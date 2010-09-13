@@ -1,0 +1,133 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>data-registry-webapp</groupId>
+    <artifactId>data-registry-webapp</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>data-registry-webapp Maven</name>
+    <url>http://dataspace.metadata.net</url>
+    <inceptionYear>2010</inceptionYear>
+    <build>
+        <finalName>data-registry</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <configuration>
+                    <url>http://localhost:8080/manager</url>
+                    <server>tomcat</server>
+                    <path>/data-registry</path>
+                    <update>true</update>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <configuration>
+                    <contextPath>/data-registry</contextPath>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>svn_status</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"
+                                         classpathref="maven.plugin.classpath"/>
+
+                                <svn javahl="false" svnkit="true">
+                                    <!-- change @path if not interested in the base directory -->
+                                    <!-- set @processUnversioned to "true" if new files should show up as modifications -->
+                                    <wcVersion path="${basedir}" prefix="buildInfo.svn." processUnversioned="false"/>
+                                </svn>
+
+                                <!-- set properties not set by wcVersion to "false" so we get nice output -->
+                                <property name="buildInfo.svn.modified" value="false"/>
+                                <property name="buildInfo.svn.mixed" value="false"/>
+
+                                <!-- set @file to wherever you want the properties file -->
+                                <!-- we copy all information from wcVersion, even if it is redundant -->
+                                <propertyfile file="${basedir}/target/classes/META-INF/build.properties"
+                                              comment="Build information">
+                                    <entry key="svn.repository.url" value="${buildInfo.svn.repository.url}"/>
+                                    <entry key="svn.repository.path" value="${buildInfo.svn.repository.path}"/>
+                                    <entry key="svn.revision.max" value="${buildInfo.svn.revision.max}"/>
+                                    <entry key="svn.revision.max-with-flags"
+                                           value="${buildInfo.svn.revision.max-with-flags}"/>
+                                    <entry key="svn.revision.range" value="${buildInfo.svn.revision.range}"/>
+                                    <entry key="svn.committed.max" value="${buildInfo.svn.committed.max}"/>
+                                    <entry key="svn.committed.max-with-flags"
+                                           value="${buildInfo.svn.committed.max-with-flags}"/>
+                                    <entry key="svn.modified" value="${buildInfo.svn.modified}"/>
+                                    <entry key="svn.mixed" value="${buildInfo.svn.mixed}"/>
+                                    <entry key="build.timestamp" type="date" pattern="yyyy-MM-dd'T'HH:mm:ss"
+                                           value="now"/>
+                                    <!-- put more useful information here -->
+                                </propertyfile>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.6.5</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant</groupId>
+                        <artifactId>ant-optional</artifactId>
+                        <version>1.5.3-1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.tigris.subversion</groupId>
+                        <artifactId>svnant</artifactId>
+                        <version>1.2.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.svnkit</groupId>
+                        <artifactId>svnkit-javahl</artifactId>
+                        <version>1.2.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+</project>
