@@ -57,6 +57,9 @@
                                     <arg line="info ${basedir}/src/main/resources/svn-revision-trick.txt"/>
                                 </exec>
                                 <property prefix="svn" file="${basedir}/target/classes/svn.properties"/>
+                                <!--<propertyfile file="${basedir}/target/classes/registry.properties">-->
+                                <!--<entry key="revision" value="${svn.Revision}"/>-->
+                                <!--</propertyfile>-->
                                 <echo>Revision: ${svn.Revision}</echo>
                             </tasks>
                         </configuration>
