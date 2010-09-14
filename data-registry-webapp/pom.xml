@@ -41,13 +41,6 @@
                     <update>true</update>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.mortbay.jetty</groupId>-->
-            <!--<artifactId>maven-jetty-plugin</artifactId>-->
-            <!--<configuration>-->
-            <!--<contextPath>/data-registry</contextPath>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -57,8 +50,11 @@
                         <phase>process-resources</phase>
                         <configuration>
                             <tasks>
+                                <exec executable="svn">
+                                    <arg line="update ${basedir}/src/main/resources/svn-revision-trick.txt"/>
+                                </exec>
                                 <exec executable="svn" output="${basedir}/target/classes/svn.properties">
-                                    <arg value="info"/>
+                                    <arg line="info ${basedir}/src/main/resources/svn-revision-trick.txt"/>
                                 </exec>
                                 <property prefix="svn" file="${basedir}/target/classes/svn.properties"/>
                                 <echo>Revision: ${svn.Revision}</echo>
@@ -86,12 +82,12 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.8.1</version>
-            <scope>compile</scope>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.apache.ant</groupId>-->
+        <!--<artifactId>ant</artifactId>-->
+        <!--<version>1.8.1</version>-->
+        <!--<scope>compile</scope>-->
+        <!--</dependency>-->
     </dependencies>
 
     <repositories>
