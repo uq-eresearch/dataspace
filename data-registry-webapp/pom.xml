@@ -12,12 +12,12 @@
         <repository>
             <id>maenad-releases</id>
             <name>maenad-releases</name>
-            <url>http://gs709-0157.eait.uq.edu.au:9023/artifactory/libs-releases-local</url>
+            <url>http://maven.metadata.net/artifactory/libs-releases-local</url>
         </repository>
         <snapshotRepository>
             <id>maenad-snapshots</id>
             <name>maenad-snapshots</name>
-            <url>http://gs709-0157.eait.uq.edu.au:9023/artifactory/libs-snapshots-local</url>
+            <url>http://maven.metadata.net/artifactory/libs-snapshots-local</url>
         </snapshotRepository>
     </distributionManagement>
     <build>
