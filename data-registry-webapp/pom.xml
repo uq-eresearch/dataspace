@@ -29,13 +29,13 @@
                     <update>true</update>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <configuration>
-                    <contextPath>/data-registry</contextPath>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+            <!--<groupId>org.mortbay.jetty</groupId>-->
+            <!--<artifactId>maven-jetty-plugin</artifactId>-->
+            <!--<configuration>-->
+            <!--<contextPath>/data-registry</contextPath>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>

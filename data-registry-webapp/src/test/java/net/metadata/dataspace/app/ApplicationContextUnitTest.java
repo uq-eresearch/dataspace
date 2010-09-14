@@ -16,4 +16,5 @@ public class ApplicationContextUnitTest {
 
         assertEquals("0.1.0.0", version);
     }
+
 }
