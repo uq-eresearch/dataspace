@@ -8,6 +8,18 @@
     <name>data-registry-webapp Maven</name>
     <url>http://dataspace.metadata.net</url>
     <inceptionYear>2010</inceptionYear>
+    <distributionManagement>
+        <repository>
+            <id>maenad-releases</id>
+            <name>maenad-releases</name>
+            <url>http://gs709-0157.eait.uq.edu.au:9023/artifactory/libs-releases-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>maenad-snapshots</id>
+            <name>maenad-snapshots</name>
+            <url>http://gs709-0157.eait.uq.edu.au:9023/artifactory/libs-snapshots-local</url>
+        </snapshotRepository>
+    </distributionManagement>
     <build>
         <finalName>data-registry</finalName>
         <plugins>
