@@ -62,7 +62,30 @@ public class ApplicationContext implements ApplicationConfiguration, ServletCont
             }
 
         }
-        this.version = getProperty(properties, "version", "beta") + ".";
+
+        // try to load additional developer-specific settings
+        File svnPropertiesFile = new File("/svn.properties");
+        if (svnPropertiesFile.isFile()) {
+            InputStream fileInputStream = null;
+            try {
+                fileInputStream = new FileInputStream(svnPropertiesFile);
+                properties.load(fileInputStream);
+            } catch (FileNotFoundException ex) {
+                // should never happen since we checked before
+            } catch (IOException ex) {
+                throw new InitializationException("Failed to load svn configuration properties", ex);
+            } finally {
+                if (fileInputStream != null) {
+                    try {
+                        fileInputStream.close();
+                    } catch (IOException ex) {
+                        // so what?
+                    }
+                }
+            }
+
+        }
+        this.version = getProperty(properties, "version", "beta") + "." + getProperty(properties, "Revision", "0");
     }
 
 
