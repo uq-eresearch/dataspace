@@ -3,6 +3,7 @@
 
 <web-app>
     <display-name>Seeding the Commons</display-name>
+    <description>Seeding the Commons project</description>
 
     <listener>
         <listener-class>net.metadata.dataspace.app.ApplicationContext</listener-class>

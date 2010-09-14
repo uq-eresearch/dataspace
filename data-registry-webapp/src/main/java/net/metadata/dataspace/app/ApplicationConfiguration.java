@@ -6,4 +6,6 @@ package net.metadata.dataspace.app;
  * Time: 3:34:49 PM
  */
 public interface ApplicationConfiguration {
+
+    String getVersion();
 }
