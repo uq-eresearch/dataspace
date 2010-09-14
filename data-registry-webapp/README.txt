@@ -1,0 +1,125 @@
+                    Seeding    the   Commons
+                    Data Collection Registry
+                    ========================
+                    Last update: 2010-09-14
+
+
+Introduction
+~~~~~~~~~~~~
+The Seeding the Commons project is developing a UQ policy on research data
+management and establishing a UQ data collections registry. The project is
+funded by Australian National Data Service (ANDS). The UQ data collections
+registry will be linked to the ANDS Collection Registry, allowing UQ data
+collections to be discovered in Research Data Australia.
+
+The data-registry web application is developed with the following technology
+stack:
+    - Java 1.6
+    - Hibernate
+    
+It relies directly on the following Open Source components:
+    - Log4j for general logging
+        (see: http://logging.apache.org/)
+    - Spring Framework for use of MVC enabled Web framework
+        (see: http://www.springframework.org/)
+    - JUnit
+        (see http://www.junit.org/)
+
+Note that these packages may have other Open Source dependencies.
+
+Directory Structure:
+
+src:
+    - source code for the web app
+
+resources:
+    - supplementary resources for source code
+
+test:
+    - unit testing for the web app
+
+lib:
+    - third party libraries used by the server
+
+
+webapp:
+    - web directory structure for the web archive
+
+Other temporary directories containing derived, configured, and copied files
+will be created by the build process.  These are not considered part of the
+source distribution.
+
+
+Setting Up the Database
+~~~~~~~~~~~~~~~~~~~~~~~
+To use PostgreSQL with the standard settings you need to:
+- Create a database called "registry". Usually this means calling
+
+                "createdb registry"
+
+  on the shell as postgres user
+- Create a user "registry" with password "registry" and grant full access to
+  the "registry" database
+
+- create a file "local/coralwatch.properties" in the project's root directory
+  containing the line:
+
+                persistenceUnitName=registry-pgsql
+
+A common sequence of commands on a Ubuntu installation looks like this (with
+abbreviated prompt):
+
+                uqpbecke$ sudo su postgres
+                postgres$ createdb registry
+                postgres$ psql registry
+                Welcome to psql 8.3.7, the PostgreSQL interactive terminal.
+
+                Type:  \copyright for distribution terms
+                       \h for help with SQL commands
+                       \? for help with psql commands
+                       \g or terminate with semicolon to execute query
+                       \q to quit
+
+                registry=# create user registry password 'registry';
+                CREATE ROLE
+                registry=# grant all on database registry to registry;
+                GRANT
+
+== Using MySQL on localhost with standard credentials ===
+
+To use the Data Registry application with a MySQL database you need to:
+
+- Create a database in Mysql named "registry" use the
+
+                "CREATE DATABASE registry;"
+
+  in the command line.
+
+- Execute the following command to grant access "registry" database user:
+
+                GRANT ALL ON registry.*
+                TO 'registry'@'localhost'
+                IDENTIFIED BY 'registry'
+                WITH GRANT OPTION;
+
+- create a file "local/registry.properties" in the project's root directory
+  containing the line:
+
+                persistenceUnitName=registry-mysql
+
+
+=== Advanced configuration ===
+
+If you want to run against a non-local database or use different credentials,
+you will need to edit the "persistence.xml" file which can be found in the
+"META-INF" folder. This folder can be found in the data-registry-webapp
+directory of the deployment or in the src/main/webapp folder.
+
+If you want to use another database you will need to also add a dependency to
+the matching JDBC driver in the "pom.xml" file.
+
+                          Good Luck!
+
+
+
+                            -oOo-
