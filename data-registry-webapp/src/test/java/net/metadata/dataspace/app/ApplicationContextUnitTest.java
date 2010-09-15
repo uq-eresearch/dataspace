@@ -31,8 +31,7 @@ public class ApplicationContextUnitTest {
         try {
             resourceAsStream = DataRegistryApplicationContext.class.getResourceAsStream("/registry.properties");
             if (resourceAsStream == null) {
-                throw new Exception("Configuration file not found, please ensure " +
-                        "there is a 'ehmp.properties' on the classpath");
+                throw new Exception("Configuration file not found, please ensure there is a 'registry.properties' on the classpath");
             }
             properties.load(resourceAsStream);
         } catch (IOException ex) {
@@ -49,8 +48,7 @@ public class ApplicationContextUnitTest {
         try {
             resourceAsStream = DataRegistryApplicationContext.class.getResourceAsStream("/revision.properties");
             if (resourceAsStream == null) {
-                throw new Exception("Configuration file not found, please ensure " +
-                        "there is a 'ehmp.properties' on the classpath");
+                throw new Exception("Configuration file not found, please ensure there is a 'revision.properties' on the classpath");
             }
             properties.load(resourceAsStream);
         } catch (IOException ex) {
