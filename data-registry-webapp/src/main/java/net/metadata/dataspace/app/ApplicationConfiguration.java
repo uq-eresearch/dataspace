@@ -7,5 +7,7 @@ package net.metadata.dataspace.app;
  */
 public interface ApplicationConfiguration {
 
+    void setVersion(String version);
+
     String getVersion();
 }

@@ -7,14 +7,14 @@ package net.metadata.dataspace.app;
  */
 public class DataRegistryApplication {
 
-    private ApplicationContext configuration;
+    private DataRegistryApplicationContext configuration;
 
 
-    public void setConfiguration(ApplicationContext configuration) {
+    public void setConfiguration(DataRegistryApplicationContext configuration) {
         this.configuration = configuration;
     }
 
-    public ApplicationContext getConfiguration() {
+    public DataRegistryApplicationContext getConfiguration() {
         return configuration;
     }
 }
