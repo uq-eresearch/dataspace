@@ -33,14 +33,11 @@ src:
     - source code for the web app
 
 resources:
-    - supplementary resources for source code
+    - supplementary resources for source code such as spring configuration
+      files
 
 test:
     - unit testing for the web app
-
-lib:
-    - third party libraries used by the server
-
 
 webapp:
     - web directory structure for the web archive
@@ -85,7 +82,8 @@ abbreviated prompt):
                 registry=# grant all on database registry to registry;
                 GRANT
 
-== Using MySQL on localhost with standard credentials ===
+Using MySQL on localhost with standard credentials
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To use the Data Registry application with a MySQL database you need to:
 
@@ -108,7 +106,8 @@ To use the Data Registry application with a MySQL database you need to:
                 persistenceUnitName=registry-mysql
 
 
-=== Advanced configuration ===
+Advanced configuration
+~~~~~~~~~~~~~~~~~~~~~~
 
 If you want to run against a non-local database or use different credentials,
 you will need to edit the "persistence.xml" file which can be found in the
@@ -117,6 +116,20 @@ directory of the deployment or in the src/main/webapp folder.
 
 If you want to use another database you will need to also add a dependency to
 the matching JDBC driver in the "pom.xml" file.
+
+Packaging
+~~~~~~~~~
+The project is set to be packaged as war file (see pom.xml). When packaging the
+project, your should run the antrun:run goal to append the revision number to
+the project's version number
+
+Deployment
+~~~~~~~~~~
+TBA
+                          
+
+
+
 
                           Good Luck!
 
