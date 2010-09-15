@@ -1,7 +1,5 @@
 package net.metadata.dataspace.app;
 
-import net.metadata.dataspace.exception.InitializationException;
-
 /**
  * User: alabri
  * Date: 14/09/2010
@@ -9,17 +7,14 @@ import net.metadata.dataspace.exception.InitializationException;
  */
 public class DataRegistryApplication {
 
-    private static final ApplicationConfiguration configuration;
+    private ApplicationContext configuration;
 
-    static {
-        try {
-            configuration = new ApplicationContext();
-        } catch (InitializationException ex) {
-            throw new RuntimeException("Failed to initialize application", ex);
-        }
+
+    public void setConfiguration(ApplicationContext configuration) {
+        this.configuration = configuration;
     }
 
-    public static ApplicationConfiguration getConfiguration() {
+    public ApplicationContext getConfiguration() {
         return configuration;
     }
 }

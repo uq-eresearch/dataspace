@@ -5,9 +5,26 @@
     <display-name>Seeding the Commons</display-name>
     <description>Seeding the Commons project</description>
 
+    <!--<listener>-->
+    <!--<listener-class>net.metadata.dataspace.app.ApplicationContext</listener-class>-->
+    <!--</listener>-->
+
     <listener>
-        <listener-class>net.metadata.dataspace.app.ApplicationContext</listener-class>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
     </listener>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:/conf/spring/applicationContext.xml</param-value>
+    </context-param>
+
+
     <welcome-file-list>
         <welcome-file id="welcome-page">index.jsp</welcome-file>
     </welcome-file-list>
