@@ -1,7 +1,7 @@
 package net.metadata.dataspace.model;
 
-import com.sun.istack.internal.NotNull;
 import org.hibernate.annotations.Entity;
+import org.hibernate.validator.NotNull;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
