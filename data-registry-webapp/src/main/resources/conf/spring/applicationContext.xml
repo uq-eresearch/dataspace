@@ -7,12 +7,13 @@
         <property name="locations">
             <list>
                 <value>classpath:/registry.properties</value>
+                <value>classpath:/revision.properties</value>
             </list>
         </property>
     </bean>
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.ApplicationContext" init-method="init">
-        <constructor-arg value="${data.registry.version}"/>
+        <constructor-arg value="${data.registry.version}.${data.registry.revision}"/>
     </bean>
 
     <bean id="dataRegistryApplication" class="net.metadata.dataspace.app.DataRegistryApplication">

@@ -47,7 +47,7 @@
                 <executions>
                     <execution>
                         <id>svn_status</id>
-                        <phase>process-resources</phase>
+                        <phase>compile</phase>
                         <configuration>
                             <tasks>
                                 <exec executable="svn">
@@ -57,10 +57,9 @@
                                     <arg line="info ${basedir}/src/main/resources/svn-revision-trick.txt"/>
                                 </exec>
                                 <property prefix="svn" file="${basedir}/target/classes/svn.properties"/>
-                                <!--<propertyfile file="${basedir}/target/classes/registry.properties">-->
-                                <!--<entry key="revision" value="${svn.Revision}"/>-->
-                                <!--</propertyfile>-->
-                                <echo>Revision: ${svn.Revision}</echo>
+                                <echo file="${basedir}/src/main/resources/revision.properties">
+                                    data.registry.revision=${svn.Revision}
+                                </echo>
                             </tasks>
                         </configuration>
                         <goals>
@@ -73,12 +72,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
