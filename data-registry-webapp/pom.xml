@@ -20,8 +20,18 @@
             <url>http://maven.metadata.net/artifactory/libs-snapshots-local</url>
         </snapshotRepository>
     </distributionManagement>
+
     <build>
-        <finalName>data-registry</finalName>
+        <finalName>data-registry-webapp</finalName>
+        <!--<resources>-->
+        <!--<resource>-->
+        <!--<directory>src/main/resources</directory>-->
+        <!--<filtering>true</filtering>-->
+        <!--</resource>-->
+        <!--</resources>-->
+        <!--<filters>-->
+        <!--<filter>src/main/resources/revision.properties</filter>-->
+        <!--</filters>-->
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -41,34 +51,40 @@
                     <update>true</update>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <id>svn_status</id>
-                        <phase>compile</phase>
-                        <configuration>
-                            <tasks>
-                                <exec executable="svn">
-                                    <arg line="update ${basedir}/src/main/resources/svn-revision-trick.txt --username uqaalabr@uq.edu.au --password hilalali"/>
-                                </exec>
-                                <exec executable="svn" output="${basedir}/target/classes/svn.properties">
-                                    <arg line="info ${basedir}/src/main/resources/svn-revision-trick.txt"/>
-                                </exec>
-                                <property prefix="svn" file="${basedir}/target/classes/svn.properties"/>
-                                <echo file="${basedir}/src/main/resources/revision.properties">
-                                    data.registry.revision=${svn.Revision}
-                                </echo>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+            <!--<groupId>com.google.code.maven-svn-revision-number-plugin</groupId>-->
+            <!--<artifactId>maven-svn-revision-number-plugin</artifactId>-->
+            <!--<version>1.5</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<goals>-->
+            <!--<goal>revision</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--<configuration>-->
+            <!--<entries>-->
+            <!--<entry>-->
+            <!--<path>src/main/resources/svn-revision-trick.txt</path>-->
+            <!--<prefix>svn</prefix>-->
+            <!--<depth>infinity</depth>-->
+            <!--<reportUnversioned>true</reportUnversioned>-->
+            <!--<reportIgnored>false</reportIgnored>-->
+            <!--<reportOutOfDate>false</reportOutOfDate>-->
+            <!--</entry>-->
+            <!--</entries>-->
+            <!--&lt;!&ndash;<verbose>true</verbose>&ndash;&gt;-->
+            <!--</configuration>-->
+            <!--</plugin>-->
+
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-resources-plugin</artifactId>-->
+            <!--<version>2.4.3</version>-->
+            <!--<configuration>-->
+            <!--<encoding>UTF-8</encoding>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 
