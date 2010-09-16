@@ -15,21 +15,21 @@ import static org.junit.Assert.assertEquals;
  * Date: 14/09/2010
  * Time: 11:26:36 AM
  */
-public class ApplicationContextUnitTest {
+public class DataRegistryApplicationConfigurationUnitTest {
 
     @Test
     public void testGetVersion() throws Exception {
 
         //Get the expected value through application context
         ApplicationContext context = new ClassPathXmlApplicationContext("conf/spring/applicationContext.xml");
-        DataRegistryApplicationContext dataRegistryApplicationContext = (DataRegistryApplicationContext) context.getBean("applicationContext");
-        String expectedVersionNumber = dataRegistryApplicationContext.getVersion();
+        DataRegistryApplicationConfigurationImpl dataRegistryApplicationConfigurationImpl = (DataRegistryApplicationConfigurationImpl) context.getBean("applicationContext");
+        String expectedVersionNumber = dataRegistryApplicationConfigurationImpl.getVersion();
 
         //Get the actual values
         Properties properties = new Properties();
         InputStream resourceAsStream = null;
         try {
-            resourceAsStream = DataRegistryApplicationContext.class.getResourceAsStream("/registry.properties");
+            resourceAsStream = DataRegistryApplicationConfigurationImpl.class.getResourceAsStream("/registry.properties");
             if (resourceAsStream == null) {
                 throw new Exception("Configuration file not found, please ensure there is a 'registry.properties' on the classpath");
             }
@@ -46,7 +46,7 @@ public class ApplicationContextUnitTest {
             }
         }
         try {
-            resourceAsStream = DataRegistryApplicationContext.class.getResourceAsStream("/revision.properties");
+            resourceAsStream = DataRegistryApplicationConfigurationImpl.class.getResourceAsStream("/revision.properties");
             if (resourceAsStream == null) {
                 throw new Exception("Configuration file not found, please ensure there is a 'revision.properties' on the classpath");
             }

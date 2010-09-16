@@ -13,11 +13,8 @@
         </property>
     </bean>
 
-    <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationContext">
+    <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
         <property name="version" value="${data.registry.version}.${data.registry.revision}"/>
     </bean>
 
-    <bean id="dataRegistryApplication" class="net.metadata.dataspace.app.DataRegistryApplication">
-        <property name="configuration" ref="applicationContext"/>
-    </bean>
 </beans>

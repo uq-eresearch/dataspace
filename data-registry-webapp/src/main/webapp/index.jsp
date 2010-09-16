@@ -1,4 +1,4 @@
-<%@ page import="net.metadata.dataspace.app.DataRegistryApplicationContext" %>
+<%@ page import="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl" %>
 <%@ page import="org.springframework.context.ApplicationContext" %>
 <%@ page import="org.springframework.context.support.ClassPathXmlApplicationContext" %>
 <html>
@@ -7,8 +7,8 @@
 
 <%
     ApplicationContext context = new ClassPathXmlApplicationContext("conf/spring/applicationContext.xml");
-    DataRegistryApplicationContext dataRegistryApplicationContext = (DataRegistryApplicationContext) context.getBean("applicationContext");
+    DataRegistryApplicationConfigurationImpl dataRegistryApplicationConfigurationImplrationImpl = (DataRegistryApplicationConfigurationImpl) context.getBean("applicationContext");
 %>
-Version number <%=dataRegistryApplicationContext.getVersion()%>
+Version number <%=dataRegistryApplicationConfigurationImplrationImpl.getVersion()%>
 </body>
 </html>

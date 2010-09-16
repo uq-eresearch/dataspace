@@ -52,7 +52,7 @@
                         <configuration>
                             <tasks>
                                 <exec executable="svn">
-                                    <arg line="update ${basedir}/src/main/resources/svn-revision-trick.txt"/>
+                                    <arg line="update ${basedir}/src/main/resources/svn-revision-trick.txt --username uqaalabr@uq.edu.au --password hilalali"/>
                                 </exec>
                                 <exec executable="svn" output="${basedir}/target/classes/svn.properties">
                                     <arg line="info ${basedir}/src/main/resources/svn-revision-trick.txt"/>

@@ -5,15 +5,15 @@ package net.metadata.dataspace.app;
  * Date: 13/09/2010
  * Time: 3:37:39 PM
  */
-public class DataRegistryApplicationContext implements ApplicationConfiguration {
+public class DataRegistryApplicationConfigurationImpl implements DataRegistryApplicationConfiguration {
 
     private String version;
 
-    public DataRegistryApplicationContext() {
+    public DataRegistryApplicationConfigurationImpl() {
     }
 
-    public DataRegistryApplicationContext(String s) {
-        this.version = s;
+    public DataRegistryApplicationConfigurationImpl(String version) {
+        this.version = version;
     }
 
     public void setVersion(String version) {
