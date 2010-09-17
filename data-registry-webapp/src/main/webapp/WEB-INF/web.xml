@@ -21,6 +21,14 @@
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>
 
+    <servlet id="abdera">
+        <servlet-name>Abdera</servlet-name>
+        <servlet-class>net.metadata.dataspace.servlets.EmployeeProviderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping id="abdera-mapping">
+        <servlet-name>Abdera</servlet-name>
+        <url-pattern>/employee</url-pattern>
+    </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file id="welcome-page">index.jsp</welcome-file>
