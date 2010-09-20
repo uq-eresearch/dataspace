@@ -15,6 +15,31 @@
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
         <property name="version" value="${data.registry.version}.${data.registry.revision}"/>
+        <!--<property name="connectorService" ref="jpaConnector"/>-->
+        <property name="collectionDao" ref="collectionDao"/>
+        <property name="subjectDao" ref="subjectDao"/>
     </bean>
 
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="${data.registry.persistenceUnitName}"/>
+    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    <!--<bean id="entityManagerFactoryUtil" class="net.metadata.dataspace.data.connector.EntityManagerFactoryUtil">-->
+    <!--<constructor-arg value="${data.registry.persistenceUnitName}"/>-->
+    <!--</bean>-->
+
+
+    <bean id="jpaConnector" class="net.metadata.dataspace.data.connector.JpaConnector">
+        <constructor-arg ref="entityManagerFactory"/>
+    </bean>
+    <!--Daos-->
+    <bean id="collectionDao" class="net.metadata.dataspace.data.access.impl.CollectionDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
+    <bean id="subjectDao" class="net.metadata.dataspace.data.access.impl.SubjectDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
 </beans>

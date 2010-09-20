@@ -1,5 +1,8 @@
 package net.metadata.dataspace.app;
 
+import net.metadata.dataspace.data.access.impl.CollectionDaoImpl;
+import net.metadata.dataspace.data.access.impl.SubjectDaoImpl;
+
 /**
  * User: alabri
  * Date: 13/09/2010
@@ -8,6 +11,8 @@ package net.metadata.dataspace.app;
 public class DataRegistryApplicationConfigurationImpl implements DataRegistryApplicationConfiguration {
 
     private String version;
+    private CollectionDaoImpl collectionDao;
+    private SubjectDaoImpl subjectDao;
 
     public DataRegistryApplicationConfigurationImpl() {
     }
@@ -22,5 +27,21 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
 
     public String getVersion() {
         return version;
+    }
+
+    public void setCollectionDao(CollectionDaoImpl collectionDao) {
+        this.collectionDao = collectionDao;
+    }
+
+    public CollectionDaoImpl getCollectionDao() {
+        return collectionDao;
+    }
+
+    public void setSubjectDao(SubjectDaoImpl subjectDao) {
+        this.subjectDao = subjectDao;
+    }
+
+    public SubjectDaoImpl getSubjectDao() {
+        return subjectDao;
     }
 }

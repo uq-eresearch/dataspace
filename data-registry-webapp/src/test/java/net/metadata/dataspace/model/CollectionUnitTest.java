@@ -1,5 +1,9 @@
 package net.metadata.dataspace.model;
 
+import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
+import net.metadata.dataspace.data.access.CollectionDao;
+import net.metadata.dataspace.data.access.SubjectDao;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -11,8 +15,20 @@ import static org.junit.Assert.assertEquals;
  */
 public class CollectionUnitTest {
 
+    private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
+
     @Test
-    public void testCollectionEntity() throws Exception {
-        assertEquals(1, 1);
+    public void testAddingCollection() throws Exception {
+        SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
+        Subject subject = PopulatorUtil.getSubject();
+        subjectDao.save(subject);
+
+        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
+        Collection collection = PopulatorUtil.getCollection();
+        collectionDao.save(collection);
+
+        assertEquals(collection, collectionDao.getByKey(collection.getKey()));
+
     }
+
 }

@@ -1,8 +1,8 @@
 package net.metadata.dataspace.model;
 
-import org.hibernate.annotations.Entity;
 import org.hibernate.validator.NotNull;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;

@@ -1,8 +1,6 @@
 package net.metadata.dataspace.app;
 
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,8 +19,7 @@ public class DataRegistryApplicationConfigurationUnitTest {
     public void testGetVersion() throws Exception {
 
         //Get the expected value through application context
-        ApplicationContext context = new ClassPathXmlApplicationContext("conf/spring/applicationContext.xml");
-        DataRegistryApplicationConfigurationImpl dataRegistryApplicationConfigurationImpl = (DataRegistryApplicationConfigurationImpl) context.getBean("applicationContext");
+        DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
         String expectedVersionNumber = dataRegistryApplicationConfigurationImpl.getVersion();
 
         //Get the actual values
