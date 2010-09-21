@@ -58,16 +58,16 @@ public class CollectionUnitTest {
         String keyUri = collection.getKeyURI();
         int originalSubjectListSize = collection.getSubjects().size();
         collection.getSubjects().add(subject);
-        String originalKeyUri = collection.getKeyURI();
-        collection.setDescription("http://dataspace.uq.edu.au/" + UUID.randomUUID().toString());
+        String originalLocationUri = collection.getLocationURI();
+        collection.setLocationURI("http://dataspace.uq.edu.au/" + UUID.randomUUID().toString());
 
         collectionDao.update(collection);
 
         Collection collectionByKey = collectionDao.getByKey(keyUri);
 
         assertEquals("Modified and Retrieved collections are not the same", collection, collectionByKey);
-        assertTrue("Number of subjects is " + collectionByKey.getSubjects().size() + " expected " + (originalSubjectListSize + 1), collectionByKey.getSubjects().size() == (originalSubjectListSize + 1));
-        assertFalse("Key URI was not updated Original " + originalKeyUri + " Current: " + collectionByKey.getDescription(), originalKeyUri.equals(collectionByKey.getDescription()));
+        assertTrue("The number of subjects should increase Current: " + collectionByKey.getSubjects().size() + " Expected: " + (originalSubjectListSize + 1), collectionByKey.getSubjects().size() == (originalSubjectListSize + 1));
+        assertFalse("Location URI should be updated " + originalLocationUri + " Current: " + collectionByKey.getLocationURI(), originalLocationUri.equals(collectionByKey.getLocationURI()));
 
     }
 
