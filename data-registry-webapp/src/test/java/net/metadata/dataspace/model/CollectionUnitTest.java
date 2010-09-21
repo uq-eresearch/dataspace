@@ -27,8 +27,7 @@ public class CollectionUnitTest {
         Collection collection = PopulatorUtil.getCollection();
         collectionDao.save(collection);
 
-        assertEquals(collection, collectionDao.getByKey(collection.getKey()));
-
+        assertEquals(collection, collectionDao.getByKey(collection.getKeyURI()));
     }
 
 }

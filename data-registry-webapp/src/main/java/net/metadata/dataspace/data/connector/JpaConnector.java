@@ -18,8 +18,8 @@ public class JpaConnector extends ConnectorService implements EntityManagerSourc
     private final EntityManagerFactory emf;
     private final ThreadLocal<EntityManager> entityManagerTL = new ThreadLocal<EntityManager>();
 
-    public JpaConnector(org.springframework.orm.jpa.LocalEntityManagerFactoryBean emf) {
-        this.emf = emf.getNativeEntityManagerFactory();
+    public JpaConnector(EntityManagerFactory emf) {
+        this.emf = emf;
     }
 
     @Override

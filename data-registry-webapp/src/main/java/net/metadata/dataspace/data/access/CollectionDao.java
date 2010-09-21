@@ -3,8 +3,6 @@ package net.metadata.dataspace.data.access;
 import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.model.Collection;
 
-import java.net.URI;
-
 /**
  * User: alabri
  * Date: 20/09/2010
@@ -12,5 +10,5 @@ import java.net.URI;
  */
 public interface CollectionDao extends Dao<Collection> {
 
-    Collection getByKey(URI uri);
+    Collection getByKey(String keyURI);
 }

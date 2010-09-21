@@ -6,7 +6,6 @@ import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.model.Collection;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -20,9 +19,8 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     }
 
     @Override
-    public Collection getByKey(URI uri) {
-        String uriValue = uri.toString();
-        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.uri = :uri").setParameter("uri", uriValue).getResultList();
+    public Collection getByKey(String keyURI) {
+        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.keyURI = :keyURI").setParameter("keyURI", keyURI).getResultList();
         if (resultList.isEmpty()) {
             return null;
         }

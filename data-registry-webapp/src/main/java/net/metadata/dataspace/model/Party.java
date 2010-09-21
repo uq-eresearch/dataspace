@@ -2,11 +2,7 @@ package net.metadata.dataspace.model;
 
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.net.URI;
+import javax.persistence.*;
 
 /**
  * User: alabri
@@ -20,16 +16,17 @@ public class Party {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private URI key;
+    private String keyURI;
 
     @NotNull
     private String name;
 
     private String description;
 
+    @OneToOne(cascade = CascadeType.ALL)
     private Subject subject;
 
-    private URI isCollectorOf;
+    private String collectorOfURI;
 
     public long getId() {
         return id;
@@ -39,12 +36,12 @@ public class Party {
         this.id = id;
     }
 
-    public URI getKey() {
-        return key;
+    public String getKeyURI() {
+        return keyURI;
     }
 
-    public void setKey(URI key) {
-        this.key = key;
+    public void setKeyURI(String keyURI) {
+        this.keyURI = keyURI;
     }
 
     public String getName() {
@@ -71,11 +68,11 @@ public class Party {
         this.subject = subject;
     }
 
-    public URI getCollectorOf() {
-        return isCollectorOf;
+    public String getCollectorOfURI() {
+        return collectorOfURI;
     }
 
-    public void setCollectorOf(URI collectorOf) {
-        isCollectorOf = collectorOf;
+    public void setCollectorOfURI(String collectorOfURI) {
+        this.collectorOfURI = collectorOfURI;
     }
 }

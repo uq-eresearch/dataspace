@@ -1,6 +1,5 @@
 package net.metadata.dataspace.model;
 
-import java.net.URI;
 import java.util.UUID;
 
 /**
@@ -13,9 +12,8 @@ public class PopulatorUtil {
     public static Subject getSubject() throws Exception {
         Subject subject = new Subject();
         UUID uuid = UUID.randomUUID();
-        String vocabUriString = "http://dataspace.uq.edu.au/collection/" + uuid.toString();
-        URI vocabUri = new URI(vocabUriString);
-        subject.setVocabulary(vocabUri);
+        String vocabUriString = "http://dataspace.uq.edu.au/subject/" + uuid.toString();
+        subject.setVocabularyURI(vocabUriString);
         subject.setValue("Test Subject");
         return subject;
     }
@@ -24,10 +22,13 @@ public class PopulatorUtil {
         Collection collection = new Collection();
         UUID uuid = UUID.randomUUID();
         String collectionKey = "http://dataspace.uq.edu.au/collection/" + uuid.toString();
-        collection.setKey(new URI(collectionKey));
+        collection.setKeyURI(collectionKey);
         collection.setName("First Collection");
         collection.setDescription("Test collection description");
-
+        UUID uuid2 = UUID.randomUUID();
+        String collectionManagedBy = "http://dataspace.uq.edu.au/collection/" + uuid2.toString();
+        collection.setManagedByURI(collectionManagedBy);
+        collection.setLocationURI(collectionManagedBy);
         return collection;
     }
 }

@@ -2,11 +2,7 @@ package net.metadata.dataspace.model;
 
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.net.URI;
+import javax.persistence.*;
 
 /**
  * User: alabri
@@ -20,7 +16,7 @@ public class Collection {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private URI key;
+    private String keyURI;
 
     @NotNull
     private String name;
@@ -28,13 +24,14 @@ public class Collection {
     @NotNull
     private String description;
 
+    @OneToOne(cascade = CascadeType.ALL)
     private Subject subject;
 
     @NotNull
-    private URI isManagedBy;
+    private String managedByURI;
 
     @NotNull
-    private URI location;
+    private String locationURI;
 
     public long getId() {
         return id;
@@ -44,12 +41,12 @@ public class Collection {
         this.id = id;
     }
 
-    public URI getKey() {
-        return key;
+    public String getKeyURI() {
+        return keyURI;
     }
 
-    public void setKey(URI key) {
-        this.key = key;
+    public void setKeyURI(String keyURI) {
+        this.keyURI = keyURI;
     }
 
     public String getName() {
@@ -76,19 +73,19 @@ public class Collection {
         this.subject = subject;
     }
 
-    public URI getManagedBy() {
-        return isManagedBy;
+    public String getManagedByURI() {
+        return managedByURI;
     }
 
-    public void setManagedBy(URI managedBy) {
-        isManagedBy = managedBy;
+    public void setManagedByURI(String managedByURI) {
+        this.managedByURI = managedByURI;
     }
 
-    public URI getLocation() {
-        return location;
+    public String getLocationURI() {
+        return locationURI;
     }
 
-    public void setLocation(URI location) {
-        this.location = location;
+    public void setLocationURI(String locationURI) {
+        this.locationURI = locationURI;
     }
 }

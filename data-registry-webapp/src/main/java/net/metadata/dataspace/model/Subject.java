@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.net.URI;
 
 /**
  * User: alabri
@@ -22,7 +21,7 @@ public class Subject {
     private long id;
 
     @NotNull
-    private URI vocabulary;
+    private String vocabularyURI;
 
     @NotNull
     private String value;
@@ -35,12 +34,12 @@ public class Subject {
         this.id = id;
     }
 
-    public URI getVocabulary() {
-        return vocabulary;
+    public String getVocabularyURI() {
+        return vocabularyURI;
     }
 
-    public void setVocabulary(URI vocabulary) {
-        this.vocabulary = vocabulary;
+    public void setVocabularyURI(String vocabularyURI) {
+        this.vocabularyURI = vocabularyURI;
     }
 
     public String getValue() {
