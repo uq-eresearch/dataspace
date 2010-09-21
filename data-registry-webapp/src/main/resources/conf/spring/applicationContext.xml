@@ -12,12 +12,13 @@
             </list>
         </property>
     </bean>
+    <import resource="dao.xml"/>
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
         <property name="version" value="${data.registry.version}.${data.registry.revision}"/>
         <property name="collectionDao" ref="collectionDao"/>
+        <property name="partyDao" ref="partyDao"/>
         <property name="subjectDao" ref="subjectDao"/>
     </bean>
 
-    <import resource="dao.xml"/>
 </beans>

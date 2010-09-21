@@ -1,6 +1,7 @@
 package net.metadata.dataspace.app;
 
 import net.metadata.dataspace.data.access.CollectionDao;
+import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
 
 /**
@@ -31,5 +32,13 @@ public interface DataRegistryApplicationConfiguration {
      */
     CollectionDao getCollectionDao();
 
+    /**
+     * Provide an implementation of the subject dao
+     *
+     * @return
+     */
     SubjectDao getSubjectDao();
+
+
+    PartyDao getPartyDao();
 }

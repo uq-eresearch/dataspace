@@ -1,6 +1,7 @@
 package net.metadata.dataspace.app;
 
 import net.metadata.dataspace.data.access.impl.CollectionDaoImpl;
+import net.metadata.dataspace.data.access.impl.PartyDaoImpl;
 import net.metadata.dataspace.data.access.impl.SubjectDaoImpl;
 
 /**
@@ -13,6 +14,7 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
     private String version;
     private CollectionDaoImpl collectionDao;
     private SubjectDaoImpl subjectDao;
+    private PartyDaoImpl partyDao;
 
     public DataRegistryApplicationConfigurationImpl() {
     }
@@ -43,5 +45,13 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
 
     public SubjectDaoImpl getSubjectDao() {
         return subjectDao;
+    }
+
+    public void setPartyDao(PartyDaoImpl partyDao) {
+        this.partyDao = partyDao;
+    }
+
+    public PartyDaoImpl getPartyDao() {
+        return partyDao;
     }
 }

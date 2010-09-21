@@ -29,7 +29,9 @@
     <bean id="collectionDao" class="net.metadata.dataspace.data.access.impl.CollectionDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>
-
+    <bean id="partyDao" class="net.metadata.dataspace.data.access.impl.PartyDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
     <bean id="subjectDao" class="net.metadata.dataspace.data.access.impl.SubjectDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>
