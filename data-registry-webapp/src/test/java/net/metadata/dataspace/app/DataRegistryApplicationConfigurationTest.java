@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  * Date: 14/09/2010
  * Time: 11:26:36 AM
  */
-public class DataRegistryApplicationConfigurationUnitTest {
+public class DataRegistryApplicationConfigurationTest {
 
     @Test
     public void testGetVersion() throws Exception {

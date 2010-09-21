@@ -9,4 +9,12 @@ import net.metadata.dataspace.model.Subject;
  * Time: 11:37:16 AM
  */
 public interface SubjectDao extends Dao<Subject> {
+
+    /**
+     * Retrieves a subject by given id
+     *
+     * @param id of the subject
+     * @return Subject
+     */
+    Subject getById(Long id);
 }

@@ -10,5 +10,19 @@ import net.metadata.dataspace.model.Collection;
  */
 public interface CollectionDao extends Dao<Collection> {
 
+    /**
+     * Retrieve a collection from the database by the provided id
+     *
+     * @param id
+     * @return Collection
+     */
+    Collection getById(Long id);
+
+    /**
+     * Retrieve a collection from the dataase by the provided key uri
+     *
+     * @param keyURI
+     * @return Collection
+     */
     Collection getByKey(String keyURI);
 }

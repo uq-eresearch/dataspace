@@ -19,6 +19,18 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public Collection getById(Long id) {
+        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.id = :id").setParameter("id", id).getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Collection) resultList.get(0);
+
+    }
+
+    @Override
     public Collection getByKey(String keyURI) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.keyURI = :keyURI").setParameter("keyURI", keyURI).getResultList();
         if (resultList.isEmpty()) {

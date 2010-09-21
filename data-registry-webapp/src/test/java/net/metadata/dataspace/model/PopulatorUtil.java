@@ -23,12 +23,25 @@ public class PopulatorUtil {
         UUID uuid = UUID.randomUUID();
         String collectionKey = "http://dataspace.uq.edu.au/collection/" + uuid.toString();
         collection.setKeyURI(collectionKey);
-        collection.setName("First Collection");
+        collection.setName("Test Collection");
         collection.setDescription("Test collection description");
         UUID uuid2 = UUID.randomUUID();
         String collectionManagedBy = "http://dataspace.uq.edu.au/collection/" + uuid2.toString();
         collection.setManagedByURI(collectionManagedBy);
         collection.setLocationURI(collectionManagedBy);
         return collection;
+    }
+
+    public static Party getParty() {
+        Party party = new Party();
+        UUID uuid = UUID.randomUUID();
+        String partyKey = "http://dataspace.uq.edu.au/party/" + uuid.toString();
+        party.setKeyURI(partyKey);
+        party.setName("Test Party");
+        party.setDescription("Test Party Description");
+        UUID uuid2 = UUID.randomUUID();
+        String collectionUri = "http://dataspace.uq.edu.au/collection/" + uuid2.toString();
+        party.setCollectorOfURI(collectionUri);
+        return party;
     }
 }

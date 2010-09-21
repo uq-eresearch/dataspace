@@ -1,9 +1,10 @@
-package net.metadata.dataspace.model;
+package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
-import net.metadata.dataspace.data.access.CollectionDao;
-import net.metadata.dataspace.data.access.SubjectDao;
+import net.metadata.dataspace.model.Collection;
+import net.metadata.dataspace.model.PopulatorUtil;
+import net.metadata.dataspace.model.Subject;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -14,20 +15,22 @@ import static org.junit.Assert.*;
 
 /**
  * User: alabri
- * Date: 15/09/2010
- * Time: 4:58:36 PM
+ * Date: 21/09/2010
+ * Time: 3:24:10 PM
  */
-public class CollectionUnitTest {
-
+public class CollectionDaoImplTest {
     private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
 
     @Test
     public void testAddingCollection() throws Exception {
+
         SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
         Subject subject = PopulatorUtil.getSubject();
         subjectDao.save(subject);
 
         CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
+
+        int originalCollectionTableSize = collectionDao.getAll().size();
 
         Collection collection = PopulatorUtil.getCollection();
         List<Subject> subjects = new ArrayList<Subject>();
@@ -36,7 +39,7 @@ public class CollectionUnitTest {
         collectionDao.save(collection);
 
         //Collection table shouldn't be empty
-        assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() != 0);
+        assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() == (originalCollectionTableSize + 1));
         assertEquals("Added and Retrieved collections are not the same.", collection, collectionDao.getByKey(collection.getKeyURI()));
     }
 

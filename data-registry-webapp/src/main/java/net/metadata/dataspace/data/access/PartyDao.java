@@ -9,4 +9,19 @@ import net.metadata.dataspace.model.Party;
  * Time: 1:21:30 PM
  */
 public interface PartyDao extends Dao<Party> {
+    /**
+     * Retrieve a party from database by the provided id
+     *
+     * @param id
+     * @return Party
+     */
+    Party getById(Long id);
+
+    /**
+     * Retrieve a party from the database by the provided key uri
+     *
+     * @param keyURI
+     * @return Party
+     */
+    Party getByKey(String keyURI);
 }
