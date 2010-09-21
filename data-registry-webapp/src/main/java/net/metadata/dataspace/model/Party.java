@@ -3,6 +3,8 @@ package net.metadata.dataspace.model;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: alabri
@@ -23,10 +25,14 @@ public class Party {
 
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Subject subject;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Subject> subjects = new ArrayList<Subject>();
+
 
     private String collectorOfURI;
+
+    public Party() {
+    }
 
     public long getId() {
         return id;
@@ -60,12 +66,12 @@ public class Party {
         this.description = description;
     }
 
-    public Subject getSubject() {
-        return subject;
+    public List<Subject> getSubjects() {
+        return subjects;
     }
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
     }
 
     public String getCollectorOfURI() {

@@ -3,6 +3,9 @@ package net.metadata.dataspace.model;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: alabri
@@ -10,7 +13,7 @@ import javax.persistence.*;
  * Time: 3:32:27 PM
  */
 @Entity
-public class Collection {
+public class Collection implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,14 +27,17 @@ public class Collection {
     @NotNull
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Subject subject;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Subject> subjects = new ArrayList<Subject>();
 
     @NotNull
     private String managedByURI;
 
     @NotNull
     private String locationURI;
+
+    public Collection() {
+    }
 
     public long getId() {
         return id;
@@ -65,12 +71,12 @@ public class Collection {
         this.description = description;
     }
 
-    public Subject getSubject() {
-        return subject;
+    public List<Subject> getSubjects() {
+        return subjects;
     }
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
     }
 
     public String getManagedByURI() {

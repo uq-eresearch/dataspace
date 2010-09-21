@@ -26,6 +26,9 @@ public class Subject {
     @NotNull
     private String value;
 
+    public Subject() {
+    }
+
     public long getId() {
         return id;
     }
