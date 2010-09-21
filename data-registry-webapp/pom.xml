@@ -126,6 +126,10 @@
                     <artifactId>spring-context</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
+                <!--<exclusion>-->
+                <!--<groupId>com.google.code</groupId>-->
+                <!--<artifactId>couchdb4j</artifactId>-->
+                <!--</exclusion>-->
             </exclusions>
         </dependency>
 
@@ -245,9 +249,21 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.code</groupId>
+            <artifactId>couchdb4j</artifactId>
+            <version>0.1.2</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/couchdb4j/couchdb4j-0.1.2.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <repositories>
+        <repository>
+            <id>dandiep.apache</id>
+            <name>Temporary repo for couchdb4j until it ends up on central.</name>
+            <url>http://people.apache.org/~dandiep/repo/</url>
+        </repository>
         <repository>
             <id>maven2-repository.dev.java.net</id>
             <name>Java.net Repository for Maven</name>
@@ -265,11 +281,6 @@
             <url>http://maven.restlet.org</url>
         </repository>
 
-        <repository>
-            <id>dandiep.apache</id>
-            <name>Temporary repo for couchdb4j until it ends up on central.</name>
-            <url>http://people.apache.org/~dandiep/repo/</url>
-        </repository>
 
         <!--<repository>-->
         <!--<id>local</id>-->
