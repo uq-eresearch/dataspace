@@ -15,6 +15,7 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
     private CollectionDaoImpl collectionDao;
     private SubjectDaoImpl subjectDao;
     private PartyDaoImpl partyDao;
+    private String uriPrefix;
 
     public DataRegistryApplicationConfigurationImpl() {
     }
@@ -53,5 +54,13 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
 
     public PartyDaoImpl getPartyDao() {
         return partyDao;
+    }
+
+    public void setUriPrefix(String uriPrefix) {
+        this.uriPrefix = uriPrefix;
+    }
+
+    public String getUriPrefix() {
+        return uriPrefix;
     }
 }

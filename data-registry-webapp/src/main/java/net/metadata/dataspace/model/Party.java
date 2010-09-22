@@ -18,6 +18,7 @@ public class Party {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NotNull
     private String keyURI;
 
     @NotNull

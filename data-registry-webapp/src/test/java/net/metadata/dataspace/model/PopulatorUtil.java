@@ -1,5 +1,8 @@
 package net.metadata.dataspace.model;
 
+import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
+
 import java.util.UUID;
 
 /**
@@ -9,10 +12,12 @@ import java.util.UUID;
  */
 public class PopulatorUtil {
 
+    private static DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
+
     public static Subject getSubject() throws Exception {
         Subject subject = new Subject();
         UUID uuid = UUID.randomUUID();
-        String vocabUriString = "http://dataspace.uq.edu.au/subject/" + uuid.toString();
+        String vocabUriString = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "subject/" + uuid.toString();
         subject.setVocabularyURI(vocabUriString);
         subject.setValue("Test Subject");
         return subject;
@@ -21,12 +26,12 @@ public class PopulatorUtil {
     public static Collection getCollection() throws Exception {
         Collection collection = new Collection();
         UUID uuid = UUID.randomUUID();
-        String collectionKey = "http://dataspace.uq.edu.au/collection/" + uuid.toString();
+        String collectionKey = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid.toString();
         collection.setKeyURI(collectionKey);
         collection.setName("Test Collection");
         collection.setDescription("Test collection description");
         UUID uuid2 = UUID.randomUUID();
-        String collectionManagedBy = "http://dataspace.uq.edu.au/collection/" + uuid2.toString();
+        String collectionManagedBy = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid2.toString();
         collection.setManagedByURI(collectionManagedBy);
         collection.setLocationURI(collectionManagedBy);
         return collection;
@@ -35,12 +40,12 @@ public class PopulatorUtil {
     public static Party getParty() {
         Party party = new Party();
         UUID uuid = UUID.randomUUID();
-        String partyKey = "http://dataspace.uq.edu.au/party/" + uuid.toString();
+        String partyKey = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "party/" + uuid.toString();
         party.setKeyURI(partyKey);
         party.setName("Test Party");
         party.setDescription("Test Party Description");
         UUID uuid2 = UUID.randomUUID();
-        String collectionUri = "http://dataspace.uq.edu.au/collection/" + uuid2.toString();
+        String collectionUri = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid2.toString();
         party.setCollectorOfURI(collectionUri);
         return party;
     }

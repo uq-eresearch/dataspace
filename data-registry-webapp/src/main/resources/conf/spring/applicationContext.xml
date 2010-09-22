@@ -16,6 +16,7 @@
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
         <property name="version" value="${data.registry.version}.${data.registry.revision}"/>
+        <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
         <property name="collectionDao" ref="collectionDao"/>
         <property name="partyDao" ref="partyDao"/>
         <property name="subjectDao" ref="subjectDao"/>

@@ -26,19 +26,30 @@ public interface DataRegistryApplicationConfiguration {
     String getVersion();
 
     /**
+     * Retrieves the system wide uri prefix
+     *
+     * @return uri prefix as String
+     */
+    String getUriPrefix();
+
+    /**
      * Provide an implementation of collection dao
      *
-     * @return a collection dao
+     * @return CollectionDao
      */
     CollectionDao getCollectionDao();
 
     /**
      * Provide an implementation of the subject dao
      *
-     * @return
+     * @return SubjectDao
      */
     SubjectDao getSubjectDao();
 
-
+    /**
+     * Provides an implementation of party dao
+     *
+     * @return PartyDao
+     */
     PartyDao getPartyDao();
 }

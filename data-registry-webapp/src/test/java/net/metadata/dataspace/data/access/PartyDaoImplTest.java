@@ -63,7 +63,7 @@ public class PartyDaoImplTest {
         int originalSubjectListSize = party.getSubjects().size();
         party.getSubjects().add(subject);
         String originalCollectorOfUri = party.getCollectorOfURI();
-        party.setCollectorOfURI("http://dataspace.uq.edu.au/collection/" + UUID.randomUUID().toString());
+        party.setCollectorOfURI(dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + UUID.randomUUID().toString());
 
         partyDao.update(party);
 

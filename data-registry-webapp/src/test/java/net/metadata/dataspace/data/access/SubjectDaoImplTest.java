@@ -40,7 +40,7 @@ public class SubjectDaoImplTest {
         long id = subject.getId();
         String originalVocabUri = subject.getVocabularyURI();
 
-        String newVocabURI = "http://dataspace.uq.edu.au/subject/" + UUID.randomUUID().toString();
+        String newVocabURI = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "subject/" + UUID.randomUUID().toString();
         subject.setVocabularyURI(newVocabURI);
 
         //update the subject in the database

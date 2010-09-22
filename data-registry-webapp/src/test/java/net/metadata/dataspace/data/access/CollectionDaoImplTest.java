@@ -62,7 +62,7 @@ public class CollectionDaoImplTest {
         int originalSubjectListSize = collection.getSubjects().size();
         collection.getSubjects().add(subject);
         String originalLocationUri = collection.getLocationURI();
-        collection.setLocationURI("http://dataspace.uq.edu.au/" + UUID.randomUUID().toString());
+        collection.setLocationURI(dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + UUID.randomUUID().toString());
 
         collectionDao.update(collection);
 
