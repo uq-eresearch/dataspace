@@ -20,7 +20,7 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection getById(Long id) {
+    public Collection getById(String id) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.id = :id").setParameter("id", id).getResultList();
         if (resultList.isEmpty()) {
             return null;

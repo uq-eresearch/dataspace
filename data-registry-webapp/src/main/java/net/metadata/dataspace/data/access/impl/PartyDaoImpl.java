@@ -20,7 +20,7 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
 
     @Override
     @SuppressWarnings("unchecked")
-    public Party getById(Long id) {
+    public Party getById(String id) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.id = :id").setParameter("id", id).getResultList();
         if (resultList.isEmpty()) {
             return null;

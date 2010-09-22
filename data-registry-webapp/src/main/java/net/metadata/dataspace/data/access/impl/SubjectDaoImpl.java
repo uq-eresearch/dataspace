@@ -21,7 +21,7 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
 
     @Override
     @SuppressWarnings("unchecked")
-    public Subject getById(Long id) {
+    public Subject getById(String id) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.id = :id").setParameter("id", id).getResultList();
         if (resultList.isEmpty()) {
             return null;

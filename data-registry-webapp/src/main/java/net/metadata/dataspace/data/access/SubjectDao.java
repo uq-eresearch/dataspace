@@ -16,5 +16,5 @@ public interface SubjectDao extends Dao<Subject> {
      * @param id of the subject
      * @return Subject
      */
-    Subject getById(Long id);
+    Subject getById(String id);
 }

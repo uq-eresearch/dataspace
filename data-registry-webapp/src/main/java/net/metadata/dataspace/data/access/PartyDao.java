@@ -15,7 +15,7 @@ public interface PartyDao extends Dao<Party> {
      * @param id
      * @return Party
      */
-    Party getById(Long id);
+    Party getById(String id);
 
     /**
      * Retrieve a party from the database by the provided key uri

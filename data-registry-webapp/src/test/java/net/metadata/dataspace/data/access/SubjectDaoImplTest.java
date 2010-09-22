@@ -37,7 +37,7 @@ public class SubjectDaoImplTest {
         SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
 
         Subject subject = subjectDao.getAll().get(0);
-        long id = subject.getId();
+        String id = subject.getId();
         String originalVocabUri = subject.getVocabularyURI();
 
         String newVocabURI = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "subject/" + UUID.randomUUID().toString();

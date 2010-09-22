@@ -2,8 +2,10 @@ package net.metadata.dataspace.model;
 
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +15,9 @@ import java.util.List;
  * Time: 3:32:27 PM
  */
 @Entity
-public class Collection implements Serializable {
+public class Collection extends AbstractBaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
+    @NotNull
     private String keyURI;
 
     @NotNull
@@ -37,14 +36,6 @@ public class Collection implements Serializable {
     private String locationURI;
 
     public Collection() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getKeyURI() {
