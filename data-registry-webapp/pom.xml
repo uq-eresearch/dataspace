@@ -61,6 +61,28 @@
                     <contextPath>/</contextPath>
                 </configuration>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>deleting_temp_db</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <delete dir="${basedir}/local"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
             <!--<plugin>-->
             <!--<groupId>com.google.code.maven-svn-revision-number-plugin</groupId>-->
             <!--<artifactId>maven-svn-revision-number-plugin</artifactId>-->
