@@ -18,9 +18,6 @@ import java.util.List;
 public class Collection extends AbstractBaseEntity {
 
     @NotNull
-    private String keyURI;
-
-    @NotNull
     private String name;
 
     @NotNull
@@ -36,14 +33,6 @@ public class Collection extends AbstractBaseEntity {
     private String locationURI;
 
     public Collection() {
-    }
-
-    public String getKeyURI() {
-        return keyURI;
-    }
-
-    public void setKeyURI(String keyURI) {
-        this.keyURI = keyURI;
     }
 
     public String getName() {

@@ -41,7 +41,7 @@ public class PartyDaoImplTest {
 
         //Collection table shouldn't be empty
         assertTrue("Party table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() == (originalPartyTableSize + 1));
-        assertEquals("Added and Retrieved collections are not the same.", party, partyDao.getByKey(party.getKeyURI()));
+        assertEquals("Added and Retrieved collections are not the same.", party, partyDao.getById(party.getId()));
     }
 
 
@@ -59,7 +59,7 @@ public class PartyDaoImplTest {
 
         List<Party> partyList = partyDao.getAll();
         Party party = partyList.get(0);
-        String keyUri = party.getKeyURI();
+        String id = party.getId();
         int originalSubjectListSize = party.getSubjects().size();
         party.getSubjects().add(subject);
         String originalCollectorOfUri = party.getCollectorOfURI();
@@ -67,11 +67,11 @@ public class PartyDaoImplTest {
 
         partyDao.update(party);
 
-        Party partyByKey = partyDao.getByKey(keyUri);
+        Party partyById = partyDao.getById(id);
 
-        assertEquals("Modified and Retrieved parties are not the same", party, partyByKey);
-        assertTrue("The number of subjects should increase Current: " + partyByKey.getSubjects().size() + " Expected: " + (originalSubjectListSize + 1), partyByKey.getSubjects().size() == (originalSubjectListSize + 1));
-        assertFalse("Collector of URI should be updated " + originalCollectorOfUri + " Current: " + partyByKey.getCollectorOfURI(), originalCollectorOfUri.equals(partyByKey.getCollectorOfURI()));
+        assertEquals("Modified and Retrieved parties are not the same", party, partyById);
+        assertTrue("The number of subjects should increase Current: " + partyById.getSubjects().size() + " Expected: " + (originalSubjectListSize + 1), partyById.getSubjects().size() == (originalSubjectListSize + 1));
+        assertFalse("Collector of URI should be updated " + originalCollectorOfUri + " Current: " + partyById.getCollectorOfURI(), originalCollectorOfUri.equals(partyById.getCollectorOfURI()));
 
     }
 

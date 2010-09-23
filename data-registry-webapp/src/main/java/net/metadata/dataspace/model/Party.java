@@ -1,5 +1,6 @@
 package net.metadata.dataspace.model;
 
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.CascadeType;
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,45 +19,56 @@ import java.util.List;
 @Entity
 public class Party extends AbstractBaseEntity {
 
+    //AtomPub related
     @NotNull
-    private String keyURI;
+    private String title; //name
 
-    @NotNull
-    private String name;
+    private String summary; //description
 
-    private String description;
+    private Date updated;
 
+    @CollectionOfElements
+    private List<String> authors = new ArrayList<String>();
+
+    //Other attributes
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Subject> subjects = new ArrayList<Subject>();
-
 
     private String collectorOfURI;
 
     public Party() {
     }
 
-    public String getKeyURI() {
-        return keyURI;
+    public String getTitle() {
+        return title;
     }
 
-    public void setKeyURI(String keyURI) {
-        this.keyURI = keyURI;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getName() {
-        return name;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
-    public String getDescription() {
-        return description;
+    public Date getUpdated() {
+        return updated;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
     }
 
     public List<Subject> getSubjects() {

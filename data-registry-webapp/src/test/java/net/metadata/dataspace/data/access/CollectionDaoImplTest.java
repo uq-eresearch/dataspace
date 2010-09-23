@@ -40,7 +40,7 @@ public class CollectionDaoImplTest {
 
         //Collection table shouldn't be empty
         assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() == (originalCollectionTableSize + 1));
-        assertEquals("Added and Retrieved collections are not the same.", collection, collectionDao.getByKey(collection.getKeyURI()));
+        assertEquals("Added and Retrieved collections are not the same.", collection, collectionDao.getById(collection.getId()));
     }
 
 
@@ -58,7 +58,7 @@ public class CollectionDaoImplTest {
 
         List<Collection> collectionList = collectionDao.getAll();
         Collection collection = collectionList.get(0);
-        String keyUri = collection.getKeyURI();
+        String id = collection.getId();
         int originalSubjectListSize = collection.getSubjects().size();
         collection.getSubjects().add(subject);
         String originalLocationUri = collection.getLocationURI();
@@ -66,11 +66,11 @@ public class CollectionDaoImplTest {
 
         collectionDao.update(collection);
 
-        Collection collectionByKey = collectionDao.getByKey(keyUri);
+        Collection collectionById = collectionDao.getById(id);
 
-        assertEquals("Modified and Retrieved collections are not the same", collection, collectionByKey);
-        assertTrue("The number of subjects should increase Current: " + collectionByKey.getSubjects().size() + " Expected: " + (originalSubjectListSize + 1), collectionByKey.getSubjects().size() == (originalSubjectListSize + 1));
-        assertFalse("Location URI should be updated " + originalLocationUri + " Current: " + collectionByKey.getLocationURI(), originalLocationUri.equals(collectionByKey.getLocationURI()));
+        assertEquals("Modified and Retrieved collections are not the same", collection, collectionById);
+        assertTrue("The number of subjects should increase Current: " + collectionById.getSubjects().size() + " Expected: " + (originalSubjectListSize + 1), collectionById.getSubjects().size() == (originalSubjectListSize + 1));
+        assertFalse("Location URI should be updated " + originalLocationUri + " Current: " + collectionById.getLocationURI(), originalLocationUri.equals(collectionById.getLocationURI()));
 
     }
 

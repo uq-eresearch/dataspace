@@ -12,6 +12,7 @@ import org.apache.abdera.protocol.server.servlet.AbderaServlet;
  * Time: 3:13:12 PM
  */
 public final class EmployeeProviderServlet extends AbderaServlet {
+
     protected Provider createProvider() {
         EmployeeCollectionAdapter ca = new EmployeeCollectionAdapter();
         ca.setHref("employee");

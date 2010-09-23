@@ -21,13 +21,37 @@
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>
 
+
     <servlet id="abdera">
         <servlet-name>Abdera</servlet-name>
-        <servlet-class>net.metadata.dataspace.servlets.EmployeeProviderServlet</servlet-class>
+        <servlet-class>org.apache.abdera.protocol.server.servlet.AbderaServlet</servlet-class>
+        <!--<init-param>-->
+        <!--<param-name>org.apache.abdera.protocol.server.ServiceContext</param-name>-->
+        <!--<param-value>org.apache.abdera.examples.appserver.SimpleServiceContext</param-value>-->
+        <!--</init-param>-->
     </servlet>
+
     <servlet-mapping id="abdera-mapping">
         <servlet-name>Abdera</servlet-name>
-        <url-pattern>/employee</url-pattern>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <!--<servlet id="abdera">-->
+    <!--<servlet-name>Abdera</servlet-name>-->
+    <!--<servlet-class>net.metadata.dataspace.servlets.EmployeeProviderServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping id="abdera-mapping">-->
+    <!--<servlet-name>Abdera</servlet-name>-->
+    <!--<url-pattern>/employee/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <servlet id="party">
+        <servlet-name>party</servlet-name>
+        <servlet-class>net.metadata.dataspace.servlets.PartyProviderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>party</servlet-name>
+        <url-pattern>/party/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

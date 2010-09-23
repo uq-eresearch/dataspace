@@ -26,8 +26,6 @@ public class PopulatorUtil {
     public static Collection getCollection() throws Exception {
         Collection collection = new Collection();
         UUID uuid = UUID.randomUUID();
-        String collectionKey = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid.toString();
-        collection.setKeyURI(collectionKey);
         collection.setName("Test Collection");
         collection.setDescription("Test collection description");
         UUID uuid2 = UUID.randomUUID();
@@ -40,10 +38,8 @@ public class PopulatorUtil {
     public static Party getParty() {
         Party party = new Party();
         UUID uuid = UUID.randomUUID();
-        String partyKey = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "party/" + uuid.toString();
-        party.setKeyURI(partyKey);
-        party.setName("Test Party");
-        party.setDescription("Test Party Description");
+        party.setTitle("Test Party");
+        party.setSummary("Test Party Description");
         UUID uuid2 = UUID.randomUUID();
         String collectionUri = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid2.toString();
         party.setCollectorOfURI(collectionUri);

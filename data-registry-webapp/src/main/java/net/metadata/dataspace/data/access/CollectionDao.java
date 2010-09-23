@@ -17,12 +17,4 @@ public interface CollectionDao extends Dao<Collection> {
      * @return Collection
      */
     Collection getById(String id);
-
-    /**
-     * Retrieve a collection from the dataase by the provided key uri
-     *
-     * @param keyURI
-     * @return Collection
-     */
-    Collection getByKey(String keyURI);
 }
