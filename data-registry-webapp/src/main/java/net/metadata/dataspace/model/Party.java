@@ -34,7 +34,7 @@ public class Party extends AbstractBaseEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Subject> subjects = new ArrayList<Subject>();
 
-    private String collectorOfURI;
+    private String collectorof;
 
     public Party() {
     }
@@ -79,11 +79,11 @@ public class Party extends AbstractBaseEntity {
         this.subjects = subjects;
     }
 
-    public String getCollectorOfURI() {
-        return collectorOfURI;
+    public String getCollectorof() {
+        return collectorof;
     }
 
-    public void setCollectorOfURI(String collectorOfURI) {
-        this.collectorOfURI = collectorOfURI;
+    public void setCollectorof(String collectorof) {
+        this.collectorof = collectorof;
     }
 }

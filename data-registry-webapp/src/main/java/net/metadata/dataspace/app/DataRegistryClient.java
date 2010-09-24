@@ -18,8 +18,12 @@ import java.util.UUID;
  */
 public class DataRegistryClient {
     public static void main(String[] args) throws Exception {
+
+        //You need to make sure your server is running
         // Set the introspection document
-        String start = "http://localhost:9002";
+        String host = "http://localhost:8080";
+        String base = "/party/";
+        String partyService = host + base;
 
         Abdera abdera = new Abdera();
 
@@ -27,7 +31,7 @@ public class DataRegistryClient {
         AbderaClient abderaClient = new AbderaClient(abdera);
 
         // Get the service doc and locate the href of the collection
-        Document<Service> service_doc = abderaClient.get(start).getDocument();
+        Document<Service> service_doc = abderaClient.get(partyService).getDocument();
         Service service = service_doc.getRoot();
         Collection collection = service.getWorkspaces().get(0).getCollections().get(0);
         String uri = collection.getHref().toString();
@@ -52,14 +56,15 @@ public class DataRegistryClient {
         options.setUseChunked(false);
 
         // Post the entry
-        Response response = abderaClient.post(start + uri, entry, options);
+        String fullURL = host + uri;
+        Response response = abderaClient.post(fullURL, entry, options);
 
 
         // Check the response
         if (response.getStatus() == 201) {
             System.out.println("Success!");
         } else {
-            System.out.println("Failed! " + response.getStatus());
+            System.out.println("Failed! " + "\n" + response.getStatus() + " " + response.getStatusText());
         }
         System.out.println(entry.toString());
     }

@@ -15,13 +15,15 @@ public class PartyProviderServlet extends AbderaServlet {
 
     protected Provider createProvider() {
         PartyCollectionAdapter ca = new PartyCollectionAdapter();
-        ca.setHref("party");
+        String collectionPath = "partycollection";
+        ca.setHref(collectionPath);
 
         SimpleWorkspaceInfo wi = new SimpleWorkspaceInfo();
         wi.setTitle("Party Directory Workspace");
         wi.addCollection(ca);
 
-        DefaultProvider provider = new DefaultProvider("/");
+        String base = "/party/";
+        DefaultProvider provider = new DefaultProvider(base);
         provider.addWorkspace(wi);
 
         provider.init(getAbdera(), null);

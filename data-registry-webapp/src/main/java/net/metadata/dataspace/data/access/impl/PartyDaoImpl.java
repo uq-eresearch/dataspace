@@ -20,7 +20,7 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
 
     @Override
     @SuppressWarnings("unchecked")
-    public Party getById(String id) {
+    public Party getById(Long id) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.id = :id").setParameter("id", id).getResultList();
         if (resultList.isEmpty()) {
             return null;
@@ -30,4 +30,13 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
 
     }
 
+    @Override
+    public Party getByKey(String key) {
+        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.key = :key").setParameter("key", key).getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "uri should be unique";
+        return (Party) resultList.get(0);
+    }
 }

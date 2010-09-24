@@ -16,5 +16,8 @@ public interface CollectionDao extends Dao<Collection> {
      * @param id
      * @return Collection
      */
-    Collection getById(String id);
+    Collection getById(Long id);
+
+
+    Collection getByKey(String key);
 }

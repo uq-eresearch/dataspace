@@ -1,5 +1,9 @@
 package net.metadata.dataspace.model;
 
+import org.hibernate.validator.NotNull;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
@@ -14,23 +18,35 @@ import java.util.UUID;
 public abstract class AbstractBaseEntity implements Serializable {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @NotNull
+    private String key;
 
     public AbstractBaseEntity() {
-        this.id = UUID.randomUUID().toString();
+        this.key = UUID.randomUUID().toString();
     }
 
-    public String getId() {
-        return id;
+    public String getKey() {
+        return key;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return key.hashCode();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -43,6 +59,6 @@ public abstract class AbstractBaseEntity implements Serializable {
             return false;
         }
         AbstractBaseEntity other = (AbstractBaseEntity) obj;
-        return getId().equals(other.getId());
+        return getId().equals(other.getId()) && getKey().equals(other.getKey());
     }
 }

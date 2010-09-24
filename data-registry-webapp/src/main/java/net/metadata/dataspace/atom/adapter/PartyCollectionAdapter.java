@@ -11,6 +11,8 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 /**
  * User: alabri
@@ -18,20 +20,27 @@ import java.util.*;
  * Time: 4:59:19 PM
  */
 public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Party> {
-
+    private Logger logger = Logger.getLogger(PartyCollectionAdapter.class.getName());
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix() + "party/";
+    private AtomicInteger nextId = new AtomicInteger(1000);
 
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
                            RequestContext requestContext) throws ResponseContextException {
         Party party = new Party();
-        party.setTitle(title);
-        party.setCollectorOfURI(UUID.randomUUID().toString());
-        party.setSummary(summary);
-        party.setAuthors(getAuthors(authors));
-        party.setUpdated(updated);
-        partyDao.save(party);
+        try {
+            party.setTitle(title);
+            party.setSummary(summary);
+            party.setUpdated(updated);
+            party.setAuthors(getAuthors(authors));
+//            party.setSubjects(new HashMap<String, String>());
+            party.setCollectorof(UUID.randomUUID().toString());
+            partyDao.save(party);
+        } catch (Exception ex) {
+            System.out.println(party.getId() + " " + party.getKey() + " " + title + " " + summary + " " + updated.toString() + " " + getAuthors(authors).size());
+            ex.printStackTrace();
+        }
         return party;
     }
 
@@ -42,13 +51,13 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     }
 
     @Override
-    public void deleteEntry(String id, RequestContext requestContext) throws ResponseContextException {
-        partyDao.delete(partyDao.getById(id));
+    public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        partyDao.delete(partyDao.getByKey(key));
     }
 
     @Override
-    public Party getEntry(String id, RequestContext requestContext) throws ResponseContextException {
-        return partyDao.getById(id);
+    public Party getEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        return partyDao.getByKey(key);
     }
 
     @Override
@@ -71,7 +80,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getId(Party party) throws ResponseContextException {
-        return ID_PREFIX + party.getId();
+        return ID_PREFIX + party.getKey();
     }
 
     @Override
@@ -81,12 +90,13 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getTitle(Party party) throws ResponseContextException {
-        return "Party: " + party.getId();
+        //TODO Review, this corresponds to party name
+        return "Party: " + party.getTitle();
     }
 
     @Override
     public Date getUpdated(Party party) throws ResponseContextException {
-        return new Date();
+        return party.getUpdated();
     }
 
 
@@ -97,7 +107,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getId(RequestContext requestContext) {
-        return DataRegistryApplication.getApplicationContext().getUriPrefix() + "party/feed";
+        return ID_PREFIX + "party/partycollection";
     }
 
     @Override

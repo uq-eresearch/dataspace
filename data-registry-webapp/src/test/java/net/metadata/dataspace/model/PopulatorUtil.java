@@ -3,6 +3,7 @@ package net.metadata.dataspace.model;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -27,6 +28,7 @@ public class PopulatorUtil {
         Collection collection = new Collection();
         UUID uuid = UUID.randomUUID();
         collection.setName("Test Collection");
+
         collection.setDescription("Test collection description");
         UUID uuid2 = UUID.randomUUID();
         String collectionManagedBy = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid2.toString();
@@ -39,10 +41,11 @@ public class PopulatorUtil {
         Party party = new Party();
         UUID uuid = UUID.randomUUID();
         party.setTitle("Test Party");
+        party.setUpdated(new Date());
         party.setSummary("Test Party Description");
         UUID uuid2 = UUID.randomUUID();
         String collectionUri = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid2.toString();
-        party.setCollectorOfURI(collectionUri);
+        party.setCollectorof(collectionUri);
         return party;
     }
 }

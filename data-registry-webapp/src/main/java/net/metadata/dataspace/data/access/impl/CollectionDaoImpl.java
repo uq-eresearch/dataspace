@@ -20,7 +20,7 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection getById(String id) {
+    public Collection getById(Long id) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.id = :id").setParameter("id", id).getResultList();
         if (resultList.isEmpty()) {
             return null;
@@ -28,6 +28,17 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
         assert resultList.size() == 1 : "id should be unique";
         return (Collection) resultList.get(0);
 
+    }
+
+
+    @Override
+    public Collection getByKey(String key) {
+        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.key = :key").setParameter("key", key).getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "uri should be unique";
+        return (Collection) resultList.get(0);
     }
 
 }

@@ -58,7 +58,7 @@ public class CollectionDaoImplTest {
 
         List<Collection> collectionList = collectionDao.getAll();
         Collection collection = collectionList.get(0);
-        String id = collection.getId();
+        Long id = collection.getId();
         int originalSubjectListSize = collection.getSubjects().size();
         collection.getSubjects().add(subject);
         String originalLocationUri = collection.getLocationURI();
