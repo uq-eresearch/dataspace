@@ -9,6 +9,7 @@ import org.apache.abdera.protocol.client.AbderaClient;
 import org.apache.abdera.protocol.client.RequestOptions;
 
 import javax.xml.namespace.QName;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -16,7 +17,7 @@ import java.util.UUID;
  * Date: 22/09/2010
  * Time: 2:14:07 PM
  */
-public class DataRegistryClient {
+public class PartyClient {
     public static void main(String[] args) throws Exception {
 
         //You need to make sure your server is running
@@ -45,8 +46,9 @@ public class DataRegistryClient {
         entry.setUpdated(new java.util.Date());
         entry.addAuthor("Abdul Alabri");
         entry.addAuthor("Nigel Ward");
-        entry.setTitle("New Party");
-        entry.setSummary("This is a description of the party");
+        String name = "New Party " + new Random().nextInt(5000);
+        entry.setTitle(name);
+        entry.setSummary("This is a description of " + name);
         entry.setContent("Optional Content");
         // Add the Specific extensions
         ((Element) entry.addExtension(new QName("http://http://www.w3.org/2005/Atom", "collectorOf"))).setAttributeValue("value", UUID.randomUUID().toString());
