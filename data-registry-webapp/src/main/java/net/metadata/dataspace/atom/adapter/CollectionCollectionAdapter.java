@@ -28,11 +28,15 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
                                 Content content, RequestContext requestContext) throws ResponseContextException {
         Collection collection = new Collection();
-        collection.setTitle(title);
-        collection.setSummary(summary);
-        collection.setUpdated(updated);
-        collection.setAuthors(getAuthors(authors));
-        collectionDao.save(collection);
+        try {
+            collection.setTitle(title);
+            collection.setSummary(summary);
+            collection.setUpdated(updated);
+            collection.setAuthors(getAuthors(authors));
+            collectionDao.save(collection);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return collection;
     }
 
@@ -49,12 +53,14 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return collectionDao.getByKey(key);
     }
 
     @Override
     public Object getContent(Collection collection, RequestContext requestContext) throws ResponseContextException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Content content = requestContext.getAbdera().getFactory().newContent(Content.Type.TEXT);
+        content.setText(collection.getSummary());
+        return content;
     }
 
     @Override

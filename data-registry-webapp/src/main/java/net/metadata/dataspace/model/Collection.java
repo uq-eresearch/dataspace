@@ -22,7 +22,7 @@ public class Collection extends AbstractBaseEntity {
     @NotNull
     private String title;
 
-    @NotNull
+//    @NotNull
     private String summary;
 
     @CollectionOfElements
@@ -31,10 +31,10 @@ public class Collection extends AbstractBaseEntity {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Subject> subjects = new ArrayList<Subject>();
 
-    @NotNull
+//    @NotNull
     private String managedBy;
 
-    @NotNull
+//    @NotNull
     private String location;
 
     private Date updated;
