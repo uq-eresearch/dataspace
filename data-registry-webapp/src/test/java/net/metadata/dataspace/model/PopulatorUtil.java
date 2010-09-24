@@ -19,7 +19,7 @@ public class PopulatorUtil {
         Subject subject = new Subject();
         UUID uuid = UUID.randomUUID();
         String vocabUriString = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "subject/" + uuid.toString();
-        subject.setVocabularyURI(vocabUriString);
+        subject.setVocabulary(vocabUriString);
         subject.setValue("Test Subject");
         return subject;
     }
@@ -27,13 +27,13 @@ public class PopulatorUtil {
     public static Collection getCollection() throws Exception {
         Collection collection = new Collection();
         UUID uuid = UUID.randomUUID();
-        collection.setName("Test Collection");
+        collection.setTitle("Test Collection");
 
-        collection.setDescription("Test collection description");
+        collection.setSummary("Test collection description");
         UUID uuid2 = UUID.randomUUID();
         String collectionManagedBy = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid2.toString();
-        collection.setManagedByURI(collectionManagedBy);
-        collection.setLocationURI(collectionManagedBy);
+        collection.setManagedBy(collectionManagedBy);
+        collection.setLocation(collectionManagedBy);
         return collection;
     }
 

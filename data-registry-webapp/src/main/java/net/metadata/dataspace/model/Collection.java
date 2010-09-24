@@ -1,5 +1,6 @@
 package net.metadata.dataspace.model;
 
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.CascadeType;
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,37 +20,50 @@ import java.util.List;
 public class Collection extends AbstractBaseEntity {
 
     @NotNull
-    private String name;
+    private String title;
 
     @NotNull
-    private String description;
+    private String summary;
+
+    @CollectionOfElements
+    private List<String> authors = new ArrayList<String>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Subject> subjects = new ArrayList<Subject>();
 
     @NotNull
-    private String managedByURI;
+    private String managedBy;
 
     @NotNull
-    private String locationURI;
+    private String location;
+
+    private Date updated;
 
     public Collection() {
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public List<Subject> getSubjects() {
@@ -59,19 +74,27 @@ public class Collection extends AbstractBaseEntity {
         this.subjects = subjects;
     }
 
-    public String getManagedByURI() {
-        return managedByURI;
+    public String getManagedBy() {
+        return managedBy;
     }
 
-    public void setManagedByURI(String managedByURI) {
-        this.managedByURI = managedByURI;
+    public void setManagedBy(String managedBy) {
+        this.managedBy = managedBy;
     }
 
-    public String getLocationURI() {
-        return locationURI;
+    public String getLocation() {
+        return location;
     }
 
-    public void setLocationURI(String locationURI) {
-        this.locationURI = locationURI;
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 }

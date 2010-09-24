@@ -10,8 +10,10 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -23,7 +25,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     private Logger logger = Logger.getLogger(PartyCollectionAdapter.class.getName());
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix() + "party/";
-    private AtomicInteger nextId = new AtomicInteger(1000);
 
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
@@ -34,8 +35,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             party.setSummary(summary);
             party.setUpdated(updated);
             party.setAuthors(getAuthors(authors));
-//            party.setSubjects(new HashMap<String, String>());
-            party.setCollectorof(UUID.randomUUID().toString());
             partyDao.save(party);
         } catch (Exception ex) {
             System.out.println(party.getId() + " " + party.getKey() + " " + title + " " + summary + " " + updated.toString() + " " + getAuthors(authors).size());
@@ -99,7 +98,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         return party.getUpdated();
     }
 
-
     @Override
     public String getAuthor(RequestContext requestContext) throws ResponseContextException {
         return DataRegistryApplication.getApplicationContext().getUriPrefix();
@@ -107,12 +105,12 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getId(RequestContext requestContext) {
-        return ID_PREFIX + "party/partycollection";
+        return ID_PREFIX + "party/parties";
     }
 
     @Override
     public String getTitle(RequestContext requestContext) {
-        return "Party Collection";
+        return "Parties";
     }
 
     private List<String> getAuthors(List<Person> persons) {

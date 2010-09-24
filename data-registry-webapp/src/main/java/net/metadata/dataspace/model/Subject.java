@@ -14,7 +14,7 @@ import javax.persistence.Entity;
 public class Subject extends AbstractBaseEntity {
 
     @NotNull
-    private String vocabularyURI;
+    private String vocabulary;
 
     @NotNull
     private String value;
@@ -22,12 +22,12 @@ public class Subject extends AbstractBaseEntity {
     public Subject() {
     }
 
-    public String getVocabularyURI() {
-        return vocabularyURI;
+    public String getVocabulary() {
+        return vocabulary;
     }
 
-    public void setVocabularyURI(String vocabularyURI) {
-        this.vocabularyURI = vocabularyURI;
+    public void setVocabulary(String vocabulary) {
+        this.vocabulary = vocabulary;
     }
 
     public String getValue() {

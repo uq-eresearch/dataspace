@@ -61,8 +61,8 @@ public class CollectionDaoImplTest {
         Long id = collection.getId();
         int originalSubjectListSize = collection.getSubjects().size();
         collection.getSubjects().add(subject);
-        String originalLocationUri = collection.getLocationURI();
-        collection.setLocationURI(dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + UUID.randomUUID().toString());
+        String originalLocationUri = collection.getLocation();
+        collection.setLocation(dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + UUID.randomUUID().toString());
 
         collectionDao.update(collection);
 
@@ -70,7 +70,7 @@ public class CollectionDaoImplTest {
 
         assertEquals("Modified and Retrieved collections are not the same", collection, collectionById);
         assertTrue("The number of subjects should increase Current: " + collectionById.getSubjects().size() + " Expected: " + (originalSubjectListSize + 1), collectionById.getSubjects().size() == (originalSubjectListSize + 1));
-        assertFalse("Location URI should be updated " + originalLocationUri + " Current: " + collectionById.getLocationURI(), originalLocationUri.equals(collectionById.getLocationURI()));
+        assertFalse("Location URI should be updated " + originalLocationUri + " Current: " + collectionById.getLocation(), originalLocationUri.equals(collectionById.getLocation()));
 
     }
 

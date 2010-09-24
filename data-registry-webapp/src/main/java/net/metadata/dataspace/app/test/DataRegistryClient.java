@@ -1,4 +1,4 @@
-package net.metadata.dataspace.app;
+package net.metadata.dataspace.app.test;
 
 import org.apache.abdera.Abdera;
 import org.apache.abdera.factory.Factory;
