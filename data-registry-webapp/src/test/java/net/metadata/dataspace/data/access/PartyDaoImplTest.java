@@ -2,13 +2,15 @@ package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
+import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.PopulatorUtil;
 import net.metadata.dataspace.model.Subject;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -33,10 +35,24 @@ public class PartyDaoImplTest {
 
         int originalPartyTableSize = partyDao.getAll().size();
 
+        //Add a party
         Party party = PopulatorUtil.getParty();
-        List<Subject> subjects = new ArrayList<Subject>();
+        Set<Subject> subjects = new HashSet<Subject>();
         subjects.add(subject);
         party.setSubjects(subjects);
+
+        //Add a collection
+        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
+        Set<Collection> collections = new HashSet<Collection>();
+        Collection collection = PopulatorUtil.getCollection();
+        Set<Party> collector = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
+        collector.add(party);
+        collection.setCollector(collector);
+        collectionDao.save(collection);
+        collections.add(collection);
+
+        party.setCollectorof(collections);
+
         partyDao.save(party);
 
         //Collection table shouldn't be empty
@@ -60,18 +76,25 @@ public class PartyDaoImplTest {
         List<Party> partyList = partyDao.getAll();
         Party party = partyList.get(0);
         Long id = party.getId();
-        int originalSubjectListSize = party.getSubjects().size();
-        party.getSubjects().add(subject);
-        String originalCollectorOfUri = party.getCollectorof();
-        party.setCollectorof(dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + UUID.randomUUID().toString());
 
+        //Get original attribute values
+        String originalPartyTitle = party.getTitle();
+        String originalPartySummary = party.getSummary();
+
+        //Edit attributes
+        String newTitle = "New Title " + UUID.randomUUID().toString();
+        party.setTitle(newTitle);
+        String newSummary = "New Summary " + UUID.randomUUID().toString();
+        party.setSummary(newSummary);
+
+        //Update the party
         partyDao.update(party);
 
         Party partyById = partyDao.getById(id);
 
         assertEquals("Modified and Retrieved parties are not the same", party, partyById);
-//        assertTrue("The number of subjects should increase Current: " + partyById.getSubjects().size() + " Expected: " + (originalSubjectListSize + 1), partyById.getSubjects().size() == (originalSubjectListSize + 1));
-        assertFalse("Collector of URI should be updated " + originalCollectorOfUri + " Current: " + partyById.getCollectorof(), originalCollectorOfUri.equals(partyById.getCollectorof()));
+        assertTrue("Party title did not update, Current: " + partyById.getTitle() + " Expected: " + newTitle, partyById.getTitle().equals(newTitle));
+        assertFalse("Party summary did not update: " + partyById.getSummary() + " Expected: " + newSummary, partyById.getSummary().equals(originalPartySummary));
 
     }
 

@@ -3,12 +3,14 @@ package net.metadata.dataspace.data.access;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
 import net.metadata.dataspace.model.Collection;
+import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.PopulatorUtil;
 import net.metadata.dataspace.model.Subject;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -33,10 +35,19 @@ public class CollectionDaoImplTest {
         int originalCollectionTableSize = collectionDao.getAll().size();
 
         Collection collection = PopulatorUtil.getCollection();
-        List<Subject> subjects = new ArrayList<Subject>();
+        Set<Subject> subjects = new HashSet<Subject>();
         subjects.add(subject);
         collection.setSubjects(subjects);
+
+
+        Party party = PopulatorUtil.getParty();
+        dataRegistryApplicationConfigurationImpl.getPartyDao().save(party);
+        Set<Party> collector = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
+        collector.add(party);
+        collection.setCollector(collector);
+
         collectionDao.save(collection);
+
 
         //Collection table shouldn't be empty
         assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() == (originalCollectionTableSize + 1));

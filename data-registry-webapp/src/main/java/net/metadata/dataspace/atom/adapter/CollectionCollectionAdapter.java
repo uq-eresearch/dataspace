@@ -10,9 +10,10 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: alabri
@@ -103,8 +104,8 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         return "Collections";
     }
 
-    private List<String> getAuthors(List<Person> persons) {
-        List<String> authors = new ArrayList<String>();
+    private Set<String> getAuthors(List<Person> persons) {
+        Set<String> authors = new HashSet<String>();
         for (Person person : persons) {
             authors.add(person.getName());
         }

@@ -10,10 +10,7 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -113,8 +110,8 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         return "Parties";
     }
 
-    private List<String> getAuthors(List<Person> persons) {
-        List<String> authors = new ArrayList<String>();
+    private Set<String> getAuthors(List<Person> persons) {
+        Set<String> authors = new HashSet<String>();
         for (Person person : persons) {
             authors.add(person.getName());
         }

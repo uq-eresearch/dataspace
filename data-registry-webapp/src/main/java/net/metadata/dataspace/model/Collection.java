@@ -3,13 +3,9 @@ package net.metadata.dataspace.model;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import java.util.ArrayList;
+import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * User: alabri
@@ -19,25 +15,28 @@ import java.util.List;
 @Entity
 public class Collection extends AbstractBaseEntity {
 
+    //Attributes related to atompub
     @NotNull
     private String title;
 
-//    @NotNull
+    @NotNull
     private String summary;
 
-    @CollectionOfElements
-    private List<String> authors = new ArrayList<String>();
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Subject> subjects = new ArrayList<Subject>();
-
-//    @NotNull
-    private String managedBy;
-
-//    @NotNull
-    private String location;
-
     private Date updated;
+
+    @CollectionOfElements
+    private Set<String> authors;
+
+    //Other attributes
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Subject> subjects;
+
+    @NotNull
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "key")
+    private Set<Party> collector;
+
+    @NotNull
+    private String location; //URI
 
     public Collection() {
     }
@@ -54,11 +53,11 @@ public class Collection extends AbstractBaseEntity {
         return summary;
     }
 
-    public List<String> getAuthors() {
+    public Set<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<String> authors) {
+    public void setAuthors(Set<String> authors) {
         this.authors = authors;
     }
 
@@ -66,20 +65,20 @@ public class Collection extends AbstractBaseEntity {
         this.summary = summary;
     }
 
-    public List<Subject> getSubjects() {
+    public Set<Subject> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<Subject> subjects) {
+    public void setSubjects(Set<Subject> subjects) {
         this.subjects = subjects;
     }
 
-    public String getManagedBy() {
-        return managedBy;
+    public Set<Party> getCollector() {
+        return collector;
     }
 
-    public void setManagedBy(String managedBy) {
-        this.managedBy = managedBy;
+    public void setCollector(Set<Party> collector) {
+        this.collector = collector;
     }
 
     public String getLocation() {

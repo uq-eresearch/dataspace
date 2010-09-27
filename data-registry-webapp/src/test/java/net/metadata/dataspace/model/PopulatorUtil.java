@@ -4,6 +4,8 @@ import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -26,26 +28,28 @@ public class PopulatorUtil {
 
     public static Collection getCollection() throws Exception {
         Collection collection = new Collection();
-        UUID uuid = UUID.randomUUID();
         collection.setTitle("Test Collection");
-
         collection.setSummary("Test collection description");
-        UUID uuid2 = UUID.randomUUID();
-        String collectionManagedBy = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid2.toString();
-        collection.setManagedBy(collectionManagedBy);
-        collection.setLocation(collectionManagedBy);
+        collection.setUpdated(new Date());
+
+        Set<String> authors = new HashSet<String>();
+        authors.add("Test Collection Author");
+        collection.setAuthors(authors);
+
+        collection.setLocation("http://test.location.com.au/collection");
+
         return collection;
     }
 
-    public static Party getParty() {
+    public static Party getParty() throws Exception {
         Party party = new Party();
-        UUID uuid = UUID.randomUUID();
-        party.setTitle("Test Party");
+        party.setTitle("Test Party Title");
+        party.setSummary("Test Party Summary");
         party.setUpdated(new Date());
-        party.setSummary("Test Party Description");
-        UUID uuid2 = UUID.randomUUID();
-        String collectionUri = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + uuid2.toString();
-        party.setCollectorof(collectionUri);
+
+        Set<String> authors = new HashSet<String>();
+        authors.add("Test Party Author");
+        party.setAuthors(authors);
         return party;
     }
 }

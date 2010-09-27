@@ -17,10 +17,12 @@ import java.util.UUID;
 @MappedSuperclass
 public abstract class AbstractBaseEntity implements Serializable {
 
+    //Internal id used by hibernate
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    //TODO this should be a unique URI
     @NotNull
     private String key;
 

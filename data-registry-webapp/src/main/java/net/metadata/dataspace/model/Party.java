@@ -7,9 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * User: alabri
@@ -28,13 +27,14 @@ public class Party extends AbstractBaseEntity {
     private Date updated;
 
     @CollectionOfElements
-    private List<String> authors = new ArrayList<String>();
+    private Set<String> authors;
 
     //Other attributes
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Subject> subjects = new ArrayList<Subject>();
+    private Set<Subject> subjects;
 
-    private String collectorof;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "key")
+    private Set<Collection> collectorof;
 
     public Party() {
     }
@@ -63,27 +63,27 @@ public class Party extends AbstractBaseEntity {
         this.updated = updated;
     }
 
-    public List<String> getAuthors() {
+    public Set<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<String> authors) {
+    public void setAuthors(Set<String> authors) {
         this.authors = authors;
     }
 
-    public List<Subject> getSubjects() {
+    public Set<Subject> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<Subject> subjects) {
+    public void setSubjects(Set<Subject> subjects) {
         this.subjects = subjects;
     }
 
-    public String getCollectorof() {
+    public Set<Collection> getCollectorof() {
         return collectorof;
     }
 
-    public void setCollectorof(String collectorof) {
+    public void setCollectorof(Set<Collection> collectorof) {
         this.collectorof = collectorof;
     }
 }
