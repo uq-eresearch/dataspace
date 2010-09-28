@@ -61,10 +61,15 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         return partyDao.getAll();
     }
 
-    public List<Person> getAuthors(Party entry, RequestContext request) throws ResponseContextException {
-        Person author = request.getAbdera().getFactory().newAuthor();
-        author.setName("UQ");
-        return Arrays.asList(author);
+    public List<Person> getAuthors(Party party, RequestContext request) throws ResponseContextException {
+        Set<String> authors = party.getAuthors();
+        List<Person> personList = new ArrayList<Person>();
+        for (String author : authors) {
+            Person person = request.getAbdera().getFactory().newAuthor();
+            person.setName(author);
+            personList.add(person);
+        }
+        return personList;
     }
 
     @Override
@@ -76,18 +81,19 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getId(Party party) throws ResponseContextException {
-        return ID_PREFIX + party.getKey();
+        return party.getKey();
     }
 
     @Override
     public String getName(Party party) throws ResponseContextException {
-        return party.getTitle();
+        //TODO this sets the link element which contains the edit link
+        return party.getKey();
     }
 
     @Override
     public String getTitle(Party party) throws ResponseContextException {
         //TODO Review, this corresponds to party name
-        return "Party: " + party.getTitle();
+        return party.getTitle();
     }
 
     @Override

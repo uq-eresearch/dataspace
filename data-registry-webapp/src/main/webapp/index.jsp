@@ -1,14 +1,20 @@
-<%@ page import="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl" %>
-<%@ page import="org.springframework.context.ApplicationContext" %>
-<%@ page import="org.springframework.context.support.ClassPathXmlApplicationContext" %>
 <html>
-<body>
-<h2>Hello World! Data Registry</h2>
+<head>
+    <jsp:include page="include/header.jsp"/>
+</head>
+<body class="tundra">
+<div class="wrapper">
+    <jsp:include page="include/title.jsp"/>
 
-<%
-    ApplicationContext context = new ClassPathXmlApplicationContext("conf/spring/applicationContext.xml");
-    DataRegistryApplicationConfigurationImpl dataRegistryApplicationConfigurationImplrationImpl = (DataRegistryApplicationConfigurationImpl) context.getBean("applicationContext");
-%>
-Version number <%=dataRegistryApplicationConfigurationImplrationImpl.getVersion()%>
+    <div class="content">
+        <ul>
+            <li><a href="/party/parties" title="Party Feed">Party Feed</a></li>
+            <li><a href="/view-party.jsp" title="Party Stuff">Party Stuff</a></li>
+            <li><a href="/collection" title="Collection Feed">Collection Feed</a></li>
+            <li><a href="/view-collection.jsp" title="Collection Stuff">Collection Stuff</a></li>
+        </ul>
+    </div>
+</div>
+<jsp:include page="include/footer.jsp"/>
 </body>
 </html>
