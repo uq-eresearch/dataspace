@@ -17,11 +17,12 @@ public class Collection extends AbstractBaseEntity {
 
     //Attributes related to atompub
     @NotNull
-    private String title;
+    private String title; //name
 
     @NotNull
-    private String summary;
+    private String summary; //description
 
+    @NotNull
     private Date updated;
 
     @CollectionOfElements

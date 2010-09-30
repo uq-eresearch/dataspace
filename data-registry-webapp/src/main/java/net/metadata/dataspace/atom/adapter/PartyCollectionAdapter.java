@@ -45,7 +45,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             party.setAuthors(getAuthors(authors));
             partyDao.save(party);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.fatal("Error Persisting Party: " + title);
         }
         return party;
     }
@@ -57,29 +57,11 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
         if (mimeType.getBaseType().equals("application/json")) {
 
-            //Parse the input stream to string
-            StringBuilder sb = new StringBuilder();
-            if (inputStream != null) {
-                String line;
-                try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line).append("\n");
-                    }
-                } catch (IOException ex) {
-                    logger.fatal("Could not parse party inputstream to a JSON string", ex);
-                } finally {
-                    try {
-                        inputStream.close();
-                    } catch (IOException ex) {
-                        logger.fatal("Could not close party inputstream", ex);
-                    }
-                }
-            }
+            String jsonString = getJsonString(inputStream);
 
             Party party = new Party();
             try {
-                JSONObject jsonObj = new JSONObject(sb.toString());
+                JSONObject jsonObj = new JSONObject(jsonString);
                 party.setTitle(jsonObj.getString("title"));
                 party.setSummary(jsonObj.getString("summary"));
                 party.setUpdated(new Date());
@@ -104,14 +86,23 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     }
 
     @Override
-    public String getContentType(Party entry) {
+    public String getContentType(Party party) {
         return "application/json";
     }
 
     @Override
     public void putEntry(Party party, String title, Date updated, List<Person> authors, String summary, Content content,
                          RequestContext requestContext) throws ResponseContextException {
+        party.setTitle(title);
+        party.setSummary(summary);
+        party.setUpdated(updated);
+        party.setAuthors(getAuthors(authors));
         partyDao.update(party);
+    }
+
+    @Override
+    public void putMedia(Party entryObj, MimeType contentType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
+        super.putMedia(entryObj, contentType, slug, inputStream, request);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override
@@ -149,13 +140,13 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getId(Party party) throws ResponseContextException {
-        return party.getKey();
+        return party.getUriKey();
     }
 
     @Override
     public String getName(Party party) throws ResponseContextException {
         //TODO this sets the link element which contains the edit link
-        return party.getKey();
+        return party.getUriKey();
     }
 
     @Override
@@ -190,5 +181,29 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             authors.add(person.getName());
         }
         return authors;
+    }
+
+    private String getJsonString(InputStream inputStream) {
+        //Parse the input stream to string
+        StringBuilder sb = new StringBuilder();
+        if (inputStream != null) {
+            String line;
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+            } catch (IOException ex) {
+                logger.fatal("Could not parse inputstream to a JSON string", ex);
+            } finally {
+                try {
+                    inputStream.close();
+                } catch (IOException ex) {
+                    logger.fatal("Could not close inputstream", ex);
+                }
+            }
+        }
+        String jsonString = sb.toString();
+        return jsonString;
     }
 }

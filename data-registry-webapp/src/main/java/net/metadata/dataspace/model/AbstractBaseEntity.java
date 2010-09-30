@@ -24,23 +24,23 @@ public abstract class AbstractBaseEntity implements Serializable {
 
     //TODO this should be a unique URI
     @NotNull
-    private String key;
+    private String uriKey;
 
     public AbstractBaseEntity() {
-        this.key = UUID.randomUUID().toString();
+        this.uriKey = UUID.randomUUID().toString();
     }
 
-    public String getKey() {
-        return key;
+    public String getUriKey() {
+        return uriKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setUriKey(String uriKey) {
+        this.uriKey = uriKey;
     }
 
     @Override
     public int hashCode() {
-        return key.hashCode();
+        return uriKey.hashCode();
     }
 
     public Long getId() {
@@ -61,6 +61,6 @@ public abstract class AbstractBaseEntity implements Serializable {
             return false;
         }
         AbstractBaseEntity other = (AbstractBaseEntity) obj;
-        return getId().equals(other.getId()) && getKey().equals(other.getKey());
+        return getId().equals(other.getId()) && getUriKey().equals(other.getUriKey());
     }
 }

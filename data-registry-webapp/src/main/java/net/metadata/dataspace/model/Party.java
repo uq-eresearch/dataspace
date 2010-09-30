@@ -22,8 +22,10 @@ public class Party extends AbstractBaseEntity {
     @NotNull
     private String title; //name
 
+    @NotNull
     private String summary; //description
 
+    @NotNull
     private Date updated;
 
     @CollectionOfElements

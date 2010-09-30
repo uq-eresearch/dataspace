@@ -31,8 +31,8 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
-    public Party getByKey(String key) {
-        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.key = :key").setParameter("key", key).getResultList();
+    public Party getByKey(String uriKey) {
+        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.uriKey = :uriKey").setParameter("uriKey", uriKey).getResultList();
         if (resultList.isEmpty()) {
             return null;
         }

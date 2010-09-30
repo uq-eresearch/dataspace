@@ -32,8 +32,8 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
 
 
     @Override
-    public Collection getByKey(String key) {
-        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.key = :key").setParameter("key", key).getResultList();
+    public Collection getByKey(String uriKey) {
+        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.uriKey = :uriKey").setParameter("uriKey", uriKey).getResultList();
         if (resultList.isEmpty()) {
             return null;
         }
