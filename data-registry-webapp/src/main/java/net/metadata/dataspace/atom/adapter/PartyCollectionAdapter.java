@@ -10,7 +10,15 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import javax.activation.MimeType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -43,62 +51,62 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     }
 
 
-//    @Override
-//    public Party postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
-//        logger.info("Persisting Party as Media Entry");
-//
-//        if (mimeType.getBaseType().equals("application/json")) {
-//
-//            //Parse the input stream to string
-//            StringBuilder sb = new StringBuilder();
-//            if (inputStream != null) {
-//                String line;
-//                try {
-//                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-//                    while ((line = reader.readLine()) != null) {
-//                        sb.append(line).append("\n");
-//                    }
-//                } catch (IOException ex) {
-//                    logger.fatal("Could not parse party inputstream to a JSON string", ex);
-//                } finally {
-//                    try {
-//                        inputStream.close();
-//                    } catch (IOException ex) {
-//                        logger.fatal("Could not close party inputstream", ex);
-//                    }
-//                }
-//            }
-//
-//            Party party = new Party();
-//            try {
-//                JSONObject jsonObj = new JSONObject(sb.toString());
-//                party.setTitle(jsonObj.getString("title"));
-//                party.setSummary(jsonObj.getString("summary"));
-//                party.setUpdated(new Date());
-//                JSONArray authors = jsonObj.getJSONArray("authors");
-//                Set<String> persons = new HashSet<String>();
-//                for (int i = 0; i < authors.length(); i++) {
-//                    persons.add(authors.getString(i));
-//                }
-//                party.setAuthors(persons);
-//            } catch (JSONException ex) {
-//                logger.fatal("Could not assemble party from JSON object", ex);
-//            }
-//            partyDao.save(party);
-//            return party;
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public String getMediaName(Party party) throws ResponseContextException {
-//        return party.getTitle();
-//    }
-//
-//    @Override
-//    public String getContentType(Party entry) {
-//        return "application/json";
-//    }
+    @Override
+    public Party postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
+        logger.info("Persisting Party as Media Entry");
+
+        if (mimeType.getBaseType().equals("application/json")) {
+
+            //Parse the input stream to string
+            StringBuilder sb = new StringBuilder();
+            if (inputStream != null) {
+                String line;
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line).append("\n");
+                    }
+                } catch (IOException ex) {
+                    logger.fatal("Could not parse party inputstream to a JSON string", ex);
+                } finally {
+                    try {
+                        inputStream.close();
+                    } catch (IOException ex) {
+                        logger.fatal("Could not close party inputstream", ex);
+                    }
+                }
+            }
+
+            Party party = new Party();
+            try {
+                JSONObject jsonObj = new JSONObject(sb.toString());
+                party.setTitle(jsonObj.getString("title"));
+                party.setSummary(jsonObj.getString("summary"));
+                party.setUpdated(new Date());
+                JSONArray authors = jsonObj.getJSONArray("authors");
+                Set<String> persons = new HashSet<String>();
+                for (int i = 0; i < authors.length(); i++) {
+                    persons.add(authors.getString(i));
+                }
+                party.setAuthors(persons);
+            } catch (JSONException ex) {
+                logger.fatal("Could not assemble party from JSON object", ex);
+            }
+            partyDao.save(party);
+            return party;
+        }
+        return null;
+    }
+
+    @Override
+    public String getMediaName(Party party) throws ResponseContextException {
+        return party.getTitle();
+    }
+
+    @Override
+    public String getContentType(Party entry) {
+        return "application/json";
+    }
 
     @Override
     public void putEntry(Party party, String title, Date updated, List<Person> authors, String summary, Content content,
