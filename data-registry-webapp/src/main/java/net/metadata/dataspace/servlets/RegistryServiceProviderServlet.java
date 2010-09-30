@@ -12,7 +12,7 @@ import org.apache.abdera.protocol.server.servlet.AbderaServlet;
  * Date: 22/09/2010
  * Time: 10:59:54 AM
  */
-public class PartyProviderServlet extends AbderaServlet {
+public class RegistryServiceProviderServlet extends AbderaServlet {
 
     protected Provider createProvider() {
         //Parties collection and workspace
