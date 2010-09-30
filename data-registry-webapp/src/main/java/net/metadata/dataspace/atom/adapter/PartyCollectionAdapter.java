@@ -31,7 +31,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     private Logger logger = Logger.getLogger(getClass());
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
-    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix() + "party/";
+    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
@@ -167,7 +167,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getId(RequestContext requestContext) {
-        return ID_PREFIX + "party/parties";
+        return ID_PREFIX + "parties";
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.metadata.dataspace.servlets;
 
+import net.metadata.dataspace.atom.adapter.CollectionCollectionAdapter;
 import net.metadata.dataspace.atom.adapter.PartyCollectionAdapter;
 import org.apache.abdera.protocol.server.Provider;
 import org.apache.abdera.protocol.server.impl.DefaultProvider;
@@ -14,17 +15,29 @@ import org.apache.abdera.protocol.server.servlet.AbderaServlet;
 public class PartyProviderServlet extends AbderaServlet {
 
     protected Provider createProvider() {
-        PartyCollectionAdapter ca = new PartyCollectionAdapter();
-        String collectionPath = "parties";
-        ca.setHref(collectionPath);
+        //Parties collection and workspace
+        PartyCollectionAdapter partyCollectionAdapter = new PartyCollectionAdapter();
+        String partiesPath = "parties";
+        partyCollectionAdapter.setHref(partiesPath);
 
-        SimpleWorkspaceInfo wi = new SimpleWorkspaceInfo();
-        wi.setTitle("Party Directory Workspace");
-        wi.addCollection(ca);
+        SimpleWorkspaceInfo partyWorkSpace = new SimpleWorkspaceInfo();
+        partyWorkSpace.setTitle("Party Directory Workspace");
+        partyWorkSpace.addCollection(partyCollectionAdapter);
 
-        String base = "/party/";
+        //collections collection and workspace
+        CollectionCollectionAdapter collectionCollectionAdapter = new CollectionCollectionAdapter();
+        String collectionsPath = "collections";
+        collectionCollectionAdapter.setHref(collectionsPath);
+        SimpleWorkspaceInfo collectionWorkSpace = new SimpleWorkspaceInfo();
+        collectionWorkSpace.setTitle("Collection Directory Workspace");
+        collectionWorkSpace.addCollection(collectionCollectionAdapter);
+
+        String base = "/";
         DefaultProvider provider = new DefaultProvider(base);
-        provider.addWorkspace(wi);
+
+        //Add workspaces
+        provider.addWorkspace(partyWorkSpace);
+        provider.addWorkspace(collectionWorkSpace);
 
         provider.init(getAbdera(), null);
         return provider;

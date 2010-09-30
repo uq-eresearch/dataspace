@@ -24,24 +24,18 @@
 
     <!--Servlets-->
     <servlet>
-        <servlet-name>collectionServlet</servlet-name>
-        <servlet-class>net.metadata.dataspace.servlets.CollectionProviderServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>partyServlet</servlet-name>
+        <servlet-name>serviceServlet</servlet-name>
         <servlet-class>net.metadata.dataspace.servlets.PartyProviderServlet</servlet-class>
     </servlet>
 
     <!--Servlet Mappings-->
     <servlet-mapping>
-        <servlet-name>collectionServlet</servlet-name>
-        <url-pattern>/collection/*</url-pattern>
+        <servlet-name>serviceServlet</servlet-name>
+        <url-pattern>/parties/*</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
-        <servlet-name>partyServlet</servlet-name>
-        <url-pattern>/party/*</url-pattern>
+        <servlet-name>serviceServlet</servlet-name>
+        <url-pattern>/collections/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

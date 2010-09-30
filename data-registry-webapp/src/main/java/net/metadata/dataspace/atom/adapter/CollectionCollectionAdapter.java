@@ -33,7 +33,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     private Logger logger = Logger.getLogger(getClass());
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getCollectionDao();
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
-    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix() + "collection/";
+    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
     @Override
     public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
@@ -163,7 +163,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public String getId(RequestContext requestContext) {
-        return ID_PREFIX + "collection/collections";
+        return ID_PREFIX + "collections";
     }
 
     @Override

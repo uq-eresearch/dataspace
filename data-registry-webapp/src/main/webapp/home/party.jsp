@@ -1,6 +1,6 @@
 <html>
 <head>
-    <jsp:include page="include/header.jsp"/>
+    <jsp:include page="../include/header.jsp"/>
     <link type="text/css" href="http://o.aolcdn.com/dojo/1.4.0/dojo/resources/dojo.css"/>
     <link type="text/css"
           href="http://archive.dojotoolkit.org/nightly/dojotoolkit/dojox/atom/widget/templates/css/EntryHeader.css"/>
@@ -114,7 +114,7 @@
 </head>
 <body class="tundra">
 <div class="wrapper">
-    <jsp:include page="include/title.jsp"/>
+    <jsp:include page="../include/title.jsp"/>
     <div class="content">
         <br/>
         <b>All Parties</b>
@@ -175,6 +175,6 @@
         <%--<pre id="simpleModifiedAtomXml"></pre>--%>
     </div>
 </div>
-<jsp:include page="include/footer.jsp"/>
+<jsp:include page="../include/footer.jsp"/>
 </body>
 </html>
