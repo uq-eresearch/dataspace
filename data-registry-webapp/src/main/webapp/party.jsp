@@ -1,6 +1,6 @@
 <html>
 <head>
-    <jsp:include page="../include/header.jsp"/>
+    <jsp:include page="include/header.jsp"/>
     <link type="text/css" href="http://o.aolcdn.com/dojo/1.4.0/dojo/resources/dojo.css"/>
     <link type="text/css"
           href="http://archive.dojotoolkit.org/nightly/dojotoolkit/dojox/atom/widget/templates/css/EntryHeader.css"/>
@@ -91,12 +91,12 @@
         //            });
         //        }
 
-        function addCollection() {
+        function submitParty() {
             var responseElement = dojo.byId('serverResponse');
             dojo.xhrPost({
-                url:'/collection/collections',
+                url:'/parties',
                 contentType:"application/json",
-                postData: dojo.byId('collectionJson').innerHTML,
+                postData: dojo.byId('partyJson').innerHTML,
                 encoding: "utf-8",
                 timeout: 5000,
                 load: function(response, ioArgs) {
@@ -114,11 +114,10 @@
 </head>
 <body class="tundra">
 <div class="wrapper">
-    <jsp:include page="../include/title.jsp"/>
+    <jsp:include page="include/title.jsp"/>
     <div class="content">
         <br/>
-        <b>All Collections</b>
-
+        <b>All Parties</b>
 
         <div id="ActionContainer"
              dojoType="dijit.layout.SplitContainer"
@@ -133,7 +132,7 @@
                     >
                 <div dojoType="dojox.atom.widget.FeedViewer"
                      id="fv1"
-                     url="collection/collections"
+                     url="parties"
                      entrySelectionTopic="atomfeed.entry.topic">
                 </div>
             </div>
@@ -159,25 +158,23 @@
         <%--<textarea rows="15" cols="100" id="partiesXml"></textarea>--%>
 
         <br/>
-        <b>Create Collection From JSON</b>
+        <b>Create Party From JSON</b>
         <br/>
-        <textarea rows="8" cols="100" id="collectionJson">{
+        <textarea rows="8" cols="100" id="partyJson">{
             "id":"urn:uuid:335FE3DE7267B37B791285306505116",
-            "title":"Collection Name",
-            "summary":"Collection Description",
+            "title":"Party 570",
+            "summary":"This is a description of New Party 570",
             "content":"Optional Content",
-            "location":"http://dataspace.uq.edu.au/335FE3DE7267B37B791285306505116",
             "subject":[],
-            "collector":[],
-            "authors":["John Smith","Joe Blog"]
+            "authors":["Abdul Alabri","Nigel Ward"]
             }</textarea>
         <br/>
-        <input type="button" id="button" value="Add Collection" onclick="addCollection()"/>
+        <input type="button" id="button" value="Add Party" onclick="submitParty()"/>
         <pre id="serverResponse"></pre>
         <%--<b>As XML (After modification)</b>--%>
         <%--<pre id="simpleModifiedAtomXml"></pre>--%>
     </div>
 </div>
-<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="include/footer.jsp"/>
 </body>
 </html>

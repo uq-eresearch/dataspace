@@ -9,9 +9,9 @@
     <div class="content">
         <ul>
             <li><a href="parties" title="Party Feed">Party Feed</a></li>
-            <li><a href="home/party.jsp" title="Party Stuff">Party Stuff</a></li>
+            <li><a href="party.jsp" title="Party Stuff">Party Stuff</a></li>
             <li><a href="collections" title="Collection Feed">Collection Feed</a></li>
-            <li><a href="home/collection.jsp" title="Collection Stuff">Collection Stuff</a></li>
+            <li><a href="collection.jsp" title="Collection Stuff">Collection Stuff</a></li>
         </ul>
     </div>
 </div>
