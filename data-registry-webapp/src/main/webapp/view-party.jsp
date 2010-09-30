@@ -58,9 +58,10 @@
                 xml.innerHTML = "";
                 xml.appendChild(dojo.doc.createTextNode(feed.toString()));
 
-                var json = dojo.byId("partiesJson");
-                json.innerHTML = "";
-                json.appendChild(dojo.doc.createTextNode(dojo.toJson(feed, true)));
+
+                //                var json = dojo.byId("partiesJson");
+                //                json.innerHTML = "";
+                //                json.appendChild(dojo.doc.createTextNode(dojo.toJson(feed, true)));
 
             },
                     function(err) {
@@ -69,33 +70,53 @@
         }
 
         function submitParty() {
-            var conn = new dojox.atom.io.Connection();
 
-            conn.getFeed("party", function(feed) {
-                //Emit both the XML (As reconstructed from the Feed object and as a JSON form.
-                var xml = dojo.byId("simplePristineAtomXml");
-                xml.innerHTML = "";
-                xml.appendChild(dojo.doc.createTextNode(feed.toString()));
 
-                //Now get an entry for mod.
-                var entry = feed.getFirstEntry();
-
-                //Make this updateable by pointing it to the app test pho script so it can properly post.
-                entry.setEditHref("../../../_static/jsdojox/atom/tests/io/app.php");
-                entry.updated = new Date();
-                entry.setTitle('<h1>New Editable Title!</h1>', 'xhtml');
-                conn.updateEntry(entry, function() {
-                    var xml = dojo.byId("simpleModifiedAtomXml");
-                    xml.innerHTML = "";
-                    xml.appendChild(dojo.doc.createTextNode(feed.toString()));
+            var responseElement = dojo.byId('serverResponse');
+            dojo.xhrPost({
+                url:'/party/parties',
+                contentType:"application/json",
+                postData: dojo.byId('partyJson').innerHTML,
+                encoding: "utf-8",
+                timeout: 5000,
+                load: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
                 },
-                        function(err) {
-                            console.debug(err);
-                        });
-            },
-                    function(err) {
-                        console.debug(err);
-                    });
+                error: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
+                }
+            });
+
+
+            //            var conn = new dojox.atom.io.Connection();
+            //
+            //            conn.getFeed("party", function(feed) {
+            //                //Emit both the XML (As reconstructed from the Feed object and as a JSON form.
+            //                var xml = dojo.byId("simplePristineAtomXml");
+            //                xml.innerHTML = "";
+            //                xml.appendChild(dojo.doc.createTextNode(feed.toString()));
+            //
+            //                //Now get an entry for mod.
+            //                var entry = feed.getFirstEntry();
+            //
+            //                //Make this updateable by pointing it to the app test pho script so it can properly post.
+            //                entry.setEditHref("../../../_static/jsdojox/atom/tests/io/app.php");
+            //                entry.updated = new Date();
+            //                entry.setTitle('<h1>New Editable Title!</h1>', 'xhtml');
+            //                conn.updateEntry(entry, function() {
+            //                    var xml = dojo.byId("simpleModifiedAtomXml");
+            //                    xml.innerHTML = "";
+            //                    xml.appendChild(dojo.doc.createTextNode(feed.toString()));
+            //                },
+            //                        function(err) {
+            //                            console.debug(err);
+            //                        });
+            //            },
+            //                    function(err) {
+            //                        console.debug(err);
+            //                    });
         }
 
         dojo.addOnLoad(loadParties);
@@ -111,15 +132,25 @@
         <textarea rows="15" cols="100" id="partiesXml"></textarea>
 
         <br/>
-        <b>All Parties JSON</b>
+        <b>Create Party From JSON</b>
         <br/>
-        <textarea rows="15" cols="100" id="partiesJson"></textarea>
+        <textarea rows="8" cols="100" id="partyJson">{
+            "id":"urn:uuid:335FE3DE7267B37B791285306505116",
+            "title":"New Party 570",
+            "summary":"This is a description of New Party 570",
+            "content":"Optional Content",
+            "authors":[
+            {
+            "name":"Abdul Alabri"
+            },
+            {
+            "name":"Nigel Ward"
+            }
+            ]
+            }</textarea>
         <br/>
-        <b>Create Party from JSON</b>
-        <br/>
-        <textarea rows="15" cols="100"></textarea>
-        <br/>
-        <input type="button" id="button" value="Submit Party" onclick="submitParty()"/>
+        <input type="button" id="button" value="Add Party" onclick="submitParty()"/>
+        <pre id="serverResponse"></pre>
         <%--<b>As XML (After modification)</b>--%>
         <%--<pre id="simpleModifiedAtomXml"></pre>--%>
     </div>

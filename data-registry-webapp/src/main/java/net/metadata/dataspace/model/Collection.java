@@ -32,7 +32,7 @@ public class Collection extends AbstractBaseEntity {
     private Set<Subject> subjects;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "key")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Party> collector;
 
     @NotNull
