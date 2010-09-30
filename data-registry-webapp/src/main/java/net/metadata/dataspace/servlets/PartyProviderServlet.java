@@ -21,23 +21,20 @@ public class PartyProviderServlet extends AbderaServlet {
         partyCollectionAdapter.setHref(partiesPath);
 
         SimpleWorkspaceInfo partyWorkSpace = new SimpleWorkspaceInfo();
-        partyWorkSpace.setTitle("Party Directory Workspace");
+        partyWorkSpace.setTitle("Data Collections Registry Workspace");
         partyWorkSpace.addCollection(partyCollectionAdapter);
 
         //collections collection and workspace
         CollectionCollectionAdapter collectionCollectionAdapter = new CollectionCollectionAdapter();
         String collectionsPath = "collections";
         collectionCollectionAdapter.setHref(collectionsPath);
-        SimpleWorkspaceInfo collectionWorkSpace = new SimpleWorkspaceInfo();
-        collectionWorkSpace.setTitle("Collection Directory Workspace");
-        collectionWorkSpace.addCollection(collectionCollectionAdapter);
+        partyWorkSpace.addCollection(collectionCollectionAdapter);
 
         String base = "/";
         DefaultProvider provider = new DefaultProvider(base);
 
         //Add workspaces
         provider.addWorkspace(partyWorkSpace);
-        provider.addWorkspace(collectionWorkSpace);
 
         provider.init(getAbdera(), null);
         return provider;
