@@ -1,13 +1,12 @@
 package net.metadata.dataspace.model;
 
-import org.hibernate.validator.NotNull;
+import net.metadata.dataspace.util.DaoHelper;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * User: alabri
@@ -17,30 +16,29 @@ import java.util.UUID;
 @MappedSuperclass
 public abstract class AbstractBaseEntity implements Serializable {
 
-    //Internal id used by hibernate
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    //TODO this should be a unique URI
-    @NotNull
-    private String uriKey;
+//    @NotNull
+//    private String uriKey;
 
     public AbstractBaseEntity() {
-        this.uriKey = UUID.randomUUID().toString();
+//        this.uriKey = UUID.randomUUID().toString();
+//        this.uriKey = fromDecimalToOtherBase(31, id.intValue());
     }
 
     public String getUriKey() {
-        return uriKey;
+        return DaoHelper.fromDecimalToOtherBase(31, getId().intValue());
     }
 
-    public void setUriKey(String uriKey) {
-        this.uriKey = uriKey;
-    }
+//    public void setUriKey(String uriKey) {
+//        this.uriKey = uriKey;
+//    }
 
     @Override
     public int hashCode() {
-        return uriKey.hashCode();
+        return DaoHelper.fromDecimalToOtherBase(31, getId().intValue()).hashCode();
     }
 
     public Long getId() {
@@ -63,4 +61,5 @@ public abstract class AbstractBaseEntity implements Serializable {
         AbstractBaseEntity other = (AbstractBaseEntity) obj;
         return getId().equals(other.getId()) && getUriKey().equals(other.getUriKey());
     }
+
 }

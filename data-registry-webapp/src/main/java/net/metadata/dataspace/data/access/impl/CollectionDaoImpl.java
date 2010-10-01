@@ -4,6 +4,7 @@ import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.model.Collection;
+import net.metadata.dataspace.util.DaoHelper;
 
 import java.io.Serializable;
 import java.util.List;
@@ -33,7 +34,8 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
 
     @Override
     public Collection getByKey(String uriKey) {
-        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.uriKey = :uriKey").setParameter("uriKey", uriKey).getResultList();
+        Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
+        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.id = :id").setParameter("id", id).getResultList();
         if (resultList.isEmpty()) {
             return null;
         }

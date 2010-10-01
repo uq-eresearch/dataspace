@@ -4,6 +4,7 @@ import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.model.Party;
+import net.metadata.dataspace.util.DaoHelper;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,7 +33,8 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
 
     @Override
     public Party getByKey(String uriKey) {
-        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.uriKey = :uriKey").setParameter("uriKey", uriKey).getResultList();
+        Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
+        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.id = :id").setParameter("id", id).getResultList();
         if (resultList.isEmpty()) {
             return null;
         }
