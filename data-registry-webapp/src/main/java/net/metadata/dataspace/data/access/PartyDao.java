@@ -18,5 +18,4 @@ public interface PartyDao extends Dao<Party> {
     Party getById(Long id);
 
     Party getByKey(String uriKey);
-
 }

@@ -13,6 +13,7 @@
         </property>
     </bean>
     <import resource="dao.xml"/>
+    <!--<import resource="collection-adapters.xml"/>-->
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
         <property name="version" value="${data.registry.version}.${data.registry.revision}"/>
@@ -32,4 +33,8 @@
             </list>
         </property>
     </bean>
+
+    <!--<bean id="atomicSequencer" class="net.metadata.dataspace.util.AtomicSequencer">-->
+    <!--<constructor-arg ref="partyDao"/>-->
+    <!--</bean>-->
 </beans>

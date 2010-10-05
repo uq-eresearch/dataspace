@@ -52,4 +52,5 @@ public interface DataRegistryApplicationConfiguration {
      * @return PartyDao
      */
     PartyDao getPartyDao();
+
 }

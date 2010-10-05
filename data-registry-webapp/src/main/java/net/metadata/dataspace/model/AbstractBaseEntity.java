@@ -20,25 +20,16 @@ public abstract class AbstractBaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-//    @NotNull
-//    private String uriKey;
-
     public AbstractBaseEntity() {
-//        this.uriKey = UUID.randomUUID().toString();
-//        this.uriKey = fromDecimalToOtherBase(31, id.intValue());
     }
 
     public String getUriKey() {
         return DaoHelper.fromDecimalToOtherBase(31, getId().intValue());
     }
 
-//    public void setUriKey(String uriKey) {
-//        this.uriKey = uriKey;
-//    }
-
     @Override
     public int hashCode() {
-        return DaoHelper.fromDecimalToOtherBase(31, getId().intValue()).hashCode();
+        return getUriKey().hashCode();
     }
 
     public Long getId() {
@@ -59,7 +50,7 @@ public abstract class AbstractBaseEntity implements Serializable {
             return false;
         }
         AbstractBaseEntity other = (AbstractBaseEntity) obj;
-        return getId().equals(other.getId()) && getUriKey().equals(other.getUriKey());
+        return getId().equals(other.getId());
     }
 
 }

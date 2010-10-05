@@ -24,10 +24,12 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         this.version = version;
     }
 
+    @Override
     public void setVersion(String version) {
         this.version = version;
     }
 
+    @Override
     public String getVersion() {
         return version;
     }
@@ -36,6 +38,7 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         this.collectionDao = collectionDao;
     }
 
+    @Override
     public CollectionDaoImpl getCollectionDao() {
         return collectionDao;
     }
@@ -44,6 +47,7 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         this.subjectDao = subjectDao;
     }
 
+    @Override
     public SubjectDaoImpl getSubjectDao() {
         return subjectDao;
     }
@@ -52,6 +56,7 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         this.partyDao = partyDao;
     }
 
+    @Override
     public PartyDaoImpl getPartyDao() {
         return partyDao;
     }
@@ -60,7 +65,9 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         this.uriPrefix = uriPrefix;
     }
 
+    @Override
     public String getUriPrefix() {
         return uriPrefix;
     }
+
 }

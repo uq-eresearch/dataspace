@@ -31,6 +31,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     private Logger logger = Logger.getLogger(getClass());
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
+//    private AtomicSequencer atomicSequencer = DataRegistryApplication.getApplicationContext().getAtomicSequencer();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
     @Override
@@ -39,6 +40,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         Party party = new Party();
         logger.info("Persisting Party: " + title);
         try {
+//            party.setUriKey(atomicSequencer.nextBase31());
             party.setTitle(title);
             party.setSummary(summary);
             party.setUpdated(updated);
@@ -62,6 +64,8 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             Party party = new Party();
             try {
                 JSONObject jsonObj = new JSONObject(jsonString);
+//                String uriKey = atomicSequencer.nextBase31();
+//                party.setUriKey(uriKey);
                 party.setTitle(jsonObj.getString("title"));
                 party.setSummary(jsonObj.getString("summary"));
                 party.setUpdated(new Date());
@@ -206,4 +210,5 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         String jsonString = sb.toString();
         return jsonString;
     }
+
 }
