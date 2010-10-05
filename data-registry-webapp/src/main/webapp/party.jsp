@@ -51,45 +51,6 @@
         dojo.require("dijit.layout.SplitContainer");
         dojo.require("dojo.parser");
 
-        //        var party = {
-        //            "id":"urn:uuid:335FE3DE7267B37B791285306505116",
-        //            "title":"New Party 570",
-        //            "summary":"This is a description of New Party 570",
-        //            "content":"Optional Content",
-        //            "updated":"2010-09-24T05:35:05.140Z",
-        //            "authors":[
-        //                {
-        //                    "name":"Abdul Alabri"
-        //                },
-        //                {
-        //                    "name":"Nigel Ward"
-        //                }
-        //            ],
-        //            "extensions":[
-        //                {
-        //                    "name":"collectorOf",
-        //                    "attributes":{
-        //                        "xmlns":"http://http://www.w3.org/2005/Atom",
-        //                        "value":"a51f87e4-d040-4ecb-b8ed-0f6043dabdc1"
-        //                    },
-        //                    "children":[
-        //                    ]
-        //                }
-        //            ]
-        //        };
-
-        //        function loadParties() {
-        //            var conn = new dojox.atom.io.Connection();
-        //            conn.getFeed("party/parties", function(feed) {
-        //                //Emit both the XML (As reconstructed from the Feed object and as a JSON form.
-        //                var xml = dojo.byId("partiesXml");
-        //                xml.innerHTML = "";
-        //                xml.appendChild(dojo.doc.createTextNode(feed.toString()));
-        //
-        //            }, function(err) {
-        //                console.debug(err);
-        //            });
-        //        }
 
         function submitParty() {
             var responseElement = dojo.byId('serverResponse');
@@ -109,7 +70,30 @@
                 }
             });
         }
-        //        dojo.addOnLoad(loadParties);
+
+        function getParty() {
+            var responseElement = dojo.byId('jsonResponseGet');
+            var partyIdField = dojo.byId('partyId');
+            dojo.xhrGet({
+                url:'/parties/' + partyIdField.value,
+                handleAs:"text",
+                headers: {
+                    "Content-Type": "text/plain",
+                    "Accept": "application/json",
+                    "Content-Encoding": "utf-8"
+                },
+                timeout: 5000,
+                load: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
+                },
+                error: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
+                }
+            });
+        }
+
     </script>
 </head>
 <body class="tundra">
@@ -171,6 +155,26 @@
         <br/>
         <input type="button" id="button" value="Add Party" onclick="submitParty()"/>
         <pre id="serverResponse"></pre>
+
+        <br/>
+        <br/>
+        <b>Get Party as JSON</b>
+        <br/>
+        Enter Party Id: <input id="partyId" name="partyId" type="text"/>
+        <br/>
+        <input type="button" id="button" value="Get Party" onclick="getParty()"/>
+        <pre id="jsonResponseGet"></pre>
+
+
+        <br/>
+        <b>Update Party from JSON</b>
+        <br/>
+        <textarea rows="8" cols="100" id="updatePartyJson"></textarea>
+        <br/>
+        <input type="button" id="button" value="Update Party" onclick="updateParty()"/>
+        <pre id="jsonResponseUpdate"></pre>
+
+
         <%--<b>As XML (After modification)</b>--%>
         <%--<pre id="simpleModifiedAtomXml"></pre>--%>
     </div>
