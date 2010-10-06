@@ -11,9 +11,16 @@ import org.apache.abdera.protocol.server.TargetType;
  */
 public class CollectionAdapterHelper {
     public static String getEntryID(RequestContext request) {
-        if (request.getTarget().getType() != TargetType.TYPE_ENTRY)
+        if (request.getTarget().getType() != TargetType.TYPE_ENTRY) {
             return null;
-        String[] segments = request.getUri().toString().split("/");
+        }
+
+        String fullUrl = request.getUri().toString();
+        if (fullUrl.contains("?")) {
+            fullUrl = fullUrl.split("\\?")[0];
+        }
+
+        String[] segments = fullUrl.split("/");
         return UrlEncoding.decode(segments[segments.length - 1]);
     }
 }

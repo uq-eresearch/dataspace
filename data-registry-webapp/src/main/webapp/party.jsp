@@ -21,6 +21,7 @@
                 contentType:"application/json",
                 postData: dojo.byId('partyJson').innerHTML,
                 encoding: "utf-8",
+                preventCache: true,
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
@@ -45,6 +46,7 @@
                     "Accept": contentTypeCombo.value,
                     "Content-Encoding": "utf-8"
                 },
+                preventCache: true,
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
@@ -63,12 +65,12 @@
             var jsonContent = dojo.byId('updatePartyJson').innerHTML;
             dojo.xhrPut({
                 url:'/parties/' + partyIdField.value,
-                contentType:"application/json",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": contentTypeCombo.value,
                     "Content-Encoding": "utf-8"
                 },
+                preventCache: true,
                 putData: jsonContent,
                 encoding: "utf-8",
                 timeout: 5000,
@@ -164,12 +166,12 @@
         <br/>
         <b>Update Party from JSON</b>
         <br/>
+        Enter Party Id: <input id="partyIdForUpdate" name="partyIdForUpdate" type="text"/>
+        <br/>
         Return Content-Type <select id="contentTypeForUpdate" name="contentTypeForUpdate">
         <option value="application/atom+xml" selected="selected">application/atom+xml</option>
         <option value="application/json">application/json</option>
     </select>
-        <br/>
-        Enter Party Id: <input id="partyIdForUpdate" name="partyIdForUpdate" type="text"/>
         <br/>
         <textarea rows="8" cols="100" id="updatePartyJson"></textarea>
         <br/>

@@ -19,6 +19,7 @@
                 contentType:"application/json",
                 postData: dojo.byId('collectionJson').innerHTML,
                 encoding: "utf-8",
+                preventCache: true,
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
@@ -34,14 +35,43 @@
         function getCollection() {
             var responseElement = dojo.byId('jsonResponseGet');
             var collectionIdField = dojo.byId('collectionId');
+            var contentTypeCombo = dojo.byId('contentTypeForGet');
             dojo.xhrGet({
                 url:'/collections/' + collectionIdField.value,
                 handleAs:"text",
                 headers: {
                     "Content-Type": "text/plain",
-                    "Accept": "application/json",
+                    "Accept": contentTypeCombo.value,
                     "Content-Encoding": "utf-8"
                 },
+                preventCache: true,
+                timeout: 5000,
+                load: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
+                },
+                error: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
+                }
+            });
+        }
+
+        function updateCollection() {
+            var responseElement = dojo.byId('jsonResponseUpdate');
+            var contentTypeCombo = dojo.byId('contentTypeForUpdate');
+            var collectionIdField = dojo.byId('collectionIdForUpdate');
+            var jsonContent = dojo.byId('updateCollectionJson').innerHTML;
+            dojo.xhrPut({
+                url:'/collections/' + collectionIdField.value,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": contentTypeCombo.value,
+                    "Content-Encoding": "utf-8"
+                },
+                preventCache: true,
+                putData: jsonContent,
+                encoding: "utf-8",
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
@@ -134,12 +164,12 @@
         <br/>
         <b>Update Collection from JSON</b>
         <br/>
+        Enter Collection Id: <input id="collectionIdForUpdate" name="collectionIdForUpdate" type="text"/>
+        <br/>
         Return Content-Type <select id="contentTypeForUpdate" name="contentTypeForUpdate">
         <option value="application/atom+xml" selected="selected">application/atom+xml</option>
         <option value="application/json">application/json</option>
     </select>
-        <br/>
-        Enter Collection Id: <input id="collectionIdForUpdate" name="collectionIdForUpdate" type="text"/>
         <br/>
         <textarea rows="8" cols="100" id="updateCollectionJson"></textarea>
         <br/>
