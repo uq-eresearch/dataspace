@@ -93,14 +93,23 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     }
 
     @Override
-    public void putMedia(Party party, MimeType contentType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
+    public ResponseContext putEntry(RequestContext request) {
         logger.info("Updating Party as Media Entry");
 
-        if (contentType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            InputStream inputStream = null;
+            try {
+                inputStream = request.getInputStream();
+            } catch (IOException e) {
+                logger.fatal("Cannot create inputstream from request.", e);
+            }
             String partyAsJsonString = getJsonString(inputStream);
+            String uriKey = CollectionAdapterHelper.getEntryID(request);
+            Party party = partyDao.getByKey(uriKey);
             assembleParty(party, partyAsJsonString);
             partyDao.update(party);
         }
+        return getEntry(request);
     }
 
     @Override
@@ -129,12 +138,13 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
             responseContext.setContentType(Constants.JSON_MIMETYPE);
             responseContext.setWriter(new JSONWriter());
-        } else if (request.getAccept().equals(Constants.ATOM_MIMETYPE)) {
+        } else {
             responseContext.setContentType(Constants.ATOM_MIMETYPE);
             responseContext.setWriter(new PrettyWriter());
-        } else {
-            return ProviderHelper.notfound(request);
         }
+//        else {
+//            return ProviderHelper.notfound(request);
+//        }
         return responseContext;
     }
 
