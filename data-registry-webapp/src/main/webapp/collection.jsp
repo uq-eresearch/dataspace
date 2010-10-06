@@ -26,6 +26,7 @@
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
+                    dijit.byId('fv1').setFeedFromUrl("collections");
                     return response;
                 },
                 error: function(response, ioArgs) {
@@ -79,6 +80,7 @@
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
+                    dijit.byId('fv1').setFeedFromUrl("collections");
                     return response;
                 },
                 error: function(response, ioArgs) {

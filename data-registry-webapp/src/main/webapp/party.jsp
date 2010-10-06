@@ -25,6 +25,7 @@
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
+                    dijit.byId('fv1').setFeedFromUrl("parties");
                     return response;
                 },
                 error: function(response, ioArgs) {
@@ -76,6 +77,7 @@
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
+                    dijit.byId('fv1').setFeedFromUrl("parties");
                     return response;
                 },
                 error: function(response, ioArgs) {
@@ -104,8 +106,7 @@
 
             <div dojoType="dijit.layout.ContentPane"
                  id="ViewPaneID"
-                 executeScripts="true"
-                    >
+                 executeScripts="true">
                 <div dojoType="dojox.atom.widget.FeedViewer"
                      id="fv1"
                      url="parties"
