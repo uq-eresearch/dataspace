@@ -17,7 +17,10 @@
             dojo.xhrPost({
                 url:'/collections',
                 contentType:"application/json",
-                postData: dojo.byId('collectionJson').innerHTML,
+                headers: {
+                    "Cache-Control": "no-cache"
+                },
+                postData: dojo.byId('collectionJson').value,
                 encoding: "utf-8",
                 preventCache: true,
                 timeout: 5000,
@@ -61,17 +64,18 @@
             var responseElement = dojo.byId('jsonResponseUpdate');
             var contentTypeCombo = dojo.byId('contentTypeForUpdate');
             var collectionIdField = dojo.byId('collectionIdForUpdate');
-            var jsonContent = dojo.byId('updateCollectionJson').innerHTML;
+            var jsonContent = dojo.byId('updateCollectionJson').value;
+            alert(jsonContent);
             dojo.xhrPut({
                 url:'/collections/' + collectionIdField.value,
                 headers: {
+                    "Cache-Control": "no-cache",
                     "Content-Type": "application/json",
                     "Accept": contentTypeCombo.value,
                     "Content-Encoding": "utf-8"
                 },
                 preventCache: true,
                 putData: jsonContent,
-                encoding: "utf-8",
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
@@ -171,7 +175,7 @@
         <option value="application/json">application/json</option>
     </select>
         <br/>
-        <textarea rows="8" cols="100" id="updateCollectionJson"></textarea>
+        <textarea rows="8" cols="100" id="updateCollectionJson" name="updateCollectionJson"></textarea>
         <br/>
         <input type="button" id="button" value="Update Collection" onclick="updateCollection()"/>
         <pre id="jsonResponseUpdate"></pre>

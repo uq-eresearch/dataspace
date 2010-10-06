@@ -19,7 +19,7 @@
             dojo.xhrPost({
                 url:'/parties',
                 contentType:"application/json",
-                postData: dojo.byId('partyJson').innerHTML,
+                postData: dojo.byId('partyJson').value,
                 encoding: "utf-8",
                 preventCache: true,
                 timeout: 5000,
@@ -62,17 +62,17 @@
             var responseElement = dojo.byId('jsonResponseUpdate');
             var contentTypeCombo = dojo.byId('contentTypeForUpdate');
             var partyIdField = dojo.byId('partyIdForUpdate');
-            var jsonContent = dojo.byId('updatePartyJson').innerHTML;
+            var jsonContent = dojo.byId('updatePartyJson').value;
             dojo.xhrPut({
                 url:'/parties/' + partyIdField.value,
+                handleAs:"text",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": contentTypeCombo.value,
                     "Content-Encoding": "utf-8"
                 },
-                preventCache: true,
                 putData: jsonContent,
-                encoding: "utf-8",
+                preventCache: true,
                 timeout: 5000,
                 load: function(response, ioArgs) {
                     responseElement.innerHTML = response;
