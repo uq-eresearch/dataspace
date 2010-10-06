@@ -142,9 +142,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             responseContext.setContentType(Constants.ATOM_MIMETYPE);
             responseContext.setWriter(new PrettyWriter());
         }
-//        else {
-//            return ProviderHelper.notfound(request);
-//        }
         return responseContext;
     }
 

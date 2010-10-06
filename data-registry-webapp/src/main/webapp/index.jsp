@@ -2,7 +2,7 @@
 <head>
     <jsp:include page="include/header.jsp"/>
 </head>
-<body class="tundra">
+<body>
 <div class="wrapper">
     <jsp:include page="include/title.jsp"/>
 

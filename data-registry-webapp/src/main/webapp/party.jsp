@@ -1,45 +1,7 @@
 <html>
 <head>
     <jsp:include page="include/header.jsp"/>
-    <link type="text/css" href="http://o.aolcdn.com/dojo/1.4.0/dojo/resources/dojo.css"/>
-    <link type="text/css"
-          href="http://archive.dojotoolkit.org/nightly/dojotoolkit/dojox/atom/widget/templates/css/EntryHeader.css"/>
 
-    <link type="text/css"
-          href="http://archive.dojotoolkit.org/nightly/dojotoolkit/dojox/atom/widget/templates/css/HtmlFeedViewer.css"/>
-    <link type="text/css"
-          href="http://archive.dojotoolkit.org/nightly/dojotoolkit/dojox/atom/widget/templates/css/HtmlFeedViewerGrouping.css"/>
-    <link type="text/css"
-          href="http://archive.dojotoolkit.org/nightly/dojotoolkit/dojox/atom/widget/templates/css/HtmlFeedViewerEntry.css"/>
-    <link type="text/css"
-          href="http://archive.dojotoolkit.org/nightly/dojotoolkit/dojox/atom/widget/templates/css/HtmlFeedEntryViewer.css"/>
-
-
-    <style type="text/css">
-        #ViewPane {
-            overflow: auto;
-            overflow-x: auto;
-            overflow-y: auto;
-            padding: 5px;
-            font-family: Myriad, Tahoma, Verdana, sans-serif;
-            font-size: small; /*background: lightgrey;*/
-            background: #FFF;
-            word-wrap: normal;
-        }
-
-        #EditorPane {
-            overflow: auto; /* We want scrolling*/
-            overflow-x: auto;
-            overflow-y: auto;
-            padding: 0px;
-            background: #FFF;
-        }
-
-        #ActionContainer {
-            height: 400px;
-        }
-
-    </style>
 
     <script type="text/javascript">
         dojo.require("dojox.atom.io.Connection");
@@ -74,12 +36,13 @@
         function getParty() {
             var responseElement = dojo.byId('jsonResponseGet');
             var partyIdField = dojo.byId('partyId');
+            var contentTypeCombo = dojo.byId('contentTypeForGet');
             dojo.xhrGet({
                 url:'/parties/' + partyIdField.value,
                 handleAs:"text",
                 headers: {
                     "Content-Type": "text/plain",
-                    "Accept": "application/json",
+                    "Accept": contentTypeCombo.value,
                     "Content-Encoding": "utf-8"
                 },
                 timeout: 5000,
@@ -93,6 +56,33 @@
                 }
             });
         }
+        function updateParty() {
+            var responseElement = dojo.byId('jsonResponseUpdate');
+            var contentTypeCombo = dojo.byId('contentTypeForUpdate');
+            var partyIdField = dojo.byId('partyIdForUpdate');
+            var jsonContent = dojo.byId('updatePartyJson').innerHTML;
+            dojo.xhrPut({
+                url:'/parties/' + partyIdField.value,
+                contentType:"application/json",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": contentTypeCombo.value,
+                    "Content-Encoding": "utf-8"
+                },
+                putData: jsonContent,
+                encoding: "utf-8",
+                timeout: 5000,
+                load: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
+                },
+                error: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
+                }
+            });
+        }
+
 
     </script>
 </head>
@@ -131,7 +121,7 @@
                      enableMenu="true"
                      enableMenuFade="true"
                      enableEdit="true"
-                     displayEntrySections="title,authors,summary,content"
+                     displayEntrySections="id,title,authors,content,summary"
                      entrySelectionTopic="atomfeed.entry.topic">
                 </div>
 
@@ -145,9 +135,9 @@
         <b>Create Party From JSON</b>
         <br/>
         <textarea rows="8" cols="100" id="partyJson">{
-            "id":"urn:uuid:335FE3DE7267B37B791285306505116",
-            "title":"Party 570",
-            "summary":"This is a description of New Party 570",
+            "id":"randomid2308322",
+            "title":"Tea Party",
+            "summary":"Tax Enough Already",
             "content":"Optional Content",
             "subject":[],
             "authors":["Abdul Alabri","Nigel Ward"]
@@ -158,9 +148,14 @@
 
         <br/>
         <br/>
-        <b>Get Party as JSON</b>
+        <b>Get Party</b>
         <br/>
         Enter Party Id: <input id="partyId" name="partyId" type="text"/>
+        <br/>
+        Return Content-Type <select id="contentTypeForGet" name="contentTypeForGet">
+        <option value="application/atom+xml" selected="selected">application/atom+xml</option>
+        <option value="application/json">application/json</option>
+    </select>
         <br/>
         <input type="button" id="button" value="Get Party" onclick="getParty()"/>
         <pre id="jsonResponseGet"></pre>
@@ -169,14 +164,18 @@
         <br/>
         <b>Update Party from JSON</b>
         <br/>
+        Return Content-Type <select id="contentTypeForUpdate" name="contentTypeForUpdate">
+        <option value="application/atom+xml" selected="selected">application/atom+xml</option>
+        <option value="application/json">application/json</option>
+    </select>
+        <br/>
+        Enter Party Id: <input id="partyIdForUpdate" name="partyIdForUpdate" type="text"/>
+        <br/>
         <textarea rows="8" cols="100" id="updatePartyJson"></textarea>
         <br/>
         <input type="button" id="button" value="Update Party" onclick="updateParty()"/>
         <pre id="jsonResponseUpdate"></pre>
 
-
-        <%--<b>As XML (After modification)</b>--%>
-        <%--<pre id="simpleModifiedAtomXml"></pre>--%>
     </div>
 </div>
 <jsp:include page="include/footer.jsp"/>
