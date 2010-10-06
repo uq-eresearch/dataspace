@@ -1,14 +1,22 @@
 package net.metadata.dataspace.atom.adapter;
 
+import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
+import net.metadata.dataspace.util.CollectionAdapterHelper;
+import org.apache.abdera.Abdera;
+import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
+import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Person;
+import org.apache.abdera.parser.stax.util.PrettyWriter;
+import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
+import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
@@ -111,6 +119,32 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     @Override
     public Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
         return collectionDao.getByKey(key);
+    }
+
+    @Override
+    public ResponseContext getEntry(RequestContext request) {
+
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Collection collection = collectionDao.getByKey(uriKey);
+        Abdera abdera = new Abdera();
+        Entry entry = abdera.newEntry();
+        entry.setId(collection.getUriKey());
+        entry.setTitle(collection.getTitle());
+        entry.setSummary(collection.getSummary());
+        entry.setUpdated(collection.getUpdated());
+
+        ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, collection.getUpdated())
+                .setEntityTag(ProviderHelper.calculateEntityTag(entry));
+        if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
+            responseContext.setContentType(Constants.JSON_MIMETYPE);
+            responseContext.setWriter(new JSONWriter());
+        } else if (request.getAccept().equals(Constants.ATOM_MIMETYPE)) {
+            responseContext.setContentType(Constants.ATOM_MIMETYPE);
+            responseContext.setWriter(new PrettyWriter());
+        } else {
+            return ProviderHelper.notfound(request);
+        }
+        return responseContext;
     }
 
     public List<Person> getAuthors(Collection collection, RequestContext request) throws ResponseContextException {

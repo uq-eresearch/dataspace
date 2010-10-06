@@ -1,19 +1,20 @@
 package net.metadata.dataspace.atom.adapter;
 
+import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.model.Party;
+import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.iri.IRI;
-import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Person;
+import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
-import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
@@ -38,7 +39,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     private Logger logger = Logger.getLogger(getClass());
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
-    private final String JSON_MIMETYPE = "application/json";
 
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
@@ -62,25 +62,10 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     public Party postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
         logger.info("Persisting Party as Media Entry");
 
-        if (mimeType.getBaseType().equals(JSON_MIMETYPE)) {
-
-            String jsonString = getJsonString(inputStream);
-
+        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             Party party = new Party();
-            try {
-                JSONObject jsonObj = new JSONObject(jsonString);
-                party.setTitle(jsonObj.getString("title"));
-                party.setSummary(jsonObj.getString("summary"));
-                party.setUpdated(new Date());
-                JSONArray authors = jsonObj.getJSONArray("authors");
-                Set<String> persons = new HashSet<String>();
-                for (int i = 0; i < authors.length(); i++) {
-                    persons.add(authors.getString(i));
-                }
-                party.setAuthors(persons);
-            } catch (JSONException ex) {
-                logger.fatal("Could not assemble party from JSON object", ex);
-            }
+            String partyAsJsonString = getJsonString(inputStream);
+            assembleParty(party, partyAsJsonString);
             partyDao.save(party);
             return party;
         }
@@ -94,7 +79,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getContentType(Party party) {
-        return JSON_MIMETYPE;
+        return Constants.JSON_MIMETYPE;
     }
 
     @Override
@@ -111,24 +96,9 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     public void putMedia(Party party, MimeType contentType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
         logger.info("Updating Party as Media Entry");
 
-        if (contentType.getBaseType().equals(JSON_MIMETYPE)) {
-
-            String jsonString = getJsonString(inputStream);
-
-            try {
-                JSONObject jsonObj = new JSONObject(jsonString);
-                party.setTitle(jsonObj.getString("title"));
-                party.setSummary(jsonObj.getString("summary"));
-                party.setUpdated(new Date());
-                JSONArray authors = jsonObj.getJSONArray("authors");
-                Set<String> persons = new HashSet<String>();
-                for (int i = 0; i < authors.length(); i++) {
-                    persons.add(authors.getString(i));
-                }
-                party.setAuthors(persons);
-            } catch (JSONException ex) {
-                logger.fatal("Could not assemble party from JSON object", ex);
-            }
+        if (contentType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            String partyAsJsonString = getJsonString(inputStream);
+            assembleParty(party, partyAsJsonString);
             partyDao.update(party);
         }
     }
@@ -140,46 +110,32 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public Party getEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        logger.info("Accept: " + requestContext.getAccept());
-//        if (requestContext.getAccept().equals(JSON_MIMETYPE)) {
-//            partyDao.getByKey(key)
-//        }
         return partyDao.getByKey(key);
     }
 
     public ResponseContext getEntry(RequestContext request) {
-        logger.info("Accept: " + request.getAccept());
-        if (request.getAccept().equals(JSON_MIMETYPE)) {
-            String uriKey = getEntryID(request);
-            Party party = partyDao.getByKey(uriKey);
-            Abdera abdera = new Abdera();
-            Entry entry = abdera.newEntry();
-            entry.setId(party.getUriKey());
-            entry.setTitle(party.getTitle());
-            entry.setSummary(party.getSummary());
-            entry.setUpdated(party.getUpdated());
 
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Party party = partyDao.getByKey(uriKey);
+        Abdera abdera = new Abdera();
+        Entry entry = abdera.newEntry();
+        entry.setId(party.getUriKey());
+        entry.setTitle(party.getTitle());
+        entry.setSummary(party.getSummary());
+        entry.setUpdated(party.getUpdated());
 
-            if (entry != null) {
-
-                ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, party.getUpdated()).setEntityTag(ProviderHelper
-                        .calculateEntityTag(entry));
-                responseContext.setContentType("application/json");
-                responseContext.setWriter(new JSONWriter());
-                return responseContext;
-            } else {
-                return ProviderHelper.notfound(request);
-            }
+        ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, party.getUpdated())
+                .setEntityTag(ProviderHelper.calculateEntityTag(entry));
+        if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
+            responseContext.setContentType(Constants.JSON_MIMETYPE);
+            responseContext.setWriter(new JSONWriter());
+        } else if (request.getAccept().equals(Constants.ATOM_MIMETYPE)) {
+            responseContext.setContentType(Constants.ATOM_MIMETYPE);
+            responseContext.setWriter(new PrettyWriter());
+        } else {
+            return ProviderHelper.notfound(request);
         }
-        return null;
-    }
-
-
-    public String getEntryID(RequestContext request) {
-        if (request.getTarget().getType() != TargetType.TYPE_ENTRY)
-            return null;
-        String[] segments = request.getUri().toString().split("/");
-        return UrlEncoding.decode(segments[segments.length - 1]);
+        return responseContext;
     }
 
 
@@ -243,6 +199,11 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         return "Parties";
     }
 
+    @Override
+    public String[] getAccepts(RequestContext request) {
+        return new String[]{Constants.ATOM_MIMETYPE + ";type=entry", Constants.JSON_MIMETYPE};
+    }
+
     private Set<String> getAuthors(List<Person> persons) {
         Set<String> authors = new HashSet<String>();
         for (Person person : persons) {
@@ -275,4 +236,20 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         return jsonString;
     }
 
+    private void assembleParty(Party party, String jsonString) {
+        try {
+            JSONObject jsonObj = new JSONObject(jsonString);
+            party.setTitle(jsonObj.getString("title"));
+            party.setSummary(jsonObj.getString("summary"));
+            party.setUpdated(new Date());
+            JSONArray authors = jsonObj.getJSONArray("authors");
+            Set<String> persons = new HashSet<String>();
+            for (int i = 0; i < authors.length(); i++) {
+                persons.add(authors.getString(i));
+            }
+            party.setAuthors(persons);
+        } catch (JSONException ex) {
+            logger.fatal("Could not assemble party from JSON object", ex);
+        }
+    }
 }

@@ -51,46 +51,6 @@
         dojo.require("dijit.layout.SplitContainer");
         dojo.require("dojo.parser");
 
-        //        var party = {
-        //            "id":"urn:uuid:335FE3DE7267B37B791285306505116",
-        //            "title":"New Party 570",
-        //            "summary":"This is a description of New Party 570",
-        //            "content":"Optional Content",
-        //            "updated":"2010-09-24T05:35:05.140Z",
-        //            "authors":[
-        //                {
-        //                    "name":"Abdul Alabri"
-        //                },
-        //                {
-        //                    "name":"Nigel Ward"
-        //                }
-        //            ],
-        //            "extensions":[
-        //                {
-        //                    "name":"collectorOf",
-        //                    "attributes":{
-        //                        "xmlns":"http://http://www.w3.org/2005/Atom",
-        //                        "value":"a51f87e4-d040-4ecb-b8ed-0f6043dabdc1"
-        //                    },
-        //                    "children":[
-        //                    ]
-        //                }
-        //            ]
-        //        };
-
-        //        function loadParties() {
-        //            var conn = new dojox.atom.io.Connection();
-        //            conn.getFeed("party/parties", function(feed) {
-        //                //Emit both the XML (As reconstructed from the Feed object and as a JSON form.
-        //                var xml = dojo.byId("partiesXml");
-        //                xml.innerHTML = "";
-        //                xml.appendChild(dojo.doc.createTextNode(feed.toString()));
-        //
-        //            }, function(err) {
-        //                console.debug(err);
-        //            });
-        //        }
-
         function addCollection() {
             var responseElement = dojo.byId('serverResponse');
             dojo.xhrPost({
@@ -109,7 +69,29 @@
                 }
             });
         }
-        //        dojo.addOnLoad(loadParties);
+
+        function getCollection() {
+            var responseElement = dojo.byId('jsonResponseGet');
+            var collectionIdField = dojo.byId('collectionId');
+            dojo.xhrGet({
+                url:'/collections/' + collectionIdField.value,
+                handleAs:"text",
+                headers: {
+                    "Content-Type": "text/plain",
+                    "Accept": "application/json",
+                    "Content-Encoding": "utf-8"
+                },
+                timeout: 5000,
+                load: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
+                },
+                error: function(response, ioArgs) {
+                    responseElement.innerHTML = response;
+                    return response;
+                }
+            });
+        }
     </script>
 </head>
 <body class="tundra">
@@ -174,6 +156,28 @@
         <br/>
         <input type="button" id="button" value="Add Collection" onclick="addCollection()"/>
         <pre id="serverResponse"></pre>
+
+        <br/>
+        <br/>
+        <b>Get Collection as JSON</b>
+        <br/>
+        Enter Collection Id: <input id="collectionId" name="collectionId" type="text"/>
+        <br/>
+        <input type="button" id="button" value="Get Collection" onclick="getCollection()"/>
+        <pre id="jsonResponseGet"></pre>
+
+
+        <br/>
+        <b>Update Collection from JSON</b>
+        <br/>
+        <textarea rows="8" cols="100" id="updateCollectionJson"></textarea>
+        <br/>
+        <input type="button" id="button" value="Update Collection" onclick="updateCollection()"/>
+        <pre id="jsonResponseUpdate"></pre>
+
+
+        <%--<b>As XML (After modification)</b>--%>
+        <%--<pre id="simpleModifiedAtomXml"></pre>--%>
         <%--<b>As XML (After modification)</b>--%>
         <%--<pre id="simpleModifiedAtomXml"></pre>--%>
     </div>
