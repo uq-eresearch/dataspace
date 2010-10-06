@@ -64,29 +64,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         if (mimeType.getBaseType().equals("application/json")) {
             String jsonString = getJsonString(inputStream);
             Collection collection = new Collection();
-            try {
-                JSONObject jsonObj = new JSONObject(jsonString);
-                collection.setTitle(jsonObj.getString("title"));
-                collection.setSummary(jsonObj.getString("summary"));
-                collection.setUpdated(new Date());
-                collection.setLocation(jsonObj.getString("location"));
-
-                JSONArray collectors = jsonObj.getJSONArray("collector");
-                Set<Party> parties = new HashSet<Party>();
-                for (int i = 0; i < collectors.length(); i++) {
-                    parties.add(partyDao.getByKey(collectors.getString(i)));
-                }
-                collection.setCollector(parties);
-
-                JSONArray authors = jsonObj.getJSONArray("authors");
-                Set<String> persons = new HashSet<String>();
-                for (int i = 0; i < authors.length(); i++) {
-                    persons.add(authors.getString(i));
-                }
-                collection.setAuthors(persons);
-            } catch (JSONException ex) {
-                logger.fatal("Could not assemble collection from JSON object", ex);
-            }
+            assembleCollectionFromJson(collection, jsonString);
             collectionDao.save(collection);
             return collection;
         }
@@ -100,7 +78,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public String getContentType(Collection collection) {
-        return "application/json";
+        return Constants.JSON_MIMETYPE;
     }
 
 
@@ -110,6 +88,26 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
         collectionDao.update(collection);
     }
+
+    @Override
+    public ResponseContext putEntry(RequestContext request) {
+        logger.info("Updating Collection as Media Entry");
+        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            InputStream inputStream = null;
+            try {
+                inputStream = request.getInputStream();
+            } catch (IOException e) {
+                logger.fatal("Cannot create inputstream from request.", e);
+            }
+            String collectionAsJsonString = getJsonString(inputStream);
+            String uriKey = CollectionAdapterHelper.getEntryID(request);
+            Collection collection = collectionDao.getByKey(uriKey);
+            assembleCollectionFromJson(collection, collectionAsJsonString);
+            collectionDao.update(collection);
+        }
+        return getEntry(request);
+    }
+
 
     @Override
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
@@ -138,11 +136,9 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
             responseContext.setContentType(Constants.JSON_MIMETYPE);
             responseContext.setWriter(new JSONWriter());
-        } else if (request.getAccept().equals(Constants.ATOM_MIMETYPE)) {
+        } else {
             responseContext.setContentType(Constants.ATOM_MIMETYPE);
             responseContext.setWriter(new PrettyWriter());
-        } else {
-            return ProviderHelper.notfound(request);
         }
         return responseContext;
     }
@@ -177,7 +173,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public String getName(Collection collection) throws ResponseContextException {
-        return collection.getTitle();
+        return collection.getUriKey();
     }
 
     @Override
@@ -203,6 +199,11 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     @Override
     public String getTitle(RequestContext requestContext) {
         return "Collections";
+    }
+
+    @Override
+    public String[] getAccepts(RequestContext request) {
+        return new String[]{Constants.ATOM_MIMETYPE + ";type=entry", Constants.JSON_MIMETYPE};
     }
 
     private Set<String> getAuthors(List<Person> persons) {
@@ -237,4 +238,29 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         return jsonString;
     }
 
+    private void assembleCollectionFromJson(Collection collection, String jsonString) {
+        try {
+            JSONObject jsonObj = new JSONObject(jsonString);
+            collection.setTitle(jsonObj.getString("title"));
+            collection.setSummary(jsonObj.getString("summary"));
+            collection.setUpdated(new Date());
+            collection.setLocation(jsonObj.getString("location"));
+
+            JSONArray collectors = jsonObj.getJSONArray("collector");
+            Set<Party> parties = new HashSet<Party>();
+            for (int i = 0; i < collectors.length(); i++) {
+                parties.add(partyDao.getByKey(collectors.getString(i)));
+            }
+            collection.setCollector(parties);
+
+            JSONArray authors = jsonObj.getJSONArray("authors");
+            Set<String> persons = new HashSet<String>();
+            for (int i = 0; i < authors.length(); i++) {
+                persons.add(authors.getString(i));
+            }
+            collection.setAuthors(persons);
+        } catch (JSONException ex) {
+            logger.fatal("Could not assemble collection from JSON object", ex);
+        }
+    }
 }
