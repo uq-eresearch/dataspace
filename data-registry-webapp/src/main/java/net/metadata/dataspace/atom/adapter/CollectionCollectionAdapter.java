@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.activation.MimeType;
+import javax.xml.namespace.QName;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +44,9 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
+    private static final QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+
+
     @Override
     public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
                                 Content content, RequestContext requestContext) throws ResponseContextException {
@@ -51,6 +55,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         collection.setSummary(summary);
         collection.setUpdated(updated);
         collection.setAuthors(getAuthors(authors));
+
         collectionDao.save(collection);
 
         return collection;
@@ -130,6 +135,8 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         entry.setTitle(collection.getTitle());
         entry.setSummary(collection.getSummary());
         entry.setUpdated(collection.getUpdated());
+        entry.addSimpleExtension(LOCATION_QNAME, collection.getLocation());
+        entry.addLink(ID_PREFIX + "collections/" + collection.getUriKey(), "alternate");
 
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, collection.getUpdated())
                 .setEntityTag(ProviderHelper.calculateEntityTag(entry));
@@ -173,7 +180,8 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public String getName(Collection collection) throws ResponseContextException {
-        return collection.getUriKey();
+//        return collection.getUriKey();
+        return ID_PREFIX + "collections/" + collection.getUriKey();
     }
 
     @Override
@@ -200,6 +208,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     public String getTitle(RequestContext requestContext) {
         return "Collections";
     }
+
 
     @Override
     public String[] getAccepts(RequestContext request) {

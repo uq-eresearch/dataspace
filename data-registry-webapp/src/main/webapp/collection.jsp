@@ -123,7 +123,7 @@
                      enableMenu="true"
                      enableMenuFade="true"
                      enableEdit="true"
-                     displayEntrySections="id,title,authors,summary,content"
+                     displayEntrySections="title,authors,id,updated,summary,content,location"
                      entrySelectionTopic="atomfeed.entry.topic">
                 </div>
 
@@ -131,23 +131,58 @@
         </div>
 
 
-        <%--<textarea rows="15" cols="100" id="partiesXml"></textarea>--%>
+        <br/>
+        <table>
+            <tr>
+                <th>Title</th>
+                <td><input type="text" id="collectionTitleInput" name="collectionTitleInput"/></td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td><input type="text" id="collectionLocationInput" name="collectionLocationInput"/></td>
+            </tr>
+            <tr>
+                <th>Subject:</th>
+                <td>Vocabulary <input type="text" id="collectionSubjectVocabularyInput"
+                                      name="collectionSubjectVocabularyInput"/> Value <input type="text"
+                                                                                             id="collectionSubjectValueInput"
+                                                                                             name="collectionSubject1ValueInput"/>
+                </td>
+            </tr>
+            <tr>
+                <th>Authors</th>
+                <td><input type="text" id="collectionAuthorsInput" name="collectionAuthorsInput"/></td>
+            </tr>
+            <tr>
+                <th>Collector</th>
+                <td><input type="text" id="collectionCollectorInput" name="collectionCollectorInput"/></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td><input type="button" id="collectionSubmitButton" name="collectionSubmitButton"
+                           value="Submit Collection" onclick="return false;"/></td>
+            </tr>
+
+        </table>
+        <pre id="serverResponseSubmitCollection"></pre>
 
         <br/>
         <b>Create Collection From JSON</b>
         <br/>
         <textarea rows="8" cols="100" id="collectionJson">{
             "id":"randomid",
-            "title":"Collection Name",
-            "summary":"Collection Description",
-            "content":"Optional Content",
-            "location":"http://dataspace.uq.edu.au/location",
-            "subject":[],
+            "title":"Money Collection",
+            "summary":"This is a cool collection of non-stone money",
+            "location":"http://e-research.sbs.uq.edu.au/client/Stats.html#metadata",
+            "subject":[
+            {"vocabulary": "anzsrc-for", "value": "160499"},
+            {"vocabulary": "anzsrc-seo","value": "910102"}
+            ],
             "collector":[],
             "authors":["John Smith","Joe Blog"]
             }</textarea>
         <br/>
-        <input type="button" id="button" value="Add Collection" onclick="addCollection()"/>
+        <input type="button" id="addCollectionButton" value="Add Collection" onclick="addCollection()"/>
         <pre id="serverResponse"></pre>
 
         <br/>
@@ -163,7 +198,7 @@
         <option value="application/json">application/json</option>
     </select>
         <br/>
-        <input type="button" id="button" value="Get Collection" onclick="getCollection()"/>
+        <input type="button" id="getCollectionButton" value="Get Collection" onclick="getCollection()"/>
         <pre id="jsonResponseGet"></pre>
 
 
@@ -179,7 +214,7 @@
         <br/>
         <textarea rows="8" cols="100" id="updateCollectionJson" name="updateCollectionJson"></textarea>
         <br/>
-        <input type="button" id="button" value="Update Collection" onclick="updateCollection()"/>
+        <input type="button" id="updateCollectionButton" value="Update Collection" onclick="updateCollection()"/>
         <pre id="jsonResponseUpdate"></pre>
 
     </div>
