@@ -26,8 +26,8 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 
         //collections collection and workspace
         CollectionCollectionAdapter collectionCollectionAdapter = new CollectionCollectionAdapter();
-//        String collectionsPath = "collections";
-//        collectionCollectionAdapter.setHref(collectionsPath);
+        String collectionsPath = "collections";
+        collectionCollectionAdapter.setHref(collectionsPath);
         partyWorkSpace.addCollection(collectionCollectionAdapter);
 
         String base = "/";

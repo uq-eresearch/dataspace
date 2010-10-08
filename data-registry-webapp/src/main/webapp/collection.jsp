@@ -131,40 +131,40 @@
         </div>
 
 
-        <br/>
-        <table>
-            <tr>
-                <th>Title</th>
-                <td><input type="text" id="collectionTitleInput" name="collectionTitleInput"/></td>
-            </tr>
-            <tr>
-                <th>Location</th>
-                <td><input type="text" id="collectionLocationInput" name="collectionLocationInput"/></td>
-            </tr>
-            <tr>
-                <th>Subject:</th>
-                <td>Vocabulary <input type="text" id="collectionSubjectVocabularyInput"
-                                      name="collectionSubjectVocabularyInput"/> Value <input type="text"
-                                                                                             id="collectionSubjectValueInput"
-                                                                                             name="collectionSubject1ValueInput"/>
-                </td>
-            </tr>
-            <tr>
-                <th>Authors</th>
-                <td><input type="text" id="collectionAuthorsInput" name="collectionAuthorsInput"/></td>
-            </tr>
-            <tr>
-                <th>Collector</th>
-                <td><input type="text" id="collectionCollectorInput" name="collectionCollectorInput"/></td>
-            </tr>
-            <tr>
-                <th></th>
-                <td><input type="button" id="collectionSubmitButton" name="collectionSubmitButton"
-                           value="Submit Collection" onclick="return false;"/></td>
-            </tr>
+        <%--<br/>--%>
+        <%--<table>--%>
+        <%--<tr>--%>
+        <%--<th>Title</th>--%>
+        <%--<td><input type="text" id="collectionTitleInput" name="collectionTitleInput"/></td>--%>
+        <%--</tr>--%>
+        <%--<tr>--%>
+        <%--<th>Location</th>--%>
+        <%--<td><input type="text" id="collectionLocationInput" name="collectionLocationInput"/></td>--%>
+        <%--</tr>--%>
+        <%--<tr>--%>
+        <%--<th>Subject:</th>--%>
+        <%--<td>Vocabulary <input type="text" id="collectionSubjectVocabularyInput"--%>
+        <%--name="collectionSubjectVocabularyInput"/> Value <input type="text"--%>
+        <%--id="collectionSubjectValueInput"--%>
+        <%--name="collectionSubject1ValueInput"/>--%>
+        <%--</td>--%>
+        <%--</tr>--%>
+        <%--<tr>--%>
+        <%--<th>Authors</th>--%>
+        <%--<td><input type="text" id="collectionAuthorsInput" name="collectionAuthorsInput"/></td>--%>
+        <%--</tr>--%>
+        <%--<tr>--%>
+        <%--<th>Collector</th>--%>
+        <%--<td><input type="text" id="collectionCollectorInput" name="collectionCollectorInput"/></td>--%>
+        <%--</tr>--%>
+        <%--<tr>--%>
+        <%--<th></th>--%>
+        <%--<td><input type="button" id="collectionSubmitButton" name="collectionSubmitButton"--%>
+        <%--value="Submit Collection" onclick="return false;"/></td>--%>
+        <%--</tr>--%>
 
-        </table>
-        <pre id="serverResponseSubmitCollection"></pre>
+        <%--</table>--%>
+        <%--<pre id="serverResponseSubmitCollection"></pre>--%>
 
         <br/>
         <b>Create Collection From JSON</b>

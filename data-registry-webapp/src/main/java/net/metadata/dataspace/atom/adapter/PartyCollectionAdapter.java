@@ -9,6 +9,7 @@ import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
+import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
@@ -57,6 +58,19 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         return party;
     }
 
+    @Override
+    public ResponseContext postEntry(RequestContext request) {
+
+        try {
+            Document<Entry> feed_doc = request.getDocument();
+            Entry root = feed_doc.getRoot();
+            System.out.println(root);
+        } catch (IOException e) {
+            logger.fatal("Invalid feed document", e);
+        }
+
+        return super.postEntry(request);
+    }
 
     @Override
     public Party postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {

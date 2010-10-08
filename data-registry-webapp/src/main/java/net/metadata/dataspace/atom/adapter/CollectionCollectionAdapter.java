@@ -4,19 +4,23 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
+import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
+import net.metadata.dataspace.model.Subject;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
+import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
+import org.apache.abdera.protocol.server.context.EmptyResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
@@ -42,9 +46,12 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     private Logger logger = Logger.getLogger(getClass());
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getCollectionDao();
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
+    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getSubjectDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
     private static final QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
 
     @Override
@@ -61,6 +68,81 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         return collection;
     }
 
+    @Override
+    public ResponseContext postEntry(RequestContext request) {
+
+        try {
+            Entry entry = getEntryFromRequest(request);
+            if (entry != null) {
+                //TODO we need to activate this validation later
+//                if (!ProviderHelper.isValidEntry(entry)) {
+//                    return new EmptyResponseContext(400);
+//                }
+
+                List<Element> extextensions = entry.getExtensions();
+                Map<String, String> extensionMap = getExtensionMap(extextensions);
+                entry.setUpdated(new Date());
+                Collection collection = new Collection();
+                collection.setTitle(entry.getTitle());
+                collection.setSummary(entry.getSummary());
+                collection.setUpdated(entry.getUpdated());
+                collection.setAuthors(getAuthors(entry.getAuthors()));
+                collection.setLocation(extensionMap.get("location"));
+//                Party collector = partyDao.getByKey(extensionMap.get("collector"));
+                Set<Party> collectors = new HashSet<Party>();
+//                collectors.add(collector);
+                collection.setCollector(collectors);
+
+
+                Set<Subject> subjects = new HashSet<Subject>();
+//                Set<Subject> subjects = getSubjects(extextensions);
+                collection.setSubjects(subjects);
+                collectionDao.save(collection);
+
+                entry.getIdElement().setValue(getId(collection));
+                IRI feedUri = getFeedIRI(collection, request);
+
+                String link = getLink(collection, feedUri, request);
+                entry.addLink(link, "edit");
+
+                String location = getLink(collection, feedUri, request, true);
+                return buildCreateEntryResponse(location, entry);
+            } else {
+                return new EmptyResponseContext(400);
+            }
+        } catch (ResponseContextException e) {
+            return createErrorResponse(e);
+        }
+    }
+
+    private Set<Subject> getSubjects(List<Element> elements) {
+        Set<Subject> subjects = new HashSet<Subject>();
+        for (Element sub : elements) {
+            if (sub.getQName().equals(SUBJECT_QNAME)) {
+                Subject subject = new Subject();
+                subject.setVocabulary(sub.getAttributeValue("vocabulary"));
+                subject.setValue(sub.getAttributeValue("value"));
+                subjectDao.save(subject);
+                subjects.add(subject);
+            }
+        }
+        return subjects;
+    }
+
+    private Map<String, String> getExtensionMap(List<Element> elements) {
+        Map<String, String> extensionsMap = new HashMap<String, String>();
+        for (Element element : elements) {
+            if (element.getElements().size() < 1) {
+                extensionsMap.put(element.getQName().getLocalPart(), element.getText());
+            }
+        }
+        return extensionsMap;
+    }
+
+    private IRI getFeedIRI(Collection entryObj, RequestContext request) {
+        String feedIri = getFeedIriForEntry(entryObj, request);
+        return new IRI(feedIri).trailingSlash();
+    }
 
     @Override
     public Collection postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
@@ -136,6 +218,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         entry.setSummary(collection.getSummary());
         entry.setUpdated(collection.getUpdated());
         entry.addSimpleExtension(LOCATION_QNAME, collection.getLocation());
+//        entry.addSimpleExtension(COLLECTOR_QNAME, collection.getCollector().iterator().next().getUriKey());
         entry.addLink(ID_PREFIX + "collections/" + collection.getUriKey(), "alternate");
 
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, collection.getUpdated())
