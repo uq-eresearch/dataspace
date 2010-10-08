@@ -42,9 +42,9 @@ public class CollectionDaoImplTest {
 
         Party party = PopulatorUtil.getParty();
         dataRegistryApplicationConfigurationImpl.getPartyDao().save(party);
-        Set<Party> collector = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
-        collector.add(party);
-        collection.setCollector(collector);
+        Set<Party> collectors = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
+        collectors.add(party);
+        collection.setCollector(collectors);
 
         collectionDao.save(collection);
 

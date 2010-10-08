@@ -2,7 +2,6 @@ package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
-import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.PopulatorUtil;
 import net.metadata.dataspace.model.Subject;
@@ -42,16 +41,16 @@ public class PartyDaoImplTest {
         party.setSubjects(subjects);
 
         //Add a collection
-        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
-        Set<Collection> collections = new HashSet<Collection>();
-        Collection collection = PopulatorUtil.getCollection();
-        Set<Party> collector = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
-        collector.add(party);
-        collection.setCollector(collector);
-        collectionDao.save(collection);
-        collections.add(collection);
+//        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
+//        Set<Collection> collections = new HashSet<Collection>();
+//        Collection collection = PopulatorUtil.getCollection();
+//        Set<Party> collector = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
+//        collector.add(party);
+//        collection.setCollector(collector);
+//        collectionDao.save(collection);
+//        collections.add(collection);
 
-        party.setCollectorof(collections);
+//        party.setCollectorof(collections);
 
         partyDao.save(party);
 
@@ -100,7 +99,7 @@ public class PartyDaoImplTest {
 
 
     @Test
-    public void testRemovingCollection() throws Exception {
+    public void testRemovingParty() throws Exception {
         testAddingParty();
 
         PartyDao partyDao = dataRegistryApplicationConfigurationImpl.getPartyDao();
