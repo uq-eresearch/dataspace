@@ -142,7 +142,7 @@
             "title":"Tea Party",
             "summary":"Tax Enough Already",
             "content":"Optional Content",
-            "subject":[],
+            "subject":[{"vocabulary": "anzsrc-for", "value": "160499"}],
             "authors":["Abdul Alabri","Nigel Ward"]
             }</textarea>
         <br/>

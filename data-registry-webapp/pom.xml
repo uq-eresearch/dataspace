@@ -122,11 +122,6 @@
 
     <dependencies>
         <!--Frameworks-->
-        <!--<dependency>-->
-        <!--<groupId>org.apache.abdera</groupId>-->
-        <!--<artifactId>abdera-spring</artifactId>-->
-        <!--<version>1.1</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>org.json</artifactId>
@@ -153,10 +148,6 @@
                     <artifactId>spring-context</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
-                <!--<exclusion>-->
-                <!--<groupId>com.google.code</groupId>-->
-                <!--<artifactId>couchdb4j</artifactId>-->
-                <!--</exclusion>-->
             </exclusions>
         </dependency>
 
@@ -175,8 +166,6 @@
             <artifactId>jetty-util</artifactId>
             <version>6.1.24</version>
         </dependency>
-
-
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -216,13 +205,6 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.8</version>
         </dependency>
-
-
-        <!--<dependency>-->
-        <!--<groupId>org.slf4j</groupId>-->
-        <!--<artifactId>slf4j-simple</artifactId>-->
-        <!--<version>1.6.1</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -269,6 +251,7 @@
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>3.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -152,7 +152,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             String jsonString = getJsonString(inputStream);
             Collection collection = new Collection();
             assembleCollectionFromJson(collection, jsonString);
-            collectionDao.save(collection);
+            collectionDao.update(collection);
             return collection;
         }
         return null;
@@ -213,11 +213,17 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         Collection collection = collectionDao.getByKey(uriKey);
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(collection.getUriKey());
+        entry.setId(ID_PREFIX + "collections/" + collection.getUriKey());
         entry.setTitle(collection.getTitle());
         entry.setSummary(collection.getSummary());
         entry.setUpdated(collection.getUpdated());
         entry.addSimpleExtension(LOCATION_QNAME, collection.getLocation());
+        Set<Subject> subjectSet = collection.getSubjects();
+        for (Subject sub : subjectSet) {
+            Element subjectElement = entry.addExtension(SUBJECT_QNAME);
+            subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
+            subjectElement.setAttributeValue("value", sub.getValue());
+        }
 //        entry.addSimpleExtension(COLLECTOR_QNAME, collection.getCollector().iterator().next().getUriKey());
         entry.addLink(ID_PREFIX + "collections/" + collection.getUriKey(), "alternate");
 
@@ -258,12 +264,11 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public String getId(Collection collection) throws ResponseContextException {
-        return collection.getUriKey();
+        return ID_PREFIX + "collections/" + collection.getUriKey();
     }
 
     @Override
     public String getName(Collection collection) throws ResponseContextException {
-//        return collection.getUriKey();
         return ID_PREFIX + "collections/" + collection.getUriKey();
     }
 
@@ -338,10 +343,23 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             collection.setUpdated(new Date());
             collection.setLocation(jsonObj.getString("location"));
 
+
+            JSONArray subjectArray = jsonObj.getJSONArray("subject");
+            Set<Subject> subjects = new HashSet<Subject>();
+            for (int i = 0; i < subjectArray.length(); i++) {
+                Subject subject = new Subject(subjectArray.getJSONObject(i).getString("vocabulary"), subjectArray.getJSONObject(i).getString("value"));
+                subjectDao.save(subject);
+                subjects.add(subject);
+            }
+            collection.setSubjects(subjects);
+
             JSONArray collectors = jsonObj.getJSONArray("collector");
             Set<Party> parties = new HashSet<Party>();
             for (int i = 0; i < collectors.length(); i++) {
-                parties.add(partyDao.getByKey(collectors.getString(i)));
+                Party party = partyDao.getByKey(collectors.getString(i));
+                if (party != null) {
+                    parties.add(party);
+                }
             }
             collection.setCollector(parties);
 

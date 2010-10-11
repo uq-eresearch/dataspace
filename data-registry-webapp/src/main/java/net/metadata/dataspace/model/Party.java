@@ -1,12 +1,10 @@
 package net.metadata.dataspace.model;
 
+import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
@@ -16,7 +14,13 @@ import java.util.Set;
  * Time: 3:32:39 PM
  */
 @Entity
-public class Party extends AbstractBaseEntity {
+public class Party {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     //AtomPub related
     @NotNull
@@ -39,6 +43,14 @@ public class Party extends AbstractBaseEntity {
     private Set<Collection> collectorof;
 
     public Party() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -88,4 +100,28 @@ public class Party extends AbstractBaseEntity {
     public void setCollectorof(Set<Collection> collectorof) {
         this.collectorof = collectorof;
     }
+
+    public String getUriKey() {
+        return DaoHelper.fromDecimalToOtherBase(31, getId().intValue());
+    }
+
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof AbstractBaseEntity)) {
+            return false;
+        }
+        AbstractBaseEntity other = (AbstractBaseEntity) obj;
+        return getId().equals(other.getId());
+    }
+
 }

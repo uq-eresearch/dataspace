@@ -1,5 +1,6 @@
 package net.metadata.dataspace.model;
 
+import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
@@ -13,7 +14,13 @@ import java.util.Set;
  * Time: 3:32:27 PM
  */
 @Entity
-public class Collection extends AbstractBaseEntity {
+public class Collection {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     //Attributes related to atompub
     @NotNull
@@ -40,6 +47,15 @@ public class Collection extends AbstractBaseEntity {
     private String location; //URI
 
     public Collection() {
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -97,4 +113,28 @@ public class Collection extends AbstractBaseEntity {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
+
+
+    public String getUriKey() {
+        return DaoHelper.fromDecimalToOtherBase(31, getId().intValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof AbstractBaseEntity)) {
+            return false;
+        }
+        AbstractBaseEntity other = (AbstractBaseEntity) obj;
+        return getId().equals(other.getId());
+    }
+
 }

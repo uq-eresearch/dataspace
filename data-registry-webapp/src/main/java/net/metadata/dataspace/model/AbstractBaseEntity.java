@@ -5,7 +5,6 @@ import net.metadata.dataspace.util.DaoHelper;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 /**
@@ -13,7 +12,7 @@ import java.io.Serializable;
  * Date: 22/09/2010
  * Time: 12:12:47 PM
  */
-@MappedSuperclass
+
 public abstract class AbstractBaseEntity implements Serializable {
 
     @Id

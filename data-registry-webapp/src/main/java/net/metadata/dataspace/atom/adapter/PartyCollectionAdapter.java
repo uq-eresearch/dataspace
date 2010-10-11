@@ -3,15 +3,14 @@ package net.metadata.dataspace.atom.adapter;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.PartyDao;
+import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.model.Party;
+import net.metadata.dataspace.model.Subject;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.iri.IRI;
-import org.apache.abdera.model.Content;
-import org.apache.abdera.model.Document;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Person;
+import org.apache.abdera.model.*;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -24,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.activation.MimeType;
+import javax.xml.namespace.QName;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +39,9 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     private Logger logger = Logger.getLogger(getClass());
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
+    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getSubjectDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
+    private static final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
@@ -51,7 +53,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             party.setSummary(summary);
             party.setUpdated(updated);
             party.setAuthors(getAuthors(authors));
-            partyDao.save(party);
+            partyDao.update(party);
         } catch (Exception ex) {
             logger.fatal("Error Persisting Party: " + title);
         }
@@ -80,7 +82,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             Party party = new Party();
             String partyAsJsonString = getJsonString(inputStream);
             assembleParty(party, partyAsJsonString);
-            partyDao.save(party);
+            partyDao.update(party);
             return party;
         }
         return null;
@@ -142,11 +144,17 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         Party party = partyDao.getByKey(uriKey);
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(party.getUriKey());
+//        entry.set
+        entry.setId(ID_PREFIX + "parties/" + party.getUriKey());
         entry.setTitle(party.getTitle());
         entry.setSummary(party.getSummary());
         entry.setUpdated(party.getUpdated());
-
+        Set<Subject> subjectSet = party.getSubjects();
+        for (Subject sub : subjectSet) {
+            Element subjectElement = entry.addExtension(SUBJECT_QNAME);
+            subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
+            subjectElement.setAttributeValue("value", sub.getValue());
+        }
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, party.getUpdated())
                 .setEntityTag(ProviderHelper.calculateEntityTag(entry));
         if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
@@ -185,13 +193,13 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getId(Party party) throws ResponseContextException {
-        return party.getUriKey();
+        return ID_PREFIX + "parties/" + party.getUriKey();
     }
 
     @Override
     public String getName(Party party) throws ResponseContextException {
         //TODO this sets the link element which contains the edit link
-        return party.getUriKey();
+        return ID_PREFIX + "parties/" + party.getUriKey();
     }
 
     @Override
@@ -263,6 +271,16 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             party.setTitle(jsonObj.getString("title"));
             party.setSummary(jsonObj.getString("summary"));
             party.setUpdated(new Date());
+
+            JSONArray subjectArray = jsonObj.getJSONArray("subject");
+            Set<Subject> subjects = new HashSet<Subject>();
+            for (int i = 0; i < subjectArray.length(); i++) {
+                Subject subject = new Subject(subjectArray.getJSONObject(i).getString("vocabulary"), subjectArray.getJSONObject(i).getString("value"));
+                subjectDao.save(subject);
+                subjects.add(subject);
+            }
+            party.setSubjects(subjects);
+
             JSONArray authors = jsonObj.getJSONArray("authors");
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
