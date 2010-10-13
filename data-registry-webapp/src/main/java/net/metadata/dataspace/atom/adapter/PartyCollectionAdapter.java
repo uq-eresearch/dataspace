@@ -53,7 +53,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             party.setSummary(summary);
             party.setUpdated(updated);
             party.setAuthors(getAuthors(authors));
-            partyDao.update(party);
+            partyDao.save(party);
         } catch (Exception ex) {
             logger.fatal("Error Persisting Party: " + title);
         }
@@ -82,7 +82,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             Party party = new Party();
             String partyAsJsonString = getJsonString(inputStream);
             assembleParty(party, partyAsJsonString);
-            partyDao.update(party);
             return party;
         }
         return null;
@@ -266,20 +265,12 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     }
 
     private void assembleParty(Party party, String jsonString) {
+
         try {
             JSONObject jsonObj = new JSONObject(jsonString);
             party.setTitle(jsonObj.getString("title"));
             party.setSummary(jsonObj.getString("summary"));
             party.setUpdated(new Date());
-
-            JSONArray subjectArray = jsonObj.getJSONArray("subject");
-            Set<Subject> subjects = new HashSet<Subject>();
-            for (int i = 0; i < subjectArray.length(); i++) {
-                Subject subject = new Subject(subjectArray.getJSONObject(i).getString("vocabulary"), subjectArray.getJSONObject(i).getString("value"));
-                subjectDao.save(subject);
-                subjects.add(subject);
-            }
-            party.setSubjects(subjects);
 
             JSONArray authors = jsonObj.getJSONArray("authors");
             Set<String> persons = new HashSet<String>();
@@ -287,6 +278,18 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
                 persons.add(authors.getString(i));
             }
             party.setAuthors(persons);
+
+            if (party.getId() == null) {
+                partyDao.save(party);
+            }
+
+            JSONArray subjectArray = jsonObj.getJSONArray("subject");
+            for (int i = 0; i < subjectArray.length(); i++) {
+                Subject subject = new Subject(subjectArray.getJSONObject(i).getString("vocabulary"), subjectArray.getJSONObject(i).getString("value"));
+                party.getSubjects().add(subject);
+                subjectDao.save(subject);
+            }
+            partyDao.update(party);
         } catch (JSONException ex) {
             logger.fatal("Could not assemble party from JSON object", ex);
         }

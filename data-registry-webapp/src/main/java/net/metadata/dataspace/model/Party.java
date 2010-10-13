@@ -1,11 +1,14 @@
 package net.metadata.dataspace.model;
 
-import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -14,15 +17,10 @@ import java.util.Set;
  * Time: 3:32:39 PM
  */
 @Entity
-public class Party {
+public class Party extends AbstractBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    //AtomPub related
     @NotNull
     private String title; //name
 
@@ -35,22 +33,13 @@ public class Party {
     @CollectionOfElements
     private Set<String> authors;
 
-    //Other attributes
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Subject> subjects;
+    private Set<Subject> subjects = new HashSet<Subject>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Collection> collectorof;
+    private Set<Collection> collectorof = new HashSet<Collection>();
 
     public Party() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -100,28 +89,4 @@ public class Party {
     public void setCollectorof(Set<Collection> collectorof) {
         this.collectorof = collectorof;
     }
-
-    public String getUriKey() {
-        return DaoHelper.fromDecimalToOtherBase(31, getId().intValue());
-    }
-
-
-    @Override
-    public int hashCode() {
-        return this.id.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof AbstractBaseEntity)) {
-            return false;
-        }
-        AbstractBaseEntity other = (AbstractBaseEntity) obj;
-        return getId().equals(other.getId());
-    }
-
 }

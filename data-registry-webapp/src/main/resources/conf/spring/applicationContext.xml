@@ -20,6 +20,7 @@
         <property name="collectionDao" ref="collectionDao"/>
         <property name="partyDao" ref="partyDao"/>
         <property name="subjectDao" ref="subjectDao"/>
+        <property name="jpaConnector" ref="jpaConnector"/>
     </bean>
     <bean id="log4jInitialization"
           class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

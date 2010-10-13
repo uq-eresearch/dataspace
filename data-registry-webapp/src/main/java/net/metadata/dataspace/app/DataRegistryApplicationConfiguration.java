@@ -3,6 +3,7 @@ package net.metadata.dataspace.app;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
+import net.metadata.dataspace.data.connector.JpaConnector;
 
 /**
  * User: alabri
@@ -52,5 +53,12 @@ public interface DataRegistryApplicationConfiguration {
      * @return PartyDao
      */
     PartyDao getPartyDao();
+
+    /**
+     * Gets the JPA connector
+     *
+     * @return JpaConnector
+     */
+    JpaConnector getJpaConnector();
 
 }

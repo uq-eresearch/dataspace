@@ -1,11 +1,11 @@
 package net.metadata.dataspace.model;
 
-import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -14,15 +14,10 @@ import java.util.Set;
  * Time: 3:32:27 PM
  */
 @Entity
-public class Collection {
+public class Collection extends AbstractBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    //Attributes related to atompub
     @NotNull
     private String title; //name
 
@@ -35,27 +30,17 @@ public class Collection {
     @CollectionOfElements
     private Set<String> authors;
 
-    //Other attributes
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Subject> subjects;
+    private Set<Subject> subjects = new HashSet<Subject>();
 
     @NotNull
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Party> collector;
+    private Set<Party> collector = new HashSet<Party>();
 
     @NotNull
     private String location; //URI
 
     public Collection() {
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -113,28 +98,4 @@ public class Collection {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
-
-
-    public String getUriKey() {
-        return DaoHelper.fromDecimalToOtherBase(31, getId().intValue());
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof AbstractBaseEntity)) {
-            return false;
-        }
-        AbstractBaseEntity other = (AbstractBaseEntity) obj;
-        return getId().equals(other.getId());
-    }
-
 }

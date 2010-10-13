@@ -115,35 +115,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         }
     }
 
-    private Set<Subject> getSubjects(List<Element> elements) {
-        Set<Subject> subjects = new HashSet<Subject>();
-        for (Element sub : elements) {
-            if (sub.getQName().equals(SUBJECT_QNAME)) {
-                Subject subject = new Subject();
-                subject.setVocabulary(sub.getAttributeValue("vocabulary"));
-                subject.setValue(sub.getAttributeValue("value"));
-                subjectDao.save(subject);
-                subjects.add(subject);
-            }
-        }
-        return subjects;
-    }
-
-    private Map<String, String> getExtensionMap(List<Element> elements) {
-        Map<String, String> extensionsMap = new HashMap<String, String>();
-        for (Element element : elements) {
-            if (element.getElements().size() < 1) {
-                extensionsMap.put(element.getQName().getLocalPart(), element.getText());
-            }
-        }
-        return extensionsMap;
-    }
-
-    private IRI getFeedIRI(Collection entryObj, RequestContext request) {
-        String feedIri = getFeedIriForEntry(entryObj, request);
-        return new IRI(feedIri).trailingSlash();
-    }
-
     @Override
     public Collection postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
         logger.info("Persisting Collection as Media Entry");
@@ -152,7 +123,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             String jsonString = getJsonString(inputStream);
             Collection collection = new Collection();
             assembleCollectionFromJson(collection, jsonString);
-            collectionDao.update(collection);
             return collection;
         }
         return null;
@@ -311,6 +281,35 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         return authors;
     }
 
+    private Set<Subject> getSubjects(List<Element> elements) {
+        Set<Subject> subjects = new HashSet<Subject>();
+        for (Element sub : elements) {
+            if (sub.getQName().equals(SUBJECT_QNAME)) {
+                Subject subject = new Subject();
+                subject.setVocabulary(sub.getAttributeValue("vocabulary"));
+                subject.setValue(sub.getAttributeValue("value"));
+                subjectDao.save(subject);
+                subjects.add(subject);
+            }
+        }
+        return subjects;
+    }
+
+    private Map<String, String> getExtensionMap(List<Element> elements) {
+        Map<String, String> extensionsMap = new HashMap<String, String>();
+        for (Element element : elements) {
+            if (element.getElements().size() < 1) {
+                extensionsMap.put(element.getQName().getLocalPart(), element.getText());
+            }
+        }
+        return extensionsMap;
+    }
+
+    private IRI getFeedIRI(Collection entryObj, RequestContext request) {
+        String feedIri = getFeedIriForEntry(entryObj, request);
+        return new IRI(feedIri).trailingSlash();
+    }
+
     private String getJsonString(InputStream inputStream) {
         //Parse the input stream to string
         StringBuilder sb = new StringBuilder();
@@ -344,31 +343,32 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             collection.setLocation(jsonObj.getString("location"));
 
 
-            JSONArray subjectArray = jsonObj.getJSONArray("subject");
-            Set<Subject> subjects = new HashSet<Subject>();
-            for (int i = 0; i < subjectArray.length(); i++) {
-                Subject subject = new Subject(subjectArray.getJSONObject(i).getString("vocabulary"), subjectArray.getJSONObject(i).getString("value"));
-                subjectDao.save(subject);
-                subjects.add(subject);
-            }
-            collection.setSubjects(subjects);
-
-            JSONArray collectors = jsonObj.getJSONArray("collector");
-            Set<Party> parties = new HashSet<Party>();
-            for (int i = 0; i < collectors.length(); i++) {
-                Party party = partyDao.getByKey(collectors.getString(i));
-                if (party != null) {
-                    parties.add(party);
-                }
-            }
-            collection.setCollector(parties);
-
             JSONArray authors = jsonObj.getJSONArray("authors");
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
                 persons.add(authors.getString(i));
             }
             collection.setAuthors(persons);
+
+            if (collection.getId() == null) {
+                collectionDao.save(collection);
+            }
+
+            JSONArray subjectArray = jsonObj.getJSONArray("subject");
+            for (int i = 0; i < subjectArray.length(); i++) {
+                Subject subject = new Subject(subjectArray.getJSONObject(i).getString("vocabulary"), subjectArray.getJSONObject(i).getString("value"));
+                collection.getSubjects().add(subject);
+                subjectDao.save(subject);
+            }
+
+            JSONArray collectors = jsonObj.getJSONArray("collector");
+            for (int i = 0; i < collectors.length(); i++) {
+                Party party = partyDao.getByKey(collectors.getString(i));
+                if (party != null) {
+                    collection.getCollector().add(party);
+                }
+            }
+            collectionDao.update(collection);
         } catch (JSONException ex) {
             logger.fatal("Could not assemble collection from JSON object", ex);
         }

@@ -3,6 +3,7 @@ package net.metadata.dataspace.app;
 import net.metadata.dataspace.data.access.impl.CollectionDaoImpl;
 import net.metadata.dataspace.data.access.impl.PartyDaoImpl;
 import net.metadata.dataspace.data.access.impl.SubjectDaoImpl;
+import net.metadata.dataspace.data.connector.JpaConnector;
 
 /**
  * User: alabri
@@ -16,6 +17,7 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
     private SubjectDaoImpl subjectDao;
     private PartyDaoImpl partyDao;
     private String uriPrefix;
+    private JpaConnector jpaConnector;
 
     public DataRegistryApplicationConfigurationImpl() {
     }
@@ -70,4 +72,11 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         return uriPrefix;
     }
 
+    public void setJpaConnector(JpaConnector jpaConnector) {
+        this.jpaConnector = jpaConnector;
+    }
+
+    public JpaConnector getJpaConnector() {
+        return jpaConnector;
+    }
 }
