@@ -283,7 +283,7 @@
         <repository>
             <id>artifactory</id>
             <name>artifactory-releases</name>
-            <url>http://maven.metadata.net/artifactory/libs-releases-local</url>
+            <url>http://maven.metadata.net/artifactory/repo</url>
         </repository>
         <repository>
             <id>maven-restlet</id>
