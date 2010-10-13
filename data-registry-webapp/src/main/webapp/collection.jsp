@@ -170,7 +170,6 @@
         <b>Create Collection From JSON</b>
         <br/>
         <textarea rows="8" cols="100" id="collectionJson">{
-            "id":"randomid",
             "title":"Money Collection",
             "summary":"This is a cool collection of non-stone money",
             "location":"http://e-research.sbs.uq.edu.au/client/Stats.html#metadata",
@@ -178,7 +177,7 @@
             {"vocabulary": "anzsrc-for", "value": "160499"},
             {"vocabulary": "anzsrc-seo","value": "910102"}
             ],
-            "collector":[],
+            "collector":["1", "2"],
             "authors":["John Smith","Joe Blog"]
             }</textarea>
         <br/>

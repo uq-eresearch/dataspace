@@ -37,7 +37,7 @@ public class Party extends AbstractBaseEntity {
     private Set<Subject> subjects = new HashSet<Subject>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Collection> collectorof = new HashSet<Collection>();
+    private Set<Collection> collectorOf = new HashSet<Collection>();
 
     public Party() {
     }
@@ -82,11 +82,11 @@ public class Party extends AbstractBaseEntity {
         this.subjects = subjects;
     }
 
-    public Set<Collection> getCollectorof() {
-        return collectorof;
+    public Set<Collection> getCollectorOf() {
+        return collectorOf;
     }
 
-    public void setCollectorof(Set<Collection> collectorof) {
-        this.collectorof = collectorof;
+    public void setCollectorOf(Set<Collection> collectorOf) {
+        this.collectorOf = collectorOf;
     }
 }

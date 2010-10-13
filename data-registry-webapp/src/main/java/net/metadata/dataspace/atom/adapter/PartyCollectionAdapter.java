@@ -2,8 +2,10 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
+import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.Subject;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
@@ -30,6 +32,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import net.metadata.dataspace.model.Collection;
+
 /**
  * User: alabri
  * Date: 21/09/2010
@@ -40,8 +44,10 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     private Logger logger = Logger.getLogger(getClass());
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getSubjectDao();
+    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getCollectionDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
     private static final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
@@ -154,6 +160,14 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
             subjectElement.setAttributeValue("value", sub.getValue());
         }
+
+        Set<Collection> collectionSet = party.getCollectorOf();
+        for (Collection collection : collectionSet) {
+            Element collectorOfElement = entry.addExtension(COLLECTOR_OF_QNAME);
+            collectorOfElement.setAttributeValue("uri", ID_PREFIX + "collections/" + collection.getUriKey());
+        }
+
+
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, party.getUpdated())
                 .setEntityTag(ProviderHelper.calculateEntityTag(entry));
         if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
@@ -289,6 +303,17 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
                 party.getSubjects().add(subject);
                 subjectDao.save(subject);
             }
+            partyDao.update(party);
+            JSONArray collectionArray = jsonObj.getJSONArray("collectorof");
+            for (int i = 0; i < collectionArray.length(); i++) {
+                Collection collection = collectionDao.getByKey(collectionArray.getString(i));
+                if (collection != null) {
+                    collection.getCollector().add(party);
+                    party.getCollectorOf().add(collection);
+//                    collectionDao.update(collection);
+                }
+            }
+
             partyDao.update(party);
         } catch (JSONException ex) {
             logger.fatal("Could not assemble party from JSON object", ex);

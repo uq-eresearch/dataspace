@@ -17,7 +17,7 @@ import java.io.Serializable;
 public abstract class AbstractBaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     public AbstractBaseEntity() {

@@ -194,6 +194,13 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
             subjectElement.setAttributeValue("value", sub.getValue());
         }
+
+        Set<Party> partySet = collection.getCollector();
+        for (Party sub : partySet) {
+            Element partyElement = entry.addExtension(COLLECTOR_QNAME);
+            partyElement.setAttributeValue("uri", ID_PREFIX + "parties/" + sub.getUriKey());
+        }
+
 //        entry.addSimpleExtension(COLLECTOR_QNAME, collection.getCollector().iterator().next().getUriKey());
         entry.addLink(ID_PREFIX + "collections/" + collection.getUriKey(), "alternate");
 
@@ -360,11 +367,13 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                 collection.getSubjects().add(subject);
                 subjectDao.save(subject);
             }
-
+            collectionDao.update(collection);
             JSONArray collectors = jsonObj.getJSONArray("collector");
             for (int i = 0; i < collectors.length(); i++) {
                 Party party = partyDao.getByKey(collectors.getString(i));
                 if (party != null) {
+                    party.getCollectorOf().add(collection);
+//                    partyDao.update(party);
                     collection.getCollector().add(party);
                 }
             }

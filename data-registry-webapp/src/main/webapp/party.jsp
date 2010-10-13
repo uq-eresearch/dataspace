@@ -138,12 +138,12 @@
         <b>Create Party From JSON</b>
         <br/>
         <textarea rows="8" cols="100" id="partyJson">{
-            "id":"randomid2308322",
             "title":"Tea Party",
             "summary":"Tax Enough Already",
             "content":"Optional Content",
             "subject":[{"vocabulary": "anzsrc-for", "value": "160499"}],
-            "authors":["Abdul Alabri","Nigel Ward"]
+            "authors":["Abdul Alabri","Nigel Ward"],
+            "collectorof":["4"]
             }</textarea>
         <br/>
         <input type="button" id="button" value="Add Party" onclick="submitParty()"/>
