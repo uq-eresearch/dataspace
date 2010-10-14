@@ -46,21 +46,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     private final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
-
-    @Override
-    public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
-                                Content content, RequestContext requestContext) throws ResponseContextException {
-        Collection collection = new Collection();
-//        collection.setTitle(title);
-//        collection.setSummary(summary);
-//        collection.setUpdated(updated);
-//        collection.setAuthors(getAuthors(authors));
-//
-//        collectionDao.save(collection);
-
-        return collection;
-    }
-
     @Override
     public ResponseContext postEntry(RequestContext request) {
         MimeType mimeType = request.getContentType();
@@ -158,7 +143,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         }
     }
 
-
     @Override
     public ResponseContext getEntry(RequestContext request) {
         String uriKey = CollectionAdapterHelper.getEntryID(request);
@@ -173,6 +157,15 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
             }
         }
+    }
+
+
+    @Override
+    public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
+                                Content content, RequestContext requestContext) throws ResponseContextException {
+        //Pleasing compiler
+        Collection collection = new Collection();
+        return collection;
     }
 
     @Override

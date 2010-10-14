@@ -88,19 +88,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         }
     }
 
-    //    @Override
-//    public Party postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
-//        logger.info("Persisting Party as Media Entry");
-//
-//        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
-//            Party party = new Party();
-//            String partyAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
-//            assembleParty(party, partyAsJsonString);
-//            return party;
-//        }
-//        return null;
-//    }
-
     @Override
     public String getMediaName(Party party) throws ResponseContextException {
         return party.getTitle();
@@ -171,16 +158,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
                            RequestContext requestContext) throws ResponseContextException {
         Party party = new Party();
-        logger.info("Persisting Party: " + title);
-        try {
-            party.setTitle(title);
-            party.setSummary(summary);
-            party.setUpdated(updated);
-            party.setAuthors(getAuthors(authors));
-            partyDao.save(party);
-        } catch (Exception ex) {
-            logger.fatal("Error Persisting Party: " + title);
-        }
         return party;
     }
 
