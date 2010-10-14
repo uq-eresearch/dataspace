@@ -12,7 +12,6 @@ import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
-import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Person;
 import org.apache.abdera.protocol.server.ProviderHelper;
@@ -46,30 +45,50 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
-
-        try {
-            Document<Entry> feed_doc = request.getDocument();
-            Entry root = feed_doc.getRoot();
-            System.out.println(root);
-        } catch (IOException e) {
-            logger.fatal("Invalid feed document", e);
-        }
-
-        return super.postEntry(request);
-    }
-
-    @Override
-    public Party postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
-        logger.info("Persisting Party as Media Entry");
-
+        MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             Party party = new Party();
-            String partyAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
-            assembleParty(party, partyAsJsonString);
-            return party;
+            try {
+                String partyAsJsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
+                assembleParty(party, partyAsJsonString);
+                Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
+                return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+            } catch (IOException e) {
+                logger.fatal("Cannot get inputstream from request.");
+                return ProviderHelper.servererror(request, e);
+            }
+        } else if (mimeType.getBaseType().equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+            try {
+                Entry entry = getEntryFromRequest(request);
+                Party party = CollectionAdapterHelper.getPartyFromEntry(entry);
+                if (party == null) {
+                    return ProviderHelper.badrequest(request, "Invalid entry posted.");
+                } else {
+                    partyDao.save(party);
+                    Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
+                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                }
+            } catch (ResponseContextException e) {
+                logger.fatal("Invalid entry posted.", e);
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported media type");
         }
-        return null;
     }
+
+//    @Override
+//    public Party postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
+//        logger.info("Persisting Party as Media Entry");
+//
+//        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+//            Party party = new Party();
+//            String partyAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
+//            assembleParty(party, partyAsJsonString);
+//            return party;
+//        }
+//        return null;
+//    }
 
     @Override
     public String getMediaName(Party party) throws ResponseContextException {

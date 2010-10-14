@@ -10,6 +10,7 @@ import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -22,7 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: alabri
@@ -159,5 +160,36 @@ public class CollectionAdapterHelper {
         }
         return responseContext;
 
+    }
+
+    public static Party getPartyFromEntry(Entry entry) {
+        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
+            return null;
+        } else {
+            Party party = new Party();
+            party.setTitle(entry.getTitle());
+            party.setSummary(entry.getSummary());
+            entry.setUpdated(new Date());
+            party.setAuthors(getAuthors(entry.getAuthors()));
+            return party;
+        }
+    }
+
+    private Map<String, String> getExtensionMap(List<Element> elements) {
+        Map<String, String> extensionsMap = new HashMap<String, String>();
+        for (Element element : elements) {
+            if (element.getElements().size() < 1) {
+                extensionsMap.put(element.getQName().getLocalPart(), element.getText());
+            }
+        }
+        return extensionsMap;
+    }
+
+    private static Set<String> getAuthors(List<Person> persons) {
+        Set<String> authors = new HashSet<String>();
+        for (Person person : persons) {
+            authors.add(person.getName());
+        }
+        return authors;
     }
 }
