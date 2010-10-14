@@ -48,6 +48,19 @@ public class CollectionAdapterHelper {
         return UrlEncoding.decode(segments[segments.length - 1]);
     }
 
+    public static String getRepresentationMimeType(RequestContext request) {
+        if (request.getTarget().getType() != TargetType.TYPE_ENTRY) {
+            return null;
+        }
+
+        String fullUrl = request.getUri().toString();
+        String representation = null;
+        if (fullUrl.contains("?")) {
+            representation = fullUrl.split("repr=")[1];
+        }
+        return representation;
+    }
+
     public static String getJsonString(InputStream inputStream) {
         StringBuilder sb = new StringBuilder();
         if (inputStream != null) {

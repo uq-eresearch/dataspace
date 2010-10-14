@@ -185,14 +185,25 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             if (collection.isActive()) {
                 Entry entry = CollectionAdapterHelper.getEntryFromCollection(collection);
                 ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, collection.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
-                if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
-                    responseContext.setContentType(Constants.JSON_MIMETYPE);
-                    responseContext.setWriter(new JSONWriter());
-                } else if (request.getAccept().equals(Constants.ATOM_MIMETYPE)) {
-                    responseContext.setContentType(Constants.ATOM_MIMETYPE);
-                    responseContext.setWriter(new PrettyWriter());
+                String representationMimeType = CollectionAdapterHelper.getRepresentationMimeType(request);
+                if (representationMimeType == null) {
+                    if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
+                        responseContext.setContentType(Constants.JSON_MIMETYPE);
+                        responseContext.setWriter(new JSONWriter());
+                    } else {
+                        responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
+                        responseContext.setWriter(new PrettyWriter());
+                    }
                 } else {
-                    return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + request.getAccept() + " mime type.");
+                    if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
+                        responseContext.setContentType(Constants.JSON_MIMETYPE);
+                        responseContext.setWriter(new JSONWriter());
+                    } else if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+                        responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
+                        responseContext.setWriter(new PrettyWriter());
+                    } else {
+                        return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + request.getAccept() + " mime type.");
+                    }
                 }
                 return responseContext;
             } else {
@@ -271,7 +282,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public String[] getAccepts(RequestContext request) {
-        return new String[]{Constants.ATOM_MIMETYPE + ";type=entry", Constants.JSON_MIMETYPE};
+        return new String[]{Constants.ATOM_ENTRY_MIMETYPE + ";type=entry", Constants.JSON_MIMETYPE};
     }
 
     @Override
