@@ -6,10 +6,14 @@ import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.Subject;
 import org.apache.abdera.Abdera;
+import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Entry;
+import org.apache.abdera.parser.stax.util.PrettyWriter;
+import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
+import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.TargetType;
 import org.apache.log4j.Logger;
 
@@ -126,8 +130,34 @@ public class CollectionAdapterHelper {
             Element partyElement = entry.addExtension(COLLECTOR_QNAME);
             partyElement.setAttributeValue("uri", ID_PREFIX + "parties/" + sub.getUriKey());
         }
-
         entry.addLink(ID_PREFIX + "collections/" + collection.getUriKey(), "alternate");
         return entry;
+    }
+
+    public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry) {
+        ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+        String representationMimeType = CollectionAdapterHelper.getRepresentationMimeType(request);
+        if (representationMimeType == null) {
+            responseContext.setHeader("Vary", "Accept");
+            if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
+                responseContext.setContentType(Constants.JSON_MIMETYPE);
+                responseContext.setWriter(new JSONWriter());
+            } else {
+                responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
+                responseContext.setWriter(new PrettyWriter());
+            }
+        } else {
+            if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
+                responseContext.setContentType(Constants.JSON_MIMETYPE);
+                responseContext.setWriter(new JSONWriter());
+            } else if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+                responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
+                responseContext.setWriter(new PrettyWriter());
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + representationMimeType + " mime type.");
+            }
+        }
+        return responseContext;
+
     }
 }

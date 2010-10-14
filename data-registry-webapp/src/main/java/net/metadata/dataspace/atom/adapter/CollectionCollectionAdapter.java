@@ -10,13 +10,11 @@ import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.Subject;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
-import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Person;
-import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
@@ -159,11 +157,10 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         if (collection == null) {
             return ProviderHelper.notfound(request);
         } else {
-            Entry entry = CollectionAdapterHelper.getEntryFromCollection(collection);
             if (collection.isActive()) {
                 try {
                     deleteEntry(uriKey, request);
-                    return ProviderHelper.returnBase(entry, 200, collection.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+                    return ProviderHelper.createErrorResponse(new Abdera(), 200, "OK");
                 } catch (ResponseContextException e) {
                     logger.fatal("Could not delete collection entry");
                     return ProviderHelper.servererror(request, e);
@@ -184,28 +181,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         } else {
             if (collection.isActive()) {
                 Entry entry = CollectionAdapterHelper.getEntryFromCollection(collection);
-                ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, collection.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
-                String representationMimeType = CollectionAdapterHelper.getRepresentationMimeType(request);
-                if (representationMimeType == null) {
-                    if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
-                        responseContext.setContentType(Constants.JSON_MIMETYPE);
-                        responseContext.setWriter(new JSONWriter());
-                    } else {
-                        responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
-                        responseContext.setWriter(new PrettyWriter());
-                    }
-                } else {
-                    if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
-                        responseContext.setContentType(Constants.JSON_MIMETYPE);
-                        responseContext.setWriter(new JSONWriter());
-                    } else if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
-                        responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
-                        responseContext.setWriter(new PrettyWriter());
-                    } else {
-                        return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + request.getAccept() + " mime type.");
-                    }
-                }
-                return responseContext;
+                return CollectionAdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
             }

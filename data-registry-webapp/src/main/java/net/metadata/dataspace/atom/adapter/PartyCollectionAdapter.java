@@ -10,13 +10,11 @@ import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.Subject;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
-import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Person;
-import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
@@ -105,17 +103,15 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
-
         String uriKey = CollectionAdapterHelper.getEntryID(request);
         Party party = partyDao.getByKey(uriKey);
         if (party == null) {
             return ProviderHelper.notfound(request);
         } else {
-            Entry entry = CollectionAdapterHelper.getEntryFromParty(party);
             if (party.isActive()) {
                 try {
                     deleteEntry(uriKey, request);
-                    return ProviderHelper.returnBase(entry, 200, party.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+                    return ProviderHelper.createErrorResponse(new Abdera(), 200, "OK");
                 } catch (ResponseContextException e) {
                     logger.fatal("Could not delete party entry");
                     return ProviderHelper.servererror(request, e);
@@ -134,29 +130,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         } else {
             if (party.isActive()) {
                 Entry entry = CollectionAdapterHelper.getEntryFromParty(party);
-                ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, party.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
-
-                String representationMimeType = CollectionAdapterHelper.getRepresentationMimeType(request);
-                if (representationMimeType == null) {
-                    if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
-                        responseContext.setContentType(Constants.JSON_MIMETYPE);
-                        responseContext.setWriter(new JSONWriter());
-                    } else {
-                        responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
-                        responseContext.setWriter(new PrettyWriter());
-                    }
-                } else {
-                    if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
-                        responseContext.setContentType(Constants.JSON_MIMETYPE);
-                        responseContext.setWriter(new JSONWriter());
-                    } else if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
-                        responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
-                        responseContext.setWriter(new PrettyWriter());
-                    } else {
-                        return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + request.getAccept() + " mime type.");
-                    }
-                }
-                return responseContext;
+                return CollectionAdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
             }
