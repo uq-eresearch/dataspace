@@ -20,6 +20,11 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
+    public List<Party> getAll() {
+        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = TRUE ORDER BY o.updated").getResultList();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public Party getById(Long id) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.id = :id").setParameter("id", id).getResultList();
@@ -35,5 +40,11 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     public Party getByKey(String uriKey) {
         Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
         return getById(id);
+    }
+
+    @Override
+    public void softDelete(String uriKey) {
+        Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
+        entityManagerSource.getEntityManager().createQuery("UPDATE Party o SET o.isActive = FALSE WHERE o.id = :id").setParameter("id", id);
     }
 }

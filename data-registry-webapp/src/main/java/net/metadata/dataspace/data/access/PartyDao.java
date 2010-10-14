@@ -17,5 +17,18 @@ public interface PartyDao extends Dao<Party> {
      */
     Party getById(Long id);
 
+    /**
+     * Retrieves a party from database by the uri key
+     *
+     * @param uriKey a 31 base uri key
+     * @return a Party object
+     */
     Party getByKey(String uriKey);
+
+    /**
+     * Soft delete a party by setting isActive flag to false
+     *
+     * @param uriKey
+     */
+    void softDelete(String uriKey);
 }

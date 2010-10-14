@@ -20,6 +20,11 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     }
 
     @Override
+    public List<Collection> getAll() {
+        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = TRUE ORDER BY o.updated").getResultList();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public Collection getById(Long id) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.id = :id").setParameter("id", id).getResultList();
@@ -36,6 +41,12 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     public Collection getByKey(String uriKey) {
         Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
         return getById(id);
+    }
+
+    @Override
+    public void softDelete(String uriKey) {
+        Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
+        entityManagerSource.getEntityManager().createQuery("UPDATE Collection o SET o.isActive = FALSE WHERE o.id = :id").setParameter("id", id);
     }
 
 }

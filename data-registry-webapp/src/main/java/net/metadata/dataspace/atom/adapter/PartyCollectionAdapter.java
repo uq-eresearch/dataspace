@@ -124,7 +124,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        partyDao.delete(partyDao.getByKey(key));
+        partyDao.softDelete(key);
     }
 
     @Override
@@ -205,7 +205,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public String getTitle(Party party) throws ResponseContextException {
-        //TODO Review, this corresponds to party name
         return party.getTitle();
     }
 

@@ -157,7 +157,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        collectionDao.delete(collectionDao.getByKey(key));
+        collectionDao.softDelete(key);
     }
 
     @Override

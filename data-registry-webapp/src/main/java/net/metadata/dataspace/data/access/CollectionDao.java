@@ -13,11 +13,23 @@ public interface CollectionDao extends Dao<Collection> {
     /**
      * Retrieve a collection from the database by the provided id
      *
-     * @param id
+     * @param id a collection id
      * @return Collection
      */
     Collection getById(Long id);
 
-
+    /**
+     * Retrieve a collection from the database by the uri key
+     *
+     * @param uriKey a 31 base uri key
+     * @return Collection
+     */
     Collection getByKey(String uriKey);
+
+    /**
+     * Soft delete a collection by setting isActive flag to false
+     *
+     * @param uriKey
+     */
+    void softDelete(String uriKey);
 }

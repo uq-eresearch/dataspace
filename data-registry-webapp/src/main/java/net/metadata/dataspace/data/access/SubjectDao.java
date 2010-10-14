@@ -17,4 +17,11 @@ public interface SubjectDao extends Dao<Subject> {
      * @return Subject
      */
     Subject getById(Long id);
+
+    /**
+     * Soft delete a subject by setting isActive flag to false
+     *
+     * @param uriKey 31 base uri key
+     */
+    void softDelete(String uriKey);
 }
