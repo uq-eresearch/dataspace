@@ -26,10 +26,8 @@ import org.json.JSONObject;
 
 import javax.activation.MimeType;
 import javax.xml.namespace.QName;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
 
 import net.metadata.dataspace.model.Collection;
@@ -45,9 +43,10 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getSubjectDao();
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getCollectionDao();
-    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
-    private static final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private static final QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+
+    private final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
+    private final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private final QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
@@ -86,7 +85,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             Party party = new Party();
-            String partyAsJsonString = getJsonString(inputStream);
+            String partyAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
             assembleParty(party, partyAsJsonString);
             return party;
         }
@@ -104,16 +103,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     }
 
     @Override
-    public void putEntry(Party party, String title, Date updated, List<Person> authors, String summary, Content content,
-                         RequestContext requestContext) throws ResponseContextException {
-        party.setTitle(title);
-        party.setSummary(summary);
-        party.setUpdated(updated);
-        party.setAuthors(getAuthors(authors));
-        partyDao.update(party);
-    }
-
-    @Override
     public ResponseContext putEntry(RequestContext request) {
         logger.info("Updating Party as Media Entry");
 
@@ -124,7 +113,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             } catch (IOException e) {
                 logger.fatal("Cannot create inputstream from request.", e);
             }
-            String partyAsJsonString = getJsonString(inputStream);
+            String partyAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
             String uriKey = CollectionAdapterHelper.getEntryID(request);
             Party party = partyDao.getByKey(uriKey);
             assembleParty(party, partyAsJsonString);
@@ -149,7 +138,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         Party party = partyDao.getByKey(uriKey);
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-//        entry.set
         entry.setId(ID_PREFIX + "parties/" + party.getUriKey());
         entry.setTitle(party.getTitle());
         entry.setSummary(party.getSummary());
@@ -246,36 +234,18 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         return new String[]{Constants.ATOM_MIMETYPE + ";type=entry", Constants.JSON_MIMETYPE};
     }
 
+    @Override
+    public void putEntry(Party party, String title, Date updated, List<Person> authors, String summary, Content content,
+                         RequestContext requestContext) throws ResponseContextException {
+        logger.warn("Method not supported");
+    }
+
     private Set<String> getAuthors(List<Person> persons) {
         Set<String> authors = new HashSet<String>();
         for (Person person : persons) {
             authors.add(person.getName());
         }
         return authors;
-    }
-
-    private String getJsonString(InputStream inputStream) {
-        //Parse the input stream to string
-        StringBuilder sb = new StringBuilder();
-        if (inputStream != null) {
-            String line;
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-            } catch (IOException ex) {
-                logger.fatal("Could not parse inputstream to a JSON string", ex);
-            } finally {
-                try {
-                    inputStream.close();
-                } catch (IOException ex) {
-                    logger.fatal("Could not close inputstream", ex);
-                }
-            }
-        }
-        String jsonString = sb.toString();
-        return jsonString;
     }
 
     private void assembleParty(Party party, String jsonString) {
@@ -310,10 +280,8 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
                 if (collection != null) {
                     collection.getCollector().add(party);
                     party.getCollectorOf().add(collection);
-//                    collectionDao.update(collection);
                 }
             }
-
             partyDao.update(party);
         } catch (JSONException ex) {
             logger.fatal("Could not assemble party from JSON object", ex);

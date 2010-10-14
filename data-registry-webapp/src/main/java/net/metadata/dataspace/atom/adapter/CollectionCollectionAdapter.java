@@ -30,10 +30,8 @@ import org.json.JSONObject;
 
 import javax.activation.MimeType;
 import javax.xml.namespace.QName;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -49,9 +47,9 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getSubjectDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
-    private static final QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private static final QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private static final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private final QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private final QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
 
     @Override
@@ -119,7 +117,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         logger.info("Persisting Collection as Media Entry");
 
         if (mimeType.getBaseType().equals("application/json")) {
-            String jsonString = getJsonString(inputStream);
+            String jsonString = CollectionAdapterHelper.getJsonString(inputStream);
             Collection collection = new Collection();
             assembleCollectionFromJson(collection, jsonString);
             return collection;
@@ -137,14 +135,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         return Constants.JSON_MIMETYPE;
     }
 
-
-    @Override
-    public void putEntry(Collection collection, String title, Date updated, List<Person> authors, String summary,
-                         Content content, RequestContext requestContext) throws ResponseContextException {
-
-        collectionDao.update(collection);
-    }
-
     @Override
     public ResponseContext putEntry(RequestContext request) {
         logger.info("Updating Collection as Media Entry");
@@ -155,7 +145,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             } catch (IOException e) {
                 logger.fatal("Cannot create inputstream from request.", e);
             }
-            String collectionAsJsonString = getJsonString(inputStream);
+            String collectionAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
             String uriKey = CollectionAdapterHelper.getEntryID(request);
             Collection collection = collectionDao.getByKey(uriKey);
             assembleCollectionFromJson(collection, collectionAsJsonString);
@@ -273,10 +263,15 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         return "Collections";
     }
 
-
     @Override
     public String[] getAccepts(RequestContext request) {
         return new String[]{Constants.ATOM_MIMETYPE + ";type=entry", Constants.JSON_MIMETYPE};
+    }
+
+    @Override
+    public void putEntry(Collection collection, String title, Date updated, List<Person> authors, String summary,
+                         Content content, RequestContext requestContext) throws ResponseContextException {
+        logger.warn("Method not supported.");
     }
 
     private Set<String> getAuthors(List<Person> persons) {
@@ -316,30 +311,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         return new IRI(feedIri).trailingSlash();
     }
 
-    private String getJsonString(InputStream inputStream) {
-        //Parse the input stream to string
-        StringBuilder sb = new StringBuilder();
-        if (inputStream != null) {
-            String line;
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-            } catch (IOException ex) {
-                logger.fatal("Could not parse inputstream to a JSON string", ex);
-            } finally {
-                try {
-                    inputStream.close();
-                } catch (IOException ex) {
-                    logger.fatal("Could not close inputstream", ex);
-                }
-            }
-        }
-        String jsonString = sb.toString();
-        return jsonString;
-    }
-
     private void assembleCollectionFromJson(Collection collection, String jsonString) {
         try {
             JSONObject jsonObj = new JSONObject(jsonString);
@@ -347,7 +318,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             collection.setSummary(jsonObj.getString("summary"));
             collection.setUpdated(new Date());
             collection.setLocation(jsonObj.getString("location"));
-
 
             JSONArray authors = jsonObj.getJSONArray("authors");
             Set<String> persons = new HashSet<String>();
@@ -372,7 +342,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                 Party party = partyDao.getByKey(collectors.getString(i));
                 if (party != null) {
                     party.getCollectorOf().add(collection);
-//                    partyDao.update(party);
                     collection.getCollector().add(party);
                 }
             }
