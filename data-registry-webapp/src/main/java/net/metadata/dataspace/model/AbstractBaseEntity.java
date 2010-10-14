@@ -20,7 +20,10 @@ public abstract class AbstractBaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
+    private boolean isActive;
+
     public AbstractBaseEntity() {
+        this.isActive = true;
     }
 
     public String getUriKey() {
@@ -33,6 +36,15 @@ public abstract class AbstractBaseEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     @Override
