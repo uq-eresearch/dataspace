@@ -128,7 +128,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
 
     public ResponseContext getEntry(RequestContext request) {
-
         String uriKey = CollectionAdapterHelper.getEntryID(request);
         Party party = partyDao.getByKey(uriKey);
         if (party == null) {
@@ -144,7 +143,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
                     responseContext.setContentType(Constants.ATOM_MIMETYPE);
                     responseContext.setWriter(new PrettyWriter());
                 } else {
-                    return ProviderHelper.notsupported(request, request.getAccept() + " mime type is not supported.");
+                    return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + request.getAccept() + " mime type.");
                 }
                 return responseContext;
             } else {

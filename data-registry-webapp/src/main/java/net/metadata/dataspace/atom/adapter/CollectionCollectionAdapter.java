@@ -177,7 +177,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public ResponseContext getEntry(RequestContext request) {
-
         String uriKey = CollectionAdapterHelper.getEntryID(request);
         Collection collection = collectionDao.getByKey(uriKey);
         if (collection == null) {
@@ -193,7 +192,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                     responseContext.setContentType(Constants.ATOM_MIMETYPE);
                     responseContext.setWriter(new PrettyWriter());
                 } else {
-                    return ProviderHelper.notsupported(request, request.getAccept() + " mime type is not supported.");
+                    return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + request.getAccept() + " mime type.");
                 }
                 return responseContext;
             } else {
