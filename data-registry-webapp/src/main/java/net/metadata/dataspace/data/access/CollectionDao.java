@@ -3,6 +3,8 @@ package net.metadata.dataspace.data.access;
 import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.model.Collection;
 
+import java.util.List;
+
 /**
  * User: alabri
  * Date: 20/09/2010
@@ -30,6 +32,21 @@ public interface CollectionDao extends Dao<Collection> {
      * Soft delete a collection by setting isActive flag to false
      *
      * @param uriKey
+     * @return rows affected
      */
-    void softDelete(String uriKey);
+    int softDelete(String uriKey);
+
+    /**
+     * Returns all active collections
+     *
+     * @return List of collections
+     */
+    List<Collection> getAllActive();
+
+    /**
+     * Returns all inactive collections
+     *
+     * @return List of inactive collections
+     */
+    List<Collection> getAllInActive();
 }

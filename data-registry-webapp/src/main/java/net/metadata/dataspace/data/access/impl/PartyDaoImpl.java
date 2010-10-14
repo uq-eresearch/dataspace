@@ -6,6 +6,7 @@ import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.util.DaoHelper;
 
+import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,11 +18,6 @@ import java.util.List;
 public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializable {
     public PartyDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
-    }
-
-    @Override
-    public List<Party> getAll() {
-        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = TRUE ORDER BY o.updated").getResultList();
     }
 
     @Override
@@ -43,8 +39,24 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
-    public void softDelete(String uriKey) {
+    public int softDelete(String uriKey) {
         Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
-        entityManagerSource.getEntityManager().createQuery("UPDATE Party o SET o.isActive = FALSE WHERE o.id = :id").setParameter("id", id);
+        entityManagerSource.getEntityManager().getTransaction().begin();
+        Query query = entityManagerSource.getEntityManager().createQuery("UPDATE Party o SET o.isActive = :isActive WHERE o.id = :id");
+        query.setParameter("id", id);
+        query.setParameter("isActive", false);
+        int updated = query.executeUpdate();
+        entityManagerSource.getEntityManager().getTransaction().commit();
+        return updated;
+    }
+
+    @Override
+    public List<Party> getAllActive() {
+        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = true ORDER BY o.updated").getResultList();
+    }
+
+    @Override
+    public List<Party> getAllInActive() {
+        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = false ORDER BY o.updated").getResultList();
     }
 }

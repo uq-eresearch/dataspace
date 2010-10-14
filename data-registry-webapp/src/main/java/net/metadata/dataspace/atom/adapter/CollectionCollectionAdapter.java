@@ -225,7 +225,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public Iterable<Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return collectionDao.getAll();
+        return collectionDao.getAllActive();
     }
 
     @Override

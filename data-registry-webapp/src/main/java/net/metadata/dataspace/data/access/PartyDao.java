@@ -3,6 +3,8 @@ package net.metadata.dataspace.data.access;
 import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.model.Party;
 
+import java.util.List;
+
 /**
  * User: alabri
  * Date: 21/09/2010
@@ -29,6 +31,21 @@ public interface PartyDao extends Dao<Party> {
      * Soft delete a party by setting isActive flag to false
      *
      * @param uriKey
+     * @return rows affected
      */
-    void softDelete(String uriKey);
+    int softDelete(String uriKey);
+
+    /**
+     * Returns all active parties
+     *
+     * @return List of parties
+     */
+    List<Party> getAllActive();
+
+    /**
+     * Returns all inactive parties
+     *
+     * @return List of inactive parties
+     */
+    List<Party> getAllInActive();
 }

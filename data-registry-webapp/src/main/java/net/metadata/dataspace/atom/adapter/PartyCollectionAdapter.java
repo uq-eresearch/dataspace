@@ -171,7 +171,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public Iterable<Party> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return partyDao.getAll();
+        return partyDao.getAllActive();
     }
 
     public List<Person> getAuthors(Party party, RequestContext request) throws ResponseContextException {

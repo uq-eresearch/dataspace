@@ -6,6 +6,7 @@ import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.model.Subject;
 import net.metadata.dataspace.util.DaoHelper;
 
+import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
 
@@ -22,11 +23,6 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
 
 
     @Override
-    public List<Subject> getAll() {
-        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.isActive = TRUE").getResultList();
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public Subject getById(Long id) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.id = :id").setParameter("id", id).getResultList();
@@ -39,9 +35,25 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
     }
 
     @Override
-    public void softDelete(String uriKey) {
+    public int softDelete(String uriKey) {
         Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
-        entityManagerSource.getEntityManager().createQuery("UPDATE Subject o SET o.isActive = FALSE WHERE o.id = :id").setParameter("id", id);
+        entityManagerSource.getEntityManager().getTransaction().begin();
+        Query query = entityManagerSource.getEntityManager().createQuery("UPDATE Subject o SET o.isActive = :isActive WHERE o.id = :id");
+        query.setParameter("id", id);
+        query.setParameter("isActive", false);
+        int updated = query.executeUpdate();
+        entityManagerSource.getEntityManager().getTransaction().commit();
+        return updated;
+    }
+
+    @Override
+    public List<Subject> getAllActive() {
+        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.isActive = true").getResultList();
+    }
+
+    @Override
+    public List<Subject> getAllInActive() {
+        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.isActive = false").getResultList();
     }
 
 }

@@ -3,6 +3,8 @@ package net.metadata.dataspace.data.access;
 import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.model.Subject;
 
+import java.util.List;
+
 /**
  * User: alabri
  * Date: 20/09/2010
@@ -22,6 +24,22 @@ public interface SubjectDao extends Dao<Subject> {
      * Soft delete a subject by setting isActive flag to false
      *
      * @param uriKey 31 base uri key
+     * @return rows affected
      */
-    void softDelete(String uriKey);
+    int softDelete(String uriKey);
+
+
+    /**
+     * Returns all active subjects
+     *
+     * @return List of subjects
+     */
+    List<Subject> getAllActive();
+
+    /**
+     * Returns all inactive subjects
+     *
+     * @return List of inactive subjects
+     */
+    List<Subject> getAllInActive();
 }
