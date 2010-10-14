@@ -175,6 +175,19 @@ public class CollectionAdapterHelper {
         }
     }
 
+    public static Collection getCollectionFromEntry(Entry entry) {
+        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
+            return null;
+        } else {
+            Collection collection = new Collection();
+            collection.setTitle(entry.getTitle());
+            collection.setSummary(entry.getSummary());
+            collection.setUpdated(entry.getUpdated());
+            collection.setAuthors(getAuthors(entry.getAuthors()));
+            return collection;
+        }
+    }
+
     private Map<String, String> getExtensionMap(List<Element> elements) {
         Map<String, String> extensionsMap = new HashMap<String, String>();
         for (Element element : elements) {
@@ -192,4 +205,5 @@ public class CollectionAdapterHelper {
         }
         return authors;
     }
+
 }

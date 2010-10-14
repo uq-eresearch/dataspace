@@ -18,7 +18,6 @@ import org.apache.abdera.model.Person;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
-import org.apache.abdera.protocol.server.context.EmptyResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
@@ -52,73 +51,61 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
                                 Content content, RequestContext requestContext) throws ResponseContextException {
         Collection collection = new Collection();
-        collection.setTitle(title);
-        collection.setSummary(summary);
-        collection.setUpdated(updated);
-        collection.setAuthors(getAuthors(authors));
-
-        collectionDao.save(collection);
+//        collection.setTitle(title);
+//        collection.setSummary(summary);
+//        collection.setUpdated(updated);
+//        collection.setAuthors(getAuthors(authors));
+//
+//        collectionDao.save(collection);
 
         return collection;
     }
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
+        MimeType mimeType = request.getContentType();
+        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            return postMedia(request);
+        } else if (mimeType.getBaseType().equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+            try {
+                Entry entry = getEntryFromRequest(request);
+                Collection collection = CollectionAdapterHelper.getCollectionFromEntry(entry);
+                if (collection == null) {
+                    return ProviderHelper.badrequest(request, "Invalid entry posted.");
+                } else {
+                    collectionDao.save(collection);
 
-        try {
-            Entry entry = getEntryFromRequest(request);
-            if (entry != null) {
-                //TODO we need to activate this validation later
-//                if (!ProviderHelper.isValidEntry(entry)) {
-//                    return new EmptyResponseContext(400);
-//                }
+                    //TODO Add subjects and collectors
 
-                List<Element> extextensions = entry.getExtensions();
-                Map<String, String> extensionMap = getExtensionMap(extextensions);
-                entry.setUpdated(new Date());
-                Collection collection = new Collection();
-                collection.setTitle(entry.getTitle());
-                collection.setSummary(entry.getSummary());
-                collection.setUpdated(entry.getUpdated());
-                collection.setAuthors(getAuthors(entry.getAuthors()));
-                collection.setLocation(extensionMap.get("location"));
-//                Party collector = partyDao.getByKey(extensionMap.get("collector"));
-                Set<Party> collectors = new HashSet<Party>();
-//                collectors.add(collector);
-                collection.setCollector(collectors);
-
-
-                Set<Subject> subjects = new HashSet<Subject>();
-//                Set<Subject> subjects = getSubjects(extextensions);
-                collection.setSubjects(subjects);
-                collectionDao.save(collection);
-                entry.getIdElement().setValue(getId(collection));
-                IRI feedUri = getFeedIRI(collection, request);
-
-                String link = getLink(collection, feedUri, request);
-                entry.addLink(link, "edit");
-
-                String location = getLink(collection, feedUri, request, true);
-                return buildCreateEntryResponse(location, entry);
-            } else {
-                return new EmptyResponseContext(400);
+                    Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
+                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                }
+            } catch (ResponseContextException e) {
+                logger.fatal("Invalid entry posted.", e);
+                return ProviderHelper.servererror(request, e);
             }
-        } catch (ResponseContextException e) {
-            return createErrorResponse(e);
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported media type");
         }
     }
 
     @Override
-    public Collection postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
-        logger.info("Persisting Collection as Media Entry");
-
-        if (mimeType.getBaseType().equals("application/json")) {
-            String jsonString = CollectionAdapterHelper.getJsonString(inputStream);
-            Collection collection = new Collection();
-            assembleCollectionFromJson(collection, jsonString);
-            return collection;
+    public ResponseContext postMedia(RequestContext request) {
+        MimeType mimeType = request.getContentType();
+        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            try {
+                String jsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
+                Collection collection = new Collection();
+                assembleCollectionFromJson(collection, jsonString);
+                Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
+                return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+            } catch (IOException e) {
+                logger.fatal("Cannot get inputstream from request.");
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported media type");
         }
-        return null;
     }
 
     @Override

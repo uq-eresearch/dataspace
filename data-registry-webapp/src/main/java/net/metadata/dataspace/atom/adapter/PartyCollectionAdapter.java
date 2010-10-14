@@ -47,16 +47,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     public ResponseContext postEntry(RequestContext request) {
         MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            Party party = new Party();
-            try {
-                String partyAsJsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
-                assembleParty(party, partyAsJsonString);
-                Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
-                return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
-            } catch (IOException e) {
-                logger.fatal("Cannot get inputstream from request.");
-                return ProviderHelper.servererror(request, e);
-            }
+            return postMedia(request);
         } else if (mimeType.getBaseType().equals(Constants.ATOM_ENTRY_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
@@ -65,6 +56,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
                     return ProviderHelper.badrequest(request, "Invalid entry posted.");
                 } else {
                     partyDao.save(party);
+                    //Add subjects and collections
                     Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
@@ -77,7 +69,26 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         }
     }
 
-//    @Override
+    @Override
+    public ResponseContext postMedia(RequestContext request) {
+        MimeType mimeType = request.getContentType();
+        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            Party party = new Party();
+            try {
+                String partyAsJsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
+                assembleParty(party, partyAsJsonString);
+                Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
+                return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+            } catch (IOException e) {
+                logger.fatal("Cannot get inputstream from request.");
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported media type");
+        }
+    }
+
+    //    @Override
 //    public Party postMedia(MimeType mimeType, String slug, InputStream inputStream, RequestContext request) throws ResponseContextException {
 //        logger.info("Persisting Party as Media Entry");
 //
