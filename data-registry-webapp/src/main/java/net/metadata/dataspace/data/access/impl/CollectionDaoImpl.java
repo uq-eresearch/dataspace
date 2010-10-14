@@ -35,9 +35,8 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     @Override
     public Collection getByKey(String uriKey) {
         Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.id = :id AND o.isActive = :isActive");
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.id = :id");
         query.setParameter("id", id);
-        query.setParameter("isActive", true);
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;

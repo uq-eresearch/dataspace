@@ -35,7 +35,14 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     @Override
     public Party getByKey(String uriKey) {
         Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
-        return getById(id);
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.id = :id");
+        query.setParameter("id", id);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Party) resultList.get(0);
     }
 
     @Override

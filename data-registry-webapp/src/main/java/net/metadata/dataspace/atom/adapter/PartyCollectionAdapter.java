@@ -12,7 +12,10 @@ import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.iri.IRI;
-import org.apache.abdera.model.*;
+import org.apache.abdera.model.Content;
+import org.apache.abdera.model.Document;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -25,12 +28,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.activation.MimeType;
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-
-import net.metadata.dataspace.model.Collection;
 
 /**
  * User: alabri
@@ -45,25 +45,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getCollectionDao();
 
     private final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
-    private final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private final QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-
-    @Override
-    public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
-                           RequestContext requestContext) throws ResponseContextException {
-        Party party = new Party();
-        logger.info("Persisting Party: " + title);
-        try {
-            party.setTitle(title);
-            party.setSummary(summary);
-            party.setUpdated(updated);
-            party.setAuthors(getAuthors(authors));
-            partyDao.save(party);
-        } catch (Exception ex) {
-            logger.fatal("Error Persisting Party: " + title);
-        }
-        return party;
-    }
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -123,6 +104,73 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     }
 
     @Override
+    public ResponseContext deleteEntry(RequestContext request) {
+
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Party party = partyDao.getByKey(uriKey);
+        if (party == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            Entry entry = CollectionAdapterHelper.getEntryFromParty(party);
+            if (party.isActive()) {
+                try {
+                    deleteEntry(uriKey, request);
+                    return ProviderHelper.returnBase(entry, 200, party.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+                } catch (ResponseContextException e) {
+                    logger.fatal("Could not delete party entry");
+                    return ProviderHelper.servererror(request, e);
+                }
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+            }
+        }
+    }
+
+
+    public ResponseContext getEntry(RequestContext request) {
+
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Party party = partyDao.getByKey(uriKey);
+        if (party == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            if (party.isActive()) {
+                Entry entry = CollectionAdapterHelper.getEntryFromParty(party);
+                ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, party.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+                if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
+                    responseContext.setContentType(Constants.JSON_MIMETYPE);
+                    responseContext.setWriter(new JSONWriter());
+                } else if (request.getAccept().equals(Constants.ATOM_MIMETYPE)) {
+                    responseContext.setContentType(Constants.ATOM_MIMETYPE);
+                    responseContext.setWriter(new PrettyWriter());
+                } else {
+                    return ProviderHelper.notsupported(request, request.getAccept() + " mime type is not supported.");
+                }
+                return responseContext;
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+            }
+        }
+    }
+
+    @Override
+    public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
+                           RequestContext requestContext) throws ResponseContextException {
+        Party party = new Party();
+        logger.info("Persisting Party: " + title);
+        try {
+            party.setTitle(title);
+            party.setSummary(summary);
+            party.setUpdated(updated);
+            party.setAuthors(getAuthors(authors));
+            partyDao.save(party);
+        } catch (Exception ex) {
+            logger.fatal("Error Persisting Party: " + title);
+        }
+        return party;
+    }
+
+    @Override
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
         partyDao.softDelete(key);
     }
@@ -131,43 +179,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     public Party getEntry(String key, RequestContext requestContext) throws ResponseContextException {
         return partyDao.getByKey(key);
     }
-
-    public ResponseContext getEntry(RequestContext request) {
-
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
-        Party party = partyDao.getByKey(uriKey);
-        Abdera abdera = new Abdera();
-        Entry entry = abdera.newEntry();
-        entry.setId(ID_PREFIX + "parties/" + party.getUriKey());
-        entry.setTitle(party.getTitle());
-        entry.setSummary(party.getSummary());
-        entry.setUpdated(party.getUpdated());
-        Set<Subject> subjectSet = party.getSubjects();
-        for (Subject sub : subjectSet) {
-            Element subjectElement = entry.addExtension(SUBJECT_QNAME);
-            subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
-            subjectElement.setAttributeValue("value", sub.getValue());
-        }
-
-        Set<Collection> collectionSet = party.getCollectorOf();
-        for (Collection collection : collectionSet) {
-            Element collectorOfElement = entry.addExtension(COLLECTOR_OF_QNAME);
-            collectorOfElement.setAttributeValue("uri", ID_PREFIX + "collections/" + collection.getUriKey());
-        }
-
-
-        ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, party.getUpdated())
-                .setEntityTag(ProviderHelper.calculateEntityTag(entry));
-        if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
-            responseContext.setContentType(Constants.JSON_MIMETYPE);
-            responseContext.setWriter(new JSONWriter());
-        } else {
-            responseContext.setContentType(Constants.ATOM_MIMETYPE);
-            responseContext.setWriter(new PrettyWriter());
-        }
-        return responseContext;
-    }
-
 
     @Override
     public Iterable<Party> getEntries(RequestContext requestContext) throws ResponseContextException {

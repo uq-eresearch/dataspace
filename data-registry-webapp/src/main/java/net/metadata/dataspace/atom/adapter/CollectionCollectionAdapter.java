@@ -47,8 +47,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getSubjectDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
-    private final QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private final QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
     private final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
 
@@ -154,6 +152,55 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         return getEntry(request);
     }
 
+    @Override
+    public ResponseContext deleteEntry(RequestContext request) {
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Collection collection = collectionDao.getByKey(uriKey);
+        if (collection == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            Entry entry = CollectionAdapterHelper.getEntryFromCollection(collection);
+            if (collection.isActive()) {
+                try {
+                    deleteEntry(uriKey, request);
+                    return ProviderHelper.returnBase(entry, 200, collection.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+                } catch (ResponseContextException e) {
+                    logger.fatal("Could not delete collection entry");
+                    return ProviderHelper.servererror(request, e);
+                }
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+            }
+        }
+    }
+
+
+    @Override
+    public ResponseContext getEntry(RequestContext request) {
+
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Collection collection = collectionDao.getByKey(uriKey);
+        if (collection == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            if (collection.isActive()) {
+                Entry entry = CollectionAdapterHelper.getEntryFromCollection(collection);
+                ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, collection.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+                if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
+                    responseContext.setContentType(Constants.JSON_MIMETYPE);
+                    responseContext.setWriter(new JSONWriter());
+                } else if (request.getAccept().equals(Constants.ATOM_MIMETYPE)) {
+                    responseContext.setContentType(Constants.ATOM_MIMETYPE);
+                    responseContext.setWriter(new PrettyWriter());
+                } else {
+                    return ProviderHelper.notsupported(request, request.getAccept() + " mime type is not supported.");
+                }
+                return responseContext;
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+            }
+        }
+    }
 
     @Override
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
@@ -163,46 +210,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     @Override
     public Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
         return collectionDao.getByKey(key);
-    }
-
-    @Override
-    public ResponseContext getEntry(RequestContext request) {
-
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
-        Collection collection = collectionDao.getByKey(uriKey);
-        Abdera abdera = new Abdera();
-        Entry entry = abdera.newEntry();
-        entry.setId(ID_PREFIX + "collections/" + collection.getUriKey());
-        entry.setTitle(collection.getTitle());
-        entry.setSummary(collection.getSummary());
-        entry.setUpdated(collection.getUpdated());
-        entry.addSimpleExtension(LOCATION_QNAME, collection.getLocation());
-        Set<Subject> subjectSet = collection.getSubjects();
-        for (Subject sub : subjectSet) {
-            Element subjectElement = entry.addExtension(SUBJECT_QNAME);
-            subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
-            subjectElement.setAttributeValue("value", sub.getValue());
-        }
-
-        Set<Party> partySet = collection.getCollector();
-        for (Party sub : partySet) {
-            Element partyElement = entry.addExtension(COLLECTOR_QNAME);
-            partyElement.setAttributeValue("uri", ID_PREFIX + "parties/" + sub.getUriKey());
-        }
-
-//        entry.addSimpleExtension(COLLECTOR_QNAME, collection.getCollector().iterator().next().getUriKey());
-        entry.addLink(ID_PREFIX + "collections/" + collection.getUriKey(), "alternate");
-
-        ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, collection.getUpdated())
-                .setEntityTag(ProviderHelper.calculateEntityTag(entry));
-        if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
-            responseContext.setContentType(Constants.JSON_MIMETYPE);
-            responseContext.setWriter(new JSONWriter());
-        } else {
-            responseContext.setContentType(Constants.ATOM_MIMETYPE);
-            responseContext.setWriter(new PrettyWriter());
-        }
-        return responseContext;
     }
 
     public List<Person> getAuthors(Collection collection, RequestContext request) throws ResponseContextException {

@@ -1,14 +1,24 @@
 package net.metadata.dataspace.util;
 
+import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.model.Collection;
+import net.metadata.dataspace.model.Party;
+import net.metadata.dataspace.model.Subject;
+import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.text.UrlEncoding;
+import org.apache.abdera.model.Element;
+import org.apache.abdera.model.Entry;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.TargetType;
 import org.apache.log4j.Logger;
 
+import javax.xml.namespace.QName;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Set;
 
 /**
  * User: alabri
@@ -18,6 +28,11 @@ import java.io.InputStreamReader;
 public class CollectionAdapterHelper {
 
     private static Logger logger = Logger.getLogger(CollectionAdapterHelper.class);
+    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
+    private static final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
     public static String getEntryID(RequestContext request) {
         if (request.getTarget().getType() != TargetType.TYPE_ENTRY) {
@@ -56,4 +71,50 @@ public class CollectionAdapterHelper {
         return jsonString;
     }
 
+    public static Entry getEntryFromParty(Party party) {
+        Abdera abdera = new Abdera();
+        Entry entry = abdera.newEntry();
+        entry.setId(ID_PREFIX + "parties/" + party.getUriKey());
+        entry.setTitle(party.getTitle());
+        entry.setSummary(party.getSummary());
+        entry.setUpdated(party.getUpdated());
+        Set<Subject> subjectSet = party.getSubjects();
+        for (Subject sub : subjectSet) {
+            Element subjectElement = entry.addExtension(SUBJECT_QNAME);
+            subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
+            subjectElement.setAttributeValue("value", sub.getValue());
+        }
+
+        Set<Collection> collectionSet = party.getCollectorOf();
+        for (Collection collection : collectionSet) {
+            Element collectorOfElement = entry.addExtension(COLLECTOR_OF_QNAME);
+            collectorOfElement.setAttributeValue("uri", ID_PREFIX + "collections/" + collection.getUriKey());
+        }
+        return entry;
+    }
+
+    public static Entry getEntryFromCollection(Collection collection) {
+        Abdera abdera = new Abdera();
+        Entry entry = abdera.newEntry();
+        entry.setId(ID_PREFIX + "collections/" + collection.getUriKey());
+        entry.setTitle(collection.getTitle());
+        entry.setSummary(collection.getSummary());
+        entry.setUpdated(collection.getUpdated());
+        entry.addSimpleExtension(LOCATION_QNAME, collection.getLocation());
+        Set<Subject> subjectSet = collection.getSubjects();
+        for (Subject sub : subjectSet) {
+            Element subjectElement = entry.addExtension(SUBJECT_QNAME);
+            subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
+            subjectElement.setAttributeValue("value", sub.getValue());
+        }
+
+        Set<Party> partySet = collection.getCollector();
+        for (Party sub : partySet) {
+            Element partyElement = entry.addExtension(COLLECTOR_QNAME);
+            partyElement.setAttributeValue("uri", ID_PREFIX + "parties/" + sub.getUriKey());
+        }
+
+        entry.addLink(ID_PREFIX + "collections/" + collection.getUriKey(), "alternate");
+        return entry;
+    }
 }
