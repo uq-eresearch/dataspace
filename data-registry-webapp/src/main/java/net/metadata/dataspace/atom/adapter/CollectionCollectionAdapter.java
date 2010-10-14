@@ -98,7 +98,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 //                Set<Subject> subjects = getSubjects(extextensions);
                 collection.setSubjects(subjects);
                 collectionDao.save(collection);
-
                 entry.getIdElement().setValue(getId(collection));
                 IRI feedUri = getFeedIRI(collection, request);
 

@@ -3,7 +3,10 @@ package net.metadata.dataspace.model;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,8 +36,7 @@ public class Collection extends AbstractBaseEntity {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Subject> subjects = new HashSet<Subject>();
 
-    @NotNull
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Party> collector = new HashSet<Party>();
 
     @NotNull

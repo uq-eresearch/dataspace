@@ -6,7 +6,7 @@ import org.hibernate.validator.NotNull;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,10 +33,10 @@ public class Party extends AbstractBaseEntity {
     @CollectionOfElements
     private Set<String> authors;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Subject> subjects = new HashSet<Subject>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Collection> collectorOf = new HashSet<Collection>();
 
     public Party() {
