@@ -60,7 +60,7 @@ public class DataRegistryApplicationConfigurationTest {
             }
         }
         String actualVersion = getProperty(properties, "data.registry.version", "null");
-        String actualRevision = getProperty(properties, "data.registry.revision", "null");
+        String actualRevision = getProperty(properties, "revision", "null");
 
         assertEquals(expectedVersionNumber, actualVersion + "." + actualRevision);
     }
