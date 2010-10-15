@@ -43,7 +43,7 @@ public class DataRegistryApplicationConfigurationTest {
             }
         }
         try {
-            resourceAsStream = DataRegistryApplicationConfigurationImpl.class.getResourceAsStream("/revision.properties");
+            resourceAsStream = DataRegistryApplicationConfigurationImpl.class.getResourceAsStream("/META-INF/svninfo.properties");
             if (resourceAsStream == null) {
                 throw new Exception("Configuration file not found, please ensure there is a 'revision.properties' on the classpath");
             }
