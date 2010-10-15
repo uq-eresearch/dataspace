@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>data-registry-webapp</groupId>
-    <artifactId>data-registry-webapp</artifactId>
+    <groupId>metadata.net</groupId>
+    <artifactId>data-collections-registry</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0.${revision}</version>
     <name>data-registry-webapp Maven</name>
     <url>http://dataspace.metadata.net</url>
     <inceptionYear>2010</inceptionYear>
@@ -24,16 +24,6 @@
         <restletVersion>1.1.8</restletVersion>
     </properties>
     <build>
-        <finalName>data-registry-webapp</finalName>
-        <!--<resources>-->
-        <!--<resource>-->
-        <!--<directory>src/main/resources</directory>-->
-        <!--<filtering>true</filtering>-->
-        <!--</resource>-->
-        <!--</resources>-->
-        <!--<filters>-->
-        <!--<filter>src/main/resources/revision.properties</filter>-->
-        <!--</filters>-->
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -43,26 +33,37 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>tomcat-maven-plugin</artifactId>-->
-            <!--<configuration>-->
-            <!--<url>http://localhost:8080/manager</url>-->
-            <!--<server>tomcat</server>-->
-            <!--<path>/data-registry</path>-->
-            <!--<update>true</update>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
-
-            <!--<plugin>-->
-            <!--<groupId>org.mortbay.jetty</groupId>-->
-            <!--<artifactId>maven-jetty-plugin</artifactId>-->
-            <!--<configuration>-->
-            <!--<contextPath>/</contextPath>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
-
-
+            <plugin>
+                <groupId>au.edu.uq.itee.maenad</groupId>
+                <artifactId>maven-svninfo-plugin</artifactId>
+                <version>0.1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>svninfo</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${basedir}/target/classes/META-INF/svninfo.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -81,42 +82,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
-            <!--<plugin>-->
-            <!--<groupId>com.google.code.maven-svn-revision-number-plugin</groupId>-->
-            <!--<artifactId>maven-svn-revision-number-plugin</artifactId>-->
-            <!--<version>1.5</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<goals>-->
-            <!--<goal>revision</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<entries>-->
-            <!--<entry>-->
-            <!--<path>src/main/resources/svn-revision-trick.txt</path>-->
-            <!--<prefix>svn</prefix>-->
-            <!--<depth>infinity</depth>-->
-            <!--<reportUnversioned>true</reportUnversioned>-->
-            <!--<reportIgnored>false</reportIgnored>-->
-            <!--<reportOutOfDate>false</reportOutOfDate>-->
-            <!--</entry>-->
-            <!--</entries>-->
-            <!--&lt;!&ndash;<verbose>true</verbose>&ndash;&gt;-->
-            <!--</configuration>-->
-            <!--</plugin>-->
-
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-resources-plugin</artifactId>-->
-            <!--<version>2.4.3</version>-->
-            <!--<configuration>-->
-            <!--<encoding>UTF-8</encoding>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 

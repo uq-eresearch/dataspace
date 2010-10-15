@@ -8,14 +8,14 @@
         <property name="locations">
             <list>
                 <value>classpath:registry.properties</value>
-                <value>classpath:revision.properties</value>
+                <value>classpath:META-INF/svninfo.properties</value>
             </list>
         </property>
     </bean>
     <import resource="dao.xml"/>
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
-        <property name="version" value="${data.registry.version}.${data.registry.revision}"/>
+        <property name="version" value="${data.registry.version}.${revision}"/>
         <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
         <property name="collectionDao" ref="collectionDao"/>
         <property name="partyDao" ref="partyDao"/>
