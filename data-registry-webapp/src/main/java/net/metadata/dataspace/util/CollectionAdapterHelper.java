@@ -117,7 +117,12 @@ public class CollectionAdapterHelper {
         entry.setId(ID_PREFIX + "collections/" + collection.getUriKey());
         entry.setTitle(collection.getTitle());
         entry.setSummary(collection.getSummary());
+        entry.setContent(collection.getDescription());
         entry.setUpdated(collection.getUpdated());
+        Set<String> authors = collection.getAuthors();
+        for (String author : authors) {
+            entry.addAuthor(author);
+        }
         entry.addSimpleExtension(LOCATION_QNAME, collection.getLocation());
         Set<Subject> subjectSet = collection.getSubjects();
         for (Subject sub : subjectSet) {
@@ -234,7 +239,7 @@ public class CollectionAdapterHelper {
         List<Element> extensionElements = entry.getExtensions();
         for (Element extension : extensionElements) {
             if (extension.getQName().equals(COLLECTOR_QNAME)) {
-                String id = extension.getAttributeValue("id");
+                String id = extension.getAttributeValue("uri");
                 if (id != null) {
                     parties.add(id);
                 }

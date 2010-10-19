@@ -218,6 +218,26 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         return collectionDao.getAllActive();
     }
 
+//    protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
+//        //TODO this should relect changes to the collections
+//        feed.setUpdated(new Date());
+//        Iterable<Collection> collections = getEntries(request);
+//        if (collections != null) {
+//            for (Collection entryObj : collections) {
+//                Entry e = feed.addEntry();
+//                IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
+//                addEntryDetails(request, e, feedIri, entryObj);
+//
+//                if (isMediaEntry(entryObj)) {
+//                    addMediaContent(feedIri, e, entryObj, request);
+//                } else {
+//                    addContent(e, entryObj, request);
+//                }
+//                e = CollectionAdapterHelper.getEntryFromCollection(entryObj);
+//            }
+//        }
+//    }
+
     @Override
     public String getId(Collection collection) throws ResponseContextException {
         return ID_PREFIX + "collections/" + collection.getUriKey();
