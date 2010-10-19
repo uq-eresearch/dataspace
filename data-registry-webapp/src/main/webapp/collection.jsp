@@ -198,6 +198,7 @@ function loadCollection(id) {
         preventCache: true,
         timeout: 5000,
         load: function(response, ioArgs) {
+            removeExtraFields();
             var idElement = dojo.byId('collectionIdXml');
             idElement.value = response.getElementsByTagName('id')[0].childNodes[0].nodeValue;
 
@@ -286,34 +287,41 @@ function deleteCollection(id) {
     });
 }
 
+function removeExtraFields() {
+
+    var subjectCounter = dojo.byId('numberOfSubjects');
+    var numberOfSubjects = Number(subjectCounter.value);
+    if (numberOfSubjects > 0) {
+        for (var i = 1; i <= numberOfSubjects; i++) {
+            removeElement('newCollectionForm', 'subject' + i);
+        }
+    }
+    var authorCounter = dojo.byId('numberOfAuthors');
+    var numberOfAuthors = Number(authorCounter.value);
+    if (numberOfAuthors > 0) {
+        for (var i = 1; i <= numberOfAuthors; i++) {
+            removeElement('newCollectionForm', 'author' + i);
+        }
+    }
+    var collectorCounter = dojo.byId('numberOfCollectors');
+    var numberOfCollectors = Number(collectorCounter.value);
+    if (numberOfCollectors > 0) {
+        for (var i = 1; i <= numberOfCollectors; i++) {
+            removeElement('newCollectionForm', 'collector' + i);
+        }
+    }
+    dojo.byId('numberOfSubjects').value = 0;
+    dojo.byId('numberOfAuthors').value = 0;
+    dojo.byId('numberOfCollectors').value = 0;
+}
 function setOperation(op) {
     var operationElement = dojo.byId('operation');
     operationElement.value = op;
     var submitButton = dojo.byId('collectionSubmitButton');
 
     if (op == 'add') {
+        removeExtraFields();
         submitButton.value = 'Submit Collection';
-        var authorCounter = dojo.byId('numberOfAuthors');
-        var numberOfAuthors = Number(authorCounter.value);
-        if (numberOfAuthors > 0) {
-            for (var i = 1; i <= numberOfAuthors; i++) {
-                removeElement('newCollectionForm', 'author' + i);
-            }
-        }
-        var subjectCounter = dojo.byId('numberOfSubjects');
-        var numberOfSubjects = Number(subjectCounter.value);
-        if (numberOfSubjects > 0) {
-            for (var i = 1; i <= numberOfSubjects; i++) {
-                removeElement('newCollectionForm', 'subject' + i);
-            }
-        }
-        var collectorCounter = dojo.byId('numberOfCollectors');
-        var numberOfCollectors = Number(collectorCounter.value);
-        if (numberOfCollectors > 0) {
-            for (var i = 1; i <= numberOfCollectors; i++) {
-                removeElement('newCollectionForm', 'collector' + i);
-            }
-        }
     } else if (op == 'edit') {
         submitButton.value = 'Update Collection';
     }
