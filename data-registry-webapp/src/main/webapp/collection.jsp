@@ -125,6 +125,7 @@ function addCollector(tb) {
     tbody.insertBefore(row, dojo.byId('submitButton'));
     collectorsCounter.value = (numberOfcollectors + 1);
 }
+
 function submitCollection() {
     var operationElement = dojo.byId('operation');
     var authorCounter = dojo.byId('numberOfAuthors');
@@ -252,6 +253,8 @@ function loadCollection(id) {
             }
 
             setOperation('edit');
+            dijit.byId('mainTabContainer').selectChild('tabAddUpdateCollections');
+
             return response;
         },
         error: function(response, ioArgs) {
@@ -287,11 +290,39 @@ function setOperation(op) {
     var operationElement = dojo.byId('operation');
     operationElement.value = op;
     var submitButton = dojo.byId('collectionSubmitButton');
+
     if (op == 'add') {
         submitButton.value = 'Submit Collection';
+        var authorCounter = dojo.byId('numberOfAuthors');
+        var numberOfAuthors = Number(authorCounter.value);
+        if (numberOfAuthors > 0) {
+            for (var i = 1; i <= numberOfAuthors; i++) {
+                removeElement('newCollectionForm', 'author' + i);
+            }
+        }
+        var subjectCounter = dojo.byId('numberOfSubjects');
+        var numberOfSubjects = Number(subjectCounter.value);
+        if (numberOfSubjects > 0) {
+            for (var i = 1; i <= numberOfSubjects; i++) {
+                removeElement('newCollectionForm', 'subject' + i);
+            }
+        }
+        var collectorCounter = dojo.byId('numberOfCollectors');
+        var numberOfCollectors = Number(collectorCounter.value);
+        if (numberOfCollectors > 0) {
+            for (var i = 1; i <= numberOfCollectors; i++) {
+                removeElement('newCollectionForm', 'collector' + i);
+            }
+        }
     } else if (op == 'edit') {
         submitButton.value = 'Update Collection';
     }
+}
+function removeElement(tb, elementId) {
+    var table = dojo.byId(tb);
+    var tbody = table.getElementsByTagName('tbody')[0];
+    var element = dojo.byId(elementId);
+    tbody.removeChild(element);
 }
 </script>
 </head>
