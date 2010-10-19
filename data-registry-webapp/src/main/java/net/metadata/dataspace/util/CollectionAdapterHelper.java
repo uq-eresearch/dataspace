@@ -23,7 +23,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * User: alabri
@@ -200,16 +203,6 @@ public class CollectionAdapterHelper {
         }
     }
 
-    private Map<String, String> getExtensionMap(List<Element> elements) {
-        Map<String, String> extensionsMap = new HashMap<String, String>();
-        for (Element element : elements) {
-            if (element.getElements().size() < 1) {
-                extensionsMap.put(element.getQName().getLocalPart(), element.getText());
-            }
-        }
-        return extensionsMap;
-    }
-
     private static Set<String> getAuthors(List<Person> persons) {
         Set<String> authors = new HashSet<String>();
         for (Person person : persons) {
@@ -239,12 +232,22 @@ public class CollectionAdapterHelper {
         List<Element> extensionElements = entry.getExtensions();
         for (Element extension : extensionElements) {
             if (extension.getQName().equals(COLLECTOR_QNAME)) {
-                String id = extension.getAttributeValue("uri");
+                String id = getEntityID(extension.getAttributeValue("uri"));
                 if (id != null) {
                     parties.add(id);
                 }
             }
         }
         return parties;
+    }
+
+    public static String getEntityID(String fullUrl) {
+
+        if (fullUrl.contains("?")) {
+            fullUrl = fullUrl.split("\\?")[0];
+        }
+
+        String[] segments = fullUrl.split("/");
+        return UrlEncoding.decode(segments[segments.length - 1]);
     }
 }

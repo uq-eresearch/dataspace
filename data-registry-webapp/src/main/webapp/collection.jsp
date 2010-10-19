@@ -28,8 +28,7 @@ function addCollection() {
         timeout: 5000,
         load: function(response, ioArgs) {
             responseElement.innerHTML = response;
-            collectionStore.url = '/collections';
-            //            dijit.byId('fv1').setFeedFromUrl("collections");
+            grid.setSortIndex(1, true);
             return response;
         },
         error: function(response, ioArgs) {
@@ -84,7 +83,7 @@ function updateCollection() {
         load: function(response, ioArgs) {
             responseElement.innerHTML = response;
 
-            dijit.byId('fv1').setFeedFromUrl("collections");
+            grid.setSortIndex(1, true);
             return response;
         },
         error: function(response, ioArgs) {
@@ -132,6 +131,7 @@ function addCollector(tb) {
     collectorsCounter.value = (numberOfcollectors + 1);
 }
 function submitCollection() {
+    var operationElement = dojo.byId('operation');
     var authorCounter = dojo.byId('numberOfAuthors');
     var numberOfAuthors = Number(authorCounter.value);
     var subjectCounter = dojo.byId('numberOfSubjects');
@@ -140,7 +140,11 @@ function submitCollection() {
     var numberOfCollectors = Number(collectorCounter.value);
     var now = new Date();
     var xmlString = '<?xml version="1.0"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:uqdata="http://dataspace.metadata.net/">';
-    xmlString = xmlString + '<id>urn:uuid:' + now.getTime() + '</id>';
+    if (operationElement.value == 'add') {
+        xmlString = xmlString + '<id>urn:uuid:' + now.getTime() + '</id>';
+    } else {
+        xmlString = xmlString + '<id>' + dojo.byId('collectionIdXml').value + '</id>';
+    }
     xmlString = xmlString + '<title type="text">' + dojo.byId('collectionTitleInput').value + '</title>';
     xmlString = xmlString + '<updated>2010-10-19T01:38:40.899Z</updated>';
     xmlString = xmlString + '<summary type="text">' + dojo.byId('collectionSummaryInput').value + '</summary>';
@@ -170,7 +174,7 @@ function submitCollection() {
         timeout: 5000,
         load: function(response, ioArgs) {
             responseElement.innerHTML = response;
-            dijit.byId('fv1').setFeedFromUrl("collections");
+            grid.setSortIndex(1, true);
             return response;
         },
         error: function(response, ioArgs) {
@@ -198,6 +202,9 @@ function loadCollection(id) {
         preventCache: true,
         timeout: 5000,
         load: function(response, ioArgs) {
+            var idElement = dojo.byId('collectionIdXml');
+            idElement.value = response.getElementsByTagName('id')[0].childNodes[0].nodeValue;
+
             var titleElement = dojo.byId('collectionTitleInput');
             titleElement.value = response.getElementsByTagName('title')[0].childNodes[0].nodeValue;
 
@@ -249,6 +256,7 @@ function loadCollection(id) {
                 }
             }
 
+            setOperation('edit');
             return response;
         },
         error: function(response, ioArgs) {
@@ -270,7 +278,7 @@ function deleteCollection(id) {
         preventCache: true,
         timeout: 5000,
         load: function(response, ioArgs) {
-            responseElement.innerHTML = response;
+            grid.update();
             return response;
         },
         error: function(response, ioArgs) {
@@ -278,6 +286,17 @@ function deleteCollection(id) {
             return response;
         }
     });
+}
+
+function setOperation(op) {
+    var operationElement = dojo.byId('operation');
+    operationElement.value = op;
+    var submitButton = dojo.byId('collectionSubmitButton');
+    if (op == 'add') {
+        submitButton.value = 'Submit Collection';
+    } else if (op == 'edit') {
+        submitButton.value = 'Update Collection';
+    }
 }
 </script>
 </head>
@@ -343,58 +362,68 @@ function deleteCollection(id) {
              structure="collectionLayout" style="width: 600px; height: 200px;"></div>
 
         <br/>
-        <table id="newCollectionForm">
-            <tr>
-                <th>Title</th>
-                <td><input type="text" id="collectionTitleInput" name="collectionTitleInput"/></td>
-            </tr>
-            <tr>
-                <th>Location</th>
-                <td><input type="text" id="collectionLocationInput" name="collectionLocationInput"/></td>
-            </tr>
-            <tr>
-                <th>Summary</th>
-                <td><input type="text" id="collectionSummaryInput" name="collectionSummaryInput"/></td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td><textarea id="collectionContent" rows="5" cols="50"></textarea></td>
-            </tr>
-            <tr id="subject0">
-                <th>Subject:</th>
-                <td>Vocabulary <input type="text" id="subjectVocabulary0"/> Value <input type="text"
-                                                                                         id="subjectValue0"/>
-                    <input type="button" id="newSubjectButton" value="New Subject"
-                           onclick="addSubject('newCollectionForm')"/>
-                    <input id="numberOfSubjects" type="hidden" value="0"/>
-                </td>
-            </tr>
-            <tr id="author0">
-                <th>Author Name</th>
-                <td><input type="text" id="authorName0" name="authorName0"/><input type="button"
-                                                                                   id="newAuthorButton"
-                                                                                   value="New Author"
-                                                                                   onclick="addAuthor('newCollectionForm')"/>
-                    <input id="numberOfAuthors" type="hidden" value="0"/></td>
-            </tr>
-            <tr id="collector0">
-                <th>Collector Id</th>
-                <td><input type="text" id="collectorId0" name="collectorId0"/><input type="button"
-                                                                                     id="newCollectorButton"
-                                                                                     value="New Collector"
-                                                                                     onclick="addCollector('newCollectionForm')"/>
-                    <input id="numberOfCollectors" type="hidden" value="0"/></td>
-            </tr>
-            <tr id="submitButton">
-                <th></th>
-                <td><input type="button" id="collectionSubmitButton" name="collectionSubmitButton"
-                           value="Submit Collection" onclick="submitCollection()"/> <input type="button"
-                                                                                           value="Clear Output"
-                                                                                           onclick="clearResponse('serverResponseSubmitCollection')"/>
-                </td>
-            </tr>
+        <b>Create/Update Collection</b>
+        <br/>
 
-        </table>
+        <form id="collectionForm">
+            <table id="newCollectionForm">
+                <tr>
+                    <th>Title</th>
+                    <td>
+                        <input type="text" id="collectionTitleInput" name="collectionTitleInput"/>
+                        <input type="hidden" id="collectionIdXml" value=""/>
+                        <input type="hidden" id="operation" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td><input type="text" id="collectionLocationInput" name="collectionLocationInput"/></td>
+                </tr>
+                <tr>
+                    <th>Summary</th>
+                    <td><input type="text" id="collectionSummaryInput" name="collectionSummaryInput"/></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td><textarea id="collectionContent" rows="5" cols="50"></textarea></td>
+                </tr>
+                <tr id="subject0">
+                    <th>Subject:</th>
+                    <td>Vocabulary <input type="text" id="subjectVocabulary0"/> Value <input type="text"
+                                                                                             id="subjectValue0"/>
+                        <input type="button" id="newSubjectButton" value="New Subject"
+                               onclick="addSubject('newCollectionForm')"/>
+                        <input id="numberOfSubjects" type="hidden" value="0"/>
+                    </td>
+                </tr>
+                <tr id="author0">
+                    <th>Author Name</th>
+                    <td><input type="text" id="authorName0" name="authorName0"/><input type="button"
+                                                                                       id="newAuthorButton"
+                                                                                       value="New Author"
+                                                                                       onclick="addAuthor('newCollectionForm')"/>
+                        <input id="numberOfAuthors" type="hidden" value="0"/></td>
+                </tr>
+                <tr id="collector0">
+                    <th>Collector ID (URI)</th>
+                    <td><input type="text" id="collectorId0" name="collectorId0"/><input type="button"
+                                                                                         id="newCollectorButton"
+                                                                                         value="New Collector"
+                                                                                         onclick="addCollector('newCollectionForm')"/>
+                        <input id="numberOfCollectors" type="hidden" value="0"/></td>
+                </tr>
+                <tr id="submitButton">
+                    <th></th>
+                    <td><input type="button" id="collectionSubmitButton" name="collectionSubmitButton"
+                               value="Submit Collection" onclick="submitCollection()"/> <input type="button"
+                                                                                               value="Clear Output"
+                                                                                               onclick="clearResponse('serverResponseSubmitCollection')"/>
+                        <input type="reset" value="Reset Form" onclick="setOperation('add')">
+                    </td>
+                </tr>
+
+            </table>
+        </form>
         <pre id="serverResponseSubmitCollection"></pre>
 
         <br/>
