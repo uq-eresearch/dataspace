@@ -256,7 +256,6 @@
             <url>http://maven.restlet.org</url>
         </repository>
 
-
         <!--<repository>-->
         <!--<id>local</id>-->
         <!--<name>Local repository in project tree</name>-->

@@ -60,7 +60,7 @@ public class CollectionAdapterHelper {
 
         String fullUrl = request.getUri().toString();
         String representation = null;
-        if (fullUrl.contains("?")) {
+        if (fullUrl.contains("?repr")) {
             representation = fullUrl.split("repr=")[1];
         }
         return representation;

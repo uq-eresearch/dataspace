@@ -49,9 +49,10 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     @Override
     public ResponseContext postEntry(RequestContext request) {
         MimeType mimeType = request.getContentType();
-        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+        String baseType = mimeType.getBaseType();
+        if (baseType.equals(Constants.JSON_MIMETYPE)) {
             return postMedia(request);
-        } else if (mimeType.getBaseType().equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+        } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
                 Collection collection = CollectionAdapterHelper.getCollectionFromEntry(entry);
@@ -238,7 +239,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public String[] getAccepts(RequestContext request) {
-        return new String[]{Constants.ATOM_ENTRY_MIMETYPE + ";type=entry", Constants.JSON_MIMETYPE};
+        return new String[]{Constants.ATOM_ENTRY_MIMETYPE, Constants.JSON_MIMETYPE};
     }
 
     @Override

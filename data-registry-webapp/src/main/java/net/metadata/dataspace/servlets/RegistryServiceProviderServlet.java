@@ -21,7 +21,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
         partyCollectionAdapter.setHref(partiesPath);
 
         SimpleWorkspaceInfo partyWorkSpace = new SimpleWorkspaceInfo();
-        partyWorkSpace.setTitle("Data Collections Registry Workspace");
+        partyWorkSpace.setTitle("UQ Collections Registry");
         partyWorkSpace.addCollection(partyCollectionAdapter);
 
         //collections collection and workspace
@@ -30,12 +30,12 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
         collectionCollectionAdapter.setHref(collectionsPath);
         partyWorkSpace.addCollection(collectionCollectionAdapter);
 
+
         String base = "/";
         DefaultProvider provider = new DefaultProvider(base);
 
         //Add workspaces
         provider.addWorkspace(partyWorkSpace);
-
         provider.init(getAbdera(), null);
         return provider;
     }
