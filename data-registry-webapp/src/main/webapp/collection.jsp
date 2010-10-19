@@ -23,7 +23,6 @@ function addCollection() {
         timeout: 5000,
         load: function(response, ioArgs) {
             responseElement.innerHTML = response;
-            grid.setSortIndex(1, true);
             return response;
         },
         error: function(response, ioArgs) {
@@ -77,8 +76,6 @@ function updateCollection() {
         timeout: 5000,
         load: function(response, ioArgs) {
             responseElement.innerHTML = response;
-
-            grid.setSortIndex(1, true);
             return response;
         },
         error: function(response, ioArgs) {
@@ -120,7 +117,7 @@ function addCollector(tb) {
     var numberOfcollectors = Number(collectorsCounter.value);
     var row = dojo.create('tr');
     row.setAttribute('id', 'collector' + (numberOfcollectors + 1));
-    row.appendChild(dojo.create('th', { innerHTML: 'Collector Id' }));
+    row.appendChild(dojo.create('th', { innerHTML: 'Collector Id (URI)' }));
     row.appendChild(dojo.create('td', { innerHTML: '<input type="text" id="collectorId' + (numberOfcollectors + 1) + '"/>'}));
     tbody.insertBefore(row, dojo.byId('submitButton'));
     collectorsCounter.value = (numberOfcollectors + 1);
@@ -170,7 +167,6 @@ function submitCollection() {
         timeout: 5000,
         load: function(response, ioArgs) {
             responseElement.innerHTML = response;
-            grid.setSortIndex(1, true);
             return response;
         },
         error: function(response, ioArgs) {
@@ -249,7 +245,7 @@ function loadCollection(id) {
                 for (var i = 1; i < collectorList.length; i++) {
                     addCollector('newCollectionForm');
                     collectorElement = dojo.byId('collectorId' + i);
-                    collectorElement.value = collectorList[i].attributes.getNamedItem('id').value;
+                    collectorElement.value = collectorList[i].attributes.getNamedItem('uri').value;
                 }
             }
 
@@ -277,7 +273,6 @@ function deleteCollection(id) {
         preventCache: true,
         timeout: 5000,
         load: function(response, ioArgs) {
-            grid.update();
             return response;
         },
         error: function(response, ioArgs) {
@@ -338,9 +333,6 @@ function removeElement(tb, elementId) {
 <div class="wrapper">
     <jsp:include page="include/title.jsp"/>
     <div class="content">
-        <br/>
-        <b>All Collections</b>
-
         <script type="text/javascript">
             var collectionLayout = [
                 [
@@ -351,7 +343,7 @@ function removeElement(tb, elementId) {
                     },
                     {
                         field: "author",
-                        name: "Author",
+                        name: "Authors",
                         width: '10',
                         formatter: function(value) {
                             var ret = "";

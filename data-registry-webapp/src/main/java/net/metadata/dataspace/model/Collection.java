@@ -17,7 +17,7 @@ import java.util.Set;
  * Time: 3:32:27 PM
  */
 @Entity
-public class Collection extends AbstractBaseEntity implements CommonEntity {
+public class Collection extends AbstractBaseEntity {
 
     private static final long serialVersionUID = 1L;
 

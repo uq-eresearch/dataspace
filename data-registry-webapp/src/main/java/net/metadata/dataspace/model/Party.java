@@ -17,7 +17,7 @@ import java.util.Set;
  * Time: 3:32:39 PM
  */
 @Entity
-public class Party extends AbstractBaseEntity implements CommonEntity {
+public class Party extends AbstractBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
