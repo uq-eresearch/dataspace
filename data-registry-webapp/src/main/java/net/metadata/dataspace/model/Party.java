@@ -17,7 +17,7 @@ import java.util.Set;
  * Time: 3:32:39 PM
  */
 @Entity
-public class Party extends AbstractBaseEntity {
+public class Party extends AbstractBaseEntity implements CommonEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,6 +26,9 @@ public class Party extends AbstractBaseEntity {
 
     @NotNull
     private String summary; //description
+
+    @NotNull
+    private String description;
 
     @NotNull
     private Date updated;
@@ -56,6 +59,14 @@ public class Party extends AbstractBaseEntity {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getUpdated() {

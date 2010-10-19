@@ -255,6 +255,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             JSONObject jsonObj = new JSONObject(jsonString);
             party.setTitle(jsonObj.getString("title"));
             party.setSummary(jsonObj.getString("summary"));
+            party.setDescription(jsonObj.getString("description"));
             party.setUpdated(new Date());
 
             JSONArray authors = jsonObj.getJSONArray("authors");

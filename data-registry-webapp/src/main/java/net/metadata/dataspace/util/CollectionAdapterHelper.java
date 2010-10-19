@@ -182,8 +182,15 @@ public class CollectionAdapterHelper {
             Collection collection = new Collection();
             collection.setTitle(entry.getTitle());
             collection.setSummary(entry.getSummary());
+            collection.setDescription(entry.getContent());
             collection.setUpdated(entry.getUpdated());
             collection.setAuthors(getAuthors(entry.getAuthors()));
+            List<Element> extensions = entry.getExtensions();
+            for (Element extension : extensions) {
+                if (extension.getQName().equals(LOCATION_QNAME)) {
+                    collection.setLocation(extension.getText());
+                }
+            }
             return collection;
         }
     }
@@ -206,4 +213,33 @@ public class CollectionAdapterHelper {
         return authors;
     }
 
+    public static Set<Subject> getSubjects(Entry entry) {
+        Set<Subject> subjects = new HashSet<Subject>();
+        List<Element> extensionElements = entry.getExtensions();
+        for (Element extension : extensionElements) {
+            if (extension.getQName().equals(SUBJECT_QNAME)) {
+                String vocabulary = extension.getAttributeValue("vocabulary");
+                String value = extension.getAttributeValue("value");
+                if (vocabulary != null && value != null) {
+                    Subject subject = new Subject(vocabulary, value);
+                    subjects.add(subject);
+                }
+            }
+        }
+        return subjects;
+    }
+
+    public static Set<String> getCollectorUriKeys(Entry entry) {
+        Set<String> parties = new HashSet<String>();
+        List<Element> extensionElements = entry.getExtensions();
+        for (Element extension : extensionElements) {
+            if (extension.getQName().equals(COLLECTOR_QNAME)) {
+                String id = extension.getAttributeValue("id");
+                if (id != null) {
+                    parties.add(id);
+                }
+            }
+        }
+        return parties;
+    }
 }

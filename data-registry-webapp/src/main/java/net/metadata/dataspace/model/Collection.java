@@ -17,7 +17,7 @@ import java.util.Set;
  * Time: 3:32:27 PM
  */
 @Entity
-public class Collection extends AbstractBaseEntity {
+public class Collection extends AbstractBaseEntity implements CommonEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,6 +26,9 @@ public class Collection extends AbstractBaseEntity {
 
     @NotNull
     private String summary; //description
+
+    @NotNull
+    private String description;
 
     @NotNull
     private Date updated;
@@ -67,6 +70,14 @@ public class Collection extends AbstractBaseEntity {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<Subject> getSubjects() {

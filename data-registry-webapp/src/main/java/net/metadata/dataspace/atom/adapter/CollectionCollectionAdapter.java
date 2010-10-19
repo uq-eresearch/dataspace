@@ -57,11 +57,27 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                 Entry entry = getEntryFromRequest(request);
                 Collection collection = CollectionAdapterHelper.getCollectionFromEntry(entry);
                 if (collection == null) {
-                    return ProviderHelper.badrequest(request, "Invalid entry posted.");
+                    return ProviderHelper.badrequest(request, "Invalid Entry.");
                 } else {
                     collectionDao.save(collection);
-
+                    collection.setUpdated(new Date());
                     //TODO Add subjects and collectors
+                    Set<Subject> subjects = CollectionAdapterHelper.getSubjects(entry);
+                    for (Subject subject : subjects) {
+                        collection.getSubjects().add(subject);
+                        subjectDao.save(subject);
+                    }
+                    collectionDao.update(collection);
+
+                    Set<String> collectorUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                    for (String uriKey : collectorUriKeys) {
+                        Party party = partyDao.getByKey(uriKey);
+                        if (party != null) {
+                            party.getCollectorOf().add(collection);
+                            collection.getCollector().add(party);
+                        }
+                    }
+                    collectionDao.update(collection);
 
                     Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
@@ -290,6 +306,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             JSONObject jsonObj = new JSONObject(jsonString);
             collection.setTitle(jsonObj.getString("title"));
             collection.setSummary(jsonObj.getString("summary"));
+            collection.setDescription(jsonObj.getString("description"));
             collection.setUpdated(new Date());
             collection.setLocation(jsonObj.getString("location"));
 

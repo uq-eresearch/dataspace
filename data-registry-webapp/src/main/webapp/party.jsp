@@ -140,6 +140,7 @@
         <textarea rows="8" cols="100" id="partyJson">{
             "title":"Tea Party",
             "summary":"Tax Enough Already",
+            "description":"Tax Enough Already description",
             "content":"Optional Content",
             "subject":[{"vocabulary": "anzsrc-for", "value": "160499"}],
             "authors":["Abdul Alabri","Nigel Ward"],

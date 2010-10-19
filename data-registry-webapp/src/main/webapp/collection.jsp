@@ -176,11 +176,13 @@
                 var numberOfSubjects = Number(subjectCounter.value);
                 var collectorCounter = dojo.byId('numberOfCollectors');
                 var numberOfCollectors = Number(collectorCounter.value);
-
+                var now = new Date();
                 var xmlString = '<?xml version="1.0"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:uqdata="http://dataspace.metadata.net/">';
+                xmlString = xmlString + '<id>urn:uuid:' + now.getTime() + '</id>';
                 xmlString = xmlString + '<title type="text">' + dojo.byId('collectionTitleInput').value + '</title>';
-                xmlString = xmlString + '<updated>' + new Date() + '</updated>';
-                xmlString = xmlString + '<summary type="text">' + dojo.byId('collectionSummary').value + '</summary>';
+                xmlString = xmlString + '<updated>2010-10-19T01:38:40.899Z</updated>';
+                xmlString = xmlString + '<summary type="text">' + dojo.byId('collectionSummaryInput').value + '</summary>';
+                xmlString = xmlString + '<content type="text">' + dojo.byId('collectionContent').value + '</content>';
                 for (var i = 0; i <= numberOfAuthors; i++) {
                     xmlString = xmlString + '<author><name>' + dojo.byId('authorName' + i).value + '</name></author>';
                 }
@@ -230,7 +232,11 @@
             </tr>
             <tr>
                 <th>Summary</th>
-                <td><textarea id="collectionSummary" rows="10" cols="50"></textarea></td>
+                <td><input type="text" id="collectionSummaryInput" name="collectionSummaryInput"/></td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td><textarea id="collectionContent" rows="10" cols="50"></textarea></td>
             </tr>
             <tr id="subject0">
                 <th>Subject:</th>
@@ -271,6 +277,7 @@
         <textarea rows="8" cols="100" id="collectionJson">{
             "title":"Money Collection",
             "summary":"This is a cool collection of non-stone money",
+            "description":"This is a cool collection of non-stone money description",
             "location":"http://e-research.sbs.uq.edu.au/client/Stats.html#metadata",
             "subject":[
             {"vocabulary": "anzsrc-for", "value": "160499"},
