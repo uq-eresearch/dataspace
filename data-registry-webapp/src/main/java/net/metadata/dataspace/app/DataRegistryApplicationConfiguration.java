@@ -13,6 +13,20 @@ import net.metadata.dataspace.data.connector.JpaConnector;
 public interface DataRegistryApplicationConfiguration {
 
     /**
+     * Set the title of the registry application
+     *
+     * @param registryTitle
+     */
+    void setRegistryTitle(String registryTitle);
+
+    /**
+     * Get the title of the registry application
+     *
+     * @return
+     */
+    String getRegistryTitle();
+
+    /**
      * Set the application version
      *
      * @param version

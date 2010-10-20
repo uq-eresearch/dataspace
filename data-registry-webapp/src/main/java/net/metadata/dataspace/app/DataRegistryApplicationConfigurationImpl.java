@@ -12,6 +12,7 @@ import net.metadata.dataspace.data.connector.JpaConnector;
  */
 public class DataRegistryApplicationConfigurationImpl implements DataRegistryApplicationConfiguration {
 
+    private String registryTitle;
     private String version;
     private CollectionDaoImpl collectionDao;
     private SubjectDaoImpl subjectDao;
@@ -24,6 +25,15 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
 
     public DataRegistryApplicationConfigurationImpl(String version) {
         this.version = version;
+    }
+
+
+    public void setRegistryTitle(String registryTitle) {
+        this.registryTitle = registryTitle;
+    }
+
+    public String getRegistryTitle() {
+        return registryTitle;
     }
 
     @Override
@@ -79,4 +89,5 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
     public JpaConnector getJpaConnector() {
         return jpaConnector;
     }
+
 }

@@ -15,6 +15,7 @@
     <import resource="dao.xml"/>
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
+        <property name="registryTitle" value="${data.registry.title}"/>
         <property name="version" value="${data.registry.version}.${revision}"/>
         <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
         <property name="collectionDao" ref="collectionDao"/>

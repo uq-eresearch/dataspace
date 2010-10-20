@@ -191,6 +191,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         feed.getSelfLink().setHref(ID_PREFIX + "parties");
         feed.getAlternateLink().setHref(ID_PREFIX + "parties?repr=application/atom+xml;type=feed");
         feed.getAlternateLink().setRel("alternate");
+        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": Parties");
         Iterable<Party> entries = getEntries(request);
         if (entries != null) {
             for (Party entryObj : entries) {
