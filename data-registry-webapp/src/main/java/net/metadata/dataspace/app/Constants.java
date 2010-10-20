@@ -17,4 +17,5 @@ public interface Constants {
     String UQ_DATA_COLLECTIONS_REGISTRY_NS = "http://dataspace.metadata.net/";
     String UQ_DATA_COLLECTIONS_REGISTRY_PFX = "uqdata";
 
+    String HTML_MIME_TYPE = "text/html";
 }

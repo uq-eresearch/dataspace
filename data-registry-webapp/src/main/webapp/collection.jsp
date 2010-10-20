@@ -1,4 +1,6 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <jsp:include page="include/header.jsp"/>
 
@@ -8,6 +10,49 @@ dojo.require("dijit.layout.TabContainer");
 dojo.require("dojox.data.AppStore");
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.parser");
+
+var collectionLayout = [
+    [
+        {
+            field: "title",
+            name: "Title",
+            width: 15
+        },
+        {
+            field: "author",
+            name: "Authors",
+            width: '10',
+            formatter: function(value) {
+                var ret = "";
+                if (value.name) {
+                    ret = value.name;
+                }
+                if (value.email) {
+                    if (value.name) {
+                        ret += " (" + value.email + ")";
+                    } else {
+                        ret = value.email;
+                    }
+                }
+                return ret;
+            }
+        },
+        {
+            field: "updated",
+            name: "Last Modified",
+            width: 'auto'
+        },
+        {
+            field: "id",
+            name: "Action",
+            width: 10,
+            formatter: function(item) {
+                var viewURL = "<a href=\"#\" onClick=\"loadCollection('" + item.toString() + "')\">Edit</a> <a href=\"#\" onClick=\"deleteCollection('" + item.toString() + "')\">Delete</a>";
+                return viewURL;
+            }
+        }
+    ]
+];
 
 function addCollection() {
     var responseElement = dojo.byId('serverResponse');
@@ -334,6 +379,7 @@ function removeElement(tb, elementId) {
     var element = dojo.byId(elementId);
     tbody.removeChild(element);
 }
+
 </script>
 </head>
 <body class="tundra">
@@ -342,55 +388,11 @@ function removeElement(tb, elementId) {
     <h2>Collections</h2>
 
     <div class="content">
-        <script type="text/javascript">
-            var collectionLayout = [
-                [
-                    {
-                        field: "title",
-                        name: "Title",
-                        width: 15
-                    },
-                    {
-                        field: "author",
-                        name: "Authors",
-                        width: '10',
-                        formatter: function(value) {
-                            var ret = "";
-                            if (value.name) {
-                                ret = value.name;
-                            }
-                            if (value.email) {
-                                if (value.name) {
-                                    ret += " (" + value.email + ")";
-                                } else {
-                                    ret = value.email;
-                                }
-                            }
-                            return ret;
-                        }
-                    },
-                    {
-                        field: "updated",
-                        name: "Last Modified",
-                        width: 'auto'
-                    },
-                    {
-                        field: "id",
-                        name: "Action",
-                        width: 10,
-                        formatter: function(item) {
-                            var viewURL = "<a href=\"#\" onClick=\"loadCollection('" + item.toString() + "')\">Edit</a> <a href=\"#\" onClick=\"deleteCollection('" + item.toString() + "')\">Delete</a>";
-                            return viewURL;
-                        }
-                    }
-                ]
-            ];
-        </script>
         <div id="mainTabContainer" dojoType="dijit.layout.TabContainer" style="width:100%;height:60ex">
             <div id="tabCollections" dojoType="dijit.layout.ContentPane" title="Collections"
                  style="width:40em;height:60ex;">
                 <div dojoType="dojox.data.AppStore"
-                     url="/collections"
+                     url="/collections?repr=application/atom+xml;type=feed"
                      jsId="collectionStore" label="title">
                     <script type="dojo/method" event="onLoad">
                         grid.setSortIndex(1, true);

@@ -7,7 +7,48 @@ dojo.require("dijit.layout.TabContainer");
 dojo.require("dojox.data.AppStore");
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.parser");
-
+var partyLayout = [
+    [
+        {
+            field: "title",
+            name: "Title",
+            width: 15
+        },
+        {
+            field: "author",
+            name: "Authors",
+            width: '10',
+            formatter: function(value) {
+                var ret = "";
+                if (value.name) {
+                    ret = value.name;
+                }
+                if (value.email) {
+                    if (value.name) {
+                        ret += " (" + value.email + ")";
+                    } else {
+                        ret = value.email;
+                    }
+                }
+                return ret;
+            }
+        },
+        {
+            field: "updated",
+            name: "Last Modified",
+            width: 'auto'
+        },
+        {
+            field: "id",
+            name: "Action",
+            width: 10,
+            formatter: function(item) {
+                var viewURL = "<a href=\"#\" onClick=\"loadParty('" + item.toString() + "')\">Edit</a> <a href=\"#\" onClick=\"deleteParty('" + item.toString() + "')\">Delete</a>";
+                return viewURL;
+            }
+        }
+    ]
+];
 function submitJsonParty() {
     var responseElement = dojo.byId('serverResponse');
     dojo.xhrPost({
@@ -334,50 +375,6 @@ function removeElement(tb, elementId) {
 <div class="wrapper">
     <jsp:include page="include/title.jsp"/>
     <h2>Parties</h2>
-    <script type="text/javascript">
-        var partyLayout = [
-            [
-                {
-                    field: "title",
-                    name: "Title",
-                    width: 15
-                },
-                {
-                    field: "author",
-                    name: "Authors",
-                    width: '10',
-                    formatter: function(value) {
-                        var ret = "";
-                        if (value.name) {
-                            ret = value.name;
-                        }
-                        if (value.email) {
-                            if (value.name) {
-                                ret += " (" + value.email + ")";
-                            } else {
-                                ret = value.email;
-                            }
-                        }
-                        return ret;
-                    }
-                },
-                {
-                    field: "updated",
-                    name: "Last Modified",
-                    width: 'auto'
-                },
-                {
-                    field: "id",
-                    name: "Action",
-                    width: 10,
-                    formatter: function(item) {
-                        var viewURL = "<a href=\"#\" onClick=\"loadParty('" + item.toString() + "')\">Edit</a> <a href=\"#\" onClick=\"deleteParty('" + item.toString() + "')\">Delete</a>";
-                        return viewURL;
-                    }
-                }
-            ]
-        ];
-    </script>
 
     <div class="content">
         <br/>
@@ -386,7 +383,7 @@ function removeElement(tb, elementId) {
             <div id="tabParties" dojoType="dijit.layout.ContentPane" title="Parties"
                  style="width:40em;height:60ex;">
                 <div dojoType="dojox.data.AppStore"
-                     url="/parties"
+                     url="/parties?repr=application/atom+xml;type=feed"
                      jsId="partyStore" label="title">
                     <script type="dojo/method" event="onLoad">
                         grid.setSortIndex(1, true);

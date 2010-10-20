@@ -8,6 +8,7 @@ import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.Subject;
+import net.metadata.dataspace.util.AtomFeedHelper;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
@@ -163,14 +164,35 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     }
 
     @Override
-    public String getMediaName(Party party) throws ResponseContextException {
-        return party.getTitle();
+    public ResponseContext getFeed(RequestContext request) {
+        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType != null) {
+            if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "party.jsp");
+            } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                return super.getFeed(request);
+            } else {
+                return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            }
+        } else {
+            String accept = request.getAccept();
+            if (accept.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                return super.getFeed(request);
+            } else {
+                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "party.jsp");
+            }
+        }
     }
 
-    @Override
-    public String getContentType(Party party) {
-        return Constants.JSON_MIMETYPE;
-    }
+    //    @Override
+//    public String getMediaName(Party party) throws ResponseContextException {
+//        return party.getTitle();
+//    }
+//
+//    @Override
+//    public String getContentType(Party party) {
+//        return Constants.JSON_MIMETYPE;
+//    }
 
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,

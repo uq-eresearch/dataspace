@@ -8,6 +8,7 @@ import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.Subject;
+import net.metadata.dataspace.util.AtomFeedHelper;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
@@ -137,9 +138,10 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     @Override
     public ResponseContext putEntry(RequestContext request) {
         logger.info("Updating Collection as Media Entry");
-        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
+        String mimeBaseType = request.getContentType().getBaseType();
+        if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
             putMedia(request);
-        } else if (request.getContentType().getBaseType().equals(Constants.ATOM_MIMETYPE)) {
+        } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
                 String collectionUriKey = CollectionAdapterHelper.getEntityID(entry.getId().toString());
@@ -221,15 +223,26 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         }
     }
 
-//    @Override
-//    public String getMediaName(Collection collection) throws ResponseContextException {
-//        return collection.getTitle();
-//    }
-//
-//    @Override
-//    public String getContentType(Collection collection) {
-//        return Constants.JSON_MIMETYPE;
-//    }
+    @Override
+    public ResponseContext getFeed(RequestContext request) {
+        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType != null) {
+            if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "collection.jsp");
+            } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                return super.getFeed(request);
+            } else {
+                return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            }
+        } else {
+            String accept = request.getAccept();
+            if (accept.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                return super.getFeed(request);
+            } else {
+                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "collection.jsp");
+            }
+        }
+    }
 
     @Override
     public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
