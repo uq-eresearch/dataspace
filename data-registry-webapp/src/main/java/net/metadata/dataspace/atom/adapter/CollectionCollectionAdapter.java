@@ -12,10 +12,7 @@ import net.metadata.dataspace.util.AtomFeedHelper;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
-import org.apache.abdera.model.Content;
-import org.apache.abdera.model.Element;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Person;
+import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
@@ -31,6 +28,8 @@ import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+
+import net.metadata.dataspace.model.Collection;
 
 /**
  * User: alabri
@@ -240,6 +239,29 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                 return super.getFeed(request);
             } else {
                 return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "collection.jsp");
+            }
+        }
+    }
+
+    @Override
+    protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
+        feed.setUpdated(new Date());
+        feed.getSelfLink().setHref(ID_PREFIX + "collections");
+        feed.getAlternateLink().setHref(ID_PREFIX + "collections?repr=application/atom+xml;type=feed");
+        feed.getAlternateLink().setRel("alternate");
+        Iterable<Collection> entries = getEntries(request);
+        if (entries != null) {
+            for (Collection entryObj : entries) {
+                Entry e = feed.addEntry();
+
+                IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
+                addEntryDetails(request, e, feedIri, entryObj);
+
+                if (isMediaEntry(entryObj)) {
+                    addMediaContent(feedIri, e, entryObj, request);
+                } else {
+                    addContent(e, entryObj, request);
+                }
             }
         }
     }

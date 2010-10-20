@@ -14,6 +14,7 @@ import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Feed;
 import org.apache.abdera.model.Person;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -184,6 +185,28 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         }
     }
 
+    @Override
+    protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
+        feed.setUpdated(new Date());
+        feed.getSelfLink().setHref(ID_PREFIX + "parties");
+        feed.getAlternateLink().setHref(ID_PREFIX + "parties?repr=application/atom+xml;type=feed");
+        feed.getAlternateLink().setRel("alternate");
+        Iterable<Party> entries = getEntries(request);
+        if (entries != null) {
+            for (Party entryObj : entries) {
+                Entry e = feed.addEntry();
+
+                IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
+                addEntryDetails(request, e, feedIri, entryObj);
+
+                if (isMediaEntry(entryObj)) {
+                    addMediaContent(feedIri, e, entryObj, request);
+                } else {
+                    addContent(e, entryObj, request);
+                }
+            }
+        }
+    }
     //    @Override
 //    public String getMediaName(Party party) throws ResponseContextException {
 //        return party.getTitle();
