@@ -151,7 +151,7 @@ function submitAtomParty() {
     xmlString = xmlString + '</entry>';
 
     var responseElement = dojo.byId('serverResponseSubmitParty');
-    dojo.xhrPost({
+    var httpArgs = {
         url:'/parties',
         contentType:"application/atom+xml;type=entry",
         headers: {
@@ -169,8 +169,12 @@ function submitAtomParty() {
             responseElement.innerHTML = response;
             return response;
         }
-    });
-
+    };
+    if (operationElement.value == 'add') {
+        dojo.xhrPost(httpArgs);
+    } else if (operationElement.value == 'edit') {
+        dojo.xhrPut(httpArgs);
+    }
 }
 
 function clearResponse(preElement) {

@@ -55,9 +55,10 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
-                Collection collection = CollectionAdapterHelper.getCollectionFromEntry(entry);
-                if (collection == null) {
-                    return ProviderHelper.badrequest(request, "Invalid Entry.");
+                Collection collection = new Collection();
+                boolean isValidColleciton = CollectionAdapterHelper.updateCollectionFromEntry(collection, entry);
+                if (!isValidColleciton) {
+                    return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     collectionDao.save(collection);
 
@@ -83,11 +84,11 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
-                logger.fatal("Invalid entry posted.", e);
+                logger.fatal("Invalid Entry", e);
                 return ProviderHelper.servererror(request, e);
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported media type");
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
         }
     }
 
@@ -106,12 +107,12 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                 return ProviderHelper.servererror(request, e);
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported media type");
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
         }
     }
 
     @Override
-    public ResponseContext putEntry(RequestContext request) {
+    public ResponseContext putMedia(RequestContext request) {
         logger.info("Updating Collection as Media Entry");
         if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
             InputStream inputStream = null;
@@ -119,12 +120,66 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                 inputStream = request.getInputStream();
             } catch (IOException e) {
                 logger.fatal("Cannot create inputstream from request.", e);
+                return ProviderHelper.servererror(request, e);
             }
             String collectionAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
             String uriKey = CollectionAdapterHelper.getEntryID(request);
             Collection collection = collectionDao.getByKey(uriKey);
             assembleCollectionFromJson(collection, collectionAsJsonString);
             collectionDao.update(collection);
+            Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
+            return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+    }
+
+    @Override
+    public ResponseContext putEntry(RequestContext request) {
+        logger.info("Updating Collection as Media Entry");
+        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            putMedia(request);
+        } else if (request.getContentType().getBaseType().equals(Constants.ATOM_MIMETYPE)) {
+            try {
+                Entry entry = getEntryFromRequest(request);
+                String collectionUriKey = CollectionAdapterHelper.getEntityID(entry.getId().toString());
+                Collection collection = collectionDao.getByKey(collectionUriKey);
+                boolean isValidaCollection = CollectionAdapterHelper.updateCollectionFromEntry(collection, entry);
+                if (collection == null || !isValidaCollection) {
+                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                } else {
+                    if (collection.isActive()) {
+                        collectionDao.update(collection);
+                        Set<Subject> subjects = CollectionAdapterHelper.getSubjects(entry);
+                        collection.setSubjects(subjects);
+                        for (Subject subject : subjects) {
+                            subjectDao.save(subject);
+                        }
+                        collectionDao.update(collection);
+
+                        Set<String> collectorUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                        for (String uriKey : collectorUriKeys) {
+                            Party party = partyDao.getByKey(uriKey);
+                            if (party != null) {
+                                party.getCollectorOf().add(collection);
+                                collection.getCollector().add(party);
+                            }
+                        }
+                        collection.setUpdated(new Date());
+                        collectionDao.update(collection);
+
+                        Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
+                        return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                    } else {
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                    }
+                }
+            } catch (ResponseContextException e) {
+                logger.fatal("Invalid Entry", e);
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
         }
         return getEntry(request);
     }
@@ -166,15 +221,15 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         }
     }
 
-    @Override
-    public String getMediaName(Collection collection) throws ResponseContextException {
-        return collection.getTitle();
-    }
-
-    @Override
-    public String getContentType(Collection collection) {
-        return Constants.JSON_MIMETYPE;
-    }
+//    @Override
+//    public String getMediaName(Collection collection) throws ResponseContextException {
+//        return collection.getTitle();
+//    }
+//
+//    @Override
+//    public String getContentType(Collection collection) {
+//        return Constants.JSON_MIMETYPE;
+//    }
 
     @Override
     public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,

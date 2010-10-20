@@ -62,7 +62,6 @@ function updateCollection() {
     var contentTypeCombo = dojo.byId('contentTypeForUpdate');
     var collectionIdField = dojo.byId('collectionIdForUpdate');
     var jsonContent = dojo.byId('updateCollectionJson').value;
-    alert(jsonContent);
     dojo.xhrPut({
         url:'/collections/' + collectionIdField.value,
         headers: {
@@ -155,7 +154,7 @@ function submitCollection() {
     xmlString = xmlString + '</entry>';
 
     var responseElement = dojo.byId('serverResponseSubmitCollection');
-    dojo.xhrPost({
+    var httpArgs = {
         url:'/collections',
         contentType:"application/atom+xml;type=entry",
         headers: {
@@ -173,7 +172,12 @@ function submitCollection() {
             responseElement.innerHTML = response;
             return response;
         }
-    });
+    }
+    if (operationElement.value == 'add') {
+        dojo.xhrPost(httpArgs);
+    } else if (operationElement.value == 'edit') {
+        dojo.xhrPut(httpArgs);
+    }
 
 }
 

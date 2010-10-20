@@ -191,11 +191,10 @@ public class CollectionAdapterHelper {
         }
     }
 
-    public static Collection getCollectionFromEntry(Entry entry) {
+    public static boolean updateCollectionFromEntry(Collection collection, Entry entry) {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            return null;
+            return false;
         } else {
-            Collection collection = new Collection();
             collection.setTitle(entry.getTitle());
             collection.setSummary(entry.getSummary());
             collection.setContent(entry.getContent());
@@ -207,7 +206,7 @@ public class CollectionAdapterHelper {
                     collection.setLocation(extension.getText());
                 }
             }
-            return collection;
+            return true;
         }
     }
 
