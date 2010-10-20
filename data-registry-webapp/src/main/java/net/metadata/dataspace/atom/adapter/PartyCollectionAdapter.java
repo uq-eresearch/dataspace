@@ -56,7 +56,25 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
                     return ProviderHelper.badrequest(request, "Invalid entry posted.");
                 } else {
                     partyDao.save(party);
-                    //Add subjects and collections
+                    Set<Subject> subjects = CollectionAdapterHelper.getSubjects(entry);
+                    for (Subject subject : subjects) {
+                        party.getSubjects().add(subject);
+                        subjectDao.save(subject);
+                    }
+                    partyDao.update(party);
+
+
+                    Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                    for (String uriKey : collectionUriKeys) {
+                        Collection collection = collectionDao.getByKey(uriKey);
+                        if (collection != null) {
+                            collection.getCollector().add(party);
+                            party.getCollectorOf().add(collection);
+                        }
+                    }
+                    party.setUpdated(new Date());
+                    partyDao.update(party);
+
                     Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
@@ -73,9 +91,9 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     public ResponseContext postMedia(RequestContext request) {
         MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            Party party = new Party();
             try {
                 String partyAsJsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
+                Party party = new Party();
                 assembleParty(party, partyAsJsonString);
                 Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
@@ -86,16 +104,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         } else {
             return ProviderHelper.notsupported(request, "Unsupported media type");
         }
-    }
-
-    @Override
-    public String getMediaName(Party party) throws ResponseContextException {
-        return party.getTitle();
-    }
-
-    @Override
-    public String getContentType(Party party) {
-        return Constants.JSON_MIMETYPE;
     }
 
     @Override
@@ -152,6 +160,16 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
             }
         }
+    }
+
+    @Override
+    public String getMediaName(Party party) throws ResponseContextException {
+        return party.getTitle();
+    }
+
+    @Override
+    public String getContentType(Party party) {
+        return Constants.JSON_MIMETYPE;
     }
 
     @Override
@@ -255,7 +273,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             JSONObject jsonObj = new JSONObject(jsonString);
             party.setTitle(jsonObj.getString("title"));
             party.setSummary(jsonObj.getString("summary"));
-            party.setDescription(jsonObj.getString("description"));
+            party.setContent(jsonObj.getString("content"));
             party.setUpdated(new Date());
 
             JSONArray authors = jsonObj.getJSONArray("authors");

@@ -179,7 +179,7 @@ function clearResponse(preElement) {
 }
 
 
-function loadCollection(id) {
+function loadParty(id) {
     dojo.xhrGet({
         url:id,
         handleAs:"xml",
@@ -201,24 +201,25 @@ function loadCollection(id) {
             var summaryElement = dojo.byId('partySummaryInput');
             summaryElement.value = response.getElementsByTagName('summary')[0].childNodes[0].nodeValue;
 
-            var descriptionElement = dojo.byId('partyContent');
-            descriptionElement.value = response.getElementsByTagName('content')[0].childNodes[0].nodeValue;
+            var contentElement = dojo.byId('partyContent');
+            contentElement.value = response.getElementsByTagName('content')[0].childNodes[0].nodeValue;
 
             var subjectList = response.getElementsByTagName('uqdata:subject');
-            var subjectVocab = dojo.byId('subjectVocabulary0');
-            var subjectValue = dojo.byId('subjectValue0');
-            subjectVocab.value = subjectList[0].attributes.getNamedItem('vocabulary').value;
-            subjectValue.value = subjectList[0].attributes.getNamedItem('value').value;
-            if (subjectList.length > 1) {
-                for (var i = 1; i < subjectList.length; i++) {
-                    addSubject('newPartyForm');
-                    subjectVocab = dojo.byId('subjectVocabulary' + i);
-                    subjectValue = dojo.byId('subjectValue' + i);
-                    subjectVocab.value = subjectList[i].attributes.getNamedItem('vocabulary').value;
-                    subjectValue.value = subjectList[i].attributes.getNamedItem('value').value;
+            if (subjectList && subjectList.length > 0) {
+                var subjectVocab = dojo.byId('subjectVocabulary0');
+                var subjectValue = dojo.byId('subjectValue0');
+                subjectVocab.value = subjectList[0].attributes.getNamedItem('vocabulary').value;
+                subjectValue.value = subjectList[0].attributes.getNamedItem('value').value;
+                if (subjectList.length > 1) {
+                    for (var i = 1; i < subjectList.length; i++) {
+                        addSubject('newPartyForm');
+                        subjectVocab = dojo.byId('subjectVocabulary' + i);
+                        subjectValue = dojo.byId('subjectValue' + i);
+                        subjectVocab.value = subjectList[i].attributes.getNamedItem('vocabulary').value;
+                        subjectValue.value = subjectList[i].attributes.getNamedItem('value').value;
+                    }
                 }
             }
-
             var authorList = response.getElementsByTagName('author');
             var authorElement = dojo.byId('authorName0');
             var authorName = authorList.item(0).childNodes[0].nextSibling.childNodes[0];
@@ -232,17 +233,18 @@ function loadCollection(id) {
                 }
             }
 
-            var collectorList = response.getElementsByTagName('uqdata:collectorOf');
-            var collectorElement = dojo.byId('collectorId0');
-            collectorElement.value = collectorList[0].attributes.getNamedItem('uri').value;
-            if (collectorList.length > 1) {
-                for (var i = 1; i < collectorList.length; i++) {
-                    addCollector('newPartyForm');
-                    collectorElement = dojo.byId('collectionId' + i);
-                    collectorElement.value = collectorList[i].attributes.getNamedItem('uri').value;
+            var collectionList = response.getElementsByTagName('uqdata:collectorOf');
+            if (collectionList && collectionList.length > 0) {
+                var collectionElement = dojo.byId('collectorId0');
+                collectionElement.value = collectionList[0].attributes.getNamedItem('uri').value;
+                if (collectionList.length > 1) {
+                    for (var i = 1; i < collectionList.length; i++) {
+                        addCollection('newPartyForm');
+                        collectionElement = dojo.byId('collectionId' + i);
+                        collectionElement.value = collectionList[i].attributes.getNamedItem('uri').value;
+                    }
                 }
             }
-
             setOperation('edit');
             dijit.byId('mainTabContainer').selectChild('tabAddUpdateParties');
 
@@ -254,7 +256,7 @@ function loadCollection(id) {
         }
     });
 }
-function deleteCollection(id) {
+function deleteParty(id) {
     var responseElement = dojo.byId('serverResponseSubmitParty');
     dojo.xhrDelete({
         url:id,
@@ -327,6 +329,7 @@ function removeElement(tb, elementId) {
 <body class="tundra">
 <div class="wrapper">
     <jsp:include page="include/title.jsp"/>
+    <h2>Parties</h2>
     <script type="text/javascript">
         var partyLayout = [
             [
@@ -364,7 +367,7 @@ function removeElement(tb, elementId) {
                     name: "Action",
                     width: 10,
                     formatter: function(item) {
-                        var viewURL = "<a href=\"#\" onClick=\"loadCollection('" + item.toString() + "')\">Edit</a> <a href=\"#\" onClick=\"deleteCollection('" + item.toString() + "')\">Delete</a>";
+                        var viewURL = "<a href=\"#\" onClick=\"loadParty('" + item.toString() + "')\">Edit</a> <a href=\"#\" onClick=\"deleteParty('" + item.toString() + "')\">Delete</a>";
                         return viewURL;
                     }
                 }
@@ -405,7 +408,7 @@ function removeElement(tb, elementId) {
                             <td><input type="text" id="partySummaryInput" name="partySummaryInput"/></td>
                         </tr>
                         <tr>
-                            <th>Description</th>
+                            <th>Content</th>
                             <td><textarea id="partyContent" rows="5" cols="50"></textarea></td>
                         </tr>
                         <tr id="subject0">
@@ -455,8 +458,7 @@ function removeElement(tb, elementId) {
                 <textarea rows="8" cols="100" id="partyJson">{
                     "title":"Tea Party",
                     "summary":"Tax Enough Already",
-                    "description":"Tax Enough Already description",
-                    "content":"Optional Content",
+                    "content":"Party Content",
                     "subject":[{"vocabulary": "anzsrc-for", "value": "160499"}],
                     "authors":["Abdul Alabri","Nigel Ward"],
                     "collectorof":["4"]

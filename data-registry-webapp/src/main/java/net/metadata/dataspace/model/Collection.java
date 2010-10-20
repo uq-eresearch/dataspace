@@ -28,7 +28,7 @@ public class Collection extends AbstractBaseEntity {
     private String summary; //description
 
     @NotNull
-    private String description;
+    private String content;
 
     @NotNull
     private Date updated;
@@ -72,12 +72,12 @@ public class Collection extends AbstractBaseEntity {
         this.summary = summary;
     }
 
-    public String getDescription() {
-        return description;
+    public String getContent() {
+        return content;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Set<Subject> getSubjects() {

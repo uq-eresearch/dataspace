@@ -211,20 +211,22 @@ function loadCollection(id) {
             descriptionElement.value = response.getElementsByTagName('content')[0].childNodes[0].nodeValue;
 
             var subjectList = response.getElementsByTagName('uqdata:subject');
-            var subjectVocab = dojo.byId('subjectVocabulary0');
-            var subjectValue = dojo.byId('subjectValue0');
-            subjectVocab.value = subjectList[0].attributes.getNamedItem('vocabulary').value;
-            subjectValue.value = subjectList[0].attributes.getNamedItem('value').value;
-            if (subjectList.length > 1) {
-                for (var i = 1; i < subjectList.length; i++) {
-                    addSubject('newCollectionForm');
-                    subjectVocab = dojo.byId('subjectVocabulary' + i);
-                    subjectValue = dojo.byId('subjectValue' + i);
-                    subjectVocab.value = subjectList[i].attributes.getNamedItem('vocabulary').value;
-                    subjectValue.value = subjectList[i].attributes.getNamedItem('value').value;
+
+            if (subjectList && subjectList.length > 0) {
+                var subjectValue = dojo.byId('subjectValue0');
+                var subjectVocab = dojo.byId('subjectVocabulary0');
+                subjectVocab.value = subjectList[0].attributes.getNamedItem('vocabulary').value;
+                subjectValue.value = subjectList[0].attributes.getNamedItem('value').value;
+                if (subjectList.length > 1) {
+                    for (var i = 1; i < subjectList.length; i++) {
+                        addSubject('newCollectionForm');
+                        subjectVocab = dojo.byId('subjectVocabulary' + i);
+                        subjectValue = dojo.byId('subjectValue' + i);
+                        subjectVocab.value = subjectList[i].attributes.getNamedItem('vocabulary').value;
+                        subjectValue.value = subjectList[i].attributes.getNamedItem('value').value;
+                    }
                 }
             }
-
             var authorList = response.getElementsByTagName('author');
             var authorElement = dojo.byId('authorName0');
             var authorName = authorList.item(0).childNodes[0].nextSibling.childNodes[0];
@@ -239,16 +241,17 @@ function loadCollection(id) {
             }
 
             var collectorList = response.getElementsByTagName('uqdata:collector');
-            var collectorElement = dojo.byId('collectorId0');
-            collectorElement.value = collectorList[0].attributes.getNamedItem('uri').value;
-            if (collectorList.length > 1) {
-                for (var i = 1; i < collectorList.length; i++) {
-                    addCollector('newCollectionForm');
-                    collectorElement = dojo.byId('collectorId' + i);
-                    collectorElement.value = collectorList[i].attributes.getNamedItem('uri').value;
+            if (collectorList && collectorList.length > 0) {
+                var collectorElement = dojo.byId('collectorId0');
+                collectorElement.value = collectorList[0].attributes.getNamedItem('uri').value;
+                if (collectorList.length > 1) {
+                    for (var i = 1; i < collectorList.length; i++) {
+                        addCollector('newCollectionForm');
+                        collectorElement = dojo.byId('collectorId' + i);
+                        collectorElement.value = collectorList[i].attributes.getNamedItem('uri').value;
+                    }
                 }
             }
-
             setOperation('edit');
             dijit.byId('mainTabContainer').selectChild('tabAddUpdateCollections');
 
@@ -332,6 +335,8 @@ function removeElement(tb, elementId) {
 <body class="tundra">
 <div class="wrapper">
     <jsp:include page="include/title.jsp"/>
+    <h2>Collections</h2>
+
     <div class="content">
         <script type="text/javascript">
             var collectionLayout = [
@@ -411,7 +416,7 @@ function removeElement(tb, elementId) {
                             <td><input type="text" id="collectionSummaryInput" name="collectionSummaryInput"/></td>
                         </tr>
                         <tr>
-                            <th>Description</th>
+                            <th>Content</th>
                             <td><textarea id="collectionContent" rows="5" cols="50"></textarea></td>
                         </tr>
                         <tr id="subject0">
@@ -461,7 +466,7 @@ function removeElement(tb, elementId) {
                 <textarea rows="8" cols="100" id="collectionJson">{
                     "title":"Money Collection",
                     "summary":"This is a cool collection of non-stone money",
-                    "description":"This is a cool collection of non-stone money description",
+                    "content":"This is a cool collection of non-stone money description",
                     "location":"http://e-research.sbs.uq.edu.au/client/Stats.html#metadata",
                     "subject":[
                     {"vocabulary": "anzsrc-for", "value": "160499"},

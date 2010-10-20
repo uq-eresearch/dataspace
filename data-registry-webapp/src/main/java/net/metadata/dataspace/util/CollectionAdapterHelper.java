@@ -98,7 +98,13 @@ public class CollectionAdapterHelper {
         entry.setId(ID_PREFIX + "parties/" + party.getUriKey());
         entry.setTitle(party.getTitle());
         entry.setSummary(party.getSummary());
+        entry.setContent(party.getContent());
         entry.setUpdated(party.getUpdated());
+        Set<String> authors = party.getAuthors();
+        for (String author : authors) {
+            entry.addAuthor(author);
+        }
+
         Set<Subject> subjectSet = party.getSubjects();
         for (Subject sub : subjectSet) {
             Element subjectElement = entry.addExtension(SUBJECT_QNAME);
@@ -111,6 +117,7 @@ public class CollectionAdapterHelper {
             Element collectorOfElement = entry.addExtension(COLLECTOR_OF_QNAME);
             collectorOfElement.setAttributeValue("uri", ID_PREFIX + "collections/" + collection.getUriKey());
         }
+        entry.addLink(ID_PREFIX + "parties/" + party.getUriKey(), "alternate");
         return entry;
     }
 
@@ -120,7 +127,7 @@ public class CollectionAdapterHelper {
         entry.setId(ID_PREFIX + "collections/" + collection.getUriKey());
         entry.setTitle(collection.getTitle());
         entry.setSummary(collection.getSummary());
-        entry.setContent(collection.getDescription());
+        entry.setContent(collection.getContent());
         entry.setUpdated(collection.getUpdated());
         Set<String> authors = collection.getAuthors();
         for (String author : authors) {
@@ -190,7 +197,7 @@ public class CollectionAdapterHelper {
             Collection collection = new Collection();
             collection.setTitle(entry.getTitle());
             collection.setSummary(entry.getSummary());
-            collection.setDescription(entry.getContent());
+            collection.setContent(entry.getContent());
             collection.setUpdated(entry.getUpdated());
             collection.setAuthors(getAuthors(entry.getAuthors()));
             List<Element> extensions = entry.getExtensions();
@@ -232,6 +239,20 @@ public class CollectionAdapterHelper {
         List<Element> extensionElements = entry.getExtensions();
         for (Element extension : extensionElements) {
             if (extension.getQName().equals(COLLECTOR_QNAME)) {
+                String id = getEntityID(extension.getAttributeValue("uri"));
+                if (id != null) {
+                    parties.add(id);
+                }
+            }
+        }
+        return parties;
+    }
+
+    public static Set<String> getCollectorOfUriKeys(Entry entry) {
+        Set<String> parties = new HashSet<String>();
+        List<Element> extensionElements = entry.getExtensions();
+        for (Element extension : extensionElements) {
+            if (extension.getQName().equals(COLLECTOR_OF_QNAME)) {
                 String id = getEntityID(extension.getAttributeValue("uri"));
                 if (id != null) {
                     parties.add(id);

@@ -60,8 +60,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                     return ProviderHelper.badrequest(request, "Invalid Entry.");
                 } else {
                     collectionDao.save(collection);
-                    collection.setUpdated(new Date());
-                    //TODO Add subjects and collectors
+
                     Set<Subject> subjects = CollectionAdapterHelper.getSubjects(entry);
                     for (Subject subject : subjects) {
                         collection.getSubjects().add(subject);
@@ -77,6 +76,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
                             collection.getCollector().add(party);
                         }
                     }
+                    collection.setUpdated(new Date());
                     collectionDao.update(collection);
 
                     Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
@@ -108,16 +108,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         } else {
             return ProviderHelper.notsupported(request, "Unsupported media type");
         }
-    }
-
-    @Override
-    public String getMediaName(Collection collection) throws ResponseContextException {
-        return collection.getTitle();
-    }
-
-    @Override
-    public String getContentType(Collection collection) {
-        return Constants.JSON_MIMETYPE;
     }
 
     @Override
@@ -176,6 +166,15 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         }
     }
 
+    @Override
+    public String getMediaName(Collection collection) throws ResponseContextException {
+        return collection.getTitle();
+    }
+
+    @Override
+    public String getContentType(Collection collection) {
+        return Constants.JSON_MIMETYPE;
+    }
 
     @Override
     public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
@@ -326,7 +325,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             JSONObject jsonObj = new JSONObject(jsonString);
             collection.setTitle(jsonObj.getString("title"));
             collection.setSummary(jsonObj.getString("summary"));
-            collection.setDescription(jsonObj.getString("description"));
+            collection.setContent(jsonObj.getString("description"));
             collection.setUpdated(new Date());
             collection.setLocation(jsonObj.getString("location"));
 
