@@ -67,4 +67,15 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     public List<Collection> getAllInActive() {
         return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = false ORDER BY o.updated").getResultList();
     }
+
+    @Override
+    public Collection getLatestCollection() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.updated = (SELECT MAX(o.updated) FROM Collection o)");
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Collection) resultList.get(0);
+    }
 }

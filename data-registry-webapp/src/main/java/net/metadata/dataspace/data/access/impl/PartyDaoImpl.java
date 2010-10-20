@@ -69,4 +69,15 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     public List<Party> getAllInActive() {
         return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = false ORDER BY o.updated").getResultList();
     }
+
+    @Override
+    public Party getLatestParty() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT MAX(o.updated) FROM Party o WHERE o.updated = (SELECT MAX(o.updated) FROM Party o)");
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Party) resultList.get(0);
+    }
 }

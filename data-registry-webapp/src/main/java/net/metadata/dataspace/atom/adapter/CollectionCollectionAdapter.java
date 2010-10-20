@@ -245,7 +245,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        feed.setUpdated(new Date());
+        feed.setUpdated(collectionDao.getLatestCollection().getUpdated());
         feed.getSelfLink().setHref(ID_PREFIX + "collections");
         feed.getAlternateLink().setHref(ID_PREFIX + "collections?repr=application/atom+xml;type=feed");
         feed.getAlternateLink().setRel("alternate");

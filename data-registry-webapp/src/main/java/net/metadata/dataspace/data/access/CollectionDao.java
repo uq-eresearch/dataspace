@@ -49,4 +49,11 @@ public interface CollectionDao extends Dao<Collection> {
      * @return List of inactive collections
      */
     List<Collection> getAllInActive();
+
+    /**
+     * Get latest updated collection
+     *
+     * @return
+     */
+    Collection getLatestCollection();
 }
