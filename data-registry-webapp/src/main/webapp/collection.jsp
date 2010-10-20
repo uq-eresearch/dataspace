@@ -404,7 +404,7 @@ function removeElement(tb, elementId) {
                             <td>
                                 <input type="text" id="collectionTitleInput" name="collectionTitleInput"/>
                                 <input type="hidden" id="collectionIdXml" value=""/>
-                                <input type="hidden" id="operation" value=""/>
+                                <input type="hidden" id="operation" value="add"/>
                             </td>
                         </tr>
                         <tr>

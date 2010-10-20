@@ -8,7 +8,7 @@ dojo.require("dojox.data.AppStore");
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.parser");
 
-function submitParty() {
+function submitJsonParty() {
     var responseElement = dojo.byId('serverResponse');
     dojo.xhrPost({
         url:'/parties',
@@ -120,7 +120,7 @@ function addCollection(tb) {
     collectorsCounter.value = (numberOfcollectors + 1);
 }
 
-function submitCollection() {
+function submitAtomParty() {
     var operationElement = dojo.byId('operation');
     var authorCounter = dojo.byId('numberOfAuthors');
     var numberOfAuthors = Number(authorCounter.value);
@@ -235,7 +235,7 @@ function loadParty(id) {
 
             var collectionList = response.getElementsByTagName('uqdata:collectorOf');
             if (collectionList && collectionList.length > 0) {
-                var collectionElement = dojo.byId('collectorId0');
+                var collectionElement = dojo.byId('collectionId0');
                 collectionElement.value = collectionList[0].attributes.getNamedItem('uri').value;
                 if (collectionList.length > 1) {
                     for (var i = 1; i < collectionList.length; i++) {
@@ -400,7 +400,7 @@ function removeElement(tb, elementId) {
                             <td>
                                 <input type="text" id="partyTitleInput" name="partyTitleInput"/>
                                 <input type="hidden" id="partyIdXml" value=""/>
-                                <input type="hidden" id="operation" value=""/>
+                                <input type="hidden" id="operation" value="add"/>
                             </td>
                         </tr>
                         <tr>
@@ -439,9 +439,9 @@ function removeElement(tb, elementId) {
                         <tr id="submitButton">
                             <th></th>
                             <td><input type="button" id="partySubmitButton" name="partySubmitButton"
-                                       value="Submit Party" onclick="submitParty()"/> <input type="button"
-                                                                                             value="Clear Output"
-                                                                                             onclick="clearResponse('serverResponseSubmitParty')"/>
+                                       value="Submit Party" onclick="submitAtomParty()"/> <input type="button"
+                                                                                                 value="Clear Output"
+                                                                                                 onclick="clearResponse('serverResponseSubmitParty')"/>
                                 <input type="reset" value="Reset Form" onclick="setOperation('add')">
                             </td>
                         </tr>
@@ -464,7 +464,7 @@ function removeElement(tb, elementId) {
                     "collectorof":["4"]
                     }</textarea>
                 <br/>
-                <input type="button" id="postButton" value="Add Party" onclick="submitParty()"/>
+                <input type="button" id="postButton" value="Add Party" onclick="submitJsonParty()"/>
                 <pre id="serverResponse"></pre>
             </div>
             <div id="tabEditPartyJson" dojoType="dijit.layout.ContentPane" title="Put (JSON)"

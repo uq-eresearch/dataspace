@@ -184,7 +184,8 @@ public class CollectionAdapterHelper {
             Party party = new Party();
             party.setTitle(entry.getTitle());
             party.setSummary(entry.getSummary());
-            entry.setUpdated(new Date());
+            party.setContent(entry.getContent());
+            party.setUpdated(new Date());
             party.setAuthors(getAuthors(entry.getAuthors()));
             return party;
         }

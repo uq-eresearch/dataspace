@@ -48,7 +48,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             return postMedia(request);
-        } else if (mimeType.getBaseType().equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+        } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
                 Party party = CollectionAdapterHelper.getPartyFromEntry(entry);
