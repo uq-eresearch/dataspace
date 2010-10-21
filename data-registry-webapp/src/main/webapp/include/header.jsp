@@ -1,4 +1,6 @@
-<title>Data Collections Registry</title>
+<%@ page import="net.metadata.dataspace.app.DataRegistryApplication" %>
+<title><%=DataRegistryApplication.getApplicationContext().getRegistryTitle()%>
+</title>
 <link rel="stylesheet" type="text/css" href="css/style.css"/>
 <link rel="stylesheet" type="text/css" href="http://o.aolcdn.com/dojo/1.4.0/dijit/themes/tundra/tundra.css"/>
 <link type="text/css" href="http://o.aolcdn.com/dojo/1.4.0/dojo/resources/dojo.css" rel="stylesheet"/>
