@@ -10,6 +10,7 @@ import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Link;
 import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
@@ -156,17 +157,41 @@ public class CollectionAdapterHelper {
         if (representationMimeType == null) {
             responseContext.setHeader("Vary", "Accept");
             if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
+                Link selfLink = entry.addLink(entry.getId() + "?repr=" + Constants.JSON_MIMETYPE, "self");
+                selfLink.setMimeType(Constants.JSON_MIMETYPE);
+
+                Link alternateLink = entry.addLink(entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE, "alternate");
+                alternateLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
+
                 responseContext.setContentType(Constants.JSON_MIMETYPE);
                 responseContext.setWriter(new JSONWriter());
             } else {
+                Link selfLink = entry.addLink(entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE, "self");
+                selfLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
+
+                Link alternateLink = entry.addLink(entry.getId() + "?repr=" + Constants.JSON_MIMETYPE, "alternate");
+                alternateLink.setMimeType(Constants.JSON_MIMETYPE);
+
                 responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
                 responseContext.setWriter(new PrettyWriter());
             }
         } else {
             if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
+                Link selfLink = entry.addLink(entry.getId() + "?repr=" + Constants.JSON_MIMETYPE, "self");
+                selfLink.setMimeType(Constants.JSON_MIMETYPE);
+
+                Link alternateLink = entry.addLink(entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE, "alternate");
+                alternateLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
+
                 responseContext.setContentType(Constants.JSON_MIMETYPE);
                 responseContext.setWriter(new JSONWriter());
             } else if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+                Link selfLink = entry.addLink(entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE, "self");
+                selfLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
+
+                Link alternateLink = entry.addLink(entry.getId() + "?repr=" + Constants.JSON_MIMETYPE, "alternate");
+                alternateLink.setMimeType(Constants.JSON_MIMETYPE);
+
                 responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
                 responseContext.setWriter(new PrettyWriter());
             } else {
