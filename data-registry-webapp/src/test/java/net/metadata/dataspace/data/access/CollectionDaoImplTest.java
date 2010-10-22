@@ -6,6 +6,8 @@ import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.PopulatorUtil;
 import net.metadata.dataspace.model.Subject;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -22,11 +24,29 @@ import static org.junit.Assert.*;
  */
 public class CollectionDaoImplTest {
     private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
+    private CollectionDao collectionDao;
+    private SubjectDao subjectDao;
+    private PartyDao partyDao;
+
+    @Before
+    public void setUp() throws Exception {
+        collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
+        subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
+        partyDao = dataRegistryApplicationConfigurationImpl.getPartyDao();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        //Remove all collections
+        List<Collection> collectionList = collectionDao.getAll();
+        for (Collection collection : collectionList) {
+            collectionDao.delete(collection);
+        }
+    }
 
     @Test
     public void testAddingCollection() throws Exception {
 
-        SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
         Subject subject = PopulatorUtil.getSubject();
         subjectDao.save(subject);
 
@@ -41,7 +61,7 @@ public class CollectionDaoImplTest {
 
 
         Party party = PopulatorUtil.getParty();
-        dataRegistryApplicationConfigurationImpl.getPartyDao().save(party);
+        partyDao.save(party);
         Set<Party> collectors = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
         collectors.add(party);
         collection.setCollector(collectors);
@@ -59,11 +79,9 @@ public class CollectionDaoImplTest {
     public void testEditingCollection() throws Exception {
         testAddingCollection();
 
-        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
         //Collection table shouldn't be empty
         assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() != 0);
 
-        SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
         Subject subject = PopulatorUtil.getSubject();
         subjectDao.save(subject);
 
@@ -89,8 +107,6 @@ public class CollectionDaoImplTest {
     public void testRemovingCollection() throws Exception {
         testAddingCollection();
 
-        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
-
         //Collection table shouldn't be empty
         assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() != 0);
         //Remove all collections
@@ -101,4 +117,29 @@ public class CollectionDaoImplTest {
         //Check that collection table has no records
         assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() == 0);
     }
+
+    @Test
+    public void testSoftDeleteCollection() throws Exception {
+        testAddingCollection();
+
+        //Collection table shouldn't be empty
+        assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() != 0);
+        //Remove all collections
+        List<Collection> collectionList = collectionDao.getAll();
+        int updated = 0;
+        for (Collection collection : collectionList) {
+            updated = collectionDao.softDelete(collection.getUriKey());
+            collectionDao.refresh(collection);
+        }
+
+        assertTrue("Updated rows should be 1 not " + updated, updated == 1);
+        assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() != 0);
+        assertTrue("Collection table has " + collectionDao.getAllActive().size() + " records", collectionDao.getAllActive().size() == 0);
+
+        List<Collection> collections = collectionDao.getAll();
+        Collection collection = collections.get(0);
+        assertTrue("Collection isActive: " + collection.isActive(), !collection.isActive());
+
+    }
+
 }

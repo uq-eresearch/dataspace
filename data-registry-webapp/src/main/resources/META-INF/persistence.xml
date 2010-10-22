@@ -3,7 +3,6 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
     <persistence-unit name="dev" transaction-type="RESOURCE_LOCAL">
-        <!-- local hsqldb copy with persisted data for development purposes -->
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <properties>
             <property name="hibernate.show_sql" value="false"/>
@@ -20,8 +19,24 @@
             <property name="hibernate.cache.use_query_cache" value="false"/>
         </properties>
     </persistence-unit>
+    <persistence-unit name="test_h2" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <properties>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
+            <property name="hibernate.connection.driver_class"
+                      value="org.h2.Driver"/>
+            <property name="hibernate.connection.url"
+                      value="jdbc:h2:file:local/database/registry;FILE_LOCK=NO"/>
+            <property name="hibernate.connection.username" value="sa"/>
+            <property name="hibernate.connection.password" value=""/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.cache.use_second_level_cache" value="false"/>
+            <property name="hibernate.cache.use_query_cache" value="false"/>
+        </properties>
+    </persistence-unit>
     <persistence-unit name="registry-pgsql" transaction-type="RESOURCE_LOCAL">
-        <!-- database is in PostgreSQL, see doc/README_DB.txt for details -->
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <properties>
             <property name="hibernate.show_sql" value="false"/>
@@ -38,7 +53,6 @@
         </properties>
     </persistence-unit>
     <persistence-unit name="registry-mysql" transaction-type="RESOURCE_LOCAL">
-        <!-- database is in MySQL with given user credentials, see doc/README_DB.txt -->
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <properties>
             <property name="hibernate.show_sql" value="false"/>
@@ -55,7 +69,6 @@
         </properties>
     </persistence-unit>
     <persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
-        <!-- local in-memory hsqldb database for testing (not persisted) -->
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <properties>
             <property name="hibernate.show_sql" value="true"/>

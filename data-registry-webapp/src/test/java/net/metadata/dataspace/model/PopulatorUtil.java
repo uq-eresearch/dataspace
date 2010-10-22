@@ -29,6 +29,7 @@ public class PopulatorUtil {
     public static Collection getCollection() throws Exception {
         Collection collection = new Collection();
         collection.setTitle("Test Collection");
+        collection.setContent("Test Collection Content");
         collection.setSummary("Test collection description");
         collection.setUpdated(new Date());
 
@@ -45,6 +46,7 @@ public class PopulatorUtil {
         Party party = new Party();
         party.setTitle("Test Party Title");
         party.setSummary("Test Party Summary");
+        party.setContent("Test Party Content");
         party.setUpdated(new Date());
 
         Set<String> authors = new HashSet<String>();
