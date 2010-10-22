@@ -8,10 +8,11 @@
 
     <div class="content">
         <ul>
-            <li><a href="parties" title="Party Feed">Party Feed</a></li>
-            <li><a href="party.jsp" title="Party Stuff">Party Stuff</a></li>
-            <li><a href="collections" title="Collection Feed">Collection Feed</a></li>
-            <li><a href="collection.jsp" title="Collection Stuff">Collection Stuff</a></li>
+            <li><a href="parties?repr=application/atom+xml;type=feed" title="Parties Feed">Parties Feed</a></li>
+            <li><a href="parties" title="Parties HTML">Parties HTML</a></li>
+            <li><a href="collections?repr=application/atom+xml;type=feed" title="Collection Feed">Collections Feed</a>
+            </li>
+            <li><a href="collections" title="Collections HTML">Collections HTML</a></li>
         </ul>
     </div>
 </div>
