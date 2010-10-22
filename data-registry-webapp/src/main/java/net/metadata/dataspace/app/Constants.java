@@ -12,7 +12,7 @@ public interface Constants {
     String ATOM_MIMETYPE = "application/atom+xml";
     String ATOM_ENTRY_MIMETYPE = "application/atom+xml;type=entry";
     String ATOM_FEED_MIMETYPE = "application/atom+xml;type=feed";
-
+    String ATOM_SERVICE_MIMETYPE = "application/atomsvc+xml";
 
     String UQ_DATA_COLLECTIONS_REGISTRY_NS = "http://dataspace.metadata.net/";
     String UQ_DATA_COLLECTIONS_REGISTRY_PFX = "uqdata";

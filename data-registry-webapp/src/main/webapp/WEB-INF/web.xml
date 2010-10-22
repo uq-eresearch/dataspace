@@ -37,7 +37,6 @@
         <servlet-name>registryServiceServlet</servlet-name>
         <url-pattern>/collections/*</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>
         <url-pattern>/registry.atomsvc</url-pattern>

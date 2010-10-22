@@ -19,6 +19,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 
     private Logger logger = Logger.getLogger(getClass());
 
+
     protected Provider createProvider() {
         //Parties collection and workspace
         PartyCollectionAdapter partyCollectionAdapter = new PartyCollectionAdapter();
@@ -39,44 +40,48 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
         DefaultProvider provider = new DefaultProvider(base) {
             public ResponseContext process(RequestContext request) {
                 Target target = request.getTarget();
+                if (target.getType().equals(TargetType.get(TargetType.COLLECTION))) {
+                    boolean isServiceRequest = target.getParameter("collection").equals("registry.atomsvc");
+                    if (isServiceRequest) {
+                        TargetType type = TargetType.get(TargetType.SERVICE);
+                        RequestProcessor processor = this.requestProcessors.get(type);
+                        if (processor == null) {
+                            return ProviderHelper.notfound(request);
+                        }
 
-                boolean isServiceRequest = target.getParameter("collection").equals("registry.atomsvc");
-                if (isServiceRequest) {
-                    TargetType type = TargetType.get(TargetType.SERVICE);
-                    RequestProcessor processor = this.requestProcessors.get(type);
-                    if (processor == null) {
-                        return ProviderHelper.notfound(request);
-                    }
-
-                    WorkspaceManager wm = getWorkspaceManager(request);
-                    CollectionAdapter adapter = wm.getCollectionAdapter(request);
-                    Transactional transaction = adapter instanceof Transactional ? (Transactional) adapter : null;
-                    ResponseContext response = null;
-                    try {
-                        transactionStart(transaction, request);
-                        response = processor.process(request, wm, adapter);
-                        response = response != null ? response : processExtensionRequest(request, adapter);
-                    } catch (Throwable e) {
-                        if (e instanceof ResponseContextException) {
-                            ResponseContextException rce = (ResponseContextException) e;
-                            if (rce.getStatusCode() >= 400 && rce.getStatusCode() < 500) {
-                                // don't report routine 4xx HTTP errors
-                                logger.info(e);
+                        WorkspaceManager wm = getWorkspaceManager(request);
+                        CollectionAdapter adapter = wm.getCollectionAdapter(request);
+                        Transactional transaction = adapter instanceof Transactional ? (Transactional) adapter : null;
+                        ResponseContext response = null;
+                        try {
+                            transactionStart(transaction, request);
+                            response = processor.process(request, wm, adapter);
+                            response = response != null ? response : processExtensionRequest(request, adapter);
+                        } catch (Throwable e) {
+                            if (e instanceof ResponseContextException) {
+                                ResponseContextException rce = (ResponseContextException) e;
+                                if (rce.getStatusCode() >= 400 && rce.getStatusCode() < 500) {
+                                    // don't report routine 4xx HTTP errors
+                                    logger.info(e);
+                                } else {
+                                    logger.error(e);
+                                }
                             } else {
                                 logger.error(e);
                             }
-                        } else {
-                            logger.error(e);
+                            transactionCompensate(transaction, request, e);
+                            response = createErrorResponse(request, e);
+                            return response;
+                        } finally {
+                            transactionEnd(transaction, request, response);
                         }
-                        transactionCompensate(transaction, request, e);
-                        response = createErrorResponse(request, e);
-                        return response;
-                    } finally {
-                        transactionEnd(transaction, request, response);
+                        return response != null ? response : ProviderHelper.badrequest(request);
+                    } else {
+                        return super.process(request);
                     }
-                    return response != null ? response : ProviderHelper.badrequest(request);
+                } else {
+                    return super.process(request);
                 }
-                return super.process(request);
             }
         };
 
