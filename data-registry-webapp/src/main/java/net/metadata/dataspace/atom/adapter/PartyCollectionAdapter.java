@@ -187,8 +187,8 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        final Date updated = partyDao.getLatestParty().getUpdated();
-        feed.setUpdated(updated == null ? new Date() : updated);
+        Party latestParty = partyDao.getLatestParty();
+        feed.setUpdated(latestParty == null ? new Date() : latestParty.getUpdated());
         feed.getSelfLink().setHref(ID_PREFIX + "parties");
         feed.getAlternateLink().setHref(ID_PREFIX + "parties?repr=application/atom+xml;type=feed");
         feed.getAlternateLink().setRel("alternate");

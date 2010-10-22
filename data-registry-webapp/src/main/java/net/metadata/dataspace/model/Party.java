@@ -3,10 +3,7 @@ package net.metadata.dataspace.model;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +25,7 @@ public class Party extends AbstractBaseEntity {
     private String summary; //description
 
     @NotNull
+    @Column(length = 5000)
     private String content;
 
     @NotNull
