@@ -2,9 +2,12 @@ package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
+import net.metadata.dataspace.model.Collection;
 import net.metadata.dataspace.model.Party;
 import net.metadata.dataspace.model.PopulatorUtil;
 import net.metadata.dataspace.model.Subject;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -22,15 +25,30 @@ import static org.junit.Assert.*;
 public class PartyDaoImplTest {
 
     private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
+    private CollectionDao collectionDao;
+    private SubjectDao subjectDao;
+    private PartyDao partyDao;
+
+    @Before
+    public void setUp() throws Exception {
+        collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
+        subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
+        partyDao = dataRegistryApplicationConfigurationImpl.getPartyDao();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        //Remove all parties
+        List<Collection> collectionList = collectionDao.getAll();
+        for (Collection collection : collectionList) {
+            collectionDao.delete(collection);
+        }
+    }
 
     @Test
     public void testAddingParty() throws Exception {
-        SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
         Subject subject = PopulatorUtil.getSubject();
         subjectDao.save(subject);
-
-
-        PartyDao partyDao = dataRegistryApplicationConfigurationImpl.getPartyDao();
 
         int originalPartyTableSize = partyDao.getAll().size();
 
@@ -42,15 +60,15 @@ public class PartyDaoImplTest {
 
         //Add a collection
 //        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
-//        Set<Collection> collections = new HashSet<Collection>();
-//        Collection collection = PopulatorUtil.getCollection();
-//        Set<Party> collector = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
-//        collector.add(party);
-//        collection.setCollector(collector);
-//        collectionDao.save(collection);
-//        collections.add(collection);
+        Set<Collection> collections = new HashSet<Collection>();
+        Collection collection = PopulatorUtil.getCollection();
+        Set<Party> collector = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
+        collector.add(party);
+        collection.setCollector(collector);
+        collections.add(collection);
+        collectionDao.save(collection);
 
-//        party.setCollectorof(collections);
+        party.setCollectorOf(collections);
 
         partyDao.save(party);
 
@@ -64,11 +82,9 @@ public class PartyDaoImplTest {
     public void testEditingParty() throws Exception {
         testAddingParty();
 
-        PartyDao partyDao = dataRegistryApplicationConfigurationImpl.getPartyDao();
         //Collection table shouldn't be empty
         assertTrue("Collection table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() != 0);
 
-        SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
         Subject subject = PopulatorUtil.getSubject();
         subjectDao.save(subject);
 
@@ -102,16 +118,33 @@ public class PartyDaoImplTest {
     public void testRemovingParty() throws Exception {
         testAddingParty();
 
-        PartyDao partyDao = dataRegistryApplicationConfigurationImpl.getPartyDao();
-
-        //Collection table shouldn't be empty
         assertTrue("Party table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() != 0);
-        //Remove all collections
+        //Remove all parties
         List<Party> partyList = partyDao.getAll();
         for (Party party : partyList) {
             partyDao.delete(party);
         }
-        //Check that collection table has no records
+        //Check that party table has no records
         assertTrue("Party table should be empty. It has has " + partyDao.getAll().size() + " records", partyDao.getAll().size() == 0);
+    }
+
+    @Test
+    public void testSoftDeleteCollection() throws Exception {
+        testAddingParty();
+        assertTrue("Party table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() != 0);
+        List<Party> partyList = partyDao.getAll();
+        int updated = 0;
+        for (Party party : partyList) {
+            updated = partyDao.softDelete(party.getUriKey());
+            partyDao.refresh(party);
+        }
+
+        assertTrue("Updated rows should be 1 not " + updated, updated == 1);
+        assertTrue("Party table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() != 0);
+        assertTrue("Party table has " + partyDao.getAllActive().size() + " records", partyDao.getAllActive().size() == 0);
+
+        List<Party> parties = partyDao.getAll();
+        Party party = parties.get(0);
+        assertTrue("Collection isActive: " + party.isActive(), !party.isActive());
     }
 }
