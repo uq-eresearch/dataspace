@@ -1,4 +1,4 @@
-package net.metadata.dataspace.model;
+package net.metadata.dataspace.data.model;
 
 import net.metadata.dataspace.util.DaoHelper;
 

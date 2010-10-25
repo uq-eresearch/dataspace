@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.access;
 
 import au.edu.uq.itee.maenad.dataaccess.Dao;
-import net.metadata.dataspace.model.Party;
+import net.metadata.dataspace.data.model.Party;
 
 import java.util.List;
 

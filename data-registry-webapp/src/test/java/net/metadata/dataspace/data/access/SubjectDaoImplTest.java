@@ -2,8 +2,8 @@ package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
-import net.metadata.dataspace.model.PopulatorUtil;
-import net.metadata.dataspace.model.Subject;
+import net.metadata.dataspace.data.model.PopulatorUtil;
+import net.metadata.dataspace.data.model.Subject;
 import org.junit.Test;
 
 import java.util.UUID;

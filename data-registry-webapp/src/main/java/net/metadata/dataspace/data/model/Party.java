@@ -1,4 +1,4 @@
-package net.metadata.dataspace.model;
+package net.metadata.dataspace.data.model;
 
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
@@ -11,10 +11,10 @@ import java.util.Set;
 /**
  * User: alabri
  * Date: 15/09/2010
- * Time: 3:32:27 PM
+ * Time: 3:32:39 PM
  */
 @Entity
-public class Collection extends AbstractBaseEntity {
+public class Party extends AbstractBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,12 +39,9 @@ public class Collection extends AbstractBaseEntity {
     private Set<Subject> subjects = new HashSet<Subject>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Party> collector = new HashSet<Party>();
+    private Set<Collection> collectorOf = new HashSet<Collection>();
 
-    @NotNull
-    private String location; //URI
-
-    public Collection() {
+    public Party() {
     }
 
     public String getTitle() {
@@ -59,14 +56,6 @@ public class Collection extends AbstractBaseEntity {
         return summary;
     }
 
-    public Set<String> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(Set<String> authors) {
-        this.authors = authors;
-    }
-
     public void setSummary(String summary) {
         this.summary = summary;
     }
@@ -79,6 +68,22 @@ public class Collection extends AbstractBaseEntity {
         this.content = content;
     }
 
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    public Set<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<String> authors) {
+        this.authors = authors;
+    }
+
     public Set<Subject> getSubjects() {
         return subjects;
     }
@@ -87,27 +92,11 @@ public class Collection extends AbstractBaseEntity {
         this.subjects = subjects;
     }
 
-    public Set<Party> getCollector() {
-        return collector;
+    public Set<Collection> getCollectorOf() {
+        return collectorOf;
     }
 
-    public void setCollector(Set<Party> collector) {
-        this.collector = collector;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
+    public void setCollectorOf(Set<Collection> collectorOf) {
+        this.collectorOf = collectorOf;
     }
 }

@@ -2,9 +2,9 @@ package net.metadata.dataspace.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
-import net.metadata.dataspace.model.Collection;
-import net.metadata.dataspace.model.Party;
-import net.metadata.dataspace.model.Subject;
+import net.metadata.dataspace.data.model.Collection;
+import net.metadata.dataspace.data.model.Party;
+import net.metadata.dataspace.data.model.Subject;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.text.UrlEncoding;

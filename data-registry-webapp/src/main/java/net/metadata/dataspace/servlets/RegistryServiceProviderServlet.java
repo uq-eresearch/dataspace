@@ -40,7 +40,8 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
         DefaultProvider provider = new DefaultProvider(base) {
             public ResponseContext process(RequestContext request) {
                 Target target = request.getTarget();
-                if (target.getType().equals(TargetType.get(TargetType.COLLECTION))) {
+                TargetType targetType = target.getType();
+                if (targetType.equals(TargetType.get(TargetType.COLLECTION))) {
                     boolean isServiceRequest = target.getParameter("collection").equals("registry.atomsvc");
                     if (isServiceRequest) {
                         TargetType type = TargetType.get(TargetType.SERVICE);
