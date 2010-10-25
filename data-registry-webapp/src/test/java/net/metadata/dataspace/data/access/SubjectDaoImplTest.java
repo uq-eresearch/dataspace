@@ -2,9 +2,14 @@ package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
+import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Subject;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.UUID;
 
@@ -15,12 +20,15 @@ import static org.junit.Assert.*;
  * Date: 21/09/2010
  * Time: 3:22:16 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class SubjectDaoImplTest {
     private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
+    @Autowired
+    private SubjectDao subjectDao;
 
     @Test
     public void testAddingSubject() throws Exception {
-        SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
         int originalSubjectTableSize = subjectDao.getAll().size();
 
         //add a new subject
@@ -34,7 +42,6 @@ public class SubjectDaoImplTest {
     @Test
     public void testEditingSubject() throws Exception {
         testAddingSubject();
-        SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
 
         Subject subject = subjectDao.getAll().get(0);
         Long id = subject.getId();

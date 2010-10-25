@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:registry-test.properties</value>
+                <value>classpath:META-INF/svninfo.properties</value>
+            </list>
+        </property>
+    </bean>
+    <import resource="dao.xml"/>
+
+    <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
+        <property name="registryTitle" value="${data.registry.title}"/>
+        <property name="version" value="${data.registry.version}.${revision}"/>
+        <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
+        <property name="collectionDao" ref="collectionDao"/>
+        <property name="partyDao" ref="partyDao"/>
+        <property name="subjectDao" ref="subjectDao"/>
+        <property name="jpaConnector" ref="jpaConnector"/>
+    </bean>
+    <bean id="log4jInitialization"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass"
+                  value="org.springframework.util.Log4jConfigurer"/>
+        <property name="targetMethod" value="initLogging"/>
+        <property name="arguments">
+            <list>
+                <value>classpath:log4j.properties</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>

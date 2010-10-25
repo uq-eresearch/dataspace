@@ -1,6 +1,9 @@
 package net.metadata.dataspace.app;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +16,8 @@ import static org.junit.Assert.assertEquals;
  * Date: 14/09/2010
  * Time: 11:26:36 AM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class DataRegistryApplicationConfigurationTest {
 
     @Test

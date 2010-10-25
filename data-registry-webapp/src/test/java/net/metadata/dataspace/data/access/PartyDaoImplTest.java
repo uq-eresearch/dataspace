@@ -1,14 +1,16 @@
 package net.metadata.dataspace.data.access;
 
-import net.metadata.dataspace.app.DataRegistryApplication;
-import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
+import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Subject;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,19 +24,17 @@ import static org.junit.Assert.*;
  * Date: 21/09/2010
  * Time: 3:23:30 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class PartyDaoImplTest {
 
-    private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
+    @Autowired
     private CollectionDao collectionDao;
+    @Autowired
     private SubjectDao subjectDao;
+    @Autowired
     private PartyDao partyDao;
 
-    @Before
-    public void setUp() throws Exception {
-        collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
-        subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
-        partyDao = dataRegistryApplicationConfigurationImpl.getPartyDao();
-    }
 
     @After
     public void tearDown() throws Exception {
