@@ -22,10 +22,11 @@ public class Party extends AbstractBaseEntity {
     private String title; //name
 
     @NotNull
+    @Column(length = 1024)
     private String summary; //description
 
     @NotNull
-    @Column(length = 5000)
+    @Column(length = 4096)
     private String content;
 
     @NotNull
