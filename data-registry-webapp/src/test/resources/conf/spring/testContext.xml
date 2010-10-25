@@ -12,6 +12,20 @@
             </list>
         </property>
     </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="${data.registry.persistenceUnitName}"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+
+    <bean id="jpaConnector" class="net.metadata.dataspace.data.connector.JpaConnector">
+        <constructor-arg ref="entityManagerFactory"/>
+    </bean>
+
     <import resource="dao.xml"/>
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">

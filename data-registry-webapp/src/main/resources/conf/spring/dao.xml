@@ -3,18 +3,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="${data.registry.persistenceUnitName}"/>
-    </bean>
-
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
-
-
-    <bean id="jpaConnector" class="net.metadata.dataspace.data.connector.JpaConnector">
-        <constructor-arg ref="entityManagerFactory"/>
-    </bean>
     <!--Daos-->
     <bean id="collectionDao" class="net.metadata.dataspace.data.access.impl.CollectionDaoImpl">
         <constructor-arg ref="jpaConnector"/>

@@ -1,8 +1,5 @@
 package net.metadata.dataspace.data.model;
 
-import net.metadata.dataspace.app.DataRegistryApplication;
-import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,14 +10,13 @@ import java.util.UUID;
  * Date: 20/09/2010
  * Time: 11:22:08 AM
  */
-public class PopulatorUtil {
 
-    private static DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
+public class PopulatorUtil {
 
     public static Subject getSubject() throws Exception {
         Subject subject = new Subject();
         UUID uuid = UUID.randomUUID();
-        String vocabUriString = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "subject/" + uuid.toString();
+        String vocabUriString = uuid.toString();
         subject.setVocabulary(vocabUriString);
         subject.setValue("Test Subject");
         return subject;

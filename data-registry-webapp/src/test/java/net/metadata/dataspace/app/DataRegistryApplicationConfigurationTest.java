@@ -2,6 +2,7 @@ package net.metadata.dataspace.app;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -20,11 +21,14 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class DataRegistryApplicationConfigurationTest {
 
+    @Autowired
+    private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl;
+
     @Test
     public void testGetVersion() throws Exception {
 
         //Get the expected value through application context
-        DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl = DataRegistryApplication.getApplicationContext();
+
         String expectedVersionNumber = dataRegistryApplicationConfigurationImpl.getVersion();
 
         //Get the actual values
