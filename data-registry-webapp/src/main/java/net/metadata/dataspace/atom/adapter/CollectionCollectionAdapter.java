@@ -255,11 +255,28 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
             //TODO what would the date be if the feed is empty??
             feed.setUpdated(new Date());
         }
-        feed.getSelfLink().setHref(ID_PREFIX + "collections");
-        feed.getSelfLink().setMimeType(Constants.HTML_MIME_TYPE);
-        feed.getAlternateLink().setHref(ID_PREFIX + "collections?repr=application/atom+xml;type=feed");
-        feed.getAlternateLink().setMimeType(Constants.ATOM_FEED_MIMETYPE);
-        feed.getAlternateLink().setRel("alternate");
+
+        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType == null) {
+            String acceptHeader = request.getAccept();
+            if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                representationMimeType = acceptHeader;
+            } else {
+                representationMimeType = Constants.HTML_MIME_TYPE;
+            }
+        }
+        if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+            String selfLinkHref = ID_PREFIX + "collections";
+            AtomFeedHelper.prepareFeedSelfLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
+            String alternateLinkHref = ID_PREFIX + "collections?repr=application/atom+xml;type=feed";
+            AtomFeedHelper.prepareFeedAlternateLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
+        } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
+            String alternateLinkHref = ID_PREFIX + "collections?repr=application/atom+xml;type=feed";
+            AtomFeedHelper.prepareFeedSelfLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
+            String selfLinkHref = ID_PREFIX + "collections";
+            AtomFeedHelper.prepareFeedAlternateLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
+        }
+
         feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": Collections");
         Iterable<Collection> entries = getEntries(request);
         if (entries != null) {

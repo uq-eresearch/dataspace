@@ -2,6 +2,7 @@ package net.metadata.dataspace.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
+import org.apache.abdera.model.Feed;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
@@ -40,5 +41,19 @@ public class AtomFeedHelper {
         } catch (IOException e) {
             return ProviderHelper.servererror(request, e);
         }
+    }
+
+
+    public static void prepareFeedSelfLink(Feed feed, String selfLinkHref, String mimeType) {
+        feed.getSelfLink().setHref(selfLinkHref);
+        feed.getSelfLink().setRel("self");
+        feed.getSelfLink().setMimeType(mimeType);
+    }
+
+
+    public static void prepareFeedAlternateLink(Feed feed, String alternateLinkHref, String mimeType) {
+        feed.getAlternateLink().setHref(alternateLinkHref);
+        feed.getAlternateLink().setRel("alternate");
+        feed.getAlternateLink().setMimeType(mimeType);
     }
 }

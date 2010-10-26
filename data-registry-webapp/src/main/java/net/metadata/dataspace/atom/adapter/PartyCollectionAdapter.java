@@ -190,10 +190,37 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
         Party latestParty = partyDao.getLatestParty();
-        feed.setUpdated(latestParty == null ? new Date() : latestParty.getUpdated());
-        feed.getSelfLink().setHref(ID_PREFIX + "parties");
-        feed.getAlternateLink().setHref(ID_PREFIX + "parties?repr=application/atom+xml;type=feed");
-        feed.getAlternateLink().setRel("alternate");
+        if (latestParty != null) {
+            partyDao.refresh(latestParty);
+            feed.setUpdated(latestParty.getUpdated());
+        } else {
+            //TODO what would the date be if the feed is empty??
+            feed.setUpdated(new Date());
+        }
+
+        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType == null) {
+            String acceptHeader = request.getAccept();
+            if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                representationMimeType = acceptHeader;
+            } else {
+                representationMimeType = Constants.HTML_MIME_TYPE;
+            }
+        }
+        if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+            String selfLinkHref = ID_PREFIX + "parties";
+            AtomFeedHelper.prepareFeedSelfLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
+
+            String alternateLinkHref = ID_PREFIX + "parties?repr=application/atom+xml;type=feed";
+            AtomFeedHelper.prepareFeedAlternateLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
+        } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
+            String alternateLinkHref = ID_PREFIX + "parties?repr=application/atom+xml;type=feed";
+            AtomFeedHelper.prepareFeedSelfLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
+
+            String selfLinkHref = ID_PREFIX + "parties";
+            AtomFeedHelper.prepareFeedAlternateLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
+        }
+
         feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": Parties");
         Iterable<Party> entries = getEntries(request);
         if (entries != null) {

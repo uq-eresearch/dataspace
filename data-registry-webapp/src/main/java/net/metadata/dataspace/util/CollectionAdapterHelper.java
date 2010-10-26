@@ -154,8 +154,8 @@ public class CollectionAdapterHelper {
     public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry) {
 
         String representationMimeType = CollectionAdapterHelper.getRepresentationMimeType(request);
-        String acceptHeader = request.getAccept();
         if (representationMimeType == null) {
+            String acceptHeader = request.getAccept();
             if (acceptHeader.equals(Constants.JSON_MIMETYPE) || acceptHeader.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
                 representationMimeType = acceptHeader;
             } else {
