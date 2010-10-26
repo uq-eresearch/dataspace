@@ -1,11 +1,9 @@
 package net.metadata.dataspace.data.model;
 
 import net.metadata.dataspace.util.DaoHelper;
+import org.hibernate.validator.NotNull;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -20,14 +18,14 @@ public abstract class AbstractBaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
+    @NotNull
+    @Column(unique = true)
+    private Integer atomicNumber;
+
     private boolean isActive;
 
     public AbstractBaseEntity() {
         this.isActive = true;
-    }
-
-    public String getUriKey() {
-        return DaoHelper.fromDecimalToOtherBase(31, getId().intValue());
     }
 
     public Long getId() {
@@ -38,6 +36,17 @@ public abstract class AbstractBaseEntity implements Serializable {
         this.id = id;
     }
 
+    public String getUriKey() {
+        return DaoHelper.fromDecimalToOtherBase(31, getAtomicNumber());
+    }
+
+    public Integer getAtomicNumber() {
+        return atomicNumber;
+    }
+
+    public void setAtomicNumber(Integer atomicNumber) {
+        this.atomicNumber = atomicNumber;
+    }
 
     public boolean isActive() {
         return isActive;

@@ -36,10 +36,10 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
 
     @Override
     public int softDelete(String uriKey) {
-        Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         entityManagerSource.getEntityManager().getTransaction().begin();
-        Query query = entityManagerSource.getEntityManager().createQuery("UPDATE Subject o SET o.isActive = :isActive WHERE o.id = :id");
-        query.setParameter("id", id);
+        Query query = entityManagerSource.getEntityManager().createQuery("UPDATE Subject o SET o.isActive = :isActive WHERE o.atomicNumber = :atomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
         query.setParameter("isActive", false);
         int updated = query.executeUpdate();
         entityManagerSource.getEntityManager().getTransaction().commit();
@@ -54,6 +54,17 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
     @Override
     public List<Subject> getAllInActive() {
         return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.isActive = false").getResultList();
+    }
+
+    @Override
+    public Subject getMostRecentInsertedCollection() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.atomicNumber = (SELECT MAX(o.atomicNumber) FROM Subject o)");
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Subject) resultList.get(0);
     }
 
 }

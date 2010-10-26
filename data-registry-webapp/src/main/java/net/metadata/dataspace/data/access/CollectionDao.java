@@ -51,9 +51,16 @@ public interface CollectionDao extends Dao<Collection> {
     List<Collection> getAllInActive();
 
     /**
-     * Get latest updated collection
+     * Get the most recent updated collection
      *
      * @return
      */
-    Collection getLatestCollection();
+    Collection getMostRecentUpdatedCollection();
+
+    /**
+     * Get the most recent inserted collection
+     *
+     * @return
+     */
+    Collection getMostRecentInsertedCollection();
 }

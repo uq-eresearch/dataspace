@@ -35,9 +35,9 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     @Override
     @SuppressWarnings("unchecked")
     public Party getByKey(String uriKey) {
-        Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.id = :id");
-        query.setParameter("id", id);
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.atomicNumber = :atomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;
@@ -48,10 +48,10 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
 
     @Override
     public int softDelete(String uriKey) {
-        Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         entityManagerSource.getEntityManager().getTransaction().begin();
-        Query query = entityManagerSource.getEntityManager().createQuery("UPDATE Party o SET o.isActive = :isActive WHERE o.id = :id");
-        query.setParameter("id", id);
+        Query query = entityManagerSource.getEntityManager().createQuery("UPDATE Party o SET o.isActive = :isActive WHERE o.atomicNumber = :atomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
         query.setParameter("isActive", false);
         int updated = query.executeUpdate();
         entityManagerSource.getEntityManager().getTransaction().commit();
@@ -71,8 +71,19 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
-    public Party getLatestParty() {
+    public Party getMostRecentUpdatedParty() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.updated = (SELECT MAX(o.updated) FROM Party o)");
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Party) resultList.get(0);
+    }
+
+    @Override
+    public Party getMostRecentInsertedParty() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.atomicNumber = (SELECT MAX(o.atomicNumber) FROM Party o)");
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;

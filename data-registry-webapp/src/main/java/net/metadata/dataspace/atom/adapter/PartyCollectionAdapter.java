@@ -8,6 +8,8 @@ import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
 import net.metadata.dataspace.data.model.Subject;
+import net.metadata.dataspace.data.sequencer.PartyAtomicSequencer;
+import net.metadata.dataspace.data.sequencer.SubjectAtomicSequencer;
 import net.metadata.dataspace.util.AtomFeedHelper;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
@@ -42,7 +44,8 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getSubjectDao();
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getCollectionDao();
-
+    private PartyAtomicSequencer partyAtomicSequencer = DataRegistryApplication.getApplicationContext().getPartyAtomicSequencer();
+    private SubjectAtomicSequencer subjectAtomicSequencer = DataRegistryApplication.getApplicationContext().getSubjectAtomicSequencer();
     private final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
     @Override
@@ -53,13 +56,16 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
-                Party party = CollectionAdapterHelper.getPartyFromEntry(entry);
-                if (party == null) {
+                Party party = new Party();
+                party.setAtomicNumber(partyAtomicSequencer.next());
+                boolean isValidParty = CollectionAdapterHelper.updatePartyFromEntry(party, entry);
+                if (!isValidParty) {
                     return ProviderHelper.badrequest(request, "Invalid entry posted.");
                 } else {
                     partyDao.save(party);
                     Set<Subject> subjects = CollectionAdapterHelper.getSubjects(entry);
                     for (Subject subject : subjects) {
+                        subject.setAtomicNumber(subjectAtomicSequencer.next());
                         party.getSubjects().add(subject);
                         subjectDao.save(subject);
                     }
@@ -96,6 +102,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             try {
                 String partyAsJsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
                 Party party = new Party();
+                party.setAtomicNumber(partyAtomicSequencer.next());
                 assembleParty(party, partyAsJsonString);
                 Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
@@ -189,7 +196,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        Party latestParty = partyDao.getLatestParty();
+        Party latestParty = partyDao.getMostRecentUpdatedParty();
         if (latestParty != null) {
             partyDao.refresh(latestParty);
             feed.setUpdated(latestParty.getUpdated());
@@ -361,6 +368,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             JSONArray subjectArray = jsonObj.getJSONArray("subject");
             for (int i = 0; i < subjectArray.length(); i++) {
                 Subject subject = new Subject(subjectArray.getJSONObject(i).getString("vocabulary"), subjectArray.getJSONObject(i).getString("value"));
+                subject.setAtomicNumber(subjectAtomicSequencer.next());
                 party.getSubjects().add(subject);
                 subjectDao.save(subject);
             }

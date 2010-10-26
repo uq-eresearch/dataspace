@@ -35,7 +35,6 @@ public class PartyDaoImplTest {
     @Autowired
     private PartyDao partyDao;
 
-
     @After
     public void tearDown() throws Exception {
         //Remove all parties
@@ -57,7 +56,6 @@ public class PartyDaoImplTest {
         Set<Subject> subjects = new HashSet<Subject>();
         subjects.add(subject);
         party.setSubjects(subjects);
-
         //Add a collection
 //        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
         Set<Collection> collections = new HashSet<Collection>();

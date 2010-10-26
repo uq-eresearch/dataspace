@@ -30,6 +30,7 @@ public class Collection extends AbstractBaseEntity {
     private String content;
 
     @NotNull
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
     @CollectionOfElements
@@ -45,6 +46,7 @@ public class Collection extends AbstractBaseEntity {
     private String location; //URI
 
     public Collection() {
+
     }
 
     public String getTitle() {

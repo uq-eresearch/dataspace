@@ -12,41 +12,11 @@
             </list>
         </property>
     </bean>
+    <import resource="registry.xml"/>
 
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="${data.registry.persistenceUnitName}"/>
+    <bean id="populatorUtil" class="net.metadata.dataspace.data.model.PopulatorUtil">
+        <property name="partyAtomicSequencer" ref="partyAtomicSequencer"/>
+        <property name="collectionAtomicSequencer" ref="collectionAtomicSequencer"/>
+        <property name="subjectAtomicSequencer" ref="subjectAtomicSequencer"/>
     </bean>
-
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
-
-
-    <bean id="jpaConnector" class="net.metadata.dataspace.data.connector.JpaConnector">
-        <constructor-arg ref="entityManagerFactory"/>
-    </bean>
-
-    <import resource="dao.xml"/>
-
-    <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
-        <property name="registryTitle" value="${data.registry.title}"/>
-        <property name="version" value="${data.registry.version}.${revision}"/>
-        <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
-        <property name="collectionDao" ref="collectionDao"/>
-        <property name="partyDao" ref="partyDao"/>
-        <property name="subjectDao" ref="subjectDao"/>
-        <property name="jpaConnector" ref="jpaConnector"/>
-    </bean>
-    <bean id="log4jInitialization"
-          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetClass"
-                  value="org.springframework.util.Log4jConfigurer"/>
-        <property name="targetMethod" value="initLogging"/>
-        <property name="arguments">
-            <list>
-                <value>classpath:log4j.properties</value>
-            </list>
-        </property>
-    </bean>
-
 </beans>

@@ -4,6 +4,9 @@ import net.metadata.dataspace.data.access.impl.CollectionDaoImpl;
 import net.metadata.dataspace.data.access.impl.PartyDaoImpl;
 import net.metadata.dataspace.data.access.impl.SubjectDaoImpl;
 import net.metadata.dataspace.data.connector.JpaConnector;
+import net.metadata.dataspace.data.sequencer.CollectionAtomicSequencer;
+import net.metadata.dataspace.data.sequencer.PartyAtomicSequencer;
+import net.metadata.dataspace.data.sequencer.SubjectAtomicSequencer;
 
 /**
  * User: alabri
@@ -19,6 +22,9 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
     private PartyDaoImpl partyDao;
     private String uriPrefix;
     private JpaConnector jpaConnector;
+    private PartyAtomicSequencer partyAtomicSequencer;
+    private CollectionAtomicSequencer collectionAtomicSequencer;
+    private SubjectAtomicSequencer subjectAtomicSequencer;
 
     public DataRegistryApplicationConfigurationImpl() {
     }
@@ -90,4 +96,27 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         return jpaConnector;
     }
 
+    public void setPartyAtomicSequencer(PartyAtomicSequencer partyAtomicSequencer) {
+        this.partyAtomicSequencer = partyAtomicSequencer;
+    }
+
+    public PartyAtomicSequencer getPartyAtomicSequencer() {
+        return partyAtomicSequencer;
+    }
+
+    public void setCollectionAtomicSequencer(CollectionAtomicSequencer collectionAtomicSequencer) {
+        this.collectionAtomicSequencer = collectionAtomicSequencer;
+    }
+
+    public CollectionAtomicSequencer getCollectionAtomicSequencer() {
+        return collectionAtomicSequencer;
+    }
+
+    public void setSubjectAtomicSequencer(SubjectAtomicSequencer subjectAtomicSequencer) {
+        this.subjectAtomicSequencer = subjectAtomicSequencer;
+    }
+
+    public SubjectAtomicSequencer getSubjectAtomicSequencer() {
+        return subjectAtomicSequencer;
+    }
 }

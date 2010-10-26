@@ -42,4 +42,11 @@ public interface SubjectDao extends Dao<Subject> {
      * @return List of inactive subjects
      */
     List<Subject> getAllInActive();
+
+    /**
+     * Gets the most recent inserted subject
+     *
+     * @return
+     */
+    Subject getMostRecentInsertedCollection();
 }

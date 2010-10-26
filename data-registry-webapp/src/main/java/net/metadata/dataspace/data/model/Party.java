@@ -30,6 +30,7 @@ public class Party extends AbstractBaseEntity {
     private String content;
 
     @NotNull
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
     @CollectionOfElements

@@ -50,9 +50,17 @@ public interface PartyDao extends Dao<Party> {
     List<Party> getAllInActive();
 
     /**
-     * Gets the latest updated party
+     * Gets the most recent updated party
      *
      * @return
      */
-    Party getLatestParty();
+    Party getMostRecentUpdatedParty();
+
+
+    /**
+     * Gets the most recent inserted party
+     *
+     * @return
+     */
+    Party getMostRecentInsertedParty();
 }

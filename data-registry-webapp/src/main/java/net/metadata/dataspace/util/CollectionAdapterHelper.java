@@ -210,17 +210,16 @@ public class CollectionAdapterHelper {
         alternateLink.setRel("alternate");
     }
 
-    public static Party getPartyFromEntry(Entry entry) {
+    public static boolean updatePartyFromEntry(Party party, Entry entry) {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            return null;
+            return false;
         } else {
-            Party party = new Party();
             party.setTitle(entry.getTitle());
             party.setSummary(entry.getSummary());
             party.setContent(entry.getContent());
             party.setUpdated(new Date());
             party.setAuthors(getAuthors(entry.getAuthors()));
-            return party;
+            return true;
         }
     }
 

@@ -9,9 +9,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Time: 11:07:08 AM
  */
 public class DataRegistryApplication {
+    private static ApplicationContext context = new ClassPathXmlApplicationContext("conf/spring/applicationContext.xml");
 
     public static DataRegistryApplicationConfiguration getApplicationContext() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("conf/spring/applicationContext.xml");
         DataRegistryApplicationConfigurationImpl dataRegistryApplicationConfigurationImpl = (DataRegistryApplicationConfigurationImpl) context.getBean("applicationContext");
         return dataRegistryApplicationConfigurationImpl;
     }

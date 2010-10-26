@@ -33,9 +33,9 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
 
     @Override
     public Collection getByKey(String uriKey) {
-        Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.id = :id");
-        query.setParameter("id", id);
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.atomicNumber = :atomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;
@@ -46,11 +46,11 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
 
     @Override
     public int softDelete(String uriKey) {
-        Long id = DaoHelper.fromOtherBaseToDecimal(31, uriKey).longValue();
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         entityManagerSource.getEntityManager().getTransaction().begin();
-        Query query = entityManagerSource.getEntityManager().createQuery("UPDATE Collection o SET o.isActive = :isActive WHERE o.id = :id");
+        Query query = entityManagerSource.getEntityManager().createQuery("UPDATE Collection o SET o.isActive = :isActive WHERE o.atomicNumber = :atomicNumber");
         query.setParameter("isActive", false);
-        query.setParameter("id", id);
+        query.setParameter("atomicNumber", atomicNumber);
         int updated = query.executeUpdate();
         entityManagerSource.getEntityManager().getTransaction().commit();
         return updated;
@@ -69,8 +69,19 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     }
 
     @Override
-    public Collection getLatestCollection() {
+    public Collection getMostRecentUpdatedCollection() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.updated = (SELECT MAX(o.updated) FROM Collection o)");
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Collection) resultList.get(0);
+    }
+
+    @Override
+    public Collection getMostRecentInsertedCollection() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.atomicNumber = (SELECT MAX(o.atomicNumber) FROM Collection o)");
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;
