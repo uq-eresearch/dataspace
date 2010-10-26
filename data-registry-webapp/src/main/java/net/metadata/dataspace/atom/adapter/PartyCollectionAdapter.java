@@ -135,6 +135,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         if (party == null) {
             return ProviderHelper.notfound(request);
         } else {
+            partyDao.refresh(party);
             if (party.isActive()) {
                 try {
                     deleteEntry(uriKey, request);
@@ -155,6 +156,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         if (party == null) {
             return ProviderHelper.notfound(request);
         } else {
+            partyDao.refresh(party);
             if (party.isActive()) {
                 Entry entry = CollectionAdapterHelper.getEntryFromParty(party);
                 return CollectionAdapterHelper.getContextResponseForGetEntry(request, entry);
@@ -209,15 +211,6 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             }
         }
     }
-    //    @Override
-//    public String getMediaName(Party party) throws ResponseContextException {
-//        return party.getTitle();
-//    }
-//
-//    @Override
-//    public String getContentType(Party party) {
-//        return Constants.JSON_MIMETYPE;
-//    }
 
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
@@ -233,7 +226,11 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     public Party getEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        return partyDao.getByKey(key);
+        Party party = partyDao.getByKey(key);
+        if (party != null) {
+            partyDao.refresh(party);
+        }
+        return party;
     }
 
     @Override

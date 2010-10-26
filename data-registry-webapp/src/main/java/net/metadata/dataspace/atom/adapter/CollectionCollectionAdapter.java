@@ -192,6 +192,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         if (collection == null) {
             return ProviderHelper.notfound(request);
         } else {
+            collectionDao.refresh(collection);
             if (collection.isActive()) {
                 try {
                     deleteEntry(uriKey, request);
@@ -210,6 +211,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     public ResponseContext getEntry(RequestContext request) {
         String uriKey = CollectionAdapterHelper.getEntryID(request);
         Collection collection = collectionDao.getByKey(uriKey);
+        collectionDao.refresh(collection);
         if (collection == null) {
             return ProviderHelper.notfound(request);
         } else {
@@ -246,7 +248,13 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
         Collection latestCollection = collectionDao.getLatestCollection();
-        feed.setUpdated(latestCollection == null ? new Date() : latestCollection.getUpdated());
+        if (latestCollection != null) {
+            collectionDao.refresh(latestCollection);
+            feed.setUpdated(latestCollection.getUpdated());
+        } else {
+            //TODO what would the date be if the feed is empty??
+            feed.setUpdated(new Date());
+        }
         feed.getSelfLink().setHref(ID_PREFIX + "collections");
         feed.getSelfLink().setMimeType(Constants.HTML_MIME_TYPE);
         feed.getAlternateLink().setHref(ID_PREFIX + "collections?repr=application/atom+xml;type=feed");
@@ -285,7 +293,11 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     public Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        return collectionDao.getByKey(key);
+        Collection collection = collectionDao.getByKey(key);
+        if (collection != null) {
+            collectionDao.refresh(collection);
+        }
+        return collection;
     }
 
     public List<Person> getAuthors(Collection collection, RequestContext request) throws ResponseContextException {
@@ -310,26 +322,6 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     public Iterable<Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
         return collectionDao.getAllActive();
     }
-
-//    protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-//        //TODO this should relect changes to the collections
-//        feed.setUpdated(new Date());
-//        Iterable<Collection> collections = getEntries(request);
-//        if (collections != null) {
-//            for (Collection entryObj : collections) {
-//                Entry e = feed.addEntry();
-//                IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
-//                addEntryDetails(request, e, feedIri, entryObj);
-//
-//                if (isMediaEntry(entryObj)) {
-//                    addMediaContent(feedIri, e, entryObj, request);
-//                } else {
-//                    addContent(e, entryObj, request);
-//                }
-//                e = CollectionAdapterHelper.getEntryFromCollection(entryObj);
-//            }
-//        }
-//    }
 
     @Override
     public String getId(Collection collection) throws ResponseContextException {

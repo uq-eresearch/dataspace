@@ -152,54 +152,62 @@ public class CollectionAdapterHelper {
     }
 
     public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry) {
-        ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+
         String representationMimeType = CollectionAdapterHelper.getRepresentationMimeType(request);
+        String acceptHeader = request.getAccept();
         if (representationMimeType == null) {
-            responseContext.setHeader("Vary", "Accept");
-            if (request.getAccept().equals(Constants.JSON_MIMETYPE)) {
-                Link selfLink = entry.addLink(entry.getId() + "?repr=" + Constants.JSON_MIMETYPE, "self");
-                selfLink.setMimeType(Constants.JSON_MIMETYPE);
-
-                Link alternateLink = entry.addLink(entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE, "alternate");
-                alternateLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
-
-                responseContext.setContentType(Constants.JSON_MIMETYPE);
-                responseContext.setWriter(new JSONWriter());
+            if (acceptHeader.equals(Constants.JSON_MIMETYPE) || acceptHeader.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+                representationMimeType = acceptHeader;
             } else {
-                Link selfLink = entry.addLink(entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE, "self");
-                selfLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
-
-                Link alternateLink = entry.addLink(entry.getId() + "?repr=" + Constants.JSON_MIMETYPE, "alternate");
-                alternateLink.setMimeType(Constants.JSON_MIMETYPE);
-
-                responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
-                responseContext.setWriter(new PrettyWriter());
-            }
-        } else {
-            if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
-                Link selfLink = entry.addLink(entry.getId() + "?repr=" + Constants.JSON_MIMETYPE, "self");
-                selfLink.setMimeType(Constants.JSON_MIMETYPE);
-
-                Link alternateLink = entry.addLink(entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE, "alternate");
-                alternateLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
-
-                responseContext.setContentType(Constants.JSON_MIMETYPE);
-                responseContext.setWriter(new JSONWriter());
-            } else if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
-                Link selfLink = entry.addLink(entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE, "self");
-                selfLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
-
-                Link alternateLink = entry.addLink(entry.getId() + "?repr=" + Constants.JSON_MIMETYPE, "alternate");
-                alternateLink.setMimeType(Constants.JSON_MIMETYPE);
-
-                responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
-                responseContext.setWriter(new PrettyWriter());
-            } else {
-                return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + representationMimeType + " mime type.");
+                representationMimeType = Constants.ATOM_ENTRY_MIMETYPE;
             }
         }
-        return responseContext;
 
+        ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+        responseContext.setHeader("Vary", "Accept");
+        if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
+            String selfLinkHref = entry.getId() + "?repr=" + Constants.JSON_MIMETYPE;
+            prepareSelfLink(entry, selfLinkHref, Constants.JSON_MIMETYPE);
+
+            String alternateLinkHref = entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE;
+            prepareAlternateLink(entry, alternateLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
+
+            responseContext.setContentType(Constants.JSON_MIMETYPE);
+            responseContext.setWriter(new JSONWriter());
+        } else if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+            String selfLinkHref = entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE;
+            prepareSelfLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
+
+            String alternateLinkHref = entry.getId() + "?repr=" + Constants.JSON_MIMETYPE;
+            prepareAlternateLink(entry, alternateLinkHref, Constants.JSON_MIMETYPE);
+
+            responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
+            responseContext.setWriter(new PrettyWriter());
+        } else {
+            return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + representationMimeType + " mime type.");
+        }
+
+        return responseContext;
+    }
+
+    private static void prepareSelfLink(Entry entry, String href, String mimeType) {
+        Link selfLink = entry.getSelfLink();
+        if (selfLink == null) {
+            selfLink = entry.addLink(entry.getId().toString());
+        }
+        selfLink.setHref(href);
+        selfLink.setMimeType(mimeType);
+        selfLink.setRel("self");
+    }
+
+    private static void prepareAlternateLink(Entry entry, String href, String mimeType) {
+        Link alternateLink = entry.getAlternateLink();
+        if (alternateLink == null) {
+            alternateLink = entry.addLink(entry.getId().toString());
+        }
+        alternateLink.setHref(href);
+        alternateLink.setMimeType(mimeType);
+        alternateLink.setRel("alternate");
     }
 
     public static Party getPartyFromEntry(Entry entry) {
