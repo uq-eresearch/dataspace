@@ -4,9 +4,6 @@ import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.data.connector.JpaConnector;
-import net.metadata.dataspace.data.sequencer.CollectionAtomicSequencer;
-import net.metadata.dataspace.data.sequencer.PartyAtomicSequencer;
-import net.metadata.dataspace.data.sequencer.SubjectAtomicSequencer;
 
 /**
  * User: alabri
@@ -77,11 +74,5 @@ public interface DataRegistryApplicationConfiguration {
      * @return JpaConnector
      */
     JpaConnector getJpaConnector();
-
-    PartyAtomicSequencer getPartyAtomicSequencer();
-
-    CollectionAtomicSequencer getCollectionAtomicSequencer();
-
-    SubjectAtomicSequencer getSubjectAtomicSequencer();
 
 }

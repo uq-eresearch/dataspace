@@ -18,7 +18,7 @@ public class SubjectAtomicSequencer {
     public SubjectAtomicSequencer(SubjectDao subjectDao) {
         Subject subject = subjectDao.getMostRecentInsertedCollection();
         if (subject == null) {
-            atomicInterger = new AtomicInteger(1);
+            atomicInterger = new AtomicInteger(0);
         } else {
             subjectDao.refresh(subject);
             String uriKey = subject.getUriKey();
@@ -27,7 +27,7 @@ public class SubjectAtomicSequencer {
     }
 
     public int next() {
-        return atomicInterger.getAndIncrement();
+        return atomicInterger.incrementAndGet();
     }
 
     public int current() {

@@ -26,9 +26,6 @@
         <property name="partyDao" ref="partyDao"/>
         <property name="subjectDao" ref="subjectDao"/>
         <property name="jpaConnector" ref="jpaConnector"/>
-        <property name="partyAtomicSequencer" ref="partyAtomicSequencer"/>
-        <property name="collectionAtomicSequencer" ref="collectionAtomicSequencer"/>
-        <property name="subjectAtomicSequencer" ref="subjectAtomicSequencer"/>
     </bean>
     <bean id="log4jInitialization"
           class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
@@ -52,5 +49,11 @@
 
     <bean id="subjectAtomicSequencer" class="net.metadata.dataspace.data.sequencer.SubjectAtomicSequencer">
         <constructor-arg ref="subjectDao"/>
+    </bean>
+
+    <bean id="daoHelper" class="net.metadata.dataspace.util.DaoHelper">
+        <property name="partyAtomicSequencer" ref="partyAtomicSequencer"/>
+        <property name="collectionAtomicSequencer" ref="collectionAtomicSequencer"/>
+        <property name="subjectAtomicSequencer" ref="subjectAtomicSequencer"/>
     </bean>
 </beans>

@@ -14,9 +14,4 @@
     </bean>
     <import resource="registry.xml"/>
 
-    <bean id="populatorUtil" class="net.metadata.dataspace.data.model.PopulatorUtil">
-        <property name="partyAtomicSequencer" ref="partyAtomicSequencer"/>
-        <property name="collectionAtomicSequencer" ref="collectionAtomicSequencer"/>
-        <property name="subjectAtomicSequencer" ref="subjectAtomicSequencer"/>
-    </bean>
 </beans>

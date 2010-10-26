@@ -19,7 +19,7 @@ public class PartyAtomicSequencer {
     public PartyAtomicSequencer(PartyDao partyDao) {
         Party party = partyDao.getMostRecentInsertedParty();
         if (party == null) {
-            atomicInterger = new AtomicInteger(1);
+            atomicInterger = new AtomicInteger(0);
         } else {
             partyDao.refresh(party);
             String uriKey = party.getUriKey();
@@ -28,7 +28,7 @@ public class PartyAtomicSequencer {
     }
 
     public int next() {
-        return atomicInterger.getAndIncrement();
+        return atomicInterger.incrementAndGet();
     }
 
     public int current() {

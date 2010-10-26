@@ -258,7 +258,9 @@ public class CollectionAdapterHelper {
                 String vocabulary = extension.getAttributeValue("vocabulary");
                 String value = extension.getAttributeValue("value");
                 if (vocabulary != null && value != null) {
-                    Subject subject = new Subject(vocabulary, value);
+                    Subject subject = DaoHelper.getNextSubject();
+                    subject.setVocabulary(vocabulary);
+                    subject.setValue(value);
                     subjects.add(subject);
                 }
             }

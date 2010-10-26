@@ -19,7 +19,7 @@ public class CollectionAtomicSequencer {
     public CollectionAtomicSequencer(CollectionDao collectionDao) {
         Collection collection = collectionDao.getMostRecentInsertedCollection();
         if (collection == null) {
-            atomicInterger = new AtomicInteger(1);
+            atomicInterger = new AtomicInteger(0);
         } else {
             collectionDao.refresh(collection);
             String uriKey = collection.getUriKey();
@@ -28,7 +28,7 @@ public class CollectionAtomicSequencer {
     }
 
     public int next() {
-        return atomicInterger.getAndIncrement();
+        return atomicInterger.incrementAndGet();
     }
 
     public int current() {
