@@ -1,6 +1,6 @@
 package net.metadata.dataspace.app;
 
-import net.metadata.dataspace.data.access.DaoRegister;
+import net.metadata.dataspace.data.access.DaoManager;
 
 /**
  * User: alabri
@@ -12,7 +12,7 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
     private String registryTitle;
     private String version;
     private String uriPrefix;
-    private DaoRegister daoRegister;
+    private DaoManager daoRegister;
 
     public DataRegistryApplicationConfigurationImpl() {
     }
@@ -49,11 +49,11 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         return uriPrefix;
     }
 
-    public void setDaoRegister(DaoRegister daoRegister) {
+    public void setDaoRegister(DaoManager daoRegister) {
         this.daoRegister = daoRegister;
     }
 
-    public DaoRegister getDaoRegister() {
+    public DaoManager getDaoRegister() {
         return daoRegister;
     }
 }

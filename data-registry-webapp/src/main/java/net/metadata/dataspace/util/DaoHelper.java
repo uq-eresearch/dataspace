@@ -16,8 +16,8 @@ public class DaoHelper {
     private static PartyAtomicSequencer partyAtomicSequencer;
     private static CollectionAtomicSequencer collectionAtomicSequencer;
     private static SubjectAtomicSequencer subjectAtomicSequencer;
-    private ServiceAtomicSequencer serviceAtomicSequencer;
-    private ActivityAtomicSequencer activityAtomicSequencer;
+    private static ServiceAtomicSequencer serviceAtomicSequencer;
+    private static ActivityAtomicSequencer activityAtomicSequencer;
 
     public static String fromDecimalToOtherBase(int base, int decimalNumber) {
         String tempVal = decimalNumber == 0 ? "0" : "";

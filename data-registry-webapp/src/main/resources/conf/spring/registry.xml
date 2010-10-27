@@ -21,7 +21,7 @@
         <property name="registryTitle" value="${data.registry.title}"/>
         <property name="version" value="${data.registry.version}.${revision}"/>
         <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
-        <property name="daoRegister" ref="daoRegister"/>
+        <property name="daoRegister" ref="daoManager"/>
     </bean>
     <bean id="log4jInitialization"
           class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
@@ -35,7 +35,7 @@
         </property>
     </bean>
 
-    <bean id="daoRegister" class="net.metadata.dataspace.data.access.DaoRegister">
+    <bean id="daoManager" class="net.metadata.dataspace.data.access.DaoManager">
         <property name="collectionDao" ref="collectionDao"/>
         <property name="partyDao" ref="partyDao"/>
         <property name="serviceDao" ref="serviceDao"/>

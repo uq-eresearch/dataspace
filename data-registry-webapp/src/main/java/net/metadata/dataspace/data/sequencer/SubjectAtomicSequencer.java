@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SubjectAtomicSequencer extends AbstractAtomicSquencer {
 
     public SubjectAtomicSequencer(SubjectDao subjectDao) {
-        Subject subject = subjectDao.getMostRecentInsertedCollection();
+        Subject subject = subjectDao.getMostRecentInserted();
         if (subject == null) {
             atomicInterger = new AtomicInteger(0);
         } else {

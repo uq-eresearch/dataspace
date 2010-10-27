@@ -1,6 +1,6 @@
 package net.metadata.dataspace.app;
 
-import net.metadata.dataspace.data.access.DaoRegister;
+import net.metadata.dataspace.data.access.DaoManager;
 
 /**
  * User: alabri
@@ -49,6 +49,6 @@ public interface DataRegistryApplicationConfiguration {
      *
      * @return DaoRegister bean
      */
-    DaoRegister getDaoRegister();
+    DaoManager getDaoRegister();
 
 }

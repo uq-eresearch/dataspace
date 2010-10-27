@@ -7,7 +7,7 @@ import net.metadata.dataspace.data.access.impl.*;
  * Date: 27/10/2010
  * Time: 11:39:29 AM
  */
-public class DaoRegister {
+public class DaoManager {
 
     private CollectionDaoImpl collectionDao;
     private PartyDaoImpl partyDao;

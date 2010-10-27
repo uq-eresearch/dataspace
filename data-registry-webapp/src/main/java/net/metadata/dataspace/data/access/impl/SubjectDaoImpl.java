@@ -33,6 +33,19 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
     }
 
     @Override
+    public Subject getByKey(String uriKey) {
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.atomicNumber = :atomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Subject) resultList.get(0);
+    }
+
+    @Override
     public int softDelete(String uriKey) {
         int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         entityManagerSource.getEntityManager().getTransaction().begin();
@@ -59,7 +72,13 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
     }
 
     @Override
-    public Subject getMostRecentInsertedCollection() {
+    public Subject getMostRecentUpdated() {
+        //TODO if a updated date property is added to Subject table then this should be changed to get most recent updated Subject
+        return getMostRecentInserted();
+    }
+
+    @Override
+    public Subject getMostRecentInserted() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.atomicNumber = (SELECT MAX(o.atomicNumber) FROM Subject o)");
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
