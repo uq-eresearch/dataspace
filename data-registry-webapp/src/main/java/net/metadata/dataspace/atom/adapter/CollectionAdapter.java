@@ -277,7 +277,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             AtomFeedHelper.prepareFeedAlternateLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
         }
 
-        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": Collections");
+        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.COLLECTIONS_TITLE);
         Iterable<Collection> entries = getEntries(request);
         if (entries != null) {
             for (Collection entryObj : entries) {
@@ -381,7 +381,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public String getTitle(RequestContext requestContext) {
-        return "Collections";
+        return Constants.COLLECTIONS_TITLE;
     }
 
     private void assembleCollectionFromJson(Collection collection, String jsonString) {

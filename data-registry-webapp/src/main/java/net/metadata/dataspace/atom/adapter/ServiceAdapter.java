@@ -1,5 +1,8 @@
 package net.metadata.dataspace.atom.adapter;
 
+import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.Service;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
@@ -20,67 +23,84 @@ import java.util.List;
 public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     private Logger logger = Logger.getLogger(getClass());
+    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
+    private ServiceDao serviceDao = DataRegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
+
+    @Override
+    public String[] getAccepts(RequestContext request) {
+        return new String[]{Constants.ATOM_ENTRY_MIMETYPE, Constants.JSON_MIMETYPE};
+    }
 
     @Override
     public Service postEntry(String title, IRI id, String summary, Date updated, List<Person> authors, Content content, RequestContext request) throws ResponseContextException {
+        logger.warn("Method not supported.");
         return null;
     }
 
     @Override
-    public void deleteEntry(String resourceName, RequestContext request) throws ResponseContextException {
+    public void deleteEntry(String key, RequestContext request) throws ResponseContextException {
+        serviceDao.softDelete(key);
     }
 
     @Override
     public Object getContent(Service entry, RequestContext request) throws ResponseContextException {
-        return null;
+        Content content = request.getAbdera().getFactory().newContent(Content.Type.TEXT);
+        content.setText(entry.getContent());
+        return content;
     }
 
     @Override
     public Iterable<Service> getEntries(RequestContext request) throws ResponseContextException {
-        return null;
+        return serviceDao.getAllActive();
     }
 
     @Override
-    public Service getEntry(String resourceName, RequestContext request) throws ResponseContextException {
-        return null;
+    public Service getEntry(String key, RequestContext request) throws ResponseContextException {
+        Service service = serviceDao.getByKey(key);
+        if (service != null) {
+            serviceDao.refresh(service);
+        }
+        return service;
+
     }
 
     @Override
     public String getId(Service entry) throws ResponseContextException {
-        return null;
+        return ID_PREFIX + Constants.SERVICES_PATH + "/" + entry.getUriKey();
     }
 
     @Override
     public String getName(Service entry) throws ResponseContextException {
-        return null;
+        return ID_PREFIX + Constants.SERVICES_PATH + "/" + entry.getUriKey();
     }
 
     @Override
     public String getTitle(Service entry) throws ResponseContextException {
-        return null;
+        return entry.getTitle();
     }
 
     @Override
     public Date getUpdated(Service entry) throws ResponseContextException {
-        return null;
+        return entry.getUpdated();
     }
 
     @Override
     public void putEntry(Service entry, String title, Date updated, List<Person> authors, String summary, Content content, RequestContext request) throws ResponseContextException {
+        logger.warn("Method not supported.");
     }
 
     @Override
     public String getAuthor(RequestContext request) throws ResponseContextException {
-        return null;
+        return DataRegistryApplication.getApplicationContext().getUriPrefix();
     }
 
     @Override
     public String getId(RequestContext request) {
-        return null;
+        return ID_PREFIX + Constants.SERVICES_PATH;
     }
 
     @Override
     public String getTitle(RequestContext request) {
-        return null;
+        return Constants.SERVICES_TITLE;
     }
 }

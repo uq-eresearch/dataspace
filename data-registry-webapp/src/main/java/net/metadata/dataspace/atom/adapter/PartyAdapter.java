@@ -223,7 +223,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             AtomFeedHelper.prepareFeedAlternateLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
         }
 
-        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": Parties");
+        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.PARTIES_TITLE);
         Iterable<Party> entries = getEntries(request);
         if (entries != null) {
             for (Party entryObj : entries) {
@@ -328,7 +328,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public String getTitle(RequestContext requestContext) {
-        return "Parties";
+        return Constants.PARTIES_TITLE;
     }
 
     private void assemblePartyFromJson(Party party, String jsonString) {

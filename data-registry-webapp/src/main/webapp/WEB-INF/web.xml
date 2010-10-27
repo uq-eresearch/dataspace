@@ -39,6 +39,14 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/activities/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/services/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
         <url-pattern>/registry.atomsvc</url-pattern>
     </servlet-mapping>
 

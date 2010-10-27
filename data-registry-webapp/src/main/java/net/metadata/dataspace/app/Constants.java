@@ -7,9 +7,9 @@ package net.metadata.dataspace.app;
  */
 public interface Constants {
 
-    /*
-    * Mime types
-    */
+    /**
+     * Mime types
+     */
     String JSON_MIMETYPE = "application/json";
     String ATOM_MIMETYPE = "application/atom+xml";
     String ATOM_ENTRY_MIMETYPE = "application/atom+xml;type=entry";
@@ -18,17 +18,26 @@ public interface Constants {
     String ATOM_SERVICE_MIMETYPE = "application/atomsvc+xml";
 
 
-    /*
-    * Namespace related
-    */
+    /**
+     * Namespace related
+     */
     String UQ_DATA_COLLECTIONS_REGISTRY_NS = "http://dataspace.metadata.net/";
     String UQ_DATA_COLLECTIONS_REGISTRY_PFX = "uqdata";
 
-    /*
-    * Adapters
-    */
+    /**
+     * Adapters
+     */
     String PARTIES_PATH = "parties";
     String COLLECTIONS_PATH = "collections";
     String ACTIVITIES_PATH = "activities";
     String SERVICES_PATH = "services";
+
+    /**
+     * Titles
+     */
+    String PARTIES_TITLE = "Parties";
+    String COLLECTIONS_TITLE = "Collections";
+    String ACTIVITIES_TITLE = "Activities";
+    String SERVICES_TITLE = "Services";
+
 }
