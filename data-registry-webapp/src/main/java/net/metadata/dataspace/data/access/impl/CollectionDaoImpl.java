@@ -16,6 +16,7 @@ import java.util.List;
  * Time: 10:21:38 AM
  */
 public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionDao, Serializable {
+
     public CollectionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

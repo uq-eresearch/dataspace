@@ -21,7 +21,6 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
         super(entityManagerSource);
     }
 
-
     @Override
     @SuppressWarnings("unchecked")
     public Subject getById(Long id) {

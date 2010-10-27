@@ -3,14 +3,24 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <!--Daos-->
     <bean id="collectionDao" class="net.metadata.dataspace.data.access.impl.CollectionDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>
+
     <bean id="partyDao" class="net.metadata.dataspace.data.access.impl.PartyDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>
+
+    <bean id="serviceDao" class="net.metadata.dataspace.data.access.impl.ServiceDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
+    <bean id="activityDao" class="net.metadata.dataspace.data.access.impl.ActivityDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
     <bean id="subjectDao" class="net.metadata.dataspace.data.access.impl.SubjectDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>
+
 </beans>
