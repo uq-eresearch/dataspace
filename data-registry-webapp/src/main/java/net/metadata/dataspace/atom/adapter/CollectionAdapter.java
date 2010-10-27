@@ -37,7 +37,7 @@ import net.metadata.dataspace.data.model.Collection;
  * Date: 24/09/2010
  * Time: 11:38:59 AM
  */
-public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter<Collection> {
+public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collection> {
 
     private Logger logger = Logger.getLogger(getClass());
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();

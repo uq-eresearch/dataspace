@@ -1,8 +1,8 @@
 package net.metadata.dataspace.servlets;
 
 import net.metadata.dataspace.app.DataRegistryApplication;
-import net.metadata.dataspace.atom.adapter.CollectionCollectionAdapter;
-import net.metadata.dataspace.atom.adapter.PartyCollectionAdapter;
+import net.metadata.dataspace.atom.adapter.CollectionAdapter;
+import net.metadata.dataspace.atom.adapter.PartyAdapter;
 import org.apache.abdera.protocol.server.*;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.DefaultProvider;
@@ -22,19 +22,19 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 
     protected Provider createProvider() {
         //Parties collection and workspace
-        PartyCollectionAdapter partyCollectionAdapter = new PartyCollectionAdapter();
+        PartyAdapter partyAdapter = new PartyAdapter();
         String partiesPath = "parties";
-        partyCollectionAdapter.setHref(partiesPath);
+        partyAdapter.setHref(partiesPath);
 
         SimpleWorkspaceInfo partyWorkSpace = new SimpleWorkspaceInfo();
         partyWorkSpace.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle());
-        partyWorkSpace.addCollection(partyCollectionAdapter);
+        partyWorkSpace.addCollection(partyAdapter);
 
         //collections collection and workspace
-        CollectionCollectionAdapter collectionCollectionAdapter = new CollectionCollectionAdapter();
+        CollectionAdapter collectionAdapter = new CollectionAdapter();
         String collectionsPath = "collections";
-        collectionCollectionAdapter.setHref(collectionsPath);
-        partyWorkSpace.addCollection(collectionCollectionAdapter);
+        collectionAdapter.setHref(collectionsPath);
+        partyWorkSpace.addCollection(collectionAdapter);
 
         String base = "/";
         DefaultProvider provider = new DefaultProvider(base) {
@@ -51,7 +51,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                         }
 
                         WorkspaceManager wm = getWorkspaceManager(request);
-                        CollectionAdapter adapter = wm.getCollectionAdapter(request);
+                        org.apache.abdera.protocol.server.CollectionAdapter adapter = wm.getCollectionAdapter(request);
                         Transactional transaction = adapter instanceof Transactional ? (Transactional) adapter : null;
                         ResponseContext response = null;
                         try {

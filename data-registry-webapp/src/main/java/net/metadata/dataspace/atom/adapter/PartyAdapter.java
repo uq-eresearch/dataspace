@@ -37,7 +37,7 @@ import java.util.*;
  * Date: 21/09/2010
  * Time: 4:59:19 PM
  */
-public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Party> {
+public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     private Logger logger = Logger.getLogger(getClass());
     private final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
