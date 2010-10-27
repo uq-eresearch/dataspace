@@ -71,7 +71,7 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
-    public Party getMostRecentUpdatedParty() {
+    public Party getMostRecentUpdated() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.updated = (SELECT MAX(o.updated) FROM Party o)");
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
@@ -82,7 +82,7 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
-    public Party getMostRecentInsertedParty() {
+    public Party getMostRecentInserted() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.atomicNumber = (SELECT MAX(o.atomicNumber) FROM Party o)");
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {

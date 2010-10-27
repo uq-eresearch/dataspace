@@ -190,7 +190,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        Party latestParty = partyDao.getMostRecentUpdatedParty();
+        Party latestParty = partyDao.getMostRecentUpdated();
         if (latestParty != null) {
             partyDao.refresh(latestParty);
             feed.setUpdated(latestParty.getUpdated());

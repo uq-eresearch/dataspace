@@ -69,7 +69,7 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     }
 
     @Override
-    public Collection getMostRecentUpdatedCollection() {
+    public Collection getMostRecentUpdated() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.updated = (SELECT MAX(o.updated) FROM Collection o)");
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
@@ -80,7 +80,7 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     }
 
     @Override
-    public Collection getMostRecentInsertedCollection() {
+    public Collection getMostRecentInserted() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.atomicNumber = (SELECT MAX(o.atomicNumber) FROM Collection o)");
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {

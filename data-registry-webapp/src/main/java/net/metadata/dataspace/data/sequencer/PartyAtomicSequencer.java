@@ -17,7 +17,7 @@ public class PartyAtomicSequencer {
     private final int BASE_THIRTY_ONE = 31;
 
     public PartyAtomicSequencer(PartyDao partyDao) {
-        Party party = partyDao.getMostRecentInsertedParty();
+        Party party = partyDao.getMostRecentInserted();
         if (party == null) {
             atomicInterger = new AtomicInteger(0);
         } else {

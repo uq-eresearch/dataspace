@@ -248,7 +248,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        Collection latestCollection = collectionDao.getMostRecentUpdatedCollection();
+        Collection latestCollection = collectionDao.getMostRecentUpdated();
         if (latestCollection != null) {
             collectionDao.refresh(latestCollection);
             feed.setUpdated(latestCollection.getUpdated());

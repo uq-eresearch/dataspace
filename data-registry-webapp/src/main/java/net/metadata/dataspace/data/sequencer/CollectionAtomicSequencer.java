@@ -17,7 +17,7 @@ public class CollectionAtomicSequencer {
     private final int BASE_THIRTY_ONE = 31;
 
     public CollectionAtomicSequencer(CollectionDao collectionDao) {
-        Collection collection = collectionDao.getMostRecentInsertedCollection();
+        Collection collection = collectionDao.getMostRecentInserted();
         if (collection == null) {
             atomicInterger = new AtomicInteger(0);
         } else {
