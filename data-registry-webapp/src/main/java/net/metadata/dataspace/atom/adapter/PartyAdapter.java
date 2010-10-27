@@ -199,7 +199,6 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             //TODO what would the date be if the feed is empty??
             feed.setUpdated(new Date());
         }
-
         String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
@@ -209,29 +208,22 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
+        String atomFeedUrl = ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = ID_PREFIX + Constants.COLLECTIONS_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            String selfLinkHref = ID_PREFIX + Constants.PARTIES_PATH;
-            AtomFeedHelper.prepareFeedSelfLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
-
-            String alternateLinkHref = ID_PREFIX + Constants.PARTIES_PATH + "?repr=application/atom+xml;type=feed";
-            AtomFeedHelper.prepareFeedAlternateLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
+            AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
         } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            String alternateLinkHref = ID_PREFIX + Constants.PARTIES_PATH + "?repr=application/atom+xml;type=feed";
-            AtomFeedHelper.prepareFeedSelfLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
-
-            String selfLinkHref = ID_PREFIX + Constants.PARTIES_PATH;
-            AtomFeedHelper.prepareFeedAlternateLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
+            AtomFeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            AtomFeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
-
         feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.PARTIES_TITLE);
         Iterable<Party> entries = getEntries(request);
         if (entries != null) {
             for (Party entryObj : entries) {
                 Entry e = feed.addEntry();
-
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
-
                 if (isMediaEntry(entryObj)) {
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {

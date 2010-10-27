@@ -73,18 +73,14 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
+        String atomFeedUrl = ID_PREFIX + Constants.ACTIVITIES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = ID_PREFIX + Constants.ACTIVITIES_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            String selfLinkHref = ID_PREFIX + Constants.ACTIVITIES_PATH;
-            AtomFeedHelper.prepareFeedSelfLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
-
-            String alternateLinkHref = ID_PREFIX + Constants.ACTIVITIES_PATH + "?repr=application/atom+xml;type=feed";
-            AtomFeedHelper.prepareFeedAlternateLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
+            AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
         } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            String alternateLinkHref = ID_PREFIX + Constants.ACTIVITIES_PATH + "?repr=application/atom+xml;type=feed";
-            AtomFeedHelper.prepareFeedSelfLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
-
-            String selfLinkHref = ID_PREFIX + Constants.ACTIVITIES_PATH;
-            AtomFeedHelper.prepareFeedAlternateLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
+            AtomFeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            AtomFeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
 
         feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.ACTIVITIES_TITLE);
@@ -92,10 +88,8 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (entries != null) {
             for (Activity entryObj : entries) {
                 Entry e = feed.addEntry();
-
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
-
                 if (isMediaEntry(entryObj)) {
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {

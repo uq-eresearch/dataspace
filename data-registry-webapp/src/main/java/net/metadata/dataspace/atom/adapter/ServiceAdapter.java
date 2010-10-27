@@ -4,10 +4,15 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.Service;
+import net.metadata.dataspace.util.AtomFeedHelper;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Feed;
 import org.apache.abdera.model.Person;
+import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
+import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
@@ -25,6 +30,73 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     private Logger logger = Logger.getLogger(getClass());
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
     private ServiceDao serviceDao = DataRegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
+
+    @Override
+    public ResponseContext getFeed(RequestContext request) {
+        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType != null) {
+            if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "service.jsp");
+            } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                return super.getFeed(request);
+            } else {
+                return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            }
+        } else {
+            String accept = request.getAccept();
+            if (accept.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                return super.getFeed(request);
+            } else {
+                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "service.jsp");
+            }
+        }
+    }
+
+    @Override
+    protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
+        Service latestService = serviceDao.getMostRecentUpdated();
+        if (latestService != null) {
+            serviceDao.refresh(latestService);
+            feed.setUpdated(latestService.getUpdated());
+        } else {
+            //TODO what would the date be if the feed is empty??
+            feed.setUpdated(new Date());
+        }
+
+        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType == null) {
+            String acceptHeader = request.getAccept();
+            if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                representationMimeType = acceptHeader;
+            } else {
+                representationMimeType = Constants.HTML_MIME_TYPE;
+            }
+        }
+        String atomFeedUrl = ID_PREFIX + Constants.SERVICES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = ID_PREFIX + Constants.SERVICES_PATH;
+        if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+            AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+        } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
+            AtomFeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            AtomFeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+        }
+
+        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.SERVICES_TITLE);
+        Iterable<Service> entries = getEntries(request);
+        if (entries != null) {
+            for (Service entryObj : entries) {
+                Entry e = feed.addEntry();
+                IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
+                addEntryDetails(request, e, feedIri, entryObj);
+                if (isMediaEntry(entryObj)) {
+                    addMediaContent(feedIri, e, entryObj, request);
+                } else {
+                    addContent(e, entryObj, request);
+                }
+            }
+        }
+    }
 
     @Override
     public String[] getAccepts(RequestContext request) {
