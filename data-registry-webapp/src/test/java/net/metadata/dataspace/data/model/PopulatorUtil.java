@@ -1,6 +1,6 @@
 package net.metadata.dataspace.data.model;
 
-import net.metadata.dataspace.data.access.manager.impl.EntityCreatorImpl;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import java.util.UUID;
  * Time: 11:22:08 AM
  */
 public class PopulatorUtil {
-    private static EntityCreatorImpl entityCreator;
+    private static EntityCreator entityCreator;
 
     public static Subject getSubject() throws Exception {
         Subject subject = entityCreator.getNextSubject();
@@ -49,11 +49,11 @@ public class PopulatorUtil {
         return party;
     }
 
-    public void setEntityCreator(EntityCreatorImpl entityCreator) {
+    public void setEntityCreator(EntityCreator entityCreator) {
         this.entityCreator = entityCreator;
     }
 
-    public EntityCreatorImpl getEntityCreator() {
+    public EntityCreator getEntityCreator() {
         return entityCreator;
     }
 }

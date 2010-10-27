@@ -7,7 +7,7 @@ package net.metadata.dataspace.util;
  */
 public class DaoHelper {
 
-    private static final String baseDigits = "0123456789bcdfghjklmnpqrstvwxyz";
+    private static final String BASE_CHARACTERS = "0123456789bcdfghjklmnpqrstvwxyz";
 
     public static String fromDecimalToOtherBase(int base, int decimalNumber) {
         String tempVal = decimalNumber == 0 ? "0" : "";
@@ -15,7 +15,7 @@ public class DaoHelper {
 
         while (decimalNumber != 0) {
             mod = decimalNumber % base;
-            tempVal = baseDigits.substring(mod, mod + 1) + tempVal;
+            tempVal = BASE_CHARACTERS.substring(mod, mod + 1) + tempVal;
             decimalNumber = decimalNumber / base;
         }
         return tempVal;
@@ -27,7 +27,7 @@ public class DaoHelper {
         int multiplier = 1;
 
         while (iterator > 0) {
-            returnValue = returnValue + (baseDigits.indexOf(number.substring(iterator - 1, iterator)) * multiplier);
+            returnValue = returnValue + (BASE_CHARACTERS.indexOf(number.substring(iterator - 1, iterator)) * multiplier);
             multiplier = multiplier * base;
             --iterator;
         }

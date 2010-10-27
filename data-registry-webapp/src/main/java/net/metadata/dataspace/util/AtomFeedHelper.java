@@ -18,6 +18,7 @@ import java.net.URLConnection;
  * Time: 2:13:08 PM
  */
 public class AtomFeedHelper {
+
     private static final String URL = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
     public static String getRepresentationMimeType(RequestContext request) {

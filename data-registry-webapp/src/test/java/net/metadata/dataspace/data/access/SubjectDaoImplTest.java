@@ -31,31 +31,22 @@ public class SubjectDaoImplTest {
     @Test
     public void testAddingSubject() throws Exception {
         int originalSubjectTableSize = subjectDao.getAll().size();
-
-        //add a new subject
         Subject subject = PopulatorUtil.getSubject();
         subjectDao.save(subject);
-
-        //Subject table shouldn't be empty
         assertTrue("Subjects number should increase Current: " + subjectDao.getAll().size() + " Original: " + originalSubjectTableSize, subjectDao.getAll().size() == (originalSubjectTableSize + 1));
     }
 
     @Test
     public void testEditingSubject() throws Exception {
         testAddingSubject();
-
         Subject subject = subjectDao.getAll().get(0);
         Long id = subject.getId();
         String originalVocabUri = subject.getVocabulary();
-
         String newVocabURI = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "subject/" + UUID.randomUUID().toString();
         subject.setVocabulary(newVocabURI);
 
-        //update the subject in the database
         subjectDao.update(subject);
-
         Subject subjectByID = subjectDao.getById(id);
-
         assertEquals("Subject and SubjectByID are not the same", subject, subjectByID);
         assertEquals("Vocabulary URIs are not the same", newVocabURI, subjectByID.getVocabulary());
         assertFalse("Vocabulary URI should be updated " + originalVocabUri + " Current: " + subjectByID.getVocabulary(), originalVocabUri.equals(subjectByID.getVocabulary()));
