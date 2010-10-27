@@ -11,9 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 26/10/2010
  * Time: 2:01:04 PM
  */
-public class SubjectAtomicSequencer {
-    private AtomicInteger atomicInterger;
-    private final int BASE_THIRTY_ONE = 31;
+public class SubjectAtomicSequencer extends AbstractAtomicSquencer {
 
     public SubjectAtomicSequencer(SubjectDao subjectDao) {
         Subject subject = subjectDao.getMostRecentInsertedCollection();
@@ -21,16 +19,10 @@ public class SubjectAtomicSequencer {
             atomicInterger = new AtomicInteger(0);
         } else {
             subjectDao.refresh(subject);
+            final int BASE_THIRTY_ONE = 31;
             String uriKey = subject.getUriKey();
             atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey) + 1);
         }
     }
 
-    public int next() {
-        return atomicInterger.incrementAndGet();
-    }
-
-    public int current() {
-        return atomicInterger.get();
-    }
 }

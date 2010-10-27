@@ -3,9 +3,7 @@ package net.metadata.dataspace.util;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
 import net.metadata.dataspace.data.model.Subject;
-import net.metadata.dataspace.data.sequencer.CollectionAtomicSequencer;
-import net.metadata.dataspace.data.sequencer.PartyAtomicSequencer;
-import net.metadata.dataspace.data.sequencer.SubjectAtomicSequencer;
+import net.metadata.dataspace.data.sequencer.*;
 
 /**
  * User: alabri
@@ -18,6 +16,8 @@ public class DaoHelper {
     private static PartyAtomicSequencer partyAtomicSequencer;
     private static CollectionAtomicSequencer collectionAtomicSequencer;
     private static SubjectAtomicSequencer subjectAtomicSequencer;
+    private ServiceAtomicSequencer serviceAtomicSequencer;
+    private ActivityAtomicSequencer activityAtomicSequencer;
 
     public static String fromDecimalToOtherBase(int base, int decimalNumber) {
         String tempVal = decimalNumber == 0 ? "0" : "";
@@ -85,5 +85,21 @@ public class DaoHelper {
 
     public SubjectAtomicSequencer getSubjectAtomicSequencer() {
         return subjectAtomicSequencer;
+    }
+
+    public void setServiceAtomicSequencer(ServiceAtomicSequencer serviceAtomicSequencer) {
+        this.serviceAtomicSequencer = serviceAtomicSequencer;
+    }
+
+    public ServiceAtomicSequencer getServiceAtomicSequencer() {
+        return serviceAtomicSequencer;
+    }
+
+    public void setActivityAtomicSequencer(ActivityAtomicSequencer activityAtomicSequencer) {
+        this.activityAtomicSequencer = activityAtomicSequencer;
+    }
+
+    public ActivityAtomicSequencer getActivityAtomicSequencer() {
+        return activityAtomicSequencer;
     }
 }

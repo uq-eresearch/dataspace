@@ -11,7 +11,6 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-
     <bean id="jpaConnector" class="net.metadata.dataspace.data.connector.JpaConnector">
         <constructor-arg ref="entityManagerFactory"/>
     </bean>
@@ -44,13 +43,20 @@
         <property name="subjectDao" ref="subjectDao"/>
     </bean>
 
-    <!--Sequencers-->
     <bean id="partyAtomicSequencer" class="net.metadata.dataspace.data.sequencer.PartyAtomicSequencer">
         <constructor-arg ref="partyDao"/>
     </bean>
 
     <bean id="collectionAtomicSequencer" class="net.metadata.dataspace.data.sequencer.CollectionAtomicSequencer">
         <constructor-arg ref="collectionDao"/>
+    </bean>
+
+    <bean id="serviceAtomicSequencer" class="net.metadata.dataspace.data.sequencer.ServiceAtomicSequencer">
+        <constructor-arg ref="serviceDao"/>
+    </bean>
+
+    <bean id="activityAtomicSequencer" class="net.metadata.dataspace.data.sequencer.ActivityAtomicSequencer">
+        <constructor-arg ref="activityDao"/>
     </bean>
 
     <bean id="subjectAtomicSequencer" class="net.metadata.dataspace.data.sequencer.SubjectAtomicSequencer">
@@ -61,5 +67,8 @@
         <property name="partyAtomicSequencer" ref="partyAtomicSequencer"/>
         <property name="collectionAtomicSequencer" ref="collectionAtomicSequencer"/>
         <property name="subjectAtomicSequencer" ref="subjectAtomicSequencer"/>
+        <property name="serviceAtomicSequencer" ref="serviceAtomicSequencer"/>
+        <property name="activityAtomicSequencer" ref="activityAtomicSequencer"/>
     </bean>
+
 </beans>
