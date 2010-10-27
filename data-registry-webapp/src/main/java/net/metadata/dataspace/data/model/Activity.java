@@ -1,6 +1,5 @@
 package net.metadata.dataspace.data.model;
 
-import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
@@ -10,11 +9,11 @@ import java.util.Set;
 
 /**
  * User: alabri
- * Date: 15/09/2010
- * Time: 3:32:39 PM
+ * Date: 27/10/2010
+ * Time: 10:30:02 AM
  */
 @Entity
-public class Party extends AbstractBaseEntity {
+public class Activity extends AbstractBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,19 +32,13 @@ public class Party extends AbstractBaseEntity {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
-    @CollectionOfElements
-    private Set<String> authors;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Collection> hasOutput = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Subject> subjects = new HashSet<Subject>();
+    private Set<Party> hasParticipant = new HashSet<Party>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Collection> collectorOf = new HashSet<Collection>();
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Activity> isParticipantIn = new HashSet<Activity>();
-
-    public Party() {
+    public Activity() {
     }
 
     public String getTitle() {
@@ -80,35 +73,19 @@ public class Party extends AbstractBaseEntity {
         this.updated = updated;
     }
 
-    public Set<String> getAuthors() {
-        return authors;
+    public Set<Collection> getHasOutput() {
+        return hasOutput;
     }
 
-    public void setAuthors(Set<String> authors) {
-        this.authors = authors;
+    public void setHasOutput(Set<Collection> hasOutput) {
+        this.hasOutput = hasOutput;
     }
 
-    public Set<Subject> getSubjects() {
-        return subjects;
+    public Set<Party> getHasParticipant() {
+        return hasParticipant;
     }
 
-    public void setSubjects(Set<Subject> subjects) {
-        this.subjects = subjects;
-    }
-
-    public Set<Collection> getCollectorOf() {
-        return collectorOf;
-    }
-
-    public void setCollectorOf(Set<Collection> collectorOf) {
-        this.collectorOf = collectorOf;
-    }
-
-    public Set<Activity> getParticipantIn() {
-        return isParticipantIn;
-    }
-
-    public void setParticipantIn(Set<Activity> participantIn) {
-        isParticipantIn = participantIn;
+    public void setHasParticipant(Set<Party> hasParticipant) {
+        this.hasParticipant = hasParticipant;
     }
 }

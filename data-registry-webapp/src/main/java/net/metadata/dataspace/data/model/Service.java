@@ -1,6 +1,5 @@
 package net.metadata.dataspace.data.model;
 
-import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
@@ -10,11 +9,11 @@ import java.util.Set;
 
 /**
  * User: alabri
- * Date: 15/09/2010
- * Time: 3:32:39 PM
+ * Date: 27/10/2010
+ * Time: 10:30:19 AM
  */
 @Entity
-public class Party extends AbstractBaseEntity {
+public class Service extends AbstractBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,19 +32,13 @@ public class Party extends AbstractBaseEntity {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
-    @CollectionOfElements
-    private Set<String> authors;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Subject> subjects = new HashSet<Subject>();
+    private Set<Collection> isSupportedBy = new HashSet<Collection>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Collection> collectorOf = new HashSet<Collection>();
+    @NotNull
+    private String location; //URI
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Activity> isParticipantIn = new HashSet<Activity>();
-
-    public Party() {
+    public Service() {
     }
 
     public String getTitle() {
@@ -80,35 +73,19 @@ public class Party extends AbstractBaseEntity {
         this.updated = updated;
     }
 
-    public Set<String> getAuthors() {
-        return authors;
+    public Set<Collection> getSupportedBy() {
+        return isSupportedBy;
     }
 
-    public void setAuthors(Set<String> authors) {
-        this.authors = authors;
+    public void setSupportedBy(Set<Collection> supportedBy) {
+        isSupportedBy = supportedBy;
     }
 
-    public Set<Subject> getSubjects() {
-        return subjects;
+    public String getLocation() {
+        return location;
     }
 
-    public void setSubjects(Set<Subject> subjects) {
-        this.subjects = subjects;
-    }
-
-    public Set<Collection> getCollectorOf() {
-        return collectorOf;
-    }
-
-    public void setCollectorOf(Set<Collection> collectorOf) {
-        this.collectorOf = collectorOf;
-    }
-
-    public Set<Activity> getParticipantIn() {
-        return isParticipantIn;
-    }
-
-    public void setParticipantIn(Set<Activity> participantIn) {
-        isParticipantIn = participantIn;
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

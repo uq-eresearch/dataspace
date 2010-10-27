@@ -42,6 +42,12 @@ public class Collection extends AbstractBaseEntity {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Party> collector = new HashSet<Party>();
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Activity> isOutputOf = new HashSet<Activity>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Service> supports = new HashSet<Service>();
+
     @NotNull
     private String location; //URI
 
@@ -81,6 +87,14 @@ public class Collection extends AbstractBaseEntity {
         this.content = content;
     }
 
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
     public Set<Subject> getSubjects() {
         return subjects;
     }
@@ -101,15 +115,24 @@ public class Collection extends AbstractBaseEntity {
         return location;
     }
 
+    public Set<Activity> getOutputOf() {
+        return isOutputOf;
+    }
+
+    public void setOutputOf(Set<Activity> outputOf) {
+        isOutputOf = outputOf;
+    }
+
+    public Set<Service> getSupports() {
+        return supports;
+    }
+
+    public void setSupports(Set<Service> supports) {
+        this.supports = supports;
+    }
+
     public void setLocation(String location) {
         this.location = location;
     }
 
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
 }
