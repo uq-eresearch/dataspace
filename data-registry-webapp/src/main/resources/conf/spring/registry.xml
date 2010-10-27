@@ -22,10 +22,7 @@
         <property name="registryTitle" value="${data.registry.title}"/>
         <property name="version" value="${data.registry.version}.${revision}"/>
         <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
-        <property name="collectionDao" ref="collectionDao"/>
-        <property name="partyDao" ref="partyDao"/>
-        <property name="subjectDao" ref="subjectDao"/>
-        <property name="jpaConnector" ref="jpaConnector"/>
+        <property name="daoRegister" ref="daoRegister"/>
     </bean>
     <bean id="log4jInitialization"
           class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
@@ -39,6 +36,13 @@
         </property>
     </bean>
 
+    <bean id="daoRegister" class="net.metadata.dataspace.data.access.DaoRegister">
+        <property name="collectionDao" ref="collectionDao"/>
+        <property name="partyDao" ref="partyDao"/>
+        <property name="subjectDao" ref="subjectDao"/>
+    </bean>
+
+    <!--Sequencers-->
     <bean id="partyAtomicSequencer" class="net.metadata.dataspace.data.sequencer.PartyAtomicSequencer">
         <constructor-arg ref="partyDao"/>
     </bean>

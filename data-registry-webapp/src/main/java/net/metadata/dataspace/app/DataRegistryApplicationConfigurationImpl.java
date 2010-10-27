@@ -1,9 +1,6 @@
 package net.metadata.dataspace.app;
 
-import net.metadata.dataspace.data.access.impl.CollectionDaoImpl;
-import net.metadata.dataspace.data.access.impl.PartyDaoImpl;
-import net.metadata.dataspace.data.access.impl.SubjectDaoImpl;
-import net.metadata.dataspace.data.connector.JpaConnector;
+import net.metadata.dataspace.data.access.DaoRegister;
 
 /**
  * User: alabri
@@ -14,11 +11,8 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
 
     private String registryTitle;
     private String version;
-    private CollectionDaoImpl collectionDao;
-    private SubjectDaoImpl subjectDao;
-    private PartyDaoImpl partyDao;
     private String uriPrefix;
-    private JpaConnector jpaConnector;
+    private DaoRegister daoRegister;
 
     public DataRegistryApplicationConfigurationImpl() {
     }
@@ -46,33 +40,6 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         return version;
     }
 
-    public void setCollectionDao(CollectionDaoImpl collectionDao) {
-        this.collectionDao = collectionDao;
-    }
-
-    @Override
-    public CollectionDaoImpl getCollectionDao() {
-        return collectionDao;
-    }
-
-    public void setSubjectDao(SubjectDaoImpl subjectDao) {
-        this.subjectDao = subjectDao;
-    }
-
-    @Override
-    public SubjectDaoImpl getSubjectDao() {
-        return subjectDao;
-    }
-
-    public void setPartyDao(PartyDaoImpl partyDao) {
-        this.partyDao = partyDao;
-    }
-
-    @Override
-    public PartyDaoImpl getPartyDao() {
-        return partyDao;
-    }
-
     public void setUriPrefix(String uriPrefix) {
         this.uriPrefix = uriPrefix;
     }
@@ -82,11 +49,11 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         return uriPrefix;
     }
 
-    public void setJpaConnector(JpaConnector jpaConnector) {
-        this.jpaConnector = jpaConnector;
+    public void setDaoRegister(DaoRegister daoRegister) {
+        this.daoRegister = daoRegister;
     }
 
-    public JpaConnector getJpaConnector() {
-        return jpaConnector;
+    public DaoRegister getDaoRegister() {
+        return daoRegister;
     }
 }

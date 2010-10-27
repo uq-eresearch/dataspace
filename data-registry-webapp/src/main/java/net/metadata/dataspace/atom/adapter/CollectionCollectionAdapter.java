@@ -40,9 +40,9 @@ import net.metadata.dataspace.data.model.Collection;
 public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter<Collection> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getCollectionDao();
-    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
-    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getSubjectDao();
+    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getCollectionDao();
+    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getPartyDao();
+    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getSubjectDao();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
     private final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);

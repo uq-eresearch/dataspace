@@ -40,10 +40,10 @@ import java.util.*;
 public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getPartyDao();
-    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getSubjectDao();
-    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getCollectionDao();
     private final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
+    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getCollectionDao();
+    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getPartyDao();
+    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getSubjectDao();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -381,4 +381,5 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
             logger.fatal("Could not assemble party from JSON object", ex);
         }
     }
+
 }
