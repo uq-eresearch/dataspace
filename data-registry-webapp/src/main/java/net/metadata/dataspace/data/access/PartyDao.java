@@ -9,5 +9,4 @@ import net.metadata.dataspace.data.model.Party;
  * Time: 1:21:30 PM
  */
 public interface PartyDao extends Dao<Party>, RegistryDao<Party> {
-
 }

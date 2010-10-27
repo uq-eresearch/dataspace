@@ -60,13 +60,15 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     @Override
     @SuppressWarnings("unchecked")
     public List<Collection> getAllActive() {
-        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = true ORDER BY o.updated").getResultList();
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = true ORDER BY o.updated");
+        return query.getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Collection> getAllInActive() {
-        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = false ORDER BY o.updated").getResultList();
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = false ORDER BY o.updated");
+        return query.getResultList();
     }
 
     @Override

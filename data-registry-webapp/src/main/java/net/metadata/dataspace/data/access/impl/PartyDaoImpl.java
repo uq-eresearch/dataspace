@@ -22,7 +22,6 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Party getById(Long id) {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.id = :id");
         query.setParameter("id", id);
@@ -35,7 +34,6 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Party getByKey(String uriKey) {
         int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.atomicNumber = :atomicNumber");
@@ -70,7 +68,8 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     @Override
     @SuppressWarnings("unchecked")
     public List<Party> getAllInActive() {
-        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = false ORDER BY o.updated").getResultList();
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = false ORDER BY o.updated");
+        return query.getResultList();
     }
 
     @Override

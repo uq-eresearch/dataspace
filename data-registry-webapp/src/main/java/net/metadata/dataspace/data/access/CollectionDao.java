@@ -9,5 +9,4 @@ import net.metadata.dataspace.data.model.Collection;
  * Time: 10:11:41 AM
  */
 public interface CollectionDao extends Dao<Collection>, RegistryDao<Collection> {
-
 }

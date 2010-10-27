@@ -59,12 +59,14 @@ public class ServiceDaoImpl extends JpaDao<Service> implements ServiceDao, Seria
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Service> getAllActive() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Service o WHERE o.isActive = true ORDER BY o.updated");
         return query.getResultList();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Service> getAllInActive() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Service o WHERE o.isActive = false ORDER BY o.updated");
         return query.getResultList();

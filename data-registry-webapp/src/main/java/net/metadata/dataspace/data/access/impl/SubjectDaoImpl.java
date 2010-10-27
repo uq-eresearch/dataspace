@@ -22,7 +22,6 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Subject getById(Long id) {
         List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.id = :id").setParameter("id", id).getResultList();
         if (resultList.isEmpty()) {
@@ -46,13 +45,17 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Subject> getAllActive() {
-        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.isActive = true").getResultList();
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.isActive = true");
+        return query.getResultList();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Subject> getAllInActive() {
-        return entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.isActive = false").getResultList();
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.isActive = false");
+        return query.getResultList();
     }
 
     @Override

@@ -9,5 +9,4 @@ import net.metadata.dataspace.data.model.Service;
  * Time: 10:44:04 AM
  */
 public interface ServiceDao extends Dao<Service>, RegistryDao<Service> {
-
 }
