@@ -13,5 +13,7 @@
         </property>
     </bean>
     <import resource="registry.xml"/>
-
+    <bean id="populatorUtil" class="net.metadata.dataspace.data.model.PopulatorUtil">
+        <property name="entityCreator" ref="entityCreator"/>
+    </bean>
 </beans>

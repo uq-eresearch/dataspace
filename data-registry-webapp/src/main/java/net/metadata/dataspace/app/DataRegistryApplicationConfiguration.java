@@ -1,6 +1,7 @@
 package net.metadata.dataspace.app;
 
-import net.metadata.dataspace.data.access.DaoManager;
+import net.metadata.dataspace.data.access.manager.DaoManager;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
 
 /**
  * User: alabri
@@ -49,6 +50,13 @@ public interface DataRegistryApplicationConfiguration {
      *
      * @return DaoRegister bean
      */
-    DaoManager getDaoRegister();
+    DaoManager getDaoManager();
+
+    /**
+     * Return an entity creator
+     *
+     * @return EntityCreator
+     */
+    EntityCreator getEntityCreator();
 
 }

@@ -5,12 +5,12 @@ import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
 import net.metadata.dataspace.data.model.Subject;
 import net.metadata.dataspace.util.AtomFeedHelper;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
-import net.metadata.dataspace.util.DaoHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.*;
@@ -40,9 +40,10 @@ import net.metadata.dataspace.data.model.Collection;
 public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter<Collection> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getCollectionDao();
-    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getPartyDao();
-    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getSubjectDao();
+    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
+    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
+    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
+    private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
     private final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
@@ -56,7 +57,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
-                Collection collection = DaoHelper.getNextCollection();
+                Collection collection = entityCreator.getNextCollection();
                 boolean isValidColleciton = CollectionAdapterHelper.updateCollectionFromEntry(collection, entry);
                 if (!isValidColleciton) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
@@ -99,7 +100,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             try {
                 String jsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
-                Collection collection = DaoHelper.getNextCollection();
+                Collection collection = entityCreator.getNextCollection();
                 assembleCollectionFromJson(collection, jsonString);
                 Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
@@ -300,7 +301,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
     public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
                                 Content content, RequestContext requestContext) throws ResponseContextException {
         //Pleasing compiler
-        Collection collection = DaoHelper.getNextCollection();
+        Collection collection = entityCreator.getNextCollection();
         return collection;
     }
 
@@ -399,7 +400,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
         Set<Subject> subjects = new HashSet<Subject>();
         for (Element sub : elements) {
             if (sub.getQName().equals(SUBJECT_QNAME)) {
-                Subject subject = DaoHelper.getNextSubject();
+                Subject subject = entityCreator.getNextSubject();
                 subject.setVocabulary(sub.getAttributeValue("vocabulary"));
                 subject.setValue(sub.getAttributeValue("value"));
                 subjectDao.save(subject);
@@ -446,7 +447,7 @@ public class CollectionCollectionAdapter extends AbstractEntityCollectionAdapter
 
             JSONArray subjectArray = jsonObj.getJSONArray("subject");
             for (int i = 0; i < subjectArray.length(); i++) {
-                Subject subject = DaoHelper.getNextSubject();
+                Subject subject = entityCreator.getNextSubject();
                 subject.setVocabulary(subjectArray.getJSONObject(i).getString("vocabulary"));
                 subject.setValue(subjectArray.getJSONObject(i).getString("value"));
                 collection.getSubjects().add(subject);

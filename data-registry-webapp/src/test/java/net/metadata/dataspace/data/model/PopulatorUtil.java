@@ -1,6 +1,6 @@
 package net.metadata.dataspace.data.model;
 
-import net.metadata.dataspace.util.DaoHelper;
+import net.metadata.dataspace.data.access.manager.impl.EntityCreatorImpl;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -13,9 +13,10 @@ import java.util.UUID;
  * Time: 11:22:08 AM
  */
 public class PopulatorUtil {
+    private static EntityCreatorImpl entityCreator;
 
     public static Subject getSubject() throws Exception {
-        Subject subject = DaoHelper.getNextSubject();
+        Subject subject = entityCreator.getNextSubject();
         UUID uuid = UUID.randomUUID();
         String vocabUriString = uuid.toString();
         subject.setVocabulary(vocabUriString);
@@ -24,7 +25,7 @@ public class PopulatorUtil {
     }
 
     public static Collection getCollection() throws Exception {
-        Collection collection = DaoHelper.getNextCollection();
+        Collection collection = entityCreator.getNextCollection();
         collection.setTitle("Test Collection");
         collection.setContent("Test Collection Content");
         collection.setSummary("Test collection description");
@@ -37,7 +38,7 @@ public class PopulatorUtil {
     }
 
     public static Party getParty() throws Exception {
-        Party party = DaoHelper.getNextParty();
+        Party party = entityCreator.getNextParty();
         party.setTitle("Test Party Title");
         party.setSummary("Test Party Summary");
         party.setContent("Test Party Content");
@@ -48,4 +49,11 @@ public class PopulatorUtil {
         return party;
     }
 
+    public void setEntityCreator(EntityCreatorImpl entityCreator) {
+        this.entityCreator = entityCreator;
+    }
+
+    public EntityCreatorImpl getEntityCreator() {
+        return entityCreator;
+    }
 }

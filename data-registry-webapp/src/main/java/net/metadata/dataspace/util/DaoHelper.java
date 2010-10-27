@@ -1,10 +1,5 @@
 package net.metadata.dataspace.util;
 
-import net.metadata.dataspace.data.model.Collection;
-import net.metadata.dataspace.data.model.Party;
-import net.metadata.dataspace.data.model.Subject;
-import net.metadata.dataspace.data.sequencer.*;
-
 /**
  * User: alabri
  * Date: 01/10/2010
@@ -13,11 +8,6 @@ import net.metadata.dataspace.data.sequencer.*;
 public class DaoHelper {
 
     private static final String baseDigits = "0123456789bcdfghjklmnpqrstvwxyz";
-    private static PartyAtomicSequencer partyAtomicSequencer;
-    private static CollectionAtomicSequencer collectionAtomicSequencer;
-    private static SubjectAtomicSequencer subjectAtomicSequencer;
-    private static ServiceAtomicSequencer serviceAtomicSequencer;
-    private static ActivityAtomicSequencer activityAtomicSequencer;
 
     public static String fromDecimalToOtherBase(int base, int decimalNumber) {
         String tempVal = decimalNumber == 0 ? "0" : "";
@@ -30,7 +20,6 @@ public class DaoHelper {
         }
         return tempVal;
     }
-
 
     public static Integer fromOtherBaseToDecimal(int base, String number) {
         int iterator = number.length();
@@ -45,61 +34,4 @@ public class DaoHelper {
         return returnValue;
     }
 
-    public static Party getNextParty() {
-        Party party = new Party();
-        party.setAtomicNumber(partyAtomicSequencer.next());
-        return party;
-    }
-
-    public static Collection getNextCollection() {
-        Collection collection = new Collection();
-        collection.setAtomicNumber(collectionAtomicSequencer.next());
-        return collection;
-    }
-
-    public static Subject getNextSubject() {
-        Subject subject = new Subject();
-        subject.setAtomicNumber(subjectAtomicSequencer.next());
-        return subject;
-    }
-
-    public void setPartyAtomicSequencer(PartyAtomicSequencer partyAtomicSequencer) {
-        DaoHelper.partyAtomicSequencer = partyAtomicSequencer;
-    }
-
-    public PartyAtomicSequencer getPartyAtomicSequencer() {
-        return partyAtomicSequencer;
-    }
-
-    public void setCollectionAtomicSequencer(CollectionAtomicSequencer collectionAtomicSequencer) {
-        DaoHelper.collectionAtomicSequencer = collectionAtomicSequencer;
-    }
-
-    public CollectionAtomicSequencer getCollectionAtomicSequencer() {
-        return collectionAtomicSequencer;
-    }
-
-    public void setSubjectAtomicSequencer(SubjectAtomicSequencer subjectAtomicSequencer) {
-        DaoHelper.subjectAtomicSequencer = subjectAtomicSequencer;
-    }
-
-    public SubjectAtomicSequencer getSubjectAtomicSequencer() {
-        return subjectAtomicSequencer;
-    }
-
-    public void setServiceAtomicSequencer(ServiceAtomicSequencer serviceAtomicSequencer) {
-        this.serviceAtomicSequencer = serviceAtomicSequencer;
-    }
-
-    public ServiceAtomicSequencer getServiceAtomicSequencer() {
-        return serviceAtomicSequencer;
-    }
-
-    public void setActivityAtomicSequencer(ActivityAtomicSequencer activityAtomicSequencer) {
-        this.activityAtomicSequencer = activityAtomicSequencer;
-    }
-
-    public ActivityAtomicSequencer getActivityAtomicSequencer() {
-        return activityAtomicSequencer;
-    }
 }

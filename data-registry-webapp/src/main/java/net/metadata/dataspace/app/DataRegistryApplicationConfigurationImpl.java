@@ -1,6 +1,7 @@
 package net.metadata.dataspace.app;
 
-import net.metadata.dataspace.data.access.DaoManager;
+import net.metadata.dataspace.data.access.manager.DaoManager;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
 
 /**
  * User: alabri
@@ -12,7 +13,8 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
     private String registryTitle;
     private String version;
     private String uriPrefix;
-    private DaoManager daoRegister;
+    private DaoManager daoManager;
+    private EntityCreator entityCreator;
 
     public DataRegistryApplicationConfigurationImpl() {
     }
@@ -49,11 +51,19 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
         return uriPrefix;
     }
 
-    public void setDaoRegister(DaoManager daoRegister) {
-        this.daoRegister = daoRegister;
+    public void setDaoManager(DaoManager daoManager) {
+        this.daoManager = daoManager;
     }
 
-    public DaoManager getDaoRegister() {
-        return daoRegister;
+    public DaoManager getDaoManager() {
+        return daoManager;
+    }
+
+    public void setEntityCreator(EntityCreator entityCreator) {
+        this.entityCreator = entityCreator;
+    }
+
+    public EntityCreator getEntityCreator() {
+        return entityCreator;
     }
 }

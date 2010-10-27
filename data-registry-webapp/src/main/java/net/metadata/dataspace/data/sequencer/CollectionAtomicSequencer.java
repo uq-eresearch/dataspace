@@ -21,7 +21,7 @@ public class CollectionAtomicSequencer extends AbstractAtomicSquencer {
             collectionDao.refresh(collection);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = collection.getUriKey();
-            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey) + 1);
+            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }
 

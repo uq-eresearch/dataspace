@@ -21,7 +21,7 @@ public class ServiceAtomicSequencer extends AbstractAtomicSquencer {
             serviceDao.refresh(service);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = service.getUriKey();
-            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey) + 1);
+            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }
 

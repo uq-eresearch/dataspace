@@ -5,12 +5,12 @@ import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
 import net.metadata.dataspace.data.model.Subject;
 import net.metadata.dataspace.util.AtomFeedHelper;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
-import net.metadata.dataspace.util.DaoHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
@@ -41,9 +41,10 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
     private Logger logger = Logger.getLogger(getClass());
     private final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
-    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getCollectionDao();
-    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getPartyDao();
-    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoRegister().getSubjectDao();
+    private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
+    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
+    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
+    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -53,7 +54,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
-                Party party = DaoHelper.getNextParty();
+                Party party = entityCreator.getNextParty();
                 boolean isValidParty = CollectionAdapterHelper.updatePartyFromEntry(party, entry);
                 if (!isValidParty) {
                     return ProviderHelper.badrequest(request, "Invalid entry posted.");
@@ -96,7 +97,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             try {
                 String partyAsJsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
-                Party party = DaoHelper.getNextParty();
+                Party party = entityCreator.getNextParty();
                 assembleParty(party, partyAsJsonString);
                 Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
@@ -243,7 +244,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
     @Override
     public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
                            RequestContext requestContext) throws ResponseContextException {
-        Party party = DaoHelper.getNextParty();
+        Party party = entityCreator.getNextParty();
         return party;
     }
 
@@ -361,7 +362,7 @@ public class PartyCollectionAdapter extends AbstractEntityCollectionAdapter<Part
 
             JSONArray subjectArray = jsonObj.getJSONArray("subject");
             for (int i = 0; i < subjectArray.length(); i++) {
-                Subject subject = DaoHelper.getNextSubject();
+                Subject subject = entityCreator.getNextSubject();
                 subject.setVocabulary(subjectArray.getJSONObject(i).getString("vocabulary"));
                 subject.setValue(subjectArray.getJSONObject(i).getString("value"));
                 party.getSubjects().add(subject);

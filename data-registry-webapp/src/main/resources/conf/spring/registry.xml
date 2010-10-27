@@ -21,7 +21,8 @@
         <property name="registryTitle" value="${data.registry.title}"/>
         <property name="version" value="${data.registry.version}.${revision}"/>
         <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
-        <property name="daoRegister" ref="daoManager"/>
+        <property name="daoManager" ref="daoManager"/>
+        <property name="entityCreator" ref="entityCreator"/>
     </bean>
     <bean id="log4jInitialization"
           class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
@@ -35,7 +36,7 @@
         </property>
     </bean>
 
-    <bean id="daoManager" class="net.metadata.dataspace.data.access.DaoManager">
+    <bean id="daoManager" class="net.metadata.dataspace.data.access.manager.impl.DaoManagerImpl">
         <property name="collectionDao" ref="collectionDao"/>
         <property name="partyDao" ref="partyDao"/>
         <property name="serviceDao" ref="serviceDao"/>
@@ -63,7 +64,7 @@
         <constructor-arg ref="subjectDao"/>
     </bean>
 
-    <bean id="daoHelper" class="net.metadata.dataspace.util.DaoHelper">
+    <bean id="entityCreator" class="net.metadata.dataspace.data.access.manager.impl.EntityCreatorImpl">
         <property name="partyAtomicSequencer" ref="partyAtomicSequencer"/>
         <property name="collectionAtomicSequencer" ref="collectionAtomicSequencer"/>
         <property name="subjectAtomicSequencer" ref="subjectAtomicSequencer"/>

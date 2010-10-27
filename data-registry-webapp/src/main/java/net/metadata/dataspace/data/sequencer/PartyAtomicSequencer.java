@@ -21,7 +21,7 @@ public class PartyAtomicSequencer extends AbstractAtomicSquencer {
             partyDao.refresh(party);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = party.getUriKey();
-            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey) + 1);
+            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }
 }

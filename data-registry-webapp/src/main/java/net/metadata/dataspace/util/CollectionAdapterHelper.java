@@ -2,6 +2,7 @@ package net.metadata.dataspace.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
 import net.metadata.dataspace.data.model.Subject;
@@ -42,6 +43,7 @@ public class CollectionAdapterHelper {
     private static final QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
     private static final QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
     private static final QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
 
     public static String getEntryID(RequestContext request) {
         if (request.getTarget().getType() != TargetType.TYPE_ENTRY) {
@@ -258,7 +260,7 @@ public class CollectionAdapterHelper {
                 String vocabulary = extension.getAttributeValue("vocabulary");
                 String value = extension.getAttributeValue("value");
                 if (vocabulary != null && value != null) {
-                    Subject subject = DaoHelper.getNextSubject();
+                    Subject subject = entityCreator.getNextSubject();
                     subject.setVocabulary(vocabulary);
                     subject.setValue(value);
                     subjects.add(subject);

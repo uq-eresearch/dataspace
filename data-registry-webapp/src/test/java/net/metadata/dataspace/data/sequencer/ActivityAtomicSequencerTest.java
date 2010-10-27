@@ -23,7 +23,8 @@ public class ActivityAtomicSequencerTest {
     @Test
     public void testNext() throws Exception {
         int currentNumber = activityAtomicSequencer.current();
-        assertTrue("Current number should be smaller than next number.", currentNumber < activityAtomicSequencer.next());
+        int next = activityAtomicSequencer.next();
+        assertTrue("Current number should be smaller than next number.", currentNumber + 1 == next);
     }
 
 }
