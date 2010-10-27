@@ -39,6 +39,8 @@
     <bean id="daoRegister" class="net.metadata.dataspace.data.access.DaoRegister">
         <property name="collectionDao" ref="collectionDao"/>
         <property name="partyDao" ref="partyDao"/>
+        <property name="serviceDao" ref="serviceDao"/>
+        <property name="activityDao" ref="activityDao"/>
         <property name="subjectDao" ref="subjectDao"/>
     </bean>
 

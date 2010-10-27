@@ -1,8 +1,6 @@
 package net.metadata.dataspace.data.access;
 
-import net.metadata.dataspace.data.access.impl.CollectionDaoImpl;
-import net.metadata.dataspace.data.access.impl.PartyDaoImpl;
-import net.metadata.dataspace.data.access.impl.SubjectDaoImpl;
+import net.metadata.dataspace.data.access.impl.*;
 
 /**
  * User: alabri
@@ -13,6 +11,8 @@ public class DaoRegister {
 
     private CollectionDaoImpl collectionDao;
     private PartyDaoImpl partyDao;
+    private ServiceDaoImpl serviceDao;
+    private ActivityDaoImpl activityDao;
     private SubjectDaoImpl subjectDao;
 
     public void setCollectionDao(CollectionDaoImpl collectionDao) {
@@ -31,6 +31,22 @@ public class DaoRegister {
         return partyDao;
     }
 
+    public void setServiceDao(ServiceDaoImpl serviceDao) {
+        this.serviceDao = serviceDao;
+    }
+
+    public ServiceDaoImpl getServiceDao() {
+        return serviceDao;
+    }
+
+    public void setActivityDao(ActivityDaoImpl activityDao) {
+        this.activityDao = activityDao;
+    }
+
+    public ActivityDaoImpl getActivityDao() {
+        return activityDao;
+    }
+
     public void setSubjectDao(SubjectDaoImpl subjectDao) {
         this.subjectDao = subjectDao;
     }
@@ -38,4 +54,5 @@ public class DaoRegister {
     public SubjectDaoImpl getSubjectDao() {
         return subjectDao;
     }
+
 }
