@@ -7,6 +7,7 @@ import org.apache.abdera.model.Person;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
+import org.apache.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
+    private Logger logger = Logger.getLogger(getClass());
 
     @Override
     public Activity postEntry(String title, IRI id, String summary, Date updated, List<Person> authors, Content content, RequestContext request) throws ResponseContextException {

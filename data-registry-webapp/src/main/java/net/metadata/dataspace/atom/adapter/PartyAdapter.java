@@ -98,7 +98,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             try {
                 String partyAsJsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
                 Party party = entityCreator.getNextParty();
-                assembleParty(party, partyAsJsonString);
+                assemblePartyFromJson(party, partyAsJsonString);
                 Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
             } catch (IOException e) {
@@ -124,7 +124,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             String partyAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
             String uriKey = CollectionAdapterHelper.getEntryID(request);
             Party party = partyDao.getByKey(uriKey);
-            assembleParty(party, partyAsJsonString);
+            assemblePartyFromJson(party, partyAsJsonString);
             partyDao.update(party);
         }
         return getEntry(request);
@@ -241,32 +241,6 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         }
     }
 
-    @Override
-    public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
-                           RequestContext requestContext) throws ResponseContextException {
-        Party party = entityCreator.getNextParty();
-        return party;
-    }
-
-    @Override
-    public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        partyDao.softDelete(key);
-    }
-
-    @Override
-    public Party getEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        Party party = partyDao.getByKey(key);
-        if (party != null) {
-            partyDao.refresh(party);
-        }
-        return party;
-    }
-
-    @Override
-    public Iterable<Party> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return partyDao.getAllActive();
-    }
-
     public List<Person> getAuthors(Party party, RequestContext request) throws ResponseContextException {
         Set<String> authors = party.getAuthors();
         List<Person> personList = new ArrayList<Person>();
@@ -279,10 +253,40 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     }
 
     @Override
+    public String[] getAccepts(RequestContext request) {
+        return new String[]{Constants.ATOM_ENTRY_MIMETYPE, Constants.JSON_MIMETYPE};
+    }
+
+    @Override
+    public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
+                           RequestContext requestContext) throws ResponseContextException {
+        return null;
+    }
+
+    @Override
+    public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        partyDao.softDelete(key);
+    }
+
+    @Override
     public Object getContent(Party party, RequestContext requestContext) throws ResponseContextException {
         Content content = requestContext.getAbdera().getFactory().newContent(Content.Type.TEXT);
-        content.setText(party.getSummary());
+        content.setText(party.getContent());
         return content;
+    }
+
+    @Override
+    public Iterable<Party> getEntries(RequestContext requestContext) throws ResponseContextException {
+        return partyDao.getAllActive();
+    }
+
+    @Override
+    public Party getEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        Party party = partyDao.getByKey(key);
+        if (party != null) {
+            partyDao.refresh(party);
+        }
+        return party;
     }
 
     @Override
@@ -307,6 +311,12 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     }
 
     @Override
+    public void putEntry(Party party, String title, Date updated, List<Person> authors, String summary, Content content,
+                         RequestContext requestContext) throws ResponseContextException {
+        logger.warn("Method not supported");
+    }
+
+    @Override
     public String getAuthor(RequestContext requestContext) throws ResponseContextException {
         return DataRegistryApplication.getApplicationContext().getUriPrefix();
     }
@@ -321,26 +331,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         return "Parties";
     }
 
-    @Override
-    public String[] getAccepts(RequestContext request) {
-        return new String[]{Constants.ATOM_ENTRY_MIMETYPE, Constants.JSON_MIMETYPE};
-    }
-
-    @Override
-    public void putEntry(Party party, String title, Date updated, List<Person> authors, String summary, Content content,
-                         RequestContext requestContext) throws ResponseContextException {
-        logger.warn("Method not supported");
-    }
-
-    private Set<String> getAuthors(List<Person> persons) {
-        Set<String> authors = new HashSet<String>();
-        for (Person person : persons) {
-            authors.add(person.getName());
-        }
-        return authors;
-    }
-
-    private void assembleParty(Party party, String jsonString) {
+    private void assemblePartyFromJson(Party party, String jsonString) {
 
         try {
             JSONObject jsonObj = new JSONObject(jsonString);

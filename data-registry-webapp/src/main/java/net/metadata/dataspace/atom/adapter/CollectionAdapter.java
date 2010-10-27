@@ -13,7 +13,10 @@ import net.metadata.dataspace.util.AtomFeedHelper;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
-import org.apache.abdera.model.*;
+import org.apache.abdera.model.Content;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Feed;
+import org.apache.abdera.model.Person;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
@@ -25,12 +28,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.activation.MimeType;
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-
-import net.metadata.dataspace.data.model.Collection;
 
 /**
  * User: alabri
@@ -45,8 +45,6 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
     private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
-
-    private final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -297,28 +295,6 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         }
     }
 
-    @Override
-    public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
-                                Content content, RequestContext requestContext) throws ResponseContextException {
-        //Pleasing compiler
-        Collection collection = entityCreator.getNextCollection();
-        return collection;
-    }
-
-    @Override
-    public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        collectionDao.softDelete(key);
-    }
-
-    @Override
-    public Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        Collection collection = collectionDao.getByKey(key);
-        if (collection != null) {
-            collectionDao.refresh(collection);
-        }
-        return collection;
-    }
-
     public List<Person> getAuthors(Collection collection, RequestContext request) throws ResponseContextException {
         Set<String> authors = collection.getAuthors();
         List<Person> personList = new ArrayList<Person>();
@@ -331,15 +307,40 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     }
 
     @Override
+    public String[] getAccepts(RequestContext request) {
+        return new String[]{Constants.ATOM_ENTRY_MIMETYPE, Constants.JSON_MIMETYPE};
+    }
+
+    @Override
+    public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
+                                Content content, RequestContext requestContext) throws ResponseContextException {
+        return null;
+    }
+
+    @Override
+    public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        collectionDao.softDelete(key);
+    }
+
+    @Override
     public Object getContent(Collection collection, RequestContext requestContext) throws ResponseContextException {
         Content content = requestContext.getAbdera().getFactory().newContent(Content.Type.TEXT);
-        content.setText(collection.getSummary());
+        content.setText(collection.getContent());
         return content;
     }
 
     @Override
     public Iterable<Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
         return collectionDao.getAllActive();
+    }
+
+    @Override
+    public Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        Collection collection = collectionDao.getByKey(key);
+        if (collection != null) {
+            collectionDao.refresh(collection);
+        }
+        return collection;
     }
 
     @Override
@@ -363,6 +364,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     }
 
     @Override
+    public void putEntry(Collection collection, String title, Date updated, List<Person> authors, String summary,
+                         Content content, RequestContext requestContext) throws ResponseContextException {
+        logger.warn("Method not supported.");
+    }
+
+    @Override
     public String getAuthor(RequestContext requestContext) throws ResponseContextException {
         return DataRegistryApplication.getApplicationContext().getUriPrefix();
     }
@@ -375,54 +382,6 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     @Override
     public String getTitle(RequestContext requestContext) {
         return "Collections";
-    }
-
-    @Override
-    public String[] getAccepts(RequestContext request) {
-        return new String[]{Constants.ATOM_ENTRY_MIMETYPE, Constants.JSON_MIMETYPE};
-    }
-
-    @Override
-    public void putEntry(Collection collection, String title, Date updated, List<Person> authors, String summary,
-                         Content content, RequestContext requestContext) throws ResponseContextException {
-        logger.warn("Method not supported.");
-    }
-
-    private Set<String> getAuthors(List<Person> persons) {
-        Set<String> authors = new HashSet<String>();
-        for (Person person : persons) {
-            authors.add(person.getName());
-        }
-        return authors;
-    }
-
-    private Set<Subject> getSubjects(List<Element> elements) {
-        Set<Subject> subjects = new HashSet<Subject>();
-        for (Element sub : elements) {
-            if (sub.getQName().equals(SUBJECT_QNAME)) {
-                Subject subject = entityCreator.getNextSubject();
-                subject.setVocabulary(sub.getAttributeValue("vocabulary"));
-                subject.setValue(sub.getAttributeValue("value"));
-                subjectDao.save(subject);
-                subjects.add(subject);
-            }
-        }
-        return subjects;
-    }
-
-    private Map<String, String> getExtensionMap(List<Element> elements) {
-        Map<String, String> extensionsMap = new HashMap<String, String>();
-        for (Element element : elements) {
-            if (element.getElements().size() < 1) {
-                extensionsMap.put(element.getQName().getLocalPart(), element.getText());
-            }
-        }
-        return extensionsMap;
-    }
-
-    private IRI getFeedIRI(Collection entryObj, RequestContext request) {
-        String feedIri = getFeedIriForEntry(entryObj, request);
-        return new IRI(feedIri).trailingSlash();
     }
 
     private void assembleCollectionFromJson(Collection collection, String jsonString) {
