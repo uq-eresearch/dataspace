@@ -5,6 +5,8 @@ import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.ActivityDao;
 import net.metadata.dataspace.data.model.Activity;
 import net.metadata.dataspace.util.AtomFeedHelper;
+import net.metadata.dataspace.util.CollectionAdapterHelper;
+import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
@@ -31,6 +33,44 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
     private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
 
+    @Override
+    public ResponseContext deleteEntry(RequestContext request) {
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Activity activity = activityDao.getByKey(uriKey);
+        if (activity == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            activityDao.refresh(activity);
+            if (activity.isActive()) {
+                try {
+                    deleteEntry(uriKey, request);
+                    return ProviderHelper.createErrorResponse(new Abdera(), 200, "OK");
+                } catch (ResponseContextException e) {
+                    logger.fatal("Could not delete party entry");
+                    return ProviderHelper.servererror(request, e);
+                }
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+            }
+        }
+    }
+
+    @Override
+    public ResponseContext getEntry(RequestContext request) {
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Activity activity = activityDao.getByKey(uriKey);
+        if (activity == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            activityDao.refresh(activity);
+            if (activity.isActive()) {
+                Entry entry = CollectionAdapterHelper.getEntryFromActivity(activity);
+                return CollectionAdapterHelper.getContextResponseForGetEntry(request, entry);
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+            }
+        }
+    }
 
     @Override
     public ResponseContext getFeed(RequestContext request) {

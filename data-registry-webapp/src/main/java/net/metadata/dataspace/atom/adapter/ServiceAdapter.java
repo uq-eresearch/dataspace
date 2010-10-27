@@ -5,6 +5,8 @@ import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.Service;
 import net.metadata.dataspace.util.AtomFeedHelper;
+import net.metadata.dataspace.util.CollectionAdapterHelper;
+import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
@@ -30,6 +32,45 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     private Logger logger = Logger.getLogger(getClass());
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
     private ServiceDao serviceDao = DataRegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
+
+    @Override
+    public ResponseContext deleteEntry(RequestContext request) {
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Service service = serviceDao.getByKey(uriKey);
+        if (service == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            serviceDao.refresh(service);
+            if (service.isActive()) {
+                try {
+                    deleteEntry(uriKey, request);
+                    return ProviderHelper.createErrorResponse(new Abdera(), 200, "OK");
+                } catch (ResponseContextException e) {
+                    logger.fatal("Could not delete party entry");
+                    return ProviderHelper.servererror(request, e);
+                }
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+            }
+        }
+    }
+
+    @Override
+    public ResponseContext getEntry(RequestContext request) {
+        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        Service service = serviceDao.getByKey(uriKey);
+        if (service == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            serviceDao.refresh(service);
+            if (service.isActive()) {
+                Entry entry = CollectionAdapterHelper.getEntryFromService(service);
+                return CollectionAdapterHelper.getContextResponseForGetEntry(request, entry);
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+            }
+        }
+    }
 
     @Override
     public ResponseContext getFeed(RequestContext request) {

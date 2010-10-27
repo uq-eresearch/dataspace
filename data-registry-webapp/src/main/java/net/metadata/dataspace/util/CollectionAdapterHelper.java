@@ -3,9 +3,7 @@ package net.metadata.dataspace.util;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.Collection;
-import net.metadata.dataspace.data.model.Party;
-import net.metadata.dataspace.data.model.Subject;
+import net.metadata.dataspace.data.model.*;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.text.UrlEncoding;
@@ -150,6 +148,31 @@ public class CollectionAdapterHelper {
             partyElement.setAttributeValue("uri", ID_PREFIX + Constants.PARTIES_PATH + "/" + sub.getUriKey());
         }
         entry.addLink(ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey(), "alternate");
+        return entry;
+    }
+
+    public static Entry getEntryFromActivity(Activity activity) {
+        Abdera abdera = new Abdera();
+        Entry entry = abdera.newEntry();
+        entry.setId(ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey());
+        entry.setTitle(activity.getTitle());
+        entry.setSummary(activity.getSummary());
+        entry.setContent(activity.getContent());
+        entry.setUpdated(activity.getUpdated());
+        entry.addLink(ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey(), "alternate");
+        return entry;
+    }
+
+    public static Entry getEntryFromService(Service service) {
+        Abdera abdera = new Abdera();
+        Entry entry = abdera.newEntry();
+        entry.setId(ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey());
+        entry.setTitle(service.getTitle());
+        entry.setSummary(service.getSummary());
+        entry.setContent(service.getContent());
+        entry.setUpdated(service.getUpdated());
+        entry.addSimpleExtension(LOCATION_QNAME, service.getLocation());
+        entry.addLink(ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey(), "alternate");
         return entry;
     }
 
@@ -307,4 +330,5 @@ public class CollectionAdapterHelper {
         String[] segments = fullUrl.split("/");
         return UrlEncoding.decode(segments[segments.length - 1]);
     }
+
 }

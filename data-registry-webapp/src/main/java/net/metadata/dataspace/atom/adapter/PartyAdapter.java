@@ -152,6 +152,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         }
     }
 
+    @Override
     public ResponseContext getEntry(RequestContext request) {
         String uriKey = CollectionAdapterHelper.getEntryID(request);
         Party party = partyDao.getByKey(uriKey);
