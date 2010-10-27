@@ -268,14 +268,14 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             }
         }
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            String selfLinkHref = ID_PREFIX + "collections";
+            String selfLinkHref = ID_PREFIX + Constants.COLLECTIONS_PATH;
             AtomFeedHelper.prepareFeedSelfLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
-            String alternateLinkHref = ID_PREFIX + "collections?repr=application/atom+xml;type=feed";
+            String alternateLinkHref = ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=application/atom+xml;type=feed";
             AtomFeedHelper.prepareFeedAlternateLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
         } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            String alternateLinkHref = ID_PREFIX + "collections?repr=application/atom+xml;type=feed";
+            String alternateLinkHref = ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=application/atom+xml;type=feed";
             AtomFeedHelper.prepareFeedSelfLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
-            String selfLinkHref = ID_PREFIX + "collections";
+            String selfLinkHref = ID_PREFIX + Constants.COLLECTIONS_PATH;
             AtomFeedHelper.prepareFeedAlternateLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
         }
 
@@ -344,12 +344,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public String getId(Collection collection) throws ResponseContextException {
-        return ID_PREFIX + "collections/" + collection.getUriKey();
+        return ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
     }
 
     @Override
     public String getName(Collection collection) throws ResponseContextException {
-        return ID_PREFIX + "collections/" + collection.getUriKey();
+        return ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
     }
 
     @Override
@@ -369,7 +369,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public String getId(RequestContext requestContext) {
-        return ID_PREFIX + "collections";
+        return ID_PREFIX + Constants.COLLECTIONS_PATH;
     }
 
     @Override

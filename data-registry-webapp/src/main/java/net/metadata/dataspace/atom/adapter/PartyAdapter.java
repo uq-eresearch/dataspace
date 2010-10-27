@@ -210,16 +210,16 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             }
         }
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            String selfLinkHref = ID_PREFIX + "parties";
+            String selfLinkHref = ID_PREFIX + Constants.PARTIES_PATH;
             AtomFeedHelper.prepareFeedSelfLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
 
-            String alternateLinkHref = ID_PREFIX + "parties?repr=application/atom+xml;type=feed";
+            String alternateLinkHref = ID_PREFIX + Constants.PARTIES_PATH + "?repr=application/atom+xml;type=feed";
             AtomFeedHelper.prepareFeedAlternateLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
         } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            String alternateLinkHref = ID_PREFIX + "parties?repr=application/atom+xml;type=feed";
+            String alternateLinkHref = ID_PREFIX + Constants.PARTIES_PATH + "?repr=application/atom+xml;type=feed";
             AtomFeedHelper.prepareFeedSelfLink(feed, alternateLinkHref, Constants.ATOM_FEED_MIMETYPE);
 
-            String selfLinkHref = ID_PREFIX + "parties";
+            String selfLinkHref = ID_PREFIX + Constants.PARTIES_PATH;
             AtomFeedHelper.prepareFeedAlternateLink(feed, selfLinkHref, Constants.HTML_MIME_TYPE);
         }
 
@@ -287,13 +287,13 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public String getId(Party party) throws ResponseContextException {
-        return ID_PREFIX + "parties/" + party.getUriKey();
+        return ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey();
     }
 
     @Override
     public String getName(Party party) throws ResponseContextException {
         //TODO this sets the link element which contains the edit link
-        return ID_PREFIX + "parties/" + party.getUriKey();
+        return ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey();
     }
 
     @Override
@@ -313,7 +313,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public String getId(RequestContext requestContext) {
-        return ID_PREFIX + "parties";
+        return ID_PREFIX + Constants.PARTIES_PATH;
     }
 
     @Override

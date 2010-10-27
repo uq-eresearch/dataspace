@@ -98,7 +98,7 @@ public class CollectionAdapterHelper {
     public static Entry getEntryFromParty(Party party) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(ID_PREFIX + "parties/" + party.getUriKey());
+        entry.setId(ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey());
         entry.setTitle(party.getTitle());
         entry.setSummary(party.getSummary());
         entry.setContent(party.getContent());
@@ -118,16 +118,16 @@ public class CollectionAdapterHelper {
         Set<Collection> collectionSet = party.getCollectorOf();
         for (Collection collection : collectionSet) {
             Element collectorOfElement = entry.addExtension(COLLECTOR_OF_QNAME);
-            collectorOfElement.setAttributeValue("uri", ID_PREFIX + "collections/" + collection.getUriKey());
+            collectorOfElement.setAttributeValue("uri", ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
         }
-        entry.addLink(ID_PREFIX + "parties/" + party.getUriKey(), "alternate");
+        entry.addLink(ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey(), "alternate");
         return entry;
     }
 
     public static Entry getEntryFromCollection(Collection collection) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(ID_PREFIX + "collections/" + collection.getUriKey());
+        entry.setId(ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
         entry.setTitle(collection.getTitle());
         entry.setSummary(collection.getSummary());
         entry.setContent(collection.getContent());
@@ -147,9 +147,9 @@ public class CollectionAdapterHelper {
         Set<Party> partySet = collection.getCollector();
         for (Party sub : partySet) {
             Element partyElement = entry.addExtension(COLLECTOR_QNAME);
-            partyElement.setAttributeValue("uri", ID_PREFIX + "parties/" + sub.getUriKey());
+            partyElement.setAttributeValue("uri", ID_PREFIX + Constants.PARTIES_PATH + "/" + sub.getUriKey());
         }
-        entry.addLink(ID_PREFIX + "collections/" + collection.getUriKey(), "alternate");
+        entry.addLink(ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey(), "alternate");
         return entry;
     }
 

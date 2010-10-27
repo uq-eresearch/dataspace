@@ -1,8 +1,11 @@
 package net.metadata.dataspace.servlets;
 
+import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.atom.adapter.ActivityAdapter;
 import net.metadata.dataspace.atom.adapter.CollectionAdapter;
 import net.metadata.dataspace.atom.adapter.PartyAdapter;
+import net.metadata.dataspace.atom.adapter.ServiceAdapter;
 import org.apache.abdera.protocol.server.*;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.DefaultProvider;
@@ -21,23 +24,28 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 
 
     protected Provider createProvider() {
-        //Parties collection and workspace
+
+        SimpleWorkspaceInfo registryWorkSpace = new SimpleWorkspaceInfo();
+        registryWorkSpace.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle());
+
         PartyAdapter partyAdapter = new PartyAdapter();
-        String partiesPath = "parties";
-        partyAdapter.setHref(partiesPath);
+        partyAdapter.setHref(Constants.PARTIES_PATH);
+        registryWorkSpace.addCollection(partyAdapter);
 
-        SimpleWorkspaceInfo partyWorkSpace = new SimpleWorkspaceInfo();
-        partyWorkSpace.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle());
-        partyWorkSpace.addCollection(partyAdapter);
-
-        //collections collection and workspace
         CollectionAdapter collectionAdapter = new CollectionAdapter();
-        String collectionsPath = "collections";
-        collectionAdapter.setHref(collectionsPath);
-        partyWorkSpace.addCollection(collectionAdapter);
+        collectionAdapter.setHref(Constants.COLLECTIONS_PATH);
+        registryWorkSpace.addCollection(collectionAdapter);
+
+        ServiceAdapter serviceAdapter = new ServiceAdapter();
+        serviceAdapter.setHref(Constants.SERVICES_PATH);
+        registryWorkSpace.addCollection(serviceAdapter);
+
+        ActivityAdapter activityAdapter = new ActivityAdapter();
+        activityAdapter.setHref(Constants.ACTIVITIES_PATH);
+        registryWorkSpace.addCollection(activityAdapter);
 
         String base = "/";
-        DefaultProvider provider = new DefaultProvider(base) {
+        DefaultProvider registryServiceProvider = new DefaultProvider(base) {
             public ResponseContext process(RequestContext request) {
                 Target target = request.getTarget();
                 TargetType targetType = target.getType();
@@ -86,10 +94,9 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
             }
         };
 
-        //Add workspaces
-        provider.addWorkspace(partyWorkSpace);
-        provider.init(getAbdera(), null);
-        return provider;
+        registryServiceProvider.addWorkspace(registryWorkSpace);
+        registryServiceProvider.init(getAbdera(), null);
+        return registryServiceProvider;
     }
 
 }
