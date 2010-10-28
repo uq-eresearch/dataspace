@@ -23,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -277,7 +276,7 @@ public class AdapterHelper {
             party.setTitle(entry.getTitle());
             party.setSummary(entry.getSummary());
             party.setContent(entry.getContent());
-            party.setUpdated(new Date());
+            party.setUpdated(entry.getUpdated());
             party.setAuthors(getAuthors(entry.getAuthors()));
             return true;
         }

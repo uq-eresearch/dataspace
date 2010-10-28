@@ -145,6 +145,47 @@ public class AdapterHelperTest {
         assertEquals("Entry title", party.getTitle(), newParty.getTitle());
         assertEquals("Entry summary", party.getSummary(), newParty.getSummary());
         assertEquals("Entry content", party.getContent(), newParty.getContent());
-        assertTrue("Entry updated", party.getUpdated().before(newParty.getUpdated()));
+        assertTrue("Entry updated", party.getUpdated().equals(newParty.getUpdated()));
+    }
+
+    @Test
+    public void testUpdateCollectionFromEntry() throws Exception {
+        List<Collection> collections = collectionDao.getAll();
+        Collection collection = collections.get(0);
+        Entry entry = AdapterHelper.getEntryFromCollection(collection);
+        Collection newCollection = entryCreator.getNextCollection();
+        assertTrue("Could not update collection", AdapterHelper.updateCollectionFromEntry(newCollection, entry));
+        assertEquals("Entry title", collection.getTitle(), newCollection.getTitle());
+        assertEquals("Entry summary", collection.getSummary(), newCollection.getSummary());
+        assertEquals("Entry content", collection.getContent(), newCollection.getContent());
+        assertEquals("Entry location", collection.getLocation(), newCollection.getLocation());
+        assertTrue("Entry updated", collection.getUpdated().equals(newCollection.getUpdated()));
+    }
+
+    @Test
+    public void testUpdateServiceFromEntry() throws Exception {
+        List<Service> services = serviceDao.getAll();
+        Service service = services.get(0);
+        Entry entry = AdapterHelper.getEntryFromService(service);
+        Service newService = entryCreator.getNextService();
+        assertTrue("Could not update service", AdapterHelper.updateServiceFromEntry(newService, entry));
+        assertEquals("Entry title", service.getTitle(), newService.getTitle());
+        assertEquals("Entry summary", service.getSummary(), newService.getSummary());
+        assertEquals("Entry content", service.getContent(), newService.getContent());
+        assertEquals("Entry location", service.getLocation(), newService.getLocation());
+        assertTrue("Entry updated", service.getUpdated().equals(newService.getUpdated()));
+    }
+
+    @Test
+    public void testUpdateActivityFromEntry() throws Exception {
+        List<Activity> activities = activityDao.getAll();
+        Activity activity = activities.get(0);
+        Entry entry = AdapterHelper.getEntryFromActivity(activity);
+        Activity newActivity = entryCreator.getNextActivity();
+        assertTrue("Could not update activity", AdapterHelper.updateActivityFromEntry(newActivity, entry));
+        assertEquals("Entry title", activity.getTitle(), newActivity.getTitle());
+        assertEquals("Entry summary", activity.getSummary(), newActivity.getSummary());
+        assertEquals("Entry content", activity.getContent(), newActivity.getContent());
+        assertTrue("Entry updated", activity.getUpdated().equals(newActivity.getUpdated()));
     }
 }
