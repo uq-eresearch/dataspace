@@ -2,12 +2,12 @@ package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
 import net.metadata.dataspace.app.NonProductionConstants;
+import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Subject;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +39,8 @@ public class CollectionDaoImplTest {
     @Autowired
     private PartyDao partyDao;
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
+    @Autowired
+    private JpaConnector jpaConnector;
 
     @After
     public void tearDown() throws Exception {
@@ -50,6 +48,7 @@ public class CollectionDaoImplTest {
         List<Collection> collectionList = collectionDao.getAll();
         for (Collection collection : collectionList) {
             collectionDao.delete(collection);
+
         }
     }
 

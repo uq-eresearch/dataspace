@@ -24,6 +24,11 @@
         <property name="daoManager" ref="daoManager"/>
         <property name="entityCreator" ref="entityCreator"/>
     </bean>
+
+    <bean id="dataRegistryApplication" class="net.metadata.dataspace.app.DataRegistryApplication">
+        <property name="applicationContext" ref="applicationContext"/>
+    </bean>
+
     <bean id="log4jInitialization"
           class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetClass"

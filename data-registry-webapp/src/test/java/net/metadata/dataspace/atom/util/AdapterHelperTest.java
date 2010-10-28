@@ -3,10 +3,10 @@ package net.metadata.dataspace.atom.util;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.*;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.*;
 import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Entry;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -41,22 +39,25 @@ public class AdapterHelperTest {
     @Autowired
     private ActivityDao activityDao;
 
+    @Autowired
+    private EntityCreator entryCreator;
+
     @Before
     public void setUp() throws Exception {
         Subject subject = PopulatorUtil.getSubject();
         subjectDao.save(subject);
 
         Party party = PopulatorUtil.getParty();
-        Set<Subject> subjects = new HashSet<Subject>();
-        subjects.add(subject);
-        party.setSubjects(subjects);
+        partyDao.save(party);
+        party.getSubjects().add(subject);
 
         Collection collection = PopulatorUtil.getCollection();
+        collectionDao.save(collection);
         collection.getSubjects().add(subject);
         collection.getCollector().add(party);
-        collectionDao.save(collection);
         party.getCollectorOf().add(collection);
-        partyDao.save(party);
+        collectionDao.update(collection);
+        partyDao.update(party);
 
         Service service = PopulatorUtil.getService();
         service.getSupportedBy().add(collection);
@@ -71,36 +72,46 @@ public class AdapterHelperTest {
         activityDao.save(activity);
     }
 
-    @After
-    public void tearDown() throws Exception {
-        List<Party> parties = partyDao.getAll();
-        for (Party party : parties) {
-            partyDao.delete(party);
-        }
-
-        List<Collection> collectionList = collectionDao.getAll();
-        for (Collection collection : collectionList) {
-            collectionDao.delete(collection);
-        }
-
-        List<Service> services = serviceDao.getAll();
-        for (Service service : services) {
-            serviceDao.delete(service);
-        }
-
-        List<Activity> activityList = activityDao.getAll();
-        for (Activity activity : activityList) {
-            activityDao.delete(activity);
-        }
-
-        List<Subject> list = subjectDao.getAll();
-        for (Subject subject : list) {
-            subjectDao.delete(subject);
-        }
-    }
+//    @After
+//    public void tearDown() throws Exception {
+//        List<Party> parties = partyDao.getAll();
+//        for (Party party : parties) {
+//            party.getCollectorOf().removeAll(party.getCollectorOf());
+//            party.getParticipantIn().removeAll(party.getParticipantIn());
+//            party.getSubjects().removeAll(party.getSubjects());
+//            partyDao.delete(party);
+//        }
+//
+//        List<Collection> collectionList = collectionDao.getAll();
+//        for (Collection collection : collectionList) {
+//            collection.getCollector().removeAll(collection.getCollector());
+//            collection.getOutputOf().removeAll(collection.getOutputOf());
+//            collection.getSupports().removeAll(collection.getSupports());
+//            collection.getSupports().removeAll(collection.getSubjects());
+//            collectionDao.delete(collection);
+//        }
+//
+//        List<Service> services = serviceDao.getAll();
+//        for (Service service : services) {
+//            service.getSupportedBy().removeAll(service.getSupportedBy());
+//            serviceDao.delete(service);
+//        }
+//
+//        List<Activity> activityList = activityDao.getAll();
+//        for (Activity activity : activityList) {
+//            activity.getHasParticipant().removeAll(activity.getHasParticipant());
+//            activity.getHasOutput().removeAll(activity.getHasOutput());
+//            activityDao.delete(activity);
+//        }
+//
+//        List<Subject> list = subjectDao.getAll();
+//        for (Subject subject : list) {
+//            subjectDao.delete(subject);
+//        }
+//    }
 
     @Test
-    public void testGetEntryFromParty() {
+    public void testGetEntryFromParty() throws Exception {
         List<Party> parties = partyDao.getAll();
         Party party = parties.get(0);
         Entry entry = AdapterHelper.getEntryFromParty(party);
@@ -109,13 +120,13 @@ public class AdapterHelperTest {
         assertEquals("Entry summary", entry.getSummary(), party.getSummary());
         assertEquals("Entry content", entry.getContent(), party.getContent());
         assertEquals("Entry updated", entry.getUpdated(), party.getUpdated());
-        assertEquals("Entry title", entry.getAuthors().size(), party.getAuthors().size());
+        assertEquals("Entry authors", entry.getAuthors().size(), party.getAuthors().size());
         assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.SUBJECT_QNAME).size() == 1);
         assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.COLLECTOR_OF_QNAME).size() == 1);
     }
 
     @Test
-    public void testGetEnteryFromCollection() {
+    public void testGetEnteryFromCollection() throws Exception {
         List<Collection> collections = collectionDao.getAll();
         Collection collection = collections.get(0);
         Entry entry = AdapterHelper.getEntryFromCollection(collection);
@@ -124,7 +135,7 @@ public class AdapterHelperTest {
         assertEquals("Entry summary", entry.getSummary(), collection.getSummary());
         assertEquals("Entry content", entry.getContent(), collection.getContent());
         assertEquals("Entry updated", entry.getUpdated(), collection.getUpdated());
-        assertEquals("Entry title", entry.getAuthors().size(), collection.getAuthors().size());
+        assertEquals("Entry authors", entry.getAuthors().size(), collection.getAuthors().size());
         assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.SUBJECT_QNAME).size() == 1);
         assertTrue("Entry should have at least one location", entry.<Element>getExtensions(Constants.LOCATION_QNAME).size() == 1);
         assertTrue("Entry should have at least one party", entry.<Element>getExtensions(Constants.COLLECTOR_QNAME).size() == 1);
@@ -133,7 +144,7 @@ public class AdapterHelperTest {
     }
 
     @Test
-    public void testGetEnteryFromActivity() {
+    public void testGetEnteryFromActivity() throws Exception {
         List<Activity> activities = activityDao.getAll();
         Activity activity = activities.get(0);
         Entry entry = AdapterHelper.getEntryFromActivity(activity);
@@ -142,13 +153,13 @@ public class AdapterHelperTest {
         assertEquals("Entry summary", entry.getSummary(), activity.getSummary());
         assertEquals("Entry content", entry.getContent(), activity.getContent());
         assertEquals("Entry updated", entry.getUpdated(), activity.getUpdated());
-        assertEquals("Entry title", entry.getAuthors().size(), activity.getAuthors().size());
+        assertEquals("Entry authors", entry.getAuthors().size(), activity.getAuthors().size());
         assertTrue("Entry should have at least one party", entry.<Element>getExtensions(Constants.HAS_PARTICIPANT_QNAME).size() == 1);
         assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.HAS_OUTPUT_QNAME).size() == 1);
     }
 
     @Test
-    public void testGetEnteryFromService() {
+    public void testGetEnteryFromService() throws Exception {
         List<Service> services = serviceDao.getAll();
         Service service = services.get(0);
         Entry entry = AdapterHelper.getEntryFromService(service);
@@ -157,8 +168,21 @@ public class AdapterHelperTest {
         assertEquals("Entry summary", entry.getSummary(), service.getSummary());
         assertEquals("Entry content", entry.getContent(), service.getContent());
         assertEquals("Entry updated", entry.getUpdated(), service.getUpdated());
-        assertEquals("Entry title", entry.getAuthors().size(), service.getAuthors().size());
+        assertEquals("Entry authors", entry.getAuthors().size(), service.getAuthors().size());
         assertTrue("Entry should have at least one location", entry.<Element>getExtensions(Constants.LOCATION_QNAME).size() == 1);
         assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.SUPPORTED_BY_QNAME).size() == 1);
+    }
+
+    @Test
+    public void testUpdatePartyFromEntry() throws Exception {
+        List<Party> parties = partyDao.getAll();
+        Party party = parties.get(0);
+        Entry entry = AdapterHelper.getEntryFromParty(party);
+        Party newParty = entryCreator.getNextParty();
+        assertTrue("Could not update party", AdapterHelper.updatePartyFromEntry(newParty, entry));
+        assertEquals("Entry title", party.getTitle(), newParty.getTitle());
+        assertEquals("Entry summary", party.getSummary(), newParty.getSummary());
+        assertEquals("Entry content", party.getContent(), newParty.getContent());
+        assertTrue("Entry updated", party.getUpdated().before(newParty.getUpdated()));
     }
 }
