@@ -60,18 +60,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     serviceDao.save(service);
-                    Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
-                    for (String uriKey : collectionUriKeys) {
-                        Collection collection = collectionDao.getByKey(uriKey);
-                        if (collection != null) {
-                            collection.getSupports().add(service);
-                            service.getSupportedBy().add(collection);
-                        }
-                    }
-                    service.setUpdated(new Date());
-                    serviceDao.update(service);
-
-                    Entry createdEntry = AdapterHelper.getEntryFromService(service);
+                    Entry createdEntry = furtherUpdate(entry, service);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
@@ -119,18 +108,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 } else {
                     if (service.isActive()) {
                         serviceDao.update(service);
-                        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
-                        for (String key : collectionUriKeys) {
-                            Collection collection = collectionDao.getByKey(key);
-                            if (collection != null) {
-                                collection.getSupports().add(service);
-                                service.getSupportedBy().add(collection);
-                            }
-                        }
-                        service.setUpdated(new Date());
-                        serviceDao.update(service);
-
-                        Entry createdEntry = AdapterHelper.getEntryFromService(service);
+                        Entry createdEntry = furtherUpdate(entry, service);
                         return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                     } else {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
@@ -351,6 +329,22 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     @Override
     public String getTitle(RequestContext request) {
         return Constants.SERVICES_TITLE;
+    }
+
+    private Entry furtherUpdate(Entry entry, Service service) {
+        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
+        for (String uriKey : collectionUriKeys) {
+            Collection collection = collectionDao.getByKey(uriKey);
+            if (collection != null) {
+                collection.getSupports().add(service);
+                service.getSupportedBy().add(collection);
+            }
+        }
+        service.setUpdated(new Date());
+        serviceDao.update(service);
+
+        Entry createdEntry = AdapterHelper.getEntryFromService(service);
+        return createdEntry;
     }
 
     private void assembleServiceFromJson(Service service, String jsonString) {

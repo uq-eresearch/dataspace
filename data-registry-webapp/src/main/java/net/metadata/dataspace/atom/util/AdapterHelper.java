@@ -154,6 +154,22 @@ public class AdapterHelper {
         entry.setSummary(activity.getSummary());
         entry.setContent(activity.getContent());
         entry.setUpdated(activity.getUpdated());
+        Set<String> authors = activity.getAuthors();
+        for (String author : authors) {
+            entry.addAuthor(author);
+        }
+
+        Set<Party> partySet = activity.getHasParticipant();
+        for (Party sub : partySet) {
+            Element partyElement = entry.addExtension(Constants.HAS_PARTICIPANT_QNAME);
+            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + sub.getUriKey());
+        }
+
+        Set<Collection> collectionSet = activity.getHasOutput();
+        for (Collection collection : collectionSet) {
+            Element collectorOfElement = entry.addExtension(Constants.HAS_OUTPUT_QNAME);
+            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
+        }
         entry.addLink(Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey(), "alternate");
         return entry;
     }
@@ -166,7 +182,18 @@ public class AdapterHelper {
         entry.setSummary(service.getSummary());
         entry.setContent(service.getContent());
         entry.setUpdated(service.getUpdated());
+        Set<String> authors = service.getAuthors();
+        for (String author : authors) {
+            entry.addAuthor(author);
+        }
         entry.addSimpleExtension(Constants.LOCATION_QNAME, service.getLocation());
+
+        Set<Collection> collectionSet = service.getSupportedBy();
+        for (Collection collection : collectionSet) {
+            Element collectorOfElement = entry.addExtension(Constants.SUPPORTED_BY_QNAME);
+            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
+        }
+
         entry.addLink(Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey(), "alternate");
         return entry;
     }
@@ -258,6 +285,19 @@ public class AdapterHelper {
                     service.setLocation(extension.getText());
                 }
             }
+            return true;
+        }
+    }
+
+    public static boolean updateActivityFromEntry(Activity activity, Entry entry) {
+        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
+            return false;
+        } else {
+            activity.setTitle(entry.getTitle());
+            activity.setSummary(entry.getSummary());
+            activity.setContent(entry.getContent());
+            activity.setUpdated(entry.getUpdated());
+            activity.setAuthors(getAuthors(entry.getAuthors()));
             return true;
         }
     }

@@ -5,7 +5,12 @@ import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.data.access.ActivityDao;
+import net.metadata.dataspace.data.access.CollectionDao;
+import net.metadata.dataspace.data.access.PartyDao;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Activity;
+import net.metadata.dataspace.data.model.Collection;
+import net.metadata.dataspace.data.model.Party;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
@@ -18,9 +23,17 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import javax.activation.MimeType;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: alabri
@@ -31,6 +44,111 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     private Logger logger = Logger.getLogger(getClass());
     private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
+    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
+    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
+    private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
+
+    @Override
+    public ResponseContext postEntry(RequestContext request) {
+        MimeType mimeType = request.getContentType();
+        String baseType = mimeType.getBaseType();
+        if (baseType.equals(Constants.JSON_MIMETYPE)) {
+            return postMedia(request);
+        } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
+            try {
+                Entry entry = getEntryFromRequest(request);
+                Activity activity = entityCreator.getNextActivity();
+                boolean isValidEntry = AdapterHelper.updateActivityFromEntry(activity, entry);
+                if (!isValidEntry) {
+                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                } else {
+                    activityDao.save(activity);
+                    Entry createdEntry = furtherUpdate(entry, activity);
+                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                }
+            } catch (ResponseContextException e) {
+                logger.fatal("Invalid Entry", e);
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+    }
+
+    @Override
+    public ResponseContext postMedia(RequestContext request) {
+        MimeType mimeType = request.getContentType();
+        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            try {
+                String jsonString = AdapterHelper.getJsonString(request.getInputStream());
+                Activity activity = entityCreator.getNextActivity();
+                assembleActivityFromJson(activity, jsonString);
+                Entry createdEntry = AdapterHelper.getEntryFromActivity(activity);
+                return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+            } catch (IOException e) {
+                logger.fatal("Cannot get inputstream from request.");
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+    }
+
+    @Override
+    public ResponseContext putEntry(RequestContext request) {
+        logger.info("Updating Entry");
+        String mimeBaseType = request.getContentType().getBaseType();
+        if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
+            putMedia(request);
+        } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
+            try {
+                Entry entry = getEntryFromRequest(request);
+                String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
+                Activity activity = activityDao.getByKey(uriKey);
+                boolean isValidEntry = AdapterHelper.updateActivityFromEntry(activity, entry);
+                if (activity == null || !isValidEntry) {
+                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                } else {
+                    if (activity.isActive()) {
+                        activityDao.update(activity);
+                        Entry createdEntry = furtherUpdate(entry, activity);
+                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                    } else {
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                    }
+                }
+            } catch (ResponseContextException e) {
+                logger.fatal("Invalid Entry", e);
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+        return getEntry(request);
+    }
+
+    @Override
+    public ResponseContext putMedia(RequestContext request) {
+        logger.info("Updating Media Entry");
+        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            InputStream inputStream = null;
+            try {
+                inputStream = request.getInputStream();
+            } catch (IOException e) {
+                logger.fatal("Cannot get inputstream from request.", e);
+                return ProviderHelper.servererror(request, e);
+            }
+            String activityAsJsonString = AdapterHelper.getJsonString(inputStream);
+            String uriKey = AdapterHelper.getEntryID(request);
+            Activity activity = activityDao.getByKey(uriKey);
+            assembleActivityFromJson(activity, activityAsJsonString);
+            activityDao.update(activity);
+            Entry createdEntry = AdapterHelper.getEntryFromActivity(activity);
+            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+    }
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
@@ -214,4 +332,74 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     public String getTitle(RequestContext request) {
         return Constants.ACTIVITIES_TITLE;
     }
+
+    private Entry furtherUpdate(Entry entry, Activity activity) {
+        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.HAS_OUTPUT_QNAME);
+        for (String key : collectionUriKeys) {
+            Collection collection = collectionDao.getByKey(key);
+            if (collection != null) {
+                collection.getOutputOf().add(activity);
+                activity.getHasOutput().add(collection);
+            }
+        }
+        activityDao.update(activity);
+
+        Set<String> partyUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.HAS_PARTICIPANT_QNAME);
+        for (String partyKey : partyUriKeys) {
+            Party party = partyDao.getByKey(partyKey);
+            if (party != null) {
+                party.getParticipantIn().add(activity);
+                activity.getHasParticipant().add(party);
+            }
+        }
+        activity.setUpdated(new Date());
+        activityDao.update(activity);
+
+        Entry createdEntry = AdapterHelper.getEntryFromActivity(activity);
+        return createdEntry;
+    }
+
+    private void assembleActivityFromJson(Activity activity, String activityAsJsonString) {
+        try {
+            JSONObject jsonObj = new JSONObject(activityAsJsonString);
+            activity.setTitle(jsonObj.getString("title"));
+            activity.setSummary(jsonObj.getString("summary"));
+            activity.setContent(jsonObj.getString("content"));
+            activity.setUpdated(new Date());
+            JSONArray authors = jsonObj.getJSONArray("authors");
+            Set<String> persons = new HashSet<String>();
+            for (int i = 0; i < authors.length(); i++) {
+                persons.add(authors.getString(i));
+            }
+            activity.setAuthors(persons);
+
+            if (activity.getId() == null) {
+                activityDao.save(activity);
+            }
+
+            JSONArray collections = jsonObj.getJSONArray("hasOutput");
+            for (int i = 0; i < collections.length(); i++) {
+                Collection collection = collectionDao.getByKey(collections.getString(i));
+                if (collection != null) {
+                    collection.getOutputOf().add(activity);
+                    activity.getHasOutput().add(collection);
+                }
+            }
+            activityDao.update(activity);
+
+            JSONArray parties = jsonObj.getJSONArray("hasParticipant");
+            for (int i = 0; i < parties.length(); i++) {
+                Party party = partyDao.getByKey(parties.getString(i));
+                if (party != null) {
+                    party.getParticipantIn().add(activity);
+                    activity.getHasParticipant().add(party);
+                }
+            }
+            activityDao.update(activity);
+        } catch (JSONException ex) {
+            logger.fatal("Could not assemble party from JSON object", ex);
+        }
+
+    }
+
 }

@@ -60,26 +60,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     collectionDao.save(collection);
-
-                    Set<Subject> subjects = AdapterHelper.getSubjects(entry);
-                    for (Subject subject : subjects) {
-                        collection.getSubjects().add(subject);
-                        subjectDao.save(subject);
-                    }
-                    collectionDao.update(collection);
-
-                    Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
-                    for (String uriKey : collectorUriKeys) {
-                        Party party = partyDao.getByKey(uriKey);
-                        if (party != null) {
-                            party.getCollectorOf().add(collection);
-                            collection.getCollector().add(party);
-                        }
-                    }
-                    collection.setUpdated(new Date());
-                    collectionDao.update(collection);
-
-                    Entry createdEntry = AdapterHelper.getEntryFromCollection(collection);
+                    Entry createdEntry = furtherUpdate(entry, collection);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
@@ -127,25 +108,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 } else {
                     if (collection.isActive()) {
                         collectionDao.update(collection);
-                        Set<Subject> subjects = AdapterHelper.getSubjects(entry);
-                        collection.setSubjects(subjects);
-                        for (Subject subject : subjects) {
-                            subjectDao.save(subject);
-                        }
-                        collectionDao.update(collection);
-
-                        Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
-                        for (String uriKey : collectorUriKeys) {
-                            Party party = partyDao.getByKey(uriKey);
-                            if (party != null) {
-                                party.getCollectorOf().add(collection);
-                                collection.getCollector().add(party);
-                            }
-                        }
-                        collection.setUpdated(new Date());
-                        collectionDao.update(collection);
-
-                        Entry createdEntry = AdapterHelper.getEntryFromCollection(collection);
+                        Entry createdEntry = furtherUpdate(entry, collection);
                         return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                     } else {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
@@ -376,6 +339,29 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     @Override
     public String getTitle(RequestContext requestContext) {
         return Constants.COLLECTIONS_TITLE;
+    }
+
+    private Entry furtherUpdate(Entry entry, Collection collection) {
+        Set<Subject> subjects = AdapterHelper.getSubjects(entry);
+        for (Subject subject : subjects) {
+            collection.getSubjects().add(subject);
+            subjectDao.save(subject);
+        }
+        collectionDao.update(collection);
+
+        Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
+        for (String uriKey : collectorUriKeys) {
+            Party party = partyDao.getByKey(uriKey);
+            if (party != null) {
+                party.getCollectorOf().add(collection);
+                collection.getCollector().add(party);
+            }
+        }
+        collection.setUpdated(new Date());
+        collectionDao.update(collection);
+
+        Entry createdEntry = AdapterHelper.getEntryFromCollection(collection);
+        return createdEntry;
     }
 
     private void assembleCollectionFromJson(Collection collection, String jsonString) {
