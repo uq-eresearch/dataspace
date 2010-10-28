@@ -72,44 +72,6 @@ public class AdapterHelperTest {
         activityDao.save(activity);
     }
 
-//    @After
-//    public void tearDown() throws Exception {
-//        List<Party> parties = partyDao.getAll();
-//        for (Party party : parties) {
-//            party.getCollectorOf().removeAll(party.getCollectorOf());
-//            party.getParticipantIn().removeAll(party.getParticipantIn());
-//            party.getSubjects().removeAll(party.getSubjects());
-//            partyDao.delete(party);
-//        }
-//
-//        List<Collection> collectionList = collectionDao.getAll();
-//        for (Collection collection : collectionList) {
-//            collection.getCollector().removeAll(collection.getCollector());
-//            collection.getOutputOf().removeAll(collection.getOutputOf());
-//            collection.getSupports().removeAll(collection.getSupports());
-//            collection.getSupports().removeAll(collection.getSubjects());
-//            collectionDao.delete(collection);
-//        }
-//
-//        List<Service> services = serviceDao.getAll();
-//        for (Service service : services) {
-//            service.getSupportedBy().removeAll(service.getSupportedBy());
-//            serviceDao.delete(service);
-//        }
-//
-//        List<Activity> activityList = activityDao.getAll();
-//        for (Activity activity : activityList) {
-//            activity.getHasParticipant().removeAll(activity.getHasParticipant());
-//            activity.getHasOutput().removeAll(activity.getHasOutput());
-//            activityDao.delete(activity);
-//        }
-//
-//        List<Subject> list = subjectDao.getAll();
-//        for (Subject subject : list) {
-//            subjectDao.delete(subject);
-//        }
-//    }
-
     @Test
     public void testGetEntryFromParty() throws Exception {
         List<Party> parties = partyDao.getAll();
