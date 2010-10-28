@@ -389,8 +389,9 @@ function removeElement(tb, elementId) {
                         grid.setSortIndex(1, true);
                     </script>
                 </div>
-                <div jsId="grid" dojoType="dojox.grid.DataGrid" store="partyStore" query="{}"
-                     structure="partyLayout" style="width: 600px; height: 200px;"></div>
+                <div dojoType="dojox.grid.DataGrid" jsId="grid" store="partyStore" query="{}"
+                     structure="partyLayout" noDataMessage="No parties yet. Add one."
+                     style="width: 600px; height: 200px;"></div>
             </div>
             <div id="tabAddUpdateParties" dojoType="dijit.layout.ContentPane" title="Post/Put (ATOM)"
                  style="width:40em;height:60ex;">
@@ -462,7 +463,7 @@ function removeElement(tb, elementId) {
                     "content":"Party Content",
                     "subject":[{"vocabulary": "anzsrc-for", "value": "160499"}],
                     "authors":["Abdul Alabri","Nigel Ward"],
-                    "collectorof":["4"]
+                    "collectorOf":["4"]
                     }</textarea>
                 <br/>
                 <input type="button" id="postButton" value="Add Party" onclick="submitJsonParty()"/>

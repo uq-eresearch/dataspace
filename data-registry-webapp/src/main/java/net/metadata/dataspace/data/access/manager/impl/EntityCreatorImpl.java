@@ -1,9 +1,7 @@
 package net.metadata.dataspace.data.access.manager.impl;
 
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.Collection;
-import net.metadata.dataspace.data.model.Party;
-import net.metadata.dataspace.data.model.Subject;
+import net.metadata.dataspace.data.model.*;
 import net.metadata.dataspace.data.sequencer.*;
 
 /**
@@ -38,6 +36,18 @@ public class EntityCreatorImpl implements EntityCreator {
         Subject subject = new Subject();
         subject.setAtomicNumber(subjectAtomicSequencer.next());
         return subject;
+    }
+
+    public Service getNextService() {
+        Service service = new Service();
+        service.setAtomicNumber(serviceAtomicSequencer.next());
+        return service;
+    }
+
+    public Activity getNextActivity() {
+        Activity activity = new Activity();
+        activity.setAtomicNumber(activityAtomicSequencer.next());
+        return activity;
     }
 
 

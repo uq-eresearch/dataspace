@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model;
 
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
@@ -31,6 +32,9 @@ public class Service extends AbstractBaseEntity {
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
+
+    @CollectionOfElements
+    private Set<String> authors = new HashSet<String>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Collection> isSupportedBy = new HashSet<Collection>();
@@ -87,5 +91,13 @@ public class Service extends AbstractBaseEntity {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Set<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<String> authors) {
+        this.authors = authors;
     }
 }

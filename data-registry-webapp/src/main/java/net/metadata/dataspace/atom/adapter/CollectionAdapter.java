@@ -112,29 +112,6 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     }
 
     @Override
-    public ResponseContext putMedia(RequestContext request) {
-        logger.info("Updating Collection as Media Entry");
-        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            InputStream inputStream = null;
-            try {
-                inputStream = request.getInputStream();
-            } catch (IOException e) {
-                logger.fatal("Cannot create inputstream from request.", e);
-                return ProviderHelper.servererror(request, e);
-            }
-            String collectionAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
-            String uriKey = CollectionAdapterHelper.getEntryID(request);
-            Collection collection = collectionDao.getByKey(uriKey);
-            assembleCollectionFromJson(collection, collectionAsJsonString);
-            collectionDao.update(collection);
-            Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
-            return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
-        } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
-        }
-    }
-
-    @Override
     public ResponseContext putEntry(RequestContext request) {
         logger.info("Updating Collection as Media Entry");
         String mimeBaseType = request.getContentType().getBaseType();
@@ -183,6 +160,29 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             return ProviderHelper.notsupported(request, "Unsupported Media Type");
         }
         return getEntry(request);
+    }
+
+    @Override
+    public ResponseContext putMedia(RequestContext request) {
+        logger.info("Updating Collection as Media Entry");
+        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            InputStream inputStream = null;
+            try {
+                inputStream = request.getInputStream();
+            } catch (IOException e) {
+                logger.fatal("Cannot create inputstream from request.", e);
+                return ProviderHelper.servererror(request, e);
+            }
+            String collectionAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
+            String uriKey = CollectionAdapterHelper.getEntryID(request);
+            Collection collection = collectionDao.getByKey(uriKey);
+            assembleCollectionFromJson(collection, collectionAsJsonString);
+            collectionDao.update(collection);
+            Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
+            return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
     }
 
     @Override
@@ -387,7 +387,6 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             collection.setContent(jsonObj.getString("content"));
             collection.setUpdated(new Date());
             collection.setLocation(jsonObj.getString("location"));
-
             JSONArray authors = jsonObj.getJSONArray("authors");
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {

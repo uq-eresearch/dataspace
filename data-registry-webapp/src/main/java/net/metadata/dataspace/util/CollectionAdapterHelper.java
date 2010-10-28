@@ -248,6 +248,25 @@ public class CollectionAdapterHelper {
         }
     }
 
+    public static boolean updateServiceFromEntry(Service service, Entry entry) {
+        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
+            return false;
+        } else {
+            service.setTitle(entry.getTitle());
+            service.setSummary(entry.getSummary());
+            service.setContent(entry.getContent());
+            service.setUpdated(entry.getUpdated());
+            service.setAuthors(getAuthors(entry.getAuthors()));
+            List<Element> extensions = entry.getExtensions();
+            for (Element extension : extensions) {
+                if (extension.getQName().equals(LOCATION_QNAME)) {
+                    service.setLocation(extension.getText());
+                }
+            }
+            return true;
+        }
+    }
+
     public static boolean updateCollectionFromEntry(Collection collection, Entry entry) {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;

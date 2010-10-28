@@ -332,7 +332,6 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             party.setSummary(jsonObj.getString("summary"));
             party.setContent(jsonObj.getString("content"));
             party.setUpdated(new Date());
-
             JSONArray authors = jsonObj.getJSONArray("authors");
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
@@ -353,7 +352,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 subjectDao.save(subject);
             }
             partyDao.update(party);
-            JSONArray collectionArray = jsonObj.getJSONArray("collectorof");
+            JSONArray collectionArray = jsonObj.getJSONArray("collectorOf");
             for (int i = 0; i < collectionArray.length(); i++) {
                 Collection collection = collectionDao.getByKey(collectionArray.getString(i));
                 if (collection != null) {

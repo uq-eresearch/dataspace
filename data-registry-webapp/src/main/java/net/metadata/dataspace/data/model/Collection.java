@@ -34,7 +34,7 @@ public class Collection extends AbstractBaseEntity {
     private Date updated;
 
     @CollectionOfElements
-    private Set<String> authors;
+    private Set<String> authors = new HashSet<String>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Subject> subjects = new HashSet<Subject>();

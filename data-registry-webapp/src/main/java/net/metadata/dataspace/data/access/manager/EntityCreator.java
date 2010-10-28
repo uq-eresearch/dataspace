@@ -1,8 +1,6 @@
 package net.metadata.dataspace.data.access.manager;
 
-import net.metadata.dataspace.data.model.Collection;
-import net.metadata.dataspace.data.model.Party;
-import net.metadata.dataspace.data.model.Subject;
+import net.metadata.dataspace.data.model.*;
 
 /**
  * User: alabri
@@ -16,4 +14,8 @@ public interface EntityCreator {
     Collection getNextCollection();
 
     Subject getNextSubject();
+
+    Service getNextService();
+
+    Activity getNextActivity();
 }

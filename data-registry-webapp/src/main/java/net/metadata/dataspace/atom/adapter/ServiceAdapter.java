@@ -2,7 +2,10 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.ServiceDao;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Service;
 import net.metadata.dataspace.util.AtomFeedHelper;
 import net.metadata.dataspace.util.CollectionAdapterHelper;
@@ -18,9 +21,17 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import javax.activation.MimeType;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: alabri
@@ -32,6 +43,133 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     private Logger logger = Logger.getLogger(getClass());
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
     private ServiceDao serviceDao = DataRegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
+    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
+    private static final EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
+
+    @Override
+    public ResponseContext postEntry(RequestContext request) {
+        MimeType mimeType = request.getContentType();
+        String baseType = mimeType.getBaseType();
+        if (baseType.equals(Constants.JSON_MIMETYPE)) {
+            return postMedia(request);
+        } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
+            try {
+                Entry entry = getEntryFromRequest(request);
+                Service service = entityCreator.getNextService();
+                boolean isValidService = CollectionAdapterHelper.updateServiceFromEntry(service, entry);
+                if (!isValidService) {
+                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                } else {
+                    serviceDao.save(service);
+                    Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                    for (String uriKey : collectionUriKeys) {
+                        Collection collection = collectionDao.getByKey(uriKey);
+                        if (collection != null) {
+                            collection.getSupports().add(service);
+                            service.getSupportedBy().add(collection);
+                        }
+                    }
+                    service.setUpdated(new Date());
+                    serviceDao.update(service);
+
+                    Entry createdEntry = CollectionAdapterHelper.getEntryFromService(service);
+                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                }
+            } catch (ResponseContextException e) {
+                logger.fatal("Invalid Entry", e);
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+    }
+
+    @Override
+    public ResponseContext postMedia(RequestContext request) {
+        MimeType mimeType = request.getContentType();
+        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            try {
+                String jsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
+                Service service = entityCreator.getNextService();
+                assembleServiceFromJson(service, jsonString);
+                Entry createdEntry = CollectionAdapterHelper.getEntryFromService(service);
+                return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+            } catch (IOException e) {
+                logger.fatal("Cannot get inputstream from request.");
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+    }
+
+    @Override
+    public ResponseContext putEntry(RequestContext request) {
+        logger.info("Updating entry as Media");
+        String mimeBaseType = request.getContentType().getBaseType();
+        if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
+            putMedia(request);
+        } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
+            try {
+                Entry entry = getEntryFromRequest(request);
+                String uriKey = CollectionAdapterHelper.getEntityID(entry.getId().toString());
+                Service service = serviceDao.getByKey(uriKey);
+                boolean isValidEntry = CollectionAdapterHelper.updateServiceFromEntry(service, entry);
+                if (service == null || !isValidEntry) {
+                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                } else {
+                    if (service.isActive()) {
+                        serviceDao.update(service);
+
+                        Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                        for (String key : collectionUriKeys) {
+                            Collection collection = collectionDao.getByKey(key);
+                            if (collection != null) {
+                                collection.getSupports().add(service);
+                                service.getSupportedBy().add(collection);
+                            }
+                        }
+                        service.setUpdated(new Date());
+                        serviceDao.update(service);
+
+                        Entry createdEntry = CollectionAdapterHelper.getEntryFromService(service);
+                        return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                    } else {
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                    }
+                }
+            } catch (ResponseContextException e) {
+                logger.fatal("Invalid Entry", e);
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+        return getEntry(request);
+    }
+
+    @Override
+    public ResponseContext putMedia(RequestContext request) {
+        logger.info("Updating entry as Media");
+        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            InputStream inputStream = null;
+            try {
+                inputStream = request.getInputStream();
+            } catch (IOException e) {
+                logger.fatal("Cannot get inputstream from request.", e);
+                return ProviderHelper.servererror(request, e);
+            }
+            String serviceAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
+            String uriKey = CollectionAdapterHelper.getEntryID(request);
+            Service service = serviceDao.getByKey(uriKey);
+            assembleServiceFromJson(service, serviceAsJsonString);
+            serviceDao.update(service);
+            Entry createdEntry = CollectionAdapterHelper.getEntryFromService(service);
+            return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+    }
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
@@ -216,4 +354,39 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     public String getTitle(RequestContext request) {
         return Constants.SERVICES_TITLE;
     }
+
+    private void assembleServiceFromJson(Service service, String jsonString) {
+        try {
+            JSONObject jsonObj = new JSONObject(jsonString);
+            service.setTitle(jsonObj.getString("title"));
+            service.setSummary(jsonObj.getString("summary"));
+            service.setContent(jsonObj.getString("content"));
+            service.setLocation(jsonObj.getString("location"));
+            service.setUpdated(new Date());
+            JSONArray authors = jsonObj.getJSONArray("authors");
+            Set<String> persons = new HashSet<String>();
+            for (int i = 0; i < authors.length(); i++) {
+                persons.add(authors.getString(i));
+            }
+            service.setAuthors(persons);
+
+            if (service.getId() == null) {
+                serviceDao.save(service);
+            }
+
+            JSONArray collectionArray = jsonObj.getJSONArray("supportedBy");
+            for (int i = 0; i < collectionArray.length(); i++) {
+                Collection collection = collectionDao.getByKey(collectionArray.getString(i));
+                if (collection != null) {
+                    collection.getSupports().add(service);
+                    service.getSupportedBy().add(collection);
+                }
+            }
+            serviceDao.update(service);
+        } catch (JSONException ex) {
+            logger.fatal("Could not assemble party from JSON object", ex);
+        }
+
+    }
+
 }
