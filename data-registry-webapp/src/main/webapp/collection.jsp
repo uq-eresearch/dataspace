@@ -199,8 +199,12 @@ function submitCollection() {
     xmlString = xmlString + '</entry>';
 
     var responseElement = dojo.byId('serverResponseSubmitCollection');
+    var url = '/collections';
+    if (operationElement.value == 'edit') {
+        url = dojo.byId('collectionIdXml').value;
+    }
     var httpArgs = {
-        url:'/collections',
+        url:url,
         contentType:"application/atom+xml;type=entry",
         headers: {
             "Cache-Control": "no-cache"

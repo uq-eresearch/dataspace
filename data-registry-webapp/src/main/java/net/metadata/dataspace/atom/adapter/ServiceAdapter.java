@@ -61,7 +61,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     serviceDao.save(service);
-                    Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                    Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorOfUriKeys(entry);
                     for (String uriKey : collectionUriKeys) {
                         Collection collection = collectionDao.getByKey(uriKey);
                         if (collection != null) {
@@ -105,7 +105,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public ResponseContext putEntry(RequestContext request) {
-        logger.info("Updating entry as Media");
+        logger.info("Updating Entry");
         String mimeBaseType = request.getContentType().getBaseType();
         if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
             putMedia(request);
@@ -121,7 +121,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                     if (service.isActive()) {
                         serviceDao.update(service);
 
-                        Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                        Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorOfUriKeys(entry);
                         for (String key : collectionUriKeys) {
                             Collection collection = collectionDao.getByKey(key);
                             if (collection != null) {
@@ -150,7 +150,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public ResponseContext putMedia(RequestContext request) {
-        logger.info("Updating entry as Media");
+        logger.info("Updating Media Entry");
         if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
             InputStream inputStream = null;
             try {

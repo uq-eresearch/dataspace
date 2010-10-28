@@ -113,7 +113,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public ResponseContext putEntry(RequestContext request) {
-        logger.info("Updating Collection as Media Entry");
+        logger.info("Updating Entry");
         String mimeBaseType = request.getContentType().getBaseType();
         if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
             putMedia(request);
@@ -164,7 +164,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public ResponseContext putMedia(RequestContext request) {
-        logger.info("Updating Collection as Media Entry");
+        logger.info("Updating Media Entry");
         if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
             InputStream inputStream = null;
             try {

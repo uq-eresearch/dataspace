@@ -192,8 +192,12 @@ function submitAtomParty() {
     xmlString = xmlString + '</entry>';
 
     var responseElement = dojo.byId('serverResponseSubmitParty');
+    var url = '/parties';
+    if (operationElement.value == 'edit') {
+        url = dojo.byId('partyIdXml').value;
+    }
     var httpArgs = {
-        url:'/parties',
+        url:url,
         contentType:"application/atom+xml;type=entry",
         headers: {
             "Cache-Control": "no-cache"

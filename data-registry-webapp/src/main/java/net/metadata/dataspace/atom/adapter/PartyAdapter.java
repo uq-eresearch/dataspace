@@ -67,8 +67,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                     }
                     partyDao.update(party);
 
-
-                    Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                    Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorOfUriKeys(entry);
                     for (String uriKey : collectionUriKeys) {
                         Collection collection = collectionDao.getByKey(uriKey);
                         if (collection != null) {
@@ -110,8 +109,54 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         }
     }
 
+
     @Override
     public ResponseContext putEntry(RequestContext request) {
+        logger.info("Updating Entry");
+        String mimeBaseType = request.getContentType().getBaseType();
+        if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
+            putMedia(request);
+        } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
+            try {
+                Entry entry = getEntryFromRequest(request);
+                String uriKey = CollectionAdapterHelper.getEntityID(entry.getId().toString());
+                Party party = partyDao.getByKey(uriKey);
+                boolean isValidEntry = CollectionAdapterHelper.updatePartyFromEntry(party, entry);
+                if (party == null || !isValidEntry) {
+                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                } else {
+                    if (party.isActive()) {
+                        partyDao.update(party);
+
+                        Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorOfUriKeys(entry);
+                        for (String key : collectionUriKeys) {
+                            Collection collection = collectionDao.getByKey(key);
+                            if (collection != null) {
+                                collection.getCollector().add(party);
+                                party.getCollectorOf().add(collection);
+                            }
+                        }
+                        party.setUpdated(new Date());
+                        partyDao.update(party);
+
+                        Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
+                        return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                    } else {
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                    }
+                }
+            } catch (ResponseContextException e) {
+                logger.fatal("Invalid Entry", e);
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+        }
+        return getEntry(request);
+    }
+
+    @Override
+    public ResponseContext putMedia(RequestContext request) {
         logger.info("Updating Party as Media Entry");
 
         if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
@@ -126,8 +171,11 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             Party party = partyDao.getByKey(uriKey);
             assemblePartyFromJson(party, partyAsJsonString);
             partyDao.update(party);
+            Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
+            return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+        } else {
+            return ProviderHelper.notsupported(request, "Unsupported Media Type");
         }
-        return getEntry(request);
     }
 
     @Override
