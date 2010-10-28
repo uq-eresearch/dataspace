@@ -1,5 +1,7 @@
 package net.metadata.dataspace.app;
 
+import javax.xml.namespace.QName;
+
 /**
  * User: alabri
  * Date: 06/10/2010
@@ -39,5 +41,14 @@ public interface Constants {
     String COLLECTIONS_TITLE = "Collections";
     String ACTIVITIES_TITLE = "Activities";
     String SERVICES_TITLE = "Services";
+
+    String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
+    QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    QName SUPPORTED_BY_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "supportedBy", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    QName HAS_OUTPUT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "hasOutput", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    QName HAS_PARTICIPANT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "hasParticipant", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
 
 }

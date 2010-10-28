@@ -67,7 +67,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                     }
                     partyDao.update(party);
 
-                    Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorOfUriKeys(entry);
+                    Set<String> collectionUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_OF_QNAME);
                     for (String uriKey : collectionUriKeys) {
                         Collection collection = collectionDao.getByKey(uriKey);
                         if (collection != null) {
@@ -128,7 +128,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                     if (party.isActive()) {
                         partyDao.update(party);
 
-                        Set<String> collectionUriKeys = CollectionAdapterHelper.getCollectorOfUriKeys(entry);
+                        Set<String> collectionUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_OF_QNAME);
                         for (String key : collectionUriKeys) {
                             Collection collection = collectionDao.getByKey(key);
                             if (collection != null) {

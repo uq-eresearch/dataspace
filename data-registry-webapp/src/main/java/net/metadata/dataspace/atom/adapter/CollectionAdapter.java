@@ -69,7 +69,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                     }
                     collectionDao.update(collection);
 
-                    Set<String> collectorUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                    Set<String> collectorUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
                     for (String uriKey : collectorUriKeys) {
                         Party party = partyDao.getByKey(uriKey);
                         if (party != null) {
@@ -135,7 +135,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                         }
                         collectionDao.update(collection);
 
-                        Set<String> collectorUriKeys = CollectionAdapterHelper.getCollectorUriKeys(entry);
+                        Set<String> collectorUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
                         for (String uriKey : collectorUriKeys) {
                             Party party = partyDao.getByKey(uriKey);
                             if (party != null) {

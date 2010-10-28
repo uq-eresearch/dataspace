@@ -36,14 +36,6 @@ import java.util.Set;
 public class CollectionAdapterHelper {
 
     private static Logger logger = Logger.getLogger(CollectionAdapterHelper.class);
-    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
-    private static final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private static final QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private static final QName SUPPORTED_BY_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "supportedBy", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private static final QName HAS_OUTPUT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "hasOutput", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private static final QName HAS_PARTICIPANT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "hasParticipant", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private static final QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    private static final QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
     private static final EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
 
     public static String getEntryID(RequestContext request) {
@@ -99,7 +91,7 @@ public class CollectionAdapterHelper {
     public static Entry getEntryFromParty(Party party) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey());
+        entry.setId(Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey());
         entry.setTitle(party.getTitle());
         entry.setSummary(party.getSummary());
         entry.setContent(party.getContent());
@@ -111,24 +103,24 @@ public class CollectionAdapterHelper {
 
         Set<Subject> subjectSet = party.getSubjects();
         for (Subject sub : subjectSet) {
-            Element subjectElement = entry.addExtension(SUBJECT_QNAME);
+            Element subjectElement = entry.addExtension(Constants.SUBJECT_QNAME);
             subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
             subjectElement.setAttributeValue("value", sub.getValue());
         }
 
         Set<Collection> collectionSet = party.getCollectorOf();
         for (Collection collection : collectionSet) {
-            Element collectorOfElement = entry.addExtension(COLLECTOR_OF_QNAME);
-            collectorOfElement.setAttributeValue("uri", ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
+            Element collectorOfElement = entry.addExtension(Constants.COLLECTOR_OF_QNAME);
+            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
         }
-        entry.addLink(ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey(), "alternate");
+        entry.addLink(Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey(), "alternate");
         return entry;
     }
 
     public static Entry getEntryFromCollection(Collection collection) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
+        entry.setId(Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
         entry.setTitle(collection.getTitle());
         entry.setSummary(collection.getSummary());
         entry.setContent(collection.getContent());
@@ -137,45 +129,45 @@ public class CollectionAdapterHelper {
         for (String author : authors) {
             entry.addAuthor(author);
         }
-        entry.addSimpleExtension(LOCATION_QNAME, collection.getLocation());
+        entry.addSimpleExtension(Constants.LOCATION_QNAME, collection.getLocation());
         Set<Subject> subjectSet = collection.getSubjects();
         for (Subject sub : subjectSet) {
-            Element subjectElement = entry.addExtension(SUBJECT_QNAME);
+            Element subjectElement = entry.addExtension(Constants.SUBJECT_QNAME);
             subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
             subjectElement.setAttributeValue("value", sub.getValue());
         }
 
         Set<Party> partySet = collection.getCollector();
         for (Party sub : partySet) {
-            Element partyElement = entry.addExtension(COLLECTOR_QNAME);
-            partyElement.setAttributeValue("uri", ID_PREFIX + Constants.PARTIES_PATH + "/" + sub.getUriKey());
+            Element partyElement = entry.addExtension(Constants.COLLECTOR_QNAME);
+            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + sub.getUriKey());
         }
-        entry.addLink(ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey(), "alternate");
+        entry.addLink(Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey(), "alternate");
         return entry;
     }
 
     public static Entry getEntryFromActivity(Activity activity) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey());
+        entry.setId(Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey());
         entry.setTitle(activity.getTitle());
         entry.setSummary(activity.getSummary());
         entry.setContent(activity.getContent());
         entry.setUpdated(activity.getUpdated());
-        entry.addLink(ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey(), "alternate");
+        entry.addLink(Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey(), "alternate");
         return entry;
     }
 
     public static Entry getEntryFromService(Service service) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey());
+        entry.setId(Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey());
         entry.setTitle(service.getTitle());
         entry.setSummary(service.getSummary());
         entry.setContent(service.getContent());
         entry.setUpdated(service.getUpdated());
-        entry.addSimpleExtension(LOCATION_QNAME, service.getLocation());
-        entry.addLink(ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey(), "alternate");
+        entry.addSimpleExtension(Constants.LOCATION_QNAME, service.getLocation());
+        entry.addLink(Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey(), "alternate");
         return entry;
     }
 
@@ -262,7 +254,7 @@ public class CollectionAdapterHelper {
             service.setAuthors(getAuthors(entry.getAuthors()));
             List<Element> extensions = entry.getExtensions();
             for (Element extension : extensions) {
-                if (extension.getQName().equals(LOCATION_QNAME)) {
+                if (extension.getQName().equals(Constants.LOCATION_QNAME)) {
                     service.setLocation(extension.getText());
                 }
             }
@@ -281,7 +273,7 @@ public class CollectionAdapterHelper {
             collection.setAuthors(getAuthors(entry.getAuthors()));
             List<Element> extensions = entry.getExtensions();
             for (Element extension : extensions) {
-                if (extension.getQName().equals(LOCATION_QNAME)) {
+                if (extension.getQName().equals(Constants.LOCATION_QNAME)) {
                     collection.setLocation(extension.getText());
                 }
             }
@@ -301,7 +293,7 @@ public class CollectionAdapterHelper {
         Set<Subject> subjects = new HashSet<Subject>();
         List<Element> extensionElements = entry.getExtensions();
         for (Element extension : extensionElements) {
-            if (extension.getQName().equals(SUBJECT_QNAME)) {
+            if (extension.getQName().equals(Constants.SUBJECT_QNAME)) {
                 String vocabulary = extension.getAttributeValue("vocabulary");
                 String value = extension.getAttributeValue("value");
                 if (vocabulary != null && value != null) {
@@ -315,74 +307,18 @@ public class CollectionAdapterHelper {
         return subjects;
     }
 
-    public static Set<String> getCollectorUriKeys(Entry entry) {
-        Set<String> parties = new HashSet<String>();
+    public static Set<String> getUriKeysFromExtension(Entry entry, QName qName) {
+        Set<String> uriKeys = new HashSet<String>();
         List<Element> extensionElements = entry.getExtensions();
         for (Element extension : extensionElements) {
-            if (extension.getQName().equals(COLLECTOR_QNAME)) {
+            if (extension.getQName().equals(qName)) {
                 String id = getEntityID(extension.getAttributeValue("uri"));
                 if (id != null) {
-                    parties.add(id);
+                    uriKeys.add(id);
                 }
             }
         }
-        return parties;
-    }
-
-    public static Set<String> getHasParticipantUriKeys(Entry entry) {
-        Set<String> parties = new HashSet<String>();
-        List<Element> extensionElements = entry.getExtensions();
-        for (Element extension : extensionElements) {
-            if (extension.getQName().equals(HAS_PARTICIPANT_QNAME)) {
-                String id = getEntityID(extension.getAttributeValue("uri"));
-                if (id != null) {
-                    parties.add(id);
-                }
-            }
-        }
-        return parties;
-    }
-
-    public static Set<String> getCollectorOfUriKeys(Entry entry) {
-        Set<String> collections = new HashSet<String>();
-        List<Element> extensionElements = entry.getExtensions();
-        for (Element extension : extensionElements) {
-            if (extension.getQName().equals(COLLECTOR_OF_QNAME)) {
-                String id = getEntityID(extension.getAttributeValue("uri"));
-                if (id != null) {
-                    collections.add(id);
-                }
-            }
-        }
-        return collections;
-    }
-
-    public static Set<String> getSupportedByUriKeys(Entry entry) {
-        Set<String> collections = new HashSet<String>();
-        List<Element> extensionElements = entry.getExtensions();
-        for (Element extension : extensionElements) {
-            if (extension.getQName().equals(SUPPORTED_BY_QNAME)) {
-                String id = getEntityID(extension.getAttributeValue("uri"));
-                if (id != null) {
-                    collections.add(id);
-                }
-            }
-        }
-        return collections;
-    }
-
-    public static Set<String> getHasOutputUriKeys(Entry entry) {
-        Set<String> collections = new HashSet<String>();
-        List<Element> extensionElements = entry.getExtensions();
-        for (Element extension : extensionElements) {
-            if (extension.getQName().equals(SUPPORTED_BY_QNAME)) {
-                String id = getEntityID(extension.getAttributeValue("uri"));
-                if (id != null) {
-                    collections.add(id);
-                }
-            }
-        }
-        return collections;
+        return uriKeys;
     }
 
     public static String getEntityID(String fullUrl) {

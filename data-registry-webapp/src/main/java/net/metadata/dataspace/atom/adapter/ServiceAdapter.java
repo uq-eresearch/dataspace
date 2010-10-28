@@ -61,7 +61,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     serviceDao.save(service);
-                    Set<String> collectionUriKeys = CollectionAdapterHelper.getSupportedByUriKeys(entry);
+                    Set<String> collectionUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
                     for (String uriKey : collectionUriKeys) {
                         Collection collection = collectionDao.getByKey(uriKey);
                         if (collection != null) {
@@ -120,8 +120,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 } else {
                     if (service.isActive()) {
                         serviceDao.update(service);
-
-                        Set<String> collectionUriKeys = CollectionAdapterHelper.getSupportedByUriKeys(entry);
+                        Set<String> collectionUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
                         for (String key : collectionUriKeys) {
                             Collection collection = collectionDao.getByKey(key);
                             if (collection != null) {
