@@ -39,6 +39,9 @@ public class CollectionAdapterHelper {
     private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
     private static final QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
     private static final QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final QName SUPPORTED_BY_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "supportedBy", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final QName HAS_OUTPUT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "hasOutput", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+    private static final QName HAS_PARTICIPANT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "hasParticipant", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
     private static final QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
     private static final QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
     private static final EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
@@ -326,11 +329,11 @@ public class CollectionAdapterHelper {
         return parties;
     }
 
-    public static Set<String> getCollectorOfUriKeys(Entry entry) {
+    public static Set<String> getHasParticipantUriKeys(Entry entry) {
         Set<String> parties = new HashSet<String>();
         List<Element> extensionElements = entry.getExtensions();
         for (Element extension : extensionElements) {
-            if (extension.getQName().equals(COLLECTOR_OF_QNAME)) {
+            if (extension.getQName().equals(HAS_PARTICIPANT_QNAME)) {
                 String id = getEntityID(extension.getAttributeValue("uri"));
                 if (id != null) {
                     parties.add(id);
@@ -338,6 +341,48 @@ public class CollectionAdapterHelper {
             }
         }
         return parties;
+    }
+
+    public static Set<String> getCollectorOfUriKeys(Entry entry) {
+        Set<String> collections = new HashSet<String>();
+        List<Element> extensionElements = entry.getExtensions();
+        for (Element extension : extensionElements) {
+            if (extension.getQName().equals(COLLECTOR_OF_QNAME)) {
+                String id = getEntityID(extension.getAttributeValue("uri"));
+                if (id != null) {
+                    collections.add(id);
+                }
+            }
+        }
+        return collections;
+    }
+
+    public static Set<String> getSupportedByUriKeys(Entry entry) {
+        Set<String> collections = new HashSet<String>();
+        List<Element> extensionElements = entry.getExtensions();
+        for (Element extension : extensionElements) {
+            if (extension.getQName().equals(SUPPORTED_BY_QNAME)) {
+                String id = getEntityID(extension.getAttributeValue("uri"));
+                if (id != null) {
+                    collections.add(id);
+                }
+            }
+        }
+        return collections;
+    }
+
+    public static Set<String> getHasOutputUriKeys(Entry entry) {
+        Set<String> collections = new HashSet<String>();
+        List<Element> extensionElements = entry.getExtensions();
+        for (Element extension : extensionElements) {
+            if (extension.getQName().equals(SUPPORTED_BY_QNAME)) {
+                String id = getEntityID(extension.getAttributeValue("uri"));
+                if (id != null) {
+                    collections.add(id);
+                }
+            }
+        }
+        return collections;
     }
 
     public static String getEntityID(String fullUrl) {
