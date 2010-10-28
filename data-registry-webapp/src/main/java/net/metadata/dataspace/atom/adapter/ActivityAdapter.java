@@ -2,8 +2,8 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
-import net.metadata.dataspace.atom.util.AtomFeedHelper;
-import net.metadata.dataspace.atom.util.CollectionAdapterHelper;
+import net.metadata.dataspace.atom.util.AdapterHelper;
+import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.data.access.ActivityDao;
 import net.metadata.dataspace.data.model.Activity;
 import org.apache.abdera.Abdera;
@@ -34,7 +34,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        String uriKey = AdapterHelper.getEntryID(request);
         Activity activity = activityDao.getByKey(uriKey);
         if (activity == null) {
             return ProviderHelper.notfound(request);
@@ -56,15 +56,15 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public ResponseContext getEntry(RequestContext request) {
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        String uriKey = AdapterHelper.getEntryID(request);
         Activity activity = activityDao.getByKey(uriKey);
         if (activity == null) {
             return ProviderHelper.notfound(request);
         } else {
             activityDao.refresh(activity);
             if (activity.isActive()) {
-                Entry entry = CollectionAdapterHelper.getEntryFromActivity(activity);
-                return CollectionAdapterHelper.getContextResponseForGetEntry(request, entry);
+                Entry entry = AdapterHelper.getEntryFromActivity(activity);
+                return AdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
             }
@@ -73,10 +73,10 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public ResponseContext getFeed(RequestContext request) {
-        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "activity.jsp");
+                return FeedHelper.getHtmlRepresentationOfFeed(request, "activity.jsp");
             } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
@@ -87,7 +87,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             if (accept.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
-                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "activity.jsp");
+                return FeedHelper.getHtmlRepresentationOfFeed(request, "activity.jsp");
             }
         }
     }
@@ -103,7 +103,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             feed.setUpdated(new Date());
         }
 
-        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
             if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
@@ -115,11 +115,11 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         String atomFeedUrl = Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
         String htmlFeedUrl = Constants.ID_PREFIX + Constants.ACTIVITIES_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-            AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
         } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            AtomFeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-            AtomFeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
 
         feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.ACTIVITIES_TITLE);

@@ -2,8 +2,8 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
-import net.metadata.dataspace.atom.util.AtomFeedHelper;
-import net.metadata.dataspace.atom.util.CollectionAdapterHelper;
+import net.metadata.dataspace.atom.util.AdapterHelper;
+import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
@@ -55,20 +55,20 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             try {
                 Entry entry = getEntryFromRequest(request);
                 Collection collection = entityCreator.getNextCollection();
-                boolean isValidColleciton = CollectionAdapterHelper.updateCollectionFromEntry(collection, entry);
+                boolean isValidColleciton = AdapterHelper.updateCollectionFromEntry(collection, entry);
                 if (!isValidColleciton) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     collectionDao.save(collection);
 
-                    Set<Subject> subjects = CollectionAdapterHelper.getSubjects(entry);
+                    Set<Subject> subjects = AdapterHelper.getSubjects(entry);
                     for (Subject subject : subjects) {
                         collection.getSubjects().add(subject);
                         subjectDao.save(subject);
                     }
                     collectionDao.update(collection);
 
-                    Set<String> collectorUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
+                    Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
                     for (String uriKey : collectorUriKeys) {
                         Party party = partyDao.getByKey(uriKey);
                         if (party != null) {
@@ -79,7 +79,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                     collection.setUpdated(new Date());
                     collectionDao.update(collection);
 
-                    Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
+                    Entry createdEntry = AdapterHelper.getEntryFromCollection(collection);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
@@ -96,10 +96,10 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             try {
-                String jsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
+                String jsonString = AdapterHelper.getJsonString(request.getInputStream());
                 Collection collection = entityCreator.getNextCollection();
                 assembleCollectionFromJson(collection, jsonString);
-                Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
+                Entry createdEntry = AdapterHelper.getEntryFromCollection(collection);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
             } catch (IOException e) {
                 logger.fatal("Cannot get inputstream from request.");
@@ -119,22 +119,22 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
-                String collectionUriKey = CollectionAdapterHelper.getEntityID(entry.getId().toString());
+                String collectionUriKey = AdapterHelper.getEntityID(entry.getId().toString());
                 Collection collection = collectionDao.getByKey(collectionUriKey);
-                boolean isValidaCollection = CollectionAdapterHelper.updateCollectionFromEntry(collection, entry);
+                boolean isValidaCollection = AdapterHelper.updateCollectionFromEntry(collection, entry);
                 if (collection == null || !isValidaCollection) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     if (collection.isActive()) {
                         collectionDao.update(collection);
-                        Set<Subject> subjects = CollectionAdapterHelper.getSubjects(entry);
+                        Set<Subject> subjects = AdapterHelper.getSubjects(entry);
                         collection.setSubjects(subjects);
                         for (Subject subject : subjects) {
                             subjectDao.save(subject);
                         }
                         collectionDao.update(collection);
 
-                        Set<String> collectorUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
+                        Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
                         for (String uriKey : collectorUriKeys) {
                             Party party = partyDao.getByKey(uriKey);
                             if (party != null) {
@@ -145,8 +145,8 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                         collection.setUpdated(new Date());
                         collectionDao.update(collection);
 
-                        Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
-                        return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                        Entry createdEntry = AdapterHelper.getEntryFromCollection(collection);
+                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                     } else {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
                     }
@@ -172,13 +172,13 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 logger.fatal("Cannot create inputstream from request.", e);
                 return ProviderHelper.servererror(request, e);
             }
-            String collectionAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
-            String uriKey = CollectionAdapterHelper.getEntryID(request);
+            String collectionAsJsonString = AdapterHelper.getJsonString(inputStream);
+            String uriKey = AdapterHelper.getEntryID(request);
             Collection collection = collectionDao.getByKey(uriKey);
             assembleCollectionFromJson(collection, collectionAsJsonString);
             collectionDao.update(collection);
-            Entry createdEntry = CollectionAdapterHelper.getEntryFromCollection(collection);
-            return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+            Entry createdEntry = AdapterHelper.getEntryFromCollection(collection);
+            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
         } else {
             return ProviderHelper.notsupported(request, "Unsupported Media Type");
         }
@@ -186,7 +186,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        String uriKey = AdapterHelper.getEntryID(request);
         Collection collection = collectionDao.getByKey(uriKey);
         if (collection == null) {
             return ProviderHelper.notfound(request);
@@ -208,15 +208,15 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public ResponseContext getEntry(RequestContext request) {
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        String uriKey = AdapterHelper.getEntryID(request);
         Collection collection = collectionDao.getByKey(uriKey);
         collectionDao.refresh(collection);
         if (collection == null) {
             return ProviderHelper.notfound(request);
         } else {
             if (collection.isActive()) {
-                Entry entry = CollectionAdapterHelper.getEntryFromCollection(collection);
-                return CollectionAdapterHelper.getContextResponseForGetEntry(request, entry);
+                Entry entry = AdapterHelper.getEntryFromCollection(collection);
+                return AdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
             }
@@ -225,10 +225,10 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public ResponseContext getFeed(RequestContext request) {
-        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "collection.jsp");
+                return FeedHelper.getHtmlRepresentationOfFeed(request, "collection.jsp");
             } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
@@ -239,7 +239,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             if (accept.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
-                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "collection.jsp");
+                return FeedHelper.getHtmlRepresentationOfFeed(request, "collection.jsp");
             }
         }
     }
@@ -255,7 +255,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             feed.setUpdated(new Date());
         }
 
-        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
             if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
@@ -267,11 +267,11 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         String atomFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
         String htmlFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-            AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
         } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            AtomFeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-            AtomFeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
         feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.COLLECTIONS_TITLE);
         Iterable<Collection> entries = getEntries(request);

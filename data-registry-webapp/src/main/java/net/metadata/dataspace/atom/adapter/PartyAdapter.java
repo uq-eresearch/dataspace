@@ -2,8 +2,9 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
-import net.metadata.dataspace.atom.util.AtomFeedHelper;
+import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.CollectionAdapterHelper;
+import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
@@ -54,19 +55,19 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             try {
                 Entry entry = getEntryFromRequest(request);
                 Party party = entityCreator.getNextParty();
-                boolean isValidParty = CollectionAdapterHelper.updatePartyFromEntry(party, entry);
+                boolean isValidParty = AdapterHelper.updatePartyFromEntry(party, entry);
                 if (!isValidParty) {
                     return ProviderHelper.badrequest(request, "Invalid entry posted.");
                 } else {
                     partyDao.save(party);
-                    Set<Subject> subjects = CollectionAdapterHelper.getSubjects(entry);
+                    Set<Subject> subjects = AdapterHelper.getSubjects(entry);
                     for (Subject subject : subjects) {
                         party.getSubjects().add(subject);
                         subjectDao.save(subject);
                     }
                     partyDao.update(party);
 
-                    Set<String> collectionUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_OF_QNAME);
+                    Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_OF_QNAME);
                     for (String uriKey : collectionUriKeys) {
                         Collection collection = collectionDao.getByKey(uriKey);
                         if (collection != null) {
@@ -77,7 +78,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                     party.setUpdated(new Date());
                     partyDao.update(party);
 
-                    Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
+                    Entry createdEntry = AdapterHelper.getEntryFromParty(party);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
@@ -94,10 +95,10 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             try {
-                String partyAsJsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
+                String partyAsJsonString = AdapterHelper.getJsonString(request.getInputStream());
                 Party party = entityCreator.getNextParty();
                 assemblePartyFromJson(party, partyAsJsonString);
-                Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
+                Entry createdEntry = AdapterHelper.getEntryFromParty(party);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
             } catch (IOException e) {
                 logger.fatal("Cannot get inputstream from request.");
@@ -118,16 +119,16 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
-                String uriKey = CollectionAdapterHelper.getEntityID(entry.getId().toString());
+                String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
                 Party party = partyDao.getByKey(uriKey);
-                boolean isValidEntry = CollectionAdapterHelper.updatePartyFromEntry(party, entry);
+                boolean isValidEntry = AdapterHelper.updatePartyFromEntry(party, entry);
                 if (party == null || !isValidEntry) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     if (party.isActive()) {
                         partyDao.update(party);
 
-                        Set<String> collectionUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_OF_QNAME);
+                        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_OF_QNAME);
                         for (String key : collectionUriKeys) {
                             Collection collection = collectionDao.getByKey(key);
                             if (collection != null) {
@@ -138,8 +139,8 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                         party.setUpdated(new Date());
                         partyDao.update(party);
 
-                        Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
-                        return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                        Entry createdEntry = AdapterHelper.getEntryFromParty(party);
+                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                     } else {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
                     }
@@ -165,13 +166,13 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             } catch (IOException e) {
                 logger.fatal("Cannot create inputstream from request.", e);
             }
-            String partyAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
-            String uriKey = CollectionAdapterHelper.getEntryID(request);
+            String partyAsJsonString = AdapterHelper.getJsonString(inputStream);
+            String uriKey = AdapterHelper.getEntryID(request);
             Party party = partyDao.getByKey(uriKey);
             assemblePartyFromJson(party, partyAsJsonString);
             partyDao.update(party);
-            Entry createdEntry = CollectionAdapterHelper.getEntryFromParty(party);
-            return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+            Entry createdEntry = AdapterHelper.getEntryFromParty(party);
+            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
         } else {
             return ProviderHelper.notsupported(request, "Unsupported Media Type");
         }
@@ -179,7 +180,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        String uriKey = AdapterHelper.getEntryID(request);
         Party party = partyDao.getByKey(uriKey);
         if (party == null) {
             return ProviderHelper.notfound(request);
@@ -201,15 +202,15 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public ResponseContext getEntry(RequestContext request) {
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        String uriKey = AdapterHelper.getEntryID(request);
         Party party = partyDao.getByKey(uriKey);
         if (party == null) {
             return ProviderHelper.notfound(request);
         } else {
             partyDao.refresh(party);
             if (party.isActive()) {
-                Entry entry = CollectionAdapterHelper.getEntryFromParty(party);
-                return CollectionAdapterHelper.getContextResponseForGetEntry(request, entry);
+                Entry entry = AdapterHelper.getEntryFromParty(party);
+                return AdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
             }
@@ -218,10 +219,10 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public ResponseContext getFeed(RequestContext request) {
-        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "party.jsp");
+                return FeedHelper.getHtmlRepresentationOfFeed(request, "party.jsp");
             } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
@@ -232,7 +233,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             if (accept.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
-                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "party.jsp");
+                return FeedHelper.getHtmlRepresentationOfFeed(request, "party.jsp");
             }
         }
     }
@@ -247,7 +248,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             //TODO what would the date be if the feed is empty??
             feed.setUpdated(new Date());
         }
-        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
             if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
@@ -259,11 +260,11 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         String atomFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
         String htmlFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-            AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
         } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            AtomFeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-            AtomFeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
         feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.PARTIES_TITLE);
         Iterable<Party> entries = getEntries(request);

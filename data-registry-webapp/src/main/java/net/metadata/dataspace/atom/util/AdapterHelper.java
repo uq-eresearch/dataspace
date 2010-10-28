@@ -33,9 +33,9 @@ import java.util.Set;
  * Date: 06/10/2010
  * Time: 11:30:29 AM
  */
-public class CollectionAdapterHelper {
+public class AdapterHelper {
 
-    private static Logger logger = Logger.getLogger(CollectionAdapterHelper.class);
+    private static Logger logger = Logger.getLogger(AdapterHelper.class);
     private static final EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
 
     public static String getEntryID(RequestContext request) {
@@ -173,7 +173,7 @@ public class CollectionAdapterHelper {
 
     public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry) {
 
-        String representationMimeType = CollectionAdapterHelper.getRepresentationMimeType(request);
+        String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
             if (acceptHeader.equals(Constants.JSON_MIMETYPE) || acceptHeader.equals(Constants.ATOM_ENTRY_MIMETYPE)) {

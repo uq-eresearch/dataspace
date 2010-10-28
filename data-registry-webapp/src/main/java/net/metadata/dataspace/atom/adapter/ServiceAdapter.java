@@ -2,8 +2,8 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
-import net.metadata.dataspace.atom.util.AtomFeedHelper;
-import net.metadata.dataspace.atom.util.CollectionAdapterHelper;
+import net.metadata.dataspace.atom.util.AdapterHelper;
+import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
@@ -55,12 +55,12 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             try {
                 Entry entry = getEntryFromRequest(request);
                 Service service = entityCreator.getNextService();
-                boolean isValidService = CollectionAdapterHelper.updateServiceFromEntry(service, entry);
+                boolean isValidService = AdapterHelper.updateServiceFromEntry(service, entry);
                 if (!isValidService) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     serviceDao.save(service);
-                    Set<String> collectionUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
+                    Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
                     for (String uriKey : collectionUriKeys) {
                         Collection collection = collectionDao.getByKey(uriKey);
                         if (collection != null) {
@@ -71,7 +71,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                     service.setUpdated(new Date());
                     serviceDao.update(service);
 
-                    Entry createdEntry = CollectionAdapterHelper.getEntryFromService(service);
+                    Entry createdEntry = AdapterHelper.getEntryFromService(service);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
@@ -88,10 +88,10 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             try {
-                String jsonString = CollectionAdapterHelper.getJsonString(request.getInputStream());
+                String jsonString = AdapterHelper.getJsonString(request.getInputStream());
                 Service service = entityCreator.getNextService();
                 assembleServiceFromJson(service, jsonString);
-                Entry createdEntry = CollectionAdapterHelper.getEntryFromService(service);
+                Entry createdEntry = AdapterHelper.getEntryFromService(service);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
             } catch (IOException e) {
                 logger.fatal("Cannot get inputstream from request.");
@@ -111,15 +111,15 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
             try {
                 Entry entry = getEntryFromRequest(request);
-                String uriKey = CollectionAdapterHelper.getEntityID(entry.getId().toString());
+                String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
                 Service service = serviceDao.getByKey(uriKey);
-                boolean isValidEntry = CollectionAdapterHelper.updateServiceFromEntry(service, entry);
+                boolean isValidEntry = AdapterHelper.updateServiceFromEntry(service, entry);
                 if (service == null || !isValidEntry) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     if (service.isActive()) {
                         serviceDao.update(service);
-                        Set<String> collectionUriKeys = CollectionAdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
+                        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
                         for (String key : collectionUriKeys) {
                             Collection collection = collectionDao.getByKey(key);
                             if (collection != null) {
@@ -130,8 +130,8 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                         service.setUpdated(new Date());
                         serviceDao.update(service);
 
-                        Entry createdEntry = CollectionAdapterHelper.getEntryFromService(service);
-                        return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                        Entry createdEntry = AdapterHelper.getEntryFromService(service);
+                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                     } else {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
                     }
@@ -157,13 +157,13 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 logger.fatal("Cannot get inputstream from request.", e);
                 return ProviderHelper.servererror(request, e);
             }
-            String serviceAsJsonString = CollectionAdapterHelper.getJsonString(inputStream);
-            String uriKey = CollectionAdapterHelper.getEntryID(request);
+            String serviceAsJsonString = AdapterHelper.getJsonString(inputStream);
+            String uriKey = AdapterHelper.getEntryID(request);
             Service service = serviceDao.getByKey(uriKey);
             assembleServiceFromJson(service, serviceAsJsonString);
             serviceDao.update(service);
-            Entry createdEntry = CollectionAdapterHelper.getEntryFromService(service);
-            return CollectionAdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+            Entry createdEntry = AdapterHelper.getEntryFromService(service);
+            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
         } else {
             return ProviderHelper.notsupported(request, "Unsupported Media Type");
         }
@@ -171,7 +171,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        String uriKey = AdapterHelper.getEntryID(request);
         Service service = serviceDao.getByKey(uriKey);
         if (service == null) {
             return ProviderHelper.notfound(request);
@@ -193,15 +193,15 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public ResponseContext getEntry(RequestContext request) {
-        String uriKey = CollectionAdapterHelper.getEntryID(request);
+        String uriKey = AdapterHelper.getEntryID(request);
         Service service = serviceDao.getByKey(uriKey);
         if (service == null) {
             return ProviderHelper.notfound(request);
         } else {
             serviceDao.refresh(service);
             if (service.isActive()) {
-                Entry entry = CollectionAdapterHelper.getEntryFromService(service);
-                return CollectionAdapterHelper.getContextResponseForGetEntry(request, entry);
+                Entry entry = AdapterHelper.getEntryFromService(service);
+                return AdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
             }
@@ -210,10 +210,10 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public ResponseContext getFeed(RequestContext request) {
-        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "service.jsp");
+                return FeedHelper.getHtmlRepresentationOfFeed(request, "service.jsp");
             } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
@@ -224,7 +224,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             if (accept.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
-                return AtomFeedHelper.getHtmlRepresentationOfFeed(request, "service.jsp");
+                return FeedHelper.getHtmlRepresentationOfFeed(request, "service.jsp");
             }
         }
     }
@@ -240,7 +240,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             feed.setUpdated(new Date());
         }
 
-        String representationMimeType = AtomFeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
             if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
@@ -252,11 +252,11 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         String atomFeedUrl = Constants.ID_PREFIX + Constants.SERVICES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
         String htmlFeedUrl = Constants.ID_PREFIX + Constants.SERVICES_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-            AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
         } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            AtomFeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-            AtomFeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
 
         feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.SERVICES_TITLE);

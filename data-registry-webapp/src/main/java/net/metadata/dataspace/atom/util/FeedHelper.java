@@ -17,7 +17,7 @@ import java.net.URLConnection;
  * Date: 20/10/2010
  * Time: 2:13:08 PM
  */
-public class AtomFeedHelper {
+public class FeedHelper {
 
     private static final String URL = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
