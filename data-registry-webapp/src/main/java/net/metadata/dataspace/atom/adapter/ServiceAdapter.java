@@ -2,13 +2,13 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.atom.util.AtomFeedHelper;
+import net.metadata.dataspace.atom.util.CollectionAdapterHelper;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Service;
-import net.metadata.dataspace.util.AtomFeedHelper;
-import net.metadata.dataspace.util.CollectionAdapterHelper;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;

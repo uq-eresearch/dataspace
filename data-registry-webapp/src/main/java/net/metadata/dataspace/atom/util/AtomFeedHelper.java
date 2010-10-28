@@ -1,4 +1,4 @@
-package net.metadata.dataspace.util;
+package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
