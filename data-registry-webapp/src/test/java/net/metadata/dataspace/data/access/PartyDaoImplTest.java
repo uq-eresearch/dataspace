@@ -60,9 +60,9 @@ public class PartyDaoImplTest {
 //        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
         Set<Collection> collections = new HashSet<Collection>();
         Collection collection = PopulatorUtil.getCollection();
-        Set<Party> collector = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
-        collector.add(party);
-        collection.setCollector(collector);
+        Set<Party> collectors = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
+        collectors.add(party);
+        collection.setCollector(collectors);
         collections.add(collection);
         collectionDao.save(collection);
 

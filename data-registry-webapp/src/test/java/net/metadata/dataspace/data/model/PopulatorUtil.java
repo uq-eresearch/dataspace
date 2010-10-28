@@ -49,6 +49,32 @@ public class PopulatorUtil {
         return party;
     }
 
+    public static Service getService() {
+        Service service = entityCreator.getNextService();
+        service.setTitle("Test Service Title");
+        service.setSummary("Test Service Summary");
+        service.setContent("Test Service Content");
+        service.setUpdated(new Date());
+        service.setLocation("http://test.location.com.au/collection");
+        Set<String> authors = new HashSet<String>();
+        authors.add("Test Service Author");
+        service.setAuthors(authors);
+        return service;
+    }
+
+    public static Activity getActivity() {
+        Activity activity = entityCreator.getNextActivity();
+        activity.setTitle("Test Activity Title");
+        activity.setSummary("Test Activity Summary");
+        activity.setContent("Test Activity Content");
+        activity.setUpdated(new Date());
+        Set<String> authors = new HashSet<String>();
+        authors.add("Test Activity Author");
+        activity.setAuthors(authors);
+        return activity;
+    }
+
+
     public void setEntityCreator(EntityCreator entityCreator) {
         this.entityCreator = entityCreator;
     }
@@ -56,4 +82,5 @@ public class PopulatorUtil {
     public EntityCreator getEntityCreator() {
         return entityCreator;
     }
+
 }

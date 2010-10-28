@@ -137,11 +137,24 @@ public class AdapterHelper {
             subjectElement.setAttributeValue("value", sub.getValue());
         }
 
-        Set<Party> partySet = collection.getCollector();
-        for (Party sub : partySet) {
+        Set<Party> parties = collection.getCollector();
+        for (Party party : parties) {
             Element partyElement = entry.addExtension(Constants.COLLECTOR_QNAME);
-            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + sub.getUriKey());
+            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey());
         }
+
+        Set<Service> services = collection.getSupports();
+        for (Service service : services) {
+            Element serviceElement = entry.addExtension(Constants.SUPPORTS_QNAME);
+            serviceElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey());
+        }
+
+        Set<Activity> activities = collection.getOutputOf();
+        for (Activity activity : activities) {
+            Element serviceElement = entry.addExtension(Constants.IS_OUTPUT_OF_QNAME);
+            serviceElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey());
+        }
+
         entry.addLink(Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey(), "alternate");
         return entry;
     }
