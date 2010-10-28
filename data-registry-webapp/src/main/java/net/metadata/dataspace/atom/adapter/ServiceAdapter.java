@@ -41,7 +41,6 @@ import java.util.Set;
 public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
     private ServiceDao serviceDao = DataRegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private static final EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
@@ -250,8 +249,8 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
-        String atomFeedUrl = ID_PREFIX + Constants.SERVICES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = ID_PREFIX + Constants.SERVICES_PATH;
+        String atomFeedUrl = Constants.ID_PREFIX + Constants.SERVICES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + Constants.SERVICES_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
             AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
             AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
@@ -316,12 +315,12 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public String getId(Service entry) throws ResponseContextException {
-        return ID_PREFIX + Constants.SERVICES_PATH + "/" + entry.getUriKey();
+        return Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + entry.getUriKey();
     }
 
     @Override
     public String getName(Service entry) throws ResponseContextException {
-        return ID_PREFIX + Constants.SERVICES_PATH + "/" + entry.getUriKey();
+        return Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + entry.getUriKey();
     }
 
     @Override
@@ -346,7 +345,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public String getId(RequestContext request) {
-        return ID_PREFIX + Constants.SERVICES_PATH;
+        return Constants.ID_PREFIX + Constants.SERVICES_PATH;
     }
 
     @Override

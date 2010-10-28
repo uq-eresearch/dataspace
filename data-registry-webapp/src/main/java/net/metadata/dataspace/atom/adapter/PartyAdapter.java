@@ -40,7 +40,6 @@ import java.util.*;
 public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
     private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
@@ -257,8 +256,8 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
-        String atomFeedUrl = ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = ID_PREFIX + Constants.COLLECTIONS_PATH;
+        String atomFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
             AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
             AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
@@ -332,13 +331,13 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public String getId(Party party) throws ResponseContextException {
-        return ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey();
+        return Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey();
     }
 
     @Override
     public String getName(Party party) throws ResponseContextException {
         //TODO this sets the link element which contains the edit link
-        return ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey();
+        return Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey();
     }
 
     @Override
@@ -364,7 +363,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public String getId(RequestContext requestContext) {
-        return ID_PREFIX + Constants.PARTIES_PATH;
+        return Constants.ID_PREFIX + Constants.PARTIES_PATH;
     }
 
     @Override

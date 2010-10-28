@@ -30,7 +30,6 @@ import java.util.List;
 public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
     private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
 
     @Override
@@ -113,8 +112,8 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
-        String atomFeedUrl = ID_PREFIX + Constants.ACTIVITIES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = ID_PREFIX + Constants.ACTIVITIES_PATH;
+        String atomFeedUrl = Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + Constants.ACTIVITIES_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
             AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
             AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
@@ -178,12 +177,12 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public String getId(Activity entry) throws ResponseContextException {
-        return ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + entry.getUriKey();
+        return Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + entry.getUriKey();
     }
 
     @Override
     public String getName(Activity entry) throws ResponseContextException {
-        return ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + entry.getUriKey();
+        return Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + entry.getUriKey();
     }
 
     @Override
@@ -208,7 +207,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public String getId(RequestContext request) {
-        return ID_PREFIX + Constants.ACTIVITIES_PATH;
+        return Constants.ID_PREFIX + Constants.ACTIVITIES_PATH;
     }
 
     @Override

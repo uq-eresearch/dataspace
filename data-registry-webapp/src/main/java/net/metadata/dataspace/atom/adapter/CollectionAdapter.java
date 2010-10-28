@@ -44,7 +44,6 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
     private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
-    private static final String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -265,8 +264,8 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
-        String atomFeedUrl = ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = ID_PREFIX + Constants.COLLECTIONS_PATH;
+        String atomFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
             AtomFeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
             AtomFeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
@@ -340,12 +339,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public String getId(Collection collection) throws ResponseContextException {
-        return ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
+        return Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
     }
 
     @Override
     public String getName(Collection collection) throws ResponseContextException {
-        return ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
+        return Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
     }
 
     @Override
@@ -371,7 +370,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public String getId(RequestContext requestContext) {
-        return ID_PREFIX + Constants.COLLECTIONS_PATH;
+        return Constants.ID_PREFIX + Constants.COLLECTIONS_PATH;
     }
 
     @Override
