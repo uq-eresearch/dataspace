@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.activation.MimeType;
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -44,6 +45,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
+    private EntityManager enityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -58,8 +60,10 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 if (!isValidParty) {
                     return ProviderHelper.badrequest(request, "Invalid entry posted.");
                 } else {
-                    partyDao.save(party);
+                    enityManager.getTransaction().begin();
+                    enityManager.persist(party);
                     Entry createdEntry = furtherUpdate(entry, party);
+                    enityManager.getTransaction().commit();
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
@@ -78,7 +82,11 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             try {
                 String partyAsJsonString = AdapterHelper.getJsonString(request.getInputStream());
                 Party party = entityCreator.getNextParty();
-                assemblePartyFromJson(party, partyAsJsonString);
+                enityManager.getTransaction().begin();
+                if (!assembleValidPartyFromJson(party, partyAsJsonString)) {
+                    return ProviderHelper.badrequest(request, "Invalid entry posted.");
+                }
+                enityManager.getTransaction().commit();
                 Entry createdEntry = AdapterHelper.getEntryFromParty(party);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
             } catch (IOException e) {
@@ -138,7 +146,9 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             String partyAsJsonString = AdapterHelper.getJsonString(inputStream);
             String uriKey = AdapterHelper.getEntryID(request);
             Party party = partyDao.getByKey(uriKey);
-            assemblePartyFromJson(party, partyAsJsonString);
+            if (!assembleValidPartyFromJson(party, partyAsJsonString)) {
+                return ProviderHelper.badrequest(request, "Invalid entry posted.");
+            }
             partyDao.update(party);
             Entry createdEntry = AdapterHelper.getEntryFromParty(party);
             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
@@ -226,8 +236,8 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
-        String atomFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH;
+        String atomFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
             FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
             FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
@@ -235,7 +245,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
             FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
-        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.PARTIES_TITLE);
+        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_PARTIES);
         Iterable<Party> entries = getEntries(request);
         if (entries != null) {
             for (Party entryObj : entries) {
@@ -301,13 +311,13 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public String getId(Party party) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey();
+        return Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey();
     }
 
     @Override
     public String getName(Party party) throws ResponseContextException {
         //TODO this sets the link element which contains the edit link
-        return Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey();
+        return Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey();
     }
 
     @Override
@@ -333,23 +343,23 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public String getId(RequestContext requestContext) {
-        return Constants.ID_PREFIX + Constants.PARTIES_PATH;
+        return Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES;
     }
 
     @Override
     public String getTitle(RequestContext requestContext) {
-        return Constants.PARTIES_TITLE;
+        return Constants.TITLE_FOR_PARTIES;
     }
 
     private Entry furtherUpdate(Entry entry, Party party) {
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {
             party.getSubjects().add(subject);
-            subjectDao.save(subject);
+            enityManager.persist(subject);
         }
-        partyDao.update(party);
+        enityManager.merge(party);
 
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_OF_QNAME);
+        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR_OF);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
@@ -358,21 +368,21 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             }
         }
         party.setUpdated(new Date());
-        partyDao.update(party);
+        enityManager.merge(party);
 
         Entry createdEntry = AdapterHelper.getEntryFromParty(party);
         return createdEntry;
     }
 
-    private void assemblePartyFromJson(Party party, String jsonString) {
-
+    private boolean assembleValidPartyFromJson(Party party, String jsonString) {
         try {
             JSONObject jsonObj = new JSONObject(jsonString);
-            party.setTitle(jsonObj.getString("title"));
-            party.setSummary(jsonObj.getString("summary"));
-            party.setContent(jsonObj.getString("content"));
+
+            party.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
+            party.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
+            party.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
             party.setUpdated(new Date());
-            JSONArray authors = jsonObj.getJSONArray("authors");
+            JSONArray authors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_AUTHORS);
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
                 persons.add(authors.getString(i));
@@ -380,30 +390,54 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             party.setAuthors(persons);
 
             if (party.getId() == null) {
-                partyDao.save(party);
+                enityManager.persist(party);
             }
 
-            JSONArray subjectArray = jsonObj.getJSONArray("subject");
-            for (int i = 0; i < subjectArray.length(); i++) {
-                Subject subject = entityCreator.getNextSubject();
-                subject.setVocabulary(subjectArray.getJSONObject(i).getString("vocabulary"));
-                subject.setValue(subjectArray.getJSONObject(i).getString("value"));
-                party.getSubjects().add(subject);
-                subjectDao.save(subject);
-            }
-            partyDao.update(party);
-            JSONArray collectionArray = jsonObj.getJSONArray("collectorOf");
+            JSONArray collectionArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_COLLECTOR_OF);
             for (int i = 0; i < collectionArray.length(); i++) {
                 Collection collection = collectionDao.getByKey(collectionArray.getString(i));
                 if (collection != null) {
                     collection.getCollector().add(party);
                     party.getCollectorOf().add(collection);
+                    enityManager.merge(collection);
                 }
             }
-            partyDao.update(party);
+
+            JSONArray subjectArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_SUBJECT);
+            for (int i = 0; i < subjectArray.length(); i++) {
+                String vocabulary = subjectArray.getJSONObject(i).getString(Constants.ATTRIBUTE_NAME_VOCABULARY);
+                String value = subjectArray.getJSONObject(i).getString(Constants.ATTRIBUTE_NAME_VALUE);
+                if (vocabulary == null || value == null) {
+                    return false;
+                } else {
+                    Subject subject = subjectDao.getSubject(vocabulary, value);
+                    if (subject == null) {
+                        subject = entityCreator.getNextSubject();
+                        subject.setVocabulary(vocabulary);
+                        subject.setValue(value);
+                    }
+                    party.getSubjects().add(subject);
+                    enityManager.persist(subject);
+                }
+            }
+            enityManager.merge(party);
+
         } catch (JSONException ex) {
             logger.fatal("Could not assemble party from JSON object", ex);
+            return false;
         }
+        return true;
     }
 
+    private boolean isValidateJsonParty(String jsonString) {
+        JSONObject jsonObj = null;
+        try {
+            jsonObj = new JSONObject(jsonString);
+        } catch (JSONException e) {
+            return false;
+        }
+        return jsonObj.has(Constants.ELEMENT_NAME_TITLE)
+                && jsonObj.has(Constants.ELEMENT_NAME_SUMMARY)
+                && jsonObj.has(Constants.ELEMENT_NAME_CONTENT);
+    }
 }

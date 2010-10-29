@@ -9,4 +9,6 @@ import net.metadata.dataspace.data.model.Subject;
  * Time: 11:37:16 AM
  */
 public interface SubjectDao extends Dao<Subject>, RegistryDao<Subject> {
+
+    Subject getSubject(String vocabulary, String value);
 }

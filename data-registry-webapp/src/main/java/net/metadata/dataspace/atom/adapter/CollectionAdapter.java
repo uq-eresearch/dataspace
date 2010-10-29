@@ -227,8 +227,8 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
-        String atomFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH;
+        String atomFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
             FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
             FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
@@ -236,7 +236,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
             FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
-        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.COLLECTIONS_TITLE);
+        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_COLLECTIONS);
         Iterable<Collection> entries = getEntries(request);
         if (entries != null) {
             for (Collection entryObj : entries) {
@@ -302,12 +302,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public String getId(Collection collection) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
+        return Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
     }
 
     @Override
     public String getName(Collection collection) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
+        return Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
     }
 
     @Override
@@ -333,12 +333,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public String getId(RequestContext requestContext) {
-        return Constants.ID_PREFIX + Constants.COLLECTIONS_PATH;
+        return Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS;
     }
 
     @Override
     public String getTitle(RequestContext requestContext) {
-        return Constants.COLLECTIONS_TITLE;
+        return Constants.TITLE_FOR_COLLECTIONS;
     }
 
     private Entry furtherUpdate(Entry entry, Collection collection) {
@@ -349,7 +349,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         }
         collectionDao.update(collection);
 
-        Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.COLLECTOR_QNAME);
+        Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR);
         for (String uriKey : collectorUriKeys) {
             Party party = partyDao.getByKey(uriKey);
             if (party != null) {

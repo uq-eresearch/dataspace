@@ -29,19 +29,19 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
         registryWorkSpace.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle());
 
         PartyAdapter partyAdapter = new PartyAdapter();
-        partyAdapter.setHref(Constants.PARTIES_PATH);
+        partyAdapter.setHref(Constants.PATH_FOR_PARTIES);
         registryWorkSpace.addCollection(partyAdapter);
 
         CollectionAdapter collectionAdapter = new CollectionAdapter();
-        collectionAdapter.setHref(Constants.COLLECTIONS_PATH);
+        collectionAdapter.setHref(Constants.PATH_FOR_COLLECTIONS);
         registryWorkSpace.addCollection(collectionAdapter);
 
         ServiceAdapter serviceAdapter = new ServiceAdapter();
-        serviceAdapter.setHref(Constants.SERVICES_PATH);
+        serviceAdapter.setHref(Constants.PATH_FOR_SERVICES);
         registryWorkSpace.addCollection(serviceAdapter);
 
         ActivityAdapter activityAdapter = new ActivityAdapter();
-        activityAdapter.setHref(Constants.ACTIVITIES_PATH);
+        activityAdapter.setHref(Constants.PATH_FOR_ACTIVITIES);
         registryWorkSpace.addCollection(activityAdapter);
 
         String base = "/";

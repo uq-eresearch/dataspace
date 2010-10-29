@@ -91,7 +91,7 @@ public class CollectionDaoImplTest {
         int originalSubjectListSize = collection.getSubjects().size();
         collection.getSubjects().add(subject);
         String originalLocationUri = collection.getLocation();
-        collection.setLocation(Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + UUID.randomUUID().toString());
+        collection.setLocation(Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + UUID.randomUUID().toString());
 
         collectionDao.update(collection);
 

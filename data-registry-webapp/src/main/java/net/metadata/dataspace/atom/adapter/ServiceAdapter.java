@@ -227,8 +227,8 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
-        String atomFeedUrl = Constants.ID_PREFIX + Constants.SERVICES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = Constants.ID_PREFIX + Constants.SERVICES_PATH;
+        String atomFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
             FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
             FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
@@ -237,7 +237,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
 
-        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.SERVICES_TITLE);
+        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_SERVICES);
         Iterable<Service> entries = getEntries(request);
         if (entries != null) {
             for (Service entryObj : entries) {
@@ -293,12 +293,12 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public String getId(Service entry) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + entry.getUriKey();
+        return Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + entry.getUriKey();
     }
 
     @Override
     public String getName(Service entry) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + entry.getUriKey();
+        return Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + entry.getUriKey();
     }
 
     @Override
@@ -323,16 +323,16 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public String getId(RequestContext request) {
-        return Constants.ID_PREFIX + Constants.SERVICES_PATH;
+        return Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES;
     }
 
     @Override
     public String getTitle(RequestContext request) {
-        return Constants.SERVICES_TITLE;
+        return Constants.TITLE_FOR_SERVICES;
     }
 
     private Entry furtherUpdate(Entry entry, Service service) {
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.SUPPORTED_BY_QNAME);
+        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_SUPPORTED_BY);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {

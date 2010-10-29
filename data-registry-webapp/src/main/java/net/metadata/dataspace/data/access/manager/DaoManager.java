@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.access.manager;
 
 import net.metadata.dataspace.data.access.*;
+import net.metadata.dataspace.data.connector.JpaConnector;
 
 /**
  * User: alabri
@@ -18,4 +19,6 @@ public interface DaoManager {
     ActivityDao getActivityDao();
 
     SubjectDao getSubjectDao();
+
+    JpaConnector getJpaConnnector();
 }

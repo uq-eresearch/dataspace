@@ -45,4 +45,16 @@ public class Subject extends AbstractBaseEntity {
         this.value = value;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Subject)) {
+            return false;
+        }
+        Subject other = (Subject) obj;
+        return getVocabulary().equals(other.getVocabulary()) && getValue().equals(other.getValue());
+    }
 }

@@ -2,6 +2,7 @@ package net.metadata.dataspace.data.access.manager.impl;
 
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
+import net.metadata.dataspace.data.connector.JpaConnector;
 
 /**
  * User: alabri
@@ -15,6 +16,7 @@ public class DaoManagerImpl implements DaoManager {
     private ServiceDao serviceDao;
     private ActivityDao activityDao;
     private SubjectDao subjectDao;
+    private JpaConnector jpaConnnector;
 
     public void setCollectionDao(CollectionDao collectionDao) {
         this.collectionDao = collectionDao;
@@ -56,4 +58,11 @@ public class DaoManagerImpl implements DaoManager {
         return subjectDao;
     }
 
+    public void setJpaConnnector(JpaConnector jpaConnnector) {
+        this.jpaConnnector = jpaConnnector;
+    }
+
+    public JpaConnector getJpaConnnector() {
+        return jpaConnnector;
+    }
 }

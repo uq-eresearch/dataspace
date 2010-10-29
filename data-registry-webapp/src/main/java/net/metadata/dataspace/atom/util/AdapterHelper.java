@@ -90,7 +90,7 @@ public class AdapterHelper {
     public static Entry getEntryFromParty(Party party) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey());
+        entry.setId(Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
         entry.setTitle(party.getTitle());
         entry.setSummary(party.getSummary());
         entry.setContent(party.getContent());
@@ -102,24 +102,24 @@ public class AdapterHelper {
 
         Set<Subject> subjectSet = party.getSubjects();
         for (Subject sub : subjectSet) {
-            Element subjectElement = entry.addExtension(Constants.SUBJECT_QNAME);
+            Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
             subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
             subjectElement.setAttributeValue("value", sub.getValue());
         }
 
         Set<Collection> collectionSet = party.getCollectorOf();
         for (Collection collection : collectionSet) {
-            Element collectorOfElement = entry.addExtension(Constants.COLLECTOR_OF_QNAME);
-            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
+            Element collectorOfElement = entry.addExtension(Constants.QNAME_COLLECTOR_OF);
+            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
-        entry.addLink(Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey(), "alternate");
+        entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey(), "alternate");
         return entry;
     }
 
     public static Entry getEntryFromCollection(Collection collection) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
+        entry.setId(Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         entry.setTitle(collection.getTitle());
         entry.setSummary(collection.getSummary());
         entry.setContent(collection.getContent());
@@ -128,40 +128,40 @@ public class AdapterHelper {
         for (String author : authors) {
             entry.addAuthor(author);
         }
-        entry.addSimpleExtension(Constants.LOCATION_QNAME, collection.getLocation());
+        entry.addSimpleExtension(Constants.QNAME_LOCATION, collection.getLocation());
         Set<Subject> subjectSet = collection.getSubjects();
         for (Subject sub : subjectSet) {
-            Element subjectElement = entry.addExtension(Constants.SUBJECT_QNAME);
+            Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
             subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
             subjectElement.setAttributeValue("value", sub.getValue());
         }
 
         Set<Party> parties = collection.getCollector();
         for (Party party : parties) {
-            Element partyElement = entry.addExtension(Constants.COLLECTOR_QNAME);
-            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey());
+            Element partyElement = entry.addExtension(Constants.QNAME_COLLECTOR);
+            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
         }
 
         Set<Service> services = collection.getSupports();
         for (Service service : services) {
-            Element serviceElement = entry.addExtension(Constants.SUPPORTS_QNAME);
-            serviceElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey());
+            Element serviceElement = entry.addExtension(Constants.QNAME_SUPPORTS);
+            serviceElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         }
 
         Set<Activity> activities = collection.getOutputOf();
         for (Activity activity : activities) {
-            Element serviceElement = entry.addExtension(Constants.IS_OUTPUT_OF_QNAME);
-            serviceElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey());
+            Element serviceElement = entry.addExtension(Constants.QNAME_IS_OUTPUT_OF);
+            serviceElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         }
 
-        entry.addLink(Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey(), "alternate");
+        entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey(), "alternate");
         return entry;
     }
 
     public static Entry getEntryFromActivity(Activity activity) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey());
+        entry.setId(Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         entry.setTitle(activity.getTitle());
         entry.setSummary(activity.getSummary());
         entry.setContent(activity.getContent());
@@ -173,23 +173,23 @@ public class AdapterHelper {
 
         Set<Party> partySet = activity.getHasParticipant();
         for (Party sub : partySet) {
-            Element partyElement = entry.addExtension(Constants.HAS_PARTICIPANT_QNAME);
-            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + sub.getUriKey());
+            Element partyElement = entry.addExtension(Constants.QNAME_HAS_PARTICIPANT);
+            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
         }
 
         Set<Collection> collectionSet = activity.getHasOutput();
         for (Collection collection : collectionSet) {
-            Element collectorOfElement = entry.addExtension(Constants.HAS_OUTPUT_QNAME);
-            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
+            Element collectorOfElement = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
+            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
-        entry.addLink(Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey(), "alternate");
+        entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey(), "alternate");
         return entry;
     }
 
     public static Entry getEntryFromService(Service service) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey());
+        entry.setId(Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         entry.setTitle(service.getTitle());
         entry.setSummary(service.getSummary());
         entry.setContent(service.getContent());
@@ -198,15 +198,15 @@ public class AdapterHelper {
         for (String author : authors) {
             entry.addAuthor(author);
         }
-        entry.addSimpleExtension(Constants.LOCATION_QNAME, service.getLocation());
+        entry.addSimpleExtension(Constants.QNAME_LOCATION, service.getLocation());
 
         Set<Collection> collectionSet = service.getSupportedBy();
         for (Collection collection : collectionSet) {
-            Element collectorOfElement = entry.addExtension(Constants.SUPPORTED_BY_QNAME);
-            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
+            Element collectorOfElement = entry.addExtension(Constants.QNAME_SUPPORTED_BY);
+            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
 
-        entry.addLink(Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey(), "alternate");
+        entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey(), "alternate");
         return entry;
     }
 
@@ -293,7 +293,7 @@ public class AdapterHelper {
             service.setAuthors(getAuthors(entry.getAuthors()));
             List<Element> extensions = entry.getExtensions();
             for (Element extension : extensions) {
-                if (extension.getQName().equals(Constants.LOCATION_QNAME)) {
+                if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
                     service.setLocation(extension.getText());
                 }
             }
@@ -325,7 +325,7 @@ public class AdapterHelper {
             collection.setAuthors(getAuthors(entry.getAuthors()));
             List<Element> extensions = entry.getExtensions();
             for (Element extension : extensions) {
-                if (extension.getQName().equals(Constants.LOCATION_QNAME)) {
+                if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
                     collection.setLocation(extension.getText());
                 }
             }
@@ -345,7 +345,7 @@ public class AdapterHelper {
         Set<Subject> subjects = new HashSet<Subject>();
         List<Element> extensionElements = entry.getExtensions();
         for (Element extension : extensionElements) {
-            if (extension.getQName().equals(Constants.SUBJECT_QNAME)) {
+            if (extension.getQName().equals(Constants.QNAME_SUBJECT)) {
                 String vocabulary = extension.getAttributeValue("vocabulary");
                 String value = extension.getAttributeValue("value");
                 if (vocabulary != null && value != null) {

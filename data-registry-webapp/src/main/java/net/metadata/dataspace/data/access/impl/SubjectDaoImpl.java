@@ -88,4 +88,16 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
         return (Subject) resultList.get(0);
     }
 
+    @Override
+    public Subject getSubject(String vocabulary, String value) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.vocabulary = :vocabulary AND o.value = :value");
+        query.setParameter("vocabulary", vocabulary);
+        query.setParameter("value", value);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Subject) resultList.get(0);
+    }
 }

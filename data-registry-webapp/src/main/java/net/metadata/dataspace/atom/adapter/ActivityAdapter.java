@@ -230,8 +230,8 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 representationMimeType = Constants.HTML_MIME_TYPE;
             }
         }
-        String atomFeedUrl = Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = Constants.ID_PREFIX + Constants.ACTIVITIES_PATH;
+        String atomFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES;
         if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
             FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
             FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
@@ -240,7 +240,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
 
-        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.ACTIVITIES_TITLE);
+        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_ACTIVITIES);
         Iterable<Activity> entries = getEntries(request);
         if (entries != null) {
             for (Activity entryObj : entries) {
@@ -295,12 +295,12 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public String getId(Activity entry) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + entry.getUriKey();
+        return Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + entry.getUriKey();
     }
 
     @Override
     public String getName(Activity entry) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + entry.getUriKey();
+        return Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + entry.getUriKey();
     }
 
     @Override
@@ -325,16 +325,16 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public String getId(RequestContext request) {
-        return Constants.ID_PREFIX + Constants.ACTIVITIES_PATH;
+        return Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES;
     }
 
     @Override
     public String getTitle(RequestContext request) {
-        return Constants.ACTIVITIES_TITLE;
+        return Constants.TITLE_FOR_ACTIVITIES;
     }
 
     private Entry furtherUpdate(Entry entry, Activity activity) {
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.HAS_OUTPUT_QNAME);
+        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_OUTPUT);
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
             if (collection != null) {
@@ -344,7 +344,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         }
         activityDao.update(activity);
 
-        Set<String> partyUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.HAS_PARTICIPANT_QNAME);
+        Set<String> partyUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_PARTICIPANT);
         for (String partyKey : partyUriKeys) {
             Party party = partyDao.getByKey(partyKey);
             if (party != null) {

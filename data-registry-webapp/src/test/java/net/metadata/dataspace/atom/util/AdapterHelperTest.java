@@ -81,14 +81,14 @@ public class AdapterHelperTest {
         List<Party> parties = partyDao.getAll();
         Party party = parties.get(0);
         Entry entry = AdapterHelper.getEntryFromParty(party);
-        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PARTIES_PATH + "/" + party.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
         assertEquals("Entry title", entry.getTitle(), party.getTitle());
         assertEquals("Entry summary", entry.getSummary(), party.getSummary());
         assertEquals("Entry content", entry.getContent(), party.getContent());
         assertEquals("Entry updated", entry.getUpdated(), party.getUpdated());
         assertEquals("Entry authors", entry.getAuthors().size(), party.getAuthors().size());
-        assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.SUBJECT_QNAME).size() == 1);
-        assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.COLLECTOR_OF_QNAME).size() == 1);
+        assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.QNAME_SUBJECT).size() == 1);
+        assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.QNAME_COLLECTOR_OF).size() == 1);
     }
 
     @Test
@@ -96,17 +96,17 @@ public class AdapterHelperTest {
         List<Collection> collections = collectionDao.getAll();
         Collection collection = collections.get(0);
         Entry entry = AdapterHelper.getEntryFromCollection(collection);
-        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         assertEquals("Entry title", entry.getTitle(), collection.getTitle());
         assertEquals("Entry summary", entry.getSummary(), collection.getSummary());
         assertEquals("Entry content", entry.getContent(), collection.getContent());
         assertEquals("Entry updated", entry.getUpdated(), collection.getUpdated());
         assertEquals("Entry authors", entry.getAuthors().size(), collection.getAuthors().size());
-        assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.SUBJECT_QNAME).size() == 1);
-        assertTrue("Entry should have at least one location", entry.<Element>getExtensions(Constants.LOCATION_QNAME).size() == 1);
-        assertTrue("Entry should have at least one party", entry.<Element>getExtensions(Constants.COLLECTOR_QNAME).size() == 1);
-        assertTrue("Entry should have at least one service", entry.<Element>getExtensions(Constants.SUPPORTS_QNAME).size() == 1);
-        assertTrue("Entry should have at least one activity", entry.<Element>getExtensions(Constants.IS_OUTPUT_OF_QNAME).size() == 1);
+        assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.QNAME_SUBJECT).size() == 1);
+        assertTrue("Entry should have at least one location", entry.<Element>getExtensions(Constants.QNAME_LOCATION).size() == 1);
+        assertTrue("Entry should have at least one party", entry.<Element>getExtensions(Constants.QNAME_COLLECTOR).size() == 1);
+        assertTrue("Entry should have at least one service", entry.<Element>getExtensions(Constants.QNAME_SUPPORTS).size() == 1);
+        assertTrue("Entry should have at least one activity", entry.<Element>getExtensions(Constants.QNAME_IS_OUTPUT_OF).size() == 1);
     }
 
     @Test
@@ -114,14 +114,14 @@ public class AdapterHelperTest {
         List<Activity> activities = activityDao.getAll();
         Activity activity = activities.get(0);
         Entry entry = AdapterHelper.getEntryFromActivity(activity);
-        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         assertEquals("Entry title", entry.getTitle(), activity.getTitle());
         assertEquals("Entry summary", entry.getSummary(), activity.getSummary());
         assertEquals("Entry content", entry.getContent(), activity.getContent());
         assertEquals("Entry updated", entry.getUpdated(), activity.getUpdated());
         assertEquals("Entry authors", entry.getAuthors().size(), activity.getAuthors().size());
-        assertTrue("Entry should have at least one party", entry.<Element>getExtensions(Constants.HAS_PARTICIPANT_QNAME).size() == 1);
-        assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.HAS_OUTPUT_QNAME).size() == 1);
+        assertTrue("Entry should have at least one party", entry.<Element>getExtensions(Constants.QNAME_HAS_PARTICIPANT).size() == 1);
+        assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.QNAME_HAS_OUTPUT).size() == 1);
     }
 
     @Test
@@ -129,14 +129,14 @@ public class AdapterHelperTest {
         List<Service> services = serviceDao.getAll();
         Service service = services.get(0);
         Entry entry = AdapterHelper.getEntryFromService(service);
-        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.SERVICES_PATH + "/" + service.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         assertEquals("Entry title", entry.getTitle(), service.getTitle());
         assertEquals("Entry summary", entry.getSummary(), service.getSummary());
         assertEquals("Entry content", entry.getContent(), service.getContent());
         assertEquals("Entry updated", entry.getUpdated(), service.getUpdated());
         assertEquals("Entry authors", entry.getAuthors().size(), service.getAuthors().size());
-        assertTrue("Entry should have at least one location", entry.<Element>getExtensions(Constants.LOCATION_QNAME).size() == 1);
-        assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.SUPPORTED_BY_QNAME).size() == 1);
+        assertTrue("Entry should have at least one location", entry.<Element>getExtensions(Constants.QNAME_LOCATION).size() == 1);
+        assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.QNAME_SUPPORTED_BY).size() == 1);
     }
 
     @Test
@@ -198,12 +198,12 @@ public class AdapterHelperTest {
         List<Activity> activities = activityDao.getAll();
         Activity activity = activities.get(0);
         Entry entry = AdapterHelper.getEntryFromActivity(activity);
-        Element element = entry.addExtension(Constants.HAS_OUTPUT_QNAME);
+        Element element = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
         List<Collection> collections = collectionDao.getAll();
         Collection collection = collections.get(0);
-        String uri = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
+        String uri = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
         element.setAttributeValue("uri", uri);
 
-        assertEquals("URI is not the same", collection.getUriKey(), AdapterHelper.getUriKeysFromExtension(entry, Constants.HAS_OUTPUT_QNAME).iterator().next());
+        assertEquals("URI is not the same", collection.getUriKey(), AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_OUTPUT).iterator().next());
     }
 }

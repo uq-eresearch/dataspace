@@ -23,34 +23,65 @@ public interface Constants {
     /**
      * Namespace related
      */
-    String UQ_DATA_COLLECTIONS_REGISTRY_NS = "http://dataspace.metadata.net/";
-    String UQ_DATA_COLLECTIONS_REGISTRY_PFX = "uqdata";
+    String NAMESPACE = "http://dataspace.metadata.net/";
+    String PREFIX = "uqdata";
+
+
+    /**
+     * Element names
+     */
+    String ELEMENT_NAME_TITLE = "title";
+    String ELEMENT_NAME_SUMMARY = "summary";
+    String ELEMENT_NAME_CONTENT = "content";
+    String ELEMENT_NAME_UPDATED = "updated";
+    String ELEMENT_NAME_AUTHOR = "author";
+    String ELEMENT_NAME_AUTHORS = "authors";
+    String ELEMENT_NAME_SUBJECT = "subject";
+    String ELEMENT_NAME_COLLECTOR_OF = "collectorOf";
+    String ELEMENT_NAME_SUPPORTED_BY = "supportedBy";
+    String ELEMENT_NAME_HAS_OUTPUT = "hasOutput";
+    String ELEMENT_NAME_HAS_PARTICIPANT = "hasParticipant";
+    String ELEMENT_NAME_COLLECTOR = "collector";
+    String ELEMENT_NAME_LOCATION = "location";
+    String ELEMENT_NAME_SUPPORTS = "supports";
+    String ELEMENT_NAME_IS_OUTPUT_OF = "isOutputOf";
+
+    /**
+     * Attribute names
+     */
+    String ATTRIBUTE_NAME_URI = "uri";
+    String ATTRIBUTE_NAME_VOCABULARY = "vocabulary";
+    String ATTRIBUTE_NAME_VALUE = "value";
 
     /**
      * Adapters
      */
-    String PARTIES_PATH = "parties";
-    String COLLECTIONS_PATH = "collections";
-    String ACTIVITIES_PATH = "activities";
-    String SERVICES_PATH = "services";
+    String PATH_FOR_PARTIES = "parties";
+    String PATH_FOR_COLLECTIONS = "collections";
+    String PATH_FOR_ACTIVITIES = "activities";
+    String PATH_FOR_SERVICES = "services";
 
     /**
      * Titles
      */
-    String PARTIES_TITLE = "Parties";
-    String COLLECTIONS_TITLE = "Collections";
-    String ACTIVITIES_TITLE = "Activities";
-    String SERVICES_TITLE = "Services";
+    String TITLE_FOR_PARTIES = "Parties";
+    String TITLE_FOR_COLLECTIONS = "Collections";
+    String TITLE_FOR_ACTIVITIES = "Activities";
+    String TITLE_FOR_SERVICES = "Services";
 
     String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
-    QName SUBJECT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "subject", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    QName COLLECTOR_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collectorOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    QName SUPPORTED_BY_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "supportedBy", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    QName HAS_OUTPUT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "hasOutput", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    QName HAS_PARTICIPANT_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "hasParticipant", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    QName COLLECTOR_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "collector", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    QName LOCATION_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "location", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    QName SUPPORTS_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "supports", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
-    QName IS_OUTPUT_OF_QNAME = new QName(Constants.UQ_DATA_COLLECTIONS_REGISTRY_NS, "isOutputOf", Constants.UQ_DATA_COLLECTIONS_REGISTRY_PFX);
+
+    /**
+     * Qualified names
+     */
+    QName QNAME_SUBJECT = new QName(NAMESPACE, ELEMENT_NAME_SUBJECT, PREFIX);
+    QName QNAME_COLLECTOR_OF = new QName(NAMESPACE, ELEMENT_NAME_COLLECTOR_OF, PREFIX);
+    QName QNAME_SUPPORTED_BY = new QName(NAMESPACE, ELEMENT_NAME_SUPPORTED_BY, PREFIX);
+    QName QNAME_HAS_OUTPUT = new QName(NAMESPACE, ELEMENT_NAME_HAS_OUTPUT, PREFIX);
+    QName QNAME_HAS_PARTICIPANT = new QName(NAMESPACE, ELEMENT_NAME_HAS_PARTICIPANT, PREFIX);
+    QName QNAME_COLLECTOR = new QName(NAMESPACE, ELEMENT_NAME_COLLECTOR, PREFIX);
+    QName QNAME_LOCATION = new QName(NAMESPACE, ELEMENT_NAME_LOCATION, PREFIX);
+    QName QNAME_SUPPORTS = new QName(NAMESPACE, ELEMENT_NAME_SUPPORTS, PREFIX);
+    QName QNAME_IS_OUTPUT_OF = new QName(NAMESPACE, ELEMENT_NAME_IS_OUTPUT_OF, PREFIX);
 
 }

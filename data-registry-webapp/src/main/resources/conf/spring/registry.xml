@@ -42,6 +42,7 @@
     </bean>
 
     <bean id="daoManager" class="net.metadata.dataspace.data.access.manager.impl.DaoManagerImpl">
+        <property name="jpaConnnector" ref="jpaConnector"/>
         <property name="collectionDao" ref="collectionDao"/>
         <property name="partyDao" ref="partyDao"/>
         <property name="serviceDao" ref="serviceDao"/>
