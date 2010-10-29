@@ -195,9 +195,11 @@ public class AdapterHelperTest {
         Activity activity = activities.get(0);
         Entry entry = AdapterHelper.getEntryFromActivity(activity);
         Element element = entry.addExtension(Constants.HAS_OUTPUT_QNAME);
-        String uri = Constants.ID_PREFIX + Constants.ACTIVITIES_PATH + "/" + activity.getUriKey();
+        List<Collection> collections = collectionDao.getAll();
+        Collection collection = collections.get(0);
+        String uri = Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + collection.getUriKey();
         element.setAttributeValue("uri", uri);
 
-        assertEquals("URI is not the same", activity.getUriKey(), AdapterHelper.getUriKeysFromExtension(entry, Constants.HAS_OUTPUT_QNAME).iterator().next());
+        assertEquals("URI is not the same", collection.getUriKey(), AdapterHelper.getUriKeysFromExtension(entry, Constants.HAS_OUTPUT_QNAME).iterator().next());
     }
 }

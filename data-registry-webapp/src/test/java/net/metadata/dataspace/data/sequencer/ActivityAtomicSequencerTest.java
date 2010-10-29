@@ -1,6 +1,8 @@
 package net.metadata.dataspace.data.sequencer;
 
 import net.metadata.dataspace.app.NonProductionConstants;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.Activity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class ActivityAtomicSequencerTest {
     @Autowired
     private ActivityAtomicSequencer activityAtomicSequencer;
 
+    @Autowired
+    private EntityCreator entityCreator;
+
     @Test
     public void testNext() throws Exception {
         int currentNumber = activityAtomicSequencer.current();
@@ -27,4 +32,14 @@ public class ActivityAtomicSequencerTest {
         assertTrue("Current number should be smaller than next number.", currentNumber + 1 == next);
     }
 
+    @Test
+    public void testActivitySequencing() throws Exception {
+        Activity activity1 = entityCreator.getNextActivity();
+        Activity activity2 = entityCreator.getNextActivity();
+        Activity activity3 = entityCreator.getNextActivity();
+
+        assertTrue("Atomic number should increase by 1.", activity1.getAtomicNumber() + 1 == activity2.getAtomicNumber());
+        assertTrue("Atomic number should increase by 2.", activity1.getAtomicNumber() + 2 == activity3.getAtomicNumber());
+        assertTrue("Atomic number should increase by 1.", activity2.getAtomicNumber() + 1 == activity3.getAtomicNumber());
+    }
 }

@@ -1,7 +1,6 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.DataRegistryApplication;
 import org.apache.abdera.model.Feed;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -19,8 +18,6 @@ import java.net.URLConnection;
  */
 public class FeedHelper {
 
-    private static final String URL = DataRegistryApplication.getApplicationContext().getUriPrefix();
-
     public static String getRepresentationMimeType(RequestContext request) {
         String fullUrl = request.getUri().toString();
         String representation = null;
@@ -32,7 +29,7 @@ public class FeedHelper {
 
     public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, String template) {
         try {
-            URL url = new URL(URL + template);
+            URL url = new URL(Constants.ID_PREFIX + template);
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             conn.setUseCaches(false);

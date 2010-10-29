@@ -56,8 +56,8 @@ public class PartyDaoImplTest {
         Set<Subject> subjects = new HashSet<Subject>();
         subjects.add(subject);
         party.setSubjects(subjects);
+
         //Add a collection
-//        CollectionDao collectionDao = dataRegistryApplicationConfigurationImpl.getCollectionDao();
         Set<Collection> collections = new HashSet<Collection>();
         Collection collection = PopulatorUtil.getCollection();
         Set<Party> collectors = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
@@ -91,7 +91,6 @@ public class PartyDaoImplTest {
         Long id = party.getId();
 
         //Get original attribute values
-        String originalPartyTitle = party.getTitle();
         String originalPartySummary = party.getSummary();
 
         //Edit attributes

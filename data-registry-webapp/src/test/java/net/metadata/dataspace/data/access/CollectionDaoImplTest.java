@@ -1,8 +1,7 @@
 package net.metadata.dataspace.data.access;
 
-import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
+import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
-import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
 import net.metadata.dataspace.data.model.PopulatorUtil;
@@ -31,16 +30,11 @@ import static org.junit.Assert.*;
 public class CollectionDaoImplTest {
 
     @Autowired
-    private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl;
-    @Autowired
     private CollectionDao collectionDao;
     @Autowired
     private SubjectDao subjectDao;
     @Autowired
     private PartyDao partyDao;
-
-    @Autowired
-    private JpaConnector jpaConnector;
 
     @After
     public void tearDown() throws Exception {
@@ -97,7 +91,7 @@ public class CollectionDaoImplTest {
         int originalSubjectListSize = collection.getSubjects().size();
         collection.getSubjects().add(subject);
         String originalLocationUri = collection.getLocation();
-        collection.setLocation(dataRegistryApplicationConfigurationImpl.getUriPrefix() + "collection/" + UUID.randomUUID().toString());
+        collection.setLocation(Constants.ID_PREFIX + Constants.COLLECTIONS_PATH + "/" + UUID.randomUUID().toString());
 
         collectionDao.update(collection);
 
