@@ -1,5 +1,6 @@
 package net.metadata.dataspace.app;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,21 +22,18 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class DataRegistryApplicationConfigurationTest {
 
+    private Properties properties = new Properties();
+
     @Autowired
     private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl;
 
-    @Test
-    public void testGetVersion() throws Exception {
-
-        //Get the expected value through application context
-
-        String expectedVersionNumber = dataRegistryApplicationConfigurationImpl.getVersion();
-
+    @Before
+    public void setUp() throws Exception {
         //Get the actual values
-        Properties properties = new Properties();
+
         InputStream resourceAsStream = null;
         try {
-            resourceAsStream = DataRegistryApplicationConfigurationImpl.class.getResourceAsStream("/registry.properties");
+            resourceAsStream = DataRegistryApplicationConfigurationImpl.class.getResourceAsStream("/registry-test.properties");
             if (resourceAsStream == null) {
                 throw new Exception("Configuration file not found, please ensure there is a 'registry.properties' on the classpath");
             }
@@ -68,10 +66,28 @@ public class DataRegistryApplicationConfigurationTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void testGetVersion() throws Exception {
+        String expectedVersionNumber = dataRegistryApplicationConfigurationImpl.getVersion();
         String actualVersion = getProperty(properties, "data.registry.version", "null");
         String actualRevision = getProperty(properties, "revision", "null");
+        assertEquals("Version Number", expectedVersionNumber, actualVersion + "." + actualRevision);
+    }
 
-        assertEquals(expectedVersionNumber, actualVersion + "." + actualRevision);
+    @Test
+    public void testApplicationTitle() throws Exception {
+        String expectedAppTitle = dataRegistryApplicationConfigurationImpl.getRegistryTitle();
+        String actualAppTitle = getProperty(properties, "data.registry.title", "null");
+        assertEquals("App Name", expectedAppTitle, actualAppTitle);
+    }
+
+    @Test
+    public void testURIPrefix() throws Exception {
+        String expectedUriPrefix = dataRegistryApplicationConfigurationImpl.getUriPrefix();
+        String actualUriPrefix = getProperty(properties, "data.registry.uri.prefix", "null");
+        assertEquals("URI Prefix", expectedUriPrefix, actualUriPrefix);
     }
 
     private static String getProperty(Properties properties, String propertyName, String defaultValue) {
