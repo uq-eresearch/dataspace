@@ -1,8 +1,9 @@
 package net.metadata.dataspace.data.access;
 
-import junit.framework.Assert;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.model.Activity;
+import net.metadata.dataspace.data.model.Collection;
+import net.metadata.dataspace.data.model.Party;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,13 +26,31 @@ public class ActivityDaoImplTest {
     @Autowired
     private ActivityDao activityDao;
 
+    @Autowired
+    private PartyDao partyDao;
+
+    @Autowired
+    private CollectionDao collectionDao;
+
     @Test
     public void testAddingService() throws Exception {
         int originalActivityTableSize = activityDao.getAll().size();
+        Party party = PopulatorUtil.getParty();
+        partyDao.save(party);
+        Collection collection = PopulatorUtil.getCollection();
+        collectionDao.save(collection);
+
         Activity activity = PopulatorUtil.getActivity();
+        activity.getHasOutput().add(collection);
+        activity.getHasParticipant().add(party);
+        party.getParticipantIn().add(activity);
+        collection.getOutputOf().add(activity);
         activityDao.save(activity);
+        collectionDao.update(collection);
+        partyDao.update(party);
+
         activityDao.refresh(activity);
         assertEquals("Number of activities", activityDao.getAll().size(), (originalActivityTableSize + 1));
-        Assert.assertEquals("Activity", activity, activityDao.getById(activity.getId()));
+        assertEquals("Activity", activity, activityDao.getById(activity.getId()));
     }
 }

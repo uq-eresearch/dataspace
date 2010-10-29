@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.NonProductionConstants;
+import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Service;
 import org.junit.Test;
@@ -22,16 +23,21 @@ public class ServiceDaoImplTest {
 
     @Autowired
     private ServiceDao serviceDao;
-//
-//    @Autowired
-//    private ServiceDao collectionDao;
+
+    @Autowired
+    private CollectionDao collectionDao;
 
     @Test
     public void testAddingService() throws Exception {
         int originalServiceTableSize = serviceDao.getAll().size();
+        Collection collection = PopulatorUtil.getCollection();
+        collectionDao.save(collection);
         Service service = PopulatorUtil.getService();
+        service.getSupportedBy().add(collection);
+        collection.getSupports().add(service);
         serviceDao.save(service);
-        serviceDao.refresh(service);
+        collectionDao.update(collection);
+
         assertEquals("Number of services", serviceDao.getAll().size(), (originalServiceTableSize + 1));
         assertEquals("Service", service, serviceDao.getById(service.getId()));
     }

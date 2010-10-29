@@ -56,6 +56,7 @@ public class AdapterHelperTest {
         collection.getSubjects().add(subject);
         collection.getCollector().add(party);
         party.getCollectorOf().add(collection);
+        subjectDao.update(subject);
         collectionDao.update(collection);
         partyDao.update(party);
 
@@ -63,6 +64,7 @@ public class AdapterHelperTest {
         service.getSupportedBy().add(collection);
         collection.getSupports().add(service);
         serviceDao.save(service);
+        collectionDao.update(collection);
 
         Activity activity = PopulatorUtil.getActivity();
         activity.getHasOutput().add(collection);
@@ -70,6 +72,8 @@ public class AdapterHelperTest {
         party.getParticipantIn().add(activity);
         collection.getOutputOf().add(activity);
         activityDao.save(activity);
+        collectionDao.update(collection);
+        partyDao.update(party);
     }
 
     @Test
