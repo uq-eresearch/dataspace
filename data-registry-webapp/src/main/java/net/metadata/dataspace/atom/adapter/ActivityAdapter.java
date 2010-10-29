@@ -362,11 +362,11 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     private void assembleActivityFromJson(Activity activity, String activityAsJsonString) {
         try {
             JSONObject jsonObj = new JSONObject(activityAsJsonString);
-            activity.setTitle(jsonObj.getString("title"));
-            activity.setSummary(jsonObj.getString("summary"));
-            activity.setContent(jsonObj.getString("content"));
+            activity.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
+            activity.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
+            activity.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
             activity.setUpdated(new Date());
-            JSONArray authors = jsonObj.getJSONArray("authors");
+            JSONArray authors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_AUTHORS);
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
                 persons.add(authors.getString(i));
@@ -377,7 +377,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 activityDao.save(activity);
             }
 
-            JSONArray collections = jsonObj.getJSONArray("hasOutput");
+            JSONArray collections = jsonObj.getJSONArray(Constants.ELEMENT_NAME_HAS_OUTPUT);
             for (int i = 0; i < collections.length(); i++) {
                 Collection collection = collectionDao.getByKey(collections.getString(i));
                 if (collection != null) {
@@ -387,7 +387,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             }
             activityDao.update(activity);
 
-            JSONArray parties = jsonObj.getJSONArray("hasParticipant");
+            JSONArray parties = jsonObj.getJSONArray(Constants.ELEMENT_NAME_HAS_PARTICIPANT);
             for (int i = 0; i < parties.length(); i++) {
                 Party party = partyDao.getByKey(parties.getString(i));
                 if (party != null) {

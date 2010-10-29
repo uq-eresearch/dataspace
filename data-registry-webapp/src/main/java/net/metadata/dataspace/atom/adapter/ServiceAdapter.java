@@ -350,12 +350,12 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     private void assembleServiceFromJson(Service service, String jsonString) {
         try {
             JSONObject jsonObj = new JSONObject(jsonString);
-            service.setTitle(jsonObj.getString("title"));
-            service.setSummary(jsonObj.getString("summary"));
-            service.setContent(jsonObj.getString("content"));
-            service.setLocation(jsonObj.getString("location"));
+            service.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
+            service.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
+            service.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
+            service.setLocation(jsonObj.getString(Constants.ELEMENT_NAME_LOCATION));
             service.setUpdated(new Date());
-            JSONArray authors = jsonObj.getJSONArray("authors");
+            JSONArray authors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_AUTHORS);
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
                 persons.add(authors.getString(i));
@@ -366,7 +366,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 serviceDao.save(service);
             }
 
-            JSONArray collectionArray = jsonObj.getJSONArray("supportedBy");
+            JSONArray collectionArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_SUPPORTED_BY);
             for (int i = 0; i < collectionArray.length(); i++) {
                 Collection collection = collectionDao.getByKey(collectionArray.getString(i));
                 if (collection != null) {

@@ -367,12 +367,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     private void assembleCollectionFromJson(Collection collection, String jsonString) {
         try {
             JSONObject jsonObj = new JSONObject(jsonString);
-            collection.setTitle(jsonObj.getString("title"));
-            collection.setSummary(jsonObj.getString("summary"));
-            collection.setContent(jsonObj.getString("content"));
+            collection.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
+            collection.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
+            collection.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
             collection.setUpdated(new Date());
-            collection.setLocation(jsonObj.getString("location"));
-            JSONArray authors = jsonObj.getJSONArray("authors");
+            collection.setLocation(jsonObj.getString(Constants.ELEMENT_NAME_LOCATION));
+            JSONArray authors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_AUTHORS);
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
                 persons.add(authors.getString(i));
@@ -383,16 +383,16 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 collectionDao.save(collection);
             }
 
-            JSONArray subjectArray = jsonObj.getJSONArray("subject");
+            JSONArray subjectArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_SUBJECT);
             for (int i = 0; i < subjectArray.length(); i++) {
                 Subject subject = entityCreator.getNextSubject();
-                subject.setVocabulary(subjectArray.getJSONObject(i).getString("vocabulary"));
-                subject.setValue(subjectArray.getJSONObject(i).getString("value"));
+                subject.setVocabulary(subjectArray.getJSONObject(i).getString(Constants.ATTRIBUTE_NAME_VOCABULARY));
+                subject.setValue(subjectArray.getJSONObject(i).getString(Constants.ATTRIBUTE_NAME_VALUE));
                 collection.getSubjects().add(subject);
                 subjectDao.save(subject);
             }
             collectionDao.update(collection);
-            JSONArray collectors = jsonObj.getJSONArray("collector");
+            JSONArray collectors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_COLLECTOR);
             for (int i = 0; i < collectors.length(); i++) {
                 Party party = partyDao.getByKey(collectors.getString(i));
                 if (party != null) {
