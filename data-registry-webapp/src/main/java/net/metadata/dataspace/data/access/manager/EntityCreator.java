@@ -15,9 +15,15 @@ public interface EntityCreator {
 
     Collection getNextCollection();
 
+    CollectionVersion getNextCollectionVersion(Collection collection);
+
     Subject getNextSubject();
 
     Service getNextService();
 
+    ServiceVersion getNextServiceVersion(Service service);
+
     Activity getNextActivity();
+
+    ActivityVersion getNextActivityVersion(Activity activity);
 }

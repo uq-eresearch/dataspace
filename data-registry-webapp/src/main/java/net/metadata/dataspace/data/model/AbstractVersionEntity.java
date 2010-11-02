@@ -3,11 +3,9 @@ package net.metadata.dataspace.data.model;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Author: alabri
@@ -23,6 +21,10 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable 
 
     @NotNull
     private Integer atomicNumber;
+
+    @NotNull
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date updated;
 
     public AbstractVersionEntity() {
     }
@@ -47,6 +49,30 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable 
         this.atomicNumber = atomicNumber;
     }
 
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+
+        PartyVersion partyVersion = (PartyVersion) o;
+        if (this.getUpdated().equals(partyVersion.getUpdated())) {
+            return 0;
+        }
+        if (this.getUpdated().before(partyVersion.getUpdated())) {
+            return 1;
+        }
+        if (this.getUpdated().after(partyVersion.getUpdated())) {
+            return -1;
+        }
+        return 0;
+    }
 
     @Override
     public boolean equals(Object obj) {

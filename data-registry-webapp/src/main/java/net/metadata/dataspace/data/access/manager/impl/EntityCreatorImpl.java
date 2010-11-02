@@ -22,12 +22,14 @@ public class EntityCreatorImpl implements EntityCreator {
     public EntityCreatorImpl() {
     }
 
+    @Override
     public Party getNextParty() {
         Party party = new Party();
         party.setAtomicNumber(partyAtomicSequencer.next());
         return party;
     }
 
+    @Override
     public PartyVersion getNextPartyVersion(Party party) {
         PartyVersion partyVersion = new PartyVersion();
         AtomicInteger atomicInteger = new AtomicInteger(party.getVersions().size());
@@ -35,30 +37,57 @@ public class EntityCreatorImpl implements EntityCreator {
         return partyVersion;
     }
 
+    @Override
     public Collection getNextCollection() {
         Collection collection = new Collection();
         collection.setAtomicNumber(collectionAtomicSequencer.next());
         return collection;
     }
 
+    @Override
+    public CollectionVersion getNextCollectionVersion(Collection collection) {
+        CollectionVersion collectionVersion = new CollectionVersion();
+        AtomicInteger atomicInteger = new AtomicInteger(collection.getVersions().size());
+        collectionVersion.setAtomicNumber(atomicInteger.incrementAndGet());
+        return collectionVersion;
+    }
+
+    @Override
     public Subject getNextSubject() {
         Subject subject = new Subject();
         subject.setAtomicNumber(subjectAtomicSequencer.next());
         return subject;
     }
 
+    @Override
     public Service getNextService() {
         Service service = new Service();
         service.setAtomicNumber(serviceAtomicSequencer.next());
         return service;
     }
 
+    @Override
+    public ServiceVersion getNextServiceVersion(Service service) {
+        ServiceVersion serviceVersion = new ServiceVersion();
+        AtomicInteger atomicInteger = new AtomicInteger(service.getVersions().size());
+        serviceVersion.setAtomicNumber(atomicInteger.incrementAndGet());
+        return serviceVersion;
+    }
+
+    @Override
     public Activity getNextActivity() {
         Activity activity = new Activity();
         activity.setAtomicNumber(activityAtomicSequencer.next());
         return activity;
     }
 
+    @Override
+    public ActivityVersion getNextActivityVersion(Activity activity) {
+        ActivityVersion collectionVersion = new ActivityVersion();
+        AtomicInteger atomicInteger = new AtomicInteger(activity.getVersions().size());
+        collectionVersion.setAtomicNumber(atomicInteger.incrementAndGet());
+        return collectionVersion;
+    }
 
     public void setPartyAtomicSequencer(PartyAtomicSequencer partyAtomicSequencer) {
         this.partyAtomicSequencer = partyAtomicSequencer;
