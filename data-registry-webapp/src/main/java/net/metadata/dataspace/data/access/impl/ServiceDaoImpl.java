@@ -4,6 +4,7 @@ import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.Service;
+import net.metadata.dataspace.data.model.ServiceVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
 import javax.persistence.Query;
@@ -44,6 +45,21 @@ public class ServiceDaoImpl extends JpaDao<Service> implements ServiceDao, Seria
         }
         assert resultList.size() == 1 : "id should be unique";
         return (Service) resultList.get(0);
+    }
+
+    @Override
+    public ServiceVersion getByVersion(String uriKey, String version) {
+        int parentAtomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, version);
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM ServiceVersion o WHERE o.atomicNumber = :atomicNumber AND o.parent.atomicNumber = :parentAtomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
+        query.setParameter("parentAtomicNumber", parentAtomicNumber);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (ServiceVersion) resultList.get(0);
     }
 
     @Override

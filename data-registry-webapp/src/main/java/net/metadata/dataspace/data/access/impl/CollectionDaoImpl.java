@@ -4,6 +4,7 @@ import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.model.Collection;
+import net.metadata.dataspace.data.model.CollectionVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
 import javax.persistence.Query;
@@ -43,6 +44,21 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
         }
         assert resultList.size() == 1 : "id should be unique";
         return (Collection) resultList.get(0);
+    }
+
+    @Override
+    public CollectionVersion getByVersion(String uriKey, String version) {
+        int parentAtomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, version);
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM CollectionVersion o WHERE o.atomicNumber = :atomicNumber AND o.parent.atomicNumber = :parentAtomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
+        query.setParameter("parentAtomicNumber", parentAtomicNumber);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (CollectionVersion) resultList.get(0);
     }
 
     @Override
