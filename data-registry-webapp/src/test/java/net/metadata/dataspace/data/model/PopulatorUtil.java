@@ -39,13 +39,15 @@ public class PopulatorUtil {
 
     public static Party getParty() throws Exception {
         Party party = entityCreator.getNextParty();
-        party.setTitle("Test Party Title");
-        party.setSummary("Test Party Summary");
-        party.setContent("Test Party Content");
-        party.setUpdated(new Date());
+        PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
+        partyVersion.setTitle("Test Party Title");
+        partyVersion.setSummary("Test Party Summary");
+        partyVersion.setContent("Test Party Content");
+        partyVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Party Author");
-        party.setAuthors(authors);
+        partyVersion.setAuthors(authors);
+        party.setUpdated(new Date());
         return party;
     }
 

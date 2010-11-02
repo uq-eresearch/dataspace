@@ -66,7 +66,7 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Subject> getAllInActive() {
+    public List<Subject> getAllInactive() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.isActive = false");
         return query.getResultList();
     }

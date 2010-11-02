@@ -67,7 +67,7 @@ public class ServiceDaoImpl extends JpaDao<Service> implements ServiceDao, Seria
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Service> getAllInActive() {
+    public List<Service> getAllInactive() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Service o WHERE o.isActive = false ORDER BY o.updated");
         return query.getResultList();
     }

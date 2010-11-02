@@ -11,6 +11,8 @@ public interface EntityCreator {
 
     Party getNextParty();
 
+    PartyVersion getNextPartyVersion(Party party);
+
     Collection getNextCollection();
 
     Subject getNextSubject();

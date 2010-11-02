@@ -66,7 +66,7 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Collection> getAllInActive() {
+    public List<Collection> getAllInactive() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = false ORDER BY o.updated");
         return query.getResultList();
     }

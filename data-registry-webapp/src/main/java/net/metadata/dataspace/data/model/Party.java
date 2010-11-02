@@ -1,12 +1,14 @@
 package net.metadata.dataspace.data.model;
 
-import org.hibernate.annotations.CollectionOfElements;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * User: alabri
@@ -18,58 +20,28 @@ public class Party extends AbstractBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
     @NotNull
-    private String title; //name
-
-    @NotNull
-    @Column(length = 1024)
-    private String summary; //description
-
-    @NotNull
-    @Column(length = 4096)
-    private String content;
+    @Sort(type = SortType.NATURAL)
+    private SortedSet<PartyVersion> versions = new TreeSet<PartyVersion>();
 
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
-    @CollectionOfElements
-    private Set<String> authors = new HashSet<String>();
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Subject> subjects = new HashSet<Subject>();
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Collection> collectorOf = new HashSet<Collection>();
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Activity> isParticipantIn = new HashSet<Activity>();
-
     public Party() {
     }
 
     public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+        return versions.first().getTitle();
     }
 
     public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
+        return versions.first().getSummary();
     }
 
     public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+        return versions.first().getContent();
     }
 
     public Date getUpdated() {
@@ -81,34 +53,28 @@ public class Party extends AbstractBaseEntity {
     }
 
     public Set<String> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(Set<String> authors) {
-        this.authors = authors;
+        return versions.first().getAuthors();
     }
 
     public Set<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(Set<Subject> subjects) {
-        this.subjects = subjects;
+        return versions.first().getSubjects();
     }
 
     public Set<Collection> getCollectorOf() {
-        return collectorOf;
-    }
-
-    public void setCollectorOf(Set<Collection> collectorOf) {
-        this.collectorOf = collectorOf;
+        return versions.first().getCollectorOf();
     }
 
     public Set<Activity> getParticipantIn() {
-        return isParticipantIn;
+        return versions.first().getParticipantIn();
     }
 
-    public void setParticipantIn(Set<Activity> participantIn) {
-        isParticipantIn = participantIn;
+    public SortedSet<PartyVersion> getVersions() {
+        return versions;
     }
+
+    public void setVersions(SortedSet<PartyVersion> versions) {
+        this.versions = versions;
+    }
+
+
 }

@@ -4,6 +4,8 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.*;
 import net.metadata.dataspace.data.sequencer.*;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * User: alabri
  * Date: 27/10/2010
@@ -24,6 +26,13 @@ public class EntityCreatorImpl implements EntityCreator {
         Party party = new Party();
         party.setAtomicNumber(partyAtomicSequencer.next());
         return party;
+    }
+
+    public PartyVersion getNextPartyVersion(Party party) {
+        PartyVersion partyVersion = new PartyVersion();
+        AtomicInteger atomicInteger = new AtomicInteger(party.getVersions().size());
+        partyVersion.setAtomicNumber(atomicInteger.incrementAndGet());
+        return partyVersion;
     }
 
     public Collection getNextCollection() {

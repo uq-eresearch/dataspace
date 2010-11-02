@@ -84,4 +84,17 @@ public interface Constants {
     QName QNAME_SUPPORTS = new QName(NAMESPACE, ELEMENT_NAME_SUPPORTS, PREFIX);
     QName QNAME_IS_OUTPUT_OF = new QName(NAMESPACE, ELEMENT_NAME_IS_OUTPUT_OF, PREFIX);
 
+    /**
+     * Target Type names
+     */
+    String TARGET_TYPE_VERSION = "version";
+
+    /**
+     * rel attribute types
+     */
+    String REL_TYPE_SELF = "self";
+    String REL_TYPE_ALTERNATE = "alternate";
+    String REL_TYPE_LATEST_VERSION = "latest-version";
+    String REL_TYPE_PREDECESSOR_VERSION = "predecessor-version";
+    String REL_TYPE_SUCCESSOR_VERSION = "successor-version";
 }

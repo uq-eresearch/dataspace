@@ -2,6 +2,7 @@ package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.*;
 import org.apache.abdera.Abdera;
@@ -26,6 +27,7 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * User: alabri
@@ -36,19 +38,45 @@ public class AdapterHelper {
 
     private static Logger logger = Logger.getLogger(AdapterHelper.class);
     private static final EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
+    private static DaoManager daoManager = DataRegistryApplication.getApplicationContext().getDaoManager();
 
-    public static String getEntryID(RequestContext request) {
-        if (request.getTarget().getType() != TargetType.TYPE_ENTRY) {
-            return null;
-        }
+    public static String getEntityID(String fullUrl) {
 
-        String fullUrl = request.getUri().toString();
         if (fullUrl.contains("?")) {
             fullUrl = fullUrl.split("\\?")[0];
         }
 
         String[] segments = fullUrl.split("/");
         return UrlEncoding.decode(segments[segments.length - 1]);
+    }
+
+    public static String getEntryID(RequestContext request) {
+        if (request.getTarget().getType() != TargetType.TYPE_ENTRY && request.getTarget().getType() != TargetType.get(Constants.TARGET_TYPE_VERSION)) {
+            return null;
+        }
+        String fullUrl = request.getUri().toString();
+        if (fullUrl.contains("?")) {
+            fullUrl = fullUrl.split("\\?")[0];
+        }
+        String[] segments = fullUrl.split("/");
+        int segmentPos = segments.length - 1;
+        if (request.getTarget().getType() == TargetType.get(Constants.TARGET_TYPE_VERSION)) {
+            return UrlEncoding.decode(segments[segmentPos - 1]);
+        }
+        return UrlEncoding.decode(segments[segmentPos]);
+    }
+
+    public static String getEntryVersionID(RequestContext request) {
+        if (request.getTarget().getType() != TargetType.get(Constants.TARGET_TYPE_VERSION)) {
+            return null;
+        }
+        String fullUrl = request.getUri().toString();
+        if (fullUrl.contains("?")) {
+            fullUrl = fullUrl.split("\\?")[0];
+        }
+        String[] segments = fullUrl.split("/");
+        int segmentPos = segments.length - 1;
+        return UrlEncoding.decode(segments[segmentPos]);
     }
 
     public static String getRepresentationMimeType(RequestContext request) {
@@ -87,32 +115,59 @@ public class AdapterHelper {
         return jsonString;
     }
 
-    public static Entry getEntryFromParty(Party party) {
+    public static Entry getEntryFromParty(PartyVersion partyVersion, boolean isParentLevel) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
-        entry.setTitle(party.getTitle());
-        entry.setSummary(party.getSummary());
-        entry.setContent(party.getContent());
-        entry.setUpdated(party.getUpdated());
-        Set<String> authors = party.getAuthors();
+        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + partyVersion.getParent().getUriKey();
+        if (isParentLevel) {
+            entry.setId(parentUrl);
+        } else {
+            entry.setId(parentUrl + "/" + partyVersion.getUriKey());
+        }
+        entry.setTitle(partyVersion.getTitle());
+        entry.setSummary(partyVersion.getSummary());
+        entry.setContent(partyVersion.getContent());
+        entry.setUpdated(partyVersion.getUpdated());
+        Set<String> authors = partyVersion.getAuthors();
         for (String author : authors) {
             entry.addAuthor(author);
         }
 
-        Set<Subject> subjectSet = party.getSubjects();
+        Set<Subject> subjectSet = partyVersion.getSubjects();
         for (Subject sub : subjectSet) {
             Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
-            subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
-            subjectElement.setAttributeValue("value", sub.getValue());
+            subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
+            subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
         }
 
-        Set<Collection> collectionSet = party.getCollectorOf();
+        Set<Collection> collectionSet = partyVersion.getCollectorOf();
         for (Collection collection : collectionSet) {
             Element collectorOfElement = entry.addExtension(Constants.QNAME_COLLECTOR_OF);
-            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+            collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
-        entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey(), "alternate");
+        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
+
+        SortedSet<PartyVersion> versions = partyVersion.getParent().getVersions();
+        PartyVersion[] versionArray = new PartyVersion[versions.size()];
+        versionArray = partyVersion.getParent().getVersions().toArray(versionArray);
+        PartyVersion successorVersion = null;
+        PartyVersion predecessorVersion = null;
+        for (int i = 0; i < versionArray.length; i++) {
+            if (versionArray[i].equals(partyVersion)) {
+                if (i > 0) {
+                    successorVersion = versionArray[i - 1];
+                }
+                if (i < (versionArray.length - 1)) {
+                    predecessorVersion = versionArray[i + 1];
+                }
+            }
+        }
+        if (predecessorVersion != null) {
+            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
+        }
+        if (successorVersion != null) {
+            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
+        }
         return entry;
     }
 
@@ -132,26 +187,26 @@ public class AdapterHelper {
         Set<Subject> subjectSet = collection.getSubjects();
         for (Subject sub : subjectSet) {
             Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
-            subjectElement.setAttributeValue("vocabulary", sub.getVocabulary());
-            subjectElement.setAttributeValue("value", sub.getValue());
+            subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
+            subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
         }
 
         Set<Party> parties = collection.getCollector();
         for (Party party : parties) {
             Element partyElement = entry.addExtension(Constants.QNAME_COLLECTOR);
-            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
+            partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
         }
 
         Set<Service> services = collection.getSupports();
         for (Service service : services) {
             Element serviceElement = entry.addExtension(Constants.QNAME_SUPPORTS);
-            serviceElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
+            serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         }
 
         Set<Activity> activities = collection.getOutputOf();
         for (Activity activity : activities) {
             Element serviceElement = entry.addExtension(Constants.QNAME_IS_OUTPUT_OF);
-            serviceElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+            serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         }
 
         entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey(), "alternate");
@@ -174,13 +229,13 @@ public class AdapterHelper {
         Set<Party> partySet = activity.getHasParticipant();
         for (Party sub : partySet) {
             Element partyElement = entry.addExtension(Constants.QNAME_HAS_PARTICIPANT);
-            partyElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
+            partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
         }
 
         Set<Collection> collectionSet = activity.getHasOutput();
         for (Collection collection : collectionSet) {
             Element collectorOfElement = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
-            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+            collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
         entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey(), "alternate");
         return entry;
@@ -203,7 +258,7 @@ public class AdapterHelper {
         Set<Collection> collectionSet = service.getSupportedBy();
         for (Collection collection : collectionSet) {
             Element collectorOfElement = entry.addExtension(Constants.QNAME_SUPPORTED_BY);
-            collectorOfElement.setAttributeValue("uri", Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+            collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
 
         entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey(), "alternate");
@@ -269,15 +324,15 @@ public class AdapterHelper {
         alternateLink.setRel("alternate");
     }
 
-    public static boolean updatePartyFromEntry(Party party, Entry entry) {
+    public static boolean updatePartyFromEntry(PartyVersion partyVersion, Entry entry) {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;
         } else {
-            party.setTitle(entry.getTitle());
-            party.setSummary(entry.getSummary());
-            party.setContent(entry.getContent());
-            party.setUpdated(entry.getUpdated());
-            party.setAuthors(getAuthors(entry.getAuthors()));
+            partyVersion.setTitle(entry.getTitle());
+            partyVersion.setSummary(entry.getSummary());
+            partyVersion.setContent(entry.getContent());
+            partyVersion.setUpdated(entry.getUpdated());
+            partyVersion.setAuthors(getAuthors(entry.getAuthors()));
             return true;
         }
     }
@@ -346,10 +401,14 @@ public class AdapterHelper {
         List<Element> extensionElements = entry.getExtensions();
         for (Element extension : extensionElements) {
             if (extension.getQName().equals(Constants.QNAME_SUBJECT)) {
-                String vocabulary = extension.getAttributeValue("vocabulary");
-                String value = extension.getAttributeValue("value");
+                String vocabulary = extension.getAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY);
+                String value = extension.getAttributeValue(Constants.ATTRIBUTE_NAME_VALUE);
                 if (vocabulary != null && value != null) {
-                    Subject subject = entityCreator.getNextSubject();
+
+                    Subject subject = daoManager.getSubjectDao().getSubject(vocabulary, value);
+                    if (subject == null) {
+                        subject = entityCreator.getNextSubject();
+                    }
                     subject.setVocabulary(vocabulary);
                     subject.setValue(value);
                     subjects.add(subject);
@@ -364,7 +423,7 @@ public class AdapterHelper {
         List<Element> extensionElements = entry.getExtensions();
         for (Element extension : extensionElements) {
             if (extension.getQName().equals(qName)) {
-                String id = getEntityID(extension.getAttributeValue("uri"));
+                String id = getEntityID(extension.getAttributeValue(Constants.ATTRIBUTE_NAME_URI));
                 if (id != null) {
                     uriKeys.add(id);
                 }
@@ -373,14 +432,5 @@ public class AdapterHelper {
         return uriKeys;
     }
 
-    public static String getEntityID(String fullUrl) {
-
-        if (fullUrl.contains("?")) {
-            fullUrl = fullUrl.split("\\?")[0];
-        }
-
-        String[] segments = fullUrl.split("/");
-        return UrlEncoding.decode(segments[segments.length - 1]);
-    }
 
 }

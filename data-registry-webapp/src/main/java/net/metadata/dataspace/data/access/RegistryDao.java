@@ -45,7 +45,7 @@ public interface RegistryDao<T> {
      *
      * @return List of inactive entities
      */
-    List<T> getAllInActive();
+    List<T> getAllInactive();
 
     /**
      * Get the most recent updated entity

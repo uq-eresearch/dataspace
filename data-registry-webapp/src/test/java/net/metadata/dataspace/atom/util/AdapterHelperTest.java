@@ -80,7 +80,7 @@ public class AdapterHelperTest {
     public void testGetEntryFromParty() throws Exception {
         List<Party> parties = partyDao.getAll();
         Party party = parties.get(0);
-        Entry entry = AdapterHelper.getEntryFromParty(party);
+        Entry entry = AdapterHelper.getEntryFromParty(party.getVersions().first(), true);
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
         assertEquals("Entry title", entry.getTitle(), party.getTitle());
         assertEquals("Entry summary", entry.getSummary(), party.getSummary());
@@ -143,9 +143,9 @@ public class AdapterHelperTest {
     public void testUpdatePartyFromEntry() throws Exception {
         List<Party> parties = partyDao.getAll();
         Party party = parties.get(0);
-        Entry entry = AdapterHelper.getEntryFromParty(party);
+        Entry entry = AdapterHelper.getEntryFromParty(party.getVersions().first(), true);
         Party newParty = entryCreator.getNextParty();
-        assertTrue("Could not update party", AdapterHelper.updatePartyFromEntry(newParty, entry));
+//        assertTrue("Could not update party", AdapterHelper.updatePartyFromEntry(newParty, entry));
         assertEquals("Entry title", party.getTitle(), newParty.getTitle());
         assertEquals("Entry summary", party.getSummary(), newParty.getSummary());
         assertEquals("Entry content", party.getContent(), newParty.getContent());

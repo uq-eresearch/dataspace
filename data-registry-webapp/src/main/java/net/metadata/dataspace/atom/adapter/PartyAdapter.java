@@ -10,6 +10,7 @@ import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
+import net.metadata.dataspace.data.model.PartyVersion;
 import net.metadata.dataspace.data.model.Subject;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
@@ -56,13 +57,19 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             try {
                 Entry entry = getEntryFromRequest(request);
                 Party party = entityCreator.getNextParty();
-                boolean isValidParty = AdapterHelper.updatePartyFromEntry(party, entry);
+                PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
+                boolean isValidParty = AdapterHelper.updatePartyFromEntry(partyVersion, entry);
                 if (!isValidParty) {
                     return ProviderHelper.badrequest(request, "Invalid entry posted.");
                 } else {
                     enityManager.getTransaction().begin();
+                    partyVersion.setParent(party);
+                    party.getVersions().add(partyVersion);
+                    party.setUpdated(new Date());
+                    enityManager.persist(partyVersion);
                     enityManager.persist(party);
-                    Entry createdEntry = furtherUpdate(entry, party);
+                    furtherUpdate(entry, partyVersion);
+                    Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
                     enityManager.getTransaction().commit();
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
@@ -82,12 +89,13 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             try {
                 String partyAsJsonString = AdapterHelper.getJsonString(request.getInputStream());
                 Party party = entityCreator.getNextParty();
+                PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
                 enityManager.getTransaction().begin();
-                if (!assembleValidPartyFromJson(party, partyAsJsonString)) {
+                if (!assembleValidPartyFromJson(party, partyVersion, partyAsJsonString)) {
                     return ProviderHelper.badrequest(request, "Invalid entry posted.");
                 }
                 enityManager.getTransaction().commit();
-                Entry createdEntry = AdapterHelper.getEntryFromParty(party);
+                Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
                 return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
             } catch (IOException e) {
                 logger.fatal("Cannot get inputstream from request.");
@@ -110,13 +118,21 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
                 Party party = partyDao.getByKey(uriKey);
-                boolean isValidEntry = AdapterHelper.updatePartyFromEntry(party, entry);
+                PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
+                boolean isValidEntry = AdapterHelper.updatePartyFromEntry(partyVersion, entry);
                 if (party == null || !isValidEntry) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
                     if (party.isActive()) {
-                        partyDao.update(party);
-                        Entry createdEntry = furtherUpdate(entry, party);
+                        enityManager.getTransaction().begin();
+                        party.getVersions().add(partyVersion);
+                        partyVersion.setParent(party);
+                        party.setUpdated(new Date());
+//                        enityManager.persist(partyVersion);
+                        furtherUpdate(entry, partyVersion);
+                        Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, false);
+                        enityManager.merge(party);
+                        enityManager.getTransaction().commit();
                         return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                     } else {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
@@ -146,11 +162,12 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             String partyAsJsonString = AdapterHelper.getJsonString(inputStream);
             String uriKey = AdapterHelper.getEntryID(request);
             Party party = partyDao.getByKey(uriKey);
-            if (!assembleValidPartyFromJson(party, partyAsJsonString)) {
+            PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
+            if (!assembleValidPartyFromJson(party, partyVersion, partyAsJsonString)) {
                 return ProviderHelper.badrequest(request, "Invalid entry posted.");
             }
             partyDao.update(party);
-            Entry createdEntry = AdapterHelper.getEntryFromParty(party);
+            Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, false);
             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
         } else {
             return ProviderHelper.notsupported(request, "Unsupported Media Type");
@@ -182,13 +199,20 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     @Override
     public ResponseContext getEntry(RequestContext request) {
         String uriKey = AdapterHelper.getEntryID(request);
+        String versionKey = AdapterHelper.getEntryVersionID(request);
         Party party = partyDao.getByKey(uriKey);
-        if (party == null) {
+        PartyVersion partyVersion;
+        if (versionKey != null) {
+            partyVersion = partyDao.getByVersion(uriKey, versionKey);
+        } else {
+            partyVersion = party.getVersions().first();
+        }
+        if (partyVersion == null) {
             return ProviderHelper.notfound(request);
         } else {
-            partyDao.refresh(party);
+            enityManager.refresh(partyVersion);
             if (party.isActive()) {
-                Entry entry = AdapterHelper.getEntryFromParty(party);
+                Entry entry = AdapterHelper.getEntryFromParty(partyVersion, versionKey == null);
                 return AdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
@@ -351,43 +375,41 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         return Constants.TITLE_FOR_PARTIES;
     }
 
-    private Entry furtherUpdate(Entry entry, Party party) {
+    private void furtherUpdate(Entry entry, PartyVersion partyVersion) {
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {
-            party.getSubjects().add(subject);
-            enityManager.persist(subject);
+            partyVersion.getSubjects().add(subject);
+            if (subject.getId() == null) {
+                enityManager.persist(subject);
+            }
         }
-        enityManager.merge(party);
 
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR_OF);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
-                collection.getCollector().add(party);
-                party.getCollectorOf().add(collection);
+                collection.getCollector().add(partyVersion.getParent());
+                partyVersion.getCollectorOf().add(collection);
             }
         }
-        party.setUpdated(new Date());
-        enityManager.merge(party);
-
-        Entry createdEntry = AdapterHelper.getEntryFromParty(party);
-        return createdEntry;
+        partyVersion.setUpdated(new Date());
     }
 
-    private boolean assembleValidPartyFromJson(Party party, String jsonString) {
+    private boolean assembleValidPartyFromJson(Party party, PartyVersion partyVersion, String jsonString) {
         try {
             JSONObject jsonObj = new JSONObject(jsonString);
 
-            party.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
-            party.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
-            party.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
+            partyVersion.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
+            partyVersion.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
+            partyVersion.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
+            partyVersion.setUpdated(new Date());
             party.setUpdated(new Date());
             JSONArray authors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_AUTHORS);
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
                 persons.add(authors.getString(i));
             }
-            party.setAuthors(persons);
+            partyVersion.setAuthors(persons);
 
             if (party.getId() == null) {
                 enityManager.persist(party);
@@ -398,7 +420,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 Collection collection = collectionDao.getByKey(collectionArray.getString(i));
                 if (collection != null) {
                     collection.getCollector().add(party);
-                    party.getCollectorOf().add(collection);
+                    partyVersion.getCollectorOf().add(collection);
                     enityManager.merge(collection);
                 }
             }
@@ -415,12 +437,16 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                         subject = entityCreator.getNextSubject();
                         subject.setVocabulary(vocabulary);
                         subject.setValue(value);
+                        enityManager.persist(subject);
                     }
-                    party.getSubjects().add(subject);
-                    enityManager.persist(subject);
+                    partyVersion.getSubjects().add(subject);
+                    enityManager.merge(subject);
                 }
             }
+            party.getVersions().add(partyVersion);
+            partyVersion.setParent(party);
             enityManager.merge(party);
+//            enityManager.persist(partyVersion);
 
         } catch (JSONException ex) {
             logger.fatal("Could not assemble party from JSON object", ex);

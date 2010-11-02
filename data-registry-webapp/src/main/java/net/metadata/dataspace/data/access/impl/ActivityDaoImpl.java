@@ -67,7 +67,7 @@ public class ActivityDaoImpl extends JpaDao<Activity> implements ActivityDao, Se
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Activity> getAllInActive() {
+    public List<Activity> getAllInactive() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Activity o WHERE o.isActive = false ORDER BY o.updated");
         return query.getResultList();
     }

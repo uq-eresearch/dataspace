@@ -6,10 +6,13 @@ import net.metadata.dataspace.atom.adapter.ActivityAdapter;
 import net.metadata.dataspace.atom.adapter.CollectionAdapter;
 import net.metadata.dataspace.atom.adapter.PartyAdapter;
 import net.metadata.dataspace.atom.adapter.ServiceAdapter;
+import org.apache.abdera.i18n.templates.Route;
 import org.apache.abdera.protocol.server.*;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.DefaultProvider;
+import org.apache.abdera.protocol.server.impl.RouteManager;
 import org.apache.abdera.protocol.server.impl.SimpleWorkspaceInfo;
+import org.apache.abdera.protocol.server.processors.EntryRequestProcessor;
 import org.apache.abdera.protocol.server.servlet.AbderaServlet;
 import org.apache.log4j.Logger;
 
@@ -46,7 +49,11 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 
         String base = "/";
         DefaultProvider registryServiceProvider = new DefaultProvider(base) {
+            RouteManager targetResolver = (RouteManager) this.getTargetResolver();
+
             public ResponseContext process(RequestContext request) {
+                this.requestProcessors.put(TargetType.get(Constants.TARGET_TYPE_VERSION, true), new EntryRequestProcessor());
+                targetResolver.addRoute(new Route(Constants.TARGET_TYPE_VERSION, "/:collection/:entry/:version"), TargetType.get(Constants.TARGET_TYPE_VERSION));
                 Target target = request.getTarget();
                 TargetType targetType = target.getType();
                 if (targetType.equals(TargetType.get(TargetType.COLLECTION))) {

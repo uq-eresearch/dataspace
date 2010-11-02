@@ -4,6 +4,7 @@ import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.model.Party;
+import net.metadata.dataspace.data.model.PartyVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
 import javax.persistence.Query;
@@ -47,6 +48,21 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
+    public PartyVersion getByVersion(String uriKey, String version) {
+        int parentAtomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, version);
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM PartyVersion o WHERE o.atomicNumber = :atomicNumber AND o.parent.atomicNumber = :parentAtomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
+        query.setParameter("parentAtomicNumber", parentAtomicNumber);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (PartyVersion) resultList.get(0);
+    }
+
+    @Override
     public int softDelete(String uriKey) {
         int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         entityManagerSource.getEntityManager().getTransaction().begin();
@@ -67,7 +83,7 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Party> getAllInActive() {
+    public List<Party> getAllInactive() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = false ORDER BY o.updated");
         return query.getResultList();
     }
