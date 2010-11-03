@@ -44,14 +44,14 @@ public class FeedHelper {
 
     public static void prepareFeedSelfLink(Feed feed, String selfLinkHref, String mimeType) {
         feed.getSelfLink().setHref(selfLinkHref);
-        feed.getSelfLink().setRel("self");
+        feed.getSelfLink().setRel(Constants.REL_TYPE_SELF);
         feed.getSelfLink().setMimeType(mimeType);
     }
 
 
     public static void prepareFeedAlternateLink(Feed feed, String alternateLinkHref, String mimeType) {
         feed.getAlternateLink().setHref(alternateLinkHref);
-        feed.getAlternateLink().setRel("alternate");
+        feed.getAlternateLink().setRel(Constants.REL_TYPE_ALTERNATE);
         feed.getAlternateLink().setMimeType(mimeType);
     }
 }

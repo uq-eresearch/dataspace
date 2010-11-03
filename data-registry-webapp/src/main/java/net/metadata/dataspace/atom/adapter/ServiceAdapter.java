@@ -80,7 +80,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 return ProviderHelper.servererror(request, e);
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
         }
     }
 
@@ -108,7 +108,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 return ProviderHelper.servererror(request, e);
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
         }
     }
 
@@ -143,7 +143,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                         }
                     } else {
-                        return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
                     }
                 }
             } catch (ResponseContextException e) {
@@ -151,7 +151,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 return ProviderHelper.servererror(request, e);
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
         }
         return getEntry(request);
     }
@@ -191,7 +191,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 }
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
         }
     }
 
@@ -206,13 +206,13 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             if (service.isActive()) {
                 try {
                     deleteEntry(uriKey, request);
-                    return ProviderHelper.createErrorResponse(new Abdera(), 200, "OK");
+                    return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
                 } catch (ResponseContextException e) {
                     logger.fatal("Could not delete party entry");
                     return ProviderHelper.servererror(request, e);
                 }
             } else {
-                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
             }
         }
     }
@@ -236,7 +236,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 Entry entry = AdapterHelper.getEntryFromService(serviceVersion, versionKey == null);
                 return AdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
-                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
             }
         }
     }
@@ -250,7 +250,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
-                return ProviderHelper.notsupported(request, "Unsupported Media Type");
+                return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
             }
         } else {
             String accept = request.getAccept();

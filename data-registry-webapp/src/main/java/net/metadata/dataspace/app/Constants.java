@@ -103,6 +103,7 @@ public interface Constants {
     /**
      * HTTP Status messages
      */
+    String HTTP_STATUS_200 = "OK";
     String HTTP_STATUS_400 = "Bad Request";
     String HTTP_STATUS_410 = "Gone";
     String HTTP_STATUS_415 = "Unsupported Media Type";

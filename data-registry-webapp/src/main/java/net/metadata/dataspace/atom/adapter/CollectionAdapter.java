@@ -82,7 +82,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 return ProviderHelper.servererror(request, e);
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
         }
     }
 
@@ -110,7 +110,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 return ProviderHelper.servererror(request, e);
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
         }
     }
 
@@ -193,7 +193,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 }
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
         }
     }
 
@@ -208,13 +208,13 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             if (collection.isActive()) {
                 try {
                     deleteEntry(uriKey, request);
-                    return ProviderHelper.createErrorResponse(new Abdera(), 200, "OK");
+                    return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
                 } catch (ResponseContextException e) {
                     logger.fatal("Could not delete collection entry");
                     return ProviderHelper.servererror(request, e);
                 }
             } else {
-                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
             }
         }
     }
@@ -238,7 +238,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 Entry entry = AdapterHelper.getEntryFromCollection(collectionVersion, versionKey == null);
                 return AdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
-                return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
             }
         }
     }
@@ -252,7 +252,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
                 return super.getFeed(request);
             } else {
-                return ProviderHelper.notsupported(request, "Unsupported Media Type");
+                return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
             }
         } else {
             String accept = request.getAccept();
