@@ -35,12 +35,12 @@ public class ActivityDaoImplTest {
     @Test
     public void testAddingService() throws Exception {
         int originalActivityTableSize = activityDao.getAll().size();
-        Party party = PopulatorUtil.getParty();
+        Party party = PopulatorUtil.getPartyVersion();
         partyDao.save(party);
-        Collection collection = PopulatorUtil.getCollection();
+        Collection collection = PopulatorUtil.getCollectionVersion();
         collectionDao.save(collection);
 
-        Activity activity = PopulatorUtil.getActivity();
+        Activity activity = PopulatorUtil.getActivityVersion();
         activity.getHasOutput().add(collection);
         activity.getHasParticipant().add(party);
         party.getParticipantIn().add(activity);

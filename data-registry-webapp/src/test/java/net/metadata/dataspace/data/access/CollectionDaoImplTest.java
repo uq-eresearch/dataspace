@@ -54,13 +54,13 @@ public class CollectionDaoImplTest {
 
         int originalCollectionTableSize = collectionDao.getAll().size();
 
-        Collection collection = PopulatorUtil.getCollection();
+        Collection collection = PopulatorUtil.getCollectionVersion();
         Set<Subject> subjects = new HashSet<Subject>();
         subjects.add(subject);
         collection.setSubjects(subjects);
 
 
-        Party party = PopulatorUtil.getParty();
+        Party party = PopulatorUtil.getPartyVersion();
         partyDao.save(party);
         Set<Party> collectors = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
         collectors.add(party);

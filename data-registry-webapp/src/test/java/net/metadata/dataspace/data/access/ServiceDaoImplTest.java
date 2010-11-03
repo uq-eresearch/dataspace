@@ -30,9 +30,9 @@ public class ServiceDaoImplTest {
     @Test
     public void testAddingService() throws Exception {
         int originalServiceTableSize = serviceDao.getAll().size();
-        Collection collection = PopulatorUtil.getCollection();
+        Collection collection = PopulatorUtil.getCollectionVersion();
         collectionDao.save(collection);
-        Service service = PopulatorUtil.getService();
+        Service service = PopulatorUtil.getServiceVersion();
         service.getSupportedBy().add(collection);
         collection.getSupports().add(service);
         serviceDao.save(service);

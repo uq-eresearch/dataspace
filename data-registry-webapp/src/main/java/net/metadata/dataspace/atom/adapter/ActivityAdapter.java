@@ -9,6 +9,7 @@ import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Activity;
+import net.metadata.dataspace.data.model.ActivityVersion;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
 import org.apache.abdera.Abdera;
@@ -28,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.activation.MimeType;
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -47,6 +49,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
+    private EntityManager enityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -58,12 +61,22 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             try {
                 Entry entry = getEntryFromRequest(request);
                 Activity activity = entityCreator.getNextActivity();
-                boolean isValidEntry = AdapterHelper.updateActivityFromEntry(activity, entry);
+                ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
+                boolean isValidEntry = AdapterHelper.isValidActivityFromEntry(activityVersion, entry);
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
-                    activityDao.save(activity);
-                    Entry createdEntry = furtherUpdate(entry, activity);
+                    enityManager.getTransaction().begin();
+                    activityVersion.setParent(activity);
+                    activity.getVersions().add(activityVersion);
+                    Date now = new Date();
+                    activityVersion.setUpdated(now);
+                    activity.setUpdated(now);
+                    enityManager.persist(activityVersion);
+                    enityManager.persist(activity);
+                    furtherUpdate(entry, activityVersion);
+                    Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
+                    enityManager.getTransaction().commit();
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
@@ -81,10 +94,19 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             try {
                 String jsonString = AdapterHelper.getJsonString(request.getInputStream());
-                Activity activity = entityCreator.getNextActivity();
-                assembleActivityFromJson(activity, jsonString);
-                Entry createdEntry = AdapterHelper.getEntryFromActivity(activity);
-                return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                if (jsonString == null) {
+                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                } else {
+                    Activity activity = entityCreator.getNextActivity();
+                    ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
+                    enityManager.getTransaction().begin();
+                    if (!assembleActivityFromJson(activity, activityVersion, jsonString)) {
+                        return ProviderHelper.badrequest(request, "Invalid Entry");
+                    }
+                    enityManager.getTransaction().commit();
+                    Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
+                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                }
             } catch (IOException e) {
                 logger.fatal("Cannot get inputstream from request.");
                 return ProviderHelper.servererror(request, e);
@@ -105,16 +127,29 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
                 Activity activity = activityDao.getByKey(uriKey);
-                boolean isValidEntry = AdapterHelper.updateActivityFromEntry(activity, entry);
-                if (activity == null || !isValidEntry) {
-                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                if (activity == null) {
+                    return ProviderHelper.notfound(request);
                 } else {
                     if (activity.isActive()) {
-                        activityDao.update(activity);
-                        Entry createdEntry = furtherUpdate(entry, activity);
-                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                        ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
+                        boolean isValidEntry = AdapterHelper.isValidActivityFromEntry(activityVersion, entry);
+                        if (!isValidEntry) {
+                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
+                        } else {
+                            enityManager.getTransaction().begin();
+                            activity.getVersions().add(activityVersion);
+                            activityVersion.setParent(activity);
+                            Date now = new Date();
+                            activityVersion.setUpdated(now);
+                            activity.setUpdated(now);
+                            furtherUpdate(entry, activityVersion);
+                            Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
+                            enityManager.merge(activity);
+                            enityManager.getTransaction().commit();
+                            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                        }
                     } else {
-                        return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
                     }
                 }
             } catch (ResponseContextException e) {
@@ -122,14 +157,13 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 return ProviderHelper.servererror(request, e);
             }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
         }
         return getEntry(request);
     }
 
     @Override
     public ResponseContext putMedia(RequestContext request) {
-        logger.info("Updating Media Entry");
         if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
             InputStream inputStream = null;
             try {
@@ -139,14 +173,30 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 return ProviderHelper.servererror(request, e);
             }
             String activityAsJsonString = AdapterHelper.getJsonString(inputStream);
-            String uriKey = AdapterHelper.getEntryID(request);
-            Activity activity = activityDao.getByKey(uriKey);
-            assembleActivityFromJson(activity, activityAsJsonString);
-            activityDao.update(activity);
-            Entry createdEntry = AdapterHelper.getEntryFromActivity(activity);
-            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+            if (activityAsJsonString == null) {
+                return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
+            } else {
+                String uriKey = AdapterHelper.getEntryID(request);
+                Activity activity = activityDao.getByKey(uriKey);
+                if (activity == null) {
+                    return ProviderHelper.notfound(request);
+                } else {
+                    if (activity.isActive()) {
+                        ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
+                        enityManager.getTransaction().begin();
+                        if (!assembleActivityFromJson(activity, activityVersion, activityAsJsonString)) {
+                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
+                        }
+                        enityManager.getTransaction().commit();
+                        Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, false);
+                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                    } else {
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
+                    }
+                }
+            }
         } else {
-            return ProviderHelper.notsupported(request, "Unsupported Media Type");
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
         }
     }
 
@@ -157,7 +207,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (activity == null) {
             return ProviderHelper.notfound(request);
         } else {
-            activityDao.refresh(activity);
+            enityManager.refresh(activity);
             if (activity.isActive()) {
                 try {
                     deleteEntry(uriKey, request);
@@ -179,9 +229,16 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (activity == null) {
             return ProviderHelper.notfound(request);
         } else {
-            activityDao.refresh(activity);
+            enityManager.refresh(activity);
             if (activity.isActive()) {
-                Entry entry = AdapterHelper.getEntryFromActivity(activity);
+                String versionKey = AdapterHelper.getEntryVersionID(request);
+                ActivityVersion activityVersion;
+                if (versionKey != null) {
+                    activityVersion = activityDao.getByVersion(uriKey, versionKey);
+                } else {
+                    activityVersion = activity.getVersions().first();
+                }
+                Entry entry = AdapterHelper.getEntryFromActivity(activityVersion, versionKey == null);
                 return AdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
@@ -333,48 +390,46 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         return Constants.TITLE_FOR_ACTIVITIES;
     }
 
-    private Entry furtherUpdate(Entry entry, Activity activity) {
+    private void furtherUpdate(Entry entry, ActivityVersion activityVersion) {
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_OUTPUT);
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
             if (collection != null) {
-                collection.getOutputOf().add(activity);
-                activity.getHasOutput().add(collection);
+                collection.getOutputOf().add(activityVersion.getParent());
+                activityVersion.getHasOutput().add(collection);
             }
         }
-        activityDao.update(activity);
-
         Set<String> partyUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_PARTICIPANT);
         for (String partyKey : partyUriKeys) {
             Party party = partyDao.getByKey(partyKey);
             if (party != null) {
-                party.getParticipantIn().add(activity);
-                activity.getHasParticipant().add(party);
+                party.getParticipantIn().add(activityVersion.getParent());
+                activityVersion.getHasParticipant().add(party);
             }
         }
-        activity.setUpdated(new Date());
-        activityDao.update(activity);
-
-        Entry createdEntry = AdapterHelper.getEntryFromActivity(activity);
-        return createdEntry;
+        Date now = new Date();
+        activityVersion.setUpdated(now);
+        activityVersion.getParent().setUpdated(now);
     }
 
-    private void assembleActivityFromJson(Activity activity, String activityAsJsonString) {
+    private boolean assembleActivityFromJson(Activity activity, ActivityVersion activityVersion, String activityAsJsonString) {
         try {
             JSONObject jsonObj = new JSONObject(activityAsJsonString);
-            activity.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
-            activity.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
-            activity.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
-            activity.setUpdated(new Date());
+            activityVersion.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
+            activityVersion.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
+            activityVersion.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
+            Date now = new Date();
+            activityVersion.setUpdated(now);
+            activity.setUpdated(now);
             JSONArray authors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_AUTHORS);
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
                 persons.add(authors.getString(i));
             }
-            activity.setAuthors(persons);
+            activityVersion.setAuthors(persons);
 
-            if (activity.getId() == null) {
-                activityDao.save(activity);
+            if (activityVersion.getId() == null) {
+                enityManager.persist(activity);
             }
 
             JSONArray collections = jsonObj.getJSONArray(Constants.ELEMENT_NAME_HAS_OUTPUT);
@@ -382,24 +437,28 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 Collection collection = collectionDao.getByKey(collections.getString(i));
                 if (collection != null) {
                     collection.getOutputOf().add(activity);
-                    activity.getHasOutput().add(collection);
+                    activityVersion.getHasOutput().add(collection);
+                    enityManager.merge(collection);
                 }
             }
-            activityDao.update(activity);
 
             JSONArray parties = jsonObj.getJSONArray(Constants.ELEMENT_NAME_HAS_PARTICIPANT);
             for (int i = 0; i < parties.length(); i++) {
                 Party party = partyDao.getByKey(parties.getString(i));
                 if (party != null) {
                     party.getParticipantIn().add(activity);
-                    activity.getHasParticipant().add(party);
+                    activityVersion.getHasParticipant().add(party);
+                    enityManager.merge(party);
                 }
             }
-            activityDao.update(activity);
+            activity.getVersions().add(activityVersion);
+            activityVersion.setParent(activity);
+            enityManager.merge(activity);
         } catch (JSONException ex) {
             logger.fatal("Could not assemble party from JSON object", ex);
+            return false;
         }
-
+        return true;
     }
 
 }

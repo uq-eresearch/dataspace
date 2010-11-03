@@ -24,21 +24,20 @@ public class PopulatorUtil {
         return subject;
     }
 
-    public static Collection getCollection() throws Exception {
-        Collection collection = entityCreator.getNextCollection();
-        collection.setTitle("Test Collection");
-        collection.setContent("Test Collection Content");
-        collection.setSummary("Test collection description");
-        collection.setUpdated(new Date());
+    public static CollectionVersion getCollectionVersion(Collection collection) throws Exception {
+        CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
+        collectionVersion.setTitle("Test Collection");
+        collectionVersion.setContent("Test Collection Content");
+        collectionVersion.setSummary("Test collection description");
+        collectionVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Collection Author");
-        collection.setAuthors(authors);
-        collection.setLocation("http://test.location.com.au/collection");
-        return collection;
+        collectionVersion.setAuthors(authors);
+        collectionVersion.setLocation("http://test.location.com.au/collection");
+        return collectionVersion;
     }
 
-    public static Party getParty() throws Exception {
-        Party party = entityCreator.getNextParty();
+    public static PartyVersion getPartyVersion(Party party) throws Exception {
         PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
         partyVersion.setTitle("Test Party Title");
         partyVersion.setSummary("Test Party Summary");
@@ -48,32 +47,32 @@ public class PopulatorUtil {
         authors.add("Test Party Author");
         partyVersion.setAuthors(authors);
         party.setUpdated(new Date());
-        return party;
+        return partyVersion;
     }
 
-    public static Service getService() {
-        Service service = entityCreator.getNextService();
-        service.setTitle("Test Service Title");
-        service.setSummary("Test Service Summary");
-        service.setContent("Test Service Content");
-        service.setUpdated(new Date());
-        service.setLocation("http://test.location.com.au/collection");
+    public static ServiceVersion getServiceVersion(Service service) {
+        ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
+        serviceVersion.setTitle("Test Service Title");
+        serviceVersion.setSummary("Test Service Summary");
+        serviceVersion.setContent("Test Service Content");
+        serviceVersion.setUpdated(new Date());
+        serviceVersion.setLocation("http://test.location.com.au/collection");
         Set<String> authors = new HashSet<String>();
         authors.add("Test Service Author");
-        service.setAuthors(authors);
-        return service;
+        serviceVersion.setAuthors(authors);
+        return serviceVersion;
     }
 
-    public static Activity getActivity() {
-        Activity activity = entityCreator.getNextActivity();
-        activity.setTitle("Test Activity Title");
-        activity.setSummary("Test Activity Summary");
-        activity.setContent("Test Activity Content");
-        activity.setUpdated(new Date());
+    public static ActivityVersion getActivityVersion(Activity activity) {
+        ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
+        activityVersion.setTitle("Test Activity Title");
+        activityVersion.setSummary("Test Activity Summary");
+        activityVersion.setContent("Test Activity Content");
+        activityVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Activity Author");
-        activity.setAuthors(authors);
-        return activity;
+        activityVersion.setAuthors(authors);
+        return activityVersion;
     }
 
 

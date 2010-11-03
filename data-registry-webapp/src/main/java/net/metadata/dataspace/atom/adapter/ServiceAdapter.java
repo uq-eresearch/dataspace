@@ -9,6 +9,7 @@ import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Service;
+import net.metadata.dataspace.data.model.ServiceVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
@@ -26,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.activation.MimeType;
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -43,7 +45,8 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     private Logger logger = Logger.getLogger(getClass());
     private ServiceDao serviceDao = DataRegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
-    private static final EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
+    private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
+    private EntityManager enityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -55,12 +58,21 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             try {
                 Entry entry = getEntryFromRequest(request);
                 Service service = entityCreator.getNextService();
-                boolean isValidService = AdapterHelper.updateServiceFromEntry(service, entry);
-                if (!isValidService) {
+                ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
+                boolean isValidEntry = AdapterHelper.updateServiceFromEntry(serviceVersion, entry);
+                if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
-                    serviceDao.save(service);
-                    Entry createdEntry = furtherUpdate(entry, service);
+                    enityManager.getTransaction().begin();
+                    serviceVersion.setParent(service);
+                    service.getVersions().add(serviceVersion);
+                    Date now = new Date();
+                    serviceVersion.setUpdated(now);
+                    service.setUpdated(now);
+                    enityManager.persist(serviceVersion);
+                    enityManager.persist(service);
+                    furtherUpdate(entry, serviceVersion);
+                    Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
@@ -78,10 +90,19 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             try {
                 String jsonString = AdapterHelper.getJsonString(request.getInputStream());
-                Service service = entityCreator.getNextService();
-                assembleServiceFromJson(service, jsonString);
-                Entry createdEntry = AdapterHelper.getEntryFromService(service);
-                return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                if (jsonString == null) {
+                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                } else {
+                    Service service = entityCreator.getNextService();
+                    ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
+                    enityManager.getTransaction().begin();
+                    if (!assembleServiceFromJson(service, serviceVersion, jsonString)) {
+                        return ProviderHelper.badrequest(request, "Invalid Entry");
+                    }
+                    enityManager.getTransaction().commit();
+                    Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
+                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                }
             } catch (IOException e) {
                 logger.fatal("Cannot get inputstream from request.");
                 return ProviderHelper.servererror(request, e);
@@ -102,14 +123,25 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
                 Service service = serviceDao.getByKey(uriKey);
-                boolean isValidEntry = AdapterHelper.updateServiceFromEntry(service, entry);
-                if (service == null || !isValidEntry) {
-                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                if (service == null) {
+
                 } else {
                     if (service.isActive()) {
-                        serviceDao.update(service);
-                        Entry createdEntry = furtherUpdate(entry, service);
-                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                        ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
+                        boolean isValidEntry = AdapterHelper.updateServiceFromEntry(serviceVersion, entry);
+                        if (!isValidEntry) {
+                            return ProviderHelper.badrequest(request, "Invalid Entry");
+                        } else {
+                            enityManager.getTransaction().begin();
+                            service.getVersions().add(serviceVersion);
+                            serviceVersion.setParent(service);
+                            Date now = new Date();
+                            service.setUpdated(now);
+                            serviceVersion.setUpdated(now);
+                            furtherUpdate(entry, serviceVersion);
+                            Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
+                            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                        }
                     } else {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
                     }
@@ -136,12 +168,28 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 return ProviderHelper.servererror(request, e);
             }
             String serviceAsJsonString = AdapterHelper.getJsonString(inputStream);
-            String uriKey = AdapterHelper.getEntryID(request);
-            Service service = serviceDao.getByKey(uriKey);
-            assembleServiceFromJson(service, serviceAsJsonString);
-            serviceDao.update(service);
-            Entry createdEntry = AdapterHelper.getEntryFromService(service);
-            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+            if (serviceAsJsonString == null) {
+                return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
+            } else {
+                String uriKey = AdapterHelper.getEntryID(request);
+                Service service = serviceDao.getByKey(uriKey);
+                if (service == null) {
+                    return ProviderHelper.notfound(request);
+                } else {
+                    if (service.isActive()) {
+                        ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
+                        enityManager.getTransaction().begin();
+                        if (!assembleServiceFromJson(service, serviceVersion, serviceAsJsonString)) {
+                            return ProviderHelper.badrequest(request, "Invalid Entry");
+                        }
+                        enityManager.getTransaction().commit();
+                        Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, false);
+                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                    } else {
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
+                    }
+                }
+            }
         } else {
             return ProviderHelper.notsupported(request, "Unsupported Media Type");
         }
@@ -176,9 +224,16 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         if (service == null) {
             return ProviderHelper.notfound(request);
         } else {
-            serviceDao.refresh(service);
+            enityManager.refresh(service);
             if (service.isActive()) {
-                Entry entry = AdapterHelper.getEntryFromService(service);
+                String versionKey = AdapterHelper.getEntryVersionID(request);
+                ServiceVersion serviceVersion;
+                if (versionKey != null) {
+                    serviceVersion = serviceDao.getByVersion(uriKey, versionKey);
+                } else {
+                    serviceVersion = service.getVersions().first();
+                }
+                Entry entry = AdapterHelper.getEntryFromService(serviceVersion, versionKey == null);
                 return AdapterHelper.getContextResponseForGetEntry(request, entry);
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, "The requested entry is no longer available.");
@@ -331,39 +386,39 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         return Constants.TITLE_FOR_SERVICES;
     }
 
-    private Entry furtherUpdate(Entry entry, Service service) {
+    private void furtherUpdate(Entry entry, ServiceVersion serviceVersion) {
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_SUPPORTED_BY);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
-                collection.getSupports().add(service);
-                service.getSupportedBy().add(collection);
+                collection.getSupports().add(serviceVersion.getParent());
+                serviceVersion.getSupportedBy().add(collection);
             }
         }
-        service.setUpdated(new Date());
-        serviceDao.update(service);
-
-        Entry createdEntry = AdapterHelper.getEntryFromService(service);
-        return createdEntry;
+        Date now = new Date();
+        serviceVersion.setUpdated(now);
+        serviceVersion.getParent().setUpdated(now);
     }
 
-    private void assembleServiceFromJson(Service service, String jsonString) {
+    private boolean assembleServiceFromJson(Service service, ServiceVersion serviceVersion, String jsonString) {
         try {
             JSONObject jsonObj = new JSONObject(jsonString);
-            service.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
-            service.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
-            service.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
-            service.setLocation(jsonObj.getString(Constants.ELEMENT_NAME_LOCATION));
-            service.setUpdated(new Date());
+            serviceVersion.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
+            serviceVersion.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
+            serviceVersion.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
+            serviceVersion.setLocation(jsonObj.getString(Constants.ELEMENT_NAME_LOCATION));
+            Date now = new Date();
+            serviceVersion.setUpdated(now);
+            service.setUpdated(now);
             JSONArray authors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_AUTHORS);
             Set<String> persons = new HashSet<String>();
             for (int i = 0; i < authors.length(); i++) {
                 persons.add(authors.getString(i));
             }
-            service.setAuthors(persons);
+            serviceVersion.setAuthors(persons);
 
             if (service.getId() == null) {
-                serviceDao.save(service);
+                enityManager.persist(service);
             }
 
             JSONArray collectionArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_SUPPORTED_BY);
@@ -371,14 +426,19 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 Collection collection = collectionDao.getByKey(collectionArray.getString(i));
                 if (collection != null) {
                     collection.getSupports().add(service);
-                    service.getSupportedBy().add(collection);
+                    serviceVersion.getSupportedBy().add(collection);
+                    enityManager.merge(collection);
                 }
             }
-            serviceDao.update(service);
+
+            service.getVersions().add(serviceVersion);
+            serviceVersion.setParent(service);
+            enityManager.merge(service);
         } catch (JSONException ex) {
             logger.fatal("Could not assemble party from JSON object", ex);
+            return false;
         }
-
+        return true;
     }
 
 }

@@ -103,6 +103,7 @@ public class AdapterHelper {
                 }
             } catch (IOException ex) {
                 logger.fatal("Could not parse inputstream to a JSON string", ex);
+                return null;
             } finally {
                 try {
                     inputStream.close();
@@ -110,9 +111,69 @@ public class AdapterHelper {
                     logger.fatal("Could not close inputstream", ex);
                 }
             }
+        } else {
+            return null;
         }
         String jsonString = sb.toString();
         return jsonString;
+    }
+
+    public static Entry getEntryFromActivity(ActivityVersion activityVersion, boolean isParentLevel) {
+        Abdera abdera = new Abdera();
+        Entry entry = abdera.newEntry();
+        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activityVersion.getParent().getUriKey();
+        if (isParentLevel) {
+            entry.setId(parentUrl);
+        } else {
+            entry.setId(parentUrl + "/" + activityVersion.getUriKey());
+        }
+        entry.setTitle(activityVersion.getTitle());
+        entry.setSummary(activityVersion.getSummary());
+        entry.setContent(activityVersion.getContent());
+        entry.setUpdated(activityVersion.getUpdated());
+        Set<String> authors = activityVersion.getAuthors();
+        for (String author : authors) {
+            entry.addAuthor(author);
+        }
+
+        Set<Party> partySet = activityVersion.getHasParticipant();
+        for (Party sub : partySet) {
+            Element partyElement = entry.addExtension(Constants.QNAME_HAS_PARTICIPANT);
+            partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
+        }
+
+        Set<Collection> collectionSet = activityVersion.getHasOutput();
+        for (Collection collection : collectionSet) {
+            Element collectorOfElement = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
+            collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+        }
+        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
+
+
+        SortedSet<ActivityVersion> versions = activityVersion.getParent().getVersions();
+        ActivityVersion[] versionArray = new ActivityVersion[versions.size()];
+        versionArray = activityVersion.getParent().getVersions().toArray(versionArray);
+        ActivityVersion successorVersion = null;
+        ActivityVersion predecessorVersion = null;
+        for (int i = 0; i < versionArray.length; i++) {
+            if (versionArray[i].equals(activityVersion)) {
+                if (i > 0) {
+                    successorVersion = versionArray[i - 1];
+                }
+                if (i < (versionArray.length - 1)) {
+                    predecessorVersion = versionArray[i + 1];
+                }
+            }
+        }
+        if (predecessorVersion != null) {
+            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
+        }
+        if (successorVersion != null) {
+            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
+        }
+
+
+        return entry;
     }
 
     public static Entry getEntryFromParty(PartyVersion partyVersion, boolean isParentLevel) {
@@ -145,6 +206,13 @@ public class AdapterHelper {
             Element collectorOfElement = entry.addExtension(Constants.QNAME_COLLECTOR_OF);
             collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
+
+        Set<Activity> activities = partyVersion.getParticipantIn();
+        for (Activity activity : activities) {
+            Element serviceElement = entry.addExtension(Constants.QNAME_IS_PARTICIPANT_IN);
+            serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+        }
+
         entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
 
         SortedSet<PartyVersion> versions = partyVersion.getParent().getVersions();
@@ -171,97 +239,125 @@ public class AdapterHelper {
         return entry;
     }
 
-    public static Entry getEntryFromCollection(Collection collection) {
+    public static Entry getEntryFromCollection(CollectionVersion collectionVersion, boolean isParentLevel) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
-        entry.setTitle(collection.getTitle());
-        entry.setSummary(collection.getSummary());
-        entry.setContent(collection.getContent());
-        entry.setUpdated(collection.getUpdated());
-        Set<String> authors = collection.getAuthors();
+        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collectionVersion.getParent().getUriKey();
+        if (isParentLevel) {
+            entry.setId(parentUrl);
+        } else {
+            entry.setId(parentUrl + "/" + collectionVersion.getUriKey());
+        }
+        entry.setTitle(collectionVersion.getTitle());
+        entry.setSummary(collectionVersion.getSummary());
+        entry.setContent(collectionVersion.getContent());
+        entry.setUpdated(collectionVersion.getUpdated());
+        Set<String> authors = collectionVersion.getAuthors();
         for (String author : authors) {
             entry.addAuthor(author);
         }
-        entry.addSimpleExtension(Constants.QNAME_LOCATION, collection.getLocation());
-        Set<Subject> subjectSet = collection.getSubjects();
+        entry.addSimpleExtension(Constants.QNAME_LOCATION, collectionVersion.getLocation());
+
+        Set<Subject> subjectSet = collectionVersion.getSubjects();
         for (Subject sub : subjectSet) {
             Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
             subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
             subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
         }
 
-        Set<Party> parties = collection.getCollector();
+        Set<Party> parties = collectionVersion.getCollector();
         for (Party party : parties) {
             Element partyElement = entry.addExtension(Constants.QNAME_COLLECTOR);
             partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
         }
 
-        Set<Service> services = collection.getSupports();
+        Set<Service> services = collectionVersion.getSupports();
         for (Service service : services) {
             Element serviceElement = entry.addExtension(Constants.QNAME_SUPPORTS);
             serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         }
 
-        Set<Activity> activities = collection.getOutputOf();
+        Set<Activity> activities = collectionVersion.getOutputOf();
         for (Activity activity : activities) {
             Element serviceElement = entry.addExtension(Constants.QNAME_IS_OUTPUT_OF);
             serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         }
+        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
 
-        entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey(), "alternate");
+        SortedSet<CollectionVersion> versions = collectionVersion.getParent().getVersions();
+        CollectionVersion[] versionArray = new CollectionVersion[versions.size()];
+        versionArray = collectionVersion.getParent().getVersions().toArray(versionArray);
+        CollectionVersion successorVersion = null;
+        CollectionVersion predecessorVersion = null;
+        for (int i = 0; i < versionArray.length; i++) {
+            if (versionArray[i].equals(collectionVersion)) {
+                if (i > 0) {
+                    successorVersion = versionArray[i - 1];
+                }
+                if (i < (versionArray.length - 1)) {
+                    predecessorVersion = versionArray[i + 1];
+                }
+            }
+        }
+        if (predecessorVersion != null) {
+            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
+        }
+        if (successorVersion != null) {
+            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
+        }
+
         return entry;
     }
 
-    public static Entry getEntryFromActivity(Activity activity) {
+    public static Entry getEntryFromService(ServiceVersion serviceVersion, boolean isParentLevel) {
         Abdera abdera = new Abdera();
         Entry entry = abdera.newEntry();
-        entry.setId(Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
-        entry.setTitle(activity.getTitle());
-        entry.setSummary(activity.getSummary());
-        entry.setContent(activity.getContent());
-        entry.setUpdated(activity.getUpdated());
-        Set<String> authors = activity.getAuthors();
+        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + serviceVersion.getParent().getUriKey();
+        if (isParentLevel) {
+            entry.setId(parentUrl);
+        } else {
+            entry.setId(parentUrl + "/" + serviceVersion.getUriKey());
+        }
+        entry.setTitle(serviceVersion.getTitle());
+        entry.setSummary(serviceVersion.getSummary());
+        entry.setContent(serviceVersion.getContent());
+        entry.setUpdated(serviceVersion.getUpdated());
+        Set<String> authors = serviceVersion.getAuthors();
         for (String author : authors) {
             entry.addAuthor(author);
         }
+        entry.addSimpleExtension(Constants.QNAME_LOCATION, serviceVersion.getLocation());
 
-        Set<Party> partySet = activity.getHasParticipant();
-        for (Party sub : partySet) {
-            Element partyElement = entry.addExtension(Constants.QNAME_HAS_PARTICIPANT);
-            partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
-        }
-
-        Set<Collection> collectionSet = activity.getHasOutput();
-        for (Collection collection : collectionSet) {
-            Element collectorOfElement = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
-            collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
-        }
-        entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey(), "alternate");
-        return entry;
-    }
-
-    public static Entry getEntryFromService(Service service) {
-        Abdera abdera = new Abdera();
-        Entry entry = abdera.newEntry();
-        entry.setId(Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
-        entry.setTitle(service.getTitle());
-        entry.setSummary(service.getSummary());
-        entry.setContent(service.getContent());
-        entry.setUpdated(service.getUpdated());
-        Set<String> authors = service.getAuthors();
-        for (String author : authors) {
-            entry.addAuthor(author);
-        }
-        entry.addSimpleExtension(Constants.QNAME_LOCATION, service.getLocation());
-
-        Set<Collection> collectionSet = service.getSupportedBy();
+        Set<Collection> collectionSet = serviceVersion.getSupportedBy();
         for (Collection collection : collectionSet) {
             Element collectorOfElement = entry.addExtension(Constants.QNAME_SUPPORTED_BY);
             collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
 
-        entry.addLink(Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey(), "alternate");
+        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
+
+        SortedSet<ServiceVersion> versions = serviceVersion.getParent().getVersions();
+        ServiceVersion[] versionArray = new ServiceVersion[versions.size()];
+        versionArray = serviceVersion.getParent().getVersions().toArray(versionArray);
+        ServiceVersion successorVersion = null;
+        ServiceVersion predecessorVersion = null;
+        for (int i = 0; i < versionArray.length; i++) {
+            if (versionArray[i].equals(serviceVersion)) {
+                if (i > 0) {
+                    successorVersion = versionArray[i - 1];
+                }
+                if (i < (versionArray.length - 1)) {
+                    predecessorVersion = versionArray[i + 1];
+                }
+            }
+        }
+        if (predecessorVersion != null) {
+            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
+        }
+        if (successorVersion != null) {
+            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
+        }
+
         return entry;
     }
 
@@ -311,7 +407,7 @@ public class AdapterHelper {
         }
         selfLink.setHref(href);
         selfLink.setMimeType(mimeType);
-        selfLink.setRel("self");
+        selfLink.setRel(Constants.REL_TYPE_SELF);
     }
 
     private static void prepareAlternateLink(Entry entry, String href, String mimeType) {
@@ -321,7 +417,7 @@ public class AdapterHelper {
         }
         alternateLink.setHref(href);
         alternateLink.setMimeType(mimeType);
-        alternateLink.setRel("alternate");
+        alternateLink.setRel(Constants.REL_TYPE_ALTERNATE);
     }
 
     public static boolean updatePartyFromEntry(PartyVersion partyVersion, Entry entry) {
@@ -337,51 +433,51 @@ public class AdapterHelper {
         }
     }
 
-    public static boolean updateServiceFromEntry(Service service, Entry entry) {
+    public static boolean updateServiceFromEntry(ServiceVersion serviceVersion, Entry entry) {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;
         } else {
-            service.setTitle(entry.getTitle());
-            service.setSummary(entry.getSummary());
-            service.setContent(entry.getContent());
-            service.setUpdated(entry.getUpdated());
-            service.setAuthors(getAuthors(entry.getAuthors()));
+            serviceVersion.setTitle(entry.getTitle());
+            serviceVersion.setSummary(entry.getSummary());
+            serviceVersion.setContent(entry.getContent());
+            serviceVersion.setUpdated(entry.getUpdated());
+            serviceVersion.setAuthors(getAuthors(entry.getAuthors()));
             List<Element> extensions = entry.getExtensions();
             for (Element extension : extensions) {
                 if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
-                    service.setLocation(extension.getText());
+                    serviceVersion.setLocation(extension.getText());
                 }
             }
             return true;
         }
     }
 
-    public static boolean updateActivityFromEntry(Activity activity, Entry entry) {
+    public static boolean isValidActivityFromEntry(ActivityVersion activityVersion, Entry entry) {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;
         } else {
-            activity.setTitle(entry.getTitle());
-            activity.setSummary(entry.getSummary());
-            activity.setContent(entry.getContent());
-            activity.setUpdated(entry.getUpdated());
-            activity.setAuthors(getAuthors(entry.getAuthors()));
+            activityVersion.setTitle(entry.getTitle());
+            activityVersion.setSummary(entry.getSummary());
+            activityVersion.setContent(entry.getContent());
+            activityVersion.setUpdated(entry.getUpdated());
+            activityVersion.setAuthors(getAuthors(entry.getAuthors()));
             return true;
         }
     }
 
-    public static boolean updateCollectionFromEntry(Collection collection, Entry entry) {
+    public static boolean updateCollectionFromEntry(CollectionVersion collectionVersion, Entry entry) {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;
         } else {
-            collection.setTitle(entry.getTitle());
-            collection.setSummary(entry.getSummary());
-            collection.setContent(entry.getContent());
-            collection.setUpdated(entry.getUpdated());
-            collection.setAuthors(getAuthors(entry.getAuthors()));
+            collectionVersion.setTitle(entry.getTitle());
+            collectionVersion.setSummary(entry.getSummary());
+            collectionVersion.setContent(entry.getContent());
+            collectionVersion.setUpdated(entry.getUpdated());
+            collectionVersion.setAuthors(getAuthors(entry.getAuthors()));
             List<Element> extensions = entry.getExtensions();
             for (Element extension : extensions) {
                 if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
-                    collection.setLocation(extension.getText());
+                    collectionVersion.setLocation(extension.getText());
                 }
             }
             return true;

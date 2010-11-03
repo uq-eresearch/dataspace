@@ -82,7 +82,7 @@ public class PartyDaoImplTest {
 
         //Add a collection
         Set<Collection> collections = new HashSet<Collection>();
-        Collection collection = PopulatorUtil.getCollection();
+        Collection collection = PopulatorUtil.getCollectionVersion();
         Set<Party> collectors = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
         collectors.add(party);
         collection.setCollector(collectors);

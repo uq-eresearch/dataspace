@@ -47,11 +47,11 @@ public class AdapterHelperTest {
         Subject subject = PopulatorUtil.getSubject();
         subjectDao.save(subject);
 
-        Party party = PopulatorUtil.getParty();
+        Party party = PopulatorUtil.getPartyVersion();
         partyDao.save(party);
         party.getSubjects().add(subject);
 
-        Collection collection = PopulatorUtil.getCollection();
+        Collection collection = PopulatorUtil.getCollectionVersion();
         collectionDao.save(collection);
         collection.getSubjects().add(subject);
         collection.getCollector().add(party);
@@ -60,13 +60,13 @@ public class AdapterHelperTest {
         collectionDao.update(collection);
         partyDao.update(party);
 
-        Service service = PopulatorUtil.getService();
+        Service service = PopulatorUtil.getServiceVersion();
         service.getSupportedBy().add(collection);
         collection.getSupports().add(service);
         serviceDao.save(service);
         collectionDao.update(collection);
 
-        Activity activity = PopulatorUtil.getActivity();
+        Activity activity = PopulatorUtil.getActivityVersion();
         activity.getHasOutput().add(collection);
         activity.getHasParticipant().add(party);
         party.getParticipantIn().add(activity);
@@ -186,7 +186,7 @@ public class AdapterHelperTest {
         Activity activity = activities.get(0);
         Entry entry = AdapterHelper.getEntryFromActivity(activity);
         Activity newActivity = entryCreator.getNextActivity();
-        assertTrue("Could not update activity", AdapterHelper.updateActivityFromEntry(newActivity, entry));
+        assertTrue("Could not update activity", AdapterHelper.isValidActivityFromEntry(newActivity, entry));
         assertEquals("Entry title", activity.getTitle(), newActivity.getTitle());
         assertEquals("Entry summary", activity.getSummary(), newActivity.getSummary());
         assertEquals("Entry content", activity.getContent(), newActivity.getContent());
