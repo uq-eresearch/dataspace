@@ -134,7 +134,6 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                             enityManager.getTransaction().begin();
                             collection.getVersions().add(collectionVersion);
                             collectionVersion.setParent(collection);
-                            collection.setUpdated(new Date());
                             furtherUpdate(entry, collectionVersion);
                             Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, false);
                             enityManager.merge(collection);

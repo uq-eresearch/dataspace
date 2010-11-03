@@ -139,9 +139,6 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                             enityManager.getTransaction().begin();
                             activity.getVersions().add(activityVersion);
                             activityVersion.setParent(activity);
-                            Date now = new Date();
-                            activityVersion.setUpdated(now);
-                            activity.setUpdated(now);
                             furtherUpdate(entry, activityVersion);
                             Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
                             enityManager.merge(activity);

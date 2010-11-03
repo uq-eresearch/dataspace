@@ -135,10 +135,9 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                             enityManager.getTransaction().begin();
                             service.getVersions().add(serviceVersion);
                             serviceVersion.setParent(service);
-                            Date now = new Date();
-                            service.setUpdated(now);
-                            serviceVersion.setUpdated(now);
                             furtherUpdate(entry, serviceVersion);
+                            enityManager.merge(service);
+                            enityManager.getTransaction().commit();
                             Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
                             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                         }
