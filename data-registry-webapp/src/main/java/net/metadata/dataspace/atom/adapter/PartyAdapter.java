@@ -4,14 +4,13 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
+import net.metadata.dataspace.data.access.ActivityDao;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.*;
 import net.metadata.dataspace.data.model.Collection;
-import net.metadata.dataspace.data.model.Party;
-import net.metadata.dataspace.data.model.PartyVersion;
-import net.metadata.dataspace.data.model.Subject;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
@@ -45,6 +44,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
+    private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
     private EntityManager enityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
@@ -91,13 +91,13 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             try {
                 String jsonString = AdapterHelper.getJsonString(request.getInputStream());
                 if (jsonString == null) {
-                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
                     Party party = entityCreator.getNextParty();
                     PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
                     enityManager.getTransaction().begin();
                     if (!assembleValidPartyFromJson(party, partyVersion, jsonString)) {
-                        return ProviderHelper.badrequest(request, "Invalid Entry");
+                        return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
                     enityManager.getTransaction().commit();
                     Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
@@ -131,7 +131,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                         PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
                         boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(partyVersion, entry);
                         if (!isValidEntry) {
-                            return ProviderHelper.badrequest(request, "Invalid Entry");
+                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         } else {
                             enityManager.getTransaction().begin();
                             party.getVersions().add(partyVersion);
@@ -170,7 +170,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             }
             String partyAsJsonString = AdapterHelper.getJsonString(inputStream);
             if (partyAsJsonString == null) {
-                return ProviderHelper.badrequest(request, "Invalid Entry");
+                return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
             } else {
                 String uriKey = AdapterHelper.getEntryID(request);
                 Party party = partyDao.getByKey(uriKey);
@@ -181,7 +181,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                         PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
                         enityManager.getTransaction().begin();
                         if (!assembleValidPartyFromJson(party, partyVersion, partyAsJsonString)) {
-                            return ProviderHelper.badrequest(request, "Invalid Entry");
+                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         }
                         enityManager.getTransaction().commit();
                         Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, false);
@@ -404,13 +404,22 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 enityManager.persist(subject);
             }
         }
-
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR_OF);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
                 collection.getCollector().add(partyVersion.getParent());
                 partyVersion.getCollectorOf().add(collection);
+                enityManager.merge(collection);
+            }
+        }
+        Set<String> isParticipantInUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_IS_PARTICIPANT_IN);
+        for (String uriKey : isParticipantInUriKeys) {
+            Activity activity = activityDao.getByKey(uriKey);
+            if (activity != null) {
+                activity.getHasParticipant().add(partyVersion.getParent());
+                partyVersion.getParticipantIn().add(activity);
+                enityManager.merge(activity);
             }
         }
         Date now = new Date();

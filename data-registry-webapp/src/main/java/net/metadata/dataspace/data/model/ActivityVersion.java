@@ -29,6 +29,10 @@ public class ActivityVersion extends AbstractVersionEntity {
         return parent;
     }
 
+    @Override
+    public void setLocation(String text) {
+    }
+
     public void setParent(Activity parent) {
         this.parent = parent;
     }

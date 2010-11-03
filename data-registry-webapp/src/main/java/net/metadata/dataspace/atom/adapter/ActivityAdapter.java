@@ -64,7 +64,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
                 boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(activityVersion, entry);
                 if (!isValidEntry) {
-                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
                     enityManager.getTransaction().begin();
                     activityVersion.setParent(activity);
@@ -95,13 +95,13 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             try {
                 String jsonString = AdapterHelper.getJsonString(request.getInputStream());
                 if (jsonString == null) {
-                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
                     Activity activity = entityCreator.getNextActivity();
                     ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
                     enityManager.getTransaction().begin();
                     if (!assembleActivityFromJson(activity, activityVersion, jsonString)) {
-                        return ProviderHelper.badrequest(request, "Invalid Entry");
+                        return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
                     enityManager.getTransaction().commit();
                     Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
@@ -397,6 +397,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             if (collection != null) {
                 collection.getOutputOf().add(activityVersion.getParent());
                 activityVersion.getHasOutput().add(collection);
+                enityManager.merge(collection);
             }
         }
         Set<String> partyUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_PARTICIPANT);
@@ -405,6 +406,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             if (party != null) {
                 party.getParticipantIn().add(activityVersion.getParent());
                 activityVersion.getHasParticipant().add(party);
+                enityManager.merge(party);
             }
         }
         Date now = new Date();

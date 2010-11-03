@@ -187,7 +187,7 @@ function submitAtomParty() {
         xmlString = xmlString + '<uqdata:subject vocabulary="' + dojo.byId('subjectVocabulary' + i).value + '" value="' + dojo.byId('subjectValue' + i).value + '" />';
     }
     for (var i = 0; i <= numberOfCollections; i++) {
-        xmlString = xmlString + '<uqdata:collector uri="' + dojo.byId('collectionId' + i).value + '" />';
+        xmlString = xmlString + '<uqdata:collectorOf uri="' + dojo.byId('collectionId' + i).value + '" />';
     }
     xmlString = xmlString + '</entry>';
 

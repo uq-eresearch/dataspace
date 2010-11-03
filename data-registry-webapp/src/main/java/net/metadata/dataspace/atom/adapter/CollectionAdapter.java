@@ -4,14 +4,10 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
-import net.metadata.dataspace.data.access.CollectionDao;
-import net.metadata.dataspace.data.access.PartyDao;
-import net.metadata.dataspace.data.access.SubjectDao;
+import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.*;
 import net.metadata.dataspace.data.model.Collection;
-import net.metadata.dataspace.data.model.CollectionVersion;
-import net.metadata.dataspace.data.model.Party;
-import net.metadata.dataspace.data.model.Subject;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
@@ -45,9 +41,10 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
+    private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
+    private ServiceDao serviceDao = DataRegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
     private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
     private EntityManager enityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-    ;
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -62,7 +59,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
                 boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(collectionVersion, entry);
                 if (!isValidEntry) {
-                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
                     enityManager.getTransaction().begin();
                     collectionVersion.setParent(collection);
@@ -93,13 +90,13 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             try {
                 String jsonString = AdapterHelper.getJsonString(request.getInputStream());
                 if (jsonString == null) {
-                    return ProviderHelper.badrequest(request, "Invalid Entry");
+                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
                     Collection collection = entityCreator.getNextCollection();
                     CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
                     enityManager.getTransaction().begin();
                     if (!assembleCollectionFromJson(collection, collectionVersion, jsonString)) {
-                        return ProviderHelper.badrequest(request, "Invalid Entry");
+                        return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
                     enityManager.getTransaction().commit();
                     Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, true);
@@ -132,7 +129,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                         CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
                         boolean isValidaEntry = AdapterHelper.isValidVersionFromEntry(collectionVersion, entry);
                         if (!isValidaEntry) {
-                            return ProviderHelper.badrequest(request, "Invalid Entry");
+                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         } else {
                             enityManager.getTransaction().begin();
                             collection.getVersions().add(collectionVersion);
@@ -171,7 +168,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             }
             String collectionAsJsonString = AdapterHelper.getJsonString(inputStream);
             if (collectionAsJsonString == null) {
-                return ProviderHelper.badrequest(request, "Invalid Entry");
+                return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
             } else {
                 String uriKey = AdapterHelper.getEntryID(request);
                 Collection collection = collectionDao.getByKey(uriKey);
@@ -182,7 +179,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                         CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
                         enityManager.getTransaction().begin();
                         if (!assembleCollectionFromJson(collection, collectionVersion, collectionAsJsonString)) {
-                            return ProviderHelper.badrequest(request, "Invalid Entry");
+                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         }
                         enityManager.getTransaction().commit();
                         Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, false);
@@ -406,13 +403,31 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 enityManager.persist(subject);
             }
         }
-
         Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR);
         for (String uriKey : collectorUriKeys) {
             Party party = partyDao.getByKey(uriKey);
             if (party != null) {
                 party.getCollectorOf().add(collectionVersion.getParent());
                 collectionVersion.getCollector().add(party);
+                enityManager.merge(party);
+            }
+        }
+        Set<String> outputOfUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_IS_OUTPUT_OF);
+        for (String uriKey : outputOfUriKeys) {
+            Activity activity = activityDao.getByKey(uriKey);
+            if (activity != null) {
+                activity.getHasOutput().add(collectionVersion.getParent());
+                collectionVersion.getOutputOf().add(activity);
+                enityManager.merge(activity);
+            }
+        }
+        Set<String> supportUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_SUPPORTS);
+        for (String uriKey : supportUriKeys) {
+            Service service = serviceDao.getByKey(uriKey);
+            if (service != null) {
+                service.getSupportedBy().add(collectionVersion.getParent());
+                collectionVersion.getSupports().add(service);
+                enityManager.merge(service);
             }
         }
         Date now = new Date();

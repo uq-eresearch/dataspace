@@ -32,6 +32,10 @@ public class PartyVersion extends AbstractVersionEntity {
         return parent;
     }
 
+    @Override
+    public void setLocation(String text) {
+    }
+
     public void setParent(Party parent) {
         this.parent = parent;
     }
