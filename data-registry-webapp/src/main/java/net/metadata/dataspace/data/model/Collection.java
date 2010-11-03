@@ -16,7 +16,7 @@ import java.util.TreeSet;
  * Time: 3:32:27 PM
  */
 @Entity
-public class Collection extends AbstractBaseEntity {
+public class Collection extends AbstractBaseEntity<CollectionVersion> {
 
     private static final long serialVersionUID = 1L;
 

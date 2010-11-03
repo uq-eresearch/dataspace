@@ -119,245 +119,84 @@ public class AdapterHelper {
     }
 
     public static Entry getEntryFromActivity(ActivityVersion activityVersion, boolean isParentLevel) {
-        Abdera abdera = new Abdera();
-        Entry entry = abdera.newEntry();
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activityVersion.getParent().getUriKey();
-        if (isParentLevel) {
-            entry.setId(parentUrl);
-        } else {
-            entry.setId(parentUrl + "/" + activityVersion.getUriKey());
-        }
-        entry.setTitle(activityVersion.getTitle());
-        entry.setSummary(activityVersion.getSummary());
-        entry.setContent(activityVersion.getContent());
-        entry.setUpdated(activityVersion.getUpdated());
-        Set<String> authors = activityVersion.getAuthors();
-        for (String author : authors) {
-            entry.addAuthor(author);
-        }
-
+        Entry entry = setCommonAttributes(activityVersion, isParentLevel, parentUrl);
         Set<Party> partySet = activityVersion.getHasParticipant();
         for (Party sub : partySet) {
             Element partyElement = entry.addExtension(Constants.QNAME_HAS_PARTICIPANT);
             partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
         }
-
         Set<Collection> collectionSet = activityVersion.getHasOutput();
         for (Collection collection : collectionSet) {
             Element collectorOfElement = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
             collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
-        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
-
-
-        SortedSet<ActivityVersion> versions = activityVersion.getParent().getVersions();
-        ActivityVersion[] versionArray = new ActivityVersion[versions.size()];
-        versionArray = activityVersion.getParent().getVersions().toArray(versionArray);
-        ActivityVersion successorVersion = null;
-        ActivityVersion predecessorVersion = null;
-        for (int i = 0; i < versionArray.length; i++) {
-            if (versionArray[i].equals(activityVersion)) {
-                if (i > 0) {
-                    successorVersion = versionArray[i - 1];
-                }
-                if (i < (versionArray.length - 1)) {
-                    predecessorVersion = versionArray[i + 1];
-                }
-            }
-        }
-        if (predecessorVersion != null) {
-            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
-        }
-        if (successorVersion != null) {
-            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
-        }
-
-
+        addLinks(activityVersion, entry, parentUrl);
         return entry;
     }
 
     public static Entry getEntryFromParty(PartyVersion partyVersion, boolean isParentLevel) {
-        Abdera abdera = new Abdera();
-        Entry entry = abdera.newEntry();
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + partyVersion.getParent().getUriKey();
-        if (isParentLevel) {
-            entry.setId(parentUrl);
-        } else {
-            entry.setId(parentUrl + "/" + partyVersion.getUriKey());
-        }
-        entry.setTitle(partyVersion.getTitle());
-        entry.setSummary(partyVersion.getSummary());
-        entry.setContent(partyVersion.getContent());
-        entry.setUpdated(partyVersion.getUpdated());
-        Set<String> authors = partyVersion.getAuthors();
-        for (String author : authors) {
-            entry.addAuthor(author);
-        }
-
+        Entry entry = setCommonAttributes(partyVersion, isParentLevel, parentUrl);
         Set<Subject> subjectSet = partyVersion.getSubjects();
         for (Subject sub : subjectSet) {
             Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
             subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
             subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
         }
-
         Set<Collection> collectionSet = partyVersion.getCollectorOf();
         for (Collection collection : collectionSet) {
             Element collectorOfElement = entry.addExtension(Constants.QNAME_COLLECTOR_OF);
             collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
-
         Set<Activity> activities = partyVersion.getParticipantIn();
         for (Activity activity : activities) {
             Element serviceElement = entry.addExtension(Constants.QNAME_IS_PARTICIPANT_IN);
             serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         }
-
-        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
-
-        SortedSet<PartyVersion> versions = partyVersion.getParent().getVersions();
-        PartyVersion[] versionArray = new PartyVersion[versions.size()];
-        versionArray = partyVersion.getParent().getVersions().toArray(versionArray);
-        PartyVersion successorVersion = null;
-        PartyVersion predecessorVersion = null;
-        for (int i = 0; i < versionArray.length; i++) {
-            if (versionArray[i].equals(partyVersion)) {
-                if (i > 0) {
-                    successorVersion = versionArray[i - 1];
-                }
-                if (i < (versionArray.length - 1)) {
-                    predecessorVersion = versionArray[i + 1];
-                }
-            }
-        }
-        if (predecessorVersion != null) {
-            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
-        }
-        if (successorVersion != null) {
-            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
-        }
+        addLinks(partyVersion, entry, parentUrl);
         return entry;
     }
 
     public static Entry getEntryFromCollection(CollectionVersion collectionVersion, boolean isParentLevel) {
-        Abdera abdera = new Abdera();
-        Entry entry = abdera.newEntry();
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collectionVersion.getParent().getUriKey();
-        if (isParentLevel) {
-            entry.setId(parentUrl);
-        } else {
-            entry.setId(parentUrl + "/" + collectionVersion.getUriKey());
-        }
-        entry.setTitle(collectionVersion.getTitle());
-        entry.setSummary(collectionVersion.getSummary());
-        entry.setContent(collectionVersion.getContent());
-        entry.setUpdated(collectionVersion.getUpdated());
-        Set<String> authors = collectionVersion.getAuthors();
-        for (String author : authors) {
-            entry.addAuthor(author);
-        }
+        Entry entry = setCommonAttributes(collectionVersion, isParentLevel, parentUrl);
         entry.addSimpleExtension(Constants.QNAME_LOCATION, collectionVersion.getLocation());
-
         Set<Subject> subjectSet = collectionVersion.getSubjects();
         for (Subject sub : subjectSet) {
             Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
             subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
             subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
         }
-
         Set<Party> parties = collectionVersion.getCollector();
         for (Party party : parties) {
             Element partyElement = entry.addExtension(Constants.QNAME_COLLECTOR);
             partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
         }
-
         Set<Service> services = collectionVersion.getSupports();
         for (Service service : services) {
             Element serviceElement = entry.addExtension(Constants.QNAME_SUPPORTS);
             serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         }
-
         Set<Activity> activities = collectionVersion.getOutputOf();
         for (Activity activity : activities) {
             Element serviceElement = entry.addExtension(Constants.QNAME_IS_OUTPUT_OF);
             serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         }
-        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
-
-        SortedSet<CollectionVersion> versions = collectionVersion.getParent().getVersions();
-        CollectionVersion[] versionArray = new CollectionVersion[versions.size()];
-        versionArray = collectionVersion.getParent().getVersions().toArray(versionArray);
-        CollectionVersion successorVersion = null;
-        CollectionVersion predecessorVersion = null;
-        for (int i = 0; i < versionArray.length; i++) {
-            if (versionArray[i].equals(collectionVersion)) {
-                if (i > 0) {
-                    successorVersion = versionArray[i - 1];
-                }
-                if (i < (versionArray.length - 1)) {
-                    predecessorVersion = versionArray[i + 1];
-                }
-            }
-        }
-        if (predecessorVersion != null) {
-            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
-        }
-        if (successorVersion != null) {
-            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
-        }
-
+        addLinks(collectionVersion, entry, parentUrl);
         return entry;
     }
 
     public static Entry getEntryFromService(ServiceVersion serviceVersion, boolean isParentLevel) {
-        Abdera abdera = new Abdera();
-        Entry entry = abdera.newEntry();
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + serviceVersion.getParent().getUriKey();
-        if (isParentLevel) {
-            entry.setId(parentUrl);
-        } else {
-            entry.setId(parentUrl + "/" + serviceVersion.getUriKey());
-        }
-        entry.setTitle(serviceVersion.getTitle());
-        entry.setSummary(serviceVersion.getSummary());
-        entry.setContent(serviceVersion.getContent());
-        entry.setUpdated(serviceVersion.getUpdated());
-        Set<String> authors = serviceVersion.getAuthors();
-        for (String author : authors) {
-            entry.addAuthor(author);
-        }
+        Entry entry = setCommonAttributes(serviceVersion, isParentLevel, parentUrl);
         entry.addSimpleExtension(Constants.QNAME_LOCATION, serviceVersion.getLocation());
-
         Set<Collection> collectionSet = serviceVersion.getSupportedBy();
         for (Collection collection : collectionSet) {
             Element collectorOfElement = entry.addExtension(Constants.QNAME_SUPPORTED_BY);
             collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         }
-
-        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
-
-        SortedSet<ServiceVersion> versions = serviceVersion.getParent().getVersions();
-        ServiceVersion[] versionArray = new ServiceVersion[versions.size()];
-        versionArray = serviceVersion.getParent().getVersions().toArray(versionArray);
-        ServiceVersion successorVersion = null;
-        ServiceVersion predecessorVersion = null;
-        for (int i = 0; i < versionArray.length; i++) {
-            if (versionArray[i].equals(serviceVersion)) {
-                if (i > 0) {
-                    successorVersion = versionArray[i - 1];
-                }
-                if (i < (versionArray.length - 1)) {
-                    predecessorVersion = versionArray[i + 1];
-                }
-            }
-        }
-        if (predecessorVersion != null) {
-            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
-        }
-        if (successorVersion != null) {
-            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
-        }
-
+        addLinks(serviceVersion, entry, parentUrl);
         return entry;
     }
 
@@ -420,67 +259,28 @@ public class AdapterHelper {
         alternateLink.setRel(Constants.REL_TYPE_ALTERNATE);
     }
 
-    public static boolean updatePartyFromEntry(PartyVersion partyVersion, Entry entry) {
+    public static boolean isValidVersionFromEntry(Version version, Entry entry) {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;
         } else {
-            partyVersion.setTitle(entry.getTitle());
-            partyVersion.setSummary(entry.getSummary());
-            partyVersion.setContent(entry.getContent());
-            partyVersion.setUpdated(entry.getUpdated());
-            partyVersion.setAuthors(getAuthors(entry.getAuthors()));
-            return true;
-        }
-    }
-
-    public static boolean updateServiceFromEntry(ServiceVersion serviceVersion, Entry entry) {
-        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            return false;
-        } else {
-            serviceVersion.setTitle(entry.getTitle());
-            serviceVersion.setSummary(entry.getSummary());
-            serviceVersion.setContent(entry.getContent());
-            serviceVersion.setUpdated(entry.getUpdated());
-            serviceVersion.setAuthors(getAuthors(entry.getAuthors()));
-            List<Element> extensions = entry.getExtensions();
-            for (Element extension : extensions) {
-                if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
-                    serviceVersion.setLocation(extension.getText());
-                }
+            version.setTitle(entry.getTitle());
+            version.setSummary(entry.getSummary());
+            version.setContent(entry.getContent());
+            version.setUpdated(entry.getUpdated());
+            version.setAuthors(getAuthors(entry.getAuthors()));
+            if (version instanceof CollectionVersion || version instanceof ServiceVersion) {
+                addLocation(version, entry);
             }
             return true;
         }
     }
 
-    public static boolean isValidActivityFromEntry(ActivityVersion activityVersion, Entry entry) {
-        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            return false;
-        } else {
-            activityVersion.setTitle(entry.getTitle());
-            activityVersion.setSummary(entry.getSummary());
-            activityVersion.setContent(entry.getContent());
-            activityVersion.setUpdated(entry.getUpdated());
-            activityVersion.setAuthors(getAuthors(entry.getAuthors()));
-            return true;
-        }
-    }
-
-    public static boolean updateCollectionFromEntry(CollectionVersion collectionVersion, Entry entry) {
-        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            return false;
-        } else {
-            collectionVersion.setTitle(entry.getTitle());
-            collectionVersion.setSummary(entry.getSummary());
-            collectionVersion.setContent(entry.getContent());
-            collectionVersion.setUpdated(entry.getUpdated());
-            collectionVersion.setAuthors(getAuthors(entry.getAuthors()));
-            List<Element> extensions = entry.getExtensions();
-            for (Element extension : extensions) {
-                if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
-                    collectionVersion.setLocation(extension.getText());
-                }
+    private static void addLocation(Version collectionVersion, Entry entry) {
+        List<Element> extensions = entry.getExtensions();
+        for (Element extension : extensions) {
+            if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
+                collectionVersion.setLocation(extension.getText());
             }
-            return true;
         }
     }
 
@@ -528,5 +328,47 @@ public class AdapterHelper {
         return uriKeys;
     }
 
+    private static Entry setCommonAttributes(Version version, boolean isParentLevel, String parentUrl) {
+        Abdera abdera = new Abdera();
+        Entry entry = abdera.newEntry();
+        if (isParentLevel) {
+            entry.setId(parentUrl);
+        } else {
+            entry.setId(parentUrl + "/" + version.getUriKey());
+        }
+        entry.setTitle(version.getTitle());
+        entry.setSummary(version.getSummary());
+        entry.setContent(version.getContent());
+        entry.setUpdated(version.getUpdated());
+        Set<String> authors = version.getAuthors();
+        for (String author : authors) {
+            entry.addAuthor(author);
+        }
+        return entry;
+    }
 
+    private static void addLinks(Version version, Entry entry, String parentUrl) {
+        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
+        SortedSet<Version> versions = version.getParent().getVersions();
+        Version[] versionArray = new Version[versions.size()];
+        versionArray = (Version[]) version.getParent().getVersions().toArray(versionArray);
+        Version successorVersion = null;
+        Version predecessorVersion = null;
+        for (int i = 0; i < versionArray.length; i++) {
+            if (versionArray[i].equals(version)) {
+                if (i > 0) {
+                    successorVersion = versionArray[i - 1];
+                }
+                if (i < (versionArray.length - 1)) {
+                    predecessorVersion = versionArray[i + 1];
+                }
+            }
+        }
+        if (predecessorVersion != null) {
+            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
+        }
+        if (successorVersion != null) {
+            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
+        }
+    }
 }

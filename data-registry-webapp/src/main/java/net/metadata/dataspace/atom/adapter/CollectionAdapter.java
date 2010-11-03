@@ -60,7 +60,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 Entry entry = getEntryFromRequest(request);
                 Collection collection = entityCreator.getNextCollection();
                 CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
-                boolean isValidEntry = AdapterHelper.updateCollectionFromEntry(collectionVersion, entry);
+                boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(collectionVersion, entry);
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
@@ -130,7 +130,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 } else {
                     if (collection.isActive()) {
                         CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
-                        boolean isValidaEntry = AdapterHelper.updateCollectionFromEntry(collectionVersion, entry);
+                        boolean isValidaEntry = AdapterHelper.isValidVersionFromEntry(collectionVersion, entry);
                         if (!isValidaEntry) {
                             return ProviderHelper.badrequest(request, "Invalid Entry");
                         } else {

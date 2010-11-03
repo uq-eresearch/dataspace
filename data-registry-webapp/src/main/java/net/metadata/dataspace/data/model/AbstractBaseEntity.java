@@ -5,6 +5,7 @@ import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.SortedSet;
 
 /**
  * User: alabri
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * Time: 12:12:47 PM
  */
 @MappedSuperclass
-public abstract class AbstractBaseEntity implements Serializable {
+public abstract class AbstractBaseEntity<T> implements Serializable, Record {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,6 +28,8 @@ public abstract class AbstractBaseEntity implements Serializable {
     public AbstractBaseEntity() {
         this.isActive = true;
     }
+
+    abstract public SortedSet<T> getVersions();
 
     public Long getId() {
         return id;

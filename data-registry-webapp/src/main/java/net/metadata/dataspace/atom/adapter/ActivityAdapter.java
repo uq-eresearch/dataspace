@@ -62,7 +62,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 Entry entry = getEntryFromRequest(request);
                 Activity activity = entityCreator.getNextActivity();
                 ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
-                boolean isValidEntry = AdapterHelper.isValidActivityFromEntry(activityVersion, entry);
+                boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(activityVersion, entry);
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
@@ -132,7 +132,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 } else {
                     if (activity.isActive()) {
                         ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
-                        boolean isValidEntry = AdapterHelper.isValidActivityFromEntry(activityVersion, entry);
+                        boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(activityVersion, entry);
                         if (!isValidEntry) {
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         } else {

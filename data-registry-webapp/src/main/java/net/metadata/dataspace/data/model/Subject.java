@@ -3,6 +3,7 @@ package net.metadata.dataspace.data.model;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.Entity;
+import java.util.SortedSet;
 
 /**
  * User: alabri
@@ -56,5 +57,10 @@ public class Subject extends AbstractBaseEntity {
         }
         Subject other = (Subject) obj;
         return getVocabulary().equals(other.getVocabulary()) && getValue().equals(other.getValue());
+    }
+
+    @Override
+    public SortedSet<Version> getVersions() {
+        return null;
     }
 }

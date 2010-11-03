@@ -59,7 +59,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 Entry entry = getEntryFromRequest(request);
                 Service service = entityCreator.getNextService();
                 ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
-                boolean isValidEntry = AdapterHelper.updateServiceFromEntry(serviceVersion, entry);
+                boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(serviceVersion, entry);
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, "Invalid Entry");
                 } else {
@@ -128,7 +128,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 } else {
                     if (service.isActive()) {
                         ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
-                        boolean isValidEntry = AdapterHelper.updateServiceFromEntry(serviceVersion, entry);
+                        boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(serviceVersion, entry);
                         if (!isValidEntry) {
                             return ProviderHelper.badrequest(request, "Invalid Entry");
                         } else {

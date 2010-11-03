@@ -58,7 +58,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 Entry entry = getEntryFromRequest(request);
                 Party party = entityCreator.getNextParty();
                 PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
-                boolean isValidEntry = AdapterHelper.updatePartyFromEntry(partyVersion, entry);
+                boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(partyVersion, entry);
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, "Invalid entry posted.");
                 } else {
@@ -129,7 +129,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 } else {
                     if (party.isActive()) {
                         PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
-                        boolean isValidEntry = AdapterHelper.updatePartyFromEntry(partyVersion, entry);
+                        boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(partyVersion, entry);
                         if (!isValidEntry) {
                             return ProviderHelper.badrequest(request, "Invalid Entry");
                         } else {
