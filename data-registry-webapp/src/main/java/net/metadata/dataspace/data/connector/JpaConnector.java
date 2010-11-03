@@ -24,8 +24,6 @@ public class JpaConnector extends ConnectorService implements EntityManagerSourc
 
     @Override
     public EntityManager getEntityManager() {
-        // we lazily initialize in case the entity manager is not actually needed
-        // by a request
         EntityManager entityManager = entityManagerTL.get();
         if (entityManager == null) {
             entityManager = emf.createEntityManager();
@@ -39,8 +37,7 @@ public class JpaConnector extends ConnectorService implements EntityManagerSourc
         EntityManager entityManager = entityManagerTL.get();
         if (entityManager != null) {
             entityManagerTL.remove();
-            assert entityManager.isOpen() :
-                    "Entity manager should only be closed here but must have been closed elsewhere";
+            assert entityManager.isOpen() : "Entity manager should only be closed here but must have been closed elsewhere";
             entityManager.close();
         }
         super.afterSend(entity);
