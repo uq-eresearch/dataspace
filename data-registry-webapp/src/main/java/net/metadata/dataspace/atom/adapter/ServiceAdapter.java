@@ -72,6 +72,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                     enityManager.persist(serviceVersion);
                     enityManager.persist(service);
                     furtherUpdate(entry, serviceVersion);
+                    enityManager.getTransaction().commit();
                     Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
