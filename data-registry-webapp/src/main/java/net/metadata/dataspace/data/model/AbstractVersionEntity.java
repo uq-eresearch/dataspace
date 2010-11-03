@@ -1,11 +1,14 @@
 package net.metadata.dataspace.data.model;
 
 import net.metadata.dataspace.util.DaoHelper;
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Author: alabri
@@ -13,7 +16,7 @@ import java.util.Date;
  * Time: 11:40:11 AM
  */
 @MappedSuperclass
-public abstract class AbstractVersionEntity implements Serializable, Comparable {
+public abstract class AbstractVersionEntity implements Serializable, Comparable, Version {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,8 +26,22 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable 
     private Integer atomicNumber;
 
     @NotNull
+    private String title; //name
+
+    @NotNull
+    @Column(length = 1024)
+    private String summary; //description
+
+    @NotNull
+    @Column(length = 4096)
+    private String content;
+
+    @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
+
+    @CollectionOfElements
+    private Set<String> authors = new HashSet<String>();
 
     public AbstractVersionEntity() {
     }
@@ -49,6 +66,29 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable 
         this.atomicNumber = atomicNumber;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public Date getUpdated() {
         return updated;
@@ -58,10 +98,18 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable 
         this.updated = updated;
     }
 
+    public Set<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<String> authors) {
+        this.authors = authors;
+    }
+
     @Override
     public int compareTo(Object o) {
 
-        PartyVersion partyVersion = (PartyVersion) o;
+        Version partyVersion = (Version) o;
         if (this.getUpdated().equals(partyVersion.getUpdated())) {
             return 0;
         }

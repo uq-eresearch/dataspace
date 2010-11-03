@@ -1,10 +1,9 @@
 package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.NonProductionConstants;
-import net.metadata.dataspace.data.model.Activity;
-import net.metadata.dataspace.data.model.Collection;
-import net.metadata.dataspace.data.model.Party;
-import net.metadata.dataspace.data.model.PopulatorUtil;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.connector.JpaConnector;
+import net.metadata.dataspace.data.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,27 +26,28 @@ public class ActivityDaoImplTest {
     private ActivityDao activityDao;
 
     @Autowired
-    private PartyDao partyDao;
+    private EntityCreator entityCreator;
 
     @Autowired
-    private CollectionDao collectionDao;
+    private JpaConnector jpaConnector;
 
     @Test
     public void testAddingService() throws Exception {
         int originalActivityTableSize = activityDao.getAll().size();
-        Party party = PopulatorUtil.getPartyVersion();
-        partyDao.save(party);
-        Collection collection = PopulatorUtil.getCollectionVersion();
-        collectionDao.save(collection);
+        Party party = entityCreator.getNextParty();
+        jpaConnector.getEntityManager().persist(party);
+        Collection collection = entityCreator.getNextCollection();
+        jpaConnector.getEntityManager().persist(collection);
 
-        Activity activity = PopulatorUtil.getActivityVersion();
-        activity.getHasOutput().add(collection);
-        activity.getHasParticipant().add(party);
+        Activity activity = entityCreator.getNextActivity();
+        ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
+        activityVersion.getHasOutput().add(collection);
+        activityVersion.getHasParticipant().add(party);
+        activityVersion.setParent(activity);
+        activity.getVersions().add(activityVersion);
         party.getParticipantIn().add(activity);
         collection.getOutputOf().add(activity);
-        activityDao.save(activity);
-        collectionDao.update(collection);
-        partyDao.update(party);
+        jpaConnector.getEntityManager().persist(activity);
 
         activityDao.refresh(activity);
         assertEquals("Number of activities", activityDao.getAll().size(), (originalActivityTableSize + 1));

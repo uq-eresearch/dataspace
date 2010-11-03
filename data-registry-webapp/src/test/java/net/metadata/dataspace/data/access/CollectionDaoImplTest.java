@@ -1,11 +1,9 @@
 package net.metadata.dataspace.data.access;
 
-import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.Collection;
-import net.metadata.dataspace.data.model.Party;
-import net.metadata.dataspace.data.model.PopulatorUtil;
-import net.metadata.dataspace.data.model.Subject;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: alabri
@@ -36,6 +33,12 @@ public class CollectionDaoImplTest {
     @Autowired
     private PartyDao partyDao;
 
+    @Autowired
+    private EntityCreator entityCreator;
+
+    @Autowired
+    private JpaConnector jpaConnector;
+
     @After
     public void tearDown() throws Exception {
         //Remove all collections
@@ -49,24 +52,10 @@ public class CollectionDaoImplTest {
     @Test
     public void testAddingCollection() throws Exception {
 
-        Subject subject = PopulatorUtil.getSubject();
-        subjectDao.save(subject);
-
         int originalCollectionTableSize = collectionDao.getAll().size();
 
-        Collection collection = PopulatorUtil.getCollectionVersion();
-        Set<Subject> subjects = new HashSet<Subject>();
-        subjects.add(subject);
-        collection.setSubjects(subjects);
-
-
-        Party party = PopulatorUtil.getPartyVersion();
-        partyDao.save(party);
-        Set<Party> collectors = collection.getCollector() == null ? new HashSet<Party>() : collection.getCollector();
-        collectors.add(party);
-        collection.setCollector(collectors);
-
-        collectionDao.save(collection);
+        Collection collection = entityCreator.getNextCollection();
+        jpaConnector.getEntityManager().persist(collection);
 
 
         //Collection table shouldn't be empty
@@ -82,40 +71,17 @@ public class CollectionDaoImplTest {
         //Collection table shouldn't be empty
         assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() != 0);
 
-        Subject subject = PopulatorUtil.getSubject();
-        subjectDao.save(subject);
-
         List<Collection> collectionList = collectionDao.getAll();
         Collection collection = collectionList.get(0);
         Long id = collection.getId();
-        int originalSubjectListSize = collection.getSubjects().size();
-        collection.getSubjects().add(subject);
-        String originalLocationUri = collection.getLocation();
-        collection.setLocation(Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + UUID.randomUUID().toString());
-
-        collectionDao.update(collection);
+        Date now = new Date();
+        collection.setUpdated(now);
+        jpaConnector.getEntityManager().merge(collection);
 
         Collection collectionById = collectionDao.getById(id);
 
         assertEquals("Modified and Retrieved collections are not the same", collection, collectionById);
-        assertTrue("The number of subjects should increase Current: " + collectionById.getSubjects().size() + " Expected: " + (originalSubjectListSize + 1), collectionById.getSubjects().size() == (originalSubjectListSize + 1));
-        assertFalse("Location URI should be updated " + originalLocationUri + " Current: " + collectionById.getLocation(), originalLocationUri.equals(collectionById.getLocation()));
-
-    }
-
-    @Test
-    public void testRemovingCollection() throws Exception {
-        testAddingCollection();
-
-        //Collection table shouldn't be empty
-        assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() != 0);
-        //Remove all collections
-        List<Collection> collectionList = collectionDao.getAll();
-        for (Collection collection : collectionList) {
-            collectionDao.delete(collection);
-        }
-        //Check that collection table has no records
-        assertTrue("Collection table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() == 0);
+        assertTrue("Date", now.equals(collectionById.getUpdated()));
     }
 
     @Test
