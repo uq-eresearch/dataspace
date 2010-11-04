@@ -23,11 +23,11 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -46,7 +46,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     private ServiceDao serviceDao = DataRegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
-    private EntityManager enityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+    private EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -63,21 +63,22 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
-                    enityManager.getTransaction().begin();
+                    entityManager.getTransaction().begin();
                     serviceVersion.setParent(service);
                     service.getVersions().add(serviceVersion);
                     Date now = new Date();
                     serviceVersion.setUpdated(now);
                     service.setUpdated(now);
-                    enityManager.persist(serviceVersion);
-                    enityManager.persist(service);
+                    entityManager.persist(serviceVersion);
+                    entityManager.persist(service);
                     furtherUpdate(entry, serviceVersion);
-                    enityManager.getTransaction().commit();
+                    entityManager.getTransaction().commit();
                     Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
                 logger.fatal("Invalid Entry", e);
+                entityManager.getTransaction().rollback();
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -96,12 +97,9 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 } else {
                     Service service = entityCreator.getNextService();
                     ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
-                    enityManager.getTransaction().begin();
                     if (!assembleServiceFromJson(service, serviceVersion, jsonString)) {
-                        enityManager.getTransaction().rollback();
                         return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
-                    enityManager.getTransaction().commit();
                     Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
@@ -134,12 +132,12 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                         if (!isValidEntry) {
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         } else {
-                            enityManager.getTransaction().begin();
+                            entityManager.getTransaction().begin();
                             service.getVersions().add(serviceVersion);
                             serviceVersion.setParent(service);
                             furtherUpdate(entry, serviceVersion);
-                            enityManager.merge(service);
-                            enityManager.getTransaction().commit();
+                            entityManager.merge(service);
+                            entityManager.getTransaction().commit();
                             Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
                             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                         }
@@ -149,6 +147,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 }
             } catch (ResponseContextException e) {
                 logger.fatal("Invalid Entry", e);
+                entityManager.getTransaction().rollback();
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -179,12 +178,9 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 } else {
                     if (service.isActive()) {
                         ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
-                        enityManager.getTransaction().begin();
                         if (!assembleServiceFromJson(service, serviceVersion, serviceAsJsonString)) {
-                            enityManager.getTransaction().rollback();
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         }
-                        enityManager.getTransaction().commit();
                         Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, false);
                         return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                     } else {
@@ -226,7 +222,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         if (service == null) {
             return ProviderHelper.notfound(request);
         } else {
-            enityManager.refresh(service);
+            entityManager.refresh(service);
             if (service.isActive()) {
                 String versionKey = AdapterHelper.getEntryVersionID(request);
                 ServiceVersion serviceVersion;
@@ -395,7 +391,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             if (collection != null) {
                 collection.getSupports().add(serviceVersion.getParent());
                 serviceVersion.getSupportedBy().add(collection);
-                enityManager.merge(collection);
+                entityManager.merge(collection);
             }
         }
         Date now = new Date();
@@ -404,7 +400,9 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     }
 
     private boolean assembleServiceFromJson(Service service, ServiceVersion serviceVersion, String jsonString) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
+            transaction.begin();
             JSONObject jsonObj = new JSONObject(jsonString);
             serviceVersion.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
             serviceVersion.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
@@ -421,7 +419,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             serviceVersion.setAuthors(persons);
 
             if (service.getId() == null) {
-                enityManager.persist(service);
+                entityManager.persist(service);
             }
 
             JSONArray collectionArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_SUPPORTED_BY);
@@ -430,15 +428,17 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 if (collection != null) {
                     collection.getSupports().add(service);
                     serviceVersion.getSupportedBy().add(collection);
-                    enityManager.merge(collection);
+                    entityManager.merge(collection);
                 }
             }
 
             service.getVersions().add(serviceVersion);
             serviceVersion.setParent(service);
-            enityManager.merge(service);
-        } catch (JSONException ex) {
+            entityManager.merge(service);
+            transaction.commit();
+        } catch (Exception ex) {
             logger.warn("Could not assemble entry from JSON object");
+            transaction.rollback();
             return false;
         }
         return true;

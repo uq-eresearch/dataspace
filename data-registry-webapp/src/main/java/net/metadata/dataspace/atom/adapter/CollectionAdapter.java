@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -53,6 +54,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         if (baseType.equals(Constants.JSON_MIMETYPE)) {
             return postMedia(request);
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
+            EntityTransaction transaction = enityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
                 Collection collection = entityCreator.getNextCollection();
@@ -61,7 +63,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
-                    enityManager.getTransaction().begin();
+                    transaction.begin();
                     collectionVersion.setParent(collection);
                     collection.getVersions().add(collectionVersion);
                     Date now = new Date();
@@ -70,12 +72,13 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                     enityManager.persist(collectionVersion);
                     enityManager.persist(collection);
                     furtherUpdate(entry, collectionVersion);
+                    transaction.commit();
                     Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, true);
-                    enityManager.getTransaction().commit();
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
                 logger.fatal("Invalid Entry", e);
+                transaction.rollback();
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -94,12 +97,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 } else {
                     Collection collection = entityCreator.getNextCollection();
                     CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
-                    enityManager.getTransaction().begin();
                     if (!assembleCollectionFromJson(collection, collectionVersion, jsonString)) {
-                        enityManager.getTransaction().rollback();
                         return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
-                    enityManager.getTransaction().commit();
                     Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
@@ -119,6 +119,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
             putMedia(request);
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
+            EntityTransaction transaction = enityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
@@ -132,13 +133,14 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                         if (!isValidaEntry) {
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         } else {
-                            enityManager.getTransaction().begin();
+                            transaction.begin();
                             collection.getVersions().add(collectionVersion);
                             collectionVersion.setParent(collection);
                             furtherUpdate(entry, collectionVersion);
-                            Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, false);
                             enityManager.merge(collection);
                             enityManager.getTransaction().commit();
+                            transaction.commit();
+                            Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, false);
                             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                         }
                     } else {
@@ -147,6 +149,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 }
             } catch (ResponseContextException e) {
                 logger.fatal("Invalid Entry", e);
+                transaction.rollback();
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -177,12 +180,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 } else {
                     if (collection.isActive()) {
                         CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
-                        enityManager.getTransaction().begin();
                         if (!assembleCollectionFromJson(collection, collectionVersion, collectionAsJsonString)) {
-                            enityManager.getTransaction().rollback();
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         }
-                        enityManager.getTransaction().commit();
                         Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, false);
                         return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                     } else {
@@ -437,7 +437,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     }
 
     private boolean assembleCollectionFromJson(Collection collection, CollectionVersion collectionVersion, String jsonString) {
+        EntityTransaction transaction = enityManager.getTransaction();
         try {
+            transaction.begin();
             JSONObject jsonObj = new JSONObject(jsonString);
             collectionVersion.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
             collectionVersion.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
@@ -485,8 +487,10 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             collection.getVersions().add(collectionVersion);
             collectionVersion.setParent(collection);
             enityManager.merge(collection);
+            transaction.commit();
         } catch (JSONException ex) {
             logger.warn("Could not assemble entry from JSON object");
+            transaction.rollback();
             return false;
         }
         return true;
