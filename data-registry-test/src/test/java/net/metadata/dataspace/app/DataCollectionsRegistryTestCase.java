@@ -13,6 +13,6 @@ public abstract class DataCollectionsRegistryTestCase extends WebTestCase {
         super.setUp();
         String baseUrl = System.getProperty("data.registry.uri.prefix", "http://localhost:9635");
         setBaseUrl(baseUrl);
-        gotoPage("/");
+//        gotoPage(baseUrl + "/");
     }
 }

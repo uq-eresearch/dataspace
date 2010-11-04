@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+=== POM for testing a war file coming out of a separate build. ===
+
+Basic idea:
+- run Surefire plugin for tests, but in the integration-test phase
+- use Cargo to start an embedded Servlet engine before the integration-tests, shut it down afterwards
+- use tests written with JWebUnit with the HtmlUnit backend to do the actual testing work
+
+This configuration can be run with "mvn integration-test".
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -50,7 +60,7 @@
                         <!-- what to deploy and how (grabbed from dependencies below) -->
                         <deployables>
                             <deployable>
-                                <groupId>metadata.net</groupId>
+                                <groupId>net.metadata.dataspace</groupId>
                                 <artifactId>data-collections-registry</artifactId>
                                 <type>war</type>
                                 <properties>
@@ -101,6 +111,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <!-- we depend on our own app, so the deployment setup above can find it -->
         <dependency>
             <groupId>net.metadata.dataspace</groupId>
