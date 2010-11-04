@@ -4,7 +4,7 @@
     <groupId>metadata.net</groupId>
     <artifactId>data-collections-registry</artifactId>
     <packaging>war</packaging>
-    <version>0.1.0.${revision}</version>
+    <version>1.0-SNAPSHOT</version>
     <name>data-registry-webapp Maven</name>
     <url>http://dataspace.metadata.net</url>
     <inceptionYear>2010</inceptionYear>
@@ -268,7 +268,7 @@
         </repository>
         <repository>
             <id>eResearch</id>
-            <name>eResearch-releases</name>
+            <name>maenad-releases</name>
             <url>http://maven.metadata.net/artifactory/repo</url>
         </repository>
         <repository>
