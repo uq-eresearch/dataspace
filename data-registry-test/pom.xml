@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>metadata.net</groupId>
+    <artifactId>data-registry-test</artifactId>
+    <name>Data Collections Registry Test Suite</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <description>A set of functional tests for the Data Collections Registry web application</description>
+    <build>
+        <plugins>
+            <plugin>
+                <!-- The Cargo plugin manages the Servlet engine -->
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <executions>
+                    <!-- start engine before tests -->
+                    <execution>
+                        <id>start-container</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <!--  stop engine after tests -->
+                    <execution>
+                        <id>stop-container</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- we use a Jetty 6 -->
+                    <container>
+                        <containerId>jetty6x</containerId>
+                        <type>embedded</type>
+                    </container>
+                    <!-- don't let Jetty ask for the Ctrl-C to stop -->
+                    <wait>false</wait>
+                    <!-- the actual configuration for the webapp -->
+                    <configuration>
+                        <!-- pick some port likely to be free, it has be matched in the test definitions -->
+                        <properties>
+                            <cargo.servlet.port>9635</cargo.servlet.port>
+                        </properties>
+                        <!-- what to deploy and how (grabbed from dependencies below) -->
+                        <deployables>
+                            <deployable>
+                                <groupId>metadata.net</groupId>
+                                <artifactId>data-collections-registry</artifactId>
+                                <type>war</type>
+                                <properties>
+                                    <context>/</context>
+                                </properties>
+                            </deployable>
+                        </deployables>
+                    </configuration>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- configure the Surefire plugin to run integration tests instead of the
+                     running in the normal test phase of the lifecycle -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <!-- we use the HTML unit variant of JWebUnit for testing -->
+        <dependency>
+            <groupId>net.sourceforge.jwebunit</groupId>
+            <artifactId>jwebunit-htmlunit-plugin</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.sourceforge.htmlunit</groupId>
+                    <artifactId>htmlunit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- we depend on our own app, so the deployment setup above can find it -->
+        <dependency>
+            <groupId>net.metadata.dataspace</groupId>
+            <artifactId>data-collections-registry</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.6</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
