@@ -9,7 +9,6 @@ import net.sourceforge.jwebunit.junit.WebTestCase;
  */
 public abstract class DataCollectionsRegistryTestCase extends WebTestCase {
 
-    @Override
     protected void setUp() throws Exception {
         super.setUp();
         String baseUrl = System.getProperty("data.registry.uri.prefix", "http://localhost:9635");
