@@ -24,11 +24,11 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -46,7 +46,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
-    private EntityManager enityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+    private EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -62,17 +62,17 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
-                    enityManager.getTransaction().begin();
+                    entityManager.getTransaction().begin();
                     partyVersion.setParent(party);
                     party.getVersions().add(partyVersion);
                     Date now = new Date();
                     partyVersion.setUpdated(now);
                     party.setUpdated(now);
-                    enityManager.persist(partyVersion);
-                    enityManager.persist(party);
+                    entityManager.persist(partyVersion);
+                    entityManager.persist(party);
                     furtherUpdate(entry, partyVersion);
                     Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
-                    enityManager.getTransaction().commit();
+                    entityManager.getTransaction().commit();
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (ResponseContextException e) {
@@ -95,11 +95,14 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 } else {
                     Party party = entityCreator.getNextParty();
                     PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
-                    enityManager.getTransaction().begin();
+//                    EntityTransaction transaction = entityManager.getTransaction();
+//                    transaction.begin();
                     if (!assembleValidPartyFromJson(party, partyVersion, jsonString)) {
+//                        transaction.rollback();
                         return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
+                    } else {
+//                        transaction.commit();
                     }
-                    enityManager.getTransaction().commit();
                     Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
@@ -133,13 +136,13 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                         if (!isValidEntry) {
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         } else {
-                            enityManager.getTransaction().begin();
+                            entityManager.getTransaction().begin();
                             party.getVersions().add(partyVersion);
                             partyVersion.setParent(party);
                             furtherUpdate(entry, partyVersion);
                             Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, false);
-                            enityManager.merge(party);
-                            enityManager.getTransaction().commit();
+                            entityManager.merge(party);
+                            entityManager.getTransaction().commit();
                             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                         }
                     } else {
@@ -178,11 +181,13 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 } else {
                     if (party.isActive()) {
                         PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
-                        enityManager.getTransaction().begin();
+//                        EntityTransaction transaction = entityManager.getTransaction();
+//                        transaction.begin();
                         if (!assembleValidPartyFromJson(party, partyVersion, partyAsJsonString)) {
+//                            transaction.rollback();
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         }
-                        enityManager.getTransaction().commit();
+//                        transaction.commit();
                         Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, false);
                         return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                     } else {
@@ -224,7 +229,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         if (party == null) {
             return ProviderHelper.notfound(request);
         } else {
-            enityManager.refresh(party);
+            entityManager.refresh(party);
             if (party.isActive()) {
                 String versionKey = AdapterHelper.getEntryVersionID(request);
                 PartyVersion partyVersion;
@@ -400,7 +405,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         for (Subject subject : subjects) {
             partyVersion.getSubjects().add(subject);
             if (subject.getId() == null) {
-                enityManager.persist(subject);
+                entityManager.persist(subject);
             }
         }
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR_OF);
@@ -409,7 +414,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             if (collection != null) {
                 collection.getCollector().add(partyVersion.getParent());
                 partyVersion.getCollectorOf().add(collection);
-                enityManager.merge(collection);
+                entityManager.merge(collection);
             }
         }
         Set<String> isParticipantInUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_IS_PARTICIPANT_IN);
@@ -418,7 +423,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             if (activity != null) {
                 activity.getHasParticipant().add(partyVersion.getParent());
                 partyVersion.getParticipantIn().add(activity);
-                enityManager.merge(activity);
+                entityManager.merge(activity);
             }
         }
         Date now = new Date();
@@ -427,6 +432,8 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     }
 
     private boolean assembleValidPartyFromJson(Party party, PartyVersion partyVersion, String jsonString) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
         try {
             JSONObject jsonObj = new JSONObject(jsonString);
             partyVersion.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
@@ -443,7 +450,10 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             partyVersion.setAuthors(persons);
 
             if (party.getId() == null) {
-                enityManager.persist(party);
+                entityManager.persist(party);
+            }
+            if (partyVersion.getId() == null) {
+                entityManager.persist(partyVersion);
             }
 
             JSONArray collectionArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_COLLECTOR_OF);
@@ -452,7 +462,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 if (collection != null) {
                     collection.getCollector().add(party);
                     partyVersion.getCollectorOf().add(collection);
-                    enityManager.merge(collection);
+                    entityManager.merge(collection);
                 }
             }
             JSONArray subjectArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_SUBJECT);
@@ -467,17 +477,19 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                         subject = entityCreator.getNextSubject();
                         subject.setVocabulary(vocabulary);
                         subject.setValue(value);
-                        enityManager.persist(subject);
+                        entityManager.persist(subject);
                     }
                     partyVersion.getSubjects().add(subject);
-                    enityManager.merge(subject);
+                    entityManager.merge(subject);
                 }
             }
             party.getVersions().add(partyVersion);
             partyVersion.setParent(party);
-            enityManager.merge(party);
-        } catch (JSONException ex) {
-            logger.fatal("Could not assemble party from JSON object", ex);
+            entityManager.merge(party);
+            transaction.commit();
+        } catch (Exception ex) {
+            logger.warn("Could not assemble entry from JSON object");
+            transaction.rollback();
             return false;
         }
         return true;

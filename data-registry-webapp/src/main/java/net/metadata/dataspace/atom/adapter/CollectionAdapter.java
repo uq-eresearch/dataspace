@@ -96,6 +96,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                     CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
                     enityManager.getTransaction().begin();
                     if (!assembleCollectionFromJson(collection, collectionVersion, jsonString)) {
+                        enityManager.getTransaction().rollback();
                         return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
                     enityManager.getTransaction().commit();
@@ -178,6 +179,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                         CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
                         enityManager.getTransaction().begin();
                         if (!assembleCollectionFromJson(collection, collectionVersion, collectionAsJsonString)) {
+                            enityManager.getTransaction().rollback();
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         }
                         enityManager.getTransaction().commit();
@@ -484,7 +486,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             collectionVersion.setParent(collection);
             enityManager.merge(collection);
         } catch (JSONException ex) {
-            logger.fatal("Could not assemble collection from JSON object", ex);
+            logger.warn("Could not assemble entry from JSON object");
             return false;
         }
         return true;

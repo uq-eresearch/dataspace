@@ -62,7 +62,7 @@
                       value="jdbc:mysql://localhost:3306/registry?autoReconnect=true"/>
             <property name="hibernate.connection.username" value="registry"/>
             <property name="hibernate.connection.password" value="registry"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.cache.use_second_level_cache" value="false"/>
             <property name="hibernate.cache.use_query_cache" value="false"/>

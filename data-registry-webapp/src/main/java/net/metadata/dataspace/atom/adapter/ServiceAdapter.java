@@ -98,6 +98,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                     ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
                     enityManager.getTransaction().begin();
                     if (!assembleServiceFromJson(service, serviceVersion, jsonString)) {
+                        enityManager.getTransaction().rollback();
                         return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
                     enityManager.getTransaction().commit();
@@ -180,6 +181,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                         ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
                         enityManager.getTransaction().begin();
                         if (!assembleServiceFromJson(service, serviceVersion, serviceAsJsonString)) {
+                            enityManager.getTransaction().rollback();
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         }
                         enityManager.getTransaction().commit();
@@ -436,7 +438,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             serviceVersion.setParent(service);
             enityManager.merge(service);
         } catch (JSONException ex) {
-            logger.fatal("Could not assemble party from JSON object", ex);
+            logger.warn("Could not assemble entry from JSON object");
             return false;
         }
         return true;

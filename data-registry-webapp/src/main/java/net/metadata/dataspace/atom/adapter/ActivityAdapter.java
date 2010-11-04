@@ -101,6 +101,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                     ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
                     enityManager.getTransaction().begin();
                     if (!assembleActivityFromJson(activity, activityVersion, jsonString)) {
+                        enityManager.getTransaction().rollback();
                         return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
                     enityManager.getTransaction().commit();
@@ -182,6 +183,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                         ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
                         enityManager.getTransaction().begin();
                         if (!assembleActivityFromJson(activity, activityVersion, activityAsJsonString)) {
+                            enityManager.getTransaction().rollback();
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         }
                         enityManager.getTransaction().commit();
@@ -454,7 +456,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             activityVersion.setParent(activity);
             enityManager.merge(activity);
         } catch (JSONException ex) {
-            logger.fatal("Could not assemble party from JSON object", ex);
+            logger.warn("Could not assemble entry from JSON object");
             return false;
         }
         return true;
