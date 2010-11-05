@@ -5,6 +5,7 @@
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true"/>
+        <property name="systemPropertiesMode" value="2"/>
         <property name="locations">
             <list>
                 <value>classpath:registry.properties</value>
