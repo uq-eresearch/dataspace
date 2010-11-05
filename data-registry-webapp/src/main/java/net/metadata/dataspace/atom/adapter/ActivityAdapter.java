@@ -205,7 +205,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (activity == null) {
             return ProviderHelper.notfound(request);
         } else {
-            enityManager.refresh(activity);
+            activityDao.refresh(activity);
             if (activity.isActive()) {
                 try {
                     deleteEntry(uriKey, request);
@@ -227,7 +227,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (activity == null) {
             return ProviderHelper.notfound(request);
         } else {
-            enityManager.refresh(activity);
+            activityDao.refresh(activity);
             if (activity.isActive()) {
                 String versionKey = AdapterHelper.getEntryVersionID(request);
                 ActivityVersion activityVersion;

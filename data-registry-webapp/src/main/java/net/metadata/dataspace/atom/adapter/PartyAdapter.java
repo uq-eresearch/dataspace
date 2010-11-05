@@ -223,7 +223,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         if (party == null) {
             return ProviderHelper.notfound(request);
         } else {
-            entityManager.refresh(party);
+            partyDao.refresh(party);
             if (party.isActive()) {
                 String versionKey = AdapterHelper.getEntryVersionID(request);
                 PartyVersion partyVersion;

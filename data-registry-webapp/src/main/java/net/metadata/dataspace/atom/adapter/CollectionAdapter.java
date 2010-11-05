@@ -224,7 +224,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         if (collection == null) {
             return ProviderHelper.notfound(request);
         } else {
-            enityManager.refresh(collection);
+            collectionDao.refresh(collection);
             if (collection.isActive()) {
                 String versionKey = AdapterHelper.getEntryVersionID(request);
                 CollectionVersion collectionVersion;

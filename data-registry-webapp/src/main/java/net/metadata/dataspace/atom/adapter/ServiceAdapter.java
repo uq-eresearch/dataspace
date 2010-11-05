@@ -222,7 +222,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         if (service == null) {
             return ProviderHelper.notfound(request);
         } else {
-            entityManager.refresh(service);
+            serviceDao.refresh(service);
             if (service.isActive()) {
                 String versionKey = AdapterHelper.getEntryVersionID(request);
                 ServiceVersion serviceVersion;
