@@ -13,6 +13,7 @@ public class DataCollectionRegistryTest extends DataCollectionsRegistryTestCase 
     public void testFrontPage() throws Exception {
         final WebClient webClient = new WebClient();
         final HtmlPage page = (HtmlPage) webClient.getPage("http://localhost:9635");
+        waitForDojo();
         assertEquals("UQ Data Collections Registry", page.getTitleText());
 
         webClient.closeAllWindows();

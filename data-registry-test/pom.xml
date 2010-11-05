@@ -118,7 +118,6 @@ This configuration can be run with "mvn integration-test".
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.2.143</version>
-            <scope>test</scope>
         </dependency>
         <!-- we depend on our own app, so the deployment setup above can find it -->
         <dependency>
