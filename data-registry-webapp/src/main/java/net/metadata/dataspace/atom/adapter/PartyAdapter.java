@@ -75,7 +75,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                     Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
-            } catch (ResponseContextException e) {
+            } catch (Exception e) {
                 logger.warn("Invalid entry posted.", e);
                 entityManager.getTransaction().rollback();
                 return ProviderHelper.servererror(request, e);
@@ -146,7 +146,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
                     }
                 }
-            } catch (ResponseContextException e) {
+            } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
                 entityManager.getTransaction().rollback();
                 return ProviderHelper.servererror(request, e);

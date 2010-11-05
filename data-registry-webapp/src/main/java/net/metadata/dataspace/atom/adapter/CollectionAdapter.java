@@ -76,7 +76,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                     Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
-            } catch (ResponseContextException e) {
+            } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
                 transaction.rollback();
                 return ProviderHelper.servererror(request, e);
@@ -147,7 +147,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
                     }
                 }
-            } catch (ResponseContextException e) {
+            } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
                 transaction.rollback();
                 return ProviderHelper.servererror(request, e);

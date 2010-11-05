@@ -81,7 +81,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                     Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
-            } catch (ResponseContextException e) {
+            } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
                 transaction.rollback();
                 return ProviderHelper.servererror(request, e);
@@ -151,7 +151,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
                     }
                 }
-            } catch (ResponseContextException e) {
+            } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
                 transaction.rollback();
                 return ProviderHelper.servererror(request, e);

@@ -76,7 +76,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                     Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
-            } catch (ResponseContextException e) {
+            } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
                 entityManager.getTransaction().rollback();
                 return ProviderHelper.servererror(request, e);
@@ -145,7 +145,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                         return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
                     }
                 }
-            } catch (ResponseContextException e) {
+            } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
                 entityManager.getTransaction().rollback();
                 return ProviderHelper.servererror(request, e);
