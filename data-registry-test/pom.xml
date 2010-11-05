@@ -48,6 +48,9 @@ This configuration can be run with "mvn integration-test".
                     <container>
                         <containerId>jetty6x</containerId>
                         <type>embedded</type>
+                        <systemProperties>
+                            <data.registry.persistenceUnitName>test</data.registry.persistenceUnitName>
+                        </systemProperties>
                     </container>
                     <!-- don't let Jetty ask for the Ctrl-C to stop -->
                     <wait>false</wait>
