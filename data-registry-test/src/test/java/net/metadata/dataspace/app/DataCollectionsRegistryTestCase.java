@@ -9,12 +9,11 @@ import net.sourceforge.jwebunit.junit.WebTestCase;
  */
 public abstract class DataCollectionsRegistryTestCase extends WebTestCase {
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        String baseUrl = System.getProperty("data.registry.uri.prefix", "http://localhost:9635");
-        setBaseUrl(baseUrl);
+//    protected void setUp() throws Exception {
+//        String baseUrl = System.getProperty("data.registry.uri.prefix", "http://localhost:9635");
+//        setBaseUrl(baseUrl);
 //        gotoPage(baseUrl + "/");
-    }
+//    }
 
     /**
      * Waits for a bit to let Dojo do its thing.
