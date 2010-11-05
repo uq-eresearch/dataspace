@@ -3,29 +3,29 @@ package net.metadata.dataspace.atom.adapter;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataCollectionsRegistryTestCase;
 import org.apache.abdera.Abdera;
+import org.apache.abdera.examples.xsltxpath.XPathExample;
 import org.apache.abdera.factory.Factory;
 import org.apache.abdera.model.*;
-import org.apache.abdera.parser.stax.util.FOMHelper;
+import org.apache.abdera.parser.Parser;
 import org.apache.abdera.protocol.Response;
 import org.apache.abdera.protocol.client.AbderaClient;
 import org.apache.abdera.protocol.client.RequestOptions;
 
-import java.util.Random;
+import java.io.InputStream;
 
 /**
  * Author: alabri
  * Date: 05/11/2010
  * Time: 3:08:31 PM
  */
-public class ActivityAdapterTest extends DataCollectionsRegistryTestCase {
+public class ActivityTest extends DataCollectionsRegistryTestCase {
 
     public void testPostActivity() throws Exception {
-
         //You need to make sure your server is running
         // Set the introspection document
         String host = Constants.URL_PREFIX;
-        String base = Constants.PATH_FOR_ACTIVITIES;
-        String serviceURI = host + "registry.atomsvc";
+        String pathForActivities = Constants.PATH_FOR_ACTIVITIES;
+        String serviceURI = host + Constants.PATH_FOR_ATOM_SERVICE;
 
         Abdera abdera = new Abdera();
 
@@ -40,23 +40,16 @@ public class ActivityAdapterTest extends DataCollectionsRegistryTestCase {
 
         // Prepare the entry
         Factory factory = abdera.getFactory();
-
-
-        Entry entry = factory.newEntry();
-        entry.setId(FOMHelper.generateUuid());
-        entry.setUpdated(new java.util.Date());
-        entry.addAuthor("Abdul Alabri");
-        entry.addAuthor("Nigel Ward");
-        String name = "New Activity " + new Random().nextInt(5000);
-        entry.setTitle(name);
-        entry.setSummary("This is a description of " + name);
-        entry.setContent("This is content of " + name);
+        InputStream in = XPathExample.class.getResourceAsStream("/files.post/new-activity.xml");
+        Parser parser = abdera.getParser();
+        Document doc = parser.parse(in);
+        Entry entry = (Entry) doc.getRoot();
 
         RequestOptions options = abderaClient.getDefaultRequestOptions();
         options.setUseChunked(false);
 
         // Post the entry
-        String fullURL = host + base;
+        String fullURL = host + pathForActivities;
         Response response = abderaClient.post(fullURL, entry, options);
 
         int status = response.getStatus();

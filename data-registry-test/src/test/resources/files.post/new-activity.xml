@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:uqdata="http://dataspace.metadata.net/">
+    <id>http://localhost:9635/activities/1</id>
+    <title type="text">Activity Name</title>
+    <summary type="text">Activity Description</summary>
+    <content type="text">Activity Content</content>
+    <updated>2010-10-28T01:03:29.877Z</updated>
+    <author>
+        <name>Nigel Ward</name>
+    </author>
+    <uqdata:hasParticipant uri="http://localhost:9635/parties/1"/>
+    <uqdata:hasOutput uri="http://localhost:9635/collections/1"/>
+</entry>

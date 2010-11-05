@@ -61,7 +61,7 @@ public interface Constants {
     String PATH_FOR_COLLECTIONS = "collections";
     String PATH_FOR_ACTIVITIES = "activities";
     String PATH_FOR_SERVICES = "services";
-
+    String PATH_FOR_ATOM_SERVICE = "registry.atomsvc";
     /**
      * Titles
      */

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:uqdata="http://dataspace.metadata.net/">
+    <id>http://localhost:9635/collections/1</id>
+    <title type="text">New Collection Name</title>
+    <summary type="text">New Collection Description</summary>
+    <content type="text">New Content</content>
+    <author>
+        <name>John Doe</name>
+    </author>
+    <updated>2010-10-07T04:53:12.456Z</updated>
+    <uqdata:location>http://localhost:9635/location</uqdata:location>
+</entry>

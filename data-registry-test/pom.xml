@@ -100,6 +100,11 @@ This configuration can be run with "mvn integration-test".
         <!-- we use the HTML unit variant of JWebUnit for testing -->
         <dependency>
             <groupId>org.apache.abdera</groupId>
+            <artifactId>abdera-examples</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.abdera</groupId>
             <artifactId>abdera-bundle</artifactId>
             <version>1.1</version>
         </dependency>
