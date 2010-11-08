@@ -134,29 +134,6 @@ This configuration can be run with "mvn integration-test".
             <artifactId>h2</artifactId>
             <version>1.2.143</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.apache.abdera</groupId>-->
-        <!--<artifactId>abdera-bundle</artifactId>-->
-        <!--<version>1.1</version>-->
-        <!--<exclusions>-->
-        <!--<exclusion>-->
-        <!--<artifactId>spring-web</artifactId>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--</exclusion>-->
-        <!--<exclusion>-->
-        <!--<artifactId>spring-beans</artifactId>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--</exclusion>-->
-        <!--<exclusion>-->
-        <!--<artifactId>spring-core</artifactId>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--</exclusion>-->
-        <!--<exclusion>-->
-        <!--<artifactId>spring-context</artifactId>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--</exclusion>-->
-        <!--</exclusions>-->
-        <!--</dependency>-->
         <!-- we depend on our own app, so the deployment setup above can find it -->
         <dependency>
             <groupId>net.metadata.dataspace</groupId>

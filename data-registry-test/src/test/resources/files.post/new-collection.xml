@@ -1,12 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <entry xmlns="http://www.w3.org/2005/Atom" xmlns:uqdata="http://dataspace.metadata.net/">
-    <id>http://localhost:9635/collections/1</id>
-    <title type="text">New Collection Name</title>
-    <summary type="text">New Collection Description</summary>
-    <content type="text">New Content</content>
+    <id>http://dataspace.metadata.net/collections/2</id>
+    <title type="text">Digitised images of Carter Brown Book Covers</title>
+    <content type="text">A collection of digitised images of covers of Carter Brown books published in the 1950s ...
+    </content>
+    <summary>Carter Brown book covers</summary>
     <author>
-        <name>John Doe</name>
+        <name>Nigel Ward</name>
     </author>
-    <updated>2010-10-07T04:53:12.456Z</updated>
-    <uqdata:location>http://localhost:9635/location</uqdata:location>
+    <updated>2010-10-08T05:58:02.781Z</updated>
+    <link rel="self" type="application/atom+xml; type=entry"
+          href="http://dataspace.metadata.net/collections/2?repr=application/atom+xml; type=entry"/>
+    <link rel="alternate" type="application/json"
+          href="http://dataspace-uat.metadata.net/collections/2?repr=application/json"/>
+    <uqdata:subject vocabulary="anzsrc-for" value="200502"/>
+    <uqdata:location>http://espace.library.uq.edu.au/collection/UQ:3521</uqdata:location>
+    <uqdata:isOutputOf uri="http://dataspace.metadata.net/activities/1"/>
+    <uqdata:supports uri="http://dataspace.metadata.net/services/1"/>
+    <uqdata:collector uri="http://dataspace.metadata.net/parties/1"/>
 </entry>
