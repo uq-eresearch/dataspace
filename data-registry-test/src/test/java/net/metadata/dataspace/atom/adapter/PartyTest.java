@@ -12,7 +12,7 @@ import net.metadata.dataspace.atom.util.TestHelper;
 public class PartyTest extends DataCollectionsRegistryTestCase {
 
     public void testPostParty() throws Exception {
-        String fileName = "/files.post/new-party.xml";
+        String fileName = "/files/post/new-party.xml";
         int status = TestHelper.postEntry(fileName, Constants.PATH_FOR_PARTIES);
         assertTrue("Could not post entry, The server returned: " + status, status == 201);
     }

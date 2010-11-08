@@ -12,7 +12,7 @@ import net.metadata.dataspace.atom.util.TestHelper;
 public class ServiceTest extends DataCollectionsRegistryTestCase {
 
     public void testPostService() throws Exception {
-        String fileName = "/files.post/new-service.xml";
+        String fileName = "/files/post/new-service.xml";
         int status = TestHelper.postEntry(fileName, Constants.PATH_FOR_SERVICES);
         assertTrue("Could not post entry, The server returned: " + status, status == 201);
     }
