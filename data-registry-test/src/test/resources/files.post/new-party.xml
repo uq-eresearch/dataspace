@@ -8,4 +8,8 @@
     <author>
         <name>Nigel Ward</name>
     </author>
+    <uqdata:subject vocabulary="anzsrc-for" value="200502"/>
+    <uqdata:subject vocabulary="anzsrc-for" value="200501"/>
+    <uqdata:collectorOf uri="http://localhost:9635/collections/1"/>
+    <uqdata:isParticipantIn uri="http://localhost:9635/activities/1"/>
 </entry>

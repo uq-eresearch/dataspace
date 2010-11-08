@@ -5,10 +5,9 @@
     <content type="text">This web-based interactive tool supports spatial and statistical analysis, modelling and
         visualisation of data derived from the 2006 Australian Census of Population and Housing, voting results for the
         2007 Australian Federal election, and location of polling booths from the Australian Electoral Commission. It
-        can be
-        used to analyse phenomena such as the relationship between voting patterns and local demographic and
-        socio-economic
-        data. The tool supports regression analysis, MANOVA cluster analysis and discriminant analysis of the data
+        can be used to analyse phenomena such as the relationship between voting patterns and local demographic and
+        socio-economicdata. The tool supports regression analysis, MANOVA cluster analysis and discriminant analysis of
+        the data
     </content>
     <summary>spatial and statistical analysis</summary>
     <author>

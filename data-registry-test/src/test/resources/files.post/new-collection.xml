@@ -9,11 +9,8 @@
         <name>Nigel Ward</name>
     </author>
     <updated>2010-10-08T05:58:02.781Z</updated>
-    <link rel="self" type="application/atom+xml; type=entry"
-          href="http://dataspace.metadata.net/collections/2?repr=application/atom+xml; type=entry"/>
-    <link rel="alternate" type="application/json"
-          href="http://dataspace-uat.metadata.net/collections/2?repr=application/json"/>
     <uqdata:subject vocabulary="anzsrc-for" value="200502"/>
+    <uqdata:subject vocabulary="anzsrc-for" value="200501"/>
     <uqdata:location>http://espace.library.uq.edu.au/collection/UQ:3521</uqdata:location>
     <uqdata:isOutputOf uri="http://dataspace.metadata.net/activities/1"/>
     <uqdata:supports uri="http://dataspace.metadata.net/services/1"/>
