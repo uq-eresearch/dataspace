@@ -55,4 +55,13 @@ public class TestHelper {
         ClientResponse clientResponse = abderaClient.get(uri);
         return clientResponse;
     }
+
+    public static ClientResponse deleteEntry(String uri) {
+        Abdera abdera = new Abdera();
+        AbderaClient abderaClient = new AbderaClient(abdera);
+        ClientResponse clientResponse = abderaClient.delete(uri);
+        return clientResponse;
+    }
+
+
 }
