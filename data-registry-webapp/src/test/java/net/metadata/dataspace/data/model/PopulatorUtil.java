@@ -27,6 +27,7 @@ public class PopulatorUtil {
 
     public static CollectionVersion getCollectionVersion(Collection collection) throws Exception {
         CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
+        collectionVersion.setParent(collection);
         collectionVersion.setTitle("Test Collection");
         collectionVersion.setContent("Test Collection Content");
         collectionVersion.setSummary("Test collection description");
@@ -54,6 +55,7 @@ public class PopulatorUtil {
 
     public static ServiceVersion getServiceVersion(Service service) {
         ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
+        serviceVersion.setParent(service);
         serviceVersion.setTitle("Test Service Title");
         serviceVersion.setSummary("Test Service Summary");
         serviceVersion.setContent("Test Service Content");
@@ -67,6 +69,7 @@ public class PopulatorUtil {
 
     public static ActivityVersion getActivityVersion(Activity activity) {
         ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
+        activityVersion.setParent(activity);
         activityVersion.setTitle("Test Activity Title");
         activityVersion.setSummary("Test Activity Summary");
         activityVersion.setContent("Test Activity Content");

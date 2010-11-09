@@ -74,6 +74,7 @@ public class PartyDaoImplTest {
         Party partyById = partyDao.getById(id);
         assertTrue("Table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() == (originalPartyTableSize + 1));
         assertEquals("Added and Retrieved records are not the same.", id, partyById.getId());
+        assertEquals("Number of versions", 1, partyById.getVersions().size());
         assertEquals("Number of subjects", 2, partyById.getVersions().first().getSubjects().size());
     }
 
@@ -119,7 +120,6 @@ public class PartyDaoImplTest {
             updated = partyDao.softDelete(party.getUriKey());
             partyDao.refresh(party);
         }
-
         assertEquals("Updated rows", 1, updated);
         assertTrue("Table is empty", partyDao.getAll().size() != 0);
         assertEquals("Table has active records", 0, partyDao.getAllActive().size());
