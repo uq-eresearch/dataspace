@@ -160,70 +160,58 @@ public class AdapterHelperTest {
         assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.QNAME_SUPPORTED_BY).size() == 1);
     }
 
-//    @Test
-//    public void testUpdatePartyFromEntry() throws Exception {
-//        List<Party> parties = partyDao.getAll();
-//        Party party = parties.get(0);
-//        Entry entry = AdapterHelper.getEntryFromParty(party.getVersions().first(), true);
-//        Party newParty = entityCreator.getNextParty();
-////        assertTrue("Could not update party", AdapterHelper.updatePartyFromEntry(newParty, entry));
-//        assertEquals("Entry title", party.getTitle(), newParty.getTitle());
-//        assertEquals("Entry summary", party.getSummary(), newParty.getSummary());
-//        assertEquals("Entry content", party.getContent(), newParty.getContent());
-//        assertTrue("Entry updated", party.getUpdated().equals(newParty.getUpdated()));
-//    }
-//
-//    @Test
-//    public void testUpdateCollectionFromEntry() throws Exception {
-//        List<Collection> collections = collectionDao.getAll();
-//        Collection collection = collections.get(0);
-//        Entry entry = AdapterHelper.getEntryFromCollection(collection.getVersions().first(), true);
-//        Collection newCollection = entityCreator.getNextCollection();
-//        assertEquals("Entry title", collection.getTitle(), newCollection.getTitle());
-//        assertEquals("Entry summary", collection.getSummary(), newCollection.getSummary());
-//        assertEquals("Entry content", collection.getContent(), newCollection.getContent());
-//        assertEquals("Entry location", collection.getLocation(), newCollection.getLocation());
-//        assertTrue("Entry updated", collection.getUpdated().equals(newCollection.getUpdated()));
-//    }
-//
-//    @Test
-//    public void testUpdateServiceFromEntry() throws Exception {
-//        List<Service> services = serviceDao.getAll();
-//        Service service = services.get(0);
-//        Entry entry = AdapterHelper.getEntryFromService(service.getVersions().first(), true);
-//        Service newService = entityCreator.getNextService();
-//        assertTrue("Could not update service", AdapterHelper.updateServiceFromEntry(newService, entry));
-//        assertEquals("Entry title", service.getTitle(), newService.getTitle());
-//        assertEquals("Entry summary", service.getSummary(), newService.getSummary());
-//        assertEquals("Entry content", service.getContent(), newService.getContent());
-//        assertEquals("Entry location", service.getLocation(), newService.getLocation());
-//        assertTrue("Entry updated", service.getUpdated().equals(newService.getUpdated()));
-//    }
-//
-//    @Test
-//    public void testUpdateActivityFromEntry() throws Exception {
-//        List<Activity> activities = activityDao.getAll();
-//        Activity activity = activities.get(0);
-//        Entry entry = AdapterHelper.getEntryFromActivity(activity);
-//        Activity newActivity = entityCreator.getNextActivity();
-//        assertTrue("Could not update activity", AdapterHelper.isValidActivityFromEntry(newActivity, entry));
-//        assertEquals("Entry title", activity.getTitle(), newActivity.getTitle());
-//        assertEquals("Entry summary", activity.getSummary(), newActivity.getSummary());
-//        assertEquals("Entry content", activity.getContent(), newActivity.getContent());
-//        assertTrue("Entry updated", activity.getUpdated().equals(newActivity.getUpdated()));
-//    }
-//
-//    @Test
-//    public void testGetUriKeysFromExtension() throws Exception {
-//        List<Activity> activities = activityDao.getAll();
-//        Activity activity = activities.get(0);
-//        Entry entry = AdapterHelper.getEntryFromActivity(activity);
-//        Element element = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
-//        List<Collection> collections = collectionDao.getAll();
-//        Collection collection = collections.get(0);
-//        String uri = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
-//        element.setAttributeValue("uri", uri);
-//
-//        assertEquals("URI is not the same", collection.getUriKey(), AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_OUTPUT).iterator().next());
-//    }
+    @Test
+    public void testUpdatePartyFromEntry() throws Exception {
+        List<Party> parties = partyDao.getAll();
+        Party party = parties.get(0);
+        Entry entry = AdapterHelper.getEntryFromParty(party.getVersions().first(), true);
+        PartyVersion version = entityCreator.getNextPartyVersion(party);
+        assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
+        assertEquals("Entry title", party.getVersions().first().getTitle(), version.getTitle());
+        assertEquals("Entry summary", party.getVersions().first().getSummary(), version.getSummary());
+        assertEquals("Entry content", party.getVersions().first().getContent(), version.getContent());
+        assertTrue("Entry updated", party.getVersions().first().getUpdated().equals(version.getUpdated()));
+    }
+
+    @Test
+    public void testUpdateCollectionFromEntry() throws Exception {
+        List<Collection> collections = collectionDao.getAll();
+        Collection collection = collections.get(0);
+        Entry entry = AdapterHelper.getEntryFromCollection(collection.getVersions().first(), true);
+        CollectionVersion version = entityCreator.getNextCollectionVersion(collection);
+        assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
+        assertEquals("Entry title", collection.getVersions().first().getTitle(), version.getTitle());
+        assertEquals("Entry summary", collection.getVersions().first().getSummary(), version.getSummary());
+        assertEquals("Entry content", collection.getVersions().first().getContent(), version.getContent());
+        assertEquals("Entry location", collection.getVersions().first().getLocation(), version.getLocation());
+        assertTrue("Entry updated", collection.getVersions().first().getUpdated().equals(version.getUpdated()));
+    }
+
+    @Test
+    public void testUpdateServiceFromEntry() throws Exception {
+        List<Service> services = serviceDao.getAll();
+        Service service = services.get(0);
+        Entry entry = AdapterHelper.getEntryFromService(service.getVersions().first(), true);
+        ServiceVersion version = entityCreator.getNextServiceVersion(service);
+        assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
+        assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
+        assertEquals("Entry summary", service.getVersions().first().getSummary(), version.getSummary());
+        assertEquals("Entry content", service.getVersions().first().getContent(), version.getContent());
+        assertEquals("Entry location", service.getVersions().first().getLocation(), version.getLocation());
+        assertTrue("Entry updated", service.getVersions().first().getUpdated().equals(version.getUpdated()));
+    }
+
+    @Test
+    public void testUpdateActivityFromEntry() throws Exception {
+        List<Activity> activities = activityDao.getAll();
+        Activity activity = activities.get(0);
+        Entry entry = AdapterHelper.getEntryFromActivity(activity.getVersions().first(), true);
+        ActivityVersion version = entityCreator.getNextActivityVersion(activity);
+        assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
+        assertEquals("Entry title", activity.getTitle(), version.getTitle());
+        assertEquals("Entry summary", activity.getSummary(), version.getSummary());
+        assertEquals("Entry content", activity.getContent(), version.getContent());
+        assertTrue("Entry updated", activity.getUpdated().equals(version.getUpdated()));
+    }
+
 }
