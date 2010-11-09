@@ -8,6 +8,7 @@ import org.apache.abdera.model.Entry;
 import org.apache.abdera.parser.Parser;
 import org.apache.abdera.protocol.Response;
 import org.apache.abdera.protocol.client.AbderaClient;
+import org.apache.abdera.protocol.client.ClientResponse;
 import org.apache.abdera.protocol.client.RequestOptions;
 
 import java.io.InputStream;
@@ -20,7 +21,7 @@ import java.io.InputStream;
 public class TestHelper {
     private static String host = Constants.URL_PREFIX;
 
-    public static int postEntry(String fileName, String pathForActivities) {
+    public static Response postEntry(String fileName, String pathForActivities) {
         Abdera abdera = new Abdera();
         AbderaClient abderaClient = new AbderaClient(abdera);
         InputStream in = XPathExample.class.getResourceAsStream(fileName);
@@ -31,11 +32,10 @@ public class TestHelper {
         options.setUseChunked(false);
         String fullURL = host + pathForActivities;
         Response response = abderaClient.post(fullURL, entry, options);
-        int status = response.getStatus();
-        return status;
+        return response;
     }
 
-    public static int putEntry(String fileName, String pathForActivities) {
+    public static Response putEntry(String fileName, String pathForActivities) {
         Abdera abdera = new Abdera();
         AbderaClient abderaClient = new AbderaClient(abdera);
         InputStream in = XPathExample.class.getResourceAsStream(fileName);
@@ -46,7 +46,13 @@ public class TestHelper {
         options.setUseChunked(false);
         String fullURL = host + pathForActivities;
         Response response = abderaClient.put(fullURL, entry, options);
-        int status = response.getStatus();
-        return status;
+        return response;
+    }
+
+    public static ClientResponse getEntry(String uri) {
+        Abdera abdera = new Abdera();
+        AbderaClient abderaClient = new AbderaClient(abdera);
+        ClientResponse clientResponse = abderaClient.get(uri);
+        return clientResponse;
     }
 }
