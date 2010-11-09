@@ -17,6 +17,10 @@ public class DaoManagerImpl implements DaoManager {
     private ActivityDao activityDao;
     private SubjectDao subjectDao;
     private JpaConnector jpaConnnector;
+    private PartyVersionDao partyVersionDao;
+    private CollectionVersionDao collectionVersionDao;
+    private ServiceVersionDao serviceVersionDao;
+    private ActivityVersionDao activityVersionDao;
 
     public void setCollectionDao(CollectionDao collectionDao) {
         this.collectionDao = collectionDao;
@@ -64,5 +68,37 @@ public class DaoManagerImpl implements DaoManager {
 
     public JpaConnector getJpaConnnector() {
         return jpaConnnector;
+    }
+
+    public void setPartyVersionDao(PartyVersionDao partyVersionDao) {
+        this.partyVersionDao = partyVersionDao;
+    }
+
+    public PartyVersionDao getPartyVersionDao() {
+        return partyVersionDao;
+    }
+
+    public void setCollectionVersionDao(CollectionVersionDao collectionVersionDao) {
+        this.collectionVersionDao = collectionVersionDao;
+    }
+
+    public CollectionVersionDao getCollectionVersionDao() {
+        return collectionVersionDao;
+    }
+
+    public void setServiceVersionDao(ServiceVersionDao serviceVersionDao) {
+        this.serviceVersionDao = serviceVersionDao;
+    }
+
+    public ServiceVersionDao getServiceVersionDao() {
+        return serviceVersionDao;
+    }
+
+    public void setActivityVersionDao(ActivityVersionDao activityVersionDao) {
+        this.activityVersionDao = activityVersionDao;
+    }
+
+    public ActivityVersionDao getActivityVersionDao() {
+        return activityVersionDao;
     }
 }

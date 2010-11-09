@@ -14,11 +14,19 @@ public interface DaoManager {
 
     PartyDao getPartyDao();
 
+    PartyVersionDao getPartyVersionDao();
+
     ServiceDao getServiceDao();
 
     ActivityDao getActivityDao();
 
     SubjectDao getSubjectDao();
+
+    CollectionVersionDao getCollectionVersionDao();
+
+    ServiceVersionDao getServiceVersionDao();
+
+    ActivityVersionDao getActivityVersionDao();
 
     JpaConnector getJpaConnnector();
 }

@@ -3,8 +3,9 @@ package net.metadata.dataspace.data.access;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
-import net.metadata.dataspace.data.model.Collection;
 import net.metadata.dataspace.data.model.Party;
+import net.metadata.dataspace.data.model.PartyVersion;
+import net.metadata.dataspace.data.model.PopulatorUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,71 +46,73 @@ public class PartyDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
+        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
     }
 
     @After
     public void tearDown() throws Exception {
         //Remove all parties
-        List<Collection> collectionList = collectionDao.getAll();
-        for (Collection collection : collectionList) {
-            collectionDao.delete(collection);
-        }
+        PopulatorUtil.cleanup();
     }
 
     @Test
     public void testAddingParty() throws Exception {
         Party party = entityCreator.getNextParty();
+        party.setUpdated(new Date());
         entityManager.getTransaction().begin();
         int originalPartyTableSize = partyDao.getAll().size();
+        PartyVersion partyVersion = PopulatorUtil.getPartyVersion(party);
+        partyVersion.getSubjects().add(PopulatorUtil.getSubject());
+        partyVersion.getSubjects().add(PopulatorUtil.getSubject());
+        party.getVersions().add(partyVersion);
+        entityManager.persist(partyVersion);
         entityManager.persist(party);
         entityManager.getTransaction().commit();
-        //Collection table shouldn't be empty
-        assertTrue("Party table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() == (originalPartyTableSize + 1));
-        assertEquals("Added and Retrieved collections are not the same.", party, partyDao.getById(party.getId()));
+
+        Long id = party.getId();
+        Party partyById = partyDao.getById(id);
+        assertTrue("Table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() == (originalPartyTableSize + 1));
+        assertEquals("Added and Retrieved records are not the same.", id, partyById.getId());
+        assertEquals("Number of subjects", 2, partyById.getVersions().first().getSubjects().size());
     }
 
 
     @Test
     public void testEditingParty() throws Exception {
         testAddingParty();
-
-        //Collection table shouldn't be empty
-        assertTrue("Collection table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() != 0);
-
+        assertTrue("Table is empty", partyDao.getAll().size() != 0);
         List<Party> partyList = partyDao.getAll();
         Party party = partyList.get(0);
+        entityManager.getTransaction().begin();
         Long id = party.getId();
         Date now = new Date();
+        String summary = "Updated Summary";
+        party.getVersions().first().setSummary(summary);
         party.setUpdated(now);
-        //Update the party
-        partyDao.update(party);
-
+        entityManager.merge(party);
+        entityManager.getTransaction().commit();
         Party partyById = partyDao.getById(id);
-
         assertEquals("Modified and Retrieved parties are not the same", party, partyById);
-        assertEquals("Date", now.equals(partyById.getUpdated()));
+        assertEquals("Update Date was not updated", now, partyById.getUpdated());
+        assertEquals("Summary was not updated", summary, partyById.getVersions().first().getSummary());
     }
-
 
     @Test
     public void testRemovingParty() throws Exception {
         testAddingParty();
-
-        assertTrue("Party table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() != 0);
-        //Remove all parties
+        assertTrue("Table is empty", partyDao.getAll().size() != 0);
         List<Party> partyList = partyDao.getAll();
         for (Party party : partyList) {
             partyDao.delete(party);
         }
-        //Check that party table has no records
-        assertTrue("Party table should be empty. It has has " + partyDao.getAll().size() + " records", partyDao.getAll().size() == 0);
+        assertTrue("Table is not empty", partyDao.getAll().size() == 0);
     }
 
     @Test
     public void testSoftDeleteCollection() throws Exception {
         testAddingParty();
-        assertTrue("Party table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() != 0);
+        assertTrue("Table is empty", partyDao.getAll().size() != 0);
         List<Party> partyList = partyDao.getAll();
         int updated = 0;
         for (Party party : partyList) {
@@ -117,12 +120,8 @@ public class PartyDaoImplTest {
             partyDao.refresh(party);
         }
 
-        assertTrue("Updated rows should be 1 not " + updated, updated == 1);
-        assertTrue("Party table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() != 0);
-        assertTrue("Party table has " + partyDao.getAllActive().size() + " records", partyDao.getAllActive().size() == 0);
-
-        List<Party> parties = partyDao.getAll();
-        Party party = parties.get(0);
-        assertTrue("Collection isActive: " + party.isActive(), !party.isActive());
+        assertEquals("Updated rows", 1, updated);
+        assertTrue("Table is empty", partyDao.getAll().size() != 0);
+        assertEquals("Table has active records", 0, partyDao.getAllActive().size());
     }
 }

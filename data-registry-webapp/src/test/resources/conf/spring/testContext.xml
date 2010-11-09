@@ -16,5 +16,6 @@
     <import resource="registry.xml"/>
     <bean id="populatorUtil" class="net.metadata.dataspace.data.model.PopulatorUtil">
         <property name="entityCreator" ref="entityCreator"/>
+        <property name="daoManager" ref="daoManager"/>
     </bean>
 </beans>

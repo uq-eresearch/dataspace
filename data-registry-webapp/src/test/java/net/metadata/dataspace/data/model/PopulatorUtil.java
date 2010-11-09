@@ -1,11 +1,11 @@
 package net.metadata.dataspace.data.model;
 
+import au.edu.uq.itee.maenad.dataaccess.Dao;
+import net.metadata.dataspace.data.access.*;
+import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * User: alabri
@@ -14,6 +14,7 @@ import java.util.UUID;
  */
 public class PopulatorUtil {
     private static EntityCreator entityCreator;
+    private static DaoManager daoManager;
 
     public static Subject getSubject() throws Exception {
         Subject subject = entityCreator.getNextSubject();
@@ -39,6 +40,7 @@ public class PopulatorUtil {
 
     public static PartyVersion getPartyVersion(Party party) throws Exception {
         PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
+        partyVersion.setParent(party);
         partyVersion.setTitle("Test Party Title");
         partyVersion.setSummary("Test Party Summary");
         partyVersion.setContent("Test Party Content");
@@ -75,6 +77,58 @@ public class PopulatorUtil {
         return activityVersion;
     }
 
+    public static void cleanup() {
+        PartyDao partyDao = daoManager.getPartyDao();
+        PartyVersionDao partyVersionDao = daoManager.getPartyVersionDao();
+        deleteEntity(partyDao, partyVersionDao);
+
+        CollectionDao collectionDao = daoManager.getCollectionDao();
+        CollectionVersionDao collectionVersionDao = daoManager.getCollectionVersionDao();
+        deleteEntity(collectionDao, collectionVersionDao);
+
+        ActivityDao activityDao = daoManager.getActivityDao();
+        ActivityVersionDao activityVersionDao = daoManager.getActivityVersionDao();
+        deleteEntity(activityDao, activityVersionDao);
+
+        ServiceDao serviceDao = daoManager.getServiceDao();
+        ServiceVersionDao serviceVersionDao = daoManager.getServiceVersionDao();
+        deleteEntity(serviceDao, serviceVersionDao);
+    }
+
+    private static void deleteEntity(Dao parentDao, Dao versionDao) {
+        List<Record> collectionList = parentDao.getAll();
+        for (Record collection : collectionList) {
+            SortedSet<Version> versions = collection.getVersions();
+            for (Version version : versions) {
+                if (parentDao instanceof PartyDao && versionDao instanceof PartyVersionDao) {
+                    PartyVersion ver = (PartyVersion) version;
+                    ver.getParticipantIn().removeAll(ver.getParticipantIn());
+                    ver.getCollectorOf().removeAll(ver.getCollectorOf());
+                    ver.getSubjects().removeAll(ver.getSubjects());
+                }
+                if (parentDao instanceof CollectionDao && versionDao instanceof CollectionVersionDao) {
+                    CollectionVersion ver = (CollectionVersion) version;
+                    ver.getOutputOf().removeAll(ver.getOutputOf());
+                    ver.getSupports().removeAll(ver.getSupports());
+                    ver.getCollector().removeAll(ver.getCollector());
+                    ver.getSubjects().removeAll(ver.getSubjects());
+                }
+                if (parentDao instanceof ActivityDao && versionDao instanceof ActivityVersionDao) {
+                    ActivityVersion ver = (ActivityVersion) version;
+                    ver.getHasOutput().removeAll(ver.getHasOutput());
+                    ver.getHasParticipant().removeAll(ver.getHasParticipant());
+                }
+                if (parentDao instanceof ServiceDao && versionDao instanceof ServiceVersionDao) {
+                    ServiceVersion ver = (ServiceVersion) version;
+                    ver.getSupportedBy().removeAll(ver.getSupportedBy());
+                }
+                version.getAuthors().removeAll(version.getAuthors());
+                collection.getVersions().remove(version);
+                versionDao.delete(version);
+            }
+            parentDao.delete(collection);
+        }
+    }
 
     public void setEntityCreator(EntityCreator entityCreator) {
         this.entityCreator = entityCreator;
@@ -84,4 +138,11 @@ public class PopulatorUtil {
         return entityCreator;
     }
 
+    public void setDaoManager(DaoManager daoManager) {
+        this.daoManager = daoManager;
+    }
+
+    public DaoManager getDaoManager() {
+        return daoManager;
+    }
 }

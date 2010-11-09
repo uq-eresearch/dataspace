@@ -7,7 +7,15 @@
         <constructor-arg ref="jpaConnector"/>
     </bean>
 
+    <bean id="collectionVersionDao" class="net.metadata.dataspace.data.access.impl.CollectionVersionDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
     <bean id="partyDao" class="net.metadata.dataspace.data.access.impl.PartyDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
+    <bean id="partyVersionDao" class="net.metadata.dataspace.data.access.impl.PartyVersionDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>
 
@@ -15,7 +23,15 @@
         <constructor-arg ref="jpaConnector"/>
     </bean>
 
+    <bean id="serviceVersionDao" class="net.metadata.dataspace.data.access.impl.ServiceVersionDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
     <bean id="activityDao" class="net.metadata.dataspace.data.access.impl.ActivityDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
+    <bean id="activityVersionDao" class="net.metadata.dataspace.data.access.impl.ActivityVersionDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>
 
