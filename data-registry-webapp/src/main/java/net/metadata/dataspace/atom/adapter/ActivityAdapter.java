@@ -129,7 +129,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
-                String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
+                String uriKey = AdapterHelper.getEntryID(request);
                 Activity activity = activityDao.getByKey(uriKey);
                 if (activity == null) {
                     return ProviderHelper.notfound(request);

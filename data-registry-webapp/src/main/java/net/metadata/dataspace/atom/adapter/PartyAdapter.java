@@ -124,7 +124,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             try {
                 Entry entry = getEntryFromRequest(request);
-                String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
+                String uriKey = AdapterHelper.getEntryID(request);
                 Party party = partyDao.getByKey(uriKey);
                 if (party == null) {
                     return ProviderHelper.notfound(request);

@@ -124,7 +124,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
-                String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
+                String uriKey = AdapterHelper.getEntryID(request);
                 Collection collection = collectionDao.getByKey(uriKey);
                 if (collection == null) {
                     return ProviderHelper.notfound(request);

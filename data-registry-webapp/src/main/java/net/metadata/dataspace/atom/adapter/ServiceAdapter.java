@@ -123,7 +123,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             try {
                 Entry entry = getEntryFromRequest(request);
-                String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
+                String uriKey = AdapterHelper.getEntryID(request);
                 Service service = serviceDao.getByKey(uriKey);
                 if (service == null) {
 
