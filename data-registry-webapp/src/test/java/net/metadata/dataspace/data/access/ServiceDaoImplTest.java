@@ -50,7 +50,6 @@ public class ServiceDaoImplTest {
 
     @After
     public void tearDown() throws Exception {
-        //Remove all parties
         PopulatorUtil.cleanup();
     }
 

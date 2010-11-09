@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.*;
 import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Entry;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
+import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -41,51 +44,57 @@ public class AdapterHelperTest {
 
     @Autowired
     private EntityCreator entityCreator;
+    @Autowired
+    private JpaConnector jpaConnector;
+
+    private EntityManager entityManager;
 
     @Before
     public void setUp() throws Exception {
-        Subject subject = PopulatorUtil.getSubject();
-        subjectDao.save(subject);
+//        PopulatorUtil.cleanup();
+        entityManager = jpaConnector.getEntityManager();
 
+        entityManager.getTransaction().begin();
         Party party = entityCreator.getNextParty();
+        party.setUpdated(new Date());
         PartyVersion partyVersion = PopulatorUtil.getPartyVersion(party);
-        partyVersion.setParent(party);
+        partyVersion.getSubjects().add(PopulatorUtil.getSubject());
+        partyVersion.getSubjects().add(PopulatorUtil.getSubject());
         party.getVersions().add(partyVersion);
-        partyDao.save(party);
-        party.getSubjects().add(subject);
+        entityManager.persist(partyVersion);
+        entityManager.persist(party);
 
         Collection collection = entityCreator.getNextCollection();
+        collection.setUpdated(new Date());
         CollectionVersion collectionVersion = PopulatorUtil.getCollectionVersion(collection);
-        collectionVersion.setParent(collection);
+        collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
+        collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
         collection.getVersions().add(collectionVersion);
-        collectionDao.save(collection);
-        collection.getSubjects().add(subject);
         collection.getCollector().add(party);
         party.getCollectorOf().add(collection);
-        subjectDao.update(subject);
-        collectionDao.update(collection);
-        partyDao.update(party);
+        entityManager.persist(collectionVersion);
+        entityManager.persist(collection);
 
         Service service = entityCreator.getNextService();
+        service.setUpdated(new Date());
         ServiceVersion serviceVersion = PopulatorUtil.getServiceVersion(service);
-        serviceVersion.setParent(service);
         service.getVersions().add(serviceVersion);
         service.getSupportedBy().add(collection);
         collection.getSupports().add(service);
-        serviceDao.save(service);
-        collectionDao.update(collection);
+        entityManager.persist(serviceVersion);
+        entityManager.persist(service);
 
         Activity activity = entityCreator.getNextActivity();
+        activity.setUpdated(new Date());
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
-        activityVersion.setParent(activity);
         activity.getVersions().add(activityVersion);
         activity.getHasOutput().add(collection);
         activity.getHasParticipant().add(party);
         party.getParticipantIn().add(activity);
         collection.getOutputOf().add(activity);
-        activityDao.save(activity);
-        collectionDao.update(collection);
-        partyDao.update(party);
+        entityManager.persist(activityVersion);
+        entityManager.persist(activity);
+        entityManager.getTransaction().commit();
     }
 
     @Test
@@ -99,8 +108,8 @@ public class AdapterHelperTest {
         assertEquals("Entry content", entry.getContent(), party.getContent());
         assertEquals("Entry updated", entry.getUpdated(), party.getUpdated());
         assertEquals("Entry authors", entry.getAuthors().size(), party.getAuthors().size());
-        assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.QNAME_SUBJECT).size() == 1);
-        assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.QNAME_COLLECTOR_OF).size() == 1);
+        assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.QNAME_SUBJECT).size() >= 1);
+        assertTrue("Entry should have at least one collection", entry.<Element>getExtensions(Constants.QNAME_COLLECTOR_OF).size() >= 1);
     }
 
     @Test
@@ -114,11 +123,11 @@ public class AdapterHelperTest {
         assertEquals("Entry content", entry.getContent(), collection.getContent());
         assertEquals("Entry updated", entry.getUpdated(), collection.getUpdated());
         assertEquals("Entry authors", entry.getAuthors().size(), collection.getAuthors().size());
-        assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.QNAME_SUBJECT).size() == 1);
-        assertTrue("Entry should have at least one location", entry.<Element>getExtensions(Constants.QNAME_LOCATION).size() == 1);
-        assertTrue("Entry should have at least one party", entry.<Element>getExtensions(Constants.QNAME_COLLECTOR).size() == 1);
-        assertTrue("Entry should have at least one service", entry.<Element>getExtensions(Constants.QNAME_SUPPORTS).size() == 1);
-        assertTrue("Entry should have at least one activity", entry.<Element>getExtensions(Constants.QNAME_IS_OUTPUT_OF).size() == 1);
+        assertTrue("Entry should have at least one subject", entry.<Element>getExtensions(Constants.QNAME_SUBJECT).size() >= 1);
+        assertTrue("Entry should have at least one location", entry.<Element>getExtensions(Constants.QNAME_LOCATION).size() >= 1);
+        assertTrue("Entry should have at least one party", entry.<Element>getExtensions(Constants.QNAME_COLLECTOR).size() >= 1);
+        assertTrue("Entry should have at least one service", entry.<Element>getExtensions(Constants.QNAME_SUPPORTS).size() >= 1);
+        assertTrue("Entry should have at least one activity", entry.<Element>getExtensions(Constants.QNAME_IS_OUTPUT_OF).size() >= 1);
     }
 
     @Test

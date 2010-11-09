@@ -50,7 +50,6 @@ public class ActivityDaoImplTest {
 
     @After
     public void tearDown() throws Exception {
-        //Remove all parties
         PopulatorUtil.cleanup();
     }
 
