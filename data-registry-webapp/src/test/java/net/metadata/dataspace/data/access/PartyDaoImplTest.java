@@ -61,7 +61,7 @@ public class PartyDaoImplTest {
         Party party = entityCreator.getNextParty();
         party.setUpdated(new Date());
         entityManager.getTransaction().begin();
-        int originalPartyTableSize = partyDao.getAll().size();
+        int originalTableSize = partyDao.getAll().size();
         PartyVersion partyVersion = PopulatorUtil.getPartyVersion(party);
         partyVersion.getSubjects().add(PopulatorUtil.getSubject());
         partyVersion.getSubjects().add(PopulatorUtil.getSubject());
@@ -72,7 +72,7 @@ public class PartyDaoImplTest {
 
         Long id = party.getId();
         Party partyById = partyDao.getById(id);
-        assertTrue("Table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() == (originalPartyTableSize + 1));
+        assertTrue("Table has " + partyDao.getAll().size() + " records", partyDao.getAll().size() == (originalTableSize + 1));
         assertEquals("Added and Retrieved records are not the same.", id, partyById.getId());
         assertEquals("Number of versions", 1, partyById.getVersions().size());
         assertEquals("Number of subjects", 2, partyById.getVersions().first().getSubjects().size());
@@ -111,7 +111,7 @@ public class PartyDaoImplTest {
     }
 
     @Test
-    public void testSoftDeleteCollection() throws Exception {
+    public void testSoftDeleteParty() throws Exception {
         testAddingParty();
         assertTrue("Table is empty", partyDao.getAll().size() != 0);
         List<Party> partyList = partyDao.getAll();

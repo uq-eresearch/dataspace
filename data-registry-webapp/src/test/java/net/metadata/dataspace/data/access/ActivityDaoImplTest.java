@@ -3,14 +3,23 @@ package net.metadata.dataspace.data.access;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
-import net.metadata.dataspace.data.model.*;
+import net.metadata.dataspace.data.model.Activity;
+import net.metadata.dataspace.data.model.ActivityVersion;
+import net.metadata.dataspace.data.model.PopulatorUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static net.sf.json.test.JSONAssert.assertEquals;
+import javax.persistence.EntityManager;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Author: alabri
@@ -31,26 +40,83 @@ public class ActivityDaoImplTest {
     @Autowired
     private JpaConnector jpaConnector;
 
+    private EntityManager entityManager;
+
+    @Before
+    public void setUp() throws Exception {
+        PopulatorUtil.cleanup();
+        entityManager = jpaConnector.getEntityManager();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        //Remove all parties
+        PopulatorUtil.cleanup();
+    }
+
     @Test
-    public void testAddingService() throws Exception {
-        int originalActivityTableSize = activityDao.getAll().size();
-        Party party = entityCreator.getNextParty();
-        jpaConnector.getEntityManager().persist(party);
-        Collection collection = entityCreator.getNextCollection();
-        jpaConnector.getEntityManager().persist(collection);
-
+    public void testAddingActivity() throws Exception {
         Activity activity = entityCreator.getNextActivity();
+        activity.setUpdated(new Date());
+        entityManager.getTransaction().begin();
+        int originalTableSize = activityDao.getAll().size();
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
-        activityVersion.getHasOutput().add(collection);
-        activityVersion.getHasParticipant().add(party);
-        activityVersion.setParent(activity);
         activity.getVersions().add(activityVersion);
-        party.getParticipantIn().add(activity);
-        collection.getOutputOf().add(activity);
-        jpaConnector.getEntityManager().persist(activity);
+        entityManager.persist(activityVersion);
+        entityManager.persist(activity);
+        entityManager.getTransaction().commit();
 
-        activityDao.refresh(activity);
-        assertEquals("Number of activities", activityDao.getAll().size(), (originalActivityTableSize + 1));
-        assertEquals("Activity", activity, activityDao.getById(activity.getId()));
+        Long id = activity.getId();
+        Activity activityById = activityDao.getById(id);
+        assertTrue("Table has " + activityDao.getAll().size() + " records", activityDao.getAll().size() == (originalTableSize + 1));
+        Assert.assertEquals("Added and Retrieved records are not the same.", id, activityById.getId());
+        Assert.assertEquals("Number of versions", 1, activityById.getVersions().size());
+    }
+
+
+    @Test
+    public void testEditingActivity() throws Exception {
+        testAddingActivity();
+        assertTrue("Table is empty", activityDao.getAll().size() != 0);
+        List<Activity> activities = activityDao.getAll();
+        Activity activity = activities.get(0);
+        entityManager.getTransaction().begin();
+        Long id = activity.getId();
+        Date now = new Date();
+        String summary = "Updated Summary";
+        activity.getVersions().first().setSummary(summary);
+        activity.setUpdated(now);
+        entityManager.merge(activity);
+        entityManager.getTransaction().commit();
+        Activity activityById = activityDao.getById(id);
+        Assert.assertEquals("Modified and Retrieved parties are not the same", activity, activityById);
+        Assert.assertEquals("Update Date was not updated", now, activityById.getUpdated());
+        Assert.assertEquals("Summary was not updated", summary, activityById.getVersions().first().getSummary());
+    }
+
+    @Test
+    public void testRemovingActivity() throws Exception {
+        testAddingActivity();
+        assertTrue("Table is empty", activityDao.getAll().size() != 0);
+        List<Activity> activities = activityDao.getAll();
+        for (Activity activity : activities) {
+            activityDao.delete(activity);
+        }
+        assertTrue("Table is not empty", activityDao.getAll().size() == 0);
+    }
+
+    @Test
+    public void testSoftDeleteActivity() throws Exception {
+        testAddingActivity();
+        assertTrue("Table is empty", activityDao.getAll().size() != 0);
+        List<Activity> activities = activityDao.getAll();
+        int updated = 0;
+        for (Activity activity : activities) {
+            updated = activityDao.softDelete(activity.getUriKey());
+            activityDao.refresh(activity);
+        }
+        Assert.assertEquals("Updated rows", 1, updated);
+        assertTrue("Table is empty", activityDao.getAll().size() != 0);
+        Assert.assertEquals("Table has active records", 0, activityDao.getAllActive().size());
     }
 }

@@ -34,8 +34,6 @@ public class CollectionDaoImplTest {
     private CollectionDao collectionDao;
     @Autowired
     private SubjectDao subjectDao;
-    @Autowired
-    private PartyDao partyDao;
 
     @Autowired
     private EntityCreator entityCreator;
