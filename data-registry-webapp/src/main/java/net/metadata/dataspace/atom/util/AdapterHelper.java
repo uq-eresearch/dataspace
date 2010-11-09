@@ -275,11 +275,12 @@ public class AdapterHelper {
         }
     }
 
-    private static void addLocation(Version collectionVersion, Entry entry) {
+    private static void addLocation(Version version, Entry entry) {
         List<Element> extensions = entry.getExtensions();
         for (Element extension : extensions) {
             if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
-                collectionVersion.setLocation(extension.getText());
+                String location = extension.getText();
+                version.setLocation(location);
             }
         }
     }

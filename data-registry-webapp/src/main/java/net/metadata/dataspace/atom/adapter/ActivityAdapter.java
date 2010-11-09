@@ -50,7 +50,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
-    private EntityManager enityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+//    private EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -59,7 +59,8 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (baseType.equals(Constants.JSON_MIMETYPE)) {
             return postMedia(request);
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
-            EntityTransaction transaction = enityManager.getTransaction();
+            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
                 Activity activity = entityCreator.getNextActivity();
@@ -74,8 +75,8 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                     Date now = new Date();
                     activityVersion.setUpdated(now);
                     activity.setUpdated(now);
-                    enityManager.persist(activityVersion);
-                    enityManager.persist(activity);
+                    entityManager.persist(activityVersion);
+                    entityManager.persist(activity);
                     furtherUpdate(entry, activityVersion);
                     transaction.commit();
                     Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
@@ -124,7 +125,8 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
             putMedia(request);
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
-            EntityTransaction transaction = enityManager.getTransaction();
+            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
@@ -142,7 +144,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                             activity.getVersions().add(activityVersion);
                             activityVersion.setParent(activity);
                             furtherUpdate(entry, activityVersion);
-                            enityManager.merge(activity);
+                            entityManager.merge(activity);
                             transaction.commit();
                             Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
                             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
@@ -389,13 +391,14 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     }
 
     private void furtherUpdate(Entry entry, ActivityVersion activityVersion) {
+        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_OUTPUT);
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
             if (collection != null) {
                 collection.getOutputOf().add(activityVersion.getParent());
                 activityVersion.getHasOutput().add(collection);
-                enityManager.merge(collection);
+                entityManager.merge(collection);
             }
         }
         Set<String> partyUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_PARTICIPANT);
@@ -404,7 +407,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             if (party != null) {
                 party.getParticipantIn().add(activityVersion.getParent());
                 activityVersion.getHasParticipant().add(party);
-                enityManager.merge(party);
+                entityManager.merge(party);
             }
         }
         Date now = new Date();
@@ -413,7 +416,8 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     }
 
     private boolean assembleActivityFromJson(Activity activity, ActivityVersion activityVersion, String activityAsJsonString) {
-        EntityTransaction transaction = enityManager.getTransaction();
+        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
             JSONObject jsonObj = new JSONObject(activityAsJsonString);
@@ -431,7 +435,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             activityVersion.setAuthors(persons);
 
             if (activityVersion.getId() == null) {
-                enityManager.persist(activity);
+                entityManager.persist(activity);
             }
 
             JSONArray collections = jsonObj.getJSONArray(Constants.ELEMENT_NAME_HAS_OUTPUT);
@@ -440,7 +444,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 if (collection != null) {
                     collection.getOutputOf().add(activity);
                     activityVersion.getHasOutput().add(collection);
-                    enityManager.merge(collection);
+                    entityManager.merge(collection);
                 }
             }
 
@@ -450,12 +454,12 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 if (party != null) {
                     party.getParticipantIn().add(activity);
                     activityVersion.getHasParticipant().add(party);
-                    enityManager.merge(party);
+                    entityManager.merge(party);
                 }
             }
             activity.getVersions().add(activityVersion);
             activityVersion.setParent(activity);
-            enityManager.merge(activity);
+            entityManager.merge(activity);
             transaction.commit();
         } catch (JSONException ex) {
             logger.warn("Could not assemble entry from JSON object");

@@ -46,7 +46,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
-    private EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+//    private EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -54,6 +54,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             return postMedia(request);
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
+            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             try {
                 Entry entry = getEntryFromRequest(request);
                 Party party = entityCreator.getNextParty();
@@ -120,6 +121,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
             putMedia(request);
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
+            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             try {
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntityID(entry.getId().toString());
@@ -395,6 +397,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     }
 
     private void furtherUpdate(Entry entry, PartyVersion partyVersion) {
+        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {
             partyVersion.getSubjects().add(subject);
@@ -426,6 +429,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     }
 
     private boolean assembleValidPartyFromJson(Party party, PartyVersion partyVersion, String jsonString) {
+        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
