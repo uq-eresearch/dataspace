@@ -56,6 +56,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             return postMedia(request);
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
             EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
                 Service service = entityCreator.getNextService();
@@ -64,7 +65,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
-                    entityManager.getTransaction().begin();
+                    transaction.begin();
                     serviceVersion.setParent(service);
                     service.getVersions().add(serviceVersion);
                     Date now = new Date();
@@ -73,13 +74,15 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                     entityManager.persist(serviceVersion);
                     entityManager.persist(service);
                     furtherUpdate(entry, serviceVersion);
-                    entityManager.getTransaction().commit();
+                    transaction.commit();
                     Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
-                entityManager.getTransaction().rollback();
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -121,12 +124,13 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             putMedia(request);
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
             EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntryID(request);
                 Service service = serviceDao.getByKey(uriKey);
                 if (service == null) {
-
+                    return ProviderHelper.notfound(request);
                 } else {
                     if (service.isActive()) {
                         ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
@@ -134,12 +138,12 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                         if (!isValidEntry) {
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         } else {
-                            entityManager.getTransaction().begin();
+                            transaction.begin();
                             service.getVersions().add(serviceVersion);
                             serviceVersion.setParent(service);
                             furtherUpdate(entry, serviceVersion);
                             entityManager.merge(service);
-                            entityManager.getTransaction().commit();
+                            transaction.commit();
                             Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
                             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                         }
@@ -149,7 +153,9 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 }
             } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
-                entityManager.getTransaction().rollback();
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -442,7 +448,9 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             transaction.commit();
         } catch (Exception ex) {
             logger.warn("Could not assemble entry from JSON object");
-            transaction.rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             return false;
         }
         return true;

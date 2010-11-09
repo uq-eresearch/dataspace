@@ -79,7 +79,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 }
             } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
-                transaction.rollback();
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -151,7 +153,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 }
             } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
-                transaction.rollback();
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -494,7 +498,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             transaction.commit();
         } catch (JSONException ex) {
             logger.warn("Could not assemble entry from JSON object");
-            transaction.rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             return false;
         }
         return true;

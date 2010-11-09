@@ -84,7 +84,9 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 }
             } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
-                transaction.rollback();
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -155,7 +157,9 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 }
             } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
-                transaction.rollback();
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -463,7 +467,9 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             transaction.commit();
         } catch (JSONException ex) {
             logger.warn("Could not assemble entry from JSON object");
-            transaction.rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             return false;
         }
         return true;

@@ -55,6 +55,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             return postMedia(request);
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
             EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
                 Party party = entityCreator.getNextParty();
@@ -63,7 +64,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 if (!isValidEntry) {
                     return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
-                    entityManager.getTransaction().begin();
+                    transaction.begin();
                     partyVersion.setParent(party);
                     party.getVersions().add(partyVersion);
                     Date now = new Date();
@@ -72,13 +73,15 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                     entityManager.persist(partyVersion);
                     entityManager.persist(party);
                     furtherUpdate(entry, partyVersion);
-                    entityManager.getTransaction().commit();
+                    transaction.commit();
                     Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
                     return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
                 }
             } catch (Exception e) {
                 logger.warn("Invalid entry posted.", e);
-                entityManager.getTransaction().rollback();
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -122,6 +125,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             putMedia(request);
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
             EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntryID(request);
@@ -135,12 +139,12 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                         if (!isValidEntry) {
                             return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                         } else {
-                            entityManager.getTransaction().begin();
+                            transaction.begin();
                             party.getVersions().add(partyVersion);
                             partyVersion.setParent(party);
                             furtherUpdate(entry, partyVersion);
                             entityManager.merge(party);
-                            entityManager.getTransaction().commit();
+                            transaction.commit();
                             Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, false);
                             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
                         }
@@ -150,7 +154,9 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 }
             } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
-                entityManager.getTransaction().rollback();
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
                 return ProviderHelper.servererror(request, e);
             }
         } else {
@@ -487,7 +493,9 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             transaction.commit();
         } catch (Exception ex) {
             logger.warn("Could not assemble entry from JSON object");
-            transaction.rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             return false;
         }
         return true;
