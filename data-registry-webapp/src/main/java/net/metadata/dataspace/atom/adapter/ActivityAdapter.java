@@ -50,7 +50,6 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
-//    private EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -80,7 +79,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                     furtherUpdate(entry, activityVersion);
                     transaction.commit();
                     Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
-                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                    return AdapterHelper.getContextResponseForPost(createdEntry);
                 }
             } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
@@ -109,7 +108,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                         return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
                     Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
-                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                    return AdapterHelper.getContextResponseForPost(createdEntry);
                 }
             } catch (IOException e) {
                 logger.fatal("Cannot get inputstream from request.");

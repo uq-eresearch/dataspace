@@ -213,6 +213,7 @@ public class AdapterHelper {
         }
 
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+        responseContext.setLocation(entry.getId().toString());
         responseContext.setHeader("Vary", "Accept");
         if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
             String selfLinkHref = entry.getId() + "?repr=" + Constants.JSON_MIMETYPE;
@@ -236,6 +237,13 @@ public class AdapterHelper {
             return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + representationMimeType + " mime type.");
         }
 
+        return responseContext;
+    }
+
+    public static ResponseContext getContextResponseForPost(Entry entry) {
+        ResponseContext responseContext = ProviderHelper.returnBase(entry, 201, entry.getUpdated());
+        responseContext.setEntityTag(ProviderHelper.calculateEntityTag(entry));
+        responseContext.setLocation(entry.getId().toString());
         return responseContext;
     }
 

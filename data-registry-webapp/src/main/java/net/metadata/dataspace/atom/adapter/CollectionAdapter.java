@@ -75,7 +75,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                     furtherUpdate(entry, collectionVersion);
                     transaction.commit();
                     Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, true);
-                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                    return AdapterHelper.getContextResponseForPost(createdEntry);
                 }
             } catch (Exception e) {
                 logger.fatal("Invalid Entry", e);
@@ -91,6 +91,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     public ResponseContext postMedia(RequestContext request) {
+
         MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             try {
@@ -104,7 +105,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                         return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                     }
                     Entry createdEntry = AdapterHelper.getEntryFromCollection(collectionVersion, true);
-                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                    return AdapterHelper.getContextResponseForPost(createdEntry);
                 }
             } catch (IOException e) {
                 logger.fatal("Cannot get inputstream from request.");

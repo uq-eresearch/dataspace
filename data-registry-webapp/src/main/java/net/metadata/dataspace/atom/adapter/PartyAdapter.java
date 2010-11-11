@@ -75,10 +75,10 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                     furtherUpdate(entry, partyVersion);
                     transaction.commit();
                     Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
-                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                    return AdapterHelper.getContextResponseForPost(createdEntry);
                 }
             } catch (Exception e) {
-                logger.warn("Invalid entry posted.", e);
+                logger.warn("Invalid Entry", e);
                 if (transaction.isActive()) {
                     transaction.rollback();
                 }
@@ -105,7 +105,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                     } else {
                     }
                     Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
-                    return ProviderHelper.returnBase(createdEntry, 201, createdEntry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(createdEntry));
+                    return AdapterHelper.getContextResponseForPost(createdEntry);
                 }
             } catch (IOException e) {
                 logger.fatal("Cannot get inputstream from request.");
