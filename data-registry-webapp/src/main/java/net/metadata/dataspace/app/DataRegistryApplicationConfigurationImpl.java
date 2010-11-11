@@ -1,5 +1,6 @@
 package net.metadata.dataspace.app;
 
+import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 
@@ -15,6 +16,7 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
     private String uriPrefix;
     private DaoManager daoManager;
     private EntityCreator entityCreator;
+    private AuthenticationManager authenticationManager;
 
     public DataRegistryApplicationConfigurationImpl() {
     }
@@ -65,5 +67,13 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
 
     public EntityCreator getEntityCreator() {
         return entityCreator;
+    }
+
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    public AuthenticationManager getAuthenticationManager() {
+        return authenticationManager;
     }
 }

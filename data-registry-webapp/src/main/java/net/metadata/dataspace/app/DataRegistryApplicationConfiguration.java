@@ -1,5 +1,6 @@
 package net.metadata.dataspace.app;
 
+import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 
@@ -58,5 +59,12 @@ public interface DataRegistryApplicationConfiguration {
      * @return EntityCreator
      */
     EntityCreator getEntityCreator();
+
+    /**
+     * Return the application's authentication manager
+     *
+     * @return AuthenticationManager
+     */
+    AuthenticationManager getAuthenticationManager();
 
 }

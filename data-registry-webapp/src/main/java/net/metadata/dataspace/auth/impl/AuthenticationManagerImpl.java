@@ -1,9 +1,14 @@
-package net.metadata.dataspace.servlets;
+package net.metadata.dataspace.auth.impl;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.access.UserDao;
 import net.metadata.dataspace.data.model.User;
+import org.apache.abdera.Abdera;
+import org.apache.abdera.protocol.server.ProviderHelper;
+import org.apache.abdera.protocol.server.RequestContext;
+import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.log4j.Logger;
 
 import javax.naming.Context;
@@ -13,29 +18,29 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.Hashtable;
 
 /**
  * Author: alabri
  * Date: 10/11/2010
- * Time: 11:46:33 AM
+ * Time: 3:00:50 PM
  */
-public class LoginServlet extends HttpServlet {
-
+public class AuthenticationManagerImpl implements AuthenticationManager {
     private Logger logger = Logger.getLogger(getClass());
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String userName = req.getParameter("username");
-        String password = req.getParameter("password");
+    public User getCurrentUser(RequestContext request) {
+        User user = (User) request.getAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER);
+        logger.info("User is: " + user.getUsername() + " Role: " + user.getRole());
+        return user;
+    }
+
+    @Override
+    public ResponseContext login(RequestContext request) {
+        String userName = request.getParameter("username");
+        String password = request.getParameter("password");
         if (userName == null || password == null) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Username and password missing");
+            return ProviderHelper.badrequest(request, "Username and password missing");
         } else {
             try {
                 Hashtable env = new Hashtable();
@@ -73,20 +78,28 @@ public class LoginServlet extends HttpServlet {
                         user = new User(userName);
                         userDao.save(user);
                     }
-                    HttpSession session = req.getSession(true);
-                    session.setAttribute(Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
-                    session.setAttribute(Constants.SESSION_ATTRIBUTE_LDAP_CONTEXT, ctx);
+                    request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
+//                            request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_LDAP_CONTEXT, ctx);
+
                     logger.info("Authenticated user: " + userName);
+                    return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
                 } else {
                     String message = "Authentication Failed, User not found";
                     logger.warn(message);
-                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, message);
+                    return ProviderHelper.notfound(request, message);
                 }
             } catch (NamingException e) {
                 String message = "Authentication Failed: " + e.getMessage();
                 logger.warn(message);
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+                return ProviderHelper.badrequest(request, message);
             }
         }
+
+    }
+
+    @Override
+    public ResponseContext logout(RequestContext request) {
+        request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, null);
+        return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
     }
 }

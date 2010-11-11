@@ -23,6 +23,7 @@
         <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
         <property name="daoManager" ref="daoManager"/>
         <property name="entityCreator" ref="entityCreator"/>
+        <property name="authenticationManager" ref="authenticationManager"/>
     </bean>
 
     <bean id="dataRegistryApplication" class="net.metadata.dataspace.app.DataRegistryApplication">
@@ -82,5 +83,7 @@
         <property name="serviceAtomicSequencer" ref="serviceAtomicSequencer"/>
         <property name="activityAtomicSequencer" ref="activityAtomicSequencer"/>
     </bean>
+
+    <bean id="authenticationManager" class="net.metadata.dataspace.auth.impl.AuthenticationManagerImpl"/>
 
 </beans>

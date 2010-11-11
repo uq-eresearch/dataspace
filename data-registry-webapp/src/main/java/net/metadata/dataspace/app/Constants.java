@@ -108,4 +108,10 @@ public interface Constants {
     String HTTP_STATUS_410 = "Gone";
     String HTTP_STATUS_415 = "Unsupported Media Type";
 
+    /**
+     *
+     */
+    String SESSION_ATTRIBUTE_CURRENT_USER = "currentUser";
+    String SESSION_ATTRIBUTE_LDAP_CONTEXT = "currentUser";
+
 }

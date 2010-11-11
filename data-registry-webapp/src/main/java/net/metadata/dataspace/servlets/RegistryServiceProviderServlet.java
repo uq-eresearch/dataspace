@@ -57,7 +57,10 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                 Target target = request.getTarget();
                 TargetType targetType = target.getType();
                 if (targetType.equals(TargetType.get(TargetType.COLLECTION))) {
+                    //TODO looks like a hack, find a better way to do this later.
                     boolean isServiceRequest = target.getParameter("collection").equals("registry.atomsvc");
+                    boolean isLoginRequest = target.getParameter("collection").equals("login");
+                    boolean isLogoutRequest = target.getParameter("collection").equals("logout");
                     if (isServiceRequest) {
                         TargetType type = TargetType.get(TargetType.SERVICE);
                         RequestProcessor processor = this.requestProcessors.get(type);
@@ -92,12 +95,24 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                             transactionEnd(transaction, request, response);
                         }
                         return response != null ? response : ProviderHelper.badrequest(request);
+                    } else if (isLoginRequest) {
+                        return login(request);
+                    } else if (isLogoutRequest) {
+                        return logout(request);
                     } else {
                         return super.process(request);
                     }
                 } else {
                     return super.process(request);
                 }
+            }
+
+            protected ResponseContext login(RequestContext request) {
+                return DataRegistryApplication.getApplicationContext().getAuthenticationManager().login(request);
+            }
+
+            protected ResponseContext logout(RequestContext request) {
+                return DataRegistryApplication.getApplicationContext().getAuthenticationManager().logout(request);
             }
         };
         registryServiceProvider.addWorkspace(registryWorkSpace);
