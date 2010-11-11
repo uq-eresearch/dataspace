@@ -62,6 +62,7 @@ This configuration can be run with "mvn integration-test".
                         <!--Override the persistence unit-->
                         <systemProperties>
                             <data.registry.persistenceUnitName>test</data.registry.persistenceUnitName>
+                            <data.registry.uri.prefix>http://localhost:9635/</data.registry.uri.prefix>
                         </systemProperties>
                     </container>
                     <!-- don't let Jetty ask for the Ctrl-C to stop -->

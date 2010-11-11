@@ -19,7 +19,6 @@ import java.io.InputStream;
  * Time: 4:06:52 PM
  */
 public class TestHelper {
-    private static String host = Constants.URL_PREFIX;
 
     public static Response postEntry(String fileName, String pathForActivities) {
         Abdera abdera = new Abdera();
@@ -30,7 +29,7 @@ public class TestHelper {
         Entry entry = (Entry) doc.getRoot();
         RequestOptions options = abderaClient.getDefaultRequestOptions();
         options.setUseChunked(false);
-        String fullURL = host + pathForActivities;
+        String fullURL = Constants.URL_PREFIX + pathForActivities;
         Response response = abderaClient.post(fullURL, entry, options);
         return response;
     }

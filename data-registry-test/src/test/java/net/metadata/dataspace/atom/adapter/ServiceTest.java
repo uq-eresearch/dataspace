@@ -19,7 +19,6 @@ public class ServiceTest extends DataCollectionsRegistryTestCase {
         assertEquals("Could not post entry", 201, response.getStatus());
         String newEntryLocation = response.getLocation().toString();
         response = TestHelper.getEntry(newEntryLocation);
-        assertTrue(newEntryLocation, false);
         assertEquals("Could not get entry after post", 200, response.getStatus());
         //Edit Entry
         fileName = "/files/put/update-service.xml";
