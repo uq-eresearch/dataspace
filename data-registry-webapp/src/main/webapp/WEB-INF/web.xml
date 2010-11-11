@@ -27,6 +27,10 @@
         <servlet-name>registryServiceServlet</servlet-name>
         <servlet-class>net.metadata.dataspace.servlets.RegistryServiceProviderServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>loginServlet</servlet-name>
+        <servlet-class>net.metadata.dataspace.servlets.LoginServlet</servlet-class>
+    </servlet>
 
     <!--Servlet Mappings-->
     <servlet-mapping>
@@ -48,6 +52,10 @@
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>
         <url-pattern>/registry.atomsvc</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>loginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

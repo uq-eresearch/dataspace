@@ -22,6 +22,8 @@ public interface DaoManager {
 
     SubjectDao getSubjectDao();
 
+    UserDao getUserDao();
+
     CollectionVersionDao getCollectionVersionDao();
 
     ServiceVersionDao getServiceVersionDao();

@@ -21,6 +21,7 @@ public class DaoManagerImpl implements DaoManager {
     private CollectionVersionDao collectionVersionDao;
     private ServiceVersionDao serviceVersionDao;
     private ActivityVersionDao activityVersionDao;
+    private UserDao userDao;
 
     public void setCollectionDao(CollectionDao collectionDao) {
         this.collectionDao = collectionDao;
@@ -100,5 +101,13 @@ public class DaoManagerImpl implements DaoManager {
 
     public ActivityVersionDao getActivityVersionDao() {
         return activityVersionDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
     }
 }

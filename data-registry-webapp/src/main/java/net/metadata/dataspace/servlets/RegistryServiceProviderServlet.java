@@ -100,7 +100,6 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                 }
             }
         };
-
         registryServiceProvider.addWorkspace(registryWorkSpace);
         registryServiceProvider.init(getAbdera(), null);
         return registryServiceProvider;

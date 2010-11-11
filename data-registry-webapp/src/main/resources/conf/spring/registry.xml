@@ -52,6 +52,7 @@
         <property name="activityDao" ref="activityDao"/>
         <property name="activityVersionDao" ref="activityVersionDao"/>
         <property name="subjectDao" ref="subjectDao"/>
+        <property name="userDao" ref="userDao"/>
     </bean>
 
     <bean id="partyAtomicSequencer" class="net.metadata.dataspace.data.sequencer.PartyAtomicSequencer">
