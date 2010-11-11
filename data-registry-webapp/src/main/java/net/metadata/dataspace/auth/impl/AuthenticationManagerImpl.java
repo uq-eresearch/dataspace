@@ -31,7 +31,6 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     @Override
     public User getCurrentUser(RequestContext request) {
         User user = (User) request.getAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER);
-        logger.info("User is: " + user.getUsername() + " Role: " + user.getRole());
         return user;
     }
 

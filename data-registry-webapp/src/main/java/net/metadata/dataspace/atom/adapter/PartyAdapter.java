@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.DataRegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
+import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.access.ActivityDao;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
@@ -46,9 +47,14 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
     private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
+    private AuthenticationManager authManager = DataRegistryApplication.getApplicationContext().getAuthenticationManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
+//        User user = authManager.getCurrentUser(request);
+//        if (user == null) {
+//            return ProviderHelper.unauthorized(request, Constants.HTTP_STATUS_401);
+//        } else {
         MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             return postMedia(request);
@@ -86,6 +92,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         } else {
             return ProviderHelper.notsupported(request, "Unsupported media type");
         }
+//        }
     }
 
     @Override
