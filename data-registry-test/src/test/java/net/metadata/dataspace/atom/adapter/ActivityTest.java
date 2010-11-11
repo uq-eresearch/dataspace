@@ -12,10 +12,24 @@ import org.apache.abdera.protocol.Response;
  */
 public class ActivityTest extends DataCollectionsRegistryTestCase {
 
-    public void testPostActivity() throws Exception {
+    public void testActivityCRUD() throws Exception {
+        //Post Entry
         String fileName = "/files/post/new-activity.xml";
         Response response = TestHelper.postEntry(fileName, Constants.PATH_FOR_ACTIVITIES);
-        int status = response.getStatus();
-        assertTrue("Could not post entry, The server returned: " + status, status == 201);
+        assertEquals("Could not post entry", 201, response.getStatus());
+        String newEntryLocation = response.getLocation().toString();
+        response = TestHelper.getEntry(newEntryLocation);
+        assertEquals("Could not get entry after post", 200, response.getStatus());
+        //Edit Entry
+        fileName = "/files/put/update-activity.xml";
+        response = TestHelper.putEntry(fileName, newEntryLocation);
+        assertEquals("Could not edit entry", 200, response.getStatus());
+        response = TestHelper.getEntry(newEntryLocation + "/2");
+        assertEquals("Could not get second version of entry after edit", 200, response.getStatus());
+        //Delete Entry
+        response = TestHelper.deleteEntry(newEntryLocation);
+        assertEquals("Could not delete entry", 200, response.getStatus());
+        response = TestHelper.getEntry(newEntryLocation);
+        assertEquals("Entry should be GONE", 410, response.getStatus());
     }
 }

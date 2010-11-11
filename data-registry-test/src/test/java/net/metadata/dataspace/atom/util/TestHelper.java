@@ -35,7 +35,7 @@ public class TestHelper {
         return response;
     }
 
-    public static Response putEntry(String fileName, String pathForActivities) {
+    public static Response putEntry(String fileName, String uri) {
         Abdera abdera = new Abdera();
         AbderaClient abderaClient = new AbderaClient(abdera);
         InputStream in = XPathExample.class.getResourceAsStream(fileName);
@@ -44,8 +44,7 @@ public class TestHelper {
         Entry entry = (Entry) doc.getRoot();
         RequestOptions options = abderaClient.getDefaultRequestOptions();
         options.setUseChunked(false);
-        String fullURL = host + pathForActivities;
-        Response response = abderaClient.put(fullURL, entry, options);
+        Response response = abderaClient.put(uri, entry, options);
         return response;
     }
 

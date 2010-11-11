@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <entry xmlns="http://www.w3.org/2005/Atom" xmlns:uqdata="http://dataspace.metadata.net/">
-    <id>http://dataspace.metadata.net/services/1</id>
+    <id>http://localhost:9635/services/1</id>
     <title type="text">Voting Patterns at the 2007 Australia Federal Election On-line</title>
     <content type="text">This web-based interactive tool supports spatial and statistical analysis, modelling and
         visualisation of data derived from the 2006 Australian Census of Population and Housing, voting results for the
@@ -15,5 +15,5 @@
     </author>
     <updated>2010-10-08T05:58:02.781Z</updated>
     <uqdata:location>http://e-research.sbs.uq.edu.au/aus_voting2007.html</uqdata:location>
-    <uqdata:isSupportedBy>http://dataspace.metadata.net/collections/1</uqdata:isSupportedBy>
+    <uqdata:isSupportedBy uri="http://dataspace.metadata.net/collections/1"/>
 </entry>
