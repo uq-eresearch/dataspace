@@ -24,6 +24,7 @@
         <property name="daoManager" ref="daoManager"/>
         <property name="entityCreator" ref="entityCreator"/>
         <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authorizationManager" ref="authorizationManager"/>
     </bean>
 
     <bean id="dataRegistryApplication" class="net.metadata.dataspace.app.RegistryApplication">
@@ -85,5 +86,6 @@
     </bean>
 
     <bean id="authenticationManager" class="net.metadata.dataspace.auth.impl.AuthenticationManagerImpl"/>
+    <bean id="authorizationManager" class="net.metadata.dataspace.auth.impl.AuthorizationManagerImpl"/>
 
 </beans>

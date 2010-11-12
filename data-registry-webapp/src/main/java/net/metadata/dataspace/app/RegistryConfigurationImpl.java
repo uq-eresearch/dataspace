@@ -1,6 +1,7 @@
 package net.metadata.dataspace.app;
 
 import net.metadata.dataspace.auth.AuthenticationManager;
+import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 
@@ -17,6 +18,7 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     private DaoManager daoManager;
     private EntityCreator entityCreator;
     private AuthenticationManager authenticationManager;
+    private AuthorizationManager authorizationManager;
 
     public RegistryConfigurationImpl() {
     }
@@ -75,5 +77,13 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
 
     public AuthenticationManager getAuthenticationManager() {
         return authenticationManager;
+    }
+
+    public void setAuthorizationManager(AuthorizationManager authorizationManager) {
+        this.authorizationManager = authorizationManager;
+    }
+
+    public AuthorizationManager getAuthorizationManager() {
+        return authorizationManager;
     }
 }
