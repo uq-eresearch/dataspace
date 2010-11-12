@@ -90,6 +90,7 @@ public interface Constants {
      * Target Type names
      */
     String TARGET_TYPE_VERSION = "version";
+    String TARGET_TYPE_WORKING_COPY = "working-copy";
     String TARGET_TYPE_VERSION_HISTORY = "version-history";
 
     /**

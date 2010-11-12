@@ -5,14 +5,17 @@ import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.auth.AuthenticationManager;
+import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.ActivityDao;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.Activity;
 import net.metadata.dataspace.data.model.base.Party;
 import net.metadata.dataspace.data.model.base.Subject;
+import net.metadata.dataspace.data.model.base.User;
 import net.metadata.dataspace.data.model.version.PartyVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
@@ -49,7 +52,8 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     private PartyDao partyDao = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
     private ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
     private SubjectDao subjectDao = RegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
-    private AuthenticationManager authManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
+    private AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
+    private AuthorizationManager authorizationManager = RegistryApplication.getApplicationContext().getAuthorizationManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -242,15 +246,35 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             partyDao.refresh(party);
             if (party.isActive()) {
                 String versionKey = AdapterHelper.getEntryVersionID(request);
-                PartyVersion partyVersion;
+                User user = authenticationManager.getCurrentUser(request);
+                Version version;
                 if (versionKey != null) {
-                    partyVersion = partyDao.getByVersion(uriKey, versionKey);
-                    //TODO check for version history request
+                    if (authorizationManager.getAccessLevelForInstance(user, party).canUpdate()) {
+                        if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
+                            Feed versionHistoryFeed = FeedHelper.createVersionFeed(request, getId(request));
+                            return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, party);
+                        } else if (versionKey.equals(Constants.TARGET_TYPE_WORKING_COPY)) {
+                            version = party.getWorkingCopy();
+                        } else {
+                            version = partyDao.getByVersion(uriKey, versionKey);
+                        }
+                    } else {
+                        return ProviderHelper.unauthorized(request);
+                    }
                 } else {
-                    partyVersion = party.getVersions().first();
+
+                    if (authorizationManager.getAccessLevelForInstance(user, party).canUpdate() && party.getPublished() == null) {
+                        version = party.getWorkingCopy();
+                    } else {
+                        version = party.getPublished();
+                    }
                 }
-                Entry entry = AdapterHelper.getEntryFromParty(partyVersion, versionKey == null);
-                return AdapterHelper.getContextResponseForGetEntry(request, entry);
+                if (version == null) {
+                    return ProviderHelper.notfound(request);
+                } else {
+                    Entry entry = AdapterHelper.getEntryFromParty((PartyVersion) version, versionKey == null);
+                    return AdapterHelper.getContextResponseForGetEntry(request, entry);
+                }
             } else {
                 return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
             }
