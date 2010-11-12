@@ -1,5 +1,5 @@
-<%@ page import="net.metadata.dataspace.app.DataRegistryApplication" %>
+<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
 <div class="title">
-    <div align="center"><%=DataRegistryApplication.getApplicationContext().getRegistryTitle()%>
+    <div align="center"><%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
     </div>
 </div>

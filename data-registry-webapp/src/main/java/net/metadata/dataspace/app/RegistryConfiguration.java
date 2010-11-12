@@ -9,7 +9,7 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
  * Date: 13/09/2010
  * Time: 3:34:49 PM
  */
-public interface DataRegistryApplicationConfiguration {
+public interface RegistryConfiguration {
 
     /**
      * Set the title of the registry application

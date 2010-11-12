@@ -17,7 +17,7 @@
 
     <import resource="dao.xml"/>
 
-    <bean id="applicationContext" class="net.metadata.dataspace.app.DataRegistryApplicationConfigurationImpl">
+    <bean id="applicationContext" class="net.metadata.dataspace.app.RegistryConfigurationImpl">
         <property name="registryTitle" value="${data.registry.title}"/>
         <property name="version" value="${data.registry.version}.${revision}"/>
         <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
@@ -26,7 +26,7 @@
         <property name="authenticationManager" ref="authenticationManager"/>
     </bean>
 
-    <bean id="dataRegistryApplication" class="net.metadata.dataspace.app.DataRegistryApplication">
+    <bean id="dataRegistryApplication" class="net.metadata.dataspace.app.RegistryApplication">
         <property name="applicationContext" ref="applicationContext"/>
     </bean>
 

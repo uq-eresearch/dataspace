@@ -1,7 +1,7 @@
 package net.metadata.dataspace.servlets;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.adapter.ActivityAdapter;
 import net.metadata.dataspace.atom.adapter.CollectionAdapter;
 import net.metadata.dataspace.atom.adapter.PartyAdapter;
@@ -29,7 +29,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
     protected Provider createProvider() {
 
         SimpleWorkspaceInfo registryWorkSpace = new SimpleWorkspaceInfo();
-        registryWorkSpace.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle());
+        registryWorkSpace.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle());
 
         PartyAdapter partyAdapter = new PartyAdapter();
         partyAdapter.setHref(Constants.PATH_FOR_PARTIES);
@@ -108,11 +108,11 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
             }
 
             protected ResponseContext login(RequestContext request) {
-                return DataRegistryApplication.getApplicationContext().getAuthenticationManager().login(request);
+                return RegistryApplication.getApplicationContext().getAuthenticationManager().login(request);
             }
 
             protected ResponseContext logout(RequestContext request) {
-                return DataRegistryApplication.getApplicationContext().getAuthenticationManager().logout(request);
+                return RegistryApplication.getApplicationContext().getAuthenticationManager().logout(request);
             }
         };
         registryServiceProvider.addWorkspace(registryWorkSpace);

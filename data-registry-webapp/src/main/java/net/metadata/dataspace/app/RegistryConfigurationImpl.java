@@ -9,7 +9,7 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
  * Date: 13/09/2010
  * Time: 3:37:39 PM
  */
-public class DataRegistryApplicationConfigurationImpl implements DataRegistryApplicationConfiguration {
+public class RegistryConfigurationImpl implements RegistryConfiguration {
 
     private String registryTitle;
     private String version;
@@ -18,10 +18,10 @@ public class DataRegistryApplicationConfigurationImpl implements DataRegistryApp
     private EntityCreator entityCreator;
     private AuthenticationManager authenticationManager;
 
-    public DataRegistryApplicationConfigurationImpl() {
+    public RegistryConfigurationImpl() {
     }
 
-    public DataRegistryApplicationConfigurationImpl(String version) {
+    public RegistryConfigurationImpl(String version) {
         this.version = version;
     }
 

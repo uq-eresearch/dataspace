@@ -1,7 +1,7 @@
 package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.data.access.ActivityDao;
@@ -46,10 +46,10 @@ import java.util.Set;
 public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
-    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
-    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
-    private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
+    private ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
+    private CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
+    private PartyDao partyDao = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
+    private EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -58,7 +58,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (baseType.equals(Constants.JSON_MIMETYPE)) {
             return postMedia(request);
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
@@ -126,7 +126,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
             putMedia(request);
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
@@ -300,7 +300,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
             FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
 
-        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_ACTIVITIES);
+        feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_ACTIVITIES);
         Iterable<Activity> entries = getEntries(request);
         if (entries != null) {
             for (Activity entryObj : entries) {
@@ -380,7 +380,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public String getAuthor(RequestContext request) throws ResponseContextException {
-        return DataRegistryApplication.getApplicationContext().getUriPrefix();
+        return RegistryApplication.getApplicationContext().getUriPrefix();
     }
 
     @Override
@@ -394,7 +394,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     }
 
     private void furtherUpdate(Entry entry, ActivityVersion activityVersion) {
-        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_OUTPUT);
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
@@ -419,7 +419,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     }
 
     private boolean assembleActivityFromJson(Activity activity, ActivityVersion activityVersion, String activityAsJsonString) {
-        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

@@ -70,7 +70,7 @@ public interface Constants {
     String TITLE_FOR_ACTIVITIES = "Activities";
     String TITLE_FOR_SERVICES = "Services";
 
-    String ID_PREFIX = DataRegistryApplication.getApplicationContext().getUriPrefix();
+    String ID_PREFIX = RegistryApplication.getApplicationContext().getUriPrefix();
 
     /**
      * Qualified names

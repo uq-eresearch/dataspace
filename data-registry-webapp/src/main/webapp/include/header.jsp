@@ -1,5 +1,5 @@
-<%@ page import="net.metadata.dataspace.app.DataRegistryApplication" %>
-<title><%=DataRegistryApplication.getApplicationContext().getRegistryTitle()%>
+<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
+<title><%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
 </title>
 <link rel="stylesheet" type="text/css" href="css/style.css"/>
 <link rel="stylesheet" type="text/css" href="http://o.aolcdn.com/dojo/1.4.0/dijit/themes/tundra/tundra.css"/>

@@ -1,7 +1,7 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.*;
@@ -37,8 +37,8 @@ import java.util.SortedSet;
 public class AdapterHelper {
 
     private static Logger logger = Logger.getLogger(AdapterHelper.class);
-    private static final EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
-    private static DaoManager daoManager = DataRegistryApplication.getApplicationContext().getDaoManager();
+    private static final EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
+    private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
 
     public static String getEntityID(String fullUrl) {
 

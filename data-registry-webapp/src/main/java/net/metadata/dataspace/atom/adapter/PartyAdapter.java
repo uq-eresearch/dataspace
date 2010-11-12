@@ -1,7 +1,7 @@
 package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.auth.AuthenticationManager;
@@ -42,12 +42,12 @@ import java.util.*;
 public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
-    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
-    private PartyDao partyDao = DataRegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
-    private ActivityDao activityDao = DataRegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
-    private SubjectDao subjectDao = DataRegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
-    private AuthenticationManager authManager = DataRegistryApplication.getApplicationContext().getAuthenticationManager();
+    private EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
+    private CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
+    private PartyDao partyDao = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
+    private ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
+    private SubjectDao subjectDao = RegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
+    private AuthenticationManager authManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -59,7 +59,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
             return postMedia(request);
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
@@ -130,7 +130,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
             putMedia(request);
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
@@ -303,7 +303,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
             FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
             FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
-        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_PARTIES);
+        feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_PARTIES);
         Iterable<Party> entries = getEntries(request);
         if (entries != null) {
             for (Party entryObj : entries) {
@@ -395,7 +395,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public String getAuthor(RequestContext requestContext) throws ResponseContextException {
-        return DataRegistryApplication.getApplicationContext().getUriPrefix();
+        return RegistryApplication.getApplicationContext().getUriPrefix();
     }
 
     @Override
@@ -409,7 +409,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     }
 
     private void furtherUpdate(Entry entry, PartyVersion partyVersion) {
-        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {
             partyVersion.getSubjects().add(subject);
@@ -441,7 +441,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     }
 
     private boolean assembleValidPartyFromJson(Party party, PartyVersion partyVersion, String jsonString) {
-        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

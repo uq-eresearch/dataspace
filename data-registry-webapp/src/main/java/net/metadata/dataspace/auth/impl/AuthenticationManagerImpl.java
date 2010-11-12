@@ -1,7 +1,7 @@
 package net.metadata.dataspace.auth.impl;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.access.UserDao;
 import net.metadata.dataspace.data.model.User;
@@ -71,7 +71,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                     }
 */
                     //TODO how do users get into our system? DO we add them when they authenticate here?
-                    UserDao userDao = DataRegistryApplication.getApplicationContext().getDaoManager().getUserDao();
+                    UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
                     User user = userDao.getByUsername(userName);
                     if (user == null) {
                         user = new User(userName);

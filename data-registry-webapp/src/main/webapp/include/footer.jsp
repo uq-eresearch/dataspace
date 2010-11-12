@@ -1,5 +1,5 @@
-<%@ page import="net.metadata.dataspace.app.DataRegistryApplication" %>
-<div class="footer" align="center"><%=DataRegistryApplication.getApplicationContext().getRegistryTitle()%> &copy; 2010
+<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
+<div class="footer" align="center"><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> &copy; 2010
     ver.
-    (<%=DataRegistryApplication.getApplicationContext().getVersion()%>)
+    (<%=RegistryApplication.getApplicationContext().getVersion()%>)
 </div>

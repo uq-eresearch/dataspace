@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.access;
 
-import net.metadata.dataspace.app.DataRegistryApplicationConfiguration;
 import net.metadata.dataspace.app.NonProductionConstants;
+import net.metadata.dataspace.app.RegistryConfiguration;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Subject;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 public class SubjectDaoImplTest {
 
     @Autowired
-    private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl;
+    private RegistryConfiguration registryConfigurationImpl;
     @Autowired
     private SubjectDao subjectDao;
 
@@ -42,7 +42,7 @@ public class SubjectDaoImplTest {
         Subject subject = subjectDao.getAll().get(0);
         Long id = subject.getId();
         String originalVocabUri = subject.getVocabulary();
-        String newVocabURI = dataRegistryApplicationConfigurationImpl.getUriPrefix() + "subject/" + UUID.randomUUID().toString();
+        String newVocabURI = registryConfigurationImpl.getUriPrefix() + "subject/" + UUID.randomUUID().toString();
         subject.setVocabulary(newVocabURI);
 
         subjectDao.update(subject);
@@ -55,7 +55,7 @@ public class SubjectDaoImplTest {
 //    @Test
 //    public void testDeletingSubjects () throws Exception {
 //        testAddingSubject();
-//        SubjectDao subjectDao = dataRegistryApplicationConfigurationImpl.getSubjectDao();
+//        SubjectDao subjectDao = registryConfigurationImpl.getSubjectDao();
 //
 //        Subject subject = subjectDao.getAll().get(0);
 //        long id = subject.getId();

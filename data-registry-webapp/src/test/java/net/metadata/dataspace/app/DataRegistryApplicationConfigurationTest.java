@@ -25,7 +25,7 @@ public class DataRegistryApplicationConfigurationTest {
     private Properties properties = new Properties();
 
     @Autowired
-    private DataRegistryApplicationConfiguration dataRegistryApplicationConfigurationImpl;
+    private RegistryConfiguration registryConfigurationImpl;
 
     @Before
     public void setUp() throws Exception {
@@ -33,7 +33,7 @@ public class DataRegistryApplicationConfigurationTest {
 
         InputStream resourceAsStream = null;
         try {
-            resourceAsStream = DataRegistryApplicationConfigurationImpl.class.getResourceAsStream("/registry-test.properties");
+            resourceAsStream = RegistryConfigurationImpl.class.getResourceAsStream("/registry-test.properties");
             if (resourceAsStream == null) {
                 throw new Exception("Configuration file not found, please ensure there is a 'registry.properties' on the classpath");
             }
@@ -50,7 +50,7 @@ public class DataRegistryApplicationConfigurationTest {
             }
         }
         try {
-            resourceAsStream = DataRegistryApplicationConfigurationImpl.class.getResourceAsStream("/META-INF/svninfo.properties");
+            resourceAsStream = RegistryConfigurationImpl.class.getResourceAsStream("/META-INF/svninfo.properties");
             if (resourceAsStream == null) {
                 throw new Exception("Configuration file not found, please ensure there is a 'revision.properties' on the classpath");
             }
@@ -70,7 +70,7 @@ public class DataRegistryApplicationConfigurationTest {
 
     @Test
     public void testGetVersion() throws Exception {
-        String expectedVersionNumber = dataRegistryApplicationConfigurationImpl.getVersion();
+        String expectedVersionNumber = registryConfigurationImpl.getVersion();
         String actualVersion = getProperty(properties, "data.registry.version", "null");
         String actualRevision = getProperty(properties, "revision", "null");
         assertEquals("Version Number", expectedVersionNumber, actualVersion + "." + actualRevision);
@@ -78,14 +78,14 @@ public class DataRegistryApplicationConfigurationTest {
 
     @Test
     public void testApplicationTitle() throws Exception {
-        String expectedAppTitle = dataRegistryApplicationConfigurationImpl.getRegistryTitle();
+        String expectedAppTitle = registryConfigurationImpl.getRegistryTitle();
         String actualAppTitle = getProperty(properties, "data.registry.title", "null");
         assertEquals("App Name", expectedAppTitle, actualAppTitle);
     }
 
     @Test
     public void testURIPrefix() throws Exception {
-        String expectedUriPrefix = dataRegistryApplicationConfigurationImpl.getUriPrefix();
+        String expectedUriPrefix = registryConfigurationImpl.getUriPrefix();
         String actualUriPrefix = getProperty(properties, "data.registry.uri.prefix", "null");
         assertEquals("URI Prefix", expectedUriPrefix, actualUriPrefix);
     }

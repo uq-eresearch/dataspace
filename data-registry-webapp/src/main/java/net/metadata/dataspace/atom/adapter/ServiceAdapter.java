@@ -1,7 +1,7 @@
 package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.DataRegistryApplication;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.data.access.CollectionDao;
@@ -43,10 +43,10 @@ import java.util.Set;
 public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private ServiceDao serviceDao = DataRegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
-    private CollectionDao collectionDao = DataRegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
-    private EntityCreator entityCreator = DataRegistryApplication.getApplicationContext().getEntityCreator();
-//    private EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+    private ServiceDao serviceDao = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
+    private CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
+    private EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
+//    private EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -55,7 +55,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         if (baseType.equals(Constants.JSON_MIMETYPE)) {
             return postMedia(request);
         } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
@@ -123,7 +123,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
             putMedia(request);
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
@@ -298,7 +298,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
 
-        feed.setTitle(DataRegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_SERVICES);
+        feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_SERVICES);
         Iterable<Service> entries = getEntries(request);
         if (entries != null) {
             for (Service entryObj : entries) {
@@ -379,7 +379,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public String getAuthor(RequestContext request) throws ResponseContextException {
-        return DataRegistryApplication.getApplicationContext().getUriPrefix();
+        return RegistryApplication.getApplicationContext().getUriPrefix();
     }
 
     @Override
@@ -393,7 +393,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     }
 
     private void furtherUpdate(Entry entry, ServiceVersion serviceVersion) {
-        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_SUPPORTED_BY);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
@@ -409,7 +409,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     }
 
     private boolean assembleServiceFromJson(Service service, ServiceVersion serviceVersion, String jsonString) {
-        EntityManager entityManager = DataRegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
