@@ -245,6 +245,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                 PartyVersion partyVersion;
                 if (versionKey != null) {
                     partyVersion = partyDao.getByVersion(uriKey, versionKey);
+                    //TODO check for version history request
                 } else {
                     partyVersion = party.getVersions().first();
                 }
