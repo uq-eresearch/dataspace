@@ -64,4 +64,14 @@ public class Subject extends AbstractBaseEntity {
     public SortedSet<Version> getVersions() {
         return null;
     }
+
+    @Override
+    public Version getPublished() {
+        return null;
+    }
+
+    @Override
+    public Version getWorkingCopy() {
+        return null;
+    }
 }
