@@ -3,8 +3,8 @@ package net.metadata.dataspace.data.access.impl;
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.ServiceDao;
-import net.metadata.dataspace.data.model.Service;
-import net.metadata.dataspace.data.model.ServiceVersion;
+import net.metadata.dataspace.data.model.base.Service;
+import net.metadata.dataspace.data.model.version.ServiceVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
 import javax.persistence.Query;

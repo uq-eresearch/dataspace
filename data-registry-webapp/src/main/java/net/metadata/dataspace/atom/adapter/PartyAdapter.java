@@ -10,8 +10,10 @@ import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.*;
-import net.metadata.dataspace.data.model.Collection;
+import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.base.Party;
+import net.metadata.dataspace.data.model.base.Subject;
+import net.metadata.dataspace.data.model.version.PartyVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
@@ -419,7 +421,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         }
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR_OF);
         for (String uriKey : collectionUriKeys) {
-            Collection collection = collectionDao.getByKey(uriKey);
+            net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
                 collection.getCollector().add(partyVersion.getParent());
                 partyVersion.getCollectorOf().add(collection);
@@ -468,7 +470,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
             JSONArray collectionArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_COLLECTOR_OF);
             for (int i = 0; i < collectionArray.length(); i++) {
-                Collection collection = collectionDao.getByKey(collectionArray.getString(i));
+                net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(collectionArray.getString(i));
                 if (collection != null) {
                     collection.getCollector().add(party);
                     partyVersion.getCollectorOf().add(collection);

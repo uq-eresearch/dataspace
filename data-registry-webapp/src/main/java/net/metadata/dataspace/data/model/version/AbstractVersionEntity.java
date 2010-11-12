@@ -1,5 +1,6 @@
-package net.metadata.dataspace.data.model;
+package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.base.AbstractBaseEntity;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
@@ -16,7 +17,7 @@ import java.util.Set;
  * Time: 11:40:11 AM
  */
 @MappedSuperclass
-public abstract class AbstractVersionEntity implements Serializable, Comparable, Version {
+public abstract class AbstractVersionEntity implements Serializable, Comparable, net.metadata.dataspace.data.model.Version {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -109,7 +110,7 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @Override
     public int compareTo(Object o) {
 
-        Version partyVersion = (Version) o;
+        net.metadata.dataspace.data.model.Version partyVersion = (net.metadata.dataspace.data.model.Version) o;
         if (this.getUpdated().equals(partyVersion.getUpdated())) {
             return 0;
         }

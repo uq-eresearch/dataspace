@@ -4,6 +4,14 @@ import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.base.Party;
+import net.metadata.dataspace.data.model.base.Service;
+import net.metadata.dataspace.data.model.base.Subject;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
+import net.metadata.dataspace.data.model.version.PartyVersion;
+import net.metadata.dataspace.data.model.version.ServiceVersion;
 
 import java.util.*;
 
@@ -25,7 +33,7 @@ public class PopulatorUtil {
         return subject;
     }
 
-    public static CollectionVersion getCollectionVersion(Collection collection) throws Exception {
+    public static CollectionVersion getCollectionVersion(net.metadata.dataspace.data.model.base.Collection collection) throws Exception {
         CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
         collectionVersion.setParent(collection);
         collectionVersion.setTitle("Test Collection");

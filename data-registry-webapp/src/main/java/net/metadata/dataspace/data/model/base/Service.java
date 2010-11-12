@@ -1,5 +1,6 @@
-package net.metadata.dataspace.data.model;
+package net.metadata.dataspace.data.model.base;
 
+import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;

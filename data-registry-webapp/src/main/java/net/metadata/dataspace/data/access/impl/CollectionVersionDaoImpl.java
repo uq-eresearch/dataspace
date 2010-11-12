@@ -3,7 +3,7 @@ package net.metadata.dataspace.data.access.impl;
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.CollectionVersionDao;
-import net.metadata.dataspace.data.model.CollectionVersion;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
 
 import java.io.Serializable;
 

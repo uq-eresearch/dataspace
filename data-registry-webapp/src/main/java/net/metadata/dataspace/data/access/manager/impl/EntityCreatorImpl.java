@@ -1,7 +1,11 @@
 package net.metadata.dataspace.data.access.manager.impl;
 
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.*;
+import net.metadata.dataspace.data.model.base.*;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
+import net.metadata.dataspace.data.model.version.PartyVersion;
+import net.metadata.dataspace.data.model.version.ServiceVersion;
 import net.metadata.dataspace.data.sequencer.*;
 
 import java.util.concurrent.atomic.AtomicInteger;

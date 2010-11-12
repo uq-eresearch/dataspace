@@ -1,6 +1,10 @@
 package net.metadata.dataspace.data.access.manager;
 
-import net.metadata.dataspace.data.model.*;
+import net.metadata.dataspace.data.model.base.*;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
+import net.metadata.dataspace.data.model.version.PartyVersion;
+import net.metadata.dataspace.data.model.version.ServiceVersion;
 
 /**
  * User: alabri

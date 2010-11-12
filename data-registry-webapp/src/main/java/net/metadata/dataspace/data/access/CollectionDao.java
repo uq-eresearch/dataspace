@@ -1,8 +1,8 @@
 package net.metadata.dataspace.data.access;
 
 import au.edu.uq.itee.maenad.dataaccess.Dao;
-import net.metadata.dataspace.data.model.Collection;
-import net.metadata.dataspace.data.model.CollectionVersion;
+import net.metadata.dataspace.data.model.base.Collection;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
 
 /**
  * User: alabri

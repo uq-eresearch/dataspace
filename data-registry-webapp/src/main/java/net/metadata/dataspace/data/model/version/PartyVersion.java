@@ -1,4 +1,9 @@
-package net.metadata.dataspace.data.model;
+package net.metadata.dataspace.data.model.version;
+
+import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.base.Collection;
+import net.metadata.dataspace.data.model.base.Party;
+import net.metadata.dataspace.data.model.base.Subject;
 
 import javax.persistence.*;
 import java.util.HashSet;

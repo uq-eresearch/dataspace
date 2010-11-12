@@ -6,8 +6,11 @@ import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.*;
-import net.metadata.dataspace.data.model.Collection;
+import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.base.Party;
+import net.metadata.dataspace.data.model.base.Service;
+import net.metadata.dataspace.data.model.base.Subject;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
@@ -36,7 +39,7 @@ import java.util.*;
  * Date: 24/09/2010
  * Time: 11:38:59 AM
  */
-public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collection> {
+public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metadata.dataspace.data.model.base.Collection> {
 
     private Logger logger = Logger.getLogger(getClass());
     private CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
@@ -45,7 +48,6 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     private ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
     private ServiceDao serviceDao = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
     private EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
-//    private EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -58,7 +60,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 Entry entry = getEntryFromRequest(request);
-                Collection collection = entityCreator.getNextCollection();
+                net.metadata.dataspace.data.model.base.Collection collection = entityCreator.getNextCollection();
                 CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
                 boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(collectionVersion, entry);
                 if (!isValidEntry) {
@@ -99,7 +101,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 if (jsonString == null) {
                     return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
                 } else {
-                    Collection collection = entityCreator.getNextCollection();
+                    net.metadata.dataspace.data.model.base.Collection collection = entityCreator.getNextCollection();
                     CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
                     if (!assembleCollectionFromJson(collection, collectionVersion, jsonString)) {
                         return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
@@ -128,7 +130,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             try {
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntryID(request);
-                Collection collection = collectionDao.getByKey(uriKey);
+                net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(uriKey);
                 if (collection == null) {
                     return ProviderHelper.notfound(request);
                 } else {
@@ -180,7 +182,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
                 return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
             } else {
                 String uriKey = AdapterHelper.getEntryID(request);
-                Collection collection = collectionDao.getByKey(uriKey);
+                net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(uriKey);
                 if (collection == null) {
                     return ProviderHelper.notfound(request);
                 } else {
@@ -204,7 +206,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
         String uriKey = AdapterHelper.getEntryID(request);
-        Collection collection = collectionDao.getByKey(uriKey);
+        net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(uriKey);
         if (collection == null) {
             return ProviderHelper.notfound(request);
         } else {
@@ -226,7 +228,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     @Override
     public ResponseContext getEntry(RequestContext request) {
         String uriKey = AdapterHelper.getEntryID(request);
-        Collection collection = collectionDao.getByKey(uriKey);
+        net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(uriKey);
         if (collection == null) {
             return ProviderHelper.notfound(request);
         } else {
@@ -270,7 +272,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        Collection latestCollection = collectionDao.getMostRecentUpdated();
+        net.metadata.dataspace.data.model.base.Collection latestCollection = collectionDao.getMostRecentUpdated();
         if (latestCollection != null) {
             collectionDao.refresh(latestCollection);
             feed.setUpdated(latestCollection.getUpdated());
@@ -298,9 +300,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
             FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
         }
         feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_COLLECTIONS);
-        Iterable<Collection> entries = getEntries(request);
+        Iterable<net.metadata.dataspace.data.model.base.Collection> entries = getEntries(request);
         if (entries != null) {
-            for (Collection entryObj : entries) {
+            for (net.metadata.dataspace.data.model.base.Collection entryObj : entries) {
                 Entry e = feed.addEntry();
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
@@ -313,7 +315,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         }
     }
 
-    public List<Person> getAuthors(Collection collection, RequestContext request) throws ResponseContextException {
+    public List<Person> getAuthors(net.metadata.dataspace.data.model.base.Collection collection, RequestContext request) throws ResponseContextException {
         Set<String> authors = collection.getAuthors();
         List<Person> personList = new ArrayList<Person>();
         for (String author : authors) {
@@ -330,8 +332,8 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     }
 
     @Override
-    public Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
-                                Content content, RequestContext requestContext) throws ResponseContextException {
+    public net.metadata.dataspace.data.model.base.Collection postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors,
+                                                                       Content content, RequestContext requestContext) throws ResponseContextException {
         return null;
     }
 
@@ -341,20 +343,20 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     }
 
     @Override
-    public Object getContent(Collection collection, RequestContext requestContext) throws ResponseContextException {
+    public Object getContent(net.metadata.dataspace.data.model.base.Collection collection, RequestContext requestContext) throws ResponseContextException {
         Content content = requestContext.getAbdera().getFactory().newContent(Content.Type.TEXT);
         content.setText(collection.getContent());
         return content;
     }
 
     @Override
-    public Iterable<Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
+    public Iterable<net.metadata.dataspace.data.model.base.Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
         return collectionDao.getAllActive();
     }
 
     @Override
-    public Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        Collection collection = collectionDao.getByKey(key);
+    public net.metadata.dataspace.data.model.base.Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(key);
         if (collection != null) {
             collectionDao.refresh(collection);
         }
@@ -362,27 +364,27 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
     }
 
     @Override
-    public String getId(Collection collection) throws ResponseContextException {
+    public String getId(net.metadata.dataspace.data.model.base.Collection collection) throws ResponseContextException {
         return Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
     }
 
     @Override
-    public String getName(Collection collection) throws ResponseContextException {
+    public String getName(net.metadata.dataspace.data.model.base.Collection collection) throws ResponseContextException {
         return Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
     }
 
     @Override
-    public String getTitle(Collection collection) throws ResponseContextException {
+    public String getTitle(net.metadata.dataspace.data.model.base.Collection collection) throws ResponseContextException {
         return collection.getTitle();
     }
 
     @Override
-    public Date getUpdated(Collection collection) throws ResponseContextException {
+    public Date getUpdated(net.metadata.dataspace.data.model.base.Collection collection) throws ResponseContextException {
         return collection.getUpdated();
     }
 
     @Override
-    public void putEntry(Collection collection, String title, Date updated, List<Person> authors, String summary,
+    public void putEntry(net.metadata.dataspace.data.model.base.Collection collection, String title, Date updated, List<Person> authors, String summary,
                          Content content, RequestContext requestContext) throws ResponseContextException {
         logger.warn("Method not supported.");
     }
@@ -443,7 +445,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<Collectio
         collectionVersion.getParent().setUpdated(now);
     }
 
-    private boolean assembleCollectionFromJson(Collection collection, CollectionVersion collectionVersion, String jsonString) {
+    private boolean assembleCollectionFromJson(net.metadata.dataspace.data.model.base.Collection collection, CollectionVersion collectionVersion, String jsonString) {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {

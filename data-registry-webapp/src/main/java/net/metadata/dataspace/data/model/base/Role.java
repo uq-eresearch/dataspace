@@ -1,4 +1,4 @@
-package net.metadata.dataspace.data.model;
+package net.metadata.dataspace.data.model.base;
 
 /**
  * Author: alabri

@@ -1,5 +1,7 @@
-package net.metadata.dataspace.data.model;
+package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.base.Collection;
+import net.metadata.dataspace.data.model.base.Service;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;

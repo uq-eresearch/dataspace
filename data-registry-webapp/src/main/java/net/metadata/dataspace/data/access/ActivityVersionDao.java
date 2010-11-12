@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.access;
 
 import au.edu.uq.itee.maenad.dataaccess.Dao;
-import net.metadata.dataspace.data.model.ActivityVersion;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
 
 /**
  * Author: alabri
