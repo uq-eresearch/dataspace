@@ -1,6 +1,6 @@
 package net.metadata.dataspace.auth;
 
-import net.metadata.dataspace.data.model.User;
+import net.metadata.dataspace.data.model.base.User;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 

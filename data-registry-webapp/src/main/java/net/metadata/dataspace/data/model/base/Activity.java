@@ -30,6 +30,9 @@ public class Activity extends AbstractBaseEntity<ActivityVersion> {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private ActivityVersion published;
+
     public Activity() {
     }
 
@@ -71,5 +74,18 @@ public class Activity extends AbstractBaseEntity<ActivityVersion> {
 
     public Set<String> getAuthors() {
         return versions.first().getAuthors();
+    }
+
+    public ActivityVersion getPublished() {
+        return published;
+    }
+
+    @Override
+    public net.metadata.dataspace.data.model.Version getWorkingCopy() {
+        return this.versions.first();
+    }
+
+    public void setPublished(ActivityVersion published) {
+        this.published = published;
     }
 }

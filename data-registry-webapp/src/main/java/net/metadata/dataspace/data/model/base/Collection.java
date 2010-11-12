@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.base;
 
+import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
@@ -29,6 +30,9 @@ public class Collection extends AbstractBaseEntity<CollectionVersion> {
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private CollectionVersion published;
 
     public Collection() {
 
@@ -86,4 +90,16 @@ public class Collection extends AbstractBaseEntity<CollectionVersion> {
         return versions.first().getSupports();
     }
 
+    public CollectionVersion getPublished() {
+        return published;
+    }
+
+    public void setPublished(CollectionVersion published) {
+        this.published = published;
+    }
+
+    @Override
+    public Version getWorkingCopy() {
+        return this.versions.first();
+    }
 }

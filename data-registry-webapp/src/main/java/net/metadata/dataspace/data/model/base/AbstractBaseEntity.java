@@ -14,7 +14,7 @@ import java.util.SortedSet;
  * Time: 12:12:47 PM
  */
 @MappedSuperclass
-public abstract class AbstractBaseEntity<T> implements Serializable, Record {
+public abstract class AbstractBaseEntity<V> implements Serializable, Record {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,7 +30,7 @@ public abstract class AbstractBaseEntity<T> implements Serializable, Record {
         this.isActive = true;
     }
 
-    abstract public SortedSet<T> getVersions();
+    abstract public SortedSet<V> getVersions();
 
     public Long getId() {
         return id;

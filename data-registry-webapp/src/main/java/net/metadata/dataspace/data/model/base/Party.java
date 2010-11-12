@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.base;
 
+import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.version.PartyVersion;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
@@ -29,6 +30,9 @@ public class Party extends AbstractBaseEntity<PartyVersion> {
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private PartyVersion published;
 
     public Party() {
     }
@@ -71,6 +75,20 @@ public class Party extends AbstractBaseEntity<PartyVersion> {
 
     public SortedSet<PartyVersion> getVersions() {
         return versions;
+    }
+
+    @Override
+    public PartyVersion getPublished() {
+        return published;
+    }
+
+    public void setPublished(PartyVersion version) {
+        this.published = version;
+    }
+
+    @Override
+    public Version getWorkingCopy() {
+        return this.versions.first();
     }
 
     public void setVersions(SortedSet<PartyVersion> versions) {

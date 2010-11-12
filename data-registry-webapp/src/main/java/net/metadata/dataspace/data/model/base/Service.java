@@ -30,6 +30,9 @@ public class Service extends AbstractBaseEntity<ServiceVersion> {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private ServiceVersion published;
+
     public Service() {
     }
 
@@ -74,4 +77,16 @@ public class Service extends AbstractBaseEntity<ServiceVersion> {
         return versions.first().getAuthors();
     }
 
+    public ServiceVersion getPublished() {
+        return published;
+    }
+
+    @Override
+    public net.metadata.dataspace.data.model.Version getWorkingCopy() {
+        return this.versions.first();
+    }
+
+    public void setPublished(ServiceVersion published) {
+        this.published = published;
+    }
 }
