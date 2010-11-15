@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model;
 
+import java.util.Date;
 import java.util.SortedSet;
 
 /**
@@ -29,5 +30,14 @@ public interface Record {
      * @return the latest version of this record
      */
     Version getWorkingCopy();
+
+    /**
+     * Return the date when the entity last modified
+     *
+     * @param updated last updated date
+     */
+    void setUpdated(Date updated);
+
+    String getUriKey();
 
 }

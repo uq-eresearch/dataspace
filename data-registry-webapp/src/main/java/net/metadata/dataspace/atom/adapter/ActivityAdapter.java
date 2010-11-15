@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
+import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.data.access.ActivityDao;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
@@ -28,7 +29,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.activation.MimeType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.IOException;
@@ -53,70 +53,12 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
-        MimeType mimeType = request.getContentType();
-        String baseType = mimeType.getBaseType();
-        if (baseType.equals(Constants.JSON_MIMETYPE)) {
-            return postMedia(request);
-        } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-            try {
-                Entry entry = getEntryFromRequest(request);
-                Activity activity = entityCreator.getNextActivity();
-                ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
-                boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(activityVersion, entry);
-                if (!isValidEntry) {
-                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                } else {
-                    transaction.begin();
-                    activityVersion.setParent(activity);
-                    activity.getVersions().add(activityVersion);
-                    Date now = new Date();
-                    activityVersion.setUpdated(now);
-                    activity.setUpdated(now);
-                    entityManager.persist(activityVersion);
-                    entityManager.persist(activity);
-                    furtherUpdate(entry, activityVersion);
-                    transaction.commit();
-                    Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
-                    return AdapterHelper.getContextResponseForPost(createdEntry);
-                }
-            } catch (Exception e) {
-                logger.fatal("Invalid Entry", e);
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                return ProviderHelper.servererror(request, e);
-            }
-        } else {
-            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-        }
+        return HttpMethodHelper.postEntry(request, Activity.class);
     }
 
     @Override
     public ResponseContext postMedia(RequestContext request) {
-        MimeType mimeType = request.getContentType();
-        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            try {
-                String jsonString = AdapterHelper.getJsonString(request.getInputStream());
-                if (jsonString == null) {
-                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                } else {
-                    Activity activity = entityCreator.getNextActivity();
-                    ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
-                    if (!assembleActivityFromJson(activity, activityVersion, jsonString)) {
-                        return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                    }
-                    Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
-                    return AdapterHelper.getContextResponseForPost(createdEntry);
-                }
-            } catch (IOException e) {
-                logger.fatal("Cannot get inputstream from request.");
-                return ProviderHelper.servererror(request, e);
-            }
-        } else {
-            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-        }
+        return HttpMethodHelper.postMedia(request, Activity.class);
     }
 
     @Override

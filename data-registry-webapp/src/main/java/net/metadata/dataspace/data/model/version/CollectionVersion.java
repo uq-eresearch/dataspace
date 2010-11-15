@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.*;
 import org.hibernate.validator.NotNull;
 
@@ -37,12 +38,12 @@ public class CollectionVersion extends AbstractVersionEntity {
     public CollectionVersion() {
     }
 
-    public Collection getParent() {
+    public Record getParent() {
         return parent;
     }
 
-    public void setParent(Collection parent) {
-        this.parent = parent;
+    public void setParent(Record parent) {
+        this.parent = (Collection) parent;
     }
 
     public Set<Subject> getSubjects() {

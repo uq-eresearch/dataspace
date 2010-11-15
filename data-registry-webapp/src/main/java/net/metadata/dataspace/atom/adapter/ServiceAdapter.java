@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
+import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
@@ -25,7 +26,6 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.activation.MimeType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.IOException;
@@ -46,74 +46,15 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     private ServiceDao serviceDao = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
     private CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
-//    private EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
-        MimeType mimeType = request.getContentType();
-        String baseType = mimeType.getBaseType();
-        if (baseType.equals(Constants.JSON_MIMETYPE)) {
-            return postMedia(request);
-        } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-            try {
-                Entry entry = getEntryFromRequest(request);
-                Service service = entityCreator.getNextService();
-                ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
-                boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(serviceVersion, entry);
-                if (!isValidEntry) {
-                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                } else {
-                    transaction.begin();
-                    serviceVersion.setParent(service);
-                    service.getVersions().add(serviceVersion);
-                    Date now = new Date();
-                    serviceVersion.setUpdated(now);
-                    service.setUpdated(now);
-                    entityManager.persist(serviceVersion);
-                    entityManager.persist(service);
-                    furtherUpdate(entry, serviceVersion);
-                    transaction.commit();
-                    Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
-                    return AdapterHelper.getContextResponseForPost(createdEntry);
-                }
-            } catch (Exception e) {
-                logger.fatal("Invalid Entry", e);
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                return ProviderHelper.servererror(request, e);
-            }
-        } else {
-            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-        }
+        return HttpMethodHelper.postEntry(request, Service.class);
     }
 
     @Override
     public ResponseContext postMedia(RequestContext request) {
-        MimeType mimeType = request.getContentType();
-        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            try {
-                String jsonString = AdapterHelper.getJsonString(request.getInputStream());
-                if (jsonString == null) {
-                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                } else {
-                    Service service = entityCreator.getNextService();
-                    ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
-                    if (!assembleServiceFromJson(service, serviceVersion, jsonString)) {
-                        return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                    }
-                    Entry createdEntry = AdapterHelper.getEntryFromService(serviceVersion, true);
-                    return AdapterHelper.getContextResponseForPost(createdEntry);
-                }
-            } catch (IOException e) {
-                logger.fatal("Cannot get inputstream from request.");
-                return ProviderHelper.servererror(request, e);
-            }
-        } else {
-            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-        }
+        return HttpMethodHelper.postMedia(request, Service.class);
     }
 
     @Override

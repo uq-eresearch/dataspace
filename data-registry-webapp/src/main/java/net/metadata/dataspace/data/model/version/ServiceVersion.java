@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Collection;
 import net.metadata.dataspace.data.model.base.Service;
 import org.hibernate.validator.NotNull;
@@ -33,8 +34,8 @@ public class ServiceVersion extends AbstractVersionEntity {
         return parent;
     }
 
-    public void setParent(Service parent) {
-        this.parent = parent;
+    public void setParent(Record parent) {
+        this.parent = (Service) parent;
     }
 
     public Set<Collection> getSupportedBy() {

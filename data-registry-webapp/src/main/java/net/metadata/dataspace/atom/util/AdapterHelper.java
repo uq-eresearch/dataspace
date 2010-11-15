@@ -123,6 +123,19 @@ public class AdapterHelper {
         return jsonString;
     }
 
+    public static Entry getEntryFromEntity(Version version, boolean isParentLevel) {
+        if (version instanceof ActivityVersion) {
+            return getEntryFromActivity((ActivityVersion) version, isParentLevel);
+        } else if (version instanceof PartyVersion) {
+            return getEntryFromParty((PartyVersion) version, isParentLevel);
+        } else if (version instanceof CollectionVersion) {
+            return getEntryFromCollection((CollectionVersion) version, isParentLevel);
+        } else if (version instanceof ServiceVersion) {
+            return getEntryFromService((ServiceVersion) version, isParentLevel);
+        }
+        return null;
+    }
+
     public static Entry getEntryFromActivity(ActivityVersion activityVersion, boolean isParentLevel) {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activityVersion.getParent().getUriKey();
         Entry entry = setCommonAttributes(activityVersion, isParentLevel, parentUrl);

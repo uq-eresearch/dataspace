@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Activity;
 import net.metadata.dataspace.data.model.base.Collection;
 import net.metadata.dataspace.data.model.base.Party;
@@ -41,8 +42,8 @@ public class PartyVersion extends AbstractVersionEntity {
     public void setLocation(String text) {
     }
 
-    public void setParent(Party parent) {
-        this.parent = parent;
+    public void setParent(Record parent) {
+        this.parent = (Party) parent;
     }
 
     public Set<Subject> getSubjects() {

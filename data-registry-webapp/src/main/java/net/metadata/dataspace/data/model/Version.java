@@ -9,9 +9,16 @@ import java.util.Set;
  * Time: 1:48:52 PM
  */
 public interface Version {
+
+    void setAtomicNumber(Integer atomicNumber);
+
+    Integer getAtomicNumber();
+
     Date getUpdated();
 
     Record getParent();
+
+    void setParent(Record parent);
 
     String getUriKey();
 

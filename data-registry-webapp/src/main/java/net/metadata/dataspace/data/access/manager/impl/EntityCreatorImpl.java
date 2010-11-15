@@ -1,6 +1,8 @@
 package net.metadata.dataspace.data.access.manager.impl;
 
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.*;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
@@ -24,6 +26,35 @@ public class EntityCreatorImpl implements EntityCreator {
     private ActivityAtomicSequencer activityAtomicSequencer;
 
     public EntityCreatorImpl() {
+    }
+
+    public Record getNextRecord(Class clazz) {
+        if (clazz.equals(Activity.class)) {
+            getNextActivity();
+        } else if (clazz.equals(Collection.class)) {
+            return getNextCollection();
+        } else if (clazz.equals(Party.class)) {
+            return getNextParty();
+        } else if (clazz.equals(Service.class)) {
+            return getNextService();
+        }
+        return null;
+    }
+
+    public Version getNextVersion(Record record) {
+        Version version = null;
+        if (record instanceof Activity) {
+            version = new ActivityVersion();
+        } else if (record instanceof Collection) {
+            version = new CollectionVersion();
+        } else if (record instanceof Party) {
+            version = new PartyVersion();
+        } else if (record instanceof Service) {
+            version = new ServiceVersion();
+        }
+        AtomicInteger atomicInteger = new AtomicInteger(record.getVersions().size());
+        version.setAtomicNumber(atomicInteger.incrementAndGet());
+        return version;
     }
 
     @Override

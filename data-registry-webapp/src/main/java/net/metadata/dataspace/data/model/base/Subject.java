@@ -4,6 +4,7 @@ import net.metadata.dataspace.data.model.Version;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.Entity;
+import java.util.Date;
 import java.util.SortedSet;
 
 /**
@@ -73,5 +74,10 @@ public class Subject extends AbstractBaseEntity {
     @Override
     public Version getWorkingCopy() {
         return null;
+    }
+
+    @Override
+    public void setUpdated(Date updated) {
+        //TODO: we might need to implement this (i.e. add updated column)
     }
 }

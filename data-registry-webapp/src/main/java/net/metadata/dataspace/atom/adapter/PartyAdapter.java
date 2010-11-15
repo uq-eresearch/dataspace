@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
+import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.ActivityDao;
@@ -32,7 +33,6 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.activation.MimeType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.IOException;
@@ -57,75 +57,12 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
-//        User user = authManager.getCurrentUser(request);
-//        if (user == null) {
-//            return ProviderHelper.unauthorized(request, Constants.HTTP_STATUS_401);
-//        } else {
-        MimeType mimeType = request.getContentType();
-        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            return postMedia(request);
-        } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-            try {
-                Entry entry = getEntryFromRequest(request);
-                Party party = entityCreator.getNextParty();
-                PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
-                boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(partyVersion, entry);
-                if (!isValidEntry) {
-                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                } else {
-                    transaction.begin();
-                    partyVersion.setParent(party);
-                    party.getVersions().add(partyVersion);
-                    Date now = new Date();
-                    partyVersion.setUpdated(now);
-                    party.setUpdated(now);
-                    entityManager.persist(partyVersion);
-                    entityManager.persist(party);
-                    furtherUpdate(entry, partyVersion);
-                    transaction.commit();
-                    Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
-                    return AdapterHelper.getContextResponseForPost(createdEntry);
-                }
-            } catch (Exception e) {
-                logger.warn("Invalid Entry", e);
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                return ProviderHelper.servererror(request, e);
-            }
-        } else {
-            return ProviderHelper.notsupported(request, "Unsupported media type");
-        }
-//        }
+        return HttpMethodHelper.postEntry(request, Party.class);
     }
 
     @Override
     public ResponseContext postMedia(RequestContext request) {
-        MimeType mimeType = request.getContentType();
-        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            try {
-                String jsonString = AdapterHelper.getJsonString(request.getInputStream());
-                if (jsonString == null) {
-                    return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                } else {
-                    Party party = entityCreator.getNextParty();
-                    PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
-                    if (!assembleValidPartyFromJson(party, partyVersion, jsonString)) {
-                        return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                    } else {
-                    }
-                    Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, true);
-                    return AdapterHelper.getContextResponseForPost(createdEntry);
-                }
-            } catch (IOException e) {
-                logger.fatal("Cannot get inputstream from request.");
-                return ProviderHelper.servererror(request, e);
-            }
-        } else {
-            return ProviderHelper.notsupported(request, "Unsupported media type");
-        }
+        return HttpMethodHelper.postMedia(request, Party.class);
     }
 
 
@@ -262,9 +199,9 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                         return ProviderHelper.unauthorized(request);
                     }
                 } else {
-
                     if (authorizationManager.getAccessLevelForInstance(user, party).canUpdate() && party.getPublished() == null) {
-                        version = party.getWorkingCopy();
+                        Feed versionHistoryFeed = FeedHelper.createVersionFeed(request, getId(request));
+                        return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, party);
                     } else {
                         version = party.getPublished();
                     }
