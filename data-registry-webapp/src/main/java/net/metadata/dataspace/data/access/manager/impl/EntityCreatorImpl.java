@@ -28,6 +28,7 @@ public class EntityCreatorImpl implements EntityCreator {
     public EntityCreatorImpl() {
     }
 
+    @Override
     public Record getNextRecord(Class clazz) {
         if (clazz.equals(Activity.class)) {
             getNextActivity();
@@ -37,10 +38,13 @@ public class EntityCreatorImpl implements EntityCreator {
             return getNextParty();
         } else if (clazz.equals(Service.class)) {
             return getNextService();
+        } else if (clazz.equals(Subject.class)) {
+            return getNextSubject();
         }
         return null;
     }
 
+    @Override
     public Version getNextVersion(Record record) {
         Version version = null;
         if (record instanceof Activity) {
@@ -57,35 +61,6 @@ public class EntityCreatorImpl implements EntityCreator {
         return version;
     }
 
-    @Override
-    public Party getNextParty() {
-        Party party = new Party();
-        party.setAtomicNumber(partyAtomicSequencer.next());
-        return party;
-    }
-
-    @Override
-    public PartyVersion getNextPartyVersion(Party party) {
-        PartyVersion partyVersion = new PartyVersion();
-        AtomicInteger atomicInteger = new AtomicInteger(party.getVersions().size());
-        partyVersion.setAtomicNumber(atomicInteger.incrementAndGet());
-        return partyVersion;
-    }
-
-    @Override
-    public Collection getNextCollection() {
-        Collection collection = new Collection();
-        collection.setAtomicNumber(collectionAtomicSequencer.next());
-        return collection;
-    }
-
-    @Override
-    public CollectionVersion getNextCollectionVersion(Collection collection) {
-        CollectionVersion collectionVersion = new CollectionVersion();
-        AtomicInteger atomicInteger = new AtomicInteger(collection.getVersions().size());
-        collectionVersion.setAtomicNumber(atomicInteger.incrementAndGet());
-        return collectionVersion;
-    }
 
     @Override
     public Subject getNextSubject() {
@@ -94,34 +69,28 @@ public class EntityCreatorImpl implements EntityCreator {
         return subject;
     }
 
-    @Override
-    public Service getNextService() {
+    private Party getNextParty() {
+        Party party = new Party();
+        party.setAtomicNumber(partyAtomicSequencer.next());
+        return party;
+    }
+
+    private Collection getNextCollection() {
+        Collection collection = new Collection();
+        collection.setAtomicNumber(collectionAtomicSequencer.next());
+        return collection;
+    }
+
+    private Service getNextService() {
         Service service = new Service();
         service.setAtomicNumber(serviceAtomicSequencer.next());
         return service;
     }
 
-    @Override
-    public ServiceVersion getNextServiceVersion(Service service) {
-        ServiceVersion serviceVersion = new ServiceVersion();
-        AtomicInteger atomicInteger = new AtomicInteger(service.getVersions().size());
-        serviceVersion.setAtomicNumber(atomicInteger.incrementAndGet());
-        return serviceVersion;
-    }
-
-    @Override
-    public Activity getNextActivity() {
+    private Activity getNextActivity() {
         Activity activity = new Activity();
         activity.setAtomicNumber(activityAtomicSequencer.next());
         return activity;
-    }
-
-    @Override
-    public ActivityVersion getNextActivityVersion(Activity activity) {
-        ActivityVersion collectionVersion = new ActivityVersion();
-        AtomicInteger atomicInteger = new AtomicInteger(activity.getVersions().size());
-        collectionVersion.setAtomicNumber(atomicInteger.incrementAndGet());
-        return collectionVersion;
     }
 
     public void setPartyAtomicSequencer(PartyAtomicSequencer partyAtomicSequencer) {

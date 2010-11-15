@@ -40,4 +40,9 @@ public interface Record {
 
     String getUriKey();
 
+    Integer getAtomicNumber();
+
+    void setAtomicNumber(Integer atomicNumber);
+
+    boolean isActive();
 }

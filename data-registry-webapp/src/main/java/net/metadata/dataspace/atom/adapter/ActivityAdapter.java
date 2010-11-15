@@ -2,18 +2,10 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.data.access.ActivityDao;
-import net.metadata.dataspace.data.access.CollectionDao;
-import net.metadata.dataspace.data.access.PartyDao;
-import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.base.Activity;
-import net.metadata.dataspace.data.model.base.Collection;
-import net.metadata.dataspace.data.model.base.Party;
-import net.metadata.dataspace.data.model.version.ActivityVersion;
-import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
@@ -25,18 +17,9 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * User: alabri
@@ -47,9 +30,6 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     private Logger logger = Logger.getLogger(getClass());
     private ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
-    private CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
-    private PartyDao partyDao = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
-    private EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -63,132 +43,22 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public ResponseContext putEntry(RequestContext request) {
-        logger.info("Updating Entry");
-        String mimeBaseType = request.getContentType().getBaseType();
-        if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
-            putMedia(request);
-        } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-            try {
-                Entry entry = getEntryFromRequest(request);
-                String uriKey = AdapterHelper.getEntryID(request);
-                Activity activity = activityDao.getByKey(uriKey);
-                if (activity == null) {
-                    return ProviderHelper.notfound(request);
-                } else {
-                    if (activity.isActive()) {
-                        ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
-                        boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(activityVersion, entry);
-                        if (!isValidEntry) {
-                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                        } else {
-                            transaction.begin();
-                            activity.getVersions().add(activityVersion);
-                            activityVersion.setParent(activity);
-                            furtherUpdate(entry, activityVersion);
-                            entityManager.merge(activity);
-                            transaction.commit();
-                            Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, true);
-                            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
-                        }
-                    } else {
-                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
-                    }
-                }
-            } catch (Exception e) {
-                logger.fatal("Invalid Entry", e);
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                return ProviderHelper.servererror(request, e);
-            }
-        } else {
-            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-        }
-        return getEntry(request);
+        return HttpMethodHelper.putEntry(request, Activity.class);
     }
 
     @Override
     public ResponseContext putMedia(RequestContext request) {
-        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            InputStream inputStream = null;
-            try {
-                inputStream = request.getInputStream();
-            } catch (IOException e) {
-                logger.fatal("Cannot get inputstream from request.", e);
-                return ProviderHelper.servererror(request, e);
-            }
-            String activityAsJsonString = AdapterHelper.getJsonString(inputStream);
-            if (activityAsJsonString == null) {
-                return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-            } else {
-                String uriKey = AdapterHelper.getEntryID(request);
-                Activity activity = activityDao.getByKey(uriKey);
-                if (activity == null) {
-                    return ProviderHelper.notfound(request);
-                } else {
-                    if (activity.isActive()) {
-                        ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
-                        if (!assembleActivityFromJson(activity, activityVersion, activityAsJsonString)) {
-                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                        }
-                        Entry createdEntry = AdapterHelper.getEntryFromActivity(activityVersion, false);
-                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
-                    } else {
-                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
-                    }
-                }
-            }
-        } else {
-            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-        }
+        return HttpMethodHelper.putMedia(request, Activity.class);
     }
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
-        String uriKey = AdapterHelper.getEntryID(request);
-        Activity activity = activityDao.getByKey(uriKey);
-        if (activity == null) {
-            return ProviderHelper.notfound(request);
-        } else {
-            activityDao.refresh(activity);
-            if (activity.isActive()) {
-                try {
-                    deleteEntry(uriKey, request);
-                    return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
-                } catch (ResponseContextException e) {
-                    logger.fatal("Could not delete party entry");
-                    return ProviderHelper.servererror(request, e);
-                }
-            } else {
-                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
-            }
-        }
+        return HttpMethodHelper.deleteEntry(request, Activity.class);
     }
 
     @Override
     public ResponseContext getEntry(RequestContext request) {
-        String uriKey = AdapterHelper.getEntryID(request);
-        Activity activity = activityDao.getByKey(uriKey);
-        if (activity == null) {
-            return ProviderHelper.notfound(request);
-        } else {
-            activityDao.refresh(activity);
-            if (activity.isActive()) {
-                String versionKey = AdapterHelper.getEntryVersionID(request);
-                ActivityVersion activityVersion;
-                if (versionKey != null) {
-                    activityVersion = activityDao.getByVersion(uriKey, versionKey);
-                } else {
-                    activityVersion = activity.getVersions().first();
-                }
-                Entry entry = AdapterHelper.getEntryFromActivity(activityVersion, versionKey == null);
-                return AdapterHelper.getContextResponseForGetEntry(request, entry);
-            } else {
-                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
-            }
-        }
+        return HttpMethodHelper.getEntry(request, Activity.class);
     }
 
     @Override
@@ -334,86 +204,4 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     public String getTitle(RequestContext request) {
         return Constants.TITLE_FOR_ACTIVITIES;
     }
-
-    private void furtherUpdate(Entry entry, ActivityVersion activityVersion) {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_OUTPUT);
-        for (String key : collectionUriKeys) {
-            Collection collection = collectionDao.getByKey(key);
-            if (collection != null) {
-                collection.getOutputOf().add(activityVersion.getParent());
-                activityVersion.getHasOutput().add(collection);
-                entityManager.merge(collection);
-            }
-        }
-        Set<String> partyUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_PARTICIPANT);
-        for (String partyKey : partyUriKeys) {
-            Party party = partyDao.getByKey(partyKey);
-            if (party != null) {
-                party.getParticipantIn().add(activityVersion.getParent());
-                activityVersion.getHasParticipant().add(party);
-                entityManager.merge(party);
-            }
-        }
-        Date now = new Date();
-        activityVersion.setUpdated(now);
-        activityVersion.getParent().setUpdated(now);
-    }
-
-    private boolean assembleActivityFromJson(Activity activity, ActivityVersion activityVersion, String activityAsJsonString) {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            JSONObject jsonObj = new JSONObject(activityAsJsonString);
-            activityVersion.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
-            activityVersion.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
-            activityVersion.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
-            Date now = new Date();
-            activityVersion.setUpdated(now);
-            activity.setUpdated(now);
-            JSONArray authors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_AUTHORS);
-            Set<String> persons = new HashSet<String>();
-            for (int i = 0; i < authors.length(); i++) {
-                persons.add(authors.getString(i));
-            }
-            activityVersion.setAuthors(persons);
-
-            if (activityVersion.getId() == null) {
-                entityManager.persist(activity);
-            }
-
-            JSONArray collections = jsonObj.getJSONArray(Constants.ELEMENT_NAME_HAS_OUTPUT);
-            for (int i = 0; i < collections.length(); i++) {
-                Collection collection = collectionDao.getByKey(collections.getString(i));
-                if (collection != null) {
-                    collection.getOutputOf().add(activity);
-                    activityVersion.getHasOutput().add(collection);
-                    entityManager.merge(collection);
-                }
-            }
-
-            JSONArray parties = jsonObj.getJSONArray(Constants.ELEMENT_NAME_HAS_PARTICIPANT);
-            for (int i = 0; i < parties.length(); i++) {
-                Party party = partyDao.getByKey(parties.getString(i));
-                if (party != null) {
-                    party.getParticipantIn().add(activity);
-                    activityVersion.getHasParticipant().add(party);
-                    entityManager.merge(party);
-                }
-            }
-            activity.getVersions().add(activityVersion);
-            activityVersion.setParent(activity);
-            entityManager.merge(activity);
-            transaction.commit();
-        } catch (JSONException ex) {
-            logger.warn("Could not assemble entry from JSON object");
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            return false;
-        }
-        return true;
-    }
-
 }

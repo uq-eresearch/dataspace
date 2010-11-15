@@ -2,23 +2,10 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.atom.util.HttpMethodHelper;
-import net.metadata.dataspace.auth.AuthenticationManager;
-import net.metadata.dataspace.auth.AuthorizationManager;
-import net.metadata.dataspace.data.access.ActivityDao;
-import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.PartyDao;
-import net.metadata.dataspace.data.access.SubjectDao;
-import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.base.Activity;
 import net.metadata.dataspace.data.model.base.Party;
-import net.metadata.dataspace.data.model.base.Subject;
-import net.metadata.dataspace.data.model.base.User;
-import net.metadata.dataspace.data.model.version.PartyVersion;
-import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
@@ -30,14 +17,11 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * User: alabri
@@ -47,13 +31,7 @@ import java.util.*;
 public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
-    private CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private PartyDao partyDao = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
-    private ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
-    private SubjectDao subjectDao = RegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
-    private AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
-    private AuthorizationManager authorizationManager = RegistryApplication.getApplicationContext().getAuthorizationManager();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -68,154 +46,22 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public ResponseContext putEntry(RequestContext request) {
-        logger.info("Updating Entry");
-        String mimeBaseType = request.getContentType().getBaseType();
-        if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
-            putMedia(request);
-        } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-            try {
-                Entry entry = getEntryFromRequest(request);
-                String uriKey = AdapterHelper.getEntryID(request);
-                Party party = partyDao.getByKey(uriKey);
-                if (party == null) {
-                    return ProviderHelper.notfound(request);
-                } else {
-                    if (party.isActive()) {
-                        PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
-                        boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(partyVersion, entry);
-                        if (!isValidEntry) {
-                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                        } else {
-                            transaction.begin();
-                            party.getVersions().add(partyVersion);
-                            partyVersion.setParent(party);
-                            furtherUpdate(entry, partyVersion);
-                            entityManager.merge(party);
-                            transaction.commit();
-                            Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, false);
-                            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
-                        }
-                    } else {
-                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
-                    }
-                }
-            } catch (Exception e) {
-                logger.fatal("Invalid Entry", e);
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                return ProviderHelper.servererror(request, e);
-            }
-        } else {
-            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-        }
-        return getEntry(request);
+        return HttpMethodHelper.putEntry(request, Party.class);
     }
 
     @Override
     public ResponseContext putMedia(RequestContext request) {
-        logger.info("Updating Party as Media Entry");
-
-        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            InputStream inputStream = null;
-            try {
-                inputStream = request.getInputStream();
-            } catch (IOException e) {
-                logger.fatal("Cannot create inputstream from request.", e);
-            }
-            String partyAsJsonString = AdapterHelper.getJsonString(inputStream);
-            if (partyAsJsonString == null) {
-                return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-            } else {
-                String uriKey = AdapterHelper.getEntryID(request);
-                Party party = partyDao.getByKey(uriKey);
-                if (party == null) {
-                    return ProviderHelper.notfound(request);
-                } else {
-                    if (party.isActive()) {
-                        PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
-                        if (!assembleValidPartyFromJson(party, partyVersion, partyAsJsonString)) {
-                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
-                        }
-                        Entry createdEntry = AdapterHelper.getEntryFromParty(partyVersion, false);
-                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
-                    } else {
-                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
-                    }
-                }
-            }
-        } else {
-            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-        }
+        return HttpMethodHelper.putMedia(request, Party.class);
     }
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
-        String uriKey = AdapterHelper.getEntryID(request);
-        Party party = partyDao.getByKey(uriKey);
-        if (party == null) {
-            return ProviderHelper.notfound(request);
-        } else {
-            partyDao.refresh(party);
-            if (party.isActive()) {
-                try {
-                    deleteEntry(uriKey, request);
-                    return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
-                } catch (ResponseContextException e) {
-                    logger.fatal("Could not delete party entry");
-                    return ProviderHelper.servererror(request, e);
-                }
-            } else {
-                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
-            }
-        }
+        return HttpMethodHelper.deleteEntry(request, Party.class);
     }
 
     @Override
     public ResponseContext getEntry(RequestContext request) {
-        String uriKey = AdapterHelper.getEntryID(request);
-        Party party = partyDao.getByKey(uriKey);
-        if (party == null) {
-            return ProviderHelper.notfound(request);
-        } else {
-            partyDao.refresh(party);
-            if (party.isActive()) {
-                String versionKey = AdapterHelper.getEntryVersionID(request);
-                User user = authenticationManager.getCurrentUser(request);
-                Version version;
-                if (versionKey != null) {
-                    if (authorizationManager.getAccessLevelForInstance(user, party).canUpdate()) {
-                        if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
-                            Feed versionHistoryFeed = FeedHelper.createVersionFeed(request, getId(request));
-                            return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, party);
-                        } else if (versionKey.equals(Constants.TARGET_TYPE_WORKING_COPY)) {
-                            version = party.getWorkingCopy();
-                        } else {
-                            version = partyDao.getByVersion(uriKey, versionKey);
-                        }
-                    } else {
-                        return ProviderHelper.unauthorized(request);
-                    }
-                } else {
-                    if (authorizationManager.getAccessLevelForInstance(user, party).canUpdate() && party.getPublished() == null) {
-                        Feed versionHistoryFeed = FeedHelper.createVersionFeed(request, getId(request));
-                        return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, party);
-                    } else {
-                        version = party.getPublished();
-                    }
-                }
-                if (version == null) {
-                    return ProviderHelper.notfound(request);
-                } else {
-                    Entry entry = AdapterHelper.getEntryFromParty((PartyVersion) version, versionKey == null);
-                    return AdapterHelper.getContextResponseForGetEntry(request, entry);
-                }
-            } else {
-                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
-            }
-        }
+        return HttpMethodHelper.getEntry(request, Party.class);
     }
 
     @Override
@@ -370,104 +216,5 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     @Override
     public String getTitle(RequestContext requestContext) {
         return Constants.TITLE_FOR_PARTIES;
-    }
-
-    private void furtherUpdate(Entry entry, PartyVersion partyVersion) {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        Set<Subject> subjects = AdapterHelper.getSubjects(entry);
-        for (Subject subject : subjects) {
-            partyVersion.getSubjects().add(subject);
-            if (subject.getId() == null) {
-                entityManager.persist(subject);
-            }
-        }
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR_OF);
-        for (String uriKey : collectionUriKeys) {
-            net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(uriKey);
-            if (collection != null) {
-                collection.getCollector().add(partyVersion.getParent());
-                partyVersion.getCollectorOf().add(collection);
-                entityManager.merge(collection);
-            }
-        }
-        Set<String> isParticipantInUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_IS_PARTICIPANT_IN);
-        for (String uriKey : isParticipantInUriKeys) {
-            Activity activity = activityDao.getByKey(uriKey);
-            if (activity != null) {
-                activity.getHasParticipant().add(partyVersion.getParent());
-                partyVersion.getParticipantIn().add(activity);
-                entityManager.merge(activity);
-            }
-        }
-        Date now = new Date();
-        partyVersion.setUpdated(now);
-        partyVersion.getParent().setUpdated(now);
-    }
-
-    private boolean assembleValidPartyFromJson(Party party, PartyVersion partyVersion, String jsonString) {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            JSONObject jsonObj = new JSONObject(jsonString);
-            partyVersion.setTitle(jsonObj.getString(Constants.ELEMENT_NAME_TITLE));
-            partyVersion.setSummary(jsonObj.getString(Constants.ELEMENT_NAME_SUMMARY));
-            partyVersion.setContent(jsonObj.getString(Constants.ELEMENT_NAME_CONTENT));
-            Date now = new Date();
-            partyVersion.setUpdated(now);
-            party.setUpdated(now);
-            JSONArray authors = jsonObj.getJSONArray(Constants.ELEMENT_NAME_AUTHORS);
-            Set<String> persons = new HashSet<String>();
-            for (int i = 0; i < authors.length(); i++) {
-                persons.add(authors.getString(i));
-            }
-            partyVersion.setAuthors(persons);
-
-            if (party.getId() == null) {
-                entityManager.persist(party);
-            }
-            if (partyVersion.getId() == null) {
-                entityManager.persist(partyVersion);
-            }
-
-            JSONArray collectionArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_COLLECTOR_OF);
-            for (int i = 0; i < collectionArray.length(); i++) {
-                net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(collectionArray.getString(i));
-                if (collection != null) {
-                    collection.getCollector().add(party);
-                    partyVersion.getCollectorOf().add(collection);
-                    entityManager.merge(collection);
-                }
-            }
-            JSONArray subjectArray = jsonObj.getJSONArray(Constants.ELEMENT_NAME_SUBJECT);
-            for (int i = 0; i < subjectArray.length(); i++) {
-                String vocabulary = subjectArray.getJSONObject(i).getString(Constants.ATTRIBUTE_NAME_VOCABULARY);
-                String value = subjectArray.getJSONObject(i).getString(Constants.ATTRIBUTE_NAME_VALUE);
-                if (vocabulary == null || value == null) {
-                    return false;
-                } else {
-                    Subject subject = subjectDao.getSubject(vocabulary, value);
-                    if (subject == null) {
-                        subject = entityCreator.getNextSubject();
-                        subject.setVocabulary(vocabulary);
-                        subject.setValue(value);
-                        entityManager.persist(subject);
-                    }
-                    partyVersion.getSubjects().add(subject);
-                    entityManager.merge(subject);
-                }
-            }
-            party.getVersions().add(partyVersion);
-            partyVersion.setParent(party);
-            entityManager.merge(party);
-            transaction.commit();
-        } catch (Exception ex) {
-            logger.warn("Could not assemble entry from JSON object");
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            return false;
-        }
-        return true;
     }
 }

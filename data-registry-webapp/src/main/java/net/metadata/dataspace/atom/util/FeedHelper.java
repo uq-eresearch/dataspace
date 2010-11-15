@@ -87,10 +87,10 @@ public class FeedHelper {
         return responseContext;
     }
 
-    public static Feed createVersionFeed(RequestContext request, String id) {
+    public static Feed createVersionFeed(RequestContext request) {
         Factory factory = request.getAbdera().getFactory();
         Feed feed = factory.newFeed();
-        String uri = id + "/" + Constants.TARGET_TYPE_VERSION_HISTORY;
+        String uri = request.getUri().toString();
         feed.setId(uri);
         feed.setTitle("Version History");
         feed.addLink(uri, "self");

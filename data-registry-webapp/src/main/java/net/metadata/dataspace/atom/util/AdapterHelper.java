@@ -398,4 +398,5 @@ public class AdapterHelper {
             entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
         }
     }
+
 }

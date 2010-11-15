@@ -2,6 +2,8 @@ package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.auth.AuthenticationManager;
+import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
@@ -14,6 +16,7 @@ import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Feed;
 import org.apache.abdera.parser.ParseException;
 import org.apache.abdera.parser.Parser;
 import org.apache.abdera.protocol.server.ProviderHelper;
@@ -29,6 +32,7 @@ import javax.activation.MimeType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +51,8 @@ public class HttpMethodHelper {
     private static ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
     private static ServiceDao serviceDao = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
     private static EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
+    private static AuthorizationManager authorizationManager = RegistryApplication.getApplicationContext().getAuthorizationManager();
+    private static AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
 
     public static ResponseContext postEntry(RequestContext request, Class clazz) {
         MimeType mimeType = request.getContentType();
@@ -89,6 +95,53 @@ public class HttpMethodHelper {
         }
     }
 
+    public static ResponseContext putEntry(RequestContext request, Class clazz) {
+        logger.info("Updating Entry");
+        String mimeBaseType = request.getContentType().getBaseType();
+        if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
+            putMedia(request, clazz);
+        } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
+            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                Entry entry = getEntryFromRequest(request);
+                String uriKey = AdapterHelper.getEntryID(request);
+                Record record = getExistingRecord(uriKey, clazz);
+                if (record == null) {
+                    return ProviderHelper.notfound(request);
+                } else {
+                    if (record.isActive()) {
+                        Version version = entityCreator.getNextVersion(record);
+                        boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(version, entry);
+                        if (!isValidEntry) {
+                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
+                        } else {
+                            transaction.begin();
+                            record.getVersions().add(version);
+                            version.setParent(record);
+                            furtherUpdate(entry, version);
+                            entityManager.merge(record);
+                            transaction.commit();
+                            Entry createdEntry = AdapterHelper.getEntryFromEntity(version, false);
+                            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                        }
+                    } else {
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
+                    }
+                }
+            } catch (Exception e) {
+                logger.fatal("Invalid Entry", e);
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                return ProviderHelper.servererror(request, e);
+            }
+        } else {
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
+        }
+        return getEntry(request, clazz);
+    }
+
     public static ResponseContext postMedia(RequestContext request, Class clazz) {
         MimeType mimeType = request.getContentType();
         if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
@@ -111,6 +164,144 @@ public class HttpMethodHelper {
             }
         } else {
             return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
+        }
+    }
+
+    public static ResponseContext putMedia(RequestContext request, Class clazz) {
+        logger.info("Updating Party as Media Entry");
+
+        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
+            InputStream inputStream = null;
+            try {
+                inputStream = request.getInputStream();
+            } catch (IOException e) {
+                logger.fatal("Cannot create inputstream from request.", e);
+            }
+            String json = AdapterHelper.getJsonString(inputStream);
+            if (json == null) {
+                return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
+            } else {
+                String uriKey = AdapterHelper.getEntryID(request);
+                Record record = getExistingRecord(uriKey, clazz);
+                if (record == null) {
+                    return ProviderHelper.notfound(request);
+                } else {
+                    if (record.isActive()) {
+                        Version partyVersion = entityCreator.getNextVersion(record);
+                        if (!createRecordFromJson(record, partyVersion, json)) {
+                            return ProviderHelper.badrequest(request, Constants.HTTP_STATUS_400);
+                        }
+                        Entry createdEntry = AdapterHelper.getEntryFromEntity(partyVersion, false);
+                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                    } else {
+                        return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
+                    }
+                }
+            }
+        } else {
+            return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
+        }
+    }
+
+    public static ResponseContext deleteEntry(RequestContext request, Class clazz) {
+        String uriKey = AdapterHelper.getEntryID(request);
+        Record record = getExistingRecord(uriKey, clazz);
+        if (record == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            refreshRecord(record, clazz);
+            if (record.isActive()) {
+//                try {
+                deleteRecord(uriKey, clazz);
+                return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
+//                } catch (ResponseContextException e) {
+//                    logger.fatal("Could not delete party entry");
+//                    return ProviderHelper.servererror(request, e);
+//                }
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
+            }
+        }
+    }
+
+    public static ResponseContext getEntry(RequestContext request, Class clazz) {
+        String uriKey = AdapterHelper.getEntryID(request);
+        Record record = getExistingRecord(uriKey, clazz);
+        if (record == null) {
+            return ProviderHelper.notfound(request);
+        } else {
+            refreshRecord(record, clazz);
+            if (record.isActive()) {
+                String versionKey = AdapterHelper.getEntryVersionID(request);
+                User user = authenticationManager.getCurrentUser(request);
+                Version version;
+                if (versionKey != null) {
+                    if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
+                        if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
+                            Feed versionHistoryFeed = FeedHelper.createVersionFeed(request);
+                            return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, record);
+                        } else if (versionKey.equals(Constants.TARGET_TYPE_WORKING_COPY)) {
+                            version = record.getWorkingCopy();
+                        } else {
+                            version = partyDao.getByVersion(uriKey, versionKey);
+                        }
+                    } else {
+                        return ProviderHelper.unauthorized(request);
+                    }
+                } else {
+                    if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
+                        Feed versionHistoryFeed = FeedHelper.createVersionFeed(request);
+                        return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, record);
+                    } else {
+                        version = record.getPublished();
+                    }
+                }
+                if (version == null) {
+                    return ProviderHelper.notfound(request);
+                } else {
+                    Entry entry = AdapterHelper.getEntryFromEntity(version, versionKey == null);
+                    return AdapterHelper.getContextResponseForGetEntry(request, entry);
+                }
+            } else {
+                return ProviderHelper.createErrorResponse(new Abdera(), 410, Constants.HTTP_STATUS_410);
+            }
+        }
+    }
+
+    private static Record getExistingRecord(String uriKey, Class clazz) {
+        if (clazz.equals(Activity.class)) {
+            return activityDao.getByKey(uriKey);
+        } else if (clazz.equals(Collection.class)) {
+            return collectionDao.getByKey(uriKey);
+        } else if (clazz.equals(Party.class)) {
+            return partyDao.getByKey(uriKey);
+        } else if (clazz.equals(Service.class)) {
+            return serviceDao.getByKey(uriKey);
+        }
+        return null;
+    }
+
+    private static void refreshRecord(Record record, Class clazz) {
+        if (clazz.equals(Activity.class)) {
+            activityDao.refresh((Activity) record);
+        } else if (clazz.equals(Collection.class)) {
+            collectionDao.refresh((Collection) record);
+        } else if (clazz.equals(Party.class)) {
+            partyDao.refresh((Party) record);
+        } else if (clazz.equals(Service.class)) {
+            serviceDao.refresh((Service) record);
+        }
+    }
+
+    private static void deleteRecord(String uriKey, Class clazz) {
+        if (clazz.equals(Activity.class)) {
+            activityDao.softDelete(uriKey);
+        } else if (clazz.equals(Collection.class)) {
+            collectionDao.softDelete(uriKey);
+        } else if (clazz.equals(Party.class)) {
+            partyDao.softDelete(uriKey);
+        } else if (clazz.equals(Service.class)) {
+            serviceDao.softDelete(uriKey);
         }
     }
 

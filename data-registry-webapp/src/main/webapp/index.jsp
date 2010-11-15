@@ -7,6 +7,17 @@
     <jsp:include page="include/title.jsp"/>
 
     <div class="content">
+        <form action="/login" method="post">
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <td><input type="text" id="username" name="username"/></td>
+                    <th>Password</th>
+                    <td><input type="password" id="password" name="password"/></td>
+                    <td><input type="submit" id="login" name="login" value="Sign In"/></td>
+                </tr>
+            </table>
+        </form>
         <ul>
             <li><a href="parties?repr=application/atom+xml;type=feed" title="Parties Feed">Parties Feed</a></li>
             <li><a href="parties" title="Parties HTML">Parties HTML</a></li>
