@@ -2,6 +2,7 @@ package net.metadata.dataspace.data.sequencer;
 
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,9 +34,9 @@ public class CollectionAtomicSequencerTest {
 
     @Test
     public void testCollectionSequencing() throws Exception {
-        Collection collection1 = entityCreator.getNextCollection();
-        Collection collection2 = entityCreator.getNextCollection();
-        Collection collection3 = entityCreator.getNextCollection();
+        Record collection1 = entityCreator.getNextRecord(Collection.class);
+        Record collection2 = entityCreator.getNextRecord(Collection.class);
+        Record collection3 = entityCreator.getNextRecord(Collection.class);
         assertTrue("Atomic number should increase by 1.", collection1.getAtomicNumber() + 1 == collection2.getAtomicNumber());
         assertTrue("Atomic number should increase by 2.", collection1.getAtomicNumber() + 2 == collection3.getAtomicNumber());
         assertTrue("Atomic number should increase by 1.", collection2.getAtomicNumber() + 1 == collection3.getAtomicNumber());

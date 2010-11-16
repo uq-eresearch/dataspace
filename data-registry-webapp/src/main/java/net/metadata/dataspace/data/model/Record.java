@@ -10,6 +10,9 @@ import java.util.SortedSet;
  */
 public interface Record {
 
+
+    Long getId();
+
     /**
      * Gets a all versions of this record
      *

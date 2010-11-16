@@ -2,6 +2,7 @@ package net.metadata.dataspace.data.sequencer;
 
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Activity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,9 +35,9 @@ public class ActivityAtomicSequencerTest {
 
     @Test
     public void testActivitySequencing() throws Exception {
-        Activity activity1 = entityCreator.getNextActivity();
-        Activity activity2 = entityCreator.getNextActivity();
-        Activity activity3 = entityCreator.getNextActivity();
+        Record activity1 = entityCreator.getNextRecord(Activity.class);
+        Record activity2 = entityCreator.getNextRecord(Activity.class);
+        Record activity3 = entityCreator.getNextRecord(Activity.class);
 
         assertTrue("Atomic number should increase by 1.", activity1.getAtomicNumber() + 1 == activity2.getAtomicNumber());
         assertTrue("Atomic number should increase by 2.", activity1.getAtomicNumber() + 2 == activity3.getAtomicNumber());

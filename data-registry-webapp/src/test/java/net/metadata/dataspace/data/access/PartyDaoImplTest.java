@@ -58,7 +58,7 @@ public class PartyDaoImplTest {
 
     @Test
     public void testAddingParty() throws Exception {
-        Party party = entityCreator.getNextParty();
+        Party party = (Party) entityCreator.getNextRecord(Party.class);
         party.setUpdated(new Date());
         entityManager.getTransaction().begin();
         int originalTableSize = partyDao.getAll().size();

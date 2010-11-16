@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
+import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Collection;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.junit.After;
@@ -56,7 +57,7 @@ public class CollectionDaoImplTest {
     @Test
     public void testAddingCollection() throws Exception {
 
-        Collection collection = entityCreator.getNextCollection();
+        Record collection = entityCreator.getNextRecord(Collection.class);
         collection.setUpdated(new Date());
         entityManager.getTransaction().begin();
         int originalTableSize = collectionDao.getAll().size();

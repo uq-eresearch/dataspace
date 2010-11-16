@@ -6,6 +6,7 @@ import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
+import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.Activity;
 import net.metadata.dataspace.data.model.base.Collection;
 import net.metadata.dataspace.data.model.base.Party;
@@ -63,7 +64,7 @@ public class AdapterHelperTest {
         entityManager = jpaConnector.getEntityManager();
 
         entityManager.getTransaction().begin();
-        Party party = entityCreator.getNextParty();
+        Party party = (Party) entityCreator.getNextRecord(Party.class);
         party.setUpdated(new Date());
         PartyVersion partyVersion = PopulatorUtil.getPartyVersion(party);
         partyVersion.getSubjects().add(PopulatorUtil.getSubject());
@@ -72,7 +73,7 @@ public class AdapterHelperTest {
         entityManager.persist(partyVersion);
         entityManager.persist(party);
 
-        Collection collection = entityCreator.getNextCollection();
+        Collection collection = (Collection) entityCreator.getNextRecord(Collection.class);
         collection.setUpdated(new Date());
         CollectionVersion collectionVersion = PopulatorUtil.getCollectionVersion(collection);
         collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
@@ -83,7 +84,7 @@ public class AdapterHelperTest {
         entityManager.persist(collectionVersion);
         entityManager.persist(collection);
 
-        Service service = entityCreator.getNextService();
+        Service service = (Service) entityCreator.getNextRecord(Service.class);
         service.setUpdated(new Date());
         ServiceVersion serviceVersion = PopulatorUtil.getServiceVersion(service);
         service.getVersions().add(serviceVersion);
@@ -92,7 +93,7 @@ public class AdapterHelperTest {
         entityManager.persist(serviceVersion);
         entityManager.persist(service);
 
-        Activity activity = entityCreator.getNextActivity();
+        Activity activity = (Activity) entityCreator.getNextRecord(Activity.class);
         activity.setUpdated(new Date());
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
         activity.getVersions().add(activityVersion);
@@ -173,7 +174,7 @@ public class AdapterHelperTest {
         List<Party> parties = partyDao.getAll();
         Party party = parties.get(0);
         Entry entry = AdapterHelper.getEntryFromParty(party.getVersions().first(), true);
-        PartyVersion version = entityCreator.getNextPartyVersion(party);
+        Version version = entityCreator.getNextVersion(party);
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", party.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry summary", party.getVersions().first().getSummary(), version.getSummary());
@@ -186,7 +187,7 @@ public class AdapterHelperTest {
         List<Collection> collections = collectionDao.getAll();
         Collection collection = collections.get(0);
         Entry entry = AdapterHelper.getEntryFromCollection(collection.getVersions().first(), true);
-        CollectionVersion version = entityCreator.getNextCollectionVersion(collection);
+        CollectionVersion version = (CollectionVersion) entityCreator.getNextVersion(collection);
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", collection.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry summary", collection.getVersions().first().getSummary(), version.getSummary());
@@ -200,7 +201,7 @@ public class AdapterHelperTest {
         List<Service> services = serviceDao.getAll();
         Service service = services.get(0);
         Entry entry = AdapterHelper.getEntryFromService(service.getVersions().first(), true);
-        ServiceVersion version = entityCreator.getNextServiceVersion(service);
+        ServiceVersion version = (ServiceVersion) entityCreator.getNextVersion(service);
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry summary", service.getVersions().first().getSummary(), version.getSummary());
@@ -214,7 +215,7 @@ public class AdapterHelperTest {
         List<Activity> activities = activityDao.getAll();
         Activity activity = activities.get(0);
         Entry entry = AdapterHelper.getEntryFromActivity(activity.getVersions().first(), true);
-        ActivityVersion version = entityCreator.getNextActivityVersion(activity);
+        Version version = entityCreator.getNextVersion(activity);
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", activity.getTitle(), version.getTitle());
         assertEquals("Entry summary", activity.getSummary(), version.getSummary());

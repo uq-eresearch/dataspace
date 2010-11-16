@@ -55,7 +55,7 @@ public class ServiceDaoImplTest {
 
     @Test
     public void testAddingService() throws Exception {
-        Service service = entityCreator.getNextService();
+        Service service = (Service) entityCreator.getNextRecord(Service.class);
         service.setUpdated(new Date());
         entityManager.getTransaction().begin();
         int originalTableSize = serviceDao.getAll().size();

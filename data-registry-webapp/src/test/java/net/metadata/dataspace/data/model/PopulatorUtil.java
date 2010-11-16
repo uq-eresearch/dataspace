@@ -4,9 +4,6 @@ import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.base.Activity;
-import net.metadata.dataspace.data.model.base.Party;
-import net.metadata.dataspace.data.model.base.Service;
 import net.metadata.dataspace.data.model.base.Subject;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
@@ -33,8 +30,8 @@ public class PopulatorUtil {
         return subject;
     }
 
-    public static CollectionVersion getCollectionVersion(net.metadata.dataspace.data.model.base.Collection collection) throws Exception {
-        CollectionVersion collectionVersion = entityCreator.getNextCollectionVersion(collection);
+    public static CollectionVersion getCollectionVersion(Record collection) throws Exception {
+        CollectionVersion collectionVersion = (CollectionVersion) entityCreator.getNextVersion(collection);
         collectionVersion.setParent(collection);
         collectionVersion.setTitle("Test Collection");
         collectionVersion.setContent("Test Collection Content");
@@ -47,8 +44,8 @@ public class PopulatorUtil {
         return collectionVersion;
     }
 
-    public static PartyVersion getPartyVersion(Party party) throws Exception {
-        PartyVersion partyVersion = entityCreator.getNextPartyVersion(party);
+    public static PartyVersion getPartyVersion(Record party) throws Exception {
+        PartyVersion partyVersion = (PartyVersion) entityCreator.getNextVersion(party);
         partyVersion.setParent(party);
         partyVersion.setTitle("Test Party Title");
         partyVersion.setSummary("Test Party Summary");
@@ -61,8 +58,8 @@ public class PopulatorUtil {
         return partyVersion;
     }
 
-    public static ServiceVersion getServiceVersion(Service service) {
-        ServiceVersion serviceVersion = entityCreator.getNextServiceVersion(service);
+    public static ServiceVersion getServiceVersion(Record service) {
+        ServiceVersion serviceVersion = (ServiceVersion) entityCreator.getNextVersion(service);
         serviceVersion.setParent(service);
         serviceVersion.setTitle("Test Service Title");
         serviceVersion.setSummary("Test Service Summary");
@@ -75,8 +72,8 @@ public class PopulatorUtil {
         return serviceVersion;
     }
 
-    public static ActivityVersion getActivityVersion(Activity activity) {
-        ActivityVersion activityVersion = entityCreator.getNextActivityVersion(activity);
+    public static ActivityVersion getActivityVersion(Record activity) {
+        ActivityVersion activityVersion = (ActivityVersion) entityCreator.getNextVersion(activity);
         activityVersion.setParent(activity);
         activityVersion.setTitle("Test Activity Title");
         activityVersion.setSummary("Test Activity Summary");

@@ -31,7 +31,7 @@ public class EntityCreatorImpl implements EntityCreator {
     @Override
     public Record getNextRecord(Class clazz) {
         if (clazz.equals(Activity.class)) {
-            getNextActivity();
+            return getNextActivity();
         } else if (clazz.equals(Collection.class)) {
             return getNextCollection();
         } else if (clazz.equals(Party.class)) {
