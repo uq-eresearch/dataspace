@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -75,12 +76,12 @@ public class HttpMethodHelper {
                     transaction.commit();
                     Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
                     return AdapterHelper.getContextResponseForPost(createdEntry);
-                } catch (Throwable th) {
+                } catch (PersistenceException th) {
                     logger.warn("Invalid Entry, Rolling back database", th);
                     if (transaction.isActive()) {
                         transaction.rollback();
                     }
-                    throw new ResponseContextException(th.getMessage(), 500);
+                    throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
                 }
             }
         } else {
@@ -117,12 +118,12 @@ public class HttpMethodHelper {
                             transaction.commit();
                             Entry createdEntry = AdapterHelper.getEntryFromEntity(version, false);
                             return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
-                        } catch (Throwable th) {
-                            logger.fatal("Invalid Entry", th);
+                        } catch (PersistenceException th) {
+                            logger.fatal("Invalid Entry, Rolling back database", th);
                             if (transaction.isActive()) {
                                 transaction.rollback();
                             }
-                            throw new ResponseContextException(th.getMessage(), 500);
+                            throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
                         }
                     }
                 } else {

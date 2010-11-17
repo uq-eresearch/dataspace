@@ -326,10 +326,15 @@ public class AdapterHelper {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;
         } else {
+            String summary = entry.getSummary();
+            String content = entry.getContent();
+            if (summary == null || content == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+            }
             try {
                 version.setTitle(entry.getTitle());
-                version.setSummary(entry.getSummary());
-                version.setContent(entry.getContent());
+                version.setSummary(summary);
+                version.setContent(content);
                 version.setUpdated(entry.getUpdated());
                 version.setAuthors(getAuthors(entry.getAuthors()));
             } catch (Throwable th) {
@@ -352,7 +357,7 @@ public class AdapterHelper {
                 }
             }
         } catch (Throwable th) {
-            throw new ResponseContextException(500, th);
+            throw new ResponseContextException(400, th);
         }
     }
 
