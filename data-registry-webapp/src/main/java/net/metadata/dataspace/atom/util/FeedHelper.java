@@ -4,9 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import org.apache.abdera.factory.Factory;
-import org.apache.abdera.model.Document;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Feed;
+import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
@@ -73,16 +71,28 @@ public class FeedHelper {
             SortedSet<Version> versions = record.getVersions();
             for (Version version : versions) {
                 Entry entry = feed.addEntry();
-                entry.setId(feed.getId() + "/" + version.getUriKey());
+                String uri = feed.getId() + "/" + version.getUriKey();
+                entry.setId(uri);
                 entry.setTitle(version.getTitle());
                 entry.setSummary(version.getSummary());
+                Link selfLink = entry.addLink(uri, Constants.REL_TYPE_SELF);
+                selfLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
                 Set<String> authors = version.getAuthors();
                 for (String author : authors) {
                     entry.addAuthor(author);
                 }
                 entry.setUpdated(version.getUpdated());
+                Control control = entry.addControl();
+                Version published = record.getPublished();
+                if (published == null || !published.equals(version)) {
+                    control.setDraft(false);
+                } else {
+                    control.setDraft(true);
+                }
             }
             feed.setUpdated(new Date());
+            Link link = feed.addLink(feed.getId() + "/" + Constants.TARGET_TYPE_VERSION_HISTORY, Constants.TARGET_TYPE_VERSION_HISTORY);
+            link.setMimeType(Constants.ATOM_FEED_MIMETYPE);
             Document<Feed> document = feed.getDocument();
             AbstractResponseContext responseContext = new BaseResponseContext<Document<Feed>>(document);
             responseContext.setEntityTag(calculateEntityTag(document.getRoot()));
@@ -96,7 +106,7 @@ public class FeedHelper {
         Factory factory = request.getAbdera().getFactory();
         Feed feed = factory.newFeed();
         String uri = request.getUri().toString();
-        feed.setId(uri);
+        feed.setId(Constants.ID_PREFIX + uri.substring(1));
         feed.setTitle("Version History");
         feed.addLink(uri, "self");
         return feed;
