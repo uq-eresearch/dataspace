@@ -72,6 +72,10 @@ public class Subject extends AbstractBaseEntity {
     }
 
     @Override
+    public void setPublished(Version version) {
+    }
+
+    @Override
     public Version getWorkingCopy() {
         return null;
     }

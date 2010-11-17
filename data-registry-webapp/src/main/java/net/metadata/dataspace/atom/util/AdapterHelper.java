@@ -6,6 +6,8 @@ import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.*;
+import net.metadata.dataspace.data.model.base.Collection;
+import net.metadata.dataspace.data.model.base.Service;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.PartyVersion;
@@ -13,10 +15,7 @@ import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.text.UrlEncoding;
-import org.apache.abdera.model.Element;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Link;
-import org.apache.abdera.model.Person;
+import org.apache.abdera.model.*;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -145,16 +144,16 @@ public class AdapterHelper {
         return null;
     }
 
-    private static Entry getEntryFromActivity(ActivityVersion activityVersion, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activityVersion.getParent().getUriKey();
-        Entry entry = setCommonAttributes(activityVersion, isParentLevel, parentUrl);
+    private static Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
+        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
+        Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            Set<Party> partySet = activityVersion.getHasParticipant();
+            Set<Party> partySet = version.getHasParticipant();
             for (Party sub : partySet) {
                 Element partyElement = entry.addExtension(Constants.QNAME_HAS_PARTICIPANT);
                 partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
             }
-            Set<Collection> collectionSet = activityVersion.getHasOutput();
+            Set<Collection> collectionSet = version.getHasOutput();
             for (Collection collection : collectionSet) {
                 Element collectorOfElement = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
                 collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
@@ -162,26 +161,27 @@ public class AdapterHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        addLinks(activityVersion, entry, parentUrl);
+        setPublished(version, entry);
+        addLinks(version, entry, parentUrl);
         return entry;
     }
 
-    private static Entry getEntryFromParty(PartyVersion partyVersion, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + partyVersion.getParent().getUriKey();
-        Entry entry = setCommonAttributes(partyVersion, isParentLevel, parentUrl);
+    private static Entry getEntryFromParty(PartyVersion version, boolean isParentLevel) throws ResponseContextException {
+        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + version.getParent().getUriKey();
+        Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            Set<Subject> subjectSet = partyVersion.getSubjects();
+            Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
                 Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
                 subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
                 subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
             }
-            Set<Collection> collectionSet = partyVersion.getCollectorOf();
+            Set<Collection> collectionSet = version.getCollectorOf();
             for (Collection collection : collectionSet) {
                 Element collectorOfElement = entry.addExtension(Constants.QNAME_COLLECTOR_OF);
                 collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
             }
-            Set<Activity> activities = partyVersion.getParticipantIn();
+            Set<Activity> activities = version.getParticipantIn();
             for (Activity activity : activities) {
                 Element serviceElement = entry.addExtension(Constants.QNAME_IS_PARTICIPANT_IN);
                 serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
@@ -189,32 +189,33 @@ public class AdapterHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        addLinks(partyVersion, entry, parentUrl);
+        setPublished(version, entry);
+        addLinks(version, entry, parentUrl);
         return entry;
     }
 
-    private static Entry getEntryFromCollection(CollectionVersion collectionVersion, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collectionVersion.getParent().getUriKey();
-        Entry entry = setCommonAttributes(collectionVersion, isParentLevel, parentUrl);
+    private static Entry getEntryFromCollection(CollectionVersion version, boolean isParentLevel) throws ResponseContextException {
+        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
+        Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            entry.addSimpleExtension(Constants.QNAME_LOCATION, collectionVersion.getLocation());
-            Set<Subject> subjectSet = collectionVersion.getSubjects();
+            entry.addSimpleExtension(Constants.QNAME_LOCATION, version.getLocation());
+            Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
                 Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
                 subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
                 subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
             }
-            Set<Party> parties = collectionVersion.getCollector();
+            Set<Party> parties = version.getCollector();
             for (Party party : parties) {
                 Element partyElement = entry.addExtension(Constants.QNAME_COLLECTOR);
                 partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
             }
-            Set<Service> services = collectionVersion.getSupports();
+            Set<Service> services = version.getSupports();
             for (Service service : services) {
                 Element serviceElement = entry.addExtension(Constants.QNAME_SUPPORTS);
                 serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
             }
-            Set<Activity> activities = collectionVersion.getOutputOf();
+            Set<Activity> activities = version.getOutputOf();
             for (Activity activity : activities) {
                 Element serviceElement = entry.addExtension(Constants.QNAME_IS_OUTPUT_OF);
                 serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
@@ -222,16 +223,17 @@ public class AdapterHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        addLinks(collectionVersion, entry, parentUrl);
+        setPublished(version, entry);
+        addLinks(version, entry, parentUrl);
         return entry;
     }
 
-    private static Entry getEntryFromService(ServiceVersion serviceVersion, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + serviceVersion.getParent().getUriKey();
-        Entry entry = setCommonAttributes(serviceVersion, isParentLevel, parentUrl);
+    private static Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
+        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
+        Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            entry.addSimpleExtension(Constants.QNAME_LOCATION, serviceVersion.getLocation());
-            Set<Collection> collectionSet = serviceVersion.getSupportedBy();
+            entry.addSimpleExtension(Constants.QNAME_LOCATION, version.getLocation());
+            Set<Collection> collectionSet = version.getSupportedBy();
             for (Collection collection : collectionSet) {
                 Element collectorOfElement = entry.addExtension(Constants.QNAME_SUPPORTED_BY);
                 collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
@@ -239,8 +241,20 @@ public class AdapterHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        addLinks(serviceVersion, entry, parentUrl);
+        setPublished(version, entry);
+        addLinks(version, entry, parentUrl);
         return entry;
+    }
+
+    private static void setPublished(Version version, Entry entry) {
+        Control control = entry.addControl();
+        Version published = version.getParent().getPublished();
+        //False is used her to indicate the version is published and true (isDraft) is not published
+        if (published != null && version.equals(published)) {
+            control.setDraft(false);
+        } else {
+            control.setDraft(true);
+        }
     }
 
     public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry) throws ResponseContextException {

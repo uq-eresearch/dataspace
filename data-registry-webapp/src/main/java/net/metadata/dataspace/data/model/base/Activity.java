@@ -76,6 +76,7 @@ public class Activity extends AbstractBaseEntity<ActivityVersion> {
         return versions.first().getAuthors();
     }
 
+    @Override
     public ActivityVersion getPublished() {
         return published;
     }
@@ -85,7 +86,7 @@ public class Activity extends AbstractBaseEntity<ActivityVersion> {
         return this.versions.first();
     }
 
-    public void setPublished(ActivityVersion published) {
-        this.published = published;
+    public void setPublished(net.metadata.dataspace.data.model.Version published) {
+        this.published = (ActivityVersion) published;
     }
 }

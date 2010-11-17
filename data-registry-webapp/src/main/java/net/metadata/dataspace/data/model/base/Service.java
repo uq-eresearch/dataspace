@@ -77,16 +77,18 @@ public class Service extends AbstractBaseEntity<ServiceVersion> {
         return versions.first().getAuthors();
     }
 
+    @Override
     public ServiceVersion getPublished() {
         return published;
     }
 
     @Override
-    public net.metadata.dataspace.data.model.Version getWorkingCopy() {
-        return this.versions.first();
+    public void setPublished(net.metadata.dataspace.data.model.Version published) {
+        this.published = (ServiceVersion) published;
     }
 
-    public void setPublished(ServiceVersion published) {
-        this.published = published;
+    @Override
+    public net.metadata.dataspace.data.model.Version getWorkingCopy() {
+        return this.versions.first();
     }
 }

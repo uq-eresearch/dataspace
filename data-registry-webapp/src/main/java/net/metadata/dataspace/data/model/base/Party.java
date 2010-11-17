@@ -82,8 +82,9 @@ public class Party extends AbstractBaseEntity<PartyVersion> {
         return published;
     }
 
-    public void setPublished(PartyVersion version) {
-        this.published = version;
+    @Override
+    public void setPublished(Version version) {
+        this.published = (PartyVersion) version;
     }
 
     @Override

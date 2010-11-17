@@ -82,13 +82,7 @@ public class FeedHelper {
                     entry.addAuthor(author);
                 }
                 entry.setUpdated(version.getUpdated());
-                Control control = entry.addControl();
-                Version published = record.getPublished();
-                if (published == null || !published.equals(version)) {
-                    control.setDraft(false);
-                } else {
-                    control.setDraft(true);
-                }
+                setPublished(version, entry);
             }
             feed.setUpdated(new Date());
             Link link = feed.addLink(feed.getId() + "/" + Constants.TARGET_TYPE_VERSION_HISTORY, Constants.TARGET_TYPE_VERSION_HISTORY);
@@ -110,5 +104,16 @@ public class FeedHelper {
         feed.setTitle("Version History");
         feed.addLink(uri, "self");
         return feed;
+    }
+
+    private static void setPublished(Version version, Entry entry) {
+        Control control = entry.addControl();
+        Version published = version.getParent().getPublished();
+        //False is used her to indicate the version is published and true (isDraft) is not published
+        if (published != null && version.equals(published)) {
+            control.setDraft(false);
+        } else {
+            control.setDraft(true);
+        }
     }
 }

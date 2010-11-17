@@ -12,6 +12,7 @@ import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
+import org.apache.abdera.model.Control;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 
@@ -33,24 +34,24 @@ public class EntityRelationshipHelper {
 
     public static void addRelations(Entry entry, Version version) throws ResponseContextException {
         if (version instanceof ActivityVersion) {
-            furtherUpdateActivity(entry, (ActivityVersion) version);
+            addRelationsToActivity(entry, (ActivityVersion) version);
         } else if (version instanceof CollectionVersion) {
-            furtherUpdateCollection(entry, (CollectionVersion) version);
+            addRelationsCollection(entry, (CollectionVersion) version);
         } else if (version instanceof PartyVersion) {
-            furtherUpdateParty(entry, (PartyVersion) version);
+            addRelationsParty(entry, (PartyVersion) version);
         } else if (version instanceof ServiceVersion) {
-            furtherUpdateService(entry, (ServiceVersion) version);
+            addRelationsService(entry, (ServiceVersion) version);
         }
     }
 
-    private static void furtherUpdateActivity(Entry entry, ActivityVersion activityVersion) throws ResponseContextException {
+    private static void addRelationsToActivity(Entry entry, ActivityVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_OUTPUT);
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
             if (collection != null) {
-                collection.getOutputOf().add(activityVersion.getParent());
-                activityVersion.getHasOutput().add(collection);
+                collection.getOutputOf().add(version.getParent());
+                version.getHasOutput().add(collection);
                 entityManager.merge(collection);
             }
         }
@@ -58,21 +59,22 @@ public class EntityRelationshipHelper {
         for (String partyKey : partyUriKeys) {
             Party party = partyDao.getByKey(partyKey);
             if (party != null) {
-                party.getParticipantIn().add(activityVersion.getParent());
-                activityVersion.getHasParticipant().add(party);
+                party.getParticipantIn().add(version.getParent());
+                version.getHasParticipant().add(party);
                 entityManager.merge(party);
             }
         }
+        setPublished(entry, version);
         Date now = new Date();
-        activityVersion.setUpdated(now);
-        activityVersion.getParent().setUpdated(now);
+        version.setUpdated(now);
+        version.getParent().setUpdated(now);
     }
 
-    private static void furtherUpdateCollection(Entry entry, CollectionVersion collectionVersion) throws ResponseContextException {
+    private static void addRelationsCollection(Entry entry, CollectionVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {
-            collectionVersion.getSubjects().add(subject);
+            version.getSubjects().add(subject);
             if (subject.getId() == null) {
                 entityManager.persist(subject);
             }
@@ -81,8 +83,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : collectorUriKeys) {
             Party party = partyDao.getByKey(uriKey);
             if (party != null) {
-                party.getCollectorOf().add((Collection) collectionVersion.getParent());
-                collectionVersion.getCollector().add(party);
+                party.getCollectorOf().add((Collection) version.getParent());
+                version.getCollector().add(party);
                 entityManager.merge(party);
             }
         }
@@ -90,8 +92,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : outputOfUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
-                activity.getHasOutput().add((Collection) collectionVersion.getParent());
-                collectionVersion.getOutputOf().add(activity);
+                activity.getHasOutput().add((Collection) version.getParent());
+                version.getOutputOf().add(activity);
                 entityManager.merge(activity);
             }
         }
@@ -99,21 +101,22 @@ public class EntityRelationshipHelper {
         for (String uriKey : supportUriKeys) {
             Service service = serviceDao.getByKey(uriKey);
             if (service != null) {
-                service.getSupportedBy().add((Collection) collectionVersion.getParent());
-                collectionVersion.getSupports().add(service);
+                service.getSupportedBy().add((Collection) version.getParent());
+                version.getSupports().add(service);
                 entityManager.merge(service);
             }
         }
+        setPublished(entry, version);
         Date now = new Date();
-        collectionVersion.setUpdated(now);
-        collectionVersion.getParent().setUpdated(now);
+        version.setUpdated(now);
+        version.getParent().setUpdated(now);
     }
 
-    private static void furtherUpdateParty(Entry entry, PartyVersion partyVersion) throws ResponseContextException {
+    private static void addRelationsParty(Entry entry, PartyVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {
-            partyVersion.getSubjects().add(subject);
+            version.getSubjects().add(subject);
             if (subject.getId() == null) {
                 entityManager.persist(subject);
             }
@@ -122,8 +125,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : collectionUriKeys) {
             net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
-                collection.getCollector().add(partyVersion.getParent());
-                partyVersion.getCollectorOf().add(collection);
+                collection.getCollector().add(version.getParent());
+                version.getCollectorOf().add(collection);
                 entityManager.merge(collection);
             }
         }
@@ -131,30 +134,39 @@ public class EntityRelationshipHelper {
         for (String uriKey : isParticipantInUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
-                activity.getHasParticipant().add(partyVersion.getParent());
-                partyVersion.getParticipantIn().add(activity);
+                activity.getHasParticipant().add(version.getParent());
+                version.getParticipantIn().add(activity);
                 entityManager.merge(activity);
             }
         }
+        setPublished(entry, version);
         Date now = new Date();
-        partyVersion.setUpdated(now);
-        partyVersion.getParent().setUpdated(now);
+        version.setUpdated(now);
+        version.getParent().setUpdated(now);
     }
 
-    private static void furtherUpdateService(Entry entry, ServiceVersion serviceVersion) throws ResponseContextException {
+    private static void addRelationsService(Entry entry, ServiceVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_SUPPORTED_BY);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
-                collection.getSupports().add(serviceVersion.getParent());
-                serviceVersion.getSupportedBy().add(collection);
+                collection.getSupports().add(version.getParent());
+                version.getSupportedBy().add(collection);
                 entityManager.merge(collection);
             }
         }
+        setPublished(entry, version);
         Date now = new Date();
-        serviceVersion.setUpdated(now);
-        serviceVersion.getParent().setUpdated(now);
+        version.setUpdated(now);
+        version.getParent().setUpdated(now);
     }
 
+
+    private static void setPublished(Entry entry, Version version) {
+        Control control = entry.getControl();
+        if (control != null && !control.isDraft()) {
+            version.getParent().setPublished(version);
+        }
+    }
 }

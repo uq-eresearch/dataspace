@@ -27,6 +27,8 @@ public interface Record {
      */
     Version getPublished();
 
+    void setPublished(Version version);
+
     /**
      * Return the working copy of this record
      *

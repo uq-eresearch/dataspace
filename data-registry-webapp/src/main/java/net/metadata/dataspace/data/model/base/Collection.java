@@ -90,12 +90,14 @@ public class Collection extends AbstractBaseEntity<CollectionVersion> {
         return versions.first().getSupports();
     }
 
+    @Override
     public CollectionVersion getPublished() {
         return published;
     }
 
-    public void setPublished(CollectionVersion published) {
-        this.published = published;
+    @Override
+    public void setPublished(Version published) {
+        this.published = (CollectionVersion) published;
     }
 
     @Override
