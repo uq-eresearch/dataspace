@@ -2,10 +2,11 @@ package net.metadata.dataspace.auth.impl;
 
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.auth.policy.AccessLevel;
-import net.metadata.dataspace.data.model.base.Party;
-import net.metadata.dataspace.data.model.base.Role;
-import net.metadata.dataspace.data.model.base.User;
+import net.metadata.dataspace.data.model.base.*;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.PartyVersion;
+import net.metadata.dataspace.data.model.version.ServiceVersion;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,11 +18,20 @@ import java.util.Set;
  */
 public class AuthorizationManagerImpl implements AuthorizationManager<User> {
     private static final AccessLevel EVERYTHING_ALLOWED = new AccessLevel(true, true, true, true);
-    private static final Set<Class<?>> NORMAL_USERS_CAN_CREATE_INSTANCES = new HashSet<Class<?>>();
+    private static final Set<Class<?>> LOGGED_IN_USERS_CAN_CREATE_INSTANCES = new HashSet<Class<?>>();
 
     static {
-        NORMAL_USERS_CAN_CREATE_INSTANCES.add(Party.class);
-        NORMAL_USERS_CAN_CREATE_INSTANCES.add(PartyVersion.class);
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(Activity.class);
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(ActivityVersion.class);
+
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(Collection.class);
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(CollectionVersion.class);
+
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(Party.class);
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(PartyVersion.class);
+
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(Service.class);
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(ServiceVersion.class);
     }
 
     @Override
@@ -56,7 +66,7 @@ public class AuthorizationManagerImpl implements AuthorizationManager<User> {
             if (user.getRole().equals(Role.ADMIN)) {
                 return true;
             } else {
-                return NORMAL_USERS_CAN_CREATE_INSTANCES.contains(clazz);
+                return LOGGED_IN_USERS_CAN_CREATE_INSTANCES.contains(clazz);
             }
         }
     }
