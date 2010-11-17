@@ -107,6 +107,7 @@ public interface Constants {
      */
     String HTTP_STATUS_200 = "OK";
     String HTTP_STATUS_400 = "Bad Request";
+    String HTTP_STATUS_404 = "Entry not found";
     String HTTP_STATUS_410 = "Gone";
     String HTTP_STATUS_415 = "Unsupported Media Type";
     String HTTP_STATUS_401 = "Unauthorized";
@@ -115,6 +116,5 @@ public interface Constants {
      *
      */
     String SESSION_ATTRIBUTE_CURRENT_USER = "currentUser";
-
     String SESSION_ATTRIBUTE_LDAP_CONTEXT = "currentUser";
 }

@@ -13,6 +13,7 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.AbstractResponseContext;
 import org.apache.abdera.protocol.server.context.BaseResponseContext;
 import org.apache.abdera.protocol.server.context.MediaResponseContext;
+import org.apache.abdera.protocol.server.context.ResponseContextException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -67,24 +68,28 @@ public class FeedHelper {
         feed.getAlternateLink().setMimeType(mimeType);
     }
 
-    public static ResponseContext getVersionHistoryFeed(Feed feed, Record record) {
-        SortedSet<Version> versions = record.getVersions();
-        for (Version version : versions) {
-            Entry entry = feed.addEntry();
-            entry.setId(feed.getId() + "/" + version.getUriKey());
-            entry.setTitle(version.getTitle());
-            entry.setSummary(version.getSummary());
-            Set<String> authors = version.getAuthors();
-            for (String author : authors) {
-                entry.addAuthor(author);
+    public static ResponseContext getVersionHistoryFeed(Feed feed, Record record) throws ResponseContextException {
+        try {
+            SortedSet<Version> versions = record.getVersions();
+            for (Version version : versions) {
+                Entry entry = feed.addEntry();
+                entry.setId(feed.getId() + "/" + version.getUriKey());
+                entry.setTitle(version.getTitle());
+                entry.setSummary(version.getSummary());
+                Set<String> authors = version.getAuthors();
+                for (String author : authors) {
+                    entry.addAuthor(author);
+                }
+                entry.setUpdated(version.getUpdated());
             }
-            entry.setUpdated(version.getUpdated());
+            feed.setUpdated(new Date());
+            Document<Feed> document = feed.getDocument();
+            AbstractResponseContext responseContext = new BaseResponseContext<Document<Feed>>(document);
+            responseContext.setEntityTag(calculateEntityTag(document.getRoot()));
+            return responseContext;
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
         }
-        feed.setUpdated(new Date());
-        Document<Feed> document = feed.getDocument();
-        AbstractResponseContext responseContext = new BaseResponseContext<Document<Feed>>(document);
-        responseContext.setEntityTag(calculateEntityTag(document.getRoot()));
-        return responseContext;
     }
 
     public static Feed createVersionFeed(RequestContext request) {

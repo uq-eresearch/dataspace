@@ -33,32 +33,56 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
-        return HttpMethodHelper.postEntry(request, Service.class);
+        try {
+            return HttpMethodHelper.postEntry(request, Service.class);
+        } catch (ResponseContextException e) {
+            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+        }
     }
 
     @Override
     public ResponseContext postMedia(RequestContext request) {
-        return HttpMethodHelper.postMedia(request, Service.class);
+        try {
+            return HttpMethodHelper.postMedia(request, Service.class);
+        } catch (ResponseContextException e) {
+            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+        }
     }
 
     @Override
     public ResponseContext putEntry(RequestContext request) {
-        return HttpMethodHelper.putEntry(request, Service.class);
+        try {
+            return HttpMethodHelper.putEntry(request, Service.class);
+        } catch (ResponseContextException e) {
+            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+        }
     }
 
     @Override
     public ResponseContext putMedia(RequestContext request) {
-        return HttpMethodHelper.putMedia(request, Service.class);
+        try {
+            return HttpMethodHelper.putMedia(request, Service.class);
+        } catch (ResponseContextException e) {
+            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+        }
     }
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
-        return HttpMethodHelper.deleteEntry(request, Service.class);
+        try {
+            return HttpMethodHelper.deleteEntry(request, Service.class);
+        } catch (ResponseContextException e) {
+            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+        }
     }
 
     @Override
     public ResponseContext getEntry(RequestContext request) {
-        return HttpMethodHelper.getEntry(request, Service.class);
+        try {
+            return HttpMethodHelper.getEntry(request, Service.class);
+        } catch (ResponseContextException e) {
+            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+        }
     }
 
     @Override

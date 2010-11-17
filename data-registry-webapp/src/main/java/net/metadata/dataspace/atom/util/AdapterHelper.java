@@ -22,6 +22,7 @@ import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.TargetType;
+import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 
 import javax.xml.namespace.QName;
@@ -71,17 +72,21 @@ public class AdapterHelper {
         return UrlEncoding.decode(segments[segmentPos]);
     }
 
-    public static String getEntryVersionID(RequestContext request) {
-        if (request.getTarget().getType() != TargetType.get(Constants.TARGET_TYPE_VERSION)) {
-            return null;
+    public static String getEntryVersionID(RequestContext request) throws ResponseContextException {
+        try {
+            if (request.getTarget().getType() != TargetType.get(Constants.TARGET_TYPE_VERSION)) {
+                return null;
+            }
+            String fullUrl = request.getUri().toString();
+            if (fullUrl.contains("?")) {
+                fullUrl = fullUrl.split("\\?")[0];
+            }
+            String[] segments = fullUrl.split("/");
+            int segmentPos = segments.length - 1;
+            return UrlEncoding.decode(segments[segmentPos]);
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
         }
-        String fullUrl = request.getUri().toString();
-        if (fullUrl.contains("?")) {
-            fullUrl = fullUrl.split("\\?")[0];
-        }
-        String[] segments = fullUrl.split("/");
-        int segmentPos = segments.length - 1;
-        return UrlEncoding.decode(segments[segmentPos]);
     }
 
     public static String getRepresentationMimeType(RequestContext request) {
@@ -123,102 +128,122 @@ public class AdapterHelper {
         return jsonString;
     }
 
-    public static Entry getEntryFromEntity(Version version, boolean isParentLevel) {
-        if (version instanceof ActivityVersion) {
-            return getEntryFromActivity((ActivityVersion) version, isParentLevel);
-        } else if (version instanceof PartyVersion) {
-            return getEntryFromParty((PartyVersion) version, isParentLevel);
-        } else if (version instanceof CollectionVersion) {
-            return getEntryFromCollection((CollectionVersion) version, isParentLevel);
-        } else if (version instanceof ServiceVersion) {
-            return getEntryFromService((ServiceVersion) version, isParentLevel);
+    public static Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
+        if (version == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+        } else {
+            if (version instanceof ActivityVersion) {
+                return getEntryFromActivity((ActivityVersion) version, isParentLevel);
+            } else if (version instanceof PartyVersion) {
+                return getEntryFromParty((PartyVersion) version, isParentLevel);
+            } else if (version instanceof CollectionVersion) {
+                return getEntryFromCollection((CollectionVersion) version, isParentLevel);
+            } else if (version instanceof ServiceVersion) {
+                return getEntryFromService((ServiceVersion) version, isParentLevel);
+            }
         }
         return null;
     }
 
-    public static Entry getEntryFromActivity(ActivityVersion activityVersion, boolean isParentLevel) {
+    private static Entry getEntryFromActivity(ActivityVersion activityVersion, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activityVersion.getParent().getUriKey();
         Entry entry = setCommonAttributes(activityVersion, isParentLevel, parentUrl);
-        Set<Party> partySet = activityVersion.getHasParticipant();
-        for (Party sub : partySet) {
-            Element partyElement = entry.addExtension(Constants.QNAME_HAS_PARTICIPANT);
-            partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
-        }
-        Set<Collection> collectionSet = activityVersion.getHasOutput();
-        for (Collection collection : collectionSet) {
-            Element collectorOfElement = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
-            collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+        try {
+            Set<Party> partySet = activityVersion.getHasParticipant();
+            for (Party sub : partySet) {
+                Element partyElement = entry.addExtension(Constants.QNAME_HAS_PARTICIPANT);
+                partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
+            }
+            Set<Collection> collectionSet = activityVersion.getHasOutput();
+            for (Collection collection : collectionSet) {
+                Element collectorOfElement = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
+                collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
         }
         addLinks(activityVersion, entry, parentUrl);
         return entry;
     }
 
-    public static Entry getEntryFromParty(PartyVersion partyVersion, boolean isParentLevel) {
+    private static Entry getEntryFromParty(PartyVersion partyVersion, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + partyVersion.getParent().getUriKey();
         Entry entry = setCommonAttributes(partyVersion, isParentLevel, parentUrl);
-        Set<Subject> subjectSet = partyVersion.getSubjects();
-        for (Subject sub : subjectSet) {
-            Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
-            subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
-            subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
-        }
-        Set<Collection> collectionSet = partyVersion.getCollectorOf();
-        for (Collection collection : collectionSet) {
-            Element collectorOfElement = entry.addExtension(Constants.QNAME_COLLECTOR_OF);
-            collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
-        }
-        Set<Activity> activities = partyVersion.getParticipantIn();
-        for (Activity activity : activities) {
-            Element serviceElement = entry.addExtension(Constants.QNAME_IS_PARTICIPANT_IN);
-            serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+        try {
+            Set<Subject> subjectSet = partyVersion.getSubjects();
+            for (Subject sub : subjectSet) {
+                Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
+                subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
+                subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
+            }
+            Set<Collection> collectionSet = partyVersion.getCollectorOf();
+            for (Collection collection : collectionSet) {
+                Element collectorOfElement = entry.addExtension(Constants.QNAME_COLLECTOR_OF);
+                collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+            }
+            Set<Activity> activities = partyVersion.getParticipantIn();
+            for (Activity activity : activities) {
+                Element serviceElement = entry.addExtension(Constants.QNAME_IS_PARTICIPANT_IN);
+                serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
         }
         addLinks(partyVersion, entry, parentUrl);
         return entry;
     }
 
-    public static Entry getEntryFromCollection(CollectionVersion collectionVersion, boolean isParentLevel) {
+    private static Entry getEntryFromCollection(CollectionVersion collectionVersion, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collectionVersion.getParent().getUriKey();
         Entry entry = setCommonAttributes(collectionVersion, isParentLevel, parentUrl);
-        entry.addSimpleExtension(Constants.QNAME_LOCATION, collectionVersion.getLocation());
-        Set<Subject> subjectSet = collectionVersion.getSubjects();
-        for (Subject sub : subjectSet) {
-            Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
-            subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
-            subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
-        }
-        Set<Party> parties = collectionVersion.getCollector();
-        for (Party party : parties) {
-            Element partyElement = entry.addExtension(Constants.QNAME_COLLECTOR);
-            partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
-        }
-        Set<Service> services = collectionVersion.getSupports();
-        for (Service service : services) {
-            Element serviceElement = entry.addExtension(Constants.QNAME_SUPPORTS);
-            serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
-        }
-        Set<Activity> activities = collectionVersion.getOutputOf();
-        for (Activity activity : activities) {
-            Element serviceElement = entry.addExtension(Constants.QNAME_IS_OUTPUT_OF);
-            serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+        try {
+            entry.addSimpleExtension(Constants.QNAME_LOCATION, collectionVersion.getLocation());
+            Set<Subject> subjectSet = collectionVersion.getSubjects();
+            for (Subject sub : subjectSet) {
+                Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
+                subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
+                subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
+            }
+            Set<Party> parties = collectionVersion.getCollector();
+            for (Party party : parties) {
+                Element partyElement = entry.addExtension(Constants.QNAME_COLLECTOR);
+                partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
+            }
+            Set<Service> services = collectionVersion.getSupports();
+            for (Service service : services) {
+                Element serviceElement = entry.addExtension(Constants.QNAME_SUPPORTS);
+                serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
+            }
+            Set<Activity> activities = collectionVersion.getOutputOf();
+            for (Activity activity : activities) {
+                Element serviceElement = entry.addExtension(Constants.QNAME_IS_OUTPUT_OF);
+                serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
         }
         addLinks(collectionVersion, entry, parentUrl);
         return entry;
     }
 
-    public static Entry getEntryFromService(ServiceVersion serviceVersion, boolean isParentLevel) {
+    private static Entry getEntryFromService(ServiceVersion serviceVersion, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + serviceVersion.getParent().getUriKey();
         Entry entry = setCommonAttributes(serviceVersion, isParentLevel, parentUrl);
-        entry.addSimpleExtension(Constants.QNAME_LOCATION, serviceVersion.getLocation());
-        Set<Collection> collectionSet = serviceVersion.getSupportedBy();
-        for (Collection collection : collectionSet) {
-            Element collectorOfElement = entry.addExtension(Constants.QNAME_SUPPORTED_BY);
-            collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+        try {
+            entry.addSimpleExtension(Constants.QNAME_LOCATION, serviceVersion.getLocation());
+            Set<Collection> collectionSet = serviceVersion.getSupportedBy();
+            for (Collection collection : collectionSet) {
+                Element collectorOfElement = entry.addExtension(Constants.QNAME_SUPPORTED_BY);
+                collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
         }
         addLinks(serviceVersion, entry, parentUrl);
         return entry;
     }
 
-    public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry) {
+    public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry) throws ResponseContextException {
 
         String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
@@ -258,42 +283,58 @@ public class AdapterHelper {
         return responseContext;
     }
 
-    public static ResponseContext getContextResponseForPost(Entry entry) {
-        ResponseContext responseContext = ProviderHelper.returnBase(entry, 201, entry.getUpdated());
-        responseContext.setEntityTag(ProviderHelper.calculateEntityTag(entry));
-        responseContext.setLocation(entry.getId().toString());
-        return responseContext;
-    }
-
-    private static void prepareSelfLink(Entry entry, String href, String mimeType) {
-        Link selfLink = entry.getSelfLink();
-        if (selfLink == null) {
-            selfLink = entry.addLink(entry.getId().toString());
+    public static ResponseContext getContextResponseForPost(Entry entry) throws ResponseContextException {
+        try {
+            ResponseContext responseContext = ProviderHelper.returnBase(entry, 201, entry.getUpdated());
+            responseContext.setEntityTag(ProviderHelper.calculateEntityTag(entry));
+            responseContext.setLocation(entry.getId().toString());
+            return responseContext;
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
         }
-        selfLink.setHref(href);
-        selfLink.setMimeType(mimeType);
-        selfLink.setRel(Constants.REL_TYPE_SELF);
     }
 
-    private static void prepareAlternateLink(Entry entry, String href, String mimeType) {
-        Link alternateLink = entry.getAlternateLink();
-        if (alternateLink == null) {
-            alternateLink = entry.addLink(entry.getId().toString());
+    private static void prepareSelfLink(Entry entry, String href, String mimeType) throws ResponseContextException {
+        try {
+            Link selfLink = entry.getSelfLink();
+            if (selfLink == null) {
+                selfLink = entry.addLink(entry.getId().toString());
+            }
+            selfLink.setHref(href);
+            selfLink.setMimeType(mimeType);
+            selfLink.setRel(Constants.REL_TYPE_SELF);
+        } catch (Throwable th) {
+            throw new ResponseContextException("Cannot build self link", 500);
         }
-        alternateLink.setHref(href);
-        alternateLink.setMimeType(mimeType);
-        alternateLink.setRel(Constants.REL_TYPE_ALTERNATE);
     }
 
-    public static boolean isValidVersionFromEntry(Version version, Entry entry) {
+    private static void prepareAlternateLink(Entry entry, String href, String mimeType) throws ResponseContextException {
+        try {
+            Link alternateLink = entry.getAlternateLink();
+            if (alternateLink == null) {
+                alternateLink = entry.addLink(entry.getId().toString());
+            }
+            alternateLink.setHref(href);
+            alternateLink.setMimeType(mimeType);
+            alternateLink.setRel(Constants.REL_TYPE_ALTERNATE);
+        } catch (Throwable th) {
+            throw new ResponseContextException("Cannot build alternate link", 500);
+        }
+    }
+
+    public static boolean isValidVersionFromEntry(Version version, Entry entry) throws ResponseContextException {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;
         } else {
-            version.setTitle(entry.getTitle());
-            version.setSummary(entry.getSummary());
-            version.setContent(entry.getContent());
-            version.setUpdated(entry.getUpdated());
-            version.setAuthors(getAuthors(entry.getAuthors()));
+            try {
+                version.setTitle(entry.getTitle());
+                version.setSummary(entry.getSummary());
+                version.setContent(entry.getContent());
+                version.setUpdated(entry.getUpdated());
+                version.setAuthors(getAuthors(entry.getAuthors()));
+            } catch (Throwable th) {
+                throw new ResponseContextException(500, th);
+            }
             if (version instanceof CollectionVersion || version instanceof ServiceVersion) {
                 addLocation(version, entry);
             }
@@ -301,101 +342,126 @@ public class AdapterHelper {
         }
     }
 
-    private static void addLocation(Version version, Entry entry) {
-        List<Element> extensions = entry.getExtensions();
-        for (Element extension : extensions) {
-            if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
-                String location = extension.getText();
-                version.setLocation(location);
+    private static void addLocation(Version version, Entry entry) throws ResponseContextException {
+        try {
+            List<Element> extensions = entry.getExtensions();
+            for (Element extension : extensions) {
+                if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
+                    String location = extension.getText();
+                    version.setLocation(location);
+                }
             }
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
         }
     }
 
-    private static Set<String> getAuthors(List<Person> persons) {
+    private static Set<String> getAuthors(List<Person> persons) throws ResponseContextException {
         Set<String> authors = new HashSet<String>();
-        for (Person person : persons) {
-            authors.add(person.getName());
+        try {
+            for (Person person : persons) {
+                authors.add(person.getName());
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException("Cannot extract authors", 500);
         }
         return authors;
     }
 
-    public static Set<Subject> getSubjects(Entry entry) {
+    public static Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
         Set<Subject> subjects = new HashSet<Subject>();
-        List<Element> extensionElements = entry.getExtensions();
-        for (Element extension : extensionElements) {
-            if (extension.getQName().equals(Constants.QNAME_SUBJECT)) {
-                String vocabulary = extension.getAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY);
-                String value = extension.getAttributeValue(Constants.ATTRIBUTE_NAME_VALUE);
-                if (vocabulary != null && value != null) {
+        try {
+            List<Element> extensionElements = entry.getExtensions();
+            for (Element extension : extensionElements) {
+                if (extension.getQName().equals(Constants.QNAME_SUBJECT)) {
+                    String vocabulary = extension.getAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY);
+                    String value = extension.getAttributeValue(Constants.ATTRIBUTE_NAME_VALUE);
+                    if (vocabulary != null && value != null) {
 
-                    Subject subject = daoManager.getSubjectDao().getSubject(vocabulary, value);
-                    if (subject == null) {
-                        subject = entityCreator.getNextSubject();
+                        Subject subject = daoManager.getSubjectDao().getSubject(vocabulary, value);
+                        if (subject == null) {
+                            subject = entityCreator.getNextSubject();
+                        }
+                        subject.setVocabulary(vocabulary);
+                        subject.setValue(value);
+                        subjects.add(subject);
                     }
-                    subject.setVocabulary(vocabulary);
-                    subject.setValue(value);
-                    subjects.add(subject);
                 }
             }
+        } catch (Throwable th) {
+            throw new ResponseContextException("Cannot extract subjects from entry", 400);
         }
         return subjects;
     }
 
-    public static Set<String> getUriKeysFromExtension(Entry entry, QName qName) {
+    public static Set<String> getUriKeysFromExtension(Entry entry, QName qName) throws ResponseContextException {
         Set<String> uriKeys = new HashSet<String>();
-        List<Element> extensionElements = entry.getExtensions();
-        for (Element extension : extensionElements) {
-            if (extension.getQName().equals(qName)) {
-                String id = getEntityID(extension.getAttributeValue(Constants.ATTRIBUTE_NAME_URI));
-                if (id != null) {
-                    uriKeys.add(id);
+        try {
+            List<Element> extensionElements = entry.getExtensions();
+            for (Element extension : extensionElements) {
+                if (extension.getQName().equals(qName)) {
+                    String id = getEntityID(extension.getAttributeValue(Constants.ATTRIBUTE_NAME_URI));
+                    if (id != null) {
+                        uriKeys.add(id);
+                    }
                 }
             }
+        } catch (Throwable th) {
+            throw new ResponseContextException("Cannot extract " + Constants.ATTRIBUTE_NAME_URI + " from extension", 400);
         }
         return uriKeys;
     }
 
-    private static Entry setCommonAttributes(Version version, boolean isParentLevel, String parentUrl) {
+    private static Entry setCommonAttributes(Version version, boolean isParentLevel, String parentUrl) throws ResponseContextException {
         Abdera abdera = new Abdera();
-        Entry entry = abdera.newEntry();
-        if (isParentLevel) {
-            entry.setId(parentUrl);
-        } else {
-            entry.setId(parentUrl + "/" + version.getUriKey());
-        }
-        entry.setTitle(version.getTitle());
-        entry.setSummary(version.getSummary());
-        entry.setContent(version.getContent());
-        entry.setUpdated(version.getUpdated());
-        Set<String> authors = version.getAuthors();
-        for (String author : authors) {
-            entry.addAuthor(author);
+        Entry entry;
+        try {
+            entry = abdera.newEntry();
+            if (isParentLevel) {
+                entry.setId(parentUrl);
+            } else {
+                entry.setId(parentUrl + "/" + version.getUriKey());
+            }
+            entry.setTitle(version.getTitle());
+            entry.setSummary(version.getSummary());
+            entry.setContent(version.getContent());
+            entry.setUpdated(version.getUpdated());
+            Set<String> authors = version.getAuthors();
+            for (String author : authors) {
+                entry.addAuthor(author);
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException("Failed to set mandatory attributes", 500);
         }
         return entry;
     }
 
-    private static void addLinks(Version version, Entry entry, String parentUrl) {
-        entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
-        SortedSet<Version> versions = version.getParent().getVersions();
-        Version[] versionArray = new Version[versions.size()];
-        versionArray = (Version[]) version.getParent().getVersions().toArray(versionArray);
-        Version successorVersion = null;
-        Version predecessorVersion = null;
-        for (int i = 0; i < versionArray.length; i++) {
-            if (versionArray[i].equals(version)) {
-                if (i > 0) {
-                    successorVersion = versionArray[i - 1];
-                }
-                if (i < (versionArray.length - 1)) {
-                    predecessorVersion = versionArray[i + 1];
+    private static void addLinks(Version version, Entry entry, String parentUrl) throws ResponseContextException {
+        try {
+            entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
+            SortedSet<Version> versions = version.getParent().getVersions();
+            Version[] versionArray = new Version[versions.size()];
+            versionArray = (Version[]) version.getParent().getVersions().toArray(versionArray);
+            Version successorVersion = null;
+            Version predecessorVersion = null;
+            for (int i = 0; i < versionArray.length; i++) {
+                if (versionArray[i].equals(version)) {
+                    if (i > 0) {
+                        successorVersion = versionArray[i - 1];
+                    }
+                    if (i < (versionArray.length - 1)) {
+                        predecessorVersion = versionArray[i + 1];
+                    }
                 }
             }
-        }
-        if (predecessorVersion != null) {
-            entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
-        }
-        if (successorVersion != null) {
-            entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
+            if (predecessorVersion != null) {
+                entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
+            }
+            if (successorVersion != null) {
+                entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException("Failed to add link elements to entry", 400);
         }
     }
 
