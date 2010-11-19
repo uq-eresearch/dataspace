@@ -24,6 +24,7 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     private Long id;
 
     @NotNull
+    @JoinColumn(name = "parent")
     private Integer atomicNumber;
 
     @NotNull

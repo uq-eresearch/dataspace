@@ -93,7 +93,7 @@ public class HttpMethodHelper {
         logger.info("Updating Entry");
         String mimeBaseType = request.getContentType().getBaseType();
         if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
-            putMedia(request, clazz);
+            return putMedia(request, clazz);
         } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
             EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
@@ -133,7 +133,6 @@ public class HttpMethodHelper {
         } else {
             throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
         }
-        return getEntry(request, clazz);
     }
 
     public static ResponseContext postMedia(RequestContext request, Class clazz) throws ResponseContextException {
