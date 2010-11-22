@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.metadata.dataspace</groupId>
+    <artifactId>data-registry-deploy</artifactId>
+    <name>Data Collections Registry Deployer</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <description>A pom project for remotely deploying the Data Collections Registry web application</description>
+    <build>
+        <plugins>
+            <plugin>
+                <inherited>false</inherited>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.0.3</version>
+                <configuration>
+                    <container>
+                        <containerId>tomcat6x</containerId>
+                        <type>remote</type>
+                        <!--<home>/opt/apache-tomcat</home>-->
+                        <systemProperties>
+                            <data.registry.persistenceUnitName>registry-pgsql</data.registry.persistenceUnitName>
+                            <data.registry.uri.prefix>http://dataspace-uat.metadata.net/</data.registry.uri.prefix>
+                        </systemProperties>
+                    </container>
+                    <configuration>
+                        <type>runtime</type>
+                        <properties>
+                            <cargo.remote.username>deployer</cargo.remote.username>
+                            <cargo.remote.password>deployer</cargo.remote.password>
+                            <cargo.tomcat.manager.url>http://dataspace-uat.metadata.net/manager</cargo.tomcat.manager.url>
+                        </properties>
+                    </configuration>
+                    <deployer>
+                        <type>remote</type>
+                        <deployables>
+                            <deployable>
+                                <groupId>net.metadata.dataspace</groupId>
+                                <artifactId>data-collections-registry</artifactId>
+                                <type>war</type>
+                                <properties>
+                                    <context>/data-collections-registry</context>
+                                </properties>
+                            </deployable>
+                        </deployables>
+                    </deployer>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>net.metadata.dataspace</groupId>
+            <artifactId>data-collections-registry</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+</project>
