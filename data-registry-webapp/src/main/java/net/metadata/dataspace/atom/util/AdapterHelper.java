@@ -262,7 +262,7 @@ public class AdapterHelper {
         String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
-            if (acceptHeader.equals(Constants.JSON_MIMETYPE) || acceptHeader.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+            if (acceptHeader != null && (acceptHeader.equals(Constants.JSON_MIMETYPE) || acceptHeader.equals(Constants.ATOM_ENTRY_MIMETYPE))) {
                 representationMimeType = acceptHeader;
             } else {
                 representationMimeType = Constants.ATOM_ENTRY_MIMETYPE;
