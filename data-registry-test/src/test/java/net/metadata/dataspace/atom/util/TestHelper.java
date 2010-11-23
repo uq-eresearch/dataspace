@@ -7,6 +7,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.*;
 
 import java.io.File;
+import java.net.URL;
 
 /**
  * Author: alabri
@@ -24,7 +25,8 @@ public class TestHelper {
     public static PostMethod postEntry(HttpClient client, String fileName, String pathForActivities) throws Exception {
         String fullURL = Constants.URL_PREFIX + pathForActivities;
         PostMethod post = new PostMethod(fullURL);
-        String path = XPathExample.class.getResource(fileName).getFile();
+        URL resource = XPathExample.class.getResource(fileName);
+        String path = resource.toExternalForm();
         File inputFile = new File(path);
         RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
         post.setRequestEntity(entity);
@@ -35,7 +37,8 @@ public class TestHelper {
     public static PutMethod putEntry(HttpClient client, String fileName, String uri, String acceptHeader) throws Exception {
         PutMethod putMethod = new PutMethod(uri);
         putMethod.setRequestHeader("Accept", acceptHeader);
-        String path = XPathExample.class.getResource(fileName).getFile();
+        URL resource = XPathExample.class.getResource(fileName);
+        String path = resource.toExternalForm();
         File inputFile = new File(path);
         RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
         putMethod.setRequestEntity(entity);
