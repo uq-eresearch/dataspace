@@ -26,7 +26,7 @@ public class TestHelper {
         String fullURL = Constants.URL_PREFIX + pathForActivities;
         PostMethod post = new PostMethod(fullURL);
         URL resource = XPathExample.class.getResource(fileName);
-        String path = resource.toExternalForm();
+        String path = resource.getPath();
         File inputFile = new File(path);
         RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
         post.setRequestEntity(entity);
@@ -38,7 +38,7 @@ public class TestHelper {
         PutMethod putMethod = new PutMethod(uri);
         putMethod.setRequestHeader("Accept", acceptHeader);
         URL resource = XPathExample.class.getResource(fileName);
-        String path = resource.toExternalForm();
+        String path = resource.getPath();
         File inputFile = new File(path);
         RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
         putMethod.setRequestEntity(entity);
