@@ -59,6 +59,12 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                 super.init(abdera, properties);
                 this.requestProcessors.put(TargetType.get(Constants.TARGET_TYPE_VERSION, true), new VersionRequestProcessor());
                 this.targetResolver.addRoute(new Route(Constants.TARGET_TYPE_VERSION, "/:collection/:entry/:version"), TargetType.get(Constants.TARGET_TYPE_VERSION));
+
+//                this.requestProcessors.put(TargetType.get(Constants.TARGET_LOGIN, true), new AuthenticationRequestProcessor());
+//                this.targetResolver.addRoute(new Route(Constants.TARGET_LOGIN, "/:login"), TargetType.get(Constants.TARGET_LOGIN));
+//
+//                this.requestProcessors.put(TargetType.get(Constants.TARGET_LOGOUT, true), new AuthenticationRequestProcessor());
+//                this.targetResolver.addRoute(new Route(Constants.TARGET_LOGOUT, "/:logout"), TargetType.get(Constants.TARGET_LOGOUT));
             }
 
             public ResponseContext process(RequestContext request) {
@@ -110,6 +116,10 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                     } else {
                         return super.process(request);
                     }
+//                }else if (targetType.equals(TargetType.get(Constants.TARGET_LOGIN))) {
+//                    return login(request);
+//                }else if (targetType.equals(TargetType.get(Constants.TARGET_LOGOUT))) {
+//                    return logout(request);
                 } else {
                     return super.process(request);
                 }

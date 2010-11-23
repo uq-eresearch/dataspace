@@ -49,149 +49,189 @@ public class HttpMethodHelper {
     private static AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
 
     public static ResponseContext postEntry(RequestContext request, Class clazz) throws ResponseContextException {
-        MimeType mimeType = request.getContentType();
-        String baseType = mimeType.getBaseType();
-        if (baseType.equals(Constants.JSON_MIMETYPE)) {
-            return postMedia(request, clazz);
-        } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-            Entry entry = getEntryFromRequest(request);
-            Record record = entityCreator.getNextRecord(clazz);
-            Version version = entityCreator.getNextVersion(record);
-            boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(version, entry);
-            if (!isValidEntry) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-            } else {
-                try {
-                    transaction.begin();
-                    version.setParent(record);
-                    record.getVersions().add(version);
-                    Date now = new Date();
-                    version.setUpdated(now);
-                    record.setUpdated(now);
-                    entityManager.persist(version);
-                    entityManager.persist(record);
-                    EntityRelationshipHelper.addRelations(entry, version);
-                    transaction.commit();
-                    Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
-                    return AdapterHelper.getContextResponseForPost(createdEntry);
-                } catch (PersistenceException th) {
-                    logger.warn("Invalid Entry, Rolling back database", th);
-                    if (transaction.isActive()) {
-                        transaction.rollback();
-                    }
-                    throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
-                }
-            }
+        User user = authenticationManager.getCurrentUser(request);
+        if (user == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
-            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            MimeType mimeType = request.getContentType();
+            String baseType = mimeType.getBaseType();
+            if (baseType.equals(Constants.JSON_MIMETYPE)) {
+                return postMedia(request, clazz);
+            } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
+                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+                EntityTransaction transaction = entityManager.getTransaction();
+                Entry entry = getEntryFromRequest(request);
+                Record record = entityCreator.getNextRecord(clazz);
+                Version version = entityCreator.getNextVersion(record);
+                boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(version, entry);
+                if (!isValidEntry) {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+                } else {
+                    try {
+                        transaction.begin();
+                        version.setParent(record);
+                        record.getVersions().add(version);
+                        Date now = new Date();
+                        version.setUpdated(now);
+                        record.setUpdated(now);
+                        entityManager.persist(version);
+                        entityManager.persist(record);
+                        EntityRelationshipHelper.addRelations(entry, version);
+                        transaction.commit();
+                        Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
+                        return AdapterHelper.getContextResponseForPost(createdEntry);
+                    } catch (PersistenceException th) {
+                        logger.warn("Invalid Entry, Rolling back database", th);
+                        if (transaction.isActive()) {
+                            transaction.rollback();
+                        }
+                        throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
+                    }
+                }
+            } else {
+                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            }
         }
     }
 
     public static ResponseContext putEntry(RequestContext request, Class clazz) throws ResponseContextException {
-        logger.info("Updating Entry");
-        String mimeBaseType = request.getContentType().getBaseType();
-        if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
-            return putMedia(request, clazz);
-        } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-            Entry entry = getEntryFromRequest(request);
-            String uriKey = AdapterHelper.getEntryID(request);
-            Record record = getExistingRecord(uriKey, clazz);
-            if (record == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
-            } else {
-                if (record.isActive()) {
-                    Version version = entityCreator.getNextVersion(record);
-                    boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(version, entry);
-                    if (!isValidEntry) {
-                        throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-                    } else {
-                        try {
-                            transaction.begin();
-                            record.getVersions().add(version);
-                            version.setParent(record);
-                            EntityRelationshipHelper.addRelations(entry, version);
-                            entityManager.merge(record);
-                            transaction.commit();
-                            Entry createdEntry = AdapterHelper.getEntryFromEntity(version, false);
-                            return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
-                        } catch (PersistenceException th) {
-                            logger.fatal("Invalid Entry, Rolling back database", th);
-                            if (transaction.isActive()) {
-                                transaction.rollback();
-                            }
-                            throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
-                        }
-                    }
-                } else {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
-                }
-            }
+        User user = authenticationManager.getCurrentUser(request);
+        if (user == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
-            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-        }
-    }
-
-    public static ResponseContext postMedia(RequestContext request, Class clazz) throws ResponseContextException {
-        MimeType mimeType = request.getContentType();
-        if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            String json = getJson(request);
-            if (json == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-            } else {
-                Record record = entityCreator.getNextRecord(clazz);
-                Version version = entityCreator.getNextVersion(record);
-                JsonHelper.createRecordFromJson(record, version, json);
-                Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
-                return AdapterHelper.getContextResponseForPost(createdEntry);
-            }
-        } else {
-            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-        }
-    }
-
-    public static ResponseContext putMedia(RequestContext request, Class clazz) throws ResponseContextException {
-        logger.info("Updating Party as Media Entry");
-        if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
-            String json = getJson(request);
-            if (json == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-            } else {
+            logger.info("Updating Entry");
+            String mimeBaseType = request.getContentType().getBaseType();
+            if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
+                return putMedia(request, clazz);
+            } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
+                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+                EntityTransaction transaction = entityManager.getTransaction();
+                Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntryID(request);
                 Record record = getExistingRecord(uriKey, clazz);
                 if (record == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
                 } else {
+                    refreshRecord(record, clazz);
                     if (record.isActive()) {
-                        Version partyVersion = entityCreator.getNextVersion(record);
-                        JsonHelper.createRecordFromJson(record, partyVersion, json);
-                        Entry createdEntry = AdapterHelper.getEntryFromEntity(partyVersion, false);
-                        return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                        Version version = entityCreator.getNextVersion(record);
+                        boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(version, entry);
+                        if (!isValidEntry) {
+                            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+                        } else {
+                            if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
+                                try {
+                                    transaction.begin();
+                                    record.getVersions().add(version);
+                                    version.setParent(record);
+                                    EntityRelationshipHelper.addRelations(entry, version);
+                                    entityManager.persist(version);
+                                    entityManager.merge(record);
+                                    transaction.commit();
+                                    Entry updatedEntry = AdapterHelper.getEntryFromEntity(version, false);
+                                    return AdapterHelper.getContextResponseForGetEntry(request, updatedEntry);
+                                } catch (PersistenceException th) {
+                                    logger.fatal("Invalid Entry, Rolling back database", th);
+                                    if (transaction.isActive()) {
+                                        transaction.rollback();
+                                    }
+                                    throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
+                                }
+                            } else {
+                                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+                            }
+                        }
                     } else {
                         throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
                     }
                 }
+            } else {
+                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
             }
+        }
+    }
+
+    public static ResponseContext postMedia(RequestContext request, Class clazz) throws ResponseContextException {
+        User user = authenticationManager.getCurrentUser(request);
+        if (user == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
-            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            MimeType mimeType = request.getContentType();
+            if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
+                String json = getJson(request);
+                if (json == null) {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+                } else {
+                    Record record = entityCreator.getNextRecord(clazz);
+                    Version version = entityCreator.getNextVersion(record);
+                    JsonHelper.createRecordFromJson(record, version, json);
+                    Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
+                    return AdapterHelper.getContextResponseForPost(createdEntry);
+                }
+            } else {
+                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            }
+        }
+    }
+
+    public static ResponseContext putMedia(RequestContext request, Class clazz) throws ResponseContextException {
+        User user = authenticationManager.getCurrentUser(request);
+        if (user == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+        } else {
+            logger.info("Updating Party as Media Entry");
+            if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
+                String json = getJson(request);
+                if (json == null) {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+                } else {
+                    String uriKey = AdapterHelper.getEntryID(request);
+                    Record record = getExistingRecord(uriKey, clazz);
+                    if (record == null) {
+                        throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+                    } else {
+                        refreshRecord(record, clazz);
+                        if (record.isActive()) {
+                            if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
+                                Version partyVersion = entityCreator.getNextVersion(record);
+                                JsonHelper.createRecordFromJson(record, partyVersion, json);
+                                Entry createdEntry = AdapterHelper.getEntryFromEntity(partyVersion, false);
+                                return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
+                            } else {
+                                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+                            }
+                        } else {
+                            throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
+                        }
+                    }
+                }
+            } else {
+                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            }
         }
     }
 
     public static ResponseContext deleteEntry(RequestContext request, Class clazz) throws ResponseContextException {
-        String uriKey = AdapterHelper.getEntryID(request);
-        Record record = getExistingRecord(uriKey, clazz);
-        if (record == null) {
-            throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+        User user = authenticationManager.getCurrentUser(request);
+        if (user == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
-            refreshRecord(record, clazz);
-            if (record.isActive()) {
-                deleteRecord(uriKey, clazz);
-                return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
+            String uriKey = AdapterHelper.getEntryID(request);
+            Record record = getExistingRecord(uriKey, clazz);
+            if (record == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
             } else {
-                throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
+                refreshRecord(record, clazz);
+                if (record.isActive()) {
+                    if (authorizationManager.getAccessLevelForInstance(user, record).canDelete()) {
+                        deleteRecord(uriKey, clazz);
+                        return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
+                    } else {
+                        throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+                    }
+                } else {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
+                }
             }
         }
     }

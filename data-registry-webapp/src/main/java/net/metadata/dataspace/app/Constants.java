@@ -92,6 +92,8 @@ public interface Constants {
     String TARGET_TYPE_VERSION = "version";
     String TARGET_TYPE_WORKING_COPY = "working-copy";
     String TARGET_TYPE_VERSION_HISTORY = "version-history";
+    String TARGET_LOGIN = "login";
+    String TARGET_LOGOUT = "logout";
 
     /**
      * rel attribute types

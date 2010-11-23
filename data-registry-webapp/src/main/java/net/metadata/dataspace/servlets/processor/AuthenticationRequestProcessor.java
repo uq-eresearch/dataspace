@@ -4,10 +4,10 @@ import org.apache.abdera.protocol.server.*;
 
 /**
  * Author: alabri
- * Date: 12/11/2010
- * Time: 2:30:34 PM
+ * Date: 22/11/2010
+ * Time: 12:00:36 PM
  */
-public class VersionRequestProcessor implements RequestProcessor {
+public class AuthenticationRequestProcessor implements RequestProcessor {
 
     public ResponseContext process(RequestContext context, WorkspaceManager workspaceManager,
                                    CollectionAdapter collectionAdapter) {
@@ -21,15 +21,14 @@ public class VersionRequestProcessor implements RequestProcessor {
     protected ResponseContext processEntry(RequestContext context, CollectionAdapter adapter) {
         String method = context.getMethod();
         if (method.equalsIgnoreCase("GET")) {
-            return adapter.getEntry(context);
+            return adapter.postEntry(context);
         } else if (method.equalsIgnoreCase("POST")) {
-            return ProviderHelper.notallowed(context);
+            return adapter.postEntry(context);
         } else if (method.equalsIgnoreCase("PUT")) {
             return ProviderHelper.notallowed(context);
         } else if (method.equalsIgnoreCase("DELETE")) {
             return ProviderHelper.notallowed(context);
         } else if (method.equalsIgnoreCase("HEAD")) {
-            //TODO maybe implement this later
             return ProviderHelper.notallowed(context);
         } else if (method.equalsIgnoreCase("OPTIONS")) {
             return ProviderHelper.notallowed(context);
@@ -38,4 +37,3 @@ public class VersionRequestProcessor implements RequestProcessor {
         }
     }
 }
-
