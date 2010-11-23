@@ -20,23 +20,29 @@ import java.io.InputStream;
  */
 public class TestHelper {
 
-    public static Response postEntry(String fileName, String pathForActivities) {
+    public static AbderaClient login(String username, String password) throws Exception {
         Abdera abdera = new Abdera();
-        AbderaClient abderaClient = new AbderaClient(abdera);
+        AbderaClient client = new AbderaClient(abdera);
+        client.get(Constants.URL_PREFIX + "login?username=" + username + "&password=" + password);
+        return client;
+    }
+
+    public static Response postEntry(AbderaClient abderaClient, String fileName, String pathForActivities) {
+        Abdera abdera = new Abdera();
         InputStream in = XPathExample.class.getResourceAsStream(fileName);
         Parser parser = abdera.getParser();
         Document doc = parser.parse(in);
         Entry entry = (Entry) doc.getRoot();
         RequestOptions options = abderaClient.getDefaultRequestOptions();
+
         options.setUseChunked(false);
         String fullURL = Constants.URL_PREFIX + pathForActivities;
         Response response = abderaClient.post(fullURL, entry, options);
         return response;
     }
 
-    public static Response putEntry(String fileName, String uri) {
+    public static Response putEntry(AbderaClient abderaClient, String fileName, String uri) {
         Abdera abdera = new Abdera();
-        AbderaClient abderaClient = new AbderaClient(abdera);
         InputStream in = XPathExample.class.getResourceAsStream(fileName);
         Parser parser = abdera.getParser();
         Document doc = parser.parse(in);
@@ -47,16 +53,15 @@ public class TestHelper {
         return response;
     }
 
-    public static ClientResponse getEntry(String uri) {
-        Abdera abdera = new Abdera();
-        AbderaClient abderaClient = new AbderaClient(abdera);
+    public static ClientResponse getEntry(AbderaClient abderaClient, String uri) {
+//        Abdera abdera = new Abdera();
+//        AbderaClient abderaClient = new AbderaClient(abdera);
         ClientResponse clientResponse = abderaClient.get(uri);
         return clientResponse;
     }
 
-    public static ClientResponse deleteEntry(String uri) {
-        Abdera abdera = new Abdera();
-        AbderaClient abderaClient = new AbderaClient(abdera);
+    public static ClientResponse deleteEntry(AbderaClient abderaClient, String uri) {
+//        Abdera abdera = new Abdera();
         ClientResponse clientResponse = abderaClient.delete(uri);
         return clientResponse;
     }

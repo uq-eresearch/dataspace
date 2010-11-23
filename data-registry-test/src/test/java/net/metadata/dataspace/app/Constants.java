@@ -109,5 +109,10 @@ public interface Constants {
     String HTTP_STATUS_410 = "Gone";
     String HTTP_STATUS_415 = "Unsupported Media Type";
 
+    /**
+     * Credentials
+     */
+    String USERNAME = "test";
+    String PASSWORD = "test";
 
 }
