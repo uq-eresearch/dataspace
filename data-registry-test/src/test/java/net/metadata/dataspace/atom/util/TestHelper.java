@@ -1,8 +1,6 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
-import org.apache.abdera.Abdera;
-import org.apache.abdera.examples.xsltxpath.XPathExample;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.*;
 
@@ -15,7 +13,6 @@ import java.net.URL;
  * Time: 4:06:52 PM
  */
 public class TestHelper {
-    private static Abdera abdera = new Abdera();
 
     public static int login(HttpClient client, String username, String password) throws Exception {
         PostMethod postMethod = new PostMethod(Constants.URL_PREFIX + "login?username=" + username + "&password=" + password);
@@ -25,7 +22,7 @@ public class TestHelper {
     public static PostMethod postEntry(HttpClient client, String fileName, String pathForActivities) throws Exception {
         String fullURL = Constants.URL_PREFIX + pathForActivities;
         PostMethod post = new PostMethod(fullURL);
-        URL resource = XPathExample.class.getResource(fileName);
+        URL resource = TestHelper.class.getResource(fileName);
         String path = resource.getPath();
         File inputFile = new File(path);
         RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
@@ -37,7 +34,7 @@ public class TestHelper {
     public static PutMethod putEntry(HttpClient client, String fileName, String uri, String acceptHeader) throws Exception {
         PutMethod putMethod = new PutMethod(uri);
         putMethod.setRequestHeader("Accept", acceptHeader);
-        URL resource = XPathExample.class.getResource(fileName);
+        URL resource = TestHelper.class.getResource(fileName);
         String path = resource.getPath();
         File inputFile = new File(path);
         RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
