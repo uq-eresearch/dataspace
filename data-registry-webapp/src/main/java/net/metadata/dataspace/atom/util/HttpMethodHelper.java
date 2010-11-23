@@ -255,7 +255,7 @@ public class HttpMethodHelper {
                         } else if (versionKey.equals(Constants.TARGET_TYPE_WORKING_COPY)) {
                             version = record.getWorkingCopy();
                         } else {
-                            version = partyDao.getByVersion(uriKey, versionKey);
+                            version = getVersion(uriKey, versionKey, clazz);
                         }
                     } else {
                         throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
@@ -342,6 +342,23 @@ public class HttpMethodHelper {
             } else if (clazz.equals(Service.class)) {
                 serviceDao.softDelete(uriKey);
             }
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
+        }
+    }
+
+    private static Version getVersion(String uriKey, String versionKey, Class clazz) throws ResponseContextException {
+        try {
+            if (clazz.equals(Activity.class)) {
+                return activityDao.getByVersion(uriKey, versionKey);
+            } else if (clazz.equals(Collection.class)) {
+                return collectionDao.getByVersion(uriKey, versionKey);
+            } else if (clazz.equals(Party.class)) {
+                return partyDao.getByVersion(uriKey, versionKey);
+            } else if (clazz.equals(Service.class)) {
+                return serviceDao.getByVersion(uriKey, versionKey);
+            }
+            return null;
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
