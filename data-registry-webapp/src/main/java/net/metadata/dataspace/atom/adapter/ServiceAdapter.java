@@ -87,56 +87,22 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public ResponseContext getFeed(RequestContext request) {
-        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
-        if (representationMimeType != null) {
-            if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-                return FeedHelper.getHtmlRepresentationOfFeed(request, "service.jsp");
-            } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-                return super.getFeed(request);
-            } else {
-                return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-            }
-        } else {
+        try {
+            String representationMimeType = FeedHelper.getRepresentationMimeType(request);
             String accept = request.getAccept();
-            if (accept.equals(Constants.ATOM_FEED_MIMETYPE)) {
+            if ((representationMimeType != null && representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) || (accept != null && accept.equals(Constants.ATOM_FEED_MIMETYPE))) {
                 return super.getFeed(request);
             } else {
-                return FeedHelper.getHtmlRepresentationOfFeed(request, "service.jsp");
+                return HttpMethodHelper.getFeed(request, Service.class);
             }
+        } catch (ResponseContextException e) {
+            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
         }
     }
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        Service latestService = serviceDao.getMostRecentUpdated();
-        if (latestService != null) {
-            serviceDao.refresh(latestService);
-            feed.setUpdated(latestService.getUpdated());
-        } else {
-            //TODO what would the date be if the feed is empty??
-            feed.setUpdated(new Date());
-        }
-
-        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
-        if (representationMimeType == null) {
-            String acceptHeader = request.getAccept();
-            if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
-                representationMimeType = acceptHeader;
-            } else {
-                representationMimeType = Constants.HTML_MIME_TYPE;
-            }
-        }
-        String atomFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES;
-        if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-        } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-        }
-
-        feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_SERVICES);
+        HttpMethodHelper.addFeedDetails(feed, request, Service.class);
         Iterable<Service> entries = getEntries(request);
         if (entries != null) {
             for (Service entryObj : entries) {
@@ -151,6 +117,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
             }
         }
     }
+
 
     @Override
     public String[] getAccepts(RequestContext request) {

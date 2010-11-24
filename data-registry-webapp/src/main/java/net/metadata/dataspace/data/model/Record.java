@@ -43,6 +43,8 @@ public interface Record {
      */
     void setUpdated(Date updated);
 
+    Date getUpdated();
+
     String getUriKey();
 
     Integer getAtomicNumber();

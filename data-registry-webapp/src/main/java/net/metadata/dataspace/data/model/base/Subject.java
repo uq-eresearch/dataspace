@@ -84,4 +84,9 @@ public class Subject extends AbstractBaseEntity {
     public void setUpdated(Date updated) {
         //TODO: we might need to implement this (i.e. add updated column)
     }
+
+    @Override
+    public Date getUpdated() {
+        return null;
+    }
 }

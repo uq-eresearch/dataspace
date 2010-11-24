@@ -364,6 +364,69 @@ public class HttpMethodHelper {
         }
     }
 
+    private static String getHtmlPage(Class clazz) throws ResponseContextException {
+        try {
+            if (clazz.equals(Activity.class)) {
+                return "activity.jsp";
+            } else if (clazz.equals(Collection.class)) {
+                return "collection.jsp";
+            } else if (clazz.equals(Party.class)) {
+                return "party.jsp";
+            } else if (clazz.equals(Service.class)) {
+                return "service.jsp";
+            }
+            return null;
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
+        }
+    }
+
+    private static String getPath(Class clazz) throws ResponseContextException {
+        try {
+            if (clazz.equals(Activity.class)) {
+                return Constants.PATH_FOR_ACTIVITIES;
+            } else if (clazz.equals(Collection.class)) {
+                return Constants.PATH_FOR_COLLECTIONS;
+            } else if (clazz.equals(Party.class)) {
+                return Constants.PATH_FOR_PARTIES;
+            } else if (clazz.equals(Service.class)) {
+                return Constants.PATH_FOR_SERVICES;
+            }
+            return null;
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
+        }
+    }
+
+    private static String getTitle(Class clazz) throws ResponseContextException {
+        try {
+            if (clazz.equals(Activity.class)) {
+                return Constants.TITLE_FOR_ACTIVITIES;
+            } else if (clazz.equals(Collection.class)) {
+                return Constants.TITLE_FOR_COLLECTIONS;
+            } else if (clazz.equals(Party.class)) {
+                return Constants.TITLE_FOR_PARTIES;
+            } else if (clazz.equals(Service.class)) {
+                return Constants.TITLE_FOR_SERVICES;
+            }
+            return null;
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
+        }
+    }
+
+    private static Record getLatestRecord(Class clazz) {
+        if (clazz.equals(Activity.class)) {
+            return activityDao.getMostRecentUpdated();
+        } else if (clazz.equals(Collection.class)) {
+            return collectionDao.getMostRecentUpdated();
+        } else if (clazz.equals(Party.class)) {
+            return partyDao.getMostRecentUpdated();
+        } else if (clazz.equals(Service.class)) {
+            return serviceDao.getMostRecentUpdated();
+        }
+        return null;
+    }
 
     private static String getJson(RequestContext request) throws ResponseContextException {
         InputStream inputStream = null;
@@ -376,4 +439,47 @@ public class HttpMethodHelper {
         return AdapterHelper.getJsonString(inputStream);
     }
 
+    public static ResponseContext getFeed(RequestContext request, Class clazz) throws ResponseContextException {
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType != null) {
+            if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+                return FeedHelper.getHtmlRepresentationOfFeed(request, getHtmlPage(clazz));
+            } else {
+                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            }
+        } else {
+            return FeedHelper.getHtmlRepresentationOfFeed(request, getHtmlPage(clazz));
+        }
+    }
+
+    public static void addFeedDetails(Feed feed, RequestContext request, Class clazz) throws ResponseContextException {
+        Record latestService = getLatestRecord(clazz);
+        if (latestService != null) {
+            refreshRecord(latestService, clazz);
+            feed.setUpdated(latestService.getUpdated());
+        } else {
+            //TODO what would the date be if the feed is empty??
+            feed.setUpdated(new Date());
+        }
+
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType == null) {
+            String acceptHeader = request.getAccept();
+            if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                representationMimeType = acceptHeader;
+            } else {
+                representationMimeType = Constants.HTML_MIME_TYPE;
+            }
+        }
+        String atomFeedUrl = Constants.ID_PREFIX + getPath(clazz) + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + getPath(clazz);
+        if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+        } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
+            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+        }
+        feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + getTitle(clazz));
+    }
 }

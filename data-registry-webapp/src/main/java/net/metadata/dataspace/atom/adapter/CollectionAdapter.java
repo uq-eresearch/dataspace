@@ -5,6 +5,7 @@ import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.data.access.CollectionDao;
+import net.metadata.dataspace.data.model.base.Collection;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
@@ -88,58 +89,25 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
 
     @Override
     public ResponseContext getFeed(RequestContext request) {
-        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
-        if (representationMimeType != null) {
-            if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-                return FeedHelper.getHtmlRepresentationOfFeed(request, "collection.jsp");
-            } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-                return super.getFeed(request);
-            } else {
-                return ProviderHelper.notsupported(request, Constants.HTTP_STATUS_415);
-            }
-        } else {
+        try {
+            String representationMimeType = FeedHelper.getRepresentationMimeType(request);
             String accept = request.getAccept();
-            if (accept.equals(Constants.ATOM_FEED_MIMETYPE)) {
+            if ((representationMimeType != null && representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) || (accept != null && accept.equals(Constants.ATOM_FEED_MIMETYPE))) {
                 return super.getFeed(request);
             } else {
-                return FeedHelper.getHtmlRepresentationOfFeed(request, "collection.jsp");
+                return HttpMethodHelper.getFeed(request, Collection.class);
             }
+        } catch (ResponseContextException e) {
+            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
         }
     }
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        net.metadata.dataspace.data.model.base.Collection latestCollection = collectionDao.getMostRecentUpdated();
-        if (latestCollection != null) {
-            collectionDao.refresh(latestCollection);
-            feed.setUpdated(latestCollection.getUpdated());
-        } else {
-            //TODO what would the date be if the feed is empty??
-            feed.setUpdated(new Date());
-        }
-
-        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
-        if (representationMimeType == null) {
-            String acceptHeader = request.getAccept();
-            if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
-                representationMimeType = acceptHeader;
-            } else {
-                representationMimeType = Constants.HTML_MIME_TYPE;
-            }
-        }
-        String atomFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS;
-        if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-        } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-        }
-        feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + Constants.TITLE_FOR_COLLECTIONS);
-        Iterable<net.metadata.dataspace.data.model.base.Collection> entries = getEntries(request);
+        HttpMethodHelper.addFeedDetails(feed, request, Collection.class);
+        Iterable<Collection> entries = getEntries(request);
         if (entries != null) {
-            for (net.metadata.dataspace.data.model.base.Collection entryObj : entries) {
+            for (Collection entryObj : entries) {
                 Entry e = feed.addEntry();
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
