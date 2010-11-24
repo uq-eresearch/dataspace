@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<entry xmlns="http://www.w3.org/2005/Atom" xmlns:uqdata="http://dataspace.metadata.net/">
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
+       xmlns:uqdata="http://dataspace.metadata.net/">
     <id>http://localhost:9635/collections/1</id>
     <title type="text">Digitised images of Carter Brown Book Covers</title>
     <content type="text">A collection of digitised images of covers of Carter Brown books published in the 1950s ...
@@ -8,6 +9,9 @@
     <author>
         <name>Nigel Ward</name>
     </author>
+    <app:control>
+        <app:draft>yes</app:draft>
+    </app:control>
     <updated>2010-10-08T05:58:02.781Z</updated>
     <uqdata:subject vocabulary="anzsrc-for" value="200502"/>
     <uqdata:subject vocabulary="anzsrc-for" value="200501"/>

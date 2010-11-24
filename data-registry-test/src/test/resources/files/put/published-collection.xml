@@ -12,7 +12,7 @@
     </author>
     <updated>2010-10-08T05:58:02.781Z</updated>
     <app:control>
-        <app:draft>yes</app:draft>
+        <app:draft>no</app:draft>
     </app:control>
     <uqdata:subject vocabulary="anzsrc-for" value="200502"/>
     <uqdata:subject vocabulary="anzsrc-for" value="200501"/>

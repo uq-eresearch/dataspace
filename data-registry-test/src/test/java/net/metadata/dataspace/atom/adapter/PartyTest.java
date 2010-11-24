@@ -45,7 +45,7 @@ public class PartyTest extends WebTestCase {
         assertEquals("Could not get second version of entry after edit", 200, getMethod.getStatusCode());
         //Get version history
         getMethod = TestHelper.getEntry(client, newEntryLocation + "/version-history", Constants.ATOM_ENTRY_MIMETYPE);
-        assertEquals("Could not get working copy after post", 200, getMethod.getStatusCode());
+        assertEquals("Could not version history", 200, getMethod.getStatusCode());
         //Delete Entry
         DeleteMethod deleteMethod = TestHelper.deleteEntry(client, newEntryLocation);
         assertEquals("Could not delete entry", 200, deleteMethod.getStatusCode());
@@ -77,8 +77,12 @@ public class PartyTest extends WebTestCase {
         status = TestHelper.logout(client);
         assertEquals("Could not logout", 200, status);
 
+        //get without authenticating
+        GetMethod getMethod = TestHelper.getEntry(client, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Get without authenticating, Wrong status code", 404, getMethod.getStatusCode());
+
         //get first version without authenticating
-        GetMethod getMethod = TestHelper.getEntry(client, newEntryLocation + "/1", Constants.ATOM_ENTRY_MIMETYPE);
+        getMethod = TestHelper.getEntry(client, newEntryLocation + "/1", Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Get first version without authenticating, Wrong status code", 401, getMethod.getStatusCode());
 
         //get working copy without authenticating
@@ -97,5 +101,31 @@ public class PartyTest extends WebTestCase {
         //Delete Entry
         DeleteMethod deleteMethod = TestHelper.deleteEntry(client, newEntryLocation);
         assertEquals("Deleting without authenticating, Wrong status code", 401, deleteMethod.getStatusCode());
+    }
+
+    public void testPartyPublishing() throws Exception {
+        //create a client
+        HttpClient client = new HttpClient();
+        //authenticate
+        int status = TestHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        assertEquals("Could not authenticate", 200, status);
+        //Post Entry
+        String fileName = "/files/post/new-party.xml";
+        PostMethod postMethod = TestHelper.postEntry(client, fileName, Constants.PATH_FOR_PARTIES);
+        assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+        String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
+
+        //publish entry
+        fileName = "/files/put/published-party.xml";
+        PutMethod putMethod = TestHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
+
+        //logout
+        status = TestHelper.logout(client);
+        assertEquals("Could not logout", 200, status);
+
+        //get without authenticating
+        GetMethod getMethod = TestHelper.getEntry(client, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Get without authenticating should now return OK", 200, getMethod.getStatusCode());
     }
 }
