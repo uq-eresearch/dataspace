@@ -1,7 +1,6 @@
 package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.DataCollectionsRegistryTestCase;
 import net.metadata.dataspace.atom.util.TestHelper;
 import net.sourceforge.jwebunit.junit.WebTestCase;
 import org.apache.commons.httpclient.HttpClient;
