@@ -97,7 +97,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                     } else {
                         String message = "Authentication Failed, User not found";
                         logger.warn(message);
-                        return ProviderHelper.notfound(request, message);
+                        return ProviderHelper.badrequest(request, message);
                     }
                 } catch (NamingException e) {
                     String message = "Authentication Failed: " + e.getMessage();
