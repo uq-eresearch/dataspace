@@ -19,6 +19,11 @@ public class TestHelper {
         return client.executeMethod(postMethod);
     }
 
+    public static int logout(HttpClient client) throws Exception {
+        PostMethod postMethod = new PostMethod(Constants.URL_PREFIX + "logout");
+        return client.executeMethod(postMethod);
+    }
+
     public static PostMethod postEntry(HttpClient client, String fileName, String pathForActivities) throws Exception {
         String fullURL = Constants.URL_PREFIX + pathForActivities;
         PostMethod post = new PostMethod(fullURL);
