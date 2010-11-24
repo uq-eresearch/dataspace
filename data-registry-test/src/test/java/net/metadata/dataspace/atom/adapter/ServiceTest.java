@@ -54,7 +54,6 @@ public class ServiceTest extends WebTestCase {
         assertEquals("Entry should be GONE", 410, getMethod.getStatusCode());
     }
 
-
     public void testServiceUnauthorized() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
