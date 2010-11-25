@@ -115,4 +115,5 @@ public interface Constants {
     String USERNAME = "test";
     String PASSWORD = "test";
 
+    String TEST_CONTEXT = "/conf/spring/testContext.xml";
 }
