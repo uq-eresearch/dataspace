@@ -38,15 +38,15 @@ public class Party extends AbstractBaseEntity<PartyVersion> {
     }
 
     public String getTitle() {
-        return versions.first().getTitle();
+        return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
     }
 
     public String getSummary() {
-        return versions.first().getSummary();
+        return this.published != null ? this.published.getSummary() : this.versions.first().getSummary();
     }
 
     public String getContent() {
-        return versions.first().getContent();
+        return this.published != null ? this.published.getContent() : this.versions.first().getContent();
     }
 
     public Date getUpdated() {
@@ -58,23 +58,27 @@ public class Party extends AbstractBaseEntity<PartyVersion> {
     }
 
     public Set<String> getAuthors() {
-        return versions.first().getAuthors();
+        return this.published != null ? this.published.getAuthors() : this.versions.first().getAuthors();
     }
 
     public Set<Subject> getSubjects() {
-        return versions.first().getSubjects();
+        return this.published != null ? this.published.getSubjects() : this.versions.first().getSubjects();
     }
 
     public Set<Collection> getCollectorOf() {
-        return versions.first().getCollectorOf();
+        return this.published != null ? this.published.getCollectorOf() : this.versions.first().getCollectorOf();
     }
 
     public Set<Activity> getParticipantIn() {
-        return versions.first().getParticipantIn();
+        return this.published != null ? this.published.getParticipantIn() : this.versions.first().getParticipantIn();
     }
 
     public SortedSet<PartyVersion> getVersions() {
         return versions;
+    }
+
+    public void setVersions(SortedSet<PartyVersion> versions) {
+        this.versions = versions;
     }
 
     @Override
@@ -90,10 +94,6 @@ public class Party extends AbstractBaseEntity<PartyVersion> {
     @Override
     public Version getWorkingCopy() {
         return this.versions.first();
-    }
-
-    public void setVersions(SortedSet<PartyVersion> versions) {
-        this.versions = versions;
     }
 
 

@@ -53,27 +53,27 @@ public class Activity extends AbstractBaseEntity<ActivityVersion> {
     }
 
     public String getTitle() {
-        return versions.first().getTitle();
+        return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
     }
 
     public String getSummary() {
-        return versions.first().getSummary();
+        return this.published != null ? this.published.getSummary() : this.versions.first().getSummary();
     }
 
     public String getContent() {
-        return versions.first().getContent();
+        return this.published != null ? this.published.getContent() : this.versions.first().getContent();
     }
 
     public Set<Collection> getHasOutput() {
-        return versions.first().getHasOutput();
+        return this.published != null ? this.published.getHasOutput() : this.versions.first().getHasOutput();
     }
 
     public Set<Party> getHasParticipant() {
-        return versions.first().getHasParticipant();
+        return this.published != null ? this.published.getHasParticipant() : this.versions.first().getHasParticipant();
     }
 
     public Set<String> getAuthors() {
-        return versions.first().getAuthors();
+        return this.published != null ? this.published.getAuthors() : this.versions.first().getAuthors();
     }
 
     @Override

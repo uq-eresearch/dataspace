@@ -89,6 +89,20 @@ public class ActivityDaoImpl extends JpaDao<Activity> implements ActivityDao, Se
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<Activity> getAllPublished() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Activity o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.updated");
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Activity> getAllUnpublished() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Activity o WHERE o.isActive = true AND o.published IS NULL ORDER BY o.updated");
+        return query.getResultList();
+    }
+
+    @Override
     public Activity getMostRecentUpdated() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Activity o WHERE o.updated = (SELECT MAX(o.updated) FROM Activity o)");
         List<?> resultList = query.getResultList();

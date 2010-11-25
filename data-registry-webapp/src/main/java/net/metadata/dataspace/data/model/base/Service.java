@@ -53,28 +53,28 @@ public class Service extends AbstractBaseEntity<ServiceVersion> {
     }
 
     public String getTitle() {
-        return versions.first().getTitle();
+        return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
     }
 
     public String getSummary() {
-        return versions.first().getSummary();
+        return this.published != null ? this.published.getSummary() : this.versions.first().getSummary();
     }
 
     public String getContent() {
-        return versions.first().getContent();
+        return this.published != null ? this.published.getContent() : this.versions.first().getContent();
     }
 
     public Set<Collection> getSupportedBy() {
-        return versions.first().getSupportedBy();
+        return this.published != null ? this.published.getSupportedBy() : this.versions.first().getSupportedBy();
     }
 
     public String getLocation() {
-        return versions.first().getLocation();
+        return this.published != null ? this.published.getLocation() : this.versions.first().getLocation();
     }
 
 
     public Set<String> getAuthors() {
-        return versions.first().getAuthors();
+        return this.published != null ? this.published.getAuthors() : this.versions.first().getAuthors();
     }
 
     @Override

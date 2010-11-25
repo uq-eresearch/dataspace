@@ -156,7 +156,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
 
     @Override
     public Iterable<net.metadata.dataspace.data.model.base.Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return collectionDao.getAllActive();
+        return collectionDao.getAllPublished();
     }
 
     @Override

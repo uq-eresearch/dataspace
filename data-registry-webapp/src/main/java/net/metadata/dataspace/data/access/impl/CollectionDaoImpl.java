@@ -88,6 +88,20 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<Collection> getAllPublished() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.updated");
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Collection> getAllUnpublished() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = true AND o.published IS NULL ORDER BY o.updated");
+        return query.getResultList();
+    }
+
+    @Override
     public Collection getMostRecentUpdated() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.updated = (SELECT MAX(o.updated) FROM Collection o)");
         List<?> resultList = query.getResultList();

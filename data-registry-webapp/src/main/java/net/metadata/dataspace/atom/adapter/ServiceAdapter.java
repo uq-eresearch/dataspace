@@ -144,7 +144,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public Iterable<Service> getEntries(RequestContext request) throws ResponseContextException {
-        return serviceDao.getAllActive();
+        return serviceDao.getAllPublished();
     }
 
     @Override

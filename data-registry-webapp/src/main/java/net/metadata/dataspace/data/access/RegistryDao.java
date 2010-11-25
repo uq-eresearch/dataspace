@@ -48,6 +48,20 @@ public interface RegistryDao<T> {
     List<T> getAllInactive();
 
     /**
+     * Returns all published entities
+     *
+     * @return List of published entities
+     */
+    List<T> getAllPublished();
+
+    /**
+     * Returns all unpublished entities
+     *
+     * @return List of unpublished entities
+     */
+    List<T> getAllUnpublished();
+
+    /**
      * Get the most recent updated entity
      *
      * @return entity

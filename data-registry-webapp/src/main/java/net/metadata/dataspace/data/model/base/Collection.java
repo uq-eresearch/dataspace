@@ -55,39 +55,39 @@ public class Collection extends AbstractBaseEntity<CollectionVersion> {
     }
 
     public String getTitle() {
-        return versions.first().getTitle();
+        return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
     }
 
     public String getSummary() {
-        return versions.first().getSummary();
+        return this.published != null ? this.published.getSummary() : this.versions.first().getSummary();
     }
 
     public Set<String> getAuthors() {
-        return versions.first().getAuthors();
+        return this.published != null ? this.published.getAuthors() : this.versions.first().getAuthors();
     }
 
     public String getContent() {
-        return versions.first().getContent();
+        return this.published != null ? this.published.getContent() : this.versions.first().getContent();
     }
 
     public Set<Subject> getSubjects() {
-        return versions.first().getSubjects();
+        return this.published != null ? this.published.getSubjects() : this.versions.first().getSubjects();
     }
 
     public Set<Party> getCollector() {
-        return versions.first().getCollector();
+        return this.published != null ? this.published.getCollector() : this.versions.first().getCollector();
     }
 
     public String getLocation() {
-        return versions.first().getLocation();
+        return this.published != null ? this.published.getLocation() : this.versions.first().getLocation();
     }
 
     public Set<Activity> getOutputOf() {
-        return versions.first().getOutputOf();
+        return this.published != null ? this.published.getOutputOf() : this.versions.first().getOutputOf();
     }
 
     public Set<Service> getSupports() {
-        return versions.first().getSupports();
+        return this.published != null ? this.published.getSupports() : this.versions.first().getSupports();
     }
 
     @Override

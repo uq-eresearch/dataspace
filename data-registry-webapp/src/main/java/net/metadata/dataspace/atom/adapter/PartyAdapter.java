@@ -156,7 +156,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public Iterable<Party> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return partyDao.getAllActive();
+        return partyDao.getAllPublished();
     }
 
     @Override

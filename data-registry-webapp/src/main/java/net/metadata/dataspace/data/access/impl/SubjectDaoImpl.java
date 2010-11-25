@@ -72,6 +72,16 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
     }
 
     @Override
+    public List<Subject> getAllPublished() {
+        return null;
+    }
+
+    @Override
+    public List<Subject> getAllUnpublished() {
+        return null;
+    }
+
+    @Override
     public Subject getMostRecentUpdated() {
         //TODO if a updated date property is added to Subject table then this should be changed to get most recent updated Subject
         return getMostRecentInserted();

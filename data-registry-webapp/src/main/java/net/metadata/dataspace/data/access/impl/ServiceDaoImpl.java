@@ -89,6 +89,20 @@ public class ServiceDaoImpl extends JpaDao<Service> implements ServiceDao, Seria
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<Service> getAllPublished() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Service o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.updated");
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Service> getAllUnpublished() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Service o WHERE o.isActive = true AND o.published IS NULL ORDER BY o.updated");
+        return query.getResultList();
+    }
+
+    @Override
     public Service getMostRecentUpdated() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Service o WHERE o.updated = (SELECT MAX(o.updated) FROM Service o)");
         List<?> resultList = query.getResultList();

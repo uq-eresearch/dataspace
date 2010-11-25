@@ -89,6 +89,20 @@ public class PartyDaoImpl extends JpaDao<Party> implements PartyDao, Serializabl
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<Party> getAllPublished() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.updated");
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Party> getAllUnpublished() {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.isActive = true AND o.published IS NULL ORDER BY o.updated");
+        return query.getResultList();
+    }
+
+    @Override
     public Party getMostRecentUpdated() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Party o WHERE o.updated = (SELECT MAX(o.updated) FROM Party o)");
         List<?> resultList = query.getResultList();
