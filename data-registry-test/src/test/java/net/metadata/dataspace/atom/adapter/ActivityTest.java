@@ -127,4 +127,31 @@ public class ActivityTest extends WebTestCase {
         GetMethod getMethod = TestHelper.getEntry(client, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Get without authenticating should now return OK", 200, getMethod.getStatusCode());
     }
+
+    public void testActivityFeed() throws Exception {
+        //create a client
+        HttpClient client = new HttpClient();
+        //authenticate
+        int status = TestHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        assertEquals("Could not authenticate", 200, status);
+        //Post Entry
+        String fileName = "/files/post/new-activity.xml";
+        PostMethod postMethod = TestHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
+        assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+        String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
+
+        //publish entry
+        fileName = "/files/put/published-activity.xml";
+        PutMethod putMethod = TestHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
+
+        //logout
+        status = TestHelper.logout(client);
+        assertEquals("Could not logout", 200, status);
+
+        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_ACTIVITIES;
+        //get without authenticating
+        GetMethod getMethod = TestHelper.getEntry(client, feedUrl, Constants.ATOM_FEED_MIMETYPE);
+        assertEquals("Could not get feed", 200, getMethod.getStatusCode());
+    }
 }
