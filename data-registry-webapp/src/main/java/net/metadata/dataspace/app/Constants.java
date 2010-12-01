@@ -17,6 +17,7 @@ public interface Constants {
     String ATOM_ENTRY_MIMETYPE = "application/atom+xml;type=entry";
     String ATOM_FEED_MIMETYPE = "application/atom+xml;type=feed";
     String HTML_MIME_TYPE = "text/html";
+    String MIME_TYPE_RDF = "application/rdf+xml";
     String ATOM_SERVICE_MIMETYPE = "application/atomsvc+xml";
 
 
@@ -98,11 +99,32 @@ public interface Constants {
     /**
      * rel attribute types
      */
-    String REL_TYPE_SELF = "self";
-    String REL_TYPE_ALTERNATE = "alternate";
-    String REL_TYPE_LATEST_VERSION = "latest-version";
-    String REL_TYPE_PREDECESSOR_VERSION = "predecessor-version";
-    String REL_TYPE_SUCCESSOR_VERSION = "successor-version";
+    String REL_ALTERNATE = "alternate";
+    String REL_CREATOR = "http://purl.org/dc/terms/creator";
+    String REL_DESCRIBES = "http://www.openarchives.org/ore/terms/describes";
+    //TODO Ask Nigel about Accessed VIA
+    String REL_IS_ACCESSED_VIA = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isAccessedVia";
+    String REL_IS_LOCATED_AT = "http://purl.org/cld/terms/isLocatedAt";
+    String REL_IS_OUTPUT_OF = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf";
+    String REL_LATEST_VERSION = "latest-version";
+    String REL_PREDECESSOR_VERSION = "predecessor-version";
+    String REL_PUBLISHER = "http://purl.org/dc/terms/publisher";
+    String REL_SELF = "self";
+    String REL_SUCCESSOR_VERSION = "successor-version";
+    String REL_VIA = "via";
+
+    /**
+     * scheme attributes
+     */
+    String SCHEME_TYPE = "http://purl.org/dc/dcmitype/";
+    String SCHEME_ANDS_GROUP = "https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php";
+
+
+    /**
+     * term attributes
+     */
+    String TERM_ANDS_GROUP = "The University of Queensland";
+    String TERM_COLLECTION = "http://purl.org/dc/dcmitype/Collection";
 
     /**
      * HTTP Status messages

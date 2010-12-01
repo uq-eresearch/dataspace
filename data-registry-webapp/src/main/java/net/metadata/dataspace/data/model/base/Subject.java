@@ -24,6 +24,8 @@ public class Subject extends AbstractBaseEntity {
     @NotNull
     private String value;
 
+    private String label;
+
     public Subject() {
     }
 
@@ -46,6 +48,14 @@ public class Subject extends AbstractBaseEntity {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override
