@@ -29,7 +29,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 
 /**
@@ -151,63 +150,37 @@ public class HttpMethodHelper {
         }
     }
 
+    /**
+     * We do not support media posting
+     *
+     * @param request
+     * @param clazz
+     * @return
+     * @throws ResponseContextException
+     */
     public static ResponseContext postMedia(RequestContext request, Class clazz) throws ResponseContextException {
         User user = authenticationManager.getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
-            MimeType mimeType = request.getContentType();
-            if (mimeType.getBaseType().equals(Constants.JSON_MIMETYPE)) {
-                String json = getJson(request);
-                if (json == null) {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-                } else {
-                    Record record = entityCreator.getNextRecord(clazz);
-                    Version version = entityCreator.getNextVersion(record);
-                    JsonHelper.createRecordFromJson(record, version, json);
-                    Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
-                    return AdapterHelper.getContextResponseForPost(createdEntry);
-                }
-            } else {
-                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-            }
+            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
         }
     }
 
+    /**
+     * We do not support media putting
+     *
+     * @param request
+     * @param clazz
+     * @return
+     * @throws ResponseContextException
+     */
     public static ResponseContext putMedia(RequestContext request, Class clazz) throws ResponseContextException {
         User user = authenticationManager.getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
-            logger.info("Updating Party as Media Entry");
-            if (request.getContentType().getBaseType().equals(Constants.JSON_MIMETYPE)) {
-                String json = getJson(request);
-                if (json == null) {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-                } else {
-                    String uriKey = AdapterHelper.getEntryID(request);
-                    Record record = getExistingRecord(uriKey, clazz);
-                    if (record == null) {
-                        throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
-                    } else {
-                        refreshRecord(record, clazz);
-                        if (record.isActive()) {
-                            if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
-                                Version partyVersion = entityCreator.getNextVersion(record);
-                                JsonHelper.createRecordFromJson(record, partyVersion, json);
-                                Entry createdEntry = AdapterHelper.getEntryFromEntity(partyVersion, false);
-                                return AdapterHelper.getContextResponseForGetEntry(request, createdEntry);
-                            } else {
-                                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-                            }
-                        } else {
-                            throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
-                        }
-                    }
-                }
-            } else {
-                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-            }
+            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
         }
     }
 
@@ -426,17 +399,6 @@ public class HttpMethodHelper {
             return serviceDao.getMostRecentUpdated();
         }
         return null;
-    }
-
-    private static String getJson(RequestContext request) throws ResponseContextException {
-        InputStream inputStream = null;
-        try {
-            inputStream = request.getInputStream();
-        } catch (Throwable th) {
-            logger.fatal("Cannot create inputstream from request.", th);
-            throw new ResponseContextException("Could not obtain data from request", 400);
-        }
-        return AdapterHelper.getJsonString(inputStream);
     }
 
     public static ResponseContext getFeed(RequestContext request, Class clazz) throws ResponseContextException {

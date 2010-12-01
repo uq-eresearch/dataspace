@@ -13,7 +13,6 @@ import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
-import org.apache.abdera.ext.json.JSONWriter;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.model.*;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
@@ -25,10 +24,6 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 
 import javax.xml.namespace.QName;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,11 +41,9 @@ public class AdapterHelper {
     private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
 
     public static String getEntityID(String fullUrl) {
-
         if (fullUrl.contains("?")) {
             fullUrl = fullUrl.split("\\?")[0];
         }
-
         String[] segments = fullUrl.split("/");
         return UrlEncoding.decode(segments[segments.length - 1]);
     }
@@ -92,39 +85,12 @@ public class AdapterHelper {
         if (request.getTarget().getType() != TargetType.TYPE_ENTRY) {
             return null;
         }
-
         String fullUrl = request.getUri().toString();
         String representation = null;
         if (fullUrl.contains("?repr")) {
             representation = fullUrl.split("repr=")[1];
         }
         return representation;
-    }
-
-    public static String getJsonString(InputStream inputStream) {
-        StringBuilder sb = new StringBuilder();
-        if (inputStream != null) {
-            String line;
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-            } catch (IOException ex) {
-                logger.fatal("Could not parse inputstream to a JSON string", ex);
-                return null;
-            } finally {
-                try {
-                    inputStream.close();
-                } catch (IOException ex) {
-                    logger.fatal("Could not close inputstream", ex);
-                }
-            }
-        } else {
-            return null;
-        }
-        String jsonString = sb.toString();
-        return jsonString;
     }
 
     public static Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
@@ -262,7 +228,7 @@ public class AdapterHelper {
         String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
-            if (acceptHeader != null && (acceptHeader.equals(Constants.JSON_MIMETYPE) || acceptHeader.equals(Constants.ATOM_ENTRY_MIMETYPE))) {
+            if (acceptHeader != null) {
                 representationMimeType = acceptHeader;
             } else {
                 representationMimeType = Constants.ATOM_ENTRY_MIMETYPE;
@@ -272,7 +238,7 @@ public class AdapterHelper {
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
         responseContext.setLocation(entry.getId().toString());
         responseContext.setHeader("Vary", "Accept");
-        if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
+        /*if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
             String selfLinkHref = entry.getId() + "?repr=" + Constants.JSON_MIMETYPE;
             prepareSelfLink(entry, selfLinkHref, Constants.JSON_MIMETYPE);
 
@@ -281,7 +247,8 @@ public class AdapterHelper {
 
             responseContext.setContentType(Constants.JSON_MIMETYPE);
             responseContext.setWriter(new JSONWriter());
-        } else if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE)) {
+        } else*/
+        if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE) || representationMimeType.equals(Constants.ATOM_MIMETYPE)) {
             String selfLinkHref = entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE;
             prepareSelfLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
 
@@ -291,7 +258,7 @@ public class AdapterHelper {
             responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
             responseContext.setWriter(new PrettyWriter());
         } else {
-            return ProviderHelper.createErrorResponse(new Abdera(), 406, "The requested entry cannot be supplied in " + representationMimeType + " mime type.");
+            return ProviderHelper.createErrorResponse(new Abdera(), 415, Constants.HTTP_STATUS_415);
         }
 
         return responseContext;
