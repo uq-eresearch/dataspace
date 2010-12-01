@@ -252,8 +252,8 @@ public class AdapterHelper {
             String selfLinkHref = entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE;
             prepareSelfLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
 
-            String alternateLinkHref = entry.getId() + "?repr=" + Constants.JSON_MIMETYPE;
-            prepareAlternateLink(entry, alternateLinkHref, Constants.JSON_MIMETYPE);
+//            String alternateLinkHref = entry.getId() + "?repr=" + Constants.JSON_MIMETYPE;
+//            prepareAlternateLink(entry, alternateLinkHref, Constants.JSON_MIMETYPE);
 
             responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
             responseContext.setWriter(new PrettyWriter());
