@@ -254,6 +254,50 @@ public class HttpMethodHelper {
     }
 
 
+    public static ResponseContext getFeed(RequestContext request, Class clazz) throws ResponseContextException {
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType != null) {
+            if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+                return FeedHelper.getHtmlRepresentationOfFeed(request, getHtmlPage(clazz));
+            } else {
+                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            }
+        } else {
+            return FeedHelper.getHtmlRepresentationOfFeed(request, getHtmlPage(clazz));
+        }
+    }
+
+    public static void addFeedDetails(Feed feed, RequestContext request, Class clazz) throws ResponseContextException {
+        Record latestService = getLatestRecord(clazz);
+        if (latestService != null) {
+            refreshRecord(latestService, clazz);
+            feed.setUpdated(latestService.getUpdated());
+        } else {
+            //TODO what would the date be if the feed is empty??
+            feed.setUpdated(new Date());
+        }
+
+        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
+        if (representationMimeType == null) {
+            String acceptHeader = request.getAccept();
+            if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
+                representationMimeType = acceptHeader;
+            } else {
+                representationMimeType = Constants.HTML_MIME_TYPE;
+            }
+        }
+        String atomFeedUrl = Constants.ID_PREFIX + getPath(clazz) + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String htmlFeedUrl = Constants.ID_PREFIX + getPath(clazz);
+        if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+        } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE) || representationMimeType.equals(Constants.ATOM_MIMETYPE)) {
+            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
+            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+        }
+        feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + getTitle(clazz));
+    }
+
     /**
      * Retrieves the FOM Entry object from the request payload.
      */
@@ -401,47 +445,4 @@ public class HttpMethodHelper {
         return null;
     }
 
-    public static ResponseContext getFeed(RequestContext request, Class clazz) throws ResponseContextException {
-        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
-        if (representationMimeType != null) {
-            if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-                return FeedHelper.getHtmlRepresentationOfFeed(request, getHtmlPage(clazz));
-            } else {
-                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-            }
-        } else {
-            return FeedHelper.getHtmlRepresentationOfFeed(request, getHtmlPage(clazz));
-        }
-    }
-
-    public static void addFeedDetails(Feed feed, RequestContext request, Class clazz) throws ResponseContextException {
-        Record latestService = getLatestRecord(clazz);
-        if (latestService != null) {
-            refreshRecord(latestService, clazz);
-            feed.setUpdated(latestService.getUpdated());
-        } else {
-            //TODO what would the date be if the feed is empty??
-            feed.setUpdated(new Date());
-        }
-
-        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
-        if (representationMimeType == null) {
-            String acceptHeader = request.getAccept();
-            if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
-                representationMimeType = acceptHeader;
-            } else {
-                representationMimeType = Constants.HTML_MIME_TYPE;
-            }
-        }
-        String atomFeedUrl = Constants.ID_PREFIX + getPath(clazz) + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
-        String htmlFeedUrl = Constants.ID_PREFIX + getPath(clazz);
-        if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-        } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) {
-            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-        }
-        feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + getTitle(clazz));
-    }
 }

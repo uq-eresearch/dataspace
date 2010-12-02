@@ -92,7 +92,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
         try {
             String representationMimeType = FeedHelper.getRepresentationMimeType(request);
             String accept = request.getAccept();
-            if ((representationMimeType != null && representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE)) || (accept != null && accept.equals(Constants.ATOM_FEED_MIMETYPE))) {
+            if (representationMimeType == null) {
+                representationMimeType = accept;
+            }
+            if (representationMimeType != null &&
+                    (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE) ||
+                            representationMimeType.equals(Constants.ATOM_MIMETYPE))) {
                 return super.getFeed(request);
             } else {
                 return HttpMethodHelper.getFeed(request, Collection.class);
