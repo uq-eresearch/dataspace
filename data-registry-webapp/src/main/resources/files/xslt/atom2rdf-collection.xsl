@@ -15,7 +15,8 @@
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
                 xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
                 xmlns:uqdata="http://dataspace.metadata.net/"
-                xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#">
+                xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
+                xmlns:rdfa="http://www.w3.org/ns/rdfa#">
 
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
 
@@ -50,6 +51,18 @@
             <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
             <!-- curator -->
             <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
+            <!-- generating activity -->
+            <xsl:apply-templates
+                    select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
+            <!-- related info -->
+            <xsl:apply-templates select="atom:link[@rel='related']"/>
+            <!-- rights descriptions -->
+            <xsl:apply-templates select="atom:rights"/>
+            <xsl:apply-templates select="rdfa:meta[@property='dcterms:accessRights']"/>
+            <!-- temporal coverage -->
+            <xsl:apply-templates select="rdfa:meta[@property='dcterms:temporal']"/>
+            <!-- spatial coverage -->
+            <!-- TO DO -->
 
             <!-- link to metadata about the description -->
             <ore:isDescribedBy rdf:resource="{atom:link[@rel='self']/@href}"/>
@@ -125,6 +138,44 @@
         <dcterms:publisher rdf:resource="{@href}"/>
     </xsl:template>
 
+    <!-- generating activity -->
+    <xsl:template match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']">
+        <ands:isOutputOf rdf:resource="{@href}"/>
+    </xsl:template>
+
+    <!-- spatial coverage -->
+    <!-- TO DO -->
+
+    <!-- temporal coverage -->
+    <xsl:template match="rdfa:meta[@property='dcterms:temporal']">
+        <dcterms:temporal>
+            <xsl:value-of select="@content"/>
+        </dcterms:temporal>
+    </xsl:template>
+
+    <!-- related info -->
+    <xsl:template match="atom:link[@rel='related']">
+        <dcterms:relation rdf:resource="{@href}">
+            <dcterms:title>
+                <xsl:value-of select="@title"/>
+            </dcterms:title>
+        </dcterms:relation>
+    </xsl:template>
+
+    <!-- rights -->
+    <xsl:template match="atom:rights">
+        <dcterms:rights>
+            <xsl:value-of select="node()"/>
+        </dcterms:rights>
+    </xsl:template>
+
+    <xsl:template match="rdfa:meta[@property='dcterms:accessRights']">
+        <dcterms:accessRights>
+            <xsl:value-of select="@content"/>
+        </dcterms:accessRights>
+    </xsl:template>
+
+
     <!-- *** elements describing the metadata itself -->
     <!-- description identifier -->
     <xsl:template match="atom:id">
@@ -157,12 +208,7 @@
             <rdf:Description rdf:about="{@href}">
                 <xsl:if test="@type">
                     <dcterms:format>
-                        <rdf:Description>
-                            <dcam:memberOf rdf:resource="http://purl.org/dc/terms/IMT"/>
-                            <rdf:value>
-                                <xsl:value-of select="@type"/>
-                            </rdf:value>
-                        </rdf:Description>
+                        <xsl:value-of select="@type"/>
                     </dcterms:format>
                 </xsl:if>
             </rdf:Description>
@@ -215,12 +261,7 @@
                 <rdf:Description rdf:about="{@href}">
                     <xsl:if test="@type">
                         <dcterms:format>
-                            <rdf:Description>
-                                <dcam:memberOf rdf:resource="http://purl.org/dc/terms/IMT"/>
-                                <rdf:value>
-                                    <xsl:value-of select="@type"/>
-                                </rdf:value>
-                            </rdf:Description>
+                            <xsl:value-of select="@type"/>
                         </dcterms:format>
                     </xsl:if>
                 </rdf:Description>
