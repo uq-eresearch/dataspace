@@ -7,15 +7,16 @@ import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.*;
-import net.metadata.dataspace.data.model.base.Collection;
-import net.metadata.dataspace.data.model.base.Service;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.text.UrlEncoding;
-import org.apache.abdera.model.*;
+import org.apache.abdera.model.Element;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Link;
+import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -114,21 +115,21 @@ public class AdapterHelper {
     private static Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
+        entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_ACTIVITY, version.getParent().getClass().getSimpleName());
         try {
             Set<Party> partySet = version.getHasParticipant();
-            for (Party sub : partySet) {
-                Element partyElement = entry.addExtension(Constants.QNAME_HAS_PARTICIPANT);
-                partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + sub.getUriKey());
+            for (Party party : partySet) {
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_HAS_PARTICIPANT);
             }
             Set<Collection> collectionSet = version.getHasOutput();
             for (Collection collection : collectionSet) {
-                Element collectorOfElement = entry.addExtension(Constants.QNAME_HAS_OUTPUT);
-                collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_HAS_OUTPUT);
             }
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        setPublished(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -136,27 +137,26 @@ public class AdapterHelper {
     private static Entry getEntryFromParty(PartyVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
+        entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_PARTY, version.getParent().getClass().getSimpleName());
         try {
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
-                Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
-                subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
-                subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
+                entry.addCategory(sub.getVocabulary(), sub.getValue(), sub.getLabel());
             }
+
             Set<Collection> collectionSet = version.getCollectorOf();
             for (Collection collection : collectionSet) {
-                Element collectorOfElement = entry.addExtension(Constants.QNAME_COLLECTOR_OF);
-                collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_IS_COLLECTOR_OF);
             }
             Set<Activity> activities = version.getParticipantIn();
             for (Activity activity : activities) {
-                Element serviceElement = entry.addExtension(Constants.QNAME_IS_PARTICIPANT_IN);
-                serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_IS_PARTICIPANT_IN);
             }
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        setPublished(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -190,7 +190,6 @@ public class AdapterHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        setPublished(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -198,30 +197,19 @@ public class AdapterHelper {
     private static Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
+        entry.addCategory(Constants.SCHEME_VIVO, Constants.TERM_SERVICE, version.getParent().getClass().getSimpleName());
         try {
-            entry.addSimpleExtension(Constants.QNAME_LOCATION, version.getLocation());
+            entry.addLink(version.getLocation(), Constants.REL_IS_LOCATED_AT);
             Set<Collection> collectionSet = version.getSupportedBy();
             for (Collection collection : collectionSet) {
-                Element collectorOfElement = entry.addExtension(Constants.QNAME_SUPPORTED_BY);
-                collectorOfElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_IS_SUPPORTED_BY);
             }
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        setPublished(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
-    }
-
-    private static void setPublished(Version version, Entry entry) {
-        Control control = entry.addControl();
-        Version published = version.getParent().getPublished();
-        //False is used her to indicate the version is published and true (isDraft) is not published
-        if (published != null && version.equals(published)) {
-            control.setDraft(false);
-        } else {
-            control.setDraft(true);
-        }
     }
 
     public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry, Class clazz) throws ResponseContextException {
