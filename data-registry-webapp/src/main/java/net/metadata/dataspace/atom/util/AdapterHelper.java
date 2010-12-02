@@ -300,14 +300,12 @@ public class AdapterHelper {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;
         } else {
-            String summary = entry.getSummary();
             String content = entry.getContent();
-            if (summary == null || content == null) {
+            if (content == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
             }
             try {
                 version.setTitle(entry.getTitle());
-                version.setSummary(summary);
                 version.setContent(content);
                 version.setUpdated(entry.getUpdated());
                 version.setAuthors(getAuthors(entry.getAuthors()));
@@ -323,13 +321,9 @@ public class AdapterHelper {
 
     private static void addLocation(Version version, Entry entry) throws ResponseContextException {
         try {
-            List<Element> extensions = entry.getExtensions();
-            for (Element extension : extensions) {
-                if (extension.getQName().equals(Constants.QNAME_LOCATION)) {
-                    String location = extension.getText();
-                    version.setLocation(location);
-                }
-            }
+            Link link = entry.getLink(Constants.REL_IS_LOCATED_AT);
+            String location = link.getHref().toString();
+            version.setLocation(location);
         } catch (Throwable th) {
             throw new ResponseContextException(400, th);
         }
