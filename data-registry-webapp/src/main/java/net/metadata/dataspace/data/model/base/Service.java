@@ -56,10 +56,6 @@ public class Service extends AbstractBaseEntity<ServiceVersion> {
         return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
     }
 
-    public String getSummary() {
-        return this.published != null ? this.published.getSummary() : this.versions.first().getSummary();
-    }
-
     public String getContent() {
         return this.published != null ? this.published.getContent() : this.versions.first().getContent();
     }

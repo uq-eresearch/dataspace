@@ -24,8 +24,6 @@ public interface Version {
 
     String getTitle();
 
-    String getSummary();
-
     String getContent();
 
     Set<String> getAuthors();
@@ -33,8 +31,6 @@ public interface Version {
     void setLocation(String text);
 
     void setTitle(String title);
-
-    void setSummary(String summary);
 
     void setContent(String content);
 

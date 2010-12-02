@@ -35,7 +35,6 @@ public class PopulatorUtil {
         collectionVersion.setParent(collection);
         collectionVersion.setTitle("Test Collection");
         collectionVersion.setContent("Test Collection Content");
-        collectionVersion.setSummary("Test collection description");
         collectionVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Collection Author");
@@ -48,7 +47,6 @@ public class PopulatorUtil {
         PartyVersion partyVersion = (PartyVersion) entityCreator.getNextVersion(party);
         partyVersion.setParent(party);
         partyVersion.setTitle("Test Party Title");
-        partyVersion.setSummary("Test Party Summary");
         partyVersion.setContent("Test Party Content");
         partyVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
@@ -62,7 +60,6 @@ public class PopulatorUtil {
         ServiceVersion serviceVersion = (ServiceVersion) entityCreator.getNextVersion(service);
         serviceVersion.setParent(service);
         serviceVersion.setTitle("Test Service Title");
-        serviceVersion.setSummary("Test Service Summary");
         serviceVersion.setContent("Test Service Content");
         serviceVersion.setUpdated(new Date());
         serviceVersion.setLocation("http://test.location.com.au/collection");
@@ -76,7 +73,6 @@ public class PopulatorUtil {
         ActivityVersion activityVersion = (ActivityVersion) entityCreator.getNextVersion(activity);
         activityVersion.setParent(activity);
         activityVersion.setTitle("Test Activity Title");
-        activityVersion.setSummary("Test Activity Summary");
         activityVersion.setContent("Test Activity Content");
         activityVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();

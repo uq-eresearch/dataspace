@@ -31,10 +31,6 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     private String title; //name
 
     @NotNull
-    @Column(length = 1024)
-    private String summary; //description
-
-    @NotNull
     @Column(length = 4096)
     private String content;
 
@@ -74,14 +70,6 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
     }
 
     public String getContent() {

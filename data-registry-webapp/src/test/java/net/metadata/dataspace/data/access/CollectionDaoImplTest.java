@@ -88,15 +88,15 @@ public class CollectionDaoImplTest {
         Long id = collection.getId();
         Date now = new Date();
         collection.setUpdated(now);
-        String summary = "Updated Summary";
-        collection.getVersions().first().setSummary(summary);
+        String content = "Updated content";
+        collection.getVersions().first().setContent(content);
         collection.setUpdated(now);
         entityManager.merge(collection);
         entityManager.getTransaction().commit();
         Collection collectionById = collectionDao.getById(id);
         assertEquals("Modified and Retrieved parties are not the same", collection, collectionById);
         assertEquals("Update Date was not updated", now, collectionById.getUpdated());
-        assertEquals("Summary was not updated", summary, collectionById.getVersions().first().getSummary());
+        assertEquals("content was not updated", content, collectionById.getVersions().first().getContent());
     }
 
 
