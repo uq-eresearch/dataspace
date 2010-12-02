@@ -165,7 +165,7 @@ public class AdapterHelper {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
         //<category scheme="http://purl.org/dc/dcmitype/" term="http://purl.org/dc/dcmitype/Collection" label="Collection"/>
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.SCHEME_TYPE, Constants.TERM_COLLECTION, "Collection");
+        entry.addCategory(Constants.SCHEME_TYPE, Constants.TERM_COLLECTION, version.getParent().getClass().getSimpleName());
         try {
             entry.addLink(version.getLocation(), Constants.REL_IS_LOCATED_AT);
             Set<Subject> subjectSet = version.getSubjects();
@@ -299,10 +299,7 @@ public class AdapterHelper {
 
     private static void prepareAlternateLink(Entry entry, String href, String mimeType) throws ResponseContextException {
         try {
-            Link alternateLink = entry.getAlternateLink();
-            if (alternateLink == null) {
-                alternateLink = entry.addLink(entry.getId().toString());
-            }
+            Link alternateLink = entry.addLink(entry.getId().toString());
             alternateLink.setHref(href + "?repr=" + mimeType);
             alternateLink.setMimeType(mimeType);
             alternateLink.setRel(Constants.REL_ALTERNATE);
@@ -411,15 +408,13 @@ public class AdapterHelper {
         Entry entry;
         try {
             entry = abdera.newEntry();
-            if (isParentLevel) {
+            if (!isParentLevel) {
                 //TODO this should accommodate external ids
-                entry.setId(parentUrl);
-            } else {
-                //TODO this should accommodate external ids
-                entry.setId(parentUrl + "/" + version.getUriKey());
+                parentUrl = parentUrl + "/" + version.getUriKey();
             }
-            prepareSelfLink(entry, parentUrl);
-            entry.addCategory(Constants.SCHEME_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);
+            entry.setId(parentUrl);
+            //<link rel="http://www.openarchives.org/ore/terms/describes" href="http://dataspace.metadata.net/collections/2#"/>
+            entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
             entry.setTitle(version.getTitle());
             entry.setContent(version.getContent());
             entry.setUpdated(version.getUpdated());
@@ -427,6 +422,8 @@ public class AdapterHelper {
             for (String author : authors) {
                 entry.addAuthor(author);
             }
+            prepareSelfLink(entry, parentUrl);
+            entry.addCategory(Constants.SCHEME_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to set mandatory attributes", 500);
         }
