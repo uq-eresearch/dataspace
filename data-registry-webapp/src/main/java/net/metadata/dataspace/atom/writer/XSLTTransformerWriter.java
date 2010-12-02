@@ -22,7 +22,7 @@ import java.util.Date;
  */
 public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedWriter {
 
-    private static final String[] FORMATS = {Constants.MIME_TYPE_RDF, "application/rdf"};
+    private static final String[] FORMATS = {Constants.MIME_TYPE_RDF, Constants.MIME_TYPE_RIFCS};
     private String XSL = "";
 
     public XSLTTransformerWriter(String xslFilePath) {

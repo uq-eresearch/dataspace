@@ -18,6 +18,7 @@ public interface Constants {
     String ATOM_FEED_MIMETYPE = "application/atom+xml;type=feed";
     String HTML_MIME_TYPE = "text/html";
     String MIME_TYPE_RDF = "application/rdf+xml";
+    String MIME_TYPE_RIFCS = "application/rifcs+xml";
     String ATOM_SERVICE_MIMETYPE = "application/atomsvc+xml";
 
 
@@ -103,7 +104,7 @@ public interface Constants {
     String REL_CREATOR = "http://purl.org/dc/terms/creator";
     String REL_DESCRIBES = "http://www.openarchives.org/ore/terms/describes";
     //TODO Ask Nigel about Accessed VIA
-    String REL_IS_ACCESSED_VIA = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isAccessedVia";
+    String REL_IS_ACCESSED_VIA = "http://purl.org/cld/terms/isAccessedVia";
     String REL_IS_LOCATED_AT = "http://purl.org/cld/terms/isLocatedAt";
     String REL_IS_OUTPUT_OF = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf";
     String REL_LATEST_VERSION = "latest-version";

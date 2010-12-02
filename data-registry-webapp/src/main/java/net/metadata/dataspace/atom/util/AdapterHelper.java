@@ -2,6 +2,7 @@ package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Version;
@@ -128,7 +129,7 @@ public class AdapterHelper {
             throw new ResponseContextException(500, th);
         }
         setPublished(version, entry);
-        addLinks(version, entry, parentUrl);
+        addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
 
@@ -156,41 +157,41 @@ public class AdapterHelper {
             throw new ResponseContextException(500, th);
         }
         setPublished(version, entry);
-        addLinks(version, entry, parentUrl);
+        addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
 
     private static Entry getEntryFromCollection(CollectionVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
+        //<category scheme="http://purl.org/dc/dcmitype/" term="http://purl.org/dc/dcmitype/Collection" label="Collection"/>
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
+        entry.addCategory(Constants.SCHEME_TYPE, Constants.TERM_COLLECTION, "Collection");
         try {
-            entry.addSimpleExtension(Constants.QNAME_LOCATION, version.getLocation());
+            entry.addLink(version.getLocation(), Constants.REL_IS_LOCATED_AT);
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
-                Element subjectElement = entry.addExtension(Constants.QNAME_SUBJECT);
-                subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY, sub.getVocabulary());
-                subjectElement.setAttributeValue(Constants.ATTRIBUTE_NAME_VALUE, sub.getValue());
+                entry.addCategory(sub.getVocabulary(), sub.getValue(), sub.getLabel());
             }
             Set<Party> parties = version.getCollector();
             for (Party party : parties) {
-                Element partyElement = entry.addExtension(Constants.QNAME_COLLECTOR);
-                partyElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_CREATOR);
             }
             Set<Service> services = version.getSupports();
             for (Service service : services) {
-                Element serviceElement = entry.addExtension(Constants.QNAME_SUPPORTS);
-                serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_IS_ACCESSED_VIA);
             }
             Set<Activity> activities = version.getOutputOf();
             for (Activity activity : activities) {
-                Element serviceElement = entry.addExtension(Constants.QNAME_IS_OUTPUT_OF);
-                serviceElement.setAttributeValue(Constants.ATTRIBUTE_NAME_URI, Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_IS_OUTPUT_OF);
             }
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
         setPublished(version, entry);
-        addLinks(version, entry, parentUrl);
+        addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
 
@@ -208,7 +209,7 @@ public class AdapterHelper {
             throw new ResponseContextException(500, th);
         }
         setPublished(version, entry);
-        addLinks(version, entry, parentUrl);
+        addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
 
@@ -223,7 +224,7 @@ public class AdapterHelper {
         }
     }
 
-    public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry) throws ResponseContextException {
+    public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry, Class clazz) throws ResponseContextException {
 
         String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
@@ -238,25 +239,33 @@ public class AdapterHelper {
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
         responseContext.setLocation(entry.getId().toString());
         responseContext.setHeader("Vary", "Accept");
-        /*if (representationMimeType.equals(Constants.JSON_MIMETYPE)) {
-            String selfLinkHref = entry.getId() + "?repr=" + Constants.JSON_MIMETYPE;
-            prepareSelfLink(entry, selfLinkHref, Constants.JSON_MIMETYPE);
-
-            String alternateLinkHref = entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE;
-            prepareAlternateLink(entry, alternateLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
-
-            responseContext.setContentType(Constants.JSON_MIMETYPE);
-            responseContext.setWriter(new JSONWriter());
-        } else*/
         if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE) || representationMimeType.equals(Constants.ATOM_MIMETYPE)) {
-            String selfLinkHref = entry.getId() + "?repr=" + Constants.ATOM_ENTRY_MIMETYPE;
-            prepareSelfLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
-
-//            String alternateLinkHref = entry.getId() + "?repr=" + Constants.JSON_MIMETYPE;
-//            prepareAlternateLink(entry, alternateLinkHref, Constants.JSON_MIMETYPE);
-
+            String selfLinkHref = entry.getId().toString();
+            prepareSelfLink(entry, selfLinkHref);
+            prepareAlternateLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS);
             responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
-            responseContext.setWriter(new PrettyWriter());
+            PrettyWriter writer = new PrettyWriter();
+            responseContext.setWriter(writer);
+        } else if (representationMimeType.equals(Constants.MIME_TYPE_RDF)) {
+            String selfLinkHref = entry.getId().toString();
+            prepareSelfLink(entry, selfLinkHref);
+            prepareAlternateLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS);
+            responseContext.setContentType(Constants.MIME_TYPE_RDF);
+            String xslFilePath = "/files/xslt/atom2rdf-" + clazz.getSimpleName().toLowerCase() + ".xsl";
+            XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
+            responseContext.setWriter(writer);
+        } else if (representationMimeType.equals(Constants.MIME_TYPE_RIFCS)) {
+            String selfLinkHref = entry.getId().toString();
+            prepareSelfLink(entry, selfLinkHref);
+            prepareAlternateLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF);
+            responseContext.setContentType(Constants.MIME_TYPE_RIFCS);
+            String xslFilePath = "/files/xslt/atom2rifcs-" + clazz.getSimpleName().toLowerCase() + ".xsl";
+            XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
+            responseContext.setWriter(writer);
         } else {
             return ProviderHelper.createErrorResponse(new Abdera(), 415, Constants.HTTP_STATUS_415);
         }
@@ -275,15 +284,14 @@ public class AdapterHelper {
         }
     }
 
-    private static void prepareSelfLink(Entry entry, String href, String mimeType) throws ResponseContextException {
+    private static void prepareSelfLink(Entry entry, String href) throws ResponseContextException {
         try {
             Link selfLink = entry.getSelfLink();
             if (selfLink == null) {
                 selfLink = entry.addLink(entry.getId().toString());
             }
             selfLink.setHref(href);
-            selfLink.setMimeType(mimeType);
-            selfLink.setRel(Constants.REL_TYPE_SELF);
+            selfLink.setRel(Constants.REL_SELF);
         } catch (Throwable th) {
             throw new ResponseContextException("Cannot build self link", 500);
         }
@@ -295,9 +303,9 @@ public class AdapterHelper {
             if (alternateLink == null) {
                 alternateLink = entry.addLink(entry.getId().toString());
             }
-            alternateLink.setHref(href);
+            alternateLink.setHref(href + "?repr=" + mimeType);
             alternateLink.setMimeType(mimeType);
-            alternateLink.setRel(Constants.REL_TYPE_ALTERNATE);
+            alternateLink.setRel(Constants.REL_ALTERNATE);
         } catch (Throwable th) {
             throw new ResponseContextException("Cannot build alternate link", 500);
         }
@@ -404,12 +412,15 @@ public class AdapterHelper {
         try {
             entry = abdera.newEntry();
             if (isParentLevel) {
+                //TODO this should accommodate external ids
                 entry.setId(parentUrl);
             } else {
+                //TODO this should accommodate external ids
                 entry.setId(parentUrl + "/" + version.getUriKey());
             }
+            prepareSelfLink(entry, parentUrl);
+            entry.addCategory(Constants.SCHEME_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);
             entry.setTitle(version.getTitle());
-            entry.setSummary(version.getSummary());
             entry.setContent(version.getContent());
             entry.setUpdated(version.getUpdated());
             Set<String> authors = version.getAuthors();
@@ -422,9 +433,9 @@ public class AdapterHelper {
         return entry;
     }
 
-    private static void addLinks(Version version, Entry entry, String parentUrl) throws ResponseContextException {
+    private static void addNavigationLinks(Version version, Entry entry, String parentUrl) throws ResponseContextException {
         try {
-            entry.addLink(parentUrl, Constants.REL_TYPE_LATEST_VERSION);
+            entry.addLink(parentUrl, Constants.REL_LATEST_VERSION);
             SortedSet<Version> versions = version.getParent().getVersions();
             Version[] versionArray = new Version[versions.size()];
             versionArray = (Version[]) version.getParent().getVersions().toArray(versionArray);
@@ -441,10 +452,10 @@ public class AdapterHelper {
                 }
             }
             if (predecessorVersion != null) {
-                entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_TYPE_PREDECESSOR_VERSION);
+                entry.addLink(parentUrl + "/" + predecessorVersion.getUriKey(), Constants.REL_PREDECESSOR_VERSION);
             }
             if (successorVersion != null) {
-                entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_TYPE_SUCCESSOR_VERSION);
+                entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_SUCCESSOR_VERSION);
             }
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to add link elements to entry", 400);

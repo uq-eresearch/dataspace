@@ -128,7 +128,7 @@ public class HttpMethodHelper {
                                     entityManager.merge(record);
                                     transaction.commit();
                                     Entry updatedEntry = AdapterHelper.getEntryFromEntity(version, false);
-                                    return AdapterHelper.getContextResponseForGetEntry(request, updatedEntry);
+                                    return AdapterHelper.getContextResponseForGetEntry(request, updatedEntry, clazz);
                                 } catch (PersistenceException th) {
                                     logger.fatal("Invalid Entry, Rolling back database", th);
                                     if (transaction.isActive()) {
@@ -245,7 +245,7 @@ public class HttpMethodHelper {
                     throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
                 } else {
                     Entry entry = AdapterHelper.getEntryFromEntity(version, versionKey == null);
-                    return AdapterHelper.getContextResponseForGetEntry(request, entry);
+                    return AdapterHelper.getContextResponseForGetEntry(request, entry, clazz);
                 }
             } else {
                 throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);

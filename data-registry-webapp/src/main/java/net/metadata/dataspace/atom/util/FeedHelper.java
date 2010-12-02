@@ -55,14 +55,14 @@ public class FeedHelper {
 
     public static void prepareFeedSelfLink(Feed feed, String selfLinkHref, String mimeType) {
         feed.getSelfLink().setHref(selfLinkHref);
-        feed.getSelfLink().setRel(Constants.REL_TYPE_SELF);
+        feed.getSelfLink().setRel(Constants.REL_SELF);
         feed.getSelfLink().setMimeType(mimeType);
     }
 
 
     public static void prepareFeedAlternateLink(Feed feed, String alternateLinkHref, String mimeType) {
         feed.getAlternateLink().setHref(alternateLinkHref);
-        feed.getAlternateLink().setRel(Constants.REL_TYPE_ALTERNATE);
+        feed.getAlternateLink().setRel(Constants.REL_ALTERNATE);
         feed.getAlternateLink().setMimeType(mimeType);
     }
 
@@ -75,7 +75,7 @@ public class FeedHelper {
                 entry.setId(uri);
                 entry.setTitle(version.getTitle());
                 entry.setSummary(version.getSummary());
-                Link selfLink = entry.addLink(uri, Constants.REL_TYPE_SELF);
+                Link selfLink = entry.addLink(uri, Constants.REL_SELF);
                 selfLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
                 Set<String> authors = version.getAuthors();
                 for (String author : authors) {
