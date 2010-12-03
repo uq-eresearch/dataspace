@@ -46,7 +46,7 @@ public class EntityRelationshipHelper {
 
     private static void addRelationsToActivity(Entry entry, ActivityVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_OUTPUT);
+        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_HAS_OUTPUT);
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
             if (collection != null) {
@@ -55,7 +55,7 @@ public class EntityRelationshipHelper {
                 entityManager.merge(collection);
             }
         }
-        Set<String> partyUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_HAS_PARTICIPANT);
+        Set<String> partyUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_HAS_PARTICIPANT);
         for (String partyKey : partyUriKeys) {
             Party party = partyDao.getByKey(partyKey);
             if (party != null) {
@@ -79,7 +79,7 @@ public class EntityRelationshipHelper {
                 entityManager.persist(subject);
             }
         }
-        Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR);
+        Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_CREATOR);
         for (String uriKey : collectorUriKeys) {
             Party party = partyDao.getByKey(uriKey);
             if (party != null) {
@@ -88,7 +88,7 @@ public class EntityRelationshipHelper {
                 entityManager.merge(party);
             }
         }
-        Set<String> outputOfUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_IS_OUTPUT_OF);
+        Set<String> outputOfUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_OUTPUT_OF);
         for (String uriKey : outputOfUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
@@ -97,7 +97,7 @@ public class EntityRelationshipHelper {
                 entityManager.merge(activity);
             }
         }
-        Set<String> supportUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_SUPPORTS);
+        Set<String> supportUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_ACCESSED_VIA);
         for (String uriKey : supportUriKeys) {
             Service service = serviceDao.getByKey(uriKey);
             if (service != null) {
@@ -121,7 +121,7 @@ public class EntityRelationshipHelper {
                 entityManager.persist(subject);
             }
         }
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_COLLECTOR_OF);
+        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_COLLECTOR_OF);
         for (String uriKey : collectionUriKeys) {
             net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
@@ -130,7 +130,7 @@ public class EntityRelationshipHelper {
                 entityManager.merge(collection);
             }
         }
-        Set<String> isParticipantInUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_IS_PARTICIPANT_IN);
+        Set<String> isParticipantInUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_PARTICIPANT_IN);
         for (String uriKey : isParticipantInUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
@@ -147,7 +147,7 @@ public class EntityRelationshipHelper {
 
     private static void addRelationsService(Entry entry, ServiceVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromExtension(entry, Constants.QNAME_SUPPORTED_BY);
+        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_SUPPORTED_BY);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {

@@ -13,7 +13,7 @@ import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.text.UrlEncoding;
-import org.apache.abdera.model.Element;
+import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Link;
 import org.apache.abdera.model.Person;
@@ -25,7 +25,6 @@ import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 
-import javax.xml.namespace.QName;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -344,19 +343,19 @@ public class AdapterHelper {
     public static Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
         Set<Subject> subjects = new HashSet<Subject>();
         try {
-            List<Element> extensionElements = entry.getExtensions();
-            for (Element extension : extensionElements) {
-                if (extension.getQName().equals(Constants.QNAME_SUBJECT)) {
-                    String vocabulary = extension.getAttributeValue(Constants.ATTRIBUTE_NAME_VOCABULARY);
-                    String value = extension.getAttributeValue(Constants.ATTRIBUTE_NAME_VALUE);
+            List<Category> categories = entry.getCategories();
+            for (Category category : categories) {
+                if (!category.getScheme().toString().equals(Constants.SCHEME_TYPE)) {
+                    String vocabulary = category.getScheme().toString();
+                    String value = category.getTerm();
                     if (vocabulary != null && value != null) {
-
                         Subject subject = daoManager.getSubjectDao().getSubject(vocabulary, value);
                         if (subject == null) {
                             subject = entityCreator.getNextSubject();
                         }
                         subject.setVocabulary(vocabulary);
                         subject.setValue(value);
+                        subject.setLabel(category.getLabel());
                         subjects.add(subject);
                     }
                 }
@@ -367,20 +366,18 @@ public class AdapterHelper {
         return subjects;
     }
 
-    public static Set<String> getUriKeysFromExtension(Entry entry, QName qName) throws ResponseContextException {
+    public static Set<String> getUriKeysFromLink(Entry entry, String rel) throws ResponseContextException {
         Set<String> uriKeys = new HashSet<String>();
         try {
-            List<Element> extensionElements = entry.getExtensions();
-            for (Element extension : extensionElements) {
-                if (extension.getQName().equals(qName)) {
-                    String id = getEntityID(extension.getAttributeValue(Constants.ATTRIBUTE_NAME_URI));
-                    if (id != null) {
-                        uriKeys.add(id);
-                    }
+            List<Link> links = entry.getLinks(rel);
+            for (Link link : links) {
+                String id = getEntityID(link.getHref().toString());
+                if (id != null) {
+                    uriKeys.add(id);
                 }
             }
         } catch (Throwable th) {
-            throw new ResponseContextException("Cannot extract " + Constants.ATTRIBUTE_NAME_URI + " from extension", 400);
+            throw new ResponseContextException("Cannot extract href from link", 400);
         }
         return uriKeys;
     }
