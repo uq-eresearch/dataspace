@@ -43,15 +43,15 @@
                             href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>services?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
                         services?repr=application/atom+xml</a>
                     </li>
-                    <li>Get a <strong>published</strong> collection (atom): curl -v -X GET <a
+                    <li>Get a published collection <strong>(atom)</strong>: curl -v -X GET <a
                             href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
                         collections/1?repr=application/atom+xml</a>
                     </li>
-                    <li>Get a <strong>published</strong> collection (rdf): curl -v -X GET <a
+                    <li>Get a published collection <strong>(rdf)</strong>: curl -v -X GET <a
                             href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1?repr=application/rdf+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
                         collections/1?repr=application/rdf+xml</a>
                     </li>
-                    <li>Get a <strong>published</strong> collection (rif-cs): curl -v -X GET <a
+                    <li>Get a published collection <strong>(rif-cs)</strong>: curl -v -X GET <a
                             href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1?repr=application/rifcs+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
                         collections/1?repr=application/rifcs+xml</a>
                     </li>
@@ -73,25 +73,25 @@
                 <ul>
                     <li>Add a Activity (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X POST
+                        login?username=test&password=test" -X POST -H "Content-Type: application/atom+xml"
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>activities" --data
                         @/location/activity.atom
                     </li>
                     <li>Add a Collection (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X POST
+                        login?username=test&password=test" -X POST -H "Content-Type: application/atom+xml"
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections" --data
                         @/location/collection.atom
                     </li>
                     <li>Add a Party (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X POST
+                        login?username=test&password=test" -X POST -H "Content-Type: application/atom+xml"
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>parties" --data
                         @/location/party.atom
                     </li>
                     <li>Add a Service (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X POST
+                        login?username=test&password=test" -X POST -H "Content-Type: application/atom+xml"
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>services" --data
                         @/location/services.atom
                     </li>
@@ -101,25 +101,25 @@
                 <ul>
                     <li>Edit a Activity (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X PUT
+                        login?username=test&password=test" -X PUT -H "Content-Type: application/atom+xml"
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>activities" --data
                         @/location/activity.atom
                     </li>
                     <li>Edit a Collection (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X PUT
+                        login?username=test&password=test" -X PUT -H "Content-Type: application/atom+xml"
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections" --data
                         @/location/collection.atom
                     </li>
                     <li>Edit a Party (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X PUT
+                        login?username=test&password=test" -X PUT -H "Content-Type: application/atom+xml"
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>parties" --data
                         @/location/party.atom
                     </li>
                     <li>Edit a Service (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X PUT
+                        login?username=test&password=test" -X PUT -H "Content-Type: application/atom+xml"
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>services" --data
                         @/location/services.atom
                     </li>
