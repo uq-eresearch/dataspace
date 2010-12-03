@@ -9,14 +9,14 @@
 
     -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-                xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
-                xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
-                xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
-                xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
-                xmlns:uqdata="http://dataspace.metadata.net/"
-                xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-                xmlns:rdfa="http://www.w3.org/ns/rdfa#">
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
+    xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
+    xmlns:uqdata="http://dataspace.metadata.net/"
+    xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#">
 
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
 
@@ -30,12 +30,12 @@
 
     <xsl:template match="atom:entry">
         <!-- the collection description itself -->
-	    <xsl:text>
+        <xsl:text>
 	    </xsl:text>
         <xsl:comment>Collection description</xsl:comment>
 
         <rdf:Description
-                rdf:about="{atom:link[@rel='http://www.openarchives.org/ore/terms/describes']/@href}">
+            rdf:about="{atom:link[@rel='http://www.openarchives.org/ore/terms/describes']/@href}">
             <!-- description type -->
             <xsl:apply-templates select="atom:category[@scheme='http://purl.org/dc/dcmitype/']"/>
             <!-- title -->
@@ -44,7 +44,7 @@
             <xsl:apply-templates select="atom:content"/>
             <!-- subjects -->
             <xsl:apply-templates
-                    select="atom:category[@scheme!='http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                select="atom:category[@scheme!='http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
             <!-- location -->
             <xsl:apply-templates select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
             <!-- creator -->
@@ -53,7 +53,7 @@
             <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
             <!-- generating activity -->
             <xsl:apply-templates
-                    select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
+                select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
             <!-- related info -->
             <xsl:apply-templates select="atom:link[@rel='related']"/>
             <!-- rights descriptions -->
@@ -69,7 +69,7 @@
         </rdf:Description>
 
         <!-- metadata about the description -->
-	    <xsl:text>
+        <xsl:text>
 	    </xsl:text>
         <xsl:comment>Metadata about the description</xsl:comment>
         <rdf:Description rdf:about="{atom:link[@rel='self']/@href}">
@@ -77,7 +77,7 @@
             <xsl:apply-templates select="atom:id"/>
             <!-- description publisher -->
             <xsl:apply-templates
-                    select="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                select="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
             <!-- description creator -->
             <xsl:apply-templates select="atom:author"/>
             <!-- description update date -->
@@ -119,7 +119,7 @@
 
     <!-- subjects -->
     <xsl:template
-            match="atom:category[@scheme!='http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+        match="atom:category[@scheme!='http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
         <dcterms:subject rdf:resource="{@term}"/>
     </xsl:template>
 
@@ -139,7 +139,8 @@
     </xsl:template>
 
     <!-- generating activity -->
-    <xsl:template match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']">
+    <xsl:template
+        match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']">
         <ands:isOutputOf rdf:resource="{@href}"/>
     </xsl:template>
 
@@ -155,10 +156,12 @@
 
     <!-- related info -->
     <xsl:template match="atom:link[@rel='related']">
-        <dcterms:relation rdf:resource="{@href}">
-            <dcterms:title>
-                <xsl:value-of select="@title"/>
-            </dcterms:title>
+        <dcterms:relation>
+            <rdf:Description rdf:about="{@href}">
+                <dcterms:title>
+                    <xsl:value-of select="@title"/>
+                </dcterms:title>
+            </rdf:Description>
         </dcterms:relation>
     </xsl:template>
 
@@ -186,7 +189,7 @@
 
     <!-- description publisher -->
     <xsl:template
-            match="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+        match="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
         <dcterms:publisher>
             <xsl:value-of select="@term"/>
         </dcterms:publisher>

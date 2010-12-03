@@ -69,7 +69,7 @@
 
     <!-- identifier -->
     <xsl:template match="atom:link[@rel='self']">
-        <identifier>
+        <identifier type="url">
             <xsl:value-of select="@href"/>
         </identifier>
     </xsl:template>
