@@ -216,7 +216,7 @@ public class AdapterHelper {
         String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
-            if (acceptHeader != null) {
+            if (acceptHeader != null && !acceptHeader.equals("*/*")) {
                 representationMimeType = acceptHeader;
             } else {
                 representationMimeType = Constants.ATOM_ENTRY_MIMETYPE;

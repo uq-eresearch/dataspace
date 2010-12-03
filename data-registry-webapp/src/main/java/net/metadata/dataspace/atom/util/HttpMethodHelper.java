@@ -100,9 +100,7 @@ public class HttpMethodHelper {
         } else {
             logger.info("Updating Entry");
             String mimeBaseType = request.getContentType().getBaseType();
-            if (mimeBaseType.equals(Constants.JSON_MIMETYPE)) {
-                return putMedia(request, clazz);
-            } else if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
+            if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
                 EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
                 EntityTransaction transaction = entityManager.getTransaction();
                 Entry entry = getEntryFromRequest(request);
