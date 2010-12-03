@@ -1,12 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
-       xmlns:uqdata="http://dataspace.metadata.net/">
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app">
     <id>http://localhost:9635/collections/1</id>
     <title type="text">Updated: Digitised images of Carter Brown Book Covers</title>
     <content type="text">Updated: A collection of digitised images of covers of Carter Brown books published in the
         1950s ...
     </content>
-    <summary>Updated: Carter Brown book covers</summary>
     <author>
         <name>Nigel Ward</name>
     </author>
@@ -14,10 +12,17 @@
     <app:control>
         <app:draft>yes</app:draft>
     </app:control>
-    <uqdata:subject vocabulary="anzsrc-for" value="200502"/>
-    <uqdata:subject vocabulary="anzsrc-for" value="200501"/>
-    <uqdata:location>http://espace.library.uq.edu.au/collection/UQ:3521</uqdata:location>
-    <uqdata:isOutputOf uri="http://localhost:9635/activities/1"/>
-    <uqdata:supports uri="http://localhost:9635/services/1"/>
-    <uqdata:collector uri="http://localhost:9635/parties/1"/>
+    <category scheme="http://purl.org/anzsrc/for/#field_" term="200502"
+              label="200502 - Australian Literature (excl. Aboriginal and Torres Strait Islander Literature)"/>
+    <category scheme="http://purl.org/anzsrc/for/#field_" term="200503"
+              label="200503 - Australian Literature (excl. Aboriginal and Torres Strait Islander Literature)"/>
+    <link href="http://espace.library.uq.edu.au/collection/UQ:3521" rel="http://purl.org/cld/terms/isLocatedAt"/>
+    <!-- collection creator -->
+    <link href="http://dataspace.metadata.net/parties/1" rel="http://purl.org/dc/terms/creator"/>
+    <!-- collection curator -->
+    <link href="http://dataspace.metadata.net/parties/1" rel="http://purl.org/dc/terms/publisher"/>
+    <!-- activity generating the collection -->
+    <link href="http://dataspace.metadata.net/activities/1"
+          rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"/>
+    <link href="http://localhost:8080/services/1" rel="http://purl.org/cld/terms/isAccessedVia"/>
 </entry>

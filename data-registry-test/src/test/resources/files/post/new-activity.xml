@@ -1,9 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
-       xmlns:uqdata="http://dataspace.metadata.net/">
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app">
     <id>http://localhost:9635/activities/1</id>
     <title type="text">Activity Name</title>
-    <summary type="text">Activity Description</summary>
     <content type="text">Activity Content</content>
     <updated>2010-10-28T01:03:29.877Z</updated>
     <author>
@@ -12,6 +10,8 @@
     <app:control>
         <app:draft>yes</app:draft>
     </app:control>
-    <uqdata:hasParticipant uri="http://localhost:9635/parties/1"/>
-    <uqdata:hasOutput uri="http://localhost:9635/collections/1"/>
+    <link href="http://localhost:8080/parties/1"
+          rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"/>
+    <link href="http://localhost:9635/collections/1"
+          rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"/>
 </entry>

@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
-       xmlns:uqdata="http://dataspace.metadata.net/">
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app">
     <id>http://localhost:9635/services/1</id>
     <title type="text">Voting Patterns at the 2007 Australia Federal Election On-line</title>
     <content type="text">This web-based interactive tool supports spatial and statistical analysis, modelling and
@@ -10,7 +9,6 @@
         socio-economicdata. The tool supports regression analysis, MANOVA cluster analysis and discriminant analysis of
         the data
     </content>
-    <summary>spatial and statistical analysis</summary>
     <author>
         <name>Nigel Ward</name>
     </author>
@@ -18,6 +16,7 @@
         <app:draft>yes</app:draft>
     </app:control>
     <updated>2010-10-08T05:58:02.781Z</updated>
-    <uqdata:location>http://e-research.sbs.uq.edu.au/aus_voting2007.html</uqdata:location>
-    <uqdata:isSupportedBy uri="http://dataspace.metadata.net/collections/1"/>
+    <link href="http://e-research.sbs.uq.edu.au/aus_voting2007.html" rel="http://purl.org/cld/terms/isLocatedAt"/>
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy"
+          href="http://dataspace.metadata.net/collections/1"/>
 </entry>
