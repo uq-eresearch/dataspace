@@ -58,9 +58,9 @@
             <xsl:apply-templates select="atom:link[@rel='related']"/>
             <!-- rights descriptions -->
             <xsl:apply-templates select="atom:rights"/>
-            <xsl:apply-templates select="rdfa:meta[@property='dcterms:accessRights']"/>
+            <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
             <!-- temporal coverage -->
-            <xsl:apply-templates select="rdfa:meta[@property='dcterms:temporal']"/>
+            <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
             <!-- spatial coverage -->
             <!-- TO DO -->
 
@@ -148,7 +148,7 @@
     <!-- TO DO -->
 
     <!-- temporal coverage -->
-    <xsl:template match="rdfa:meta[@property='dcterms:temporal']">
+    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
         <dcterms:temporal>
             <xsl:value-of select="@content"/>
         </dcterms:temporal>
@@ -172,7 +172,7 @@
         </dcterms:rights>
     </xsl:template>
 
-    <xsl:template match="rdfa:meta[@property='dcterms:accessRights']">
+    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']">
         <dcterms:accessRights>
             <xsl:value-of select="@content"/>
         </dcterms:accessRights>

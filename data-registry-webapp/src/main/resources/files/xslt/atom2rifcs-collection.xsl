@@ -14,7 +14,7 @@
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns="http://ands.org.au/standards/rif-cs/registryObjects">
 
-    <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
+    <xsl:output method="xml" media-type="application/rifcs+xml" indent="yes"/>
 
     <xsl:template match="/">
         <registryObjects>
@@ -46,7 +46,7 @@
                     <!-- locations -->
                     <xsl:apply-templates select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
                     <!-- coverage -->
-                    <xsl:apply-templates select="rdfa:meta[@property='dcterms:temporal']"/>
+                    <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
                     <!-- related objects -->
                     <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
                     <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
@@ -59,7 +59,7 @@
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->
                     <xsl:apply-templates select="atom:rights"/>
-                    <xsl:apply-templates select="rdfa:meta[@property='dcterms:accessRights']"/>
+                    <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
                     <!-- related info -->
                     <xsl:apply-templates select="atom:link[@rel='related']"/>
                 </collection>
@@ -99,7 +99,7 @@
     <!-- temporal coverage -->
     <!-- NB: the XSL below is fragile. It assumes a restricted DCMI Period encoding, with only start and end components,
          in that order, and encoded as W3CDTF dates-->
-    <xsl:template match="rdfa:meta[@property='dcterms:temporal']">
+    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
         <coverage>
             <temporal>
                 <date type="from" dateFormat="W3CDTF">
@@ -176,7 +176,7 @@
         </description>
     </xsl:template>
 
-    <xsl:template match="rdfa:meta[@property='dcterms:accessRights']">
+    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']">
         <description type="accessRights">
             <xsl:value-of select="@content"/>
         </description>
