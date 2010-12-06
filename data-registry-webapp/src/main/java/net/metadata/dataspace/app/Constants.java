@@ -17,6 +17,7 @@ public interface Constants {
     String HTML_MIME_TYPE = "text/html";
     String MIME_TYPE_RDF = "application/rdf+xml";
     String MIME_TYPE_RIFCS = "application/rifcs+xml";
+    String MIME_TYPE_XHTML = "application/xhtml+xml";
     String ATOM_SERVICE_MIMETYPE = "application/atomsvc+xml";
 
     /**
