@@ -34,7 +34,7 @@
             <title>
                 <xsl:value-of select="atom:title"/>
             </title>
-            <link href="collection.css" rel="stylesheet" type="text/css"/>
+            <link href="description.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
             <!-- the collection description itself -->
