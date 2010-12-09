@@ -34,7 +34,35 @@
             <title>
                 <xsl:value-of select="atom:title"/>
             </title>
-            <link href="description.css" rel="stylesheet" type="text/css"/>
+            <style type="text/css">
+                div.description {
+                    font-family: Elvetica, sans-serif;
+                    width: 50em;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+                div.statement {
+                    clear: both;
+                    background-color: #DBDBDB;
+                    border: thin dotted #ffffff;
+                }
+                div.property {
+                    float: left;
+                    width: 10em;
+                    font-weight: bold;
+                    text-align: right;
+                }
+                div.content {
+                    margin-left: 11em;
+                    background-color: #FEFEFE;
+                }
+                div.content p, div.property p {
+                    margin: 0em 0em;
+                    padding: 0.25em 0em;
+                }
+                .smaller {
+                    font-size: smaller;
+                }</style>
         </head>
         <body>
             <!-- the collection description itself -->
