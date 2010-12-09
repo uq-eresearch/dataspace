@@ -1,5 +1,8 @@
+body {
+    font-family: Elvetica, sans-serif;    
+}
+
 div.description {
-    font-family: Elvetica, sans-serif;
     width: 50em;
     margin-left: auto;
     margin-right: auto;
@@ -28,6 +31,9 @@ div.content p, div.property p {
     padding: 0.25em 0em;
 }
 
-.smaller {
+div.about {
+    width: 50em;
+    margin-left: auto;
+    margin-right: auto;
     font-size: smaller;
 }

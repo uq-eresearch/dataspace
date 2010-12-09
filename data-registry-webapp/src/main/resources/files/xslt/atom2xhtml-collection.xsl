@@ -34,35 +34,7 @@
             <title>
                 <xsl:value-of select="atom:title"/>
             </title>
-            <style type="text/css">
-                div.description {
-                    font-family: Elvetica, sans-serif;
-                    width: 50em;
-                    margin-left: auto;
-                    margin-right: auto;
-                }
-                div.statement {
-                    clear: both;
-                    background-color: #DBDBDB;
-                    border: thin dotted #ffffff;
-                }
-                div.property {
-                    float: left;
-                    width: 10em;
-                    font-weight: bold;
-                    text-align: right;
-                }
-                div.content {
-                    margin-left: 11em;
-                    background-color: #FEFEFE;
-                }
-                div.content p, div.property p {
-                    margin: 0em 0em;
-                    padding: 0.25em 0em;
-                }
-                .smaller {
-                    font-size: smaller;
-                }</style>
+            <link href="description.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
             <!-- the collection description itself -->
@@ -103,18 +75,14 @@
                 <xsl:text>
                 </xsl:text>
                 <xsl:comment>Metadata about the description</xsl:comment>
-                <p class="smaller">
+                <div class="about">
                     <!-- publisher -->
                     <xsl:apply-templates
                         select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
-                    <!-- source system -->
-                    <xsl:apply-templates select="atom:source"/>
-                </p>
-                <p class="smaller">
+
                     <!-- updated and updater -->
                     <xsl:call-template name="updated"/>
-                </p>
-
+                </div>
             </div>
 
         </body>
@@ -342,19 +310,19 @@
     <!-- description publisher -->
     <xsl:template
         match="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
-        <span>Description published by <xsl:value-of select="@term"/></span>
+        <p>Description published by <xsl:value-of select="@term"/>
+            <xsl:apply-templates select="//atom:source"/></p>
     </xsl:template>
 
     <!-- source -->
     <!-- TO DO: check if id starts with HTTP before making it a link -->
-    <xsl:template match="atom:source">
-        <span>via <a href="{atom:id}"><xsl:value-of select="atom:title"/></a>
-        </span>
-    </xsl:template>
+    <xsl:template match="atom:source"> via <a href="{atom:id}"><xsl:value-of select="atom:title"
+            /></a>. </xsl:template>
 
     <!-- updated -->
-    <xsl:template name="updated"> Last updated <xsl:value-of select="atom:updated"/> by
-            <xsl:value-of select="atom:author/atom:name"/>
+    <xsl:template name="updated">
+        <p>Last updated <xsl:value-of select="atom:updated"/> by <xsl:value-of
+                select="atom:author/atom:name"/></p>
     </xsl:template>
 
     <!-- link relations: TO DO -->
