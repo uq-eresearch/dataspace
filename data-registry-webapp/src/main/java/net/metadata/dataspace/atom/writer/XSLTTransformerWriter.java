@@ -7,6 +7,7 @@ import org.apache.abdera.util.AbstractNamedWriter;
 import org.apache.abdera.util.AbstractWriterOptions;
 import org.apache.abdera.writer.NamedWriter;
 import org.apache.abdera.writer.WriterOptions;
+import org.apache.log4j.Logger;
 
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
@@ -22,6 +23,7 @@ import java.util.Date;
  */
 public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedWriter {
 
+    private Logger logger = Logger.getLogger(getClass());
     private static final String[] FORMATS = {Constants.MIME_TYPE_RDF, Constants.MIME_TYPE_RIFCS};
     private String XSL = "";
 
@@ -58,6 +60,7 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
         URL xslResource = XSLTTransformerWriter.class.getResource(this.XSL);
         String xslPath = xslResource.getPath();
         File xslFile = new File(xslPath);
+        //TODO need to find a better way to pipe in stream between ouputstream and inputstream
         File xmlFile = new File("temp" + new Date().getTime());
         PrettyWriter writer = new PrettyWriter();
         OutputStream fileOS = new FileOutputStream(xmlFile);
@@ -65,7 +68,9 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
         try {
             process(xmlFile, xslFile, out);
         } catch (TransformerException e) {
-            e.printStackTrace();
+            logger.warn("Error while transforming atom representation using:\n" + xslPath, e);
+        } finally {
+            xmlFile.delete();
         }
 
     }

@@ -138,7 +138,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
 
     @Override
     public String[] getAccepts(RequestContext request) {
-        return new String[]{Constants.ATOM_ENTRY_MIMETYPE, Constants.JSON_MIMETYPE};
+        return new String[]{Constants.ATOM_ENTRY_MIMETYPE};
     }
 
     @Override
