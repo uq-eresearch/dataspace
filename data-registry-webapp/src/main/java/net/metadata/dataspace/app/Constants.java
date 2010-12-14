@@ -84,7 +84,8 @@ public interface Constants {
     String TERM_ANDS_GROUP = "The University of Queensland";
     String TERM_ACTIVITY = SCHEME_FOAF + "Project";
     String TERM_COLLECTION = SCHEME_TYPE + "Collection";
-    String TERM_PARTY = SCHEME_FOAF + "Group";
+    String TERM_PARTY_AS_GROUP = SCHEME_FOAF + "Group";
+    String TERM_PARTY_AS_PERSON = SCHEME_FOAF + "Person";
     String TERM_SERVICE = SCHEME_VIVO + "Service";
 
     /**

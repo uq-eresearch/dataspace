@@ -175,4 +175,4 @@
         <dcterms:publisher rdf:resource="{@href}"/>
     </xsl:template>
 
-</xsl:stylesheet>
+</xsl:stylesheet>        

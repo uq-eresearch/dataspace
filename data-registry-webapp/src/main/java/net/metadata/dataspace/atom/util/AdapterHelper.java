@@ -136,7 +136,7 @@ public class AdapterHelper {
     private static Entry getEntryFromParty(PartyVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_PARTY, version.getParent().getClass().getSimpleName());
+        entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_PARTY_AS_PERSON, version.getParent().getClass().getSimpleName());
         try {
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
