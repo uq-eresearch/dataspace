@@ -61,8 +61,7 @@
                     select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
                 <xsl:apply-templates select="atom:rights"/>
                 <!-- spatial -->
-                <xsl:apply-templates select="georss:point"/>
-                <xsl:apply-templates select="georss:polygon"/>
+                <xsl:call-template name="spatial"/>
                 <!-- temporal -->
                 <xsl:apply-templates
                     select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
@@ -137,7 +136,7 @@
     <xsl:template name="curators">
         <div class="statement">
             <div class="property">
-                <p>Curator(s)</p>
+                <p>Custodian(s)</p>
             </div>
             <div class="content">
 
@@ -205,37 +204,42 @@
     </xsl:template>
 
     <!-- spatial -->
-    <xsl:template match="georss:point">
+    <xsl:template name="spatial">
         <div class="statement">
             <div class="property">
                 <p>Coverage</p>
             </div>
             <div class="content">
-                <p>
-                    <xsl:value-of select="text()"/>
-                </p>
+                <xsl:apply-templates select="georss:point"/>
+                <xsl:apply-templates select="georss:polygon"/>
+                <xsl:apply-templates select="georss:featureName"/>
             </div>
         </div>
     </xsl:template>
 
+    <xsl:template match="georss:point">
+        <p>
+            <xsl:value-of select="text()"/>
+        </p>
+    </xsl:template>
+
     <xsl:template match="georss:polygon">
-        <div class="statement">
-            <div class="property">
-                <p>Coverage</p>
-            </div>
-            <div class="content">
-                <p>
-                    <xsl:value-of select="text()"/>
-                </p>
-            </div>
-        </div>
+        <p>
+            <xsl:value-of select="text()"/>
+        </p>
+    </xsl:template>
+
+    <xsl:template match="georss:featureName">
+        <p>
+            <xsl:value-of select="text()"/>
+        </p>
     </xsl:template>
 
     <!-- temporal -->
     <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
         <div class="statement">
             <div class="property">
-                <p>Temporal coverage</p>
+                <p>Coverage</p>
             </div>
             <div class="content">
                 <p>
@@ -252,25 +256,26 @@
                 <p>Subjects</p>
             </div>
             <div class="content">
-                <p>
-                    <xsl:apply-templates
-                        select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"
-                    />
-                </p>
+
+                <xsl:apply-templates
+                    select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+
             </div>
         </div>
     </xsl:template>
 
     <xsl:template
         match="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
-        <xsl:choose>
-            <xsl:when test="@label">
-                <xsl:value-of select="@label"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="@term"/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <p>
+            <xsl:choose>
+                <xsl:when test="@label">
+                    <xsl:value-of select="@label"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="@term"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </p>
     </xsl:template>
 
     <!-- related info -->
@@ -317,7 +322,7 @@
     <!-- source -->
     <!-- TO DO: check if id starts with HTTP before making it a link -->
     <xsl:template match="atom:source"> via <a href="{atom:id}"><xsl:value-of select="atom:title"
-            /></a>. </xsl:template>
+            /></a></xsl:template>
 
     <!-- updated -->
     <xsl:template name="updated">
