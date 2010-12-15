@@ -1,0 +1,54 @@
+body {
+    font-family: Helvetica, Tahoma, Arial, clean, sans-serif;
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0;
+}
+
+div.description {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.statement {
+    clear: both;
+    border: 1px dotted #dddddd;
+}
+
+div.property {
+    width: 10em;
+    font-weight: bold;
+    text-align: right;
+    float: left;
+    display: inline;
+    padding-right: 1em;
+    background-color: #dbdbdb;
+}
+
+div.content {
+    margin-left: 1em;
+    float: left;
+    display: inline;
+}
+
+div.content p, div.property p {
+    margin: 0 0;
+    padding: 0.25em 0;
+}
+
+div.clear {
+    clear: both;
+}
+
+div.about {
+    clear: both;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: smaller;
+    width: 50%;
+}
+
+div.about p {
+    text-align: center;
+}

@@ -14,10 +14,10 @@
                 xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
                 xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
-                xmlns:uqdata="http://dataspace.metadata.net/"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-                xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:georss="http://www.georss.org/georss">
+                xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:georss="http://www.georss.org/georss"
+                xmlns="http://www.w3.org/1999/xhtml"
+                exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
 
     <xsl:output method="xml" media-type="application/xhtml+xml" indent="yes"/>
 
@@ -34,18 +34,20 @@
             <title>
                 <xsl:value-of select="atom:title"/>
             </title>
-            <link href="collection.css" rel="stylesheet" type="text/css"/>
+            <link href="/description.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
             <!-- the collection description itself -->
             <xsl:text>
             </xsl:text>
             <xsl:comment>Collection description</xsl:comment>
-            <dl>
-                <!-- type and title -->
-                <xsl:call-template name="heading"/>
+            <div class="description">
+                <!-- name -->
+                <xsl:apply-templates select="atom:title"/>
                 <!-- description -->
                 <xsl:apply-templates select="atom:content"/>
+                <!-- type -->
+                <xsl:call-template name="type"/>
                 <!-- creators -->
                 <xsl:call-template name="creators"/>
                 <!-- curators -->
@@ -59,8 +61,7 @@
                         select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
                 <xsl:apply-templates select="atom:rights"/>
                 <!-- spatial -->
-                <xsl:apply-templates select="georss:point"/>
-                <xsl:apply-templates select="georss:polygon"/>
+                <xsl:call-template name="spatial"/>
                 <!-- temporal -->
                 <xsl:apply-templates
                         select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
@@ -68,143 +69,204 @@
                 <xsl:call-template name="subjects"/>
                 <!-- related info -->
                 <xsl:call-template name="related"/>
-            </dl>
 
-            <!-- metadata about the description -->
-            <xsl:text>
-            </xsl:text>
-            <xsl:comment>Metadata about the description</xsl:comment>
-            <h2>Description</h2>
-            <dl>
-                <xsl:apply-templates
-                        select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
-                <xsl:apply-templates select="atom:source"/>
-                <xsl:call-template name="updated"/>
-            </dl>
+                <!-- metadata about the description -->
+                <xsl:text>
+                </xsl:text>
+                <xsl:comment>Metadata about the description</xsl:comment>
+                <div class="about">
+                    <!-- publisher -->
+                    <xsl:apply-templates
+                            select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+
+                    <!-- updated and updater -->
+                    <xsl:call-template name="updated"/>
+                </div>
+            </div>
 
         </body>
     </xsl:template>
 
     <!-- *** collection description elements *** -->
-    <!-- object type and title -->
-    <xsl:template name="heading">
-        <li>
-            <dt>
-                <xsl:value-of select="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@label"
-                        />
-            </dt>
-            <dd>
-                <h1>
-                    <xsl:value-of select="atom:title"/>
-                </h1>
-            </dd>
-        </li>
+
+    <!-- name -->
+    <xsl:template match="atom:title">
+        <h1>
+            <xsl:value-of select="text()"/>
+        </h1>
     </xsl:template>
 
     <!-- description -->
     <xsl:template match="atom:content">
-        <li>
-            <dt>Description</dt>
-            <dd>
-                <xsl:value-of select="text()"/>
-            </dd>
-        </li>
+        <p>
+            <xsl:value-of select="text()"/>
+        </p>
+    </xsl:template>
+
+    <!-- object type -->
+    <xsl:template name="type">
+        <div class="statement">
+            <div class="property">
+                <p>Type</p>
+            </div>
+            <div class="content">
+                <p>
+                    <xsl:value-of
+                            select="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@label"/>
+                </p>
+            </div>
+        </div>
     </xsl:template>
 
     <!-- creators -->
     <xsl:template name="creators">
-        <li>
-            <dt>Creator(s)</dt>
-            <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
-        </li>
+        <div class="statement">
+            <div class="property">
+                <p>Creator(s)</p>
+            </div>
+            <div class="content">
+
+                <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
+
+            </div>
+        </div>
     </xsl:template>
 
     <!-- curators -->
     <xsl:template name="curators">
-        <li>
-            <dt>Curator(s)</dt>
-            <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
-        </li>
+        <div class="statement">
+            <div class="property">
+                <p>Custodian(s)</p>
+            </div>
+            <div class="content">
+
+                <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
+
+            </div>
+        </div>
     </xsl:template>
 
     <!-- projects -->
     <xsl:template name="projects">
-        <li>
-            <dt>Project (s)</dt>
-            <xsl:apply-templates
-                    select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"
-                    />
-        </li>
+        <div class="statement">
+            <div class="property">
+                <p>Project (s)</p>
+            </div>
+            <div class="content">
+
+                <xsl:apply-templates
+                        select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
+
+            </div>
+        </div>
     </xsl:template>
 
     <!-- locations -->
     <xsl:template name="locations">
-        <li>
-            <dt>Location</dt>
-            <xsl:apply-templates select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
-        </li>
+        <div class="statement">
+            <div class="property">
+                <p>Location</p>
+            </div>
+            <div class="content">
+
+                <xsl:apply-templates
+                        select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
+
+            </div>
+        </div>
     </xsl:template>
 
     <!-- Rights -->
     <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']">
-        <li>
-            <dt>Access rights</dt>
-            <dd>
-                <xsl:value-of select="@content"/>
-            </dd>
-        </li>
+        <div class="statement">
+            <div class="property">
+                <p>Access rights</p>
+            </div>
+            <div class="content">
+                <p>
+                    <xsl:value-of select="@content"/>
+                </p>
+            </div>
+        </div>
     </xsl:template>
 
     <xsl:template match="atom:rights">
-        <li>
-            <dt>Rights</dt>
-            <dd>
-                <xsl:value-of select="text()"/>
-            </dd>
-        </li>
+        <div class="statement">
+            <div class="property">
+                <p>Rights</p>
+            </div>
+            <div class="content">
+                <p>
+                    <xsl:value-of select="text()"/>
+                </p>
+            </div>
+        </div>
     </xsl:template>
 
     <!-- spatial -->
-    <xsl:template match="georss:point">
-        <li>
-            <dt>Coverage</dt>
-            <dd>
-                <xsl:value-of select="text()"/>
-            </dd>
-        </li>
+    <xsl:template name="spatial">
+        <div class="statement">
+            <div class="property">
+                <p>Coverage</p>
+            </div>
+            <div class="content">
+                <xsl:apply-templates select="georss:point"/>
+                <xsl:apply-templates select="georss:polygon"/>
+                <xsl:apply-templates select="georss:featureName"/>
+            </div>
+        </div>
     </xsl:template>
+
+    <xsl:template match="georss:point">
+        <p>
+            <xsl:value-of select="text()"/>
+        </p>
+    </xsl:template>
+
     <xsl:template match="georss:polygon">
-        <li>
-            <dt>Coverage</dt>
-            <dd>
-                <xsl:value-of select="text()"/>
-            </dd>
-        </li>
+        <p>
+            <xsl:value-of select="text()"/>
+        </p>
+    </xsl:template>
+
+    <xsl:template match="georss:featureName">
+        <p>
+            <xsl:value-of select="text()"/>
+        </p>
     </xsl:template>
 
     <!-- temporal -->
     <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
-        <li>
-            <dt>Temporal coverage</dt>
-            <dd>
-                <xsl:value-of select="@content"/>
-            </dd>
-        </li>
+        <div class="statement">
+            <div class="property">
+                <p>Coverage</p>
+            </div>
+            <div class="content">
+                <p>
+                    <xsl:value-of select="@content"/>
+                </p>
+            </div>
+        </div>
     </xsl:template>
 
     <!-- subjects -->
     <xsl:template name="subjects">
-        <li>
-            <dt>Subjects</dt>
-            <xsl:apply-templates
-                    select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"
-                    />
-        </li>
+        <div class="statement">
+            <div class="property">
+                <p>Subjects</p>
+            </div>
+            <div class="content">
+
+                <xsl:apply-templates
+                        select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+
+            </div>
+        </div>
     </xsl:template>
 
     <xsl:template
             match="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
-        <dd>
+        <p>
             <xsl:choose>
                 <xsl:when test="@label">
                     <xsl:value-of select="@label"/>
@@ -213,22 +275,26 @@
                     <xsl:value-of select="@term"/>
                 </xsl:otherwise>
             </xsl:choose>
-        </dd>
+        </p>
     </xsl:template>
 
     <!-- related info -->
     <xsl:template name="related">
-        <li>
-            <dt>Related information</dt>
-            <xsl:apply-templates select="atom:link[@rel = 'related']"/>
-        </li>
+        <div class="statement">
+            <div class="property">
+                <p>Related information</p>
+            </div>
+            <div class="content">
+                <xsl:apply-templates select="atom:link[@rel = 'related']"/>
+            </div>
+        </div>
     </xsl:template>
 
 
     <!-- displayed links -->
     <xsl:template
             match="atom:link[@rel='http://purl.org/dc/terms/creator' or @rel='http://purl.org/dc/terms/publisher' or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf' or @rel='http://purl.org/cld/terms/isLocatedAt' or @rel='related']">
-        <dd>
+        <p>
             <a href="{@href}">
                 <xsl:choose>
                     <xsl:when test="@title">
@@ -239,7 +305,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </a>
-        </dd>
+        </p>
     </xsl:template>
 
 
@@ -249,52 +315,30 @@
     <!-- description publisher -->
     <xsl:template
             match="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
-        <li>
-            <dt>Published by</dt>
-            <dd>
-                <xsl:value-of select="@term"/>
-            </dd>
-        </li>
+        <p>Description published by
+            <xsl:value-of select="@term"/>
+            <xsl:apply-templates select="//atom:source"/>
+        </p>
     </xsl:template>
 
     <!-- source -->
-    <!-- TO DO: check if id starts with HTTP before macking it a link -->
-    <xsl:template match="atom:source">
-        <li>
-            <dt>Source</dt>
-            <dd>
-                <a href="{atom:id}">
-                    <xsl:value-of select="atom:title"/>
-                </a>
-            </dd>
-        </li>
+    <!-- TO DO: check if id starts with HTTP before making it a link -->
+    <xsl:template match="atom:source">via
+        <a href="{atom:id}">
+            <xsl:value-of select="atom:title"
+                    />
+        </a>
     </xsl:template>
 
     <!-- updated -->
     <xsl:template name="updated">
-        <li>
-            <dt>updated</dt>
-            <dd>
-                <xsl:value-of select="atom:updated"/> by
-                <xsl:value-of select="atom:author/atom:name"/>
-            </dd>
-        </li>
+        <p>Last updated
+            <xsl:value-of select="atom:updated"/> by
+            <xsl:value-of
+                    select="atom:author/atom:name"/>
+        </p>
     </xsl:template>
 
-
-    <!-- alternate formats for description -->
-    <xsl:template match="atom:link[@rel = 'alternate']">
-        <xsl:if test="@href">
-            <dcterms:hasFormat>
-                <rdf:Description rdf:about="{@href}">
-                    <xsl:if test="@type">
-                        <dcterms:format>
-                            <xsl:value-of select="@type"/>
-                        </dcterms:format>
-                    </xsl:if>
-                </rdf:Description>
-            </dcterms:hasFormat>
-        </xsl:if>
-    </xsl:template>
+    <!-- link relations: TO DO -->
 
 </xsl:stylesheet>

@@ -9,15 +9,15 @@
 
     -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
-    xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
-    xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
-    xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-    xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:georss="http://www.georss.org/georss"
-    xmlns="http://www.w3.org/1999/xhtml"
-    exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
+                xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
+                xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
+                xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
+                xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:georss="http://www.georss.org/georss"
+                xmlns="http://www.w3.org/1999/xhtml"
+                exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
 
     <xsl:output method="xml" media-type="application/xhtml+xml" indent="yes"/>
 
@@ -34,7 +34,7 @@
             <title>
                 <xsl:value-of select="atom:title"/>
             </title>
-            <link href="description.css" rel="stylesheet" type="text/css"/>
+            <link href="/description.css" rel="stylesheet" type="text/css"/>
         </head>
         <body>
             <!-- the collection description itself -->
@@ -58,13 +58,13 @@
                 <xsl:call-template name="locations"/>
                 <!-- rights -->
                 <xsl:apply-templates
-                    select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
+                        select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
                 <xsl:apply-templates select="atom:rights"/>
                 <!-- spatial -->
                 <xsl:call-template name="spatial"/>
                 <!-- temporal -->
                 <xsl:apply-templates
-                    select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
+                        select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
                 <!-- subjects -->
                 <xsl:call-template name="subjects"/>
                 <!-- related info -->
@@ -73,11 +73,12 @@
                 <!-- metadata about the description -->
                 <xsl:text>
                 </xsl:text>
+                <div class="clear"></div>
                 <xsl:comment>Metadata about the description</xsl:comment>
                 <div class="about">
                     <!-- publisher -->
                     <xsl:apply-templates
-                        select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                            select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
 
                     <!-- updated and updater -->
                     <xsl:call-template name="updated"/>
@@ -112,7 +113,7 @@
             <div class="content">
                 <p>
                     <xsl:value-of
-                        select="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@label"/>
+                            select="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@label"/>
                 </p>
             </div>
         </div>
@@ -155,7 +156,7 @@
             <div class="content">
 
                 <xsl:apply-templates
-                    select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
+                        select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
 
             </div>
         </div>
@@ -170,7 +171,7 @@
             <div class="content">
 
                 <xsl:apply-templates
-                    select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
+                        select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
 
             </div>
         </div>
@@ -258,14 +259,14 @@
             <div class="content">
 
                 <xsl:apply-templates
-                    select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                        select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
 
             </div>
         </div>
     </xsl:template>
 
     <xsl:template
-        match="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+            match="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
         <p>
             <xsl:choose>
                 <xsl:when test="@label">
@@ -293,7 +294,7 @@
 
     <!-- displayed links -->
     <xsl:template
-        match="atom:link[@rel='http://purl.org/dc/terms/creator' or @rel='http://purl.org/dc/terms/publisher' or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf' or @rel='http://purl.org/cld/terms/isLocatedAt' or @rel='related']">
+            match="atom:link[@rel='http://purl.org/dc/terms/creator' or @rel='http://purl.org/dc/terms/publisher' or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf' or @rel='http://purl.org/cld/terms/isLocatedAt' or @rel='related']">
         <p>
             <a href="{@href}">
                 <xsl:choose>
@@ -314,20 +315,29 @@
 
     <!-- description publisher -->
     <xsl:template
-        match="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
-        <p>Description published by <xsl:value-of select="@term"/>
-            <xsl:apply-templates select="//atom:source"/></p>
+            match="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+        <p>Description published by
+            <xsl:value-of select="@term"/>
+            <xsl:apply-templates select="//atom:source"/>
+        </p>
     </xsl:template>
 
     <!-- source -->
     <!-- TO DO: check if id starts with HTTP before making it a link -->
-    <xsl:template match="atom:source"> via <a href="{atom:id}"><xsl:value-of select="atom:title"
-            /></a></xsl:template>
+    <xsl:template match="atom:source">via
+        <a href="{atom:id}">
+            <xsl:value-of select="atom:title"
+                    />
+        </a>
+    </xsl:template>
 
     <!-- updated -->
     <xsl:template name="updated">
-        <p>Last updated <xsl:value-of select="atom:updated"/> by <xsl:value-of
-                select="atom:author/atom:name"/></p>
+        <p>Last updated
+            <xsl:value-of select="atom:updated"/> by
+            <xsl:value-of
+                    select="atom:author/atom:name"/>
+        </p>
     </xsl:template>
 
     <!-- link relations: TO DO -->
