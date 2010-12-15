@@ -54,9 +54,7 @@ public class HttpMethodHelper {
         } else {
             MimeType mimeType = request.getContentType();
             String baseType = mimeType.getBaseType();
-            if (baseType.equals(Constants.JSON_MIMETYPE)) {
-                return postMedia(request, clazz);
-            } else if (mimeType.getBaseType().equals(Constants.ATOM_MIMETYPE)) {
+            if (baseType.equals(Constants.ATOM_MIMETYPE)) {
                 EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
                 EntityTransaction transaction = entityManager.getTransaction();
                 Entry entry = getEntryFromRequest(request);

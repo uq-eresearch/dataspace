@@ -213,20 +213,12 @@ public class AdapterHelper {
 
     public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry, Class clazz) throws ResponseContextException {
 
-        String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
-        if (representationMimeType == null) {
-            String acceptHeader = request.getAccept();
-            if (acceptHeader != null && !acceptHeader.equals("*/*")) {
-                representationMimeType = acceptHeader;
-            } else {
-                representationMimeType = Constants.ATOM_ENTRY_MIMETYPE;
-            }
-        }
+        String accept = getAcceptHeader(request);
 
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
         responseContext.setLocation(entry.getId().toString());
         responseContext.setHeader("Vary", "Accept");
-        if (representationMimeType.equals(Constants.ATOM_ENTRY_MIMETYPE) || representationMimeType.equals(Constants.ATOM_MIMETYPE)) {
+        if (accept.equals(Constants.ATOM_ENTRY_MIMETYPE) || accept.equals(Constants.ATOM_MIMETYPE)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML);
@@ -235,7 +227,7 @@ public class AdapterHelper {
             responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
             PrettyWriter writer = new PrettyWriter();
             responseContext.setWriter(writer);
-        } else if (representationMimeType.equals(Constants.MIME_TYPE_RDF)) {
+        } else if (accept.equals(Constants.MIME_TYPE_RDF)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
@@ -245,7 +237,7 @@ public class AdapterHelper {
             String xslFilePath = "/files/xslt/atom2rdf-" + clazz.getSimpleName().toLowerCase() + ".xsl";
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
             responseContext.setWriter(writer);
-        } else if (representationMimeType.equals(Constants.MIME_TYPE_XHTML)) {
+        } else if (accept.equals(Constants.MIME_TYPE_XHTML)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
@@ -255,7 +247,7 @@ public class AdapterHelper {
             String xslFilePath = "/files/xslt/atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
             responseContext.setWriter(writer);
-        } else if (representationMimeType.equals(Constants.MIME_TYPE_RIFCS)) {
+        } else if (accept.equals(Constants.MIME_TYPE_RIFCS)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
@@ -270,6 +262,27 @@ public class AdapterHelper {
         }
 
         return responseContext;
+    }
+
+    private static String getAcceptHeader(RequestContext request) {
+        String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
+        if (representationMimeType == null) {
+            String acceptHeader = request.getAccept();
+            if (acceptHeader != null) {
+                if (acceptHeader.contains(Constants.ATOM_ENTRY_MIMETYPE) || acceptHeader.contains(Constants.ATOM_MIMETYPE)) {
+                    representationMimeType = Constants.ATOM_MIMETYPE;
+                } else if (acceptHeader.contains(Constants.MIME_TYPE_RDF)) {
+                    representationMimeType = Constants.MIME_TYPE_RDF;
+                } else if (acceptHeader.contains(Constants.MIME_TYPE_RIFCS)) {
+                    representationMimeType = Constants.MIME_TYPE_RIFCS;
+                } else {
+                    representationMimeType = Constants.MIME_TYPE_XHTML;
+                }
+            } else {
+                representationMimeType = Constants.MIME_TYPE_XHTML;
+            }
+        }
+        return representationMimeType;
     }
 
     public static ResponseContext getContextResponseForPost(Entry entry) throws ResponseContextException {
