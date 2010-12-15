@@ -49,10 +49,11 @@
             <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
             <!-- curator -->
             <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
-            <!-- generating activity -->
+
+            <!-- participation -->
             <xsl:apply-templates
                     select="atom:link[@rel='http://xmlns.com/foaf/0.1/currentProject']"/>
-
+            <!--Collector of-->
             <xsl:apply-templates
                     select="atom:link[@rel='http://xmlns.com/foaf/0.1/made']"/>
             <!-- related info -->

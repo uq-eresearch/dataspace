@@ -53,7 +53,6 @@ public interface Constants {
     String REL_ALTERNATE = "alternate";
     String REL_CREATOR = "http://purl.org/dc/terms/creator";
     String REL_DESCRIBES = "http://www.openarchives.org/ore/terms/describes";
-    //TODO Ask Nigel about Accessed VIA
     String REL_HAS_PARTICIPANT = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant";
     String REL_HAS_OUTPUT = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput";
     String REL_IS_ACCESSED_VIA = "http://purl.org/cld/terms/isAccessedVia";
@@ -72,7 +71,7 @@ public interface Constants {
     /**
      * scheme attributes
      */
-    String SCHEME_TYPE = "http://purl.org/dc/dcmitype/";
+    String SCHEME_DCMITYPE = "http://purl.org/dc/dcmitype/";
     String SCHEME_VIVO = "http://vivoweb.org/ontology/core#";
     String SCHEME_FOAF = "http://xmlns.com/foaf/0.1/";
     String SCHEME_ANDS_GROUP = "https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php";
@@ -83,9 +82,9 @@ public interface Constants {
      */
     String TERM_ANDS_GROUP = "The University of Queensland";
     String TERM_ACTIVITY = SCHEME_FOAF + "Project";
-    String TERM_COLLECTION = SCHEME_TYPE + "Collection";
+    String TERM_COLLECTION = SCHEME_DCMITYPE + "Collection";
     String TERM_PARTY_AS_GROUP = SCHEME_FOAF + "Group";
-    String TERM_PARTY_AS_PERSON = SCHEME_FOAF + "Person";
+    String TERM_PARTY_AS_AGENT = SCHEME_FOAF + "Agent";
     String TERM_SERVICE = SCHEME_VIVO + "Service";
 
     /**
