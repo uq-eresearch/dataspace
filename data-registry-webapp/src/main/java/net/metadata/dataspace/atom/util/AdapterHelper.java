@@ -218,19 +218,19 @@ public class AdapterHelper {
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
         responseContext.setLocation(entry.getId().toString());
         responseContext.setHeader("Vary", "Accept");
-        if (accept.equals(Constants.ATOM_ENTRY_MIMETYPE) || accept.equals(Constants.ATOM_MIMETYPE)) {
+        if (accept.equals(Constants.MIME_TYPE_ATOM_ENTRY) || accept.equals(Constants.MIME_TYPE_ATOM)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS);
-            responseContext.setContentType(Constants.ATOM_ENTRY_MIMETYPE);
+            responseContext.setContentType(Constants.MIME_TYPE_ATOM_ENTRY);
             PrettyWriter writer = new PrettyWriter();
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_RDF)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
-            prepareAlternateLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML);
             responseContext.setContentType(Constants.MIME_TYPE_RDF);
@@ -240,17 +240,21 @@ public class AdapterHelper {
         } else if (accept.equals(Constants.MIME_TYPE_XHTML)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
-            prepareAlternateLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF);
-            responseContext.setContentType(Constants.MIME_TYPE_XHTML);
+            if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
+                responseContext.setContentType(Constants.MIME_TYPE_XHTML);
+            } else {
+                responseContext.setContentType(Constants.MIME_TYPE_HTML);
+            }
             String xslFilePath = "/files/xslt/atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_RIFCS)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
-            prepareAlternateLink(entry, selfLinkHref, Constants.ATOM_ENTRY_MIMETYPE);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML);
             responseContext.setContentType(Constants.MIME_TYPE_RIFCS);
@@ -269,8 +273,8 @@ public class AdapterHelper {
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
             if (acceptHeader != null) {
-                if (acceptHeader.contains(Constants.ATOM_ENTRY_MIMETYPE) || acceptHeader.contains(Constants.ATOM_MIMETYPE)) {
-                    representationMimeType = Constants.ATOM_MIMETYPE;
+                if (acceptHeader.contains(Constants.MIME_TYPE_ATOM_ENTRY) || acceptHeader.contains(Constants.MIME_TYPE_ATOM)) {
+                    representationMimeType = Constants.MIME_TYPE_ATOM;
                 } else if (acceptHeader.contains(Constants.MIME_TYPE_RDF)) {
                     representationMimeType = Constants.MIME_TYPE_RDF;
                 } else if (acceptHeader.contains(Constants.MIME_TYPE_RIFCS)) {

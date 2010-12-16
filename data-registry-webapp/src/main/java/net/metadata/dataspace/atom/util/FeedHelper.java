@@ -45,7 +45,7 @@ public class FeedHelper {
             conn.setDoOutput(true);
             conn.setUseCaches(false);
             MediaResponseContext rc = new MediaResponseContext(conn.getInputStream(), 200);
-            rc.setContentType(Constants.HTML_MIME_TYPE);
+            rc.setContentType(Constants.MIME_TYPE_HTML);
             return rc;
         } catch (IOException e) {
             return ProviderHelper.servererror(request, e);
@@ -76,7 +76,7 @@ public class FeedHelper {
                 entry.setTitle(version.getTitle());
                 entry.setContent(version.getContent());
                 Link selfLink = entry.addLink(uri, Constants.REL_SELF);
-                selfLink.setMimeType(Constants.ATOM_ENTRY_MIMETYPE);
+                selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
                 Set<String> authors = version.getAuthors();
                 for (String author : authors) {
                     entry.addAuthor(author);
@@ -86,7 +86,7 @@ public class FeedHelper {
             }
             feed.setUpdated(new Date());
             Link link = feed.addLink(feed.getId() + "/" + Constants.TARGET_TYPE_VERSION_HISTORY, Constants.TARGET_TYPE_VERSION_HISTORY);
-            link.setMimeType(Constants.ATOM_FEED_MIMETYPE);
+            link.setMimeType(Constants.MIME_TYPE_ATOM_FEED);
             Document<Feed> document = feed.getDocument();
             AbstractResponseContext responseContext = new BaseResponseContext<Document<Feed>>(document);
             responseContext.setEntityTag(calculateEntityTag(document.getRoot()));

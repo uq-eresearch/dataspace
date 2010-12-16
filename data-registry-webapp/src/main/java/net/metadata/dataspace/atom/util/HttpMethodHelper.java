@@ -54,7 +54,7 @@ public class HttpMethodHelper {
         } else {
             MimeType mimeType = request.getContentType();
             String baseType = mimeType.getBaseType();
-            if (baseType.equals(Constants.ATOM_MIMETYPE)) {
+            if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
                 EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
                 EntityTransaction transaction = entityManager.getTransaction();
                 Entry entry = getEntryFromRequest(request);
@@ -98,7 +98,7 @@ public class HttpMethodHelper {
         } else {
             logger.info("Updating Entry");
             String mimeBaseType = request.getContentType().getBaseType();
-            if (mimeBaseType.equals(Constants.ATOM_MIMETYPE)) {
+            if (mimeBaseType.equals(Constants.MIME_TYPE_ATOM)) {
                 EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
                 EntityTransaction transaction = entityManager.getTransaction();
                 Entry entry = getEntryFromRequest(request);
@@ -253,7 +253,7 @@ public class HttpMethodHelper {
     public static ResponseContext getFeed(RequestContext request, Class clazz) throws ResponseContextException {
         String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType != null) {
-            if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
+            if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
                 return FeedHelper.getHtmlRepresentationOfFeed(request, getHtmlPage(clazz));
             } else {
                 throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
@@ -276,20 +276,20 @@ public class HttpMethodHelper {
         String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
-            if (acceptHeader.equals(Constants.HTML_MIME_TYPE) || acceptHeader.equals(Constants.ATOM_FEED_MIMETYPE)) {
+            if (acceptHeader.equals(Constants.MIME_TYPE_HTML) || acceptHeader.equals(Constants.MIME_TYPE_ATOM_FEED)) {
                 representationMimeType = acceptHeader;
             } else {
-                representationMimeType = Constants.HTML_MIME_TYPE;
+                representationMimeType = Constants.MIME_TYPE_HTML;
             }
         }
-        String atomFeedUrl = Constants.ID_PREFIX + getPath(clazz) + "?repr=" + Constants.ATOM_FEED_MIMETYPE;
+        String atomFeedUrl = Constants.ID_PREFIX + getPath(clazz) + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
         String htmlFeedUrl = Constants.ID_PREFIX + getPath(clazz);
-        if (representationMimeType.equals(Constants.HTML_MIME_TYPE)) {
-            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
-            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-        } else if (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE) || representationMimeType.equals(Constants.ATOM_MIMETYPE)) {
-            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.ATOM_FEED_MIMETYPE);
-            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.HTML_MIME_TYPE);
+        if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
+            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
+            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
+        } else if (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) || representationMimeType.equals(Constants.MIME_TYPE_ATOM)) {
+            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
+            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
         }
         feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + getTitle(clazz));
     }

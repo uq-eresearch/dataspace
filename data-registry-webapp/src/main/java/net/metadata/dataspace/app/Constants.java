@@ -10,15 +10,13 @@ public interface Constants {
     /**
      * Mime types
      */
-    String JSON_MIMETYPE = "application/json";
-    String ATOM_MIMETYPE = "application/atom+xml";
-    String ATOM_ENTRY_MIMETYPE = "application/atom+xml;type=entry";
-    String ATOM_FEED_MIMETYPE = "application/atom+xml;type=feed";
-    String HTML_MIME_TYPE = "text/html";
+    String MIME_TYPE_ATOM = "application/atom+xml";
+    String MIME_TYPE_ATOM_ENTRY = "application/atom+xml;type=entry";
+    String MIME_TYPE_ATOM_FEED = "application/atom+xml;type=feed";
+    String MIME_TYPE_HTML = "text/html";
     String MIME_TYPE_RDF = "application/rdf+xml";
     String MIME_TYPE_RIFCS = "application/rifcs+xml";
     String MIME_TYPE_XHTML = "application/xhtml+xml";
-    String ATOM_SERVICE_MIMETYPE = "application/atomsvc+xml";
 
     /**
      * Adapters

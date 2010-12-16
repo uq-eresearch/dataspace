@@ -94,8 +94,8 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 representationMimeType = accept;
             }
             if (representationMimeType != null &&
-                    (representationMimeType.equals(Constants.ATOM_FEED_MIMETYPE) ||
-                            representationMimeType.equals(Constants.ATOM_MIMETYPE))) {
+                    (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) ||
+                            representationMimeType.equals(Constants.MIME_TYPE_ATOM))) {
                 return super.getFeed(request);
             } else {
                 return HttpMethodHelper.getFeed(request, Service.class);
@@ -126,7 +126,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public String[] getAccepts(RequestContext request) {
-        return new String[]{Constants.ATOM_ENTRY_MIMETYPE};
+        return new String[]{Constants.MIME_TYPE_ATOM_ENTRY};
     }
 
     @Override
