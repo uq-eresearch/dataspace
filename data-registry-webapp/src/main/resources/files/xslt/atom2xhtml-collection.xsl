@@ -46,6 +46,8 @@
                 <xsl:apply-templates select="atom:title"/>
                 <!-- description -->
                 <xsl:apply-templates select="atom:content"/>
+                <!-- latest-version -->
+                <xsl:call-template name="latest-version"/>
                 <!-- type -->
                 <xsl:call-template name="type"/>
                 <!-- creators -->
@@ -54,22 +56,23 @@
                 <xsl:call-template name="curators"/>
                 <!-- projects -->
                 <xsl:call-template name="projects"/>
+                <!-- services -->
+                <xsl:call-template name="services"/>
                 <!-- location -->
                 <xsl:call-template name="locations"/>
                 <!-- rights -->
-                <xsl:apply-templates
-                        select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
+                <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
                 <xsl:apply-templates select="atom:rights"/>
                 <!-- spatial -->
                 <xsl:call-template name="spatial"/>
                 <!-- temporal -->
-                <xsl:apply-templates
-                        select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
+                <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
                 <!-- subjects -->
                 <xsl:call-template name="subjects"/>
                 <!-- related info -->
                 <xsl:call-template name="related"/>
-
+                <!-- representations -->
+                <xsl:call-template name="representations"/>
                 <!-- metadata about the description -->
                 <xsl:text>
                 </xsl:text>
@@ -106,75 +109,115 @@
 
     <!-- object type -->
     <xsl:template name="type">
-        <div class="statement">
-            <div class="property">
-                <p>Type</p>
+        <xsl:if test="atom:category[@scheme='http://purl.org/dc/dcmitype/']">
+            <div class="statement">
+                <div class="property">
+                    <p>Type</p>
+                </div>
+                <div class="content">
+                    <p>
+                        <xsl:value-of
+                                select="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@label"/>
+                    </p>
+                </div>
             </div>
-            <div class="content">
-                <p>
-                    <xsl:value-of
-                            select="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@label"/>
-                </p>
-            </div>
-        </div>
+        </xsl:if>
     </xsl:template>
 
     <!-- creators -->
     <xsl:template name="creators">
-        <div class="statement">
-            <div class="property">
-                <p>Creator(s)</p>
-            </div>
-            <div class="content">
+        <xsl:if test="atom:link[@rel='http://purl.org/dc/terms/creator']">
+            <div class="statement">
+                <div class="property">
+                    <p>Creator(s)</p>
+                </div>
+                <div class="content">
 
-                <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
+                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
 
+                </div>
             </div>
-        </div>
+        </xsl:if>
     </xsl:template>
 
     <!-- curators -->
     <xsl:template name="curators">
-        <div class="statement">
-            <div class="property">
-                <p>Custodian(s)</p>
-            </div>
-            <div class="content">
+        <xsl:if test="atom:link[@rel='http://purl.org/dc/terms/publisher']">
+            <div class="statement">
+                <div class="property">
+                    <p>Custodian(s)</p>
+                </div>
+                <div class="content">
 
-                <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
+                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
 
+                </div>
             </div>
-        </div>
+        </xsl:if>
     </xsl:template>
 
     <!-- projects -->
     <xsl:template name="projects">
-        <div class="statement">
-            <div class="property">
-                <p>Project (s)</p>
-            </div>
-            <div class="content">
+        <xsl:if test="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']">
+            <div class="statement">
+                <div class="property">
+                    <p>Project (s)</p>
+                </div>
+                <div class="content">
 
-                <xsl:apply-templates
-                        select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
+                    <xsl:apply-templates
+                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
 
+                </div>
             </div>
-        </div>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- services -->
+    <xsl:template name="services">
+        <xsl:if test="atom:link[@rel='http://purl.org/cld/terms/isAccessedVia']">
+            <div class="statement">
+                <div class="property">
+                    <p>Accessed Via</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates
+                            select="atom:link[@rel='http://purl.org/cld/terms/isAccessedVia']"/>
+                </div>
+            </div>
+        </xsl:if>
     </xsl:template>
 
     <!-- locations -->
     <xsl:template name="locations">
-        <div class="statement">
-            <div class="property">
-                <p>Location</p>
-            </div>
-            <div class="content">
+        <xsl:if test="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']">
+            <div class="statement">
+                <div class="property">
+                    <p>Location</p>
+                </div>
+                <div class="content">
 
-                <xsl:apply-templates
-                        select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
+                    <xsl:apply-templates
+                            select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
 
+                </div>
             </div>
-        </div>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- representations -->
+    <xsl:template name="representations">
+        <xsl:if test="atom:link[@rel='alternate']">
+            <div class="statement">
+                <div class="property">
+                    <p>Representations</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel='alternate']"/>
+
+                </div>
+            </div>
+        </xsl:if>
     </xsl:template>
 
     <!-- Rights -->
@@ -206,16 +249,18 @@
 
     <!-- spatial -->
     <xsl:template name="spatial">
-        <div class="statement">
-            <div class="property">
-                <p>Coverage</p>
+        <xsl:if test="georss">
+            <div class="statement">
+                <div class="property">
+                    <p>Coverage</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="georss:point"/>
+                    <xsl:apply-templates select="georss:polygon"/>
+                    <xsl:apply-templates select="georss:featureName"/>
+                </div>
             </div>
-            <div class="content">
-                <xsl:apply-templates select="georss:point"/>
-                <xsl:apply-templates select="georss:polygon"/>
-                <xsl:apply-templates select="georss:featureName"/>
-            </div>
-        </div>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="georss:point">
@@ -281,20 +326,35 @@
 
     <!-- related info -->
     <xsl:template name="related">
-        <div class="statement">
-            <div class="property">
-                <p>Related information</p>
+        <xsl:if test="atom:link[@rel = 'related']">
+            <div class="statement">
+                <div class="property">
+                    <p>Related information</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel = 'related']"/>
+                </div>
             </div>
-            <div class="content">
-                <xsl:apply-templates select="atom:link[@rel = 'related']"/>
+        </xsl:if>
+    </xsl:template>
+    <!-- Latest version -->
+    <xsl:template name="latest-version">
+        <xsl:if test="atom:link[@rel = 'latest-version']">
+            <div class="statement">
+                <div class="property">
+                    <p>Latest Version</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel = 'latest-version']"/>
+                </div>
             </div>
-        </div>
+        </xsl:if>
     </xsl:template>
 
 
     <!-- displayed links -->
     <xsl:template
-            match="atom:link[@rel='http://purl.org/dc/terms/creator' or @rel='http://purl.org/dc/terms/publisher' or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf' or @rel='http://purl.org/cld/terms/isLocatedAt' or @rel='related']">
+            match="atom:link[@rel='http://purl.org/dc/terms/creator' or @rel='http://purl.org/dc/terms/publisher' or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf' or @rel='http://purl.org/cld/terms/isLocatedAt' or @rel='related' or @rel='alternate' or @rel='latest-version']">
         <p>
             <a href="{@href}">
                 <xsl:choose>

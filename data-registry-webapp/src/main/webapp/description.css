@@ -13,28 +13,25 @@ div.description {
 
 div.statement {
     clear: both;
-    border: 1px dotted #dddddd;
-}
-
-div.property {
-    width: 10em;
-    font-weight: bold;
-    text-align: right;
-    float: left;
-    display: inline;
-    padding-right: 1em;
+    border: 1px dotted #ffffff;
     background-color: #dbdbdb;
 }
 
-div.content {
-    margin-left: 1em;
+div.property {
     float: left;
-    display: inline;
+    font-weight: bold;
+    text-align: right;
+    width: 12em;
+}
+
+div.content {
+    background-color: #FFFFFF;
+    margin-left: 12.25em;
 }
 
 div.content p, div.property p {
     margin: 0 0;
-    padding: 0.25em 0;
+    padding: 0.25em;
 }
 
 div.clear {
@@ -46,9 +43,4 @@ div.about {
     margin-left: auto;
     margin-right: auto;
     font-size: smaller;
-    width: 50%;
-}
-
-div.about p {
-    text-align: center;
 }
