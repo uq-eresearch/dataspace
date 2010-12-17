@@ -384,7 +384,7 @@
 
     <!-- source -->
     <!-- TO DO: check if id starts with HTTP before making it a link -->
-    <xsl:template match="atom:source">via
+    <xsl:template match="atom:source"> via
         <a href="{atom:id}">
             <xsl:value-of select="atom:title"
                     />
