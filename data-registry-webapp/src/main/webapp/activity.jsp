@@ -1,6 +1,6 @@
 <html>
 <head>
-    <jsp:include page="include/header.jsp"/>
+    <jsp:include page="include/head.jsp"/>
 </head>
 <body class="tundra">
 <div class="wrapper">

@@ -1,6 +1,6 @@
 <html>
 <head>
-<jsp:include page="include/header.jsp"/>
+<jsp:include page="include/head.jsp"/>
 <script type="text/javascript">
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.TabContainer");

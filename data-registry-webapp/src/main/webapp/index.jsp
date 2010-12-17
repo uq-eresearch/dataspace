@@ -1,27 +1,11 @@
 <%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
 <html>
 <head>
-    <jsp:include page="include/header.jsp"/>
+    <jsp:include page="include/head.jsp"/>
 </head>
 <body>
 <div class="wrapper">
     <jsp:include page="include/title.jsp"/>
-
-    <div class="content">
-        <br/>
-
-        <form action="/login" method="post">
-            <table>
-                <tr>
-                    <th>Username</th>
-                    <td><input type="text" id="username" name="username"/></td>
-                    <th>Password</th>
-                    <td><input type="password" id="password" name="password"/></td>
-                    <td><input type="submit" id="login" name="login" value="Sign In"/></td>
-                </tr>
-            </table>
-        </form>
-    </div>
     <div class="content">
         <h3>cURL Examples</h3>
         <ul>

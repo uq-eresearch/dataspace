@@ -354,7 +354,14 @@
 
     <!-- displayed links -->
     <xsl:template
-            match="atom:link[@rel='http://purl.org/dc/terms/creator' or @rel='http://purl.org/dc/terms/publisher' or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf' or @rel='http://purl.org/cld/terms/isLocatedAt' or @rel='related' or @rel='alternate' or @rel='latest-version']">
+            match="atom:link[@rel='http://purl.org/dc/terms/creator'
+            or @rel='http://purl.org/dc/terms/publisher'
+            or @rel='http://purl.org/cld/terms/isAccessedVia'
+            or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf'
+            or @rel='http://purl.org/cld/terms/isLocatedAt'
+            or @rel='related'
+            or @rel='alternate'
+            or @rel='latest-version']">
         <p>
             <a href="{@href}">
                 <xsl:choose>
@@ -384,7 +391,7 @@
 
     <!-- source -->
     <!-- TO DO: check if id starts with HTTP before making it a link -->
-    <xsl:template match="atom:source"> via
+    <xsl:template match="atom:source">via
         <a href="{atom:id}">
             <xsl:value-of select="atom:title"
                     />

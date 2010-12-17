@@ -4,11 +4,9 @@ body {
     font-family: "Helvetica", "Arial", sans-serif;
     background-color: #f5f5f5;
     background-repeat: no-repeat;
-    background-attachment: fixed;
 }
 
 body a {
-    color: #003399;
     font-size: 1em;
     text-decoration: none;
 }
@@ -45,17 +43,262 @@ body a {
     font-weight: bold;
 }
 
-.footer {
+/* Footer
+-----------------------------------------------------------------------------*/
+.version-footer {
     bottom: 0;
     font-size: 0.7em;
-    left: 0;
-    margin-bottom: 1em;
-    margin-top: 1em;
+    margin: 1em auto;
     position: relative;
-    text-align: center;
-    width: 100%;
+    width: 960px;
 }
 
-.footer a {
-    font-size: 1em;
+#footer {
+    background: rgb(8, 68, 125) url('../images/bg-footer.gif') repeat-x scroll 100% 0pt;
+    border-top: solid 2px #78b800;
+}
+
+#footer {
+    clear: both;
+    min-height: 140px;
+    height: 220px ! important;
+    margin-top: 20px;
+}
+
+#footer .footer-wrapper {
+    margin: 40px auto;
+    position: relative;
+    top: 0;
+    width: 960px;
+}
+
+#footer div {
+}
+
+#footer li a, #navResources p a, .campus a, .directions a {
+    border-bottom: 1px solid rgb(108, 93, 94);
+    color: rgb(241, 241, 241);
+    cursor: pointer;
+}
+
+#footer li a:hover, #navResources p a:hover, .campus a:hover, .directions a:hover {
+    border-bottom: 1px solid rgb(73, 59, 60);
+    color: rgb(221, 212, 213);
+}
+
+#siteinfo {
+    padding: 0 0 0 5px;
+    width: 200px;
+    float: left;
+    color: rgb(255, 255, 255);
+}
+
+#siteinfo {
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+}
+
+#siteinfo .org {
+    font-weight: bold;
+}
+
+#siteinfo address {
+    font-style: normal;
+}
+
+#siteinfo .org {
+    margin: 0 0 10px 0;
+    height: 38px;
+    width: 200px;
+}
+
+#siteinfo .org a {
+    overflow: hidden;
+    background-image: url('../images/uq-logo.gif') ! important;
+    background-repeat: no-repeat ! important;
+    background-color: transparent ! important;
+    display: block;
+    height: 38px;
+    text-indent: -1000px;
+}
+
+#siteinfo .adr {
+    margin: 0 0 5px 0;
+    line-height: 1.4;
+}
+
+#siteinfo .tel {
+    margin: 0 0 5px 0;
+}
+
+#siteinfo .campus {
+    margin: 0 0 5px 0;
+}
+
+#siteinfo .directions {
+    margin: 0 0 5px 0;
+}
+
+#copyright {
+    margin: 0pt;
+    font-size: 11px;
+    width: 200px;
+}
+
+#footer-resources {
+    margin: 0 0px 0 20px;
+    width: 400px;
+    float: left;
+    border-left: 1px dotted rgb(217, 184, 250);
+}
+
+#footer-resources h2 {
+    margin: 0pt 0pt 6px;
+}
+
+#footer-resources h2 {
+    display: none;
+}
+
+#footer-resources h3 {
+    margin: 0pt 0pt 6px;
+    font-family: 'Helvetica Neue', Arial, verdana, sans-serif;
+    font-size: 12px;
+    color: rgb(234, 184, 250);
+    text-transform: uppercase;
+}
+
+#footer-resources li {
+    font-size: 11px;
+    font-family: verdana, Arial, sans-serif;
+}
+
+#footer-resources ul {
+    margin: 0pt;
+    list-style-type: none;
+}
+
+#footer-resources li {
+    margin: 0pt 0pt 6px;
+    padding: 0 0 0 12px;
+    background: transparent url('../images/arrow.png') no-repeat scroll 0px 2px;
+}
+
+#footer-resources a {
+    padding: 0pt 1px;
+}
+
+#footer-resources p {
+    color: rgb(255, 255, 255);
+    font-family: 'Helvetica Neue', Arial, verdana, sans-serif;
+    font-size: 11px;
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+#navResources, #navSocial {
+    float: left;
+}
+
+#navResources {
+    padding: 0 20px 0 20px;
+    width: 50%;
+}
+
+#navSocial {
+    padding: 0 0 10px 0;
+    width: 40%;
+}
+
+#navQuick {
+    float: left;
+    padding: 0 0 10px 0;
+    width: 40%;
+}
+
+.member-logo {
+    margin: 0 20px 10px 0;
+    padding: 0 0 2px 0;
+}
+
+.member-logo a:hover {
+    background: none;
+    text-decoration: none;
+}
+
+#footer-right {
+    padding: 0 0 10px 15px;
+    margin: 0;
+    float: left;
+    width: 310px;
+    height: 146px;
+    background: transparent url('../images/footer-device.png') no-repeat scroll 10px -1px ! important;
+    border-left: 1px dotted rgb(217, 184, 250);
+}
+
+#footer-right h3 {
+    margin: 0pt 0pt 6px;
+    font-family: 'Helvetica Neue', Arial, verdana, sans-serif;
+    font-size: 12px;
+    color: rgb(234, 184, 250);
+    text-transform: uppercase;
+}
+
+#footer-right p {
+    margin: 5px 0 12px 0;
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+    color: rgb(255, 255, 255);
+}
+
+#footer-right li {
+    font-size: 11px;
+    font-family: verdana, Arial, sans-serif;
+}
+
+#footer-right ul {
+    margin: 0pt;
+    list-style-type: none;
+}
+
+#footer-right li {
+    margin: 0pt 0pt 6px;
+    padding: 0 0 0 12px;
+    background: transparent url('../images/arrow.png') no-repeat scroll 0px 2px;
+}
+
+p.centenary {
+    padding: 16px 0 0 0;
+}
+
+.opacity-toggle img {
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 90);
+    -moz-opacity: 0.9;
+    opacity: 0.9;
+}
+
+.opacity-toggle:hover img {
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 100);
+    -moz-opacity: 1;
+    opacity: 1.0;
+}
+
+#navExplore, #navLogos {
+    float: left;
+}
+
+#navExplore {
+    padding: 0 20px 0 5px;
+    width: 180px;
+}
+
+#navLogos {
+    padding: 0 0 10px 0;
 }
