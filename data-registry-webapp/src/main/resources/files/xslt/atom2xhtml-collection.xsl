@@ -224,7 +224,7 @@
     <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']">
         <div class="statement">
             <div class="property">
-                <p>Access rights</p>
+                <p>Access</p>
             </div>
             <div class="content">
                 <p>
