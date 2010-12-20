@@ -3,9 +3,8 @@
 </title>
 <link rel="stylesheet" type="text/css" href="css/style.css"/>
 <script type="text/javascript" src="jquery/jquery.js"></script>
-<script type="text/javascript" src="jquery/jquery.jfeed.pack.js"></script>
+<script type="text/javascript" src="jquery/jquery.jfeed.js"></script>
 <script type="text/javascript">
-
 
     $(document).ready(function() {
         $(".signin").click(function(e) {
@@ -29,7 +28,6 @@
         jQuery.getFeed({
             url: '<%= request.getParameter("path") %>?repr=application/atom+xml',
             success: function(feed) {
-
                 jQuery('#result').append('<h2>'
                         + '<a href="'
                         + feed.link
@@ -43,14 +41,14 @@
                 for (var i = 0; i < feed.items.length && i < 5; i++) {
 
                     var item = feed.items[i];
-                    html += '<div style="border-top:1px dashed #BE87E9;">'
+                    html += '<div class="record">'
                     html += '<a href="'
                             + item.link
                             + '">'
                             + item.title
-                            + '</a>' + '<br/>';
+                            + '</a> (' + item.author + ')<br/>';
                     html += item.description + ' ';
-                    html += '<span style="font-size: 0.8em;">' + item.updated
+                    html += '<span class="record-date">' + item.updated
                             + '</span></div>';
 
                 }
