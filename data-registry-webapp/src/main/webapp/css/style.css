@@ -385,6 +385,7 @@ h6 {
     font-size: 11px;
     font-family: Helvetica, "Trebuchet MS", sans-serif;
     font-weight: lighter;
+    text-align: right;
 }
 
 #topnav ul {
@@ -742,4 +743,112 @@ p.centenary {
 
 #navLogos {
     padding: 0 0 10px 0;
+}
+
+/*---------------Login-------------*/
+
+#topnav a {
+    text-transform: uppercase;
+    margin: 0 0 0 -8px;
+    padding: 12px 8px 12px 8px;
+}
+
+#topnav a:link {
+    color: rgb(223, 223, 223);
+    text-decoration: none;
+}
+
+#topnav a:visited {
+    color: rgb(223, 223, 223);
+    text-decoration: none;
+}
+
+#topnav a:hover {
+    color: rgb(245, 225, 255);
+    text-decoration: none;
+    background: transparent url('../images/top_nav_bg_active.gif') repeat-x scroll right bottom;
+    border-bottom: 1px solid rgb(229, 229, 229);
+}
+
+#topnav a:active {
+    color: rgb(245, 225, 255);
+    text-decoration: none;
+    border-bottom: 1px solid rgb(229, 229, 229);
+}
+
+#topnav a.menu-open {
+    outline: none;
+}
+
+#signin_menu {
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    display: none;
+    background-color: #000000;
+    position: absolute;
+    width: 210px;
+    z-index: 9999;
+    opacity: 0.8;
+    border: 1px transparent;
+    text-align: left;
+    padding: 12px;
+    right: 0px;
+    margin-top: 5px;
+    margin-right: 0px;
+    color: #ffffff;
+    font-size: 11px;
+}
+
+#signin_menu input[type=text], #signin_menu input[type=password] {
+    display: block;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border: 1px solid #ACE;
+    font-size: 13px;
+    margin: 0 0 5px;
+    padding: 5px;
+    width: 203px;
+}
+
+#signin_menu p {
+    margin: 0;
+}
+
+#signin_menu a {
+    color: #6AC;
+}
+
+#signin_menu label {
+    font-weight: normal;
+}
+
+#signin_menu p a {
+    color: #27B !important;
+}
+
+#signin_submit {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: #39d url('images/bg-btn-blue.png') repeat-x scroll 0 0;
+    border: 1px solid #39D;
+    color: #fff;
+    text-shadow: 0 -1px 0 #39d;
+    padding: 4px 10px 5px;
+    font-size: 11px;
+    margin: 0 5px 0 0;
+    font-weight: bold;
+}
+
+#signin_submit::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+#signin_submit:hover, #signin_submit:focus {
+    background-position: 0 -5px;
+    cursor: pointer;
 }

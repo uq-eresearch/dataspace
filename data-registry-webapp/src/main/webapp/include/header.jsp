@@ -46,9 +46,26 @@
             <li><a href="/">Home</a></li>
             <li><a href="/browse">Browse</a></li>
             <li><a href="/search">Search</a></li>
-            <li><a href="/log-in">Login</a></li>
             <li><a href="http://www.uq.edu.au/about/">About</a></li>
         </ul>
-        <div class="clear">&nbsp;</div>
+        <%--<div class="clear">&nbsp;</div>--%>
     </div>
+    <a href="logins" class="signin">Sign in</a>
+    <fieldset id="signin_menu">
+        <form method="post" id="signin" action="/login">
+            <p>
+                <label for="username">Username</label>
+                <input id="username" name="username" value="" title="username" tabindex="4" type="text">
+            </p>
+
+            <p>
+                <label for="password">Password</label>
+                <input id="password" name="password" value="" title="password" tabindex="5" type="password">
+            </p>
+
+            <p class="remember">
+                <input id="signin_submit" value="Sign in" tabindex="6" type="submit">
+            </p>
+        </form>
+    </fieldset>
 </div>
