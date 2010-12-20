@@ -46,7 +46,7 @@
                             + item.link
                             + '">'
                             + item.title
-                            + '</a> (' + item.author + ')<br/>';
+                            + '</a><span class="author"> (' + item.author + ')</span><br/>';
                     html += item.description + ' ';
                     html += '<span class="record-date">' + item.updated
                             + '</span></div>';

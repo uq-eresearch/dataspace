@@ -23,14 +23,6 @@ body a {
     min-height: 600px;
 }
 
-.title {
-    font-size: 1.5em;
-    font-weight: bold;
-    padding-bottom: 7px;
-    border-bottom: 1px solid #ccc;
-    font-family: Helvetica, Arial, sans-serif;
-}
-
 .content ul {
     margin: 0em 0 1em 0;
 }
@@ -50,6 +42,10 @@ body a {
 #result .record {
     border-top: 1px dashed #BE87E9;
     padding: 0.3em;
+}
+
+#result .record .author {
+    color: #4F7F37
 }
 
 #result .record-date {
