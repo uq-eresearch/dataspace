@@ -291,7 +291,7 @@ public class HttpMethodHelper {
             FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
             FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
         }
-        feed.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle() + ": " + getTitle(clazz));
+        feed.setTitle(getTitle(clazz));
     }
 
     /**

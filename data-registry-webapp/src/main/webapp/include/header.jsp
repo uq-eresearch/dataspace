@@ -43,10 +43,11 @@
 <div id="topnav">
     <div id="topnav-inner">
         <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/browse">Browse</a></li>
+            <li><a href="/search">Search</a></li>
+            <li><a href="/log-in">Login</a></li>
             <li><a href="http://www.uq.edu.au/about/">About</a></li>
-            <li><a href="http://www.uq.edu.au/news/">News</a></li>
-            <li><a href="http://www.uq.edu.au/study/future-students.html">Future Students</a></li>
-            <li><a href="http://www.uq.edu.au/staff/">Future Staff</a></li>
         </ul>
         <div class="clear">&nbsp;</div>
     </div>
