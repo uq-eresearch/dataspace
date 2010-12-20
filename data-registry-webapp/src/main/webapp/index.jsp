@@ -6,7 +6,6 @@
 <body>
 <jsp:include page="include/header.jsp"/>
 <div class="wrapper">
-    <jsp:include page="include/title.jsp"/>
     <div class="content">
         <h3>cURL Examples</h3>
         <ul>

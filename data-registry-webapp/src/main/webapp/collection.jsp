@@ -7,7 +7,6 @@
 <body>
 <jsp:include page="include/header.jsp"/>
 <div class="wrapper">
-    <jsp:include page="include/title.jsp"/>
     <div id="result"></div>
 </div>
 <jsp:include page="include/footer.jsp"/>
