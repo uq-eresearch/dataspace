@@ -6,9 +6,8 @@
 <script type="text/javascript" src="jquery/jquery.jfeed.pack.js"></script>
 <script type="text/javascript">
     jQuery(function() {
-
         jQuery.getFeed({
-            url: '/collections?repr=application/atom+xml',
+            url: '<%= request.getParameter("path") %>?repr=application/atom+xml',
             success: function(feed) {
 
                 jQuery('#result').append('<h2>'

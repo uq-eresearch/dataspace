@@ -2,7 +2,9 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <jsp:include page="include/head.jsp"/>
+    <jsp:include page="include/head.jsp">
+        <jsp:param name="path" value="/collections"/>
+    </jsp:include>
 </head>
 <body>
 <jsp:include page="include/header.jsp"/>
