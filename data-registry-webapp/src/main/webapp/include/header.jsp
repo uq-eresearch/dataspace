@@ -1,7 +1,13 @@
+<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
 <!--START: Header -->
 <div id="header">
     <div id="header-inner">
         <h1><a href="http://www.uq.edu.au/" title="Home" accesskey="1">The University of Queensland</a></h1>
+
+        <h2 style="z-index: 500;">
+            <a href="/" title="UQ Data Space"><%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
+            </a>
+        </h2>
 
         <div id="mininav">
             <ul>

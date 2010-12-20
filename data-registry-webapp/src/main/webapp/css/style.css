@@ -311,18 +311,19 @@ h6 {
 }
 
 #header-inner h2 {
-    margin: 26px 0 0 205px;
-    text-indent: -9999px;
-    z-index: 9999;
+    border-left: 1px solid #FFFFFF;
+    color: #FFFFFF;
+    display: block;
+    font-size: 24px;
+    height: 40px;
+    margin: 26px 0 0 220px;
+    padding-left: 15px;
+    padding-top: 10px;
     position: absolute;
 }
 
 #header-inner h2 a {
-    background: transparent url('../images/masthead-logo-facultyofscience.png') no-repeat scroll 0pt 0pt;
-    display: block;
-    height: 50px;
-    text-decoration: none;
-    width: 208px;
+    color: #FFFFFF;
 }
 
 #mininav {
