@@ -66,7 +66,7 @@
                 <!-- spatial -->
                 <xsl:call-template name="spatial"/>
                 <!-- temporal -->
-                <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
+                <xsl:call-template name="temporal"/>
                 <!-- subjects -->
                 <xsl:call-template name="subjects"/>
                 <!-- related info -->
@@ -282,17 +282,24 @@
     </xsl:template>
 
     <!-- temporal -->
+    <xsl:template name="temporal">
+        <xsl:if test="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
+            <div class="statement">
+                <div class="property">
+                    <p>Temporal coverage</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
+
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    
     <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
-        <div class="statement">
-            <div class="property">
-                <p>Coverage</p>
-            </div>
-            <div class="content">
-                <p>
-                    <xsl:value-of select="@content"/>
-                </p>
-            </div>
-        </div>
+        <p>
+            <xsl:value-of select="@content"/>
+        </p>
     </xsl:template>
 
     <!-- subjects -->
@@ -302,10 +309,8 @@
                 <p>Subjects</p>
             </div>
             <div class="content">
-
                 <xsl:apply-templates
                         select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
-
             </div>
         </div>
     </xsl:template>
