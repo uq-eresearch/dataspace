@@ -5,24 +5,19 @@
     (<%=RegistryApplication.getApplicationContext().getVersion()%>)
 </div>
 <div id="footer">
-
     <div class="footer-wrapper">
-
         <div id="siteinfo" class="vcard">
             <div class="org fn"><a href="http://www.uq.edu.au/">The University of Queensland</a></div>
             <address id="uq-address" class="adr"><span class="street-address">Brisbane</span>
                 <span class="locality">St Lucia</span>, <span class="region">QLD</span> <span
                         class="postal-code">4072</span></address>
-
             <div class="tel">+61 7 3365 1111</div>
             <div class="campus">Other Campuses: <a href="http://www.uq.edu.au/ipswich/">UQ Ipswich</a>, <br/><a
                     href="http://www.uq.edu.au/gatton/">UQ Gatton</a>, <a
                     href="http://www.uq.edu.au/about/herston-campus">UQ Herston</a></div>
             <div class="directions"><a href="http://www.uq.edu.au/maps/">Maps and Directions</a></div>
             <div id="copyright">&copy; 2010 The University of Queensland</div>
-
         </div>
-
         <div id="footer-resources">
             <h2>Supplemental Resources</h2>
 
@@ -37,7 +32,6 @@
                     <a href="http://www.go8.edu.au/"><img src="../images/logo-go8.gif" border="0" width="123"
                                                           height="18" alt="Group of 8"/></a>
                 </div>
-
                 <p><a href="http://www.uq.edu.au/terms-of-use/">Terms of use</a> | <a
                         href="http://www.uq.edu.au/feedback/">Feedback</a></p><br/>
 
@@ -57,10 +51,8 @@
                     <li><a href="http://www.uq.edu.au/contacts/">Emergency Contact</a></li>
                 </ul>
             </div>
-
             <div id="navSocial">
                 <h3>Social Media</h3>
-
                 <ul>
                     <li><a href="http://www.uq.edu.au/itunes/">iTunes U</a></li>
                     <li><a href="http://www.flickr.com/photos/uqnews/sets/">Flickr</a></li>
@@ -68,9 +60,7 @@
                     <li><a href="http://www.youtube.com/universityqueensland">YouTube Channel</a></li>
                 </ul>
             </div>
-
         </div>
-
         <div id="footer-right">
             <div id="navExplore">
                 <h3>Explore</h3>
@@ -83,9 +73,7 @@
                     <li><a href="http://www.uq.edu.au/services/">Services &amp; Facilities</a></li>
                 </ul>
             </div>
-
             <div id="navLogos">
-
                 <h3>Need Help?</h3>
 
                 <p><a href="http://www.uq.edu.au/uqanswers/" class="opacity-toggle"><img
@@ -96,10 +84,6 @@
                         src="../images/logo-centenary.png" width="102" height="69" border="0" alt="UQ Centenary"/></a>
                 </p>
             </div>
-
         </div>
-
-
     </div>
-
 </div>

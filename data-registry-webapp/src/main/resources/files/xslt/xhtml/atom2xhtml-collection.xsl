@@ -20,7 +20,6 @@
                 exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
 
     <xsl:output method="xml" media-type="application/xhtml+xml" indent="yes"/>
-
     <xsl:template match="/">
         <html>
             <xsl:apply-templates/>
@@ -35,59 +34,65 @@
                 <xsl:value-of select="atom:title"/>
             </title>
             <link href="/description.css" rel="stylesheet" type="text/css"/>
+            <xsl:variable name="headfile" select="document('include/head.xsl')"/>
+            <xsl:copy-of select="$headfile/htmlcode/node()"/>
         </head>
         <body>
             <!-- the collection description itself -->
             <xsl:text>
             </xsl:text>
             <xsl:comment>Collection description</xsl:comment>
-            <div class="description">
-                <!-- name -->
-                <xsl:apply-templates select="atom:title"/>
-                <!-- description -->
-                <xsl:apply-templates select="atom:content"/>
-                <!-- latest-version -->
-                <xsl:call-template name="latest-version"/>
-                <!-- type -->
-                <xsl:call-template name="type"/>
-                <!-- creators -->
-                <xsl:call-template name="creators"/>
-                <!-- curators -->
-                <xsl:call-template name="curators"/>
-                <!-- projects -->
-                <xsl:call-template name="projects"/>
-                <!-- services -->
-                <xsl:call-template name="services"/>
-                <!-- location -->
-                <xsl:call-template name="locations"/>
-                <!-- rights -->
-                <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
-                <xsl:apply-templates select="atom:rights"/>
-                <!-- spatial -->
-                <xsl:call-template name="spatial"/>
-                <!-- temporal -->
-                <xsl:call-template name="temporal"/>
-                <!-- subjects -->
-                <xsl:call-template name="subjects"/>
-                <!-- related info -->
-                <xsl:call-template name="related"/>
-                <!-- representations -->
-                <xsl:call-template name="representations"/>
-                <!-- metadata about the description -->
+            <xsl:variable name="headerfile" select="document('include/header.xsl')"/>
+            <xsl:copy-of select="$headerfile/htmlcode/node()"/>
+            <div class="wrapper">
+                <div class="description">
+                    <!-- name -->
+                    <xsl:apply-templates select="atom:title"/>
+                    <!-- description -->
+                    <xsl:apply-templates select="atom:content"/>
+                    <!-- latest-version -->
+                    <xsl:call-template name="latest-version"/>
+                    <!-- type -->
+                    <xsl:call-template name="type"/>
+                    <!-- creators -->
+                    <xsl:call-template name="creators"/>
+                    <!-- curators -->
+                    <xsl:call-template name="curators"/>
+                    <!-- projects -->
+                    <xsl:call-template name="projects"/>
+                    <!-- services -->
+                    <xsl:call-template name="services"/>
+                    <!-- location -->
+                    <xsl:call-template name="locations"/>
+                    <!-- rights -->
+                    <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
+                    <xsl:apply-templates select="atom:rights"/>
+                    <!-- spatial -->
+                    <xsl:call-template name="spatial"/>
+                    <!-- temporal -->
+                    <xsl:call-template name="temporal"/>
+                    <!-- subjects -->
+                    <xsl:call-template name="subjects"/>
+                    <!-- related info -->
+                    <xsl:call-template name="related"/>
+                    <!-- representations -->
+                    <xsl:call-template name="representations"/>
+                    <!-- metadata about the description -->
                 <xsl:text>
                 </xsl:text>
-                <div class="clear"></div>
-                <xsl:comment>Metadata about the description</xsl:comment>
-                <div class="about">
-                    <!-- publisher -->
-                    <xsl:apply-templates
-                            select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                    <xsl:comment>Metadata about the description</xsl:comment>
+                    <div class="about">
+                        <!-- publisher -->
+                        <xsl:apply-templates
+                                select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
 
-                    <!-- updated and updater -->
-                    <xsl:call-template name="updated"/>
+                        <!-- updated and updater -->
+                        <xsl:call-template name="updated"/>
+                    </div>
                 </div>
             </div>
-
+            <xsl:variable name="footerfile" select="document('include/footer.xsl')"/>
+            <xsl:copy-of select="$footerfile/htmlcode/node()"/>
         </body>
     </xsl:template>
 
@@ -295,7 +300,7 @@
             </div>
         </xsl:if>
     </xsl:template>
-    
+
     <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
         <p>
             <xsl:value-of select="@content"/>
