@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    getLoginLink();
+});
+function getLoginLink() {
     $(".signin").click(function(e) {
         e.preventDefault();
         $('#login-error').html('');
@@ -15,8 +18,7 @@ $(document).ready(function() {
             $("fieldset#signin_menu").hide();
         }
     });
-});
-
+}
 function login() {
     var username = $('#username').val();
     var password = $('#password').val();
@@ -28,6 +30,7 @@ function login() {
             $('#signin-link').html('Welcome ' + username + ', Sign out');
             $('a#signin-link').attr('href', '/logout');
             $('a#signin-link').attr('class', 'signout');
+            $(".signin").removeClass("menu-open");
             $("fieldset#signin_menu").hide();
             $(".signout").click(function(e) {
                 e.preventDefault();
@@ -36,11 +39,12 @@ function login() {
                     url: '/logout',
                     success: function(data) {
                         $('#signin-link').html('Sign in');
-                        $('a#signin-link').attr('href', 'logins');
+                        $('a#signin-link').attr('href', '#');
                         $('a#signin-link').attr('class', 'signin');
-                        $("fieldset#signin_menu").hide();
+                        getLoginLink();
                     }
                 });
+
             });
         },
         error: function(xhr, textStatus, errorThrown) {

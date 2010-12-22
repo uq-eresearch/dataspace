@@ -50,7 +50,7 @@
         </ul>
         <%--<div class="clear">&nbsp;</div>--%>
     </div>
-    <a href="logins" class="signin" id="signin-link">Sign in</a>
+    <a href="#" class="signin" id="signin-link">Sign in</a>
     <fieldset id="signin_menu">
         <span id="login-error" style="color:#ff0000;"></span>
 
