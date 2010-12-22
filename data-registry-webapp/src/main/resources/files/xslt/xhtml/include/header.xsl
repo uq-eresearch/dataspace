@@ -34,7 +34,9 @@
                         <a href="http://my.uq.edu.au/">my.UQ</a>
                     </li>
                 </ul>
-                <div class="clear"></div>
+                <div class="clear">
+
+                </div>
             </div>
             <div id="search">
                 <form id="searchbox" method="get" action="http://www.uq.edu.au/search">
@@ -50,7 +52,9 @@
                     </fieldset>
                 </form>
             </div>
-            <div class="clear"></div>
+            <div class="clear">
+
+            </div>
         </div>
     </div>
     <div id="topnav">
@@ -70,9 +74,12 @@
                 </li>
             </ul>
         </div>
-        <a href="logins" class="signin">Sign in</a>
+        <a href="logins" class="signin" id="signin-link">Sign in</a>
         <fieldset id="signin_menu">
-            <form method="post" id="signin" action="/login">
+            <span id="login-error" style="color:#ff0000;">
+
+            </span>
+            <form id="signin" onsubmit="login(); return false;">
                 <p>
                     <label for="username">Username</label>
                     <input id="username" name="username" value="" title="username" tabindex="4" type="text"/>

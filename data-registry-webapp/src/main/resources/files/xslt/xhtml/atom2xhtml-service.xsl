@@ -35,55 +35,61 @@
                 <xsl:value-of select="atom:title"/>
             </title>
             <link href="/description.css" rel="stylesheet" type="text/css"/>
+            <xsl:variable name="headfile" select="document('include/head.xsl')"/>
+            <xsl:copy-of select="$headfile/htmlcode/node()"/>
         </head>
         <body>
-            <!-- the collection description itself -->
             <xsl:text>
             </xsl:text>
             <xsl:comment>Collection description</xsl:comment>
-            <div class="description">
-                <!-- name -->
-                <xsl:apply-templates select="atom:title"/>
-                <!-- description -->
-                <xsl:apply-templates select="atom:content"/>
-                <!-- type -->
-                <xsl:call-template name="type"/>
-                <!-- creators -->
-                <xsl:call-template name="creators"/>
-                <!-- curators -->
-                <xsl:call-template name="curators"/>
-                <!-- projects -->
-                <xsl:call-template name="projects"/>
-                <!-- location -->
-                <xsl:call-template name="locations"/>
-                <!-- rights -->
-                <xsl:apply-templates
-                        select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
-                <xsl:apply-templates select="atom:rights"/>
-                <!-- spatial -->
-                <xsl:call-template name="spatial"/>
-                <!-- temporal -->
-                <xsl:apply-templates
-                        select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
-                <!-- subjects -->
-                <xsl:call-template name="subjects"/>
-                <!-- related info -->
-                <xsl:call-template name="related"/>
+            <xsl:variable name="headerfile" select="document('include/header.xsl')"/>
+            <xsl:copy-of select="$headerfile/htmlcode/node()"/>
+            <div class="wrapper">
+                <div class="description">
+                    <!-- name -->
+                    <xsl:apply-templates select="atom:title"/>
+                    <!-- description -->
+                    <xsl:apply-templates select="atom:content"/>
+                    <!-- type -->
+                    <xsl:call-template name="type"/>
+                    <!-- creators -->
+                    <xsl:call-template name="creators"/>
+                    <!-- curators -->
+                    <xsl:call-template name="curators"/>
+                    <!-- projects -->
+                    <xsl:call-template name="projects"/>
+                    <!-- location -->
+                    <xsl:call-template name="locations"/>
+                    <!-- rights -->
+                    <xsl:apply-templates
+                            select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
+                    <xsl:apply-templates select="atom:rights"/>
+                    <!-- spatial -->
+                    <xsl:call-template name="spatial"/>
+                    <!-- temporal -->
+                    <xsl:apply-templates
+                            select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
+                    <!-- subjects -->
+                    <xsl:call-template name="subjects"/>
+                    <!-- related info -->
+                    <xsl:call-template name="related"/>
 
-                <!-- metadata about the description -->
+                    <!-- metadata about the description -->
                 <xsl:text>
                 </xsl:text>
-                <xsl:comment>Metadata about the description</xsl:comment>
-                <div class="about">
-                    <!-- publisher -->
-                    <xsl:apply-templates
-                            select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                    <xsl:comment>Metadata about the description</xsl:comment>
+                    <div class="about">
+                        <!-- publisher -->
+                        <xsl:apply-templates
+                                select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
 
-                    <!-- updated and updater -->
-                    <xsl:call-template name="updated"/>
+                        <!-- updated and updater -->
+                        <xsl:call-template name="updated"/>
+                    </div>
                 </div>
             </div>
-
+            <xsl:variable name="footerfile" select="document('include/footer.xsl')"/>
+            <xsl:copy-of select="$footerfile/htmlcode/node()"/>
         </body>
     </xsl:template>
 

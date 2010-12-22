@@ -25,7 +25,7 @@
                 <div class="directions">
                     <a href="http://www.uq.edu.au/maps/">Maps and Directions</a>
                 </div>
-                <div id="copyright"><![CDATA[&copy;]]> 2010 The University of Queensland</div>
+                <div id="copyright">&#160; 2010 The University of Queensland</div>
             </div>
             <div id="footer-resources">
                 <h2>Supplemental Resources</h2>
