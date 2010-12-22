@@ -147,8 +147,8 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     }
 
     @Override
-    public Iterable<Activity> getEntries(RequestContext request) throws ResponseContextException {
-        return activityDao.getAllPublished();
+    public Iterable<Activity> getEntries(RequestContext requestContext) throws ResponseContextException {
+        return HttpMethodHelper.getRecords(requestContext, Activity.class);
     }
 
     @Override

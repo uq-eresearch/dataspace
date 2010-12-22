@@ -30,6 +30,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author: alabri
@@ -304,15 +305,50 @@ public class HttpMethodHelper {
         Document<Entry> entry_doc;
         try {
             entry_doc = (Document<Entry>) request.getDocument(parser).clone();
+            if (entry_doc == null) {
+                return null;
+            }
+            return entry_doc.getRoot();
         } catch (ParseException e) {
             throw new ResponseContextException(400, e);
         } catch (IOException e) {
             throw new ResponseContextException(500, e);
         }
-        if (entry_doc == null) {
-            return null;
+    }
+
+    public static Iterable getRecords(RequestContext request, Class clazz) {
+        User user = authenticationManager.getCurrentUser(request);
+        List list;
+        if (authorizationManager.canAccessWorkingCopy(user, Collection.class)) {
+            if (clazz.equals(Activity.class)) {
+                list = activityDao.getAllPublished();
+                list.addAll(activityDao.getAllUnpublished());
+            } else if (clazz.equals(Collection.class)) {
+                list = collectionDao.getAllPublished();
+                list.addAll(collectionDao.getAllUnpublished());
+            } else if (clazz.equals(Party.class)) {
+                list = partyDao.getAllPublished();
+                list.addAll(partyDao.getAllUnpublished());
+            } else if (clazz.equals(Service.class)) {
+                list = serviceDao.getAllPublished();
+                list.addAll(serviceDao.getAllUnpublished());
+            } else {
+                return null;
+            }
+        } else {
+            if (clazz.equals(Activity.class)) {
+                list = activityDao.getAllPublished();
+            } else if (clazz.equals(Collection.class)) {
+                list = collectionDao.getAllPublished();
+            } else if (clazz.equals(Party.class)) {
+                list = partyDao.getAllPublished();
+            } else if (clazz.equals(Service.class)) {
+                list = serviceDao.getAllPublished();
+            } else {
+                return null;
+            }
         }
-        return entry_doc.getRoot();
+        return list;
     }
 
     private static Record getExistingRecord(String uriKey, Class clazz) {
@@ -379,16 +415,7 @@ public class HttpMethodHelper {
 
     private static String getHtmlPage(Class clazz) throws ResponseContextException {
         try {
-            if (clazz.equals(Activity.class)) {
-                return "activity.jsp";
-            } else if (clazz.equals(Collection.class)) {
-                return "collection.jsp";
-            } else if (clazz.equals(Party.class)) {
-                return "party.jsp";
-            } else if (clazz.equals(Service.class)) {
-                return "service.jsp";
-            }
-            return null;
+            return clazz.getSimpleName().toLowerCase() + ".jsp";
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }

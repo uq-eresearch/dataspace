@@ -55,7 +55,7 @@ public class AuthorizationManagerImpl implements AuthorizationManager<User> {
 
     @Override
     public boolean canAccessWorkingCopy(User user, Class<?> clazz) {
-        return false;
+        return user != null;
     }
 
     @Override
