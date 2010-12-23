@@ -44,7 +44,25 @@
     <div id="topnav-inner">
         <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/browse">Browse</a></li>
+            <li>
+                <a href="#" class="browse" id="browse">Browse</a>
+                <fieldset id="browse_menu">
+                    <ul id="browse_submenu" class="submenu">
+                        <li>
+                            <a href="/collections">Collections</a>
+                        </li>
+                        <li>
+                            <a href="/parties">Parties</a>
+                        </li>
+                        <li>
+                            <a href="/services">Services</a>
+                        </li>
+                        <li>
+                            <a href="/activities">Activities</a>
+                        </li>
+                    </ul>
+                </fieldset>
+            </li>
             <li><a href="/search">Search</a></li>
             <li><a href="http://www.uq.edu.au/about/">About</a></li>
         </ul>

@@ -8,6 +8,14 @@ function getLoginLink() {
         $("fieldset#signin_menu").toggle();
         $(".signin").toggleClass("menu-open");
     });
+    $(".browse").mouseover(function() {
+        $(".browse").addClass("menu-open");
+        $("fieldset#browse_menu").fadeIn(400);
+    });
+    $("#browse_menu").mouseout(function() {
+        $(".browse").removeClass("menu-open");
+    });
+
     $(".signout").click(function(e) {
         e.preventDefault();
         $.ajax({
@@ -28,7 +36,11 @@ function getLoginLink() {
     $(document).mouseup(function(e) {
         if ($(e.target).parent("a.signin").length == 0) {
             $(".signin").removeClass("menu-open");
-            $("fieldset#signin_menu").hide();
+            $("fieldset#signin_menu").fadeOut(400);
+        }
+        if ($(e.target).parent("a.browse").length == 0) {
+            $(".browse").removeClass("menu-open");
+            $("fieldset#browse_menu").fadeOut(400);
         }
     });
 }
