@@ -428,6 +428,7 @@ h6 {
 #topnav #browse_submenu li a {
     text-transform: none;
     text-decoration: none;
+    color: #ffffff;
     margin: 0;
     padding: 0px 25px 0 0;
 }
@@ -818,7 +819,7 @@ p.centenary {
     position: absolute;
     width: 210px;
     z-index: 9999;
-    opacity: 0.8;
+    opacity: 0.85;
     border: 1px transparent;
     text-align: left;
     padding: 12px;
@@ -841,12 +842,13 @@ p.centenary {
     position: absolute;
     width: 210px;
     z-index: 9999;
-    opacity: 0.8;
+    opacity: 0.85;
     border: 1px transparent;
     text-align: left;
     padding: 12px;
     margin-top: 5px;
     margin-right: 0px;
+    margin-left: -8px;
     float: left;
     color: #ffffff;
     font-size: 11px;
