@@ -116,6 +116,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
                 Entry e = feed.addEntry();
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
+                FeedHelper.setPublished(entryObj, e);
                 if (isMediaEntry(entryObj)) {
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {

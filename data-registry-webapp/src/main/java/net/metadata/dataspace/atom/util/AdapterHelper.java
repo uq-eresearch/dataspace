@@ -129,6 +129,7 @@ public class AdapterHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
+        FeedHelper.setPublished(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -156,6 +157,7 @@ public class AdapterHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
+        FeedHelper.setPublished(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -189,6 +191,7 @@ public class AdapterHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
+        FeedHelper.setPublished(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -207,6 +210,7 @@ public class AdapterHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
+        FeedHelper.setPublished(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -249,7 +253,7 @@ public class AdapterHelper {
                 responseContext.setContentType(Constants.MIME_TYPE_HTML);
             }
             String xslFilePath = "/files/xslt/xhtml/atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
-            XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
+            XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_RIFCS)) {
             String selfLinkHref = entry.getId().toString();

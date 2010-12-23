@@ -83,6 +83,7 @@ JAtom.prototype = {
             item.updated = jQuery(this).find('updated').eq(0).text();
             item.id = jQuery(this).find('id').eq(0).text();
             item.author = jQuery(this).find('author').eq(0).find('name').eq(0).text();
+            item.isDraft = jQuery(this).find('app\\:control').eq(0).find('app\\:draft').eq(0).text();
             feed.items.push(item);
         });
     }

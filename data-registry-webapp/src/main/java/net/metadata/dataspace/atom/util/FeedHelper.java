@@ -106,11 +106,22 @@ public class FeedHelper {
         return feed;
     }
 
-    private static void setPublished(Version version, Entry entry) {
+    public static void setPublished(Version version, Entry entry) {
         Control control = entry.addControl();
         Version published = version.getParent().getPublished();
         //False is used her to indicate the version is published and true (isDraft) is not published
         if (published != null && version.equals(published)) {
+            control.setDraft(false);
+        } else {
+            control.setDraft(true);
+        }
+    }
+
+    public static void setPublished(Record record, Entry entry) {
+        Control control = entry.addControl();
+        Version published = record.getPublished();
+        //False is used her to indicate the version is published and true (isDraft) is not published
+        if (published != null) {
             control.setDraft(false);
         } else {
             control.setDraft(true);

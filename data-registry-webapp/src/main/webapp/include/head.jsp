@@ -24,12 +24,15 @@
 
                     var item = feed.items[i];
                     html += '<div class="record">'
+                    if (item.isDraft == "yes") {
+                        html += '<span class="draft">(draft)</span> ';
+                    }
                     html += '<a href="'
                             + item.link
                             + '">'
                             + item.title
                             + '</a><span class="author"> (' + item.author + ')</span><br/>';
-                    html += item.description + ' ';
+                    html += item.description.substring(0, 200) + ' ';
                     html += '<span class="record-date">' + item.updated
                             + '</span></div>';
 

@@ -1,8 +1,12 @@
 package net.metadata.dataspace.atom.writer;
 
 import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.auth.AuthenticationManager;
+import net.metadata.dataspace.data.model.base.User;
 import org.apache.abdera.model.Base;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
+import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.util.AbstractNamedWriter;
 import org.apache.abdera.util.AbstractWriterOptions;
 import org.apache.abdera.writer.NamedWriter;
@@ -26,10 +30,17 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
     private Logger logger = Logger.getLogger(getClass());
     private static final String[] FORMATS = {Constants.MIME_TYPE_RDF, Constants.MIME_TYPE_RIFCS};
     private String XSL = "";
+    private RequestContext contextRequest;
 
     public XSLTTransformerWriter(String xslFilePath) {
         super("XSLTTransformer", FORMATS);
         this.XSL = xslFilePath;
+    }
+
+    public XSLTTransformerWriter(String xslFilePath, RequestContext request) {
+        super("XSLTTransformer", FORMATS);
+        this.XSL = xslFilePath;
+        this.contextRequest = request;
     }
 
     @Override
@@ -83,6 +94,13 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
         try {
             Templates template = TransformerFactory.newInstance().newTemplates(xsl);
             Transformer transformer = template.newTransformer();
+            if (this.contextRequest != null) {
+                AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
+                User currentUser = authenticationManager.getCurrentUser(this.contextRequest);
+                if (currentUser != null) {
+                    transformer.setParameter("currentUser", currentUser.getUsername());
+                }
+            }
             transformer.transform(xml, result);
         } catch (TransformerConfigurationException tce) {
             throw new TransformerException(tce.getMessageAndLocation());

@@ -114,6 +114,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 Entry e = feed.addEntry();
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
+                FeedHelper.setPublished(entryObj, e);
                 if (isMediaEntry(entryObj)) {
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {
