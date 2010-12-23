@@ -8,7 +8,20 @@ function getLoginLink() {
         $("fieldset#signin_menu").toggle();
         $(".signin").toggleClass("menu-open");
     });
+    $(".signout").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/logout',
+            success: function(data) {
+                $('#signin-link').html('Sign in');
+                $('a#signin-link').attr('href', '#');
+                $('a#signin-link').attr('class', 'signin');
+                getLoginLink();
+            }
+        });
 
+    });
     $("fieldset#signin_menu").mouseup(function() {
         return false
     });
@@ -27,7 +40,7 @@ function login() {
         url: '/login',
         data: 'username=' + username + '&password=' + password,
         success: function(data) {
-            $('#signin-link').html('Welcome ' + username + ', Sign out');
+            $('#signin-link').html('Sign out');
             $('a#signin-link').attr('href', '/logout');
             $('a#signin-link').attr('class', 'signout');
             $(".signin").removeClass("menu-open");

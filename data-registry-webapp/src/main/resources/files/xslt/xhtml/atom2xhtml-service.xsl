@@ -19,6 +19,10 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
 
+    <xsl:include href="include/header.xsl"/>
+    <xsl:include href="include/head.xsl"/>
+    <xsl:include href="include/footer.xsl"/>
+
     <xsl:output method="xml" media-type="application/xhtml+xml" indent="yes"/>
 
     <xsl:template match="/">
@@ -35,15 +39,13 @@
                 <xsl:value-of select="atom:title"/>
             </title>
             <link href="/description.css" rel="stylesheet" type="text/css"/>
-            <xsl:variable name="headfile" select="document('include/head.xsl')"/>
-            <xsl:copy-of select="$headfile/htmlcode/node()"/>
+            <xsl:call-template name="head"/>
         </head>
         <body>
             <xsl:text>
             </xsl:text>
             <xsl:comment>Collection description</xsl:comment>
-            <xsl:variable name="headerfile" select="document('include/header.xsl')"/>
-            <xsl:copy-of select="$headerfile/htmlcode/node()"/>
+            <xsl:call-template name="header"/>
             <div class="wrapper">
                 <div class="description">
                     <!-- name -->
@@ -88,8 +90,7 @@
                     </div>
                 </div>
             </div>
-            <xsl:variable name="footerfile" select="document('include/footer.xsl')"/>
-            <xsl:copy-of select="$footerfile/htmlcode/node()"/>
+            <xsl:call-template name="footer"/>
         </body>
     </xsl:template>
 

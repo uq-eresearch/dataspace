@@ -85,10 +85,11 @@
             </div>
             <xsl:call-template name="loginlink"/>
             <fieldset id="signin_menu">
-                <span id="login-error" style="color:#ff0000;">
 
-                </span>
-                <form action="" id="signin" onsubmit="login(); return false;">
+                <form action="#" method="post" id="signin" onsubmit="login(); return false;">
+                    <p id="login-error" style="color:#ff0000;">
+
+                    </p>
                     <p>
                         <label for="username">Username</label>
                         <input id="username" name="username" value="" title="username" tabindex="4" type="text"/>
@@ -108,7 +109,7 @@
     <xsl:template name="loginlink">
         <xsl:choose>
             <xsl:when test="$currentUser">
-                <a href="/logout" class="signout" id="signin-link">Log out</a>
+                <a href="/logout" class="signout" id="signin-link">Sign out</a>
             </xsl:when>
             <xsl:otherwise>
                 <a href="logins" class="signin" id="signin-link">Sign in</a>
