@@ -119,20 +119,6 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- Rights -->
-    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']">
-        <div class="statement">
-            <div class="property">
-                <p>Access rights</p>
-            </div>
-            <div class="content">
-                <p>
-                    <xsl:value-of select="@content"/>
-                </p>
-            </div>
-        </div>
-    </xsl:template>
-
     <xsl:template
             match="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
         <p>
@@ -144,23 +130,6 @@
                     <xsl:value-of select="@term"/>
                 </xsl:otherwise>
             </xsl:choose>
-        </p>
-    </xsl:template>
-
-    <!-- displayed links -->
-    <xsl:template
-            match="atom:link[@rel='http://purl.org/dc/terms/creator' or @rel='http://purl.org/dc/terms/publisher' or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf' or @rel='http://purl.org/cld/terms/isLocatedAt' or @rel='related']">
-        <p>
-            <a href="{@href}">
-                <xsl:choose>
-                    <xsl:when test="@title">
-                        <xsl:value-of select="@title"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="@href"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </a>
         </p>
     </xsl:template>
 
