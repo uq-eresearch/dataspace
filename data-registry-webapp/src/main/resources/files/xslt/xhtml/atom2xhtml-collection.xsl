@@ -9,14 +9,10 @@
 
     -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
-                xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
-                xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
-                xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
-                xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
+                xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns="http://www.w3.org/1999/xhtml"
-                exclude-result-prefixes="ore atom foaf dc dcterms dctype dcam cld ands rdfa">
+                exclude-result-prefixes="atom rdfa">
 
     <xsl:include href="common.xsl"/>
     <xsl:include href="include/header.xsl"/>
