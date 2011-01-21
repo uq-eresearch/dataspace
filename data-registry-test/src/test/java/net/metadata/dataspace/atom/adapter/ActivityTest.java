@@ -13,8 +13,10 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import java.io.InputStream;
 
 import static junit.framework.Assert.*;
@@ -219,5 +221,38 @@ public class ActivityTest {
         String draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
         assertNotNull("Entry missing draft element", draft);
         assertEquals("Entry's should be draft", "yes", draft);
+
+        //publish entry
+        fileName = "/files/put/published-activity.xml";
+        PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
+        docFromStream = XPathHelper.getDocFromStream(putMethod.getResponseBodyAsStream());
+
+        draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
+        assertNotNull("Entry missing draft element", draft);
+        assertEquals("Entry's should be published", "no", draft);
+
+        Element selfLink = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@rel='self']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing self link", selfLink);
+        String entryLocation = selfLink.getAttribute("href");
+
+        Element xhtmlLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing xhtml link", xhtmlLinkElement);
+        String xhtmlLink = xhtmlLinkElement.getAttribute("href");
+        String expectedXhtmlLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
+        assertEquals(expectedXhtmlLink, xhtmlLink);
+
+        Element rdfLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_RDF + "']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing rdf link", rdfLinkElement);
+        String rdfLink = rdfLinkElement.getAttribute("href");
+        String expectedRdfLink = entryLocation + "?repr=" + Constants.MIME_TYPE_RDF;
+        assertEquals(expectedRdfLink, rdfLink);
+
+        Element rifcsLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing rifcs link", rifcsLinkElement);
+        String rifcsLink = rifcsLinkElement.getAttribute("href");
+        String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
+        assertEquals(expectedRifcsLink, rifcsLink);
+
     }
 }

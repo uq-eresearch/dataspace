@@ -16,7 +16,9 @@ public interface Constants {
     String ATOM_FEED_MIMETYPE = "application/atom+xml;type=feed";
     String HTML_MIME_TYPE = "text/html";
     String ATOM_SERVICE_MIMETYPE = "application/atomsvc+xml";
-
+    String MIME_TYPE_RDF = "application/rdf+xml";
+    String MIME_TYPE_RIFCS = "application/rifcs+xml";
+    String MIME_TYPE_XHTML = "application/xhtml+xml";
 
     /**
      * Adapters
@@ -34,8 +36,8 @@ public interface Constants {
     String TITLE_FOR_ACTIVITIES = "Activities";
     String TITLE_FOR_SERVICES = "Services";
 
-    String URL_PREFIX = "http://localhost:9635/";
-//    String URL_PREFIX = "http://localhost:8080/";
+//    String URL_PREFIX = "http://localhost:9635/";
+    String URL_PREFIX = "http://localhost:8080/";
 
     /**
      * Target Type names
@@ -73,4 +75,5 @@ public interface Constants {
     String RECORD_UPDATED_PATH = "/atom:entry/atom:updated";
     String RECORD_DRAFT_PATH = "/atom:entry/app:control/app:draft";
     String RECORD_AUTHOR_NAME_PATH = "/atom:entry/atom:author/atom:name";
+    String RECORD_LINK_PATH = "/atom:entry/atom:link";
 }
