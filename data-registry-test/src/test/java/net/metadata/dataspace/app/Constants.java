@@ -1,7 +1,5 @@
 package net.metadata.dataspace.app;
 
-import javax.xml.namespace.QName;
-
 /**
  * Author: alabri
  * Date: 05/11/2010
@@ -21,40 +19,6 @@ public interface Constants {
 
 
     /**
-     * Namespace related
-     */
-    String NAMESPACE = "http://dataspace.metadata.net/";
-    String PREFIX = "uqdata";
-
-
-    /**
-     * Element names
-     */
-    String ELEMENT_NAME_TITLE = "title";
-    String ELEMENT_NAME_SUMMARY = "summary";
-    String ELEMENT_NAME_CONTENT = "content";
-    String ELEMENT_NAME_UPDATED = "updated";
-    String ELEMENT_NAME_AUTHOR = "author";
-    String ELEMENT_NAME_AUTHORS = "authors";
-    String ELEMENT_NAME_SUBJECT = "subject";
-    String ELEMENT_NAME_COLLECTOR_OF = "collectorOf";
-    String ELEMENT_NAME_SUPPORTED_BY = "supportedBy";
-    String ELEMENT_NAME_HAS_OUTPUT = "hasOutput";
-    String ELEMENT_NAME_HAS_PARTICIPANT = "hasParticipant";
-    String ELEMENT_NAME_IS_PARTICIPANT_IN = "isParticipantIn";
-    String ELEMENT_NAME_COLLECTOR = "collector";
-    String ELEMENT_NAME_LOCATION = "location";
-    String ELEMENT_NAME_SUPPORTS = "supports";
-    String ELEMENT_NAME_IS_OUTPUT_OF = "isOutputOf";
-
-    /**
-     * Attribute names
-     */
-    String ATTRIBUTE_NAME_URI = "uri";
-    String ATTRIBUTE_NAME_VOCABULARY = "vocabulary";
-    String ATTRIBUTE_NAME_VALUE = "value";
-
-    /**
      * Adapters
      */
     String PATH_FOR_PARTIES = "parties";
@@ -72,20 +36,6 @@ public interface Constants {
 
     String URL_PREFIX = "http://localhost:9635/";
 //    String URL_PREFIX = "http://localhost:8080/";
-
-    /**
-     * Qualified names
-     */
-    QName QNAME_SUBJECT = new QName(NAMESPACE, ELEMENT_NAME_SUBJECT, PREFIX);
-    QName QNAME_COLLECTOR_OF = new QName(NAMESPACE, ELEMENT_NAME_COLLECTOR_OF, PREFIX);
-    QName QNAME_COLLECTOR = new QName(NAMESPACE, ELEMENT_NAME_COLLECTOR, PREFIX);
-    QName QNAME_HAS_OUTPUT = new QName(NAMESPACE, ELEMENT_NAME_HAS_OUTPUT, PREFIX);
-    QName QNAME_IS_OUTPUT_OF = new QName(NAMESPACE, ELEMENT_NAME_IS_OUTPUT_OF, PREFIX);
-    QName QNAME_HAS_PARTICIPANT = new QName(NAMESPACE, ELEMENT_NAME_HAS_PARTICIPANT, PREFIX);
-    QName QNAME_IS_PARTICIPANT_IN = new QName(NAMESPACE, ELEMENT_NAME_IS_PARTICIPANT_IN, PREFIX);
-    QName QNAME_LOCATION = new QName(NAMESPACE, ELEMENT_NAME_LOCATION, PREFIX);
-    QName QNAME_SUPPORTED_BY = new QName(NAMESPACE, ELEMENT_NAME_SUPPORTED_BY, PREFIX);
-    QName QNAME_SUPPORTS = new QName(NAMESPACE, ELEMENT_NAME_SUPPORTS, PREFIX);
 
     /**
      * Target Type names
@@ -116,4 +66,11 @@ public interface Constants {
     String PASSWORD = "test";
 
     String TEST_CONTEXT = "/conf/spring/testContext.xml";
+
+    String RECORD_ID_PATH = "/atom:entry/atom:id";
+    String RECORD_TITLE_PATH = "/atom:entry/atom:title";
+    String RECORD_CONTENT_PATH = "/atom:entry/atom:content";
+    String RECORD_UPDATED_PATH = "/atom:entry/atom:updated";
+    String RECORD_DRAFT_PATH = "/atom:entry/app:control/app:draft";
+    String RECORD_AUTHOR_NAME_PATH = "/atom:entry/atom:author/atom:name";
 }

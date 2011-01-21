@@ -2,6 +2,7 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.atom.util.ClientHelper;
+import net.metadata.dataspace.atom.util.XPathHelper;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -11,8 +12,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.w3c.dom.Document;
 
-import static junit.framework.Assert.assertEquals;
+import javax.xml.xpath.XPath;
+import java.io.InputStream;
+
+import static junit.framework.Assert.*;
 
 /**
  * Author: alabri
@@ -164,6 +169,55 @@ public class ServiceTest {
         //get without authenticating
         GetMethod getMethod = ClientHelper.getEntry(client, feedUrl, Constants.ATOM_FEED_MIMETYPE);
         assertEquals("Could not get feed", 200, getMethod.getStatusCode());
+    }
+
+    @Test
+    public void testServiceRecordContent() throws Exception {
+
+        //create a client
+        HttpClient client = new HttpClient();
+        //authenticate
+        int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        assertEquals("Could not authenticate", 200, status);
+        //Post Entry
+        String fileName = "/files/post/new-service.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
+        assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+        String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
+
+        XPath xpath = XPathHelper.getXPath();
+        InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
+        Document docFromStream = XPathHelper.getDocFromStream(responseBodyAsStream);
+        Document docFromFile = XPathHelper.getDocFromFile(fileName);
+
+        String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
+        assertNotNull("Entry missing id", id);
+        assertTrue("Entry's id does not contain path to entry", id.contains(Constants.PATH_FOR_SERVICES));
+
+        String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromStream);
+        assertNotNull("Entry missing title", title);
+        String originalTitle = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromFile);
+        assertNotNull("Original Entry missing title", originalTitle);
+        assertEquals("Entry's title is incorrect", originalTitle, title);
+
+        String content = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromStream);
+        assertNotNull("Entry missing content", content);
+        String originalContent = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromFile);
+        assertNotNull("Original Entry missing content", originalContent);
+        assertEquals("Entry's content is incorrect", originalContent, content);
+
+        String updated = xpath.evaluate(Constants.RECORD_UPDATED_PATH, docFromStream);
+        assertNotNull("Entry missing updated", updated);
+
+        String authorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromStream);
+        assertNotNull("Entry missing author name", authorName);
+        String originalAuthorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromFile);
+        assertNotNull("Original Entry missing author name", originalAuthorName);
+        assertEquals("Entry's author name is incorrect", originalAuthorName, authorName);
+
+        String draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
+        assertNotNull("Entry missing draft element", draft);
+        assertEquals("Entry's should be draft", "yes", draft);
     }
 }
 
