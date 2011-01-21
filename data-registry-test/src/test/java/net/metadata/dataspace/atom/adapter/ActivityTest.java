@@ -14,6 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -253,6 +255,84 @@ public class ActivityTest {
         String rifcsLink = rifcsLinkElement.getAttribute("href");
         String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
         assertEquals(expectedRifcsLink, rifcsLink);
+
+    }
+
+    @Test
+    public void testActivityFeedContent() throws Exception {
+        //create a client
+        HttpClient client = new HttpClient();
+        //authenticate
+        int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        assertEquals("Could not authenticate", 200, status);
+        //Post Entry
+        String fileName = "/files/post/new-activity.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
+        assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+        String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
+
+        //publish entry
+        fileName = "/files/put/published-activity.xml";
+        PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
+
+        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_ACTIVITIES;
+        //get without authenticating
+        GetMethod getMethod = ClientHelper.getEntry(client, feedUrl, Constants.ATOM_FEED_MIMETYPE);
+        assertEquals("Could not get feed", 200, getMethod.getStatusCode());
+
+        XPath xpath = XPathHelper.getXPath();
+        InputStream responseBodyAsStream = getMethod.getResponseBodyAsStream();
+        Document docFromStream = XPathHelper.getDocFromStream(responseBodyAsStream);
+
+        String id = xpath.evaluate(Constants.FEED_ID_PATH, docFromStream);
+        assertNotNull("Feed missing id", id);
+        assertTrue("Feed's id does not contain path to entry", id.contains(Constants.PATH_FOR_ACTIVITIES));
+
+        String title = xpath.evaluate(Constants.FEED_TITLE_PATH, docFromStream);
+        assertNotNull("Feed missing title", title);
+        assertEquals("Feed's title is incorrect", Constants.TITLE_FOR_ACTIVITIES, title);
+
+        String updated = xpath.evaluate(Constants.FEED_UPDATED_PATH, docFromStream);
+        assertNotNull("Feed missing updated", updated);
+
+        String authorName = xpath.evaluate(Constants.FEED_AUTHOR_NAME_PATH, docFromStream);
+        assertNotNull("Feed missing author name", authorName);
+
+        Element selfLink = (Element) xpath.evaluate(Constants.FEED_LINK_PATH + "[@rel='self']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Feed missing self link", selfLink);
+        String feedSelfLink = selfLink.getAttribute("href");
+        assertTrue(feedSelfLink.contains(Constants.ATOM_FEED_MIMETYPE));
+
+        Element alternateLink = (Element) xpath.evaluate(Constants.FEED_LINK_PATH + "[@rel='alternate']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Feed missing alternate link", alternateLink);
+
+        //Number of entries in the feed
+        NodeList nodes = (NodeList) xpath.evaluate(Constants.FEED_PATH + "/atom:entry", docFromStream, XPathConstants.NODESET);
+        int numberOfEntries = nodes.getLength();
+        assertTrue("There should be at least one entry in this feed", numberOfEntries > 0);
+
+        Node entry = nodes.item(0);
+
+        String entryId = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_ID_PATH, entry);
+        assertNotNull("Feed entry missing id", entryId);
+        assertTrue("Feed entry's id does not contain path to entry", entryId.contains(Constants.PATH_FOR_ACTIVITIES));
+
+        String entryTitle = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_TITLE_PATH, entry);
+        assertNotNull("Feed entry missing title", entryTitle);
+        assertFalse("Feed entry title is empty", entryTitle.isEmpty());
+
+        String entryContent = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_CONTENT_PATH, entry);
+        assertNotNull("Feed entry missing content", entryContent);
+        assertFalse("Feed entry content is empty", entryContent.isEmpty());
+
+        String entryUpdated = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_UPDATED_PATH, entry);
+        assertNotNull("Feed entry missing updated", entryUpdated);
+        assertFalse("Feed entry updated is empty", entryContent.isEmpty());
+
+        String draft = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_DRAFT_PATH, entry);
+        assertNotNull("Feed Entry missing draft element", draft);
+        assertFalse("Feed entry draft is empty", entryContent.isEmpty());
 
     }
 }

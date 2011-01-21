@@ -36,8 +36,8 @@ public interface Constants {
     String TITLE_FOR_ACTIVITIES = "Activities";
     String TITLE_FOR_SERVICES = "Services";
 
-//    String URL_PREFIX = "http://localhost:9635/";
-    String URL_PREFIX = "http://localhost:8080/";
+    String URL_PREFIX = "http://localhost:9635/";
+//    String URL_PREFIX = "http://localhost:8080/";
 
     /**
      * Target Type names
@@ -69,6 +69,13 @@ public interface Constants {
 
     String TEST_CONTEXT = "/conf/spring/testContext.xml";
 
+    String FEED_PATH = "/atom:feed";
+    String FEED_ID_PATH = "/atom:feed/atom:id";
+    String FEED_TITLE_PATH = "/atom:feed/atom:title";
+    String FEED_UPDATED_PATH = "/atom:feed/atom:updated";
+    String FEED_AUTHOR_NAME_PATH = "/atom:feed/atom:author/atom:name";
+    String FEED_LINK_PATH = "/atom:feed/atom:link";
+
     String RECORD_ID_PATH = "/atom:entry/atom:id";
     String RECORD_TITLE_PATH = "/atom:entry/atom:title";
     String RECORD_CONTENT_PATH = "/atom:entry/atom:content";
@@ -76,4 +83,5 @@ public interface Constants {
     String RECORD_DRAFT_PATH = "/atom:entry/app:control/app:draft";
     String RECORD_AUTHOR_NAME_PATH = "/atom:entry/atom:author/atom:name";
     String RECORD_LINK_PATH = "/atom:entry/atom:link";
+
 }
