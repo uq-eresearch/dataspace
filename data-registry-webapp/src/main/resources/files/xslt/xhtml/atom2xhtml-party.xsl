@@ -48,6 +48,8 @@
                     <xsl:apply-templates select="atom:title"/>
                     <!-- description -->
                     <xsl:apply-templates select="atom:content"/>
+                    <!-- latest-version -->
+                    <xsl:call-template name="latest-version"/>
                     <!-- type -->
                     <xsl:call-template name="type"/>
                     <!-- creators -->
@@ -63,13 +65,13 @@
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
                     <!-- temporal -->
-                    <xsl:apply-templates
-                            select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
+                    <xsl:call-template name="temporal"/>
                     <!-- subjects -->
                     <xsl:call-template name="subjects"/>
                     <!-- related info -->
                     <xsl:call-template name="related"/>
-
+                    <!-- representations -->
+                    <xsl:call-template name="representations"/>
                     <!-- metadata about the description -->
                 <xsl:text>
                 </xsl:text>

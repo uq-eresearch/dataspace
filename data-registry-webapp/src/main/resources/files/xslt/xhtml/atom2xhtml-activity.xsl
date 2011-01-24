@@ -48,16 +48,14 @@
                     <xsl:apply-templates select="atom:title"/>
                     <!-- description -->
                     <xsl:apply-templates select="atom:content"/>
+                    <!-- latest-version -->
+                    <xsl:call-template name="latest-version"/>
                     <!-- type -->
                     <xsl:call-template name="type"/>
                     <!-- creators -->
                     <xsl:call-template name="creators"/>
                     <!-- curators -->
                     <xsl:call-template name="curators"/>
-                    <!-- projects -->
-                    <xsl:call-template name="projects"/>
-                    <!-- location -->
-                    <xsl:call-template name="locations"/>
                     <!-- rights -->
                     <xsl:apply-templates
                             select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
@@ -65,13 +63,11 @@
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
                     <!-- temporal -->
-                    <xsl:apply-templates
-                            select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
-                    <!-- subjects -->
-                    <xsl:call-template name="subjects"/>
+                    <xsl:call-template name="temporal"/>
                     <!-- related info -->
                     <xsl:call-template name="related"/>
-
+                    <!-- representations -->
+                    <xsl:call-template name="representations"/>
                     <!-- metadata about the description -->
                 <xsl:text>
                 </xsl:text>
@@ -92,18 +88,20 @@
 
     <!-- object type -->
     <xsl:template name="type">
-        <div class="statement">
-            <div class="property">
-                <p>Type</p>
+        <xsl:if test="atom:category[@term='http://xmlns.com/foaf/0.1/Project']">
+            <div class="statement">
+                <div class="property">
+                    <p>Type</p>
+                </div>
+                <div class="content">
+                    <p>
+                        <xsl:value-of select="atom:category[@term='http://xmlns.com/foaf/0.1/Project']/@label"/>
+                    </p>
+                </div>
             </div>
-            <div class="content">
-                <p>
-                    <xsl:value-of
-                            select="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@label"/>
-                </p>
-            </div>
-        </div>
+        </xsl:if>
     </xsl:template>
+
 
     <!-- projects -->
     <xsl:template name="projects">
