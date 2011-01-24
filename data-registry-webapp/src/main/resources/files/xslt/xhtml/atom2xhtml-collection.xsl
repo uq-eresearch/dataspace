@@ -14,7 +14,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="atom rdfa">
 
-    <xsl:include href="common.xsl"/>
+    <xsl:include href="common-xhtml.xsl"/>
     <xsl:include href="include/header.xsl"/>
     <xsl:include href="include/head.xsl"/>
     <xsl:include href="include/footer.xsl"/>

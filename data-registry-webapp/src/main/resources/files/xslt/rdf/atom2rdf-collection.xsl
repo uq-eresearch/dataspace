@@ -17,7 +17,7 @@
                 xmlns:uqdata="http://dataspace.metadata.net/"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#">
-    <xsl:include href="common.xsl"/>
+    <xsl:include href="common-rdf.xsl"/>
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
 
     <xsl:template match="/">

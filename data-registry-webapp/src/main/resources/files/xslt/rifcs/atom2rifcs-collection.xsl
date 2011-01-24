@@ -14,7 +14,7 @@
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns="http://ands.org.au/standards/rif-cs/registryObjects">
 
-    <xsl:include href="common.xsl"/>
+    <xsl:include href="common-rifcs.xsl"/>
     <xsl:output method="xml" media-type="application/rifcs+xml" indent="yes"/>
 
     <xsl:template match="/">
