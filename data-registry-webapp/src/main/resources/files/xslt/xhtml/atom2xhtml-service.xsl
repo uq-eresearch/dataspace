@@ -56,6 +56,8 @@
                     <xsl:call-template name="creators"/>
                     <!-- curators -->
                     <xsl:call-template name="curators"/>
+                    <!-- accesses -->
+                    <xsl:call-template name="collections"/>
                     <!-- location -->
                     <xsl:call-template name="locations"/>
                     <!-- rights -->
@@ -104,19 +106,19 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- projects -->
-    <xsl:template name="projects">
-        <div class="statement">
-            <div class="property">
-                <p>Project (s)</p>
+    <!-- collections -->
+    <xsl:template name="collections">
+        <xsl:if test="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy']">
+            <div class="statement">
+                <div class="property">
+                    <p>Accesses</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates
+                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy']"/>
+                </div>
             </div>
-            <div class="content">
-
-                <xsl:apply-templates
-                        select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
-
-            </div>
-        </div>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template

@@ -56,6 +56,10 @@
                     <xsl:call-template name="creators"/>
                     <!-- curators -->
                     <xsl:call-template name="curators"/>
+                    <!-- accesses -->
+                    <xsl:call-template name="participants"/>
+                    <!-- accesses -->
+                    <xsl:call-template name="output"/>
                     <!-- rights -->
                     <xsl:apply-templates
                             select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
@@ -64,6 +68,8 @@
                     <xsl:call-template name="spatial"/>
                     <!-- temporal -->
                     <xsl:call-template name="temporal"/>
+                    <!-- subjects -->
+                    <xsl:call-template name="subjects"/>
                     <!-- related info -->
                     <xsl:call-template name="related"/>
                     <!-- representations -->
@@ -101,21 +107,34 @@
             </div>
         </xsl:if>
     </xsl:template>
-
-
-    <!-- projects -->
-    <xsl:template name="projects">
-        <div class="statement">
-            <div class="property">
-                <p>Project (s)</p>
+    <!-- collections -->
+    <xsl:template name="participants">
+        <xsl:if test="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant']">
+            <div class="statement">
+                <div class="property">
+                    <p>Participants</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates
+                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant']"/>
+                </div>
             </div>
-            <div class="content">
+        </xsl:if>
+    </xsl:template>
 
-                <xsl:apply-templates
-                        select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
-
+    <!-- collections -->
+    <xsl:template name="output">
+        <xsl:if test="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput']">
+            <div class="statement">
+                <div class="property">
+                    <p>Output</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates
+                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput']"/>
+                </div>
             </div>
-        </div>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template
