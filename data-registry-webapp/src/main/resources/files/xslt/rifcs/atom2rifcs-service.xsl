@@ -38,8 +38,8 @@
 
             <!-- collection -->
             <xsl:if
-                    test="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@term = 'http://purl.org/dc/dcmitype/Collection'">
-                <collection type="collection">
+                    test="atom:category[@scheme='http://vivoweb.org/ontology/core#']/@term = 'http://vivoweb.org/ontology/core#Service'">
+                <collection type="service">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel='self']"/>
                     <!-- names -->
@@ -55,7 +55,8 @@
                             select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
                     <!-- subjects -->
                     <xsl:apply-templates
-                            select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                            select="atom:category[@scheme != 'http://vivoweb.org/ontology/core#' 
+                            and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->
