@@ -26,9 +26,7 @@
     <!-- *** Atom entry ***-->
 
     <xsl:template match="atom:entry">
-        <registryObject
-                group="{atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']/@term}">
-
+        <registryObject group="{atom:category[@scheme=$GROUP_LIST]/@term}">
             <key>
                 <xsl:value-of select="atom:link[@rel='self']/@href"/>
             </key>
@@ -38,25 +36,22 @@
 
             <!-- collection -->
             <xsl:if
-                    test="atom:category[@scheme='http://vivoweb.org/ontology/core#']/@term = 'http://vivoweb.org/ontology/core#Service'">
+                    test="atom:category[@scheme=$NS_VIVO]/@term =concat($NS_VIVO,'Service')">
                 <collection type="service">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel='self']"/>
                     <!-- names -->
                     <xsl:apply-templates select="atom:title"/>
                     <!-- locations -->
-                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_CLD, 'isLocatedAt')]"/>
                     <!-- coverage -->
                     <xsl:apply-templates select="rdfa:meta[@property='dcterms:temporal']"/>
                     <!-- related objects -->
-                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
-                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
-                    <xsl:apply-templates
-                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_DC,'creator')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_DC,'publisher')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_ANDS, 'isOutputOf')]"/>
                     <!-- subjects -->
-                    <xsl:apply-templates
-                            select="atom:category[@scheme != 'http://vivoweb.org/ontology/core#' 
-                            and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                    <xsl:apply-templates select="atom:category[@scheme != $NS_VIVO and @scheme!=$GROUP_LIST]"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->

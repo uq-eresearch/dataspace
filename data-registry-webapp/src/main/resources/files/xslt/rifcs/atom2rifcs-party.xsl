@@ -26,8 +26,7 @@
     <!-- *** Atom entry ***-->
 
     <xsl:template match="atom:entry">
-        <registryObject
-                group="{atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']/@term}">
+        <registryObject group="{atom:category[@scheme=$GROUP_LIST]/@term}">
 
             <key>
                 <xsl:value-of select="atom:link[@rel='self']/@href"/>
@@ -38,7 +37,7 @@
 
             <!-- collection -->
             <xsl:if
-                    test="atom:category[@scheme='http://xmlns.com/foaf/0.1/']/@term = 'http://xmlns.com/foaf/0.1/Agent'">
+                    test="atom:category[@scheme=$NS_FOAF]/@term = concat($NS_FOAF, 'Agent')">
                 <collection type="party">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel='self']"/>
@@ -55,7 +54,7 @@
                             select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
                     <!-- subjects -->
                     <xsl:apply-templates
-                            select="atom:category[@scheme != 'http://xmlns.com/foaf/0.1/'
+                            select="atom:category[@scheme != $NS_FOAF
                             and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>

@@ -18,6 +18,7 @@
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:georss="http://www.georss.org/georss"
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
+    <xsl:include href="../constants.xsl"/>
     <xsl:output method="html" media-type="application/xhtml+xml" indent="yes"/>
     <!-- name -->
     <xsl:template match="atom:title">
@@ -35,13 +36,13 @@
 
     <!-- Latest version -->
     <xsl:template name="latest-version">
-        <xsl:if test="atom:link[@rel = 'latest-version']">
+        <xsl:if test="atom:link[@rel = $REL_LATEST_VERSION]">
             <div class="statement">
                 <div class="property">
                     <p>Latest Version</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel = 'latest-version']"/>
+                    <xsl:apply-templates select="atom:link[@rel = $REL_LATEST_VERSION]"/>
                 </div>
             </div>
         </xsl:if>
@@ -57,13 +58,13 @@
 
     <!-- representations -->
     <xsl:template name="representations">
-        <xsl:if test="atom:link[@rel='alternate']">
+        <xsl:if test="atom:link[@rel=$REL_ALTERNATE]">
             <div class="statement">
                 <div class="property">
                     <p>Representations</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel='alternate']"/>
+                    <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
                 </div>
             </div>
         </xsl:if>
@@ -97,13 +98,13 @@
 
     <!-- related info -->
     <xsl:template name="related">
-        <xsl:if test="atom:link[@rel = 'related']">
+        <xsl:if test="atom:link[@rel = $REL_RELATED]">
             <div class="statement">
                 <div class="property">
                     <p>Related information</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel = 'related']"/>
+                    <xsl:apply-templates select="atom:link[@rel = $REL_RELATED]"/>
                 </div>
             </div>
         </xsl:if>
@@ -111,14 +112,14 @@
 
     <!-- creators -->
     <xsl:template name="creators">
-        <xsl:if test="atom:link[@rel='http://purl.org/dc/terms/creator']">
+        <xsl:if test="atom:link[@rel=concat($NS_DC, 'creator')]">
             <div class="statement">
                 <div class="property">
                     <p>Creator(s)</p>
                 </div>
                 <div class="content">
 
-                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_DC, 'creator')]"/>
 
                 </div>
             </div>
@@ -127,14 +128,14 @@
 
     <!-- curators -->
     <xsl:template name="curators">
-        <xsl:if test="atom:link[@rel='http://purl.org/dc/terms/publisher']">
+        <xsl:if test="atom:link[@rel=concat($NS_DC, 'publisher')]">
             <div class="statement">
                 <div class="property">
                     <p>Custodian(s)</p>
                 </div>
                 <div class="content">
 
-                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_DC, 'publisher')]"/>
 
                 </div>
             </div>
@@ -143,14 +144,14 @@
 
     <!-- locations -->
     <xsl:template name="locations">
-        <xsl:if test="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']">
+        <xsl:if test="atom:link[@rel=concat($NS_CLD, 'isLocatedAt')]">
             <div class="statement">
                 <div class="property">
                     <p>Location</p>
                 </div>
                 <div class="content">
 
-                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_CLD, 'isLocatedAt')]"/>
 
                 </div>
             </div>
@@ -181,8 +182,8 @@
                 <p>Subjects</p>
             </div>
             <div class="content">
-                <xsl:apply-templates
-                        select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                <xsl:apply-templates select="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
+                and @scheme!=$NS_FOAF and @scheme!=$GROUP_LIST]"/>
             </div>
         </div>
     </xsl:template>
@@ -223,13 +224,13 @@
 
     <!-- temporal -->
     <xsl:template name="temporal">
-        <xsl:if test="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
+        <xsl:if test="rdfa:meta[@property=concat($NS_DC, 'temporal')]">
             <div class="statement">
                 <div class="property">
                     <p>Temporal coverage</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=concat($NS_DC, 'temporal')]"/>
 
                 </div>
             </div>
@@ -252,6 +253,8 @@
             or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant'
             or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput'
             or @rel='http://purl.org/cld/terms/isLocatedAt'
+            or @rel='http://xmlns.com/foaf/0.1/made'
+            or @rel='http://xmlns.com/foaf/0.1/currentProject'
             or @rel='related'
             or @rel='alternate'
             or @rel='latest-version']">

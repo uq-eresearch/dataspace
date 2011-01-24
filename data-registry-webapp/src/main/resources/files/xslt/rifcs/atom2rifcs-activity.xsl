@@ -26,9 +26,7 @@
     <!-- *** Atom entry ***-->
 
     <xsl:template match="atom:entry">
-        <registryObject
-                group="{atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']/@term}">
-
+        <registryObject group="{atom:category[@scheme=$GROUP_LIST]/@term}">
             <key>
                 <xsl:value-of select="atom:link[@rel='self']/@href"/>
             </key>
@@ -38,7 +36,7 @@
 
             <!-- collection -->
             <xsl:if
-                    test="atom:category[@scheme='http://xmlns.com/foaf/0.1/']/@term = 'http://xmlns.com/foaf/0.1/Project'">
+                    test="atom:category[@scheme=$NS_FOAF]/@term = concat($NS_FOAF , 'Project')">
                 <collection type="activity">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel='self']"/>
@@ -52,7 +50,9 @@
                     <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
                     <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
                     <xsl:apply-templates
-                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
+                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant']"/>
+                    <xsl:apply-templates
+                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput']"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->
@@ -85,14 +85,25 @@
         </relatedObject>
     </xsl:template>
 
-    <!-- output of (activity) -->
+    <!-- participant (party) -->
     <xsl:template
-            match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']">
+            match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant']">
         <relatedObject>
             <key>
                 <xsl:value-of select="@href"/>
             </key>
-            <relation type="isOutputOf"/>
+            <relation type="hasParticipant"/>
+        </relatedObject>
+    </xsl:template>
+
+    <!-- participant (party) -->
+    <xsl:template
+            match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput']">
+        <relatedObject>
+            <key>
+                <xsl:value-of select="@href"/>
+            </key>
+            <relation type="hasOutput"/>
         </relatedObject>
     </xsl:template>
 

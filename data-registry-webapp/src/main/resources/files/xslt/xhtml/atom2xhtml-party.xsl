@@ -56,11 +56,13 @@
                     <xsl:call-template name="creators"/>
                     <!-- curators -->
                     <xsl:call-template name="curators"/>
-                    <!-- projects -->
-                    <xsl:call-template name="projects"/>
+                    <!-- collections -->
+                    <xsl:call-template name="collections"/>
+                    <!-- activities -->
+                    <xsl:call-template name="activities"/>
                     <!-- rights -->
                     <xsl:apply-templates
-                            select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
+                            select="rdfa:meta[@property=concat($NS_DC, 'accessRights')]"/>
                     <xsl:apply-templates select="atom:rights"/>
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
@@ -78,9 +80,7 @@
                     <xsl:comment>Metadata about the description</xsl:comment>
                     <div class="about">
                         <!-- publisher -->
-                        <xsl:apply-templates
-                                select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
-
+                        <xsl:apply-templates select="atom:category[@scheme = $GROUP_LIST]"/>
                         <!-- updated and updater -->
                         <xsl:call-template name="updated"/>
                     </div>
@@ -92,37 +92,51 @@
 
     <!-- object type -->
     <xsl:template name="type">
-        <xsl:if test="atom:category[@term='http://xmlns.com/foaf/0.1/Agent']">
+        <xsl:if test="atom:category[@term=concat($NS_FOAF, 'Agent')]">
             <div class="statement">
                 <div class="property">
                     <p>Type</p>
                 </div>
                 <div class="content">
                     <p>
-                        <xsl:value-of select="atom:category[@term='http://xmlns.com/foaf/0.1/Agent']/@label"/>
+                        <xsl:value-of select="atom:category[@term=concat($NS_FOAF, 'Agent')]/@label"/>
                     </p>
                 </div>
             </div>
         </xsl:if>
     </xsl:template>
 
-    <!-- projects -->
-    <xsl:template name="projects">
-        <xsl:if test="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']">
+    <!-- collections -->
+    <xsl:template name="collections">
+        <xsl:if test="atom:link[@rel=concat($NS_FOAF, 'made')]">
             <div class="statement">
                 <div class="property">
-                    <p>Project (s)</p>
+                    <p>Collector Of</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates
-                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_FOAF, 'made')]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- Activities -->
+    <xsl:template name="activities">
+        <xsl:if test="atom:link[@rel=concat($NS_FOAF, 'currentProject')]">
+            <div class="statement">
+                <div class="property">
+                    <p>Participate In</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_FOAF, 'currentProject')]"/>
                 </div>
             </div>
         </xsl:if>
     </xsl:template>
 
     <xsl:template
-            match="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+            match="atom:category[@scheme != 'http://xmlns.com/foaf/0.1/'
+            and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
         <p>
             <xsl:choose>
                 <xsl:when test="@label">

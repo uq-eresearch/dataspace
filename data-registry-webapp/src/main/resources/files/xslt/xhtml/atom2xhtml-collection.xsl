@@ -63,7 +63,7 @@
                     <!-- location -->
                     <xsl:call-template name="locations"/>
                     <!-- rights -->
-                    <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=concat($NS_DC, 'accessRights')]"/>
                     <xsl:apply-templates select="atom:rights"/>
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
@@ -81,9 +81,7 @@
                     <xsl:comment>Metadata about the description</xsl:comment>
                     <div class="about">
                         <!-- publisher -->
-                        <xsl:apply-templates
-                                select="atom:category[@scheme = 'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
-
+                        <xsl:apply-templates select="atom:category[@scheme = $GROUP_LIST]"/>
                         <!-- updated and updater -->
                         <xsl:call-template name="updated"/>
                     </div>
@@ -95,15 +93,14 @@
 
     <!-- object type -->
     <xsl:template name="type">
-        <xsl:if test="atom:category[@scheme='http://purl.org/dc/dcmitype/']">
+        <xsl:if test="atom:category[@scheme=$NS_DCMITYPE]">
             <div class="statement">
                 <div class="property">
                     <p>Type</p>
                 </div>
                 <div class="content">
                     <p>
-                        <xsl:value-of
-                                select="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@label"/>
+                        <xsl:value-of select="atom:category[@scheme=$NS_DCMITYPE]/@label"/>
                     </p>
                 </div>
             </div>
@@ -112,16 +109,13 @@
 
     <!-- projects -->
     <xsl:template name="projects">
-        <xsl:if test="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']">
+        <xsl:if test="atom:link[@rel=concat($NS_ANDS,'isOutputOf')]">
             <div class="statement">
                 <div class="property">
                     <p>Project (s)</p>
                 </div>
                 <div class="content">
-
-                    <xsl:apply-templates
-                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
-
+                    <xsl:apply-templates select="atom:link[@rel=concat($NS_ANDS,'isOutputOf')]"/>
                 </div>
             </div>
         </xsl:if>
@@ -129,21 +123,22 @@
 
     <!-- services -->
     <xsl:template name="services">
-        <xsl:if test="atom:link[@rel='http://purl.org/cld/terms/isAccessedVia']">
+        <xsl:if test="atom:link[@rel=concat($NS_CLD,'isAccessedVia')]">
             <div class="statement">
                 <div class="property">
                     <p>Accessed Via</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates
-                            select="atom:link[@rel='http://purl.org/cld/terms/isAccessedVia']"/>
+                            select="atom:link[@rel=concat($NS_CLD,'isAccessedVia')]"/>
                 </div>
             </div>
         </xsl:if>
     </xsl:template>
 
     <xsl:template
-            match="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+            match="atom:category[@scheme != 'http://purl.org/dc/dcmitype/'
+            and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
         <p>
             <xsl:choose>
                 <xsl:when test="@label">

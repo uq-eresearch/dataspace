@@ -26,16 +26,13 @@
     <!-- *** Atom entry ***-->
 
     <xsl:template match="atom:entry">
-        <registryObject
-                group="{atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']/@term}">
-
+        <registryObject group="{atom:category[@scheme=$GROUP_LIST]/@term}">
             <key>
                 <xsl:value-of select="atom:link[@rel='self']/@href"/>
             </key>
             <originatingSource>
                 <xsl:value-of select="atom:source/atom:id"/>
             </originatingSource>
-
             <!-- collection -->
             <xsl:if
                     test="atom:category[@scheme='http://purl.org/dc/dcmitype/']/@term = 'http://purl.org/dc/dcmitype/Collection'">
@@ -55,7 +52,8 @@
                             select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
                     <!-- subjects -->
                     <xsl:apply-templates
-                            select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                            select="atom:category[@scheme != 'http://purl.org/dc/dcmitype/'
+                            and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->
