@@ -29,7 +29,7 @@
         <registryObject group="{atom:category[@scheme=$GROUP_LIST]/@term}">
 
             <key>
-                <xsl:value-of select="atom:link[@rel='self']/@href"/>
+                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
             </key>
             <originatingSource>
                 <xsl:value-of select="atom:source/atom:id"/>
@@ -37,45 +37,33 @@
 
             <!-- collection -->
             <xsl:if
-                    test="atom:category[@scheme=$NS_FOAF]/@term = concat($NS_FOAF, 'Agent')">
+                    test="atom:category[@scheme=$NS_FOAF]/@term = $ENTITY_PARTY">
                 <collection type="party">
                     <!-- identifiers -->
-                    <xsl:apply-templates select="atom:link[@rel='self']"/>
+                    <xsl:apply-templates select="atom:link[@rel=$REL_SELF]"/>
                     <!-- names -->
                     <xsl:apply-templates select="atom:title"/>
                     <!-- locations -->
-                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
                     <!-- coverage -->
-                    <xsl:apply-templates select="rdfa:meta[@property='dcterms:temporal']"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
                     <!-- related objects -->
-                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
-                    <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
-                    <xsl:apply-templates
-                            select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]"/>
                     <!-- subjects -->
-                    <xsl:apply-templates
-                            select="atom:category[@scheme != $NS_FOAF
-                            and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+                    <xsl:apply-templates select="atom:category[@scheme != $NS_FOAF and @scheme!=$GROUP_LIST]"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->
                     <xsl:apply-templates select="atom:rights"/>
-                    <xsl:apply-templates select="rdfa:meta[@property='dcterms:accessRights']"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <!-- related info -->
-                    <xsl:apply-templates select="atom:link[@rel='related']"/>
+                    <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
                 </collection>
             </xsl:if>
         </registryObject>
-    </xsl:template>
-
-    <!-- collector (party) -->
-    <xsl:template match="atom:link[@rel='http://purl.org/dc/terms/creator']">
-        <relatedObject>
-            <key>
-                <xsl:value-of select="@href"/>
-            </key>
-            <relation type="hasCollector"/>
-        </relatedObject>
     </xsl:template>
 
     <!-- curator / manager (party) -->
@@ -88,14 +76,24 @@
         </relatedObject>
     </xsl:template>
 
-    <!-- output of (activity) -->
+    <!-- collector of (collection) -->
     <xsl:template
-            match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']">
+            match="atom:link[@rel='http://xmlns.com/foaf/0.1/made']">
         <relatedObject>
             <key>
                 <xsl:value-of select="@href"/>
             </key>
-            <relation type="isOutputOf"/>
+            <relation type="isCollectorOf"/>
+        </relatedObject>
+    </xsl:template>
+    <!-- participate in (activities) -->
+    <xsl:template
+            match="atom:link[@rel='http://xmlns.com/foaf/0.1/currentProject']">
+        <relatedObject>
+            <key>
+                <xsl:value-of select="@href"/>
+            </key>
+            <relation type="isParticipantIn"/>
         </relatedObject>
     </xsl:template>
 

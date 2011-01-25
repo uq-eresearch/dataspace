@@ -35,52 +35,46 @@
 	    </xsl:text>
         <xsl:comment>Party description</xsl:comment>
 
-        <rdf:Description
-                rdf:about="{atom:link[@rel='http://www.openarchives.org/ore/terms/describes']/@href}">
+        <rdf:Description rdf:about="{atom:link[@rel=$RDF_DESCRIBES]/@href}">
             <!-- description type -->
-            <xsl:apply-templates select="atom:category[@scheme='http://xmlns.com/foaf/0.1/']"/>
+            <xsl:apply-templates select="atom:category[@scheme=$NS_FOAF]"/>
             <!-- title -->
             <xsl:apply-templates select="atom:title"/>
             <!-- description -->
             <xsl:apply-templates select="atom:content"/>
             <!-- subjects -->
-            <xsl:apply-templates
-                    select="atom:category[@scheme!='http://xmlns.com/foaf/0.1/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+            <xsl:apply-templates select="atom:category[@scheme!=$NS_FOAF and @scheme!=$GROUP_LIST]"/>
             <!-- creator -->
-            <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
             <!-- curator -->
-            <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
-
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
             <!-- participation -->
-            <xsl:apply-templates
-                    select="atom:link[@rel='http://xmlns.com/foaf/0.1/currentProject']"/>
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]"/>
             <!--Collector of-->
-            <xsl:apply-templates
-                    select="atom:link[@rel='http://xmlns.com/foaf/0.1/made']"/>
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]"/>
             <!-- related info -->
-            <xsl:apply-templates select="atom:link[@rel='related']"/>
+            <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
             <!-- rights descriptions -->
             <xsl:apply-templates select="atom:rights"/>
-            <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
+            <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
             <!-- temporal coverage -->
-            <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
+            <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
             <!-- spatial coverage -->
             <!-- TO DO -->
 
             <!-- link to metadata about the description -->
-            <ore:isDescribedBy rdf:resource="{atom:link[@rel='self']/@href}"/>
+            <ore:isDescribedBy rdf:resource="{atom:link[@rel=$REL_SELF]/@href}"/>
         </rdf:Description>
 
         <!-- metadata about the description -->
         <xsl:text>
 	    </xsl:text>
         <xsl:comment>Metadata about the description</xsl:comment>
-        <rdf:Description rdf:about="{atom:link[@rel='self']/@href}">
+        <rdf:Description rdf:about="{atom:link[@rel=$REL_SELF]/@href}">
             <!-- description id -->
             <xsl:apply-templates select="atom:id"/>
             <!-- description publisher -->
-            <xsl:apply-templates
-                    select="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+            <xsl:apply-templates select="atom:category[@scheme=$GROUP_LIST]"/>
             <!-- description creator -->
             <xsl:apply-templates select="atom:author"/>
             <!-- description update date -->
@@ -90,10 +84,10 @@
 
             <!-- description source -->
             <xsl:apply-templates select="atom:source"/>
-            <xsl:apply-templates select="atom:link[@rel='via']"/>
+            <xsl:apply-templates select="atom:link[@rel=$REL_VIA]"/>
 
             <!-- alternate formats for description -->
-            <xsl:apply-templates select="atom:link[@rel='alternate']"/>
+            <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
         </rdf:Description>
     </xsl:template>
 
@@ -105,16 +99,13 @@
     </xsl:template>
 
     <!-- generating activity -->
-    <xsl:template
-            match="atom:link[@rel='http://xmlns.com/foaf/0.1/currentProject']">
+    <xsl:template match="atom:link[@rel='http://xmlns.com/foaf/0.1/currentProject']">
         <ands:isOutputOf rdf:resource="{@href}"/>
     </xsl:template>
 
     <!-- making collections -->
-    <xsl:template
-            match="atom:link[@rel='http://xmlns.com/foaf/0.1/made']">
+    <xsl:template match="atom:link[@rel='http://xmlns.com/foaf/0.1/made']">
         <foaf:made rdf:resource="{@href}"/>
     </xsl:template>
-
 
 </xsl:stylesheet>

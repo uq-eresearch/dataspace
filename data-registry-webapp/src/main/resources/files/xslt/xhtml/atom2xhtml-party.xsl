@@ -61,8 +61,7 @@
                     <!-- activities -->
                     <xsl:call-template name="activities"/>
                     <!-- rights -->
-                    <xsl:apply-templates
-                            select="rdfa:meta[@property=concat($NS_DC, 'accessRights')]"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <xsl:apply-templates select="atom:rights"/>
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
@@ -92,14 +91,14 @@
 
     <!-- object type -->
     <xsl:template name="type">
-        <xsl:if test="atom:category[@term=concat($NS_FOAF, 'Agent')]">
+        <xsl:if test="atom:category[@term=$ENTITY_PARTY]">
             <div class="statement">
                 <div class="property">
                     <p>Type</p>
                 </div>
                 <div class="content">
                     <p>
-                        <xsl:value-of select="atom:category[@term=concat($NS_FOAF, 'Agent')]/@label"/>
+                        <xsl:value-of select="atom:category[@term=$ENTITY_PARTY]/@label"/>
                     </p>
                 </div>
             </div>
@@ -108,13 +107,13 @@
 
     <!-- collections -->
     <xsl:template name="collections">
-        <xsl:if test="atom:link[@rel=concat($NS_FOAF, 'made')]">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]">
             <div class="statement">
                 <div class="property">
                     <p>Collector Of</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_FOAF, 'made')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]"/>
                 </div>
             </div>
         </xsl:if>
@@ -122,13 +121,13 @@
 
     <!-- Activities -->
     <xsl:template name="activities">
-        <xsl:if test="atom:link[@rel=concat($NS_FOAF, 'currentProject')]">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]">
             <div class="statement">
                 <div class="property">
                     <p>Participate In</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_FOAF, 'currentProject')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]"/>
                 </div>
             </div>
         </xsl:if>

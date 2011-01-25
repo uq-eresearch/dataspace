@@ -63,7 +63,7 @@
                     <!-- location -->
                     <xsl:call-template name="locations"/>
                     <!-- rights -->
-                    <xsl:apply-templates select="rdfa:meta[@property=concat($NS_DC, 'accessRights')]"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <xsl:apply-templates select="atom:rights"/>
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
@@ -93,14 +93,14 @@
 
     <!-- object type -->
     <xsl:template name="type">
-        <xsl:if test="atom:category[@scheme=$NS_DCMITYPE]">
+        <xsl:if test="atom:category[@term=$ENTITY_COLLECTION]">
             <div class="statement">
                 <div class="property">
                     <p>Type</p>
                 </div>
                 <div class="content">
                     <p>
-                        <xsl:value-of select="atom:category[@scheme=$NS_DCMITYPE]/@label"/>
+                        <xsl:value-of select="atom:category[@term=$ENTITY_COLLECTION]/@label"/>
                     </p>
                 </div>
             </div>
@@ -109,13 +109,13 @@
 
     <!-- projects -->
     <xsl:template name="projects">
-        <xsl:if test="atom:link[@rel=concat($NS_ANDS,'isOutputOf')]">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_OUTPUT_OF]">
             <div class="statement">
                 <div class="property">
                     <p>Project (s)</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_ANDS,'isOutputOf')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_OUTPUT_OF]"/>
                 </div>
             </div>
         </xsl:if>
@@ -123,14 +123,14 @@
 
     <!-- services -->
     <xsl:template name="services">
-        <xsl:if test="atom:link[@rel=concat($NS_CLD,'isAccessedVia')]">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]">
             <div class="statement">
                 <div class="property">
                     <p>Accessed Via</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates
-                            select="atom:link[@rel=concat($NS_CLD,'isAccessedVia')]"/>
+                            select="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]"/>
                 </div>
             </div>
         </xsl:if>

@@ -62,7 +62,7 @@
                     <xsl:call-template name="locations"/>
                     <!-- rights -->
                     <xsl:apply-templates
-                            select="rdfa:meta[@property=concat($NS_DC, 'accessRights')]"/>
+                            select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <xsl:apply-templates select="atom:rights"/>
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
@@ -90,14 +90,14 @@
 
     <!-- object type -->
     <xsl:template name="type">
-        <xsl:if test="atom:category[@term=concat($NS_VIVO, 'Service')]">
+        <xsl:if test="atom:category[@term=$ENTITY_SERVICE]">
             <div class="statement">
                 <div class="property">
                     <p>Type</p>
                 </div>
                 <div class="content">
                     <p>
-                        <xsl:value-of select="atom:category[@term=concat($NS_VIVO, 'Service')]/@label"/>
+                        <xsl:value-of select="atom:category[@term=$ENTITY_SERVICE]/@label"/>
                     </p>
                 </div>
             </div>
@@ -106,14 +106,13 @@
 
     <!-- collections -->
     <xsl:template name="collections">
-        <xsl:if test="atom:link[@rel=concat($NS_ANDS, 'isSupportedBy')]">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]">
             <div class="statement">
                 <div class="property">
                     <p>Accesses</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates
-                            select="atom:link[@rel=concat($NS_ANDS, 'isSupportedBy')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]"/>
                 </div>
             </div>
         </xsl:if>

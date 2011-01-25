@@ -36,46 +36,43 @@
         <xsl:comment>Service description</xsl:comment>
 
         <rdf:Description
-                rdf:about="{atom:link[@rel='http://www.openarchives.org/ore/terms/describes']/@href}">
+                rdf:about="{atom:link[@rel=$RDF_DESCRIBES]/@href}">
             <!-- description type -->
-            <xsl:apply-templates select="atom:category[@scheme='http://vivoweb.org/ontology/core#']"/>
+            <xsl:apply-templates select="atom:category[@scheme=$NS_VIVO]"/>
             <!-- title -->
             <xsl:apply-templates select="atom:title"/>
             <!-- description -->
             <xsl:apply-templates select="atom:content"/>
             <!-- location -->
-            <xsl:apply-templates select="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']"/>
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
             <!-- creator -->
-            <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/creator']"/>
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
             <!-- curator -->
-            <xsl:apply-templates select="atom:link[@rel='http://purl.org/dc/terms/publisher']"/>
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
             <!-- generating activity -->
-            <xsl:apply-templates
-                    select="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy']"/>
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]"/>
             <!-- related info -->
-            <xsl:apply-templates select="atom:link[@rel='related']"/>
+            <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
             <!-- rights descriptions -->
             <xsl:apply-templates select="atom:rights"/>
-            <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']"/>
+            <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
             <!-- temporal coverage -->
-            <xsl:apply-templates select="rdfa:meta[@property='http://purl.org/dc/terms/temporal']"/>
+            <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
             <!-- spatial coverage -->
             <!-- TO DO -->
-
             <!-- link to metadata about the description -->
-            <ore:isDescribedBy rdf:resource="{atom:link[@rel='self']/@href}"/>
+            <ore:isDescribedBy rdf:resource="{atom:link[@rel=$REL_SELF]/@href}"/>
         </rdf:Description>
 
         <!-- metadata about the description -->
         <xsl:text>
 	    </xsl:text>
         <xsl:comment>Metadata about the description</xsl:comment>
-        <rdf:Description rdf:about="{atom:link[@rel='self']/@href}">
+        <rdf:Description rdf:about="{atom:link[@rel=$REL_SELF]/@href}">
             <!-- description id -->
             <xsl:apply-templates select="atom:id"/>
             <!-- description publisher -->
-            <xsl:apply-templates
-                    select="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']"/>
+            <xsl:apply-templates select="atom:category[@scheme=$GROUP_LIST]"/>
             <!-- description creator -->
             <xsl:apply-templates select="atom:author"/>
             <!-- description update date -->
@@ -85,10 +82,10 @@
 
             <!-- description source -->
             <xsl:apply-templates select="atom:source"/>
-            <xsl:apply-templates select="atom:link[@rel='via']"/>
+            <xsl:apply-templates select="atom:link[@rel=$REL_VIA]"/>
 
             <!-- alternate formats for description -->
-            <xsl:apply-templates select="atom:link[@rel='alternate']"/>
+            <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
         </rdf:Description>
     </xsl:template>
 

@@ -61,15 +61,14 @@
                     <!-- accesses -->
                     <xsl:call-template name="output"/>
                     <!-- rights -->
-                    <xsl:apply-templates
-                            select="rdfa:meta[@property=concat($NS_DC,'accessRights')]"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <xsl:apply-templates select="atom:rights"/>
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
                     <!-- temporal -->
                     <xsl:call-template name="temporal"/>
                     <!-- subjects -->
-                    <xsl:call-template name="subjects"/>
+                    <!--<xsl:call-template name="subjects"/>-->
                     <!-- related info -->
                     <xsl:call-template name="related"/>
                     <!-- representations -->
@@ -93,14 +92,14 @@
 
     <!-- object type -->
     <xsl:template name="type">
-        <xsl:if test="atom:category[@term=concat($NS_FOAF, 'Project')]">
+        <xsl:if test="atom:category[@term=$ENTITY_ACTIVITY]">
             <div class="statement">
                 <div class="property">
                     <p>Type</p>
                 </div>
                 <div class="content">
                     <p>
-                        <xsl:value-of select="atom:category[@term=concat($NS_FOAF, 'Project')]/@label"/>
+                        <xsl:value-of select="atom:category[@term=$ENTITY_ACTIVITY]/@label"/>
                     </p>
                 </div>
             </div>
@@ -108,13 +107,13 @@
     </xsl:template>
     <!-- collections -->
     <xsl:template name="participants">
-        <xsl:if test="atom:link[@rel=concat($NS_ANDS, 'hasParticipant')]">
+        <xsl:if test="atom:link[@rel=$ATOM_HAS_PARTICIPANT]">
             <div class="statement">
                 <div class="property">
                     <p>Participants</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_ANDS, 'hasParticipant')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_HAS_PARTICIPANT]"/>
                 </div>
             </div>
         </xsl:if>
@@ -122,14 +121,13 @@
 
     <!-- collections -->
     <xsl:template name="output">
-        <xsl:if test="atom:link[@rel=concat($NS_ANDS,'hasOutput')]">
+        <xsl:if test="atom:link[@rel=$ATOM_HAS_OUTPUT]">
             <div class="statement">
                 <div class="property">
                     <p>Output</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates
-                            select="atom:link[@rel=concat($NS_ANDS,'hasOutput')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_HAS_OUTPUT]"/>
                 </div>
             </div>
         </xsl:if>

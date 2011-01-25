@@ -112,15 +112,13 @@
 
     <!-- creators -->
     <xsl:template name="creators">
-        <xsl:if test="atom:link[@rel=concat($NS_DC, 'creator')]">
+        <xsl:if test="atom:link[@rel=$ATOM_CREATOR]">
             <div class="statement">
                 <div class="property">
                     <p>Creator(s)</p>
                 </div>
                 <div class="content">
-
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_DC, 'creator')]"/>
-
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
                 </div>
             </div>
         </xsl:if>
@@ -128,15 +126,13 @@
 
     <!-- curators -->
     <xsl:template name="curators">
-        <xsl:if test="atom:link[@rel=concat($NS_DC, 'publisher')]">
+        <xsl:if test="atom:link[@rel=$ATOM_PUBLISHER]">
             <div class="statement">
                 <div class="property">
                     <p>Custodian(s)</p>
                 </div>
                 <div class="content">
-
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_DC, 'publisher')]"/>
-
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
                 </div>
             </div>
         </xsl:if>
@@ -144,15 +140,13 @@
 
     <!-- locations -->
     <xsl:template name="locations">
-        <xsl:if test="atom:link[@rel=concat($NS_CLD, 'isLocatedAt')]">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
             <div class="statement">
                 <div class="property">
                     <p>Location</p>
                 </div>
                 <div class="content">
-
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_CLD, 'isLocatedAt')]"/>
-
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
                 </div>
             </div>
         </xsl:if>
@@ -224,13 +218,13 @@
 
     <!-- temporal -->
     <xsl:template name="temporal">
-        <xsl:if test="rdfa:meta[@property=concat($NS_DC, 'temporal')]">
+        <xsl:if test="rdfa:meta[@property=$RDFA_TEMPORAL]">
             <div class="statement">
                 <div class="property">
                     <p>Temporal coverage</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="rdfa:meta[@property=concat($NS_DC, 'temporal')]"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
 
                 </div>
             </div>

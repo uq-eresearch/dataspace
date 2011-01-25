@@ -28,7 +28,7 @@
     <xsl:template match="atom:entry">
         <registryObject group="{atom:category[@scheme=$GROUP_LIST]/@term}">
             <key>
-                <xsl:value-of select="atom:link[@rel='self']/@href"/>
+                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
             </key>
             <originatingSource>
                 <xsl:value-of select="atom:source/atom:id"/>
@@ -36,29 +36,29 @@
 
             <!-- collection -->
             <xsl:if
-                    test="atom:category[@scheme=$NS_VIVO]/@term =concat($NS_VIVO,'Service')">
+                    test="atom:category[@scheme=$NS_VIVO]/@term =$ENTITY_SERVICE">
                 <collection type="service">
                     <!-- identifiers -->
-                    <xsl:apply-templates select="atom:link[@rel='self']"/>
+                    <xsl:apply-templates select="atom:link[@rel=$REL_SELF]"/>
                     <!-- names -->
                     <xsl:apply-templates select="atom:title"/>
                     <!-- locations -->
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_CLD, 'isLocatedAt')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
                     <!-- coverage -->
-                    <xsl:apply-templates select="rdfa:meta[@property='dcterms:temporal']"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
                     <!-- related objects -->
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_DC,'creator')]"/>
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_DC,'publisher')]"/>
-                    <xsl:apply-templates select="atom:link[@rel=concat($NS_ANDS, 'isOutputOf')]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_OUTPUT_OF]"/>
                     <!-- subjects -->
                     <xsl:apply-templates select="atom:category[@scheme != $NS_VIVO and @scheme!=$GROUP_LIST]"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->
                     <xsl:apply-templates select="atom:rights"/>
-                    <xsl:apply-templates select="rdfa:meta[@property='dcterms:accessRights']"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <!-- related info -->
-                    <xsl:apply-templates select="atom:link[@rel='related']"/>
+                    <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
                 </collection>
             </xsl:if>
         </registryObject>
