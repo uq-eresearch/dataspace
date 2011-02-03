@@ -9,6 +9,35 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>A pom project for remotely deploying the Data Collections Registry web application</description>
+    <developers>
+        <developer>
+            <id>abdul.alabri</id>
+            <name>Abdul Alabri</name>
+            <email>a.alabri@uq.edu.au</email>
+            <url>http://archive.itee.uq.edu.au/~alabri/</url>
+            <organization>School of ITEE, University of Queensland</organization>
+            <organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>nigel.ward</id>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+            <url>http://www.itee.uq.edu.au/~uqnward/</url>
+            <organization>School of IT and EE, University of Queensland
+            </organization>
+            <organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
+            <roles>
+                <role>Project Manager</role>
+            </roles>
+        </developer>
+    </developers>
+    <organization>
+        <name>eResearch, ITEE, UQ</name>
+        <url>http://www.itee.uq.edu.au/~eresearch</url>
+    </organization>
     <build>
         <plugins>
             <plugin>
@@ -31,7 +60,8 @@
                         <properties>
                             <cargo.remote.username>deployer</cargo.remote.username>
                             <cargo.remote.password>deployer</cargo.remote.password>
-                            <cargo.tomcat.manager.url>http://dataspace-uat.metadata.net/manager</cargo.tomcat.manager.url>
+                            <cargo.tomcat.manager.url>http://dataspace-uat.metadata.net/manager
+                            </cargo.tomcat.manager.url>
                         </properties>
                     </configuration>
                     <deployer>
