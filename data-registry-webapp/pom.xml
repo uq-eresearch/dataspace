@@ -6,8 +6,37 @@
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>Data Collections Registry Server</name>
-    <url>http://dataspace.metadata.net</url>
+    <url>http://dataspace.uq.edu.au</url>
     <inceptionYear>2010</inceptionYear>
+    <developers>
+        <developer>
+            <id>abdul.alabri</id>
+            <name>Abdul Alabri</name>
+            <email>a.alabri@uq.edu.au</email>
+            <url>http://archive.itee.uq.edu.au/~alabri/</url>
+            <organization>School of ITEE, University of Queensland</organization>
+            <organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>nigel.ward</id>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+            <url>http://www.itee.uq.edu.au/~uqnward/</url>
+            <organization>School of IT and EE, University of Queensland
+            </organization>
+            <organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
+            <roles>
+                <role>Project Manager</role>
+            </roles>
+        </developer>
+    </developers>
+    <organization>
+        <name>eResearch, ITEE, UQ</name>
+        <url>http://www.itee.uq.edu.au/~eresearch</url>
+    </organization>
     <distributionManagement>
         <repository>
             <id>maenad-releases</id>
@@ -196,7 +225,6 @@
             <artifactId>org.restlet</artifactId>
             <version>${restletVersion}</version>
         </dependency>
-
         <!--Local libraries-->
         <dependency>
             <groupId>au.edu.uq.itee.maenad</groupId>
@@ -250,6 +278,13 @@
             <version>0.1.2</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/couchdb4j/couchdb4j-0.1.2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.dspace</groupId>
+            <artifactId>oaicat</artifactId>
+            <version>1.5.57</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/oaicat/oaicat-1.5.57.jar</systemPath>
         </dependency>
     </dependencies>
 
