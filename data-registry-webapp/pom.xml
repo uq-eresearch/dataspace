@@ -283,8 +283,6 @@
             <groupId>org.dspace</groupId>
             <artifactId>oaicat</artifactId>
             <version>1.5.57</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/oaicat/oaicat-1.5.57.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -310,7 +308,10 @@
             <name>Public online Restlet repository</name>
             <url>http://maven.restlet.org</url>
         </repository>
-
+        <repository>
+            <id>maven.ala.org.au</id>
+            <url>http://maven.ala.org.au/repository</url>
+        </repository>
         <!--<repository>-->
         <!--<id>local</id>-->
         <!--<name>Local repository in project tree</name>-->
