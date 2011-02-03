@@ -10,6 +10,11 @@
         <param-value>classpath:/conf/spring/applicationContext.xml</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>properties</param-name>
+        <param-value>conf/oai/oaicat.properties</param-value>
+    </context-param>
+
     <!--Listeners-->
     <listener>
         <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
@@ -26,6 +31,10 @@
     <servlet>
         <servlet-name>registryServiceServlet</servlet-name>
         <servlet-class>net.metadata.dataspace.servlets.RegistryServiceProviderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>oaipmhServlet</servlet-name>
+        <servlet-class>net.metadata.dataspace.servlets.OAIPMHServlet</servlet-class>
     </servlet>
 
     <!--Servlet Mappings-->
@@ -56,6 +65,10 @@
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>
         <url-pattern>/logout/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>oaipmhServlet</servlet-name>
+        <url-pattern>/oai/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
