@@ -4,6 +4,7 @@ import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.oaipmh.BasicOaiCatalog;
 
 /**
  * User: alabri
@@ -74,5 +75,12 @@ public interface RegistryConfiguration {
      * @return AuthorizationManager
      */
     AuthorizationManager getAuthorizationManager();
+
+    /**
+     * Return OAI-PMH catalog
+     *
+     * @return
+     */
+    BasicOaiCatalog getOaiCatalog();
 
 }

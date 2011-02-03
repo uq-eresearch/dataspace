@@ -16,6 +16,7 @@
     </bean>
 
     <import resource="dao.xml"/>
+    <import resource="oaipmh.xml"/>
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.RegistryConfigurationImpl">
         <property name="registryTitle" value="${data.registry.title}"/>
@@ -25,6 +26,7 @@
         <property name="entityCreator" ref="entityCreator"/>
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
+        <property name="oaiCatalog" ref="oaiCatalog"/>
     </bean>
 
     <bean id="dataRegistryApplication" class="net.metadata.dataspace.app.RegistryApplication">

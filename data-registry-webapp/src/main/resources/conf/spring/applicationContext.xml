@@ -10,6 +10,7 @@
         <property name="locations">
             <list>
                 <value>classpath:registry.properties</value>
+                <value>classpath:/conf/oai/oaicat.properties</value>
                 <value>classpath:META-INF/svninfo.properties</value>
             </list>
         </property>
