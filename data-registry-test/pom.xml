@@ -19,6 +19,35 @@ This configuration can be run with "mvn integration-test".
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>A set of functional tests for the Data Collections Registry web application</description>
+    <developers>
+        <developer>
+            <id>abdul.alabri</id>
+            <name>Abdul Alabri</name>
+            <email>a.alabri@uq.edu.au</email>
+            <url>http://archive.itee.uq.edu.au/~alabri/</url>
+            <organization>School of ITEE, University of Queensland</organization>
+            <organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>nigel.ward</id>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+            <url>http://www.itee.uq.edu.au/~uqnward/</url>
+            <organization>School of IT and EE, University of Queensland
+            </organization>
+            <organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
+            <roles>
+                <role>Project Manager</role>
+            </roles>
+        </developer>
+    </developers>
+    <organization>
+        <name>eResearch, ITEE, UQ</name>
+        <url>http://www.itee.uq.edu.au/~eresearch</url>
+    </organization>
     <build>
         <plugins>
             <plugin>
