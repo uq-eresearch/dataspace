@@ -56,7 +56,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         List<String> identifiers = new ArrayList<String>(collectionList.size());
         for (net.metadata.dataspace.data.model.base.Collection col : collectionList) {
             identifiers.add(Long.toString(col.getId()));
-            headers.add(RIFCSOaiRecordFactory.createHeader(col.getId().toString(), getRecordFactory().getDatestamp(col.getPublished()), getRecordFactory().getSetSpecs(col), false)[0]);
+            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(col.getPublished()), getRecordFactory().getDatestamp(col.getPublished()), getRecordFactory().getSetSpecs(col), false)[0]);
         }
         listIdentifiersMap.put("identifiers", identifiers.iterator());
         listIdentifiersMap.put("headers", headers.iterator());
@@ -73,7 +73,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         try {
             net.metadata.dataspace.data.model.base.Collection col = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublished().get(0);
             String schemaURL = getCrosswalks().getSchemaURL(metadataPrefix);
-            return getRecordFactory().create(col, schemaURL, metadataPrefix);
+            return getRecordFactory().create(col.getPublished(), schemaURL, metadataPrefix);
         } catch (ObjectNotFoundException e) {
             throw new IdDoesNotExistException(identifier);
         }
