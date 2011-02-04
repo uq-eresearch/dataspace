@@ -20,6 +20,7 @@ public class OAIPMHServlet extends OAIHandler {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public HashMap getAttributes(Properties properties) {
         try {
+            properties = RegistryApplication.getApplicationContext().getOaiProperties();
             HashMap attributes = new HashMap();
             Enumeration attrNames = getServletContext().getAttributeNames();
             while (attrNames.hasMoreElements()) {

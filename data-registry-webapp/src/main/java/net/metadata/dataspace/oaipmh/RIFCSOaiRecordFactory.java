@@ -2,7 +2,9 @@ package net.metadata.dataspace.oaipmh;
 
 import ORG.oclc.oai.server.catalog.RecordFactory;
 import ORG.oclc.oai.server.verb.CannotDisseminateFormatException;
+import net.metadata.dataspace.data.model.Version;
 
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -11,15 +13,16 @@ import java.util.Properties;
  * Date: 03/02/2011
  * Time: 4:13:36 PM
  */
-public class BasicOaiRecordFactory extends RecordFactory {
+public class RIFCSOaiRecordFactory extends RecordFactory {
 
-    public BasicOaiRecordFactory(Properties properties) {
+    public RIFCSOaiRecordFactory(Properties properties) {
         super(properties);
     }
 
-    public BasicOaiRecordFactory() {
-        this(new Properties());
-    }
+//    public RIFCSOaiRecordFactory() {
+//
+//        this();
+//    }
 
     @Override
     public String fromOAIIdentifier(String s) {
@@ -38,7 +41,7 @@ public class BasicOaiRecordFactory extends RecordFactory {
 
     @Override
     public String getDatestamp(Object o) {
-        return null;
+        return new SimpleDateFormat("yyyy-MM-dd").format(((Version) o).getUpdated());
     }
 
     @Override

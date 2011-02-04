@@ -4,7 +4,8 @@ import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.oaipmh.BasicOaiCatalog;
+import net.metadata.dataspace.oaipmh.OAIProperties;
+import net.metadata.dataspace.oaipmh.RIFCSOaiCatalog;
 
 /**
  * User: alabri
@@ -81,6 +82,8 @@ public interface RegistryConfiguration {
      *
      * @return
      */
-    BasicOaiCatalog getOaiCatalog();
+    RIFCSOaiCatalog getOaiCatalog();
+
+    OAIProperties getOaiProperties();
 
 }

@@ -4,7 +4,8 @@ import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.oaipmh.BasicOaiCatalog;
+import net.metadata.dataspace.oaipmh.OAIProperties;
+import net.metadata.dataspace.oaipmh.RIFCSOaiCatalog;
 
 /**
  * User: alabri
@@ -20,7 +21,8 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     private EntityCreator entityCreator;
     private AuthenticationManager authenticationManager;
     private AuthorizationManager authorizationManager;
-    private BasicOaiCatalog oaiCatalog;
+    private RIFCSOaiCatalog oaiCatalog;
+    private OAIProperties oaiProperties;
 
     public RegistryConfigurationImpl() {
     }
@@ -89,11 +91,19 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
         return authorizationManager;
     }
 
-    public void setOaiCatalog(BasicOaiCatalog oaiCatalog) {
+    public void setOaiCatalog(RIFCSOaiCatalog oaiCatalog) {
         this.oaiCatalog = oaiCatalog;
     }
 
-    public BasicOaiCatalog getOaiCatalog() {
+    public RIFCSOaiCatalog getOaiCatalog() {
         return oaiCatalog;
+    }
+
+    public void setOaiProperties(OAIProperties oaiProperties) {
+        this.oaiProperties = oaiProperties;
+    }
+
+    public OAIProperties getOaiProperties() {
+        return oaiProperties;
     }
 }

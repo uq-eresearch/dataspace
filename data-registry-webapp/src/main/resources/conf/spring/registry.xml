@@ -27,6 +27,7 @@
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
         <property name="oaiCatalog" ref="oaiCatalog"/>
+        <property name="oaiProperties" ref="oaiProperties"/>
     </bean>
 
     <bean id="dataRegistryApplication" class="net.metadata.dataspace.app.RegistryApplication">
