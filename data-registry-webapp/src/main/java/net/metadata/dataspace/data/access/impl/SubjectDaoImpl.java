@@ -8,6 +8,7 @@ import net.metadata.dataspace.util.DaoHelper;
 
 import javax.persistence.Query;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,6 +79,13 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
 
     @Override
     public List<Subject> getAllUnpublished() {
+        return null;
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Subject> getAllPublishedBetween(Date fromDate, Date untilDate) {
         return null;
     }
 

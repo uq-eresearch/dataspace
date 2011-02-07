@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.access;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,6 +61,15 @@ public interface RegistryDao<T> {
      * @return List of unpublished entities
      */
     List<T> getAllUnpublished();
+
+    /**
+     * Returns all the records between fromDate and endDate including deleted ones
+     *
+     * @param fromDate  start date of the query
+     * @param untilDate end date of the query
+     * @return list of published or unpublished entities that were published between the two dates
+     */
+    List<T> getAllPublishedBetween(Date fromDate, Date untilDate);
 
     /**
      * Get the most recent updated entity

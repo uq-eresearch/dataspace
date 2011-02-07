@@ -9,6 +9,7 @@ import net.metadata.dataspace.util.DaoHelper;
 
 import javax.persistence.Query;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -98,6 +99,15 @@ public class CollectionDaoImpl extends JpaDao<Collection> implements CollectionD
     @SuppressWarnings("unchecked")
     public List<Collection> getAllUnpublished() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.isActive = true AND o.published IS NULL ORDER BY o.updated");
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Collection> getAllPublishedBetween(Date fromDate, Date untilDate) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.published IS NOT NULL AND o.updated BETWEEN :fromDate and :untilDate ORDER BY o.updated");
+        query.setParameter("fromDate", fromDate);
+        query.setParameter("untilDate", untilDate);
         return query.getResultList();
     }
 
