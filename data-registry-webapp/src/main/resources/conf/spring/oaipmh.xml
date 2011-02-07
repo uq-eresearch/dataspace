@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
     <bean id="oaiProperties" class="net.metadata.dataspace.oaipmh.OAIProperties">
         <constructor-arg value="/conf/oai/oaicat.properties"/>
     </bean>
@@ -13,7 +14,6 @@
         <constructor-arg ref="oaiProperties"/>
     </bean>
 
-
     <bean id="oaiCatalog" class="net.metadata.dataspace.oaipmh.RIFCSOaiCatalog">
         <property name="recordFactory">
             <bean class="net.metadata.dataspace.oaipmh.RIFCSOaiRecordFactory">
@@ -21,4 +21,5 @@
             </bean>
         </property>
     </bean>
+
 </beans>
