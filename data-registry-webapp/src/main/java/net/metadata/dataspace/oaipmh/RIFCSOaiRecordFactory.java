@@ -21,11 +21,6 @@ public class RIFCSOaiRecordFactory extends RecordFactory {
         super(properties);
     }
 
-//    public RIFCSOaiRecordFactory() {
-//
-//        this();
-//    }
-
     @Override
     public String fromOAIIdentifier(String s) {
         return null;
