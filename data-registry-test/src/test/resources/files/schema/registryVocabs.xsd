@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://ands.org.au/standards/rif-cs/registryObjects"
+           xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:annotation>
+        <xs:documentation xml:lang="en">Vocabulary definitions for most of the RIF-CS type
+            attributes. Nigel Ward, University of Queensland 2010-08
+        </xs:documentation>
+    </xs:annotation>
+
+    <xs:simpleType name="originatingSourceVocab">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="authoritative"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="entityTypeVocab">
+        <xs:annotation>
+            <xs:documentation>Vocabulary that combines all collection, party, activity and service
+                types. Could remodel with separate vocabularies for each entity
+                type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <!-- activity types -->
+            <xs:enumeration value="award"/>
+            <xs:enumeration value="course"/>
+            <xs:enumeration value="event"/>
+            <xs:enumeration value="program"/>
+            <xs:enumeration value="project"/>
+            <!-- collection types-->
+            <xs:enumeration value="catalogueOrIndex"/>
+            <xs:enumeration value="collection"/>
+            <xs:enumeration value="registry"/>
+            <xs:enumeration value="repository"/>
+            <xs:enumeration value="dataset"/>
+            <!-- party types -->
+            <xs:enumeration value="group"/>
+            <xs:enumeration value="person"/>
+            <!-- service types -->
+            <xs:enumeration value="create"/>
+            <xs:enumeration value="generate"/>
+            <xs:enumeration value="report"/>
+            <xs:enumeration value="annotate"/>
+            <xs:enumeration value="transform"/>
+            <xs:enumeration value="assemble"/>
+            <xs:enumeration value="harvest-oaipmh"/>
+            <xs:enumeration value="search-http"/>
+            <xs:enumeration value="search-opensearch"/>
+            <xs:enumeration value="search-sru"/>
+            <xs:enumeration value="search-srw"/>
+            <xs:enumeration value="search-z3950"/>
+            <xs:enumeration value="syndicate-atom"/>
+            <xs:enumeration value="syndicate-rss"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="identifierTypeVocab">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="abn"/>
+            <xs:enumeration value="arc"/>
+            <xs:enumeration value="ark"/>
+            <xs:enumeration value="doi"/>
+            <xs:enumeration value="handle"/>
+            <xs:enumeration value="infouri"/>
+            <xs:enumeration value="isil"/>
+            <xs:enumeration value="local"/>
+            <xs:enumeration value="nla"/>
+            <xs:enumeration value="purl"/>
+            <xs:enumeration value="uri"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="nameTypeVocab">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="primary"/>
+            <xs:enumeration value="abbreviated"/>
+            <xs:enumeration value="alternative"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="namePartTypeVocab">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="family"/>
+            <xs:enumeration value="given"/>
+            <xs:enumeration value="initial"/>
+            <xs:enumeration value="suffix"/>
+            <xs:enumeration value="title"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="electronicAddressTypeVocab">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="email"/>
+
+            <xs:enumeration value="other"/>
+            <xs:enumeration value="url"/>
+
+            <xs:enumeration value="wsdl"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="physicalAddressTypeVocab">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="streetAddress"/>
+            <xs:enumeration value="postalAddress"/>
+            <xs:enumeration value="telephoneNumber"/>
+            <xs:enumeration value="faxNumber"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="addressPartTypeVocab">
+        <xs:annotation>
+            <xs:documentation>This reflects the RIF-CS documentation. Many more values are listed in
+                the RIF-CS content guide.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="addressLine"/>
+            <xs:enumeration value="text"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="spatialTypeVocabulary">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="gml"/>
+            <xs:enumeration value="gmlKMLPolyCoords"/>
+            <xs:enumeration value="gpx"/>
+            <xs:enumeration value="iso31661"/>
+            <xs:enumeration value="iso31662"/>
+            <xs:enumeration value="iso19139dcmiBox"/>
+            <xs:enumeration value="kml"/>
+            <xs:enumeration value="kmlPolyCoords"/>
+            <xs:enumeration value="dcmiPoint"/>
+            <xs:enumeration value="text"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="dateTypeVocabulary">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="from"/>
+            <xs:enumeration value="to"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="dateFormatVocabulary">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="UTC"/>
+            <xs:enumeration value="W3CDTF"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="relationTypeVocabulary">
+        <xs:restriction base="xs:string">
+            <!-- relations common to many entities are declared the first time and appear as comments for the other entities -->
+
+            <!-- Activity relations -->
+            <xs:enumeration value="hasAssociationWith"/>
+            <xs:enumeration value="hasOutput"/>
+            <xs:enumeration value="hasPart"/>
+            <xs:enumeration value="hasParticipant"/>
+            <xs:enumeration value="isFundedBy"/>
+            <xs:enumeration value="isManagedBy"/>
+            <xs:enumeration value="isOwnedBy"/>
+            <xs:enumeration value="isPartOf"/>
+
+            <!-- Collection relations -->
+            <xs:enumeration value="describes"/>
+            <!--<xs:enumeration value="hasPart"/>-->
+            <!--<xs:enumeration value="hasAssociationWith"/>-->
+            <xs:enumeration value="hasCollector"/>
+            <xs:enumeration value="isDescribedBy"/>
+            <xs:enumeration value="isLocatedIn"/>
+            <xs:enumeration value="isLocationFor"/>
+            <xs:enumeration value="isManagedBy"/>
+            <xs:enumeration value="isOutputOf"/>
+            <xs:enumeration value="isOwnedBy"/>
+            <!--<xs:enumeration value="isPartOf"/>-->
+            <xs:enumeration value="supports"/>
+
+            <!-- Party relations -->
+            <!--<xs:enumeration value="hasAssociationWith"/>-->
+            <xs:enumeration value="hasMember"/>
+            <!--<xs:enumeration value="hasPart"/>-->
+            <xs:enumeration value="isCollectorOf"/>
+            <xs:enumeration value="isFundedBy"/>
+            <xs:enumeration value="isFunderOf"/>
+            <!--<xs:enumeration value="isManagedBy"/>-->
+            <xs:enumeration value="isManagerOf"/>
+            <xs:enumeration value="isMemberOf"/>
+            <!--<xs:enumeration value="isOwnedBy"/>-->
+            <xs:enumeration value="isOwnerOf"/>
+            <!--<xs:enumeration value="isPartOf"/>-->
+            <xs:enumeration value="isParticipantIn"/>
+
+            <!-- Service relations -->
+            <!--<xs:enumeration value="hasAssociationWith"/>-->
+            <!--<xs:enumeration value="hasPart"/>-->
+            <!--<xs:enumeration value="isManagedBy"/>-->
+            <!--<xs:enumeration value="isOwnedBy"/>-->
+            <!--<xs:enumeration value="isPartOf"/>-->
+            <xs:enumeration value="isSupportedBy"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="descriptionTypeVocab">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="brief"/>
+            <xs:enumeration value="full"/>
+            <xs:enumeration value="logo"/>
+            <xs:enumeration value="note"/>
+            <xs:enumeration value="rights"/>
+            <xs:enumeration value="accessRights"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
