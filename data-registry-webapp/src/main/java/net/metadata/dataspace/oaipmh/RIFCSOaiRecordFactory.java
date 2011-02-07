@@ -53,7 +53,7 @@ public class RIFCSOaiRecordFactory extends RecordFactory {
 
     @Override
     public boolean isDeleted(Object o) {
-        return false;
+        return !((Version) o).getParent().isActive();
     }
 
     @Override

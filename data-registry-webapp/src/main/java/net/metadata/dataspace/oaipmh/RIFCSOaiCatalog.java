@@ -9,8 +9,10 @@ import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Activity;
 import net.metadata.dataspace.data.model.base.Party;
 import net.metadata.dataspace.data.model.base.Service;
+import net.metadata.dataspace.util.DateUtil;
 import org.hibernate.ObjectNotFoundException;
 
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -50,32 +52,40 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             NoItemsMatchException, NoSetHierarchyException,
             OAIInternalServerError {
         Map<String, Iterator<String>> listIdentifiersMap = new HashMap<String, Iterator<String>>(2);
+        Date fromDate = null;
+        Date toDate = null;
 
+        try {
+            fromDate = DateUtil.parseDate(from, DateUtil.OAI_DATE_FORMATS);
+            toDate = DateUtil.parseDate(until, DateUtil.OAI_DATE_FORMATS);
+        }
+        catch (ParseException pe) {
+            throw new BadArgumentException();
+        }
         //TODO create queries to return records between the given dates
-        List<Activity> activityList = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getAllPublished();
-        List<net.metadata.dataspace.data.model.base.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublished();
-        List<Party> partyList = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao().getAllPublished();
-        List<Service> serviceList = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getAllPublished();
+        List<Activity> activityList = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getAllPublishedBetween(fromDate, toDate);
+        List<net.metadata.dataspace.data.model.base.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublishedBetween(fromDate, toDate);
+        List<Party> partyList = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao().getAllPublishedBetween(fromDate, toDate);
+        List<Service> serviceList = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getAllPublishedBetween(fromDate, toDate);
 
         int size = activityList.size() + collectionList.size() + partyList.size() + serviceList.size();
-
         List<String> headers = new ArrayList<String>(size);
         List<String> identifiers = new ArrayList<String>(size);
         for (Activity activity : activityList) {
             identifiers.add(getRecordFactory().getOAIIdentifier(activity.getPublished()));
-            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(activity.getPublished()), getRecordFactory().getDatestamp(activity.getPublished()), getRecordFactory().getSetSpecs(activity), false)[0]);
+            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(activity.getPublished()), getRecordFactory().getDatestamp(activity.getPublished()), getRecordFactory().getSetSpecs(activity), !activity.isActive())[0]);
         }
         for (net.metadata.dataspace.data.model.base.Collection collection : collectionList) {
             identifiers.add(getRecordFactory().getOAIIdentifier(collection.getPublished()));
-            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(collection.getPublished()), getRecordFactory().getDatestamp(collection.getPublished()), getRecordFactory().getSetSpecs(collection), false)[0]);
+            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(collection.getPublished()), getRecordFactory().getDatestamp(collection.getPublished()), getRecordFactory().getSetSpecs(collection), !collection.isActive())[0]);
         }
         for (Party party : partyList) {
             identifiers.add(getRecordFactory().getOAIIdentifier(party.getPublished()));
-            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(party.getPublished()), getRecordFactory().getDatestamp(party.getPublished()), getRecordFactory().getSetSpecs(party), false)[0]);
+            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(party.getPublished()), getRecordFactory().getDatestamp(party.getPublished()), getRecordFactory().getSetSpecs(party), !party.isActive())[0]);
         }
         for (Service service : serviceList) {
             identifiers.add(getRecordFactory().getOAIIdentifier(service.getPublished()));
-            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(service.getPublished()), getRecordFactory().getDatestamp(service.getPublished()), getRecordFactory().getSetSpecs(service), false)[0]);
+            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(service.getPublished()), getRecordFactory().getDatestamp(service.getPublished()), getRecordFactory().getSetSpecs(service), !service.isActive())[0]);
         }
         listIdentifiersMap.put("identifiers", identifiers.iterator());
         listIdentifiersMap.put("headers", headers.iterator());
