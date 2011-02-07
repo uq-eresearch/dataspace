@@ -38,7 +38,7 @@
             <!-- collection -->
             <xsl:if
                     test="atom:category[@scheme=$NS_FOAF]/@term = $ENTITY_PARTY">
-                <collection type="party">
+                <party type="person">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel=$REL_SELF]"/>
                     <!-- names -->
@@ -61,7 +61,7 @@
                     <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <!-- related info -->
                     <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
-                </collection>
+                </party>
             </xsl:if>
         </registryObject>
     </xsl:template>

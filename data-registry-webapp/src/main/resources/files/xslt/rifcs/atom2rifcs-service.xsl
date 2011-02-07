@@ -37,7 +37,7 @@
             <!-- collection -->
             <xsl:if
                     test="atom:category[@scheme=$NS_VIVO]/@term =$ENTITY_SERVICE">
-                <collection type="service">
+                <service type="report">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel=$REL_SELF]"/>
                     <!-- names -->
@@ -59,7 +59,7 @@
                     <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <!-- related info -->
                     <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
-                </collection>
+                </service>
             </xsl:if>
         </registryObject>
     </xsl:template>
