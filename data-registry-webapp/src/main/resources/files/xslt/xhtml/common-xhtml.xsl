@@ -177,7 +177,7 @@
             </div>
             <div class="content">
                 <xsl:apply-templates select="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
-                and @scheme!=$NS_FOAF and @scheme!=$GROUP_LIST]"/>
+                and @scheme!=$NS_FOAF and @scheme!=$NS_GROUP]"/>
             </div>
         </div>
     </xsl:template>

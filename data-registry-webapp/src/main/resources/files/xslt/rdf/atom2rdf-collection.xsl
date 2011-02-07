@@ -43,7 +43,7 @@
             <!-- description -->
             <xsl:apply-templates select="atom:content"/>
             <!-- subjects -->
-            <xsl:apply-templates select="atom:category[@scheme!=$NS_DCMITYPE and @scheme!=$GROUP_LIST]"/>
+            <xsl:apply-templates select="atom:category[@scheme!=$NS_DCMITYPE and @scheme!=$NS_GROUP]"/>
             <!-- location -->
             <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
             <!-- creator -->
@@ -51,7 +51,7 @@
             <!-- curator -->
             <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
             <!-- generating activity -->
-            <xsl:apply-templates select="atom:link[@rel=$GROUP_LIST]"/>
+            <xsl:apply-templates select="atom:link[@rel=$NS_GROUP]"/>
             <!-- accessed via service -->
             <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]"/>
             <!-- related info -->
@@ -76,7 +76,7 @@
             <!-- description id -->
             <xsl:apply-templates select="atom:id"/>
             <!-- description publisher -->
-            <xsl:apply-templates select="atom:category[@scheme=$GROUP_LIST]"/>
+            <xsl:apply-templates select="atom:category[@scheme=$NS_GROUP]"/>
             <!-- description creator -->
             <xsl:apply-templates select="atom:author"/>
             <!-- description update date -->

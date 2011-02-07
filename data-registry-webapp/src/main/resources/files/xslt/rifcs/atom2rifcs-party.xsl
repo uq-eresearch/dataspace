@@ -26,7 +26,7 @@
     <!-- *** Atom entry ***-->
 
     <xsl:template match="atom:entry">
-        <registryObject group="{atom:category[@scheme=$GROUP_LIST]/@term}">
+        <registryObject group="{atom:category[@scheme=$NS_GROUP]/@term}">
 
             <key>
                 <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
@@ -53,7 +53,7 @@
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]"/>
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]"/>
                     <!-- subjects -->
-                    <xsl:apply-templates select="atom:category[@scheme != $NS_FOAF and @scheme!=$GROUP_LIST]"/>
+                    <xsl:apply-templates select="atom:category[@scheme != $NS_FOAF and @scheme!=$NS_GROUP]"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->

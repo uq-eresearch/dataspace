@@ -9,8 +9,8 @@
     <xsl:variable name="NS_ORE">http://www.openarchives.org/ore/terms/</xsl:variable>
     <xsl:variable name="NS_GEORSS">http://www.georss.org/georss/</xsl:variable>
     <xsl:variable name="NS_RDFA">http://www.w3.org/ns/rdfa#</xsl:variable>
-
-    <xsl:variable name="GROUP_LIST">https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php
+    <xsl:variable name="NS_GROUP">
+        <xsl:value-of select="'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php'"/>
     </xsl:variable>
 
     <xsl:variable name="REL_SELF">self</xsl:variable>

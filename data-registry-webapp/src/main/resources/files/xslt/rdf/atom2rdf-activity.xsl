@@ -72,7 +72,7 @@
             <!-- description id -->
             <xsl:apply-templates select="atom:id"/>
             <!-- description publisher -->
-            <xsl:apply-templates select="atom:category[@scheme=$GROUP_LIST]"/>
+            <xsl:apply-templates select="atom:category[@scheme=$NS_GROUP]"/>
             <!-- description creator -->
             <xsl:apply-templates select="atom:author"/>
             <!-- description update date -->
