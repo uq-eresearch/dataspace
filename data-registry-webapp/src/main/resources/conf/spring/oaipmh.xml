@@ -10,9 +10,9 @@
     <bean id="rifcsCrosswalk" class="net.metadata.dataspace.oaipmh.crosswalk.RIFCSCrosswalk">
         <constructor-arg ref="oaiProperties"/>
     </bean>
-    <bean id="dcCrosswalk" class="net.metadata.dataspace.oaipmh.crosswalk.DCCrosswalk">
-        <constructor-arg ref="oaiProperties"/>
-    </bean>
+    <!--<bean id="dcCrosswalk" class="net.metadata.dataspace.oaipmh.crosswalk.DCCrosswalk">-->
+    <!--<constructor-arg ref="oaiProperties"/>-->
+    <!--</bean>-->
 
     <bean id="oaiCatalog" class="net.metadata.dataspace.oaipmh.RIFCSOaiCatalog">
         <property name="recordFactory">

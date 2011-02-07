@@ -18,11 +18,22 @@ public class DCCrosswalk extends Crosswalk {
 
     @Override
     public String createMetadata(Object o) throws CannotDisseminateFormatException {
-        return null;
+        try {
+
+            String xmlContent = "<warning>The DC Crosswalk is not supported by this repository.</warning>";
+            // need to strip the xml declaration - <?xml version="1.0"
+            // encoding="UTF-16"?>
+            if (xmlContent.startsWith("<?xml ")) {
+                xmlContent = xmlContent.substring(xmlContent.indexOf("?>") + 2);
+            }
+            return xmlContent;
+        } catch (Exception e) {
+            throw new CannotDisseminateFormatException(e.toString());
+        }
     }
 
     @Override
     public boolean isAvailableFor(Object o) {
-        return true;
+        return false;
     }
 }
