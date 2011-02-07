@@ -3,7 +3,7 @@
     <xsl:variable name="NS_FOAF">http://xmlns.com/foaf/0.1/</xsl:variable>
     <xsl:variable name="NS_ANDS">http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#</xsl:variable>
     <xsl:variable name="NS_DC">http://purl.org/dc/terms/</xsl:variable>
-    <xsl:variable name="NS_DCMITYPE">http://purl.org/dc/terms/dcmitype/</xsl:variable>
+    <xsl:variable name="NS_DCMITYPE">http://purl.org/dc/dcmitype/</xsl:variable>
     <xsl:variable name="NS_CLD">http://purl.org/cld/terms/</xsl:variable>
     <xsl:variable name="NS_VIVO">http://vivoweb.org/ontology/core#</xsl:variable>
     <xsl:variable name="NS_ORE">http://www.openarchives.org/ore/terms/</xsl:variable>
