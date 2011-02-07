@@ -4,6 +4,7 @@ import ORG.oclc.oai.server.catalog.AbstractCatalog;
 import ORG.oclc.oai.server.verb.*;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Activity;
 import net.metadata.dataspace.data.model.base.Party;
@@ -90,14 +91,15 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
     public String getRecord(String identifier, String metadataPrefix) throws IdDoesNotExistException, CannotDisseminateFormatException, OAIInternalServerError {
         try {
             Record record = null;
+            String key = AdapterHelper.getEntityID(identifier);
             if (identifier.contains(Constants.PATH_FOR_ACTIVITIES)) {
-                record = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getAllPublished().get(0);
+                record = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_COLLECTIONS)) {
-                record = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublished().get(0);
+                record = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_PARTIES)) {
-                record = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao().getAllPublished().get(0);
+                record = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_SERVICES)) {
-                record = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getAllPublished().get(0);
+                record = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getByKey(key);
             }
             if (record == null) {
                 throw new IdDoesNotExistException(identifier);
