@@ -6,10 +6,6 @@ import net.metadata.dataspace.atom.util.SchemaHelper;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -22,11 +18,12 @@ import static org.junit.Assert.assertTrue;
  * Date: 07/02/2011
  * Time: 3:55:21 PM
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = Constants.TEST_CONTEXT)
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = Constants.TEST_CONTEXT)
 public class XSLTTransformerWriterTest {
 
-    @Test
+//    @Test
+
     public void testValidActivity() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
@@ -47,7 +44,8 @@ public class XSLTTransformerWriterTest {
         assertTrue(newEntryLocation + " is not a valid RIF-CS xml", SchemaHelper.isValidRIFCS(source, newEntryLocation));
     }
 
-    @Test
+//    @Test
+
     public void testValidCollection() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
@@ -68,7 +66,8 @@ public class XSLTTransformerWriterTest {
         assertTrue(newEntryLocation + " is not a valid RIF-CS xml", SchemaHelper.isValidRIFCS(source, newEntryLocation));
     }
 
-    @Test
+//    @Test
+
     public void testValidParty() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
@@ -89,7 +88,8 @@ public class XSLTTransformerWriterTest {
         assertTrue(newEntryLocation + " is not a valid RIF-CS xml", SchemaHelper.isValidRIFCS(source, newEntryLocation));
     }
 
-    @Test
+//    @Test
+
     public void testValidService() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
