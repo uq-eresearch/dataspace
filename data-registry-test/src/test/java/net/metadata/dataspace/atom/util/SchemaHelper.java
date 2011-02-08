@@ -19,7 +19,7 @@ public class SchemaHelper {
 
     public static boolean isValidRIFCS(Source source, String entryLocation) throws Exception {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        URL resource = SchemaHelper.class.getResource("/files/schema/ands/registryObjects.xsd");
+        URL resource = SchemaHelper.class.getResource("/files/schema/registryObjects.xsd");
         String path = resource.getPath();
         File schemaLocation = new File(path);
         Schema schema = factory.newSchema(schemaLocation);
