@@ -1,18 +1,5 @@
 package net.metadata.dataspace.atom.writer;
 
-import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.atom.util.ClientHelper;
-import net.metadata.dataspace.atom.util.SchemaHelper;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /**
  * Author: alabri
  * Date: 07/02/2011
@@ -20,11 +7,11 @@ import static org.junit.Assert.assertTrue;
  */
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations = Constants.TEST_CONTEXT)
-public class XSLTTransformerWriterTest {
+public class XSLTTransformerWriter {
 
 //    @Test
 
-    public void testValidActivity() throws Exception {
+    /* public void testValidActivity() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
@@ -108,5 +95,5 @@ public class XSLTTransformerWriterTest {
         Source source = new StreamSource(getMethod.getResponseBodyAsStream());
 
         assertTrue(newEntryLocation + " is not a valid RIF-CS xml", SchemaHelper.isValidRIFCS(source, newEntryLocation));
-    }
+    }*/
 }
