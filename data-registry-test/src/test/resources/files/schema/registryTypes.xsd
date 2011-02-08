@@ -19,7 +19,6 @@
         </xsd:documentation>
     </xsd:annotation>
 
-    <!-- include vocabulary definitions -->
     <xsd:include schemaLocation="registryVocabs.xsd"/>
 
     <xsd:complexType name="identifierType">

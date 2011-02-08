@@ -23,22 +23,20 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
-            <!-- activity types -->
             <xs:enumeration value="award"/>
             <xs:enumeration value="course"/>
             <xs:enumeration value="event"/>
             <xs:enumeration value="program"/>
             <xs:enumeration value="project"/>
-            <!-- collection types-->
             <xs:enumeration value="catalogueOrIndex"/>
             <xs:enumeration value="collection"/>
             <xs:enumeration value="registry"/>
             <xs:enumeration value="repository"/>
             <xs:enumeration value="dataset"/>
-            <!-- party types -->
+
             <xs:enumeration value="group"/>
             <xs:enumeration value="person"/>
-            <!-- service types -->
+
             <xs:enumeration value="create"/>
             <xs:enumeration value="generate"/>
             <xs:enumeration value="report"/>
@@ -153,9 +151,6 @@
 
     <xs:simpleType name="relationTypeVocabulary">
         <xs:restriction base="xs:string">
-            <!-- relations common to many entities are declared the first time and appear as comments for the other entities -->
-
-            <!-- Activity relations -->
             <xs:enumeration value="hasAssociationWith"/>
             <xs:enumeration value="hasOutput"/>
             <xs:enumeration value="hasPart"/>
@@ -165,10 +160,7 @@
             <xs:enumeration value="isOwnedBy"/>
             <xs:enumeration value="isPartOf"/>
 
-            <!-- Collection relations -->
             <xs:enumeration value="describes"/>
-            <!--<xs:enumeration value="hasPart"/>-->
-            <!--<xs:enumeration value="hasAssociationWith"/>-->
             <xs:enumeration value="hasCollector"/>
             <xs:enumeration value="isDescribedBy"/>
             <xs:enumeration value="isLocatedIn"/>
@@ -176,30 +168,17 @@
             <xs:enumeration value="isManagedBy"/>
             <xs:enumeration value="isOutputOf"/>
             <xs:enumeration value="isOwnedBy"/>
-            <!--<xs:enumeration value="isPartOf"/>-->
             <xs:enumeration value="supports"/>
 
-            <!-- Party relations -->
-            <!--<xs:enumeration value="hasAssociationWith"/>-->
             <xs:enumeration value="hasMember"/>
-            <!--<xs:enumeration value="hasPart"/>-->
             <xs:enumeration value="isCollectorOf"/>
             <xs:enumeration value="isFundedBy"/>
             <xs:enumeration value="isFunderOf"/>
-            <!--<xs:enumeration value="isManagedBy"/>-->
             <xs:enumeration value="isManagerOf"/>
             <xs:enumeration value="isMemberOf"/>
-            <!--<xs:enumeration value="isOwnedBy"/>-->
             <xs:enumeration value="isOwnerOf"/>
-            <!--<xs:enumeration value="isPartOf"/>-->
             <xs:enumeration value="isParticipantIn"/>
 
-            <!-- Service relations -->
-            <!--<xs:enumeration value="hasAssociationWith"/>-->
-            <!--<xs:enumeration value="hasPart"/>-->
-            <!--<xs:enumeration value="isManagedBy"/>-->
-            <!--<xs:enumeration value="isOwnedBy"/>-->
-            <!--<xs:enumeration value="isPartOf"/>-->
             <xs:enumeration value="isSupportedBy"/>
         </xs:restriction>
     </xs:simpleType>
