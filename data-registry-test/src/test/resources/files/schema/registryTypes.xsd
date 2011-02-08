@@ -4,8 +4,7 @@
             targetNamespace="http://ands.org.au/standards/rif-cs/registryObjects"
             elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"
-                schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
 
     <xsd:annotation>
         <xsd:documentation>Type library for Registry Schema</xsd:documentation>
