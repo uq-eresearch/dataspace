@@ -23,21 +23,25 @@ public class SchemaHelper {
         URL resource = SchemaHelper.class.getResource("/files/schema/registryObjects.xsd");
         String path = resource.getPath();
         File schemaLocation = new File(path);
+        Schema schema = null;
         try {
-            Schema schema = factory.newSchema(schemaLocation);
-            Validator validator = schema.newValidator();
+            schema = factory.newSchema(schemaLocation);
+        } catch (SAXException e) {
+            System.out.println("Schema is not valid because ");
+            System.out.println(e.getMessage());
+        }
+        Validator validator = schema.newValidator();
+        try {
             validator.validate(source);
             System.out.println(entryLocation + " is valid.");
             return true;
-        }
-        catch (SAXException ex) {
+        } catch (SAXException ex) {
             System.out.println(entryLocation + " is not valid because ");
             System.out.println(ex.getMessage());
             return false;
         } catch (IOException e) {
             System.out.println(entryLocation + " is not valid because ");
             System.out.println(e.getMessage());
-            e.printStackTrace();
             return false;
         }
     }
