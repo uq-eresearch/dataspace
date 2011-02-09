@@ -5,6 +5,7 @@ import ORG.oclc.oai.server.verb.CannotDisseminateFormatException;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.data.model.Version;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
+import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -17,17 +18,21 @@ import java.util.Properties;
  */
 public class RIFCSOaiRecordFactory extends RecordFactory {
 
+    private Logger logger = Logger.getLogger(getClass());
+
     public RIFCSOaiRecordFactory(Properties properties) {
         super(properties);
     }
 
     @Override
     public String fromOAIIdentifier(String s) {
+        logger.debug("fromOAIIdentifier() is not implemented but being called");
         return null;
     }
 
     @Override
     public String quickCreate(Object o, String s, String s1) throws IllegalArgumentException, CannotDisseminateFormatException {
+        logger.debug("quickCreate() is not implemented but being called");
         return null;
     }
 
@@ -48,6 +53,7 @@ public class RIFCSOaiRecordFactory extends RecordFactory {
 
     @Override
     public Iterator getSetSpecs(Object o) throws IllegalArgumentException {
+        logger.debug("getSetSpecs() is not implemented but being called");
         return null;
     }
 
@@ -58,6 +64,7 @@ public class RIFCSOaiRecordFactory extends RecordFactory {
 
     @Override
     public Iterator getAbouts(Object o) {
+        logger.debug("getAbouts() is not implemented but being called");
         return null;
     }
 }

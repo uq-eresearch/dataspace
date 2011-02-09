@@ -10,6 +10,7 @@ import net.metadata.dataspace.data.model.base.Activity;
 import net.metadata.dataspace.data.model.base.Party;
 import net.metadata.dataspace.data.model.base.Service;
 import net.metadata.dataspace.util.DateUtil;
+import org.apache.log4j.Logger;
 import org.hibernate.ObjectNotFoundException;
 
 import java.text.ParseException;
@@ -22,6 +23,8 @@ import java.util.*;
  */
 public class RIFCSOaiCatalog extends AbstractCatalog {
 
+    private Logger logger = Logger.getLogger(getClass());
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     public RIFCSOaiCatalog() {
     }
@@ -32,16 +35,19 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
 
     @Override
     public Map listSets() throws NoSetHierarchyException, OAIInternalServerError {
+        logger.debug("listSets() is not implemented but being called");
         return null;
     }
 
     @Override
     public Map listSets(String s) throws BadResumptionTokenException, OAIInternalServerError {
+        logger.debug("listSets() is not implemented but being called");
         return null;
     }
 
     @Override
     public Vector getSchemaLocations(String s) throws IdDoesNotExistException, NoMetadataFormatsException, OAIInternalServerError {
+        logger.debug("getSchemaLocations() is not implemented but being called");
         return null;
     }
 
@@ -51,6 +57,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             throws BadArgumentException, CannotDisseminateFormatException,
             NoItemsMatchException, NoSetHierarchyException,
             OAIInternalServerError {
+        logger.debug("Listing identifiers");
         Map<String, Iterator<String>> listIdentifiersMap = new HashMap<String, Iterator<String>>(2);
         Date fromDate = null;
         Date toDate = null;
@@ -94,12 +101,14 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
 
     @Override
     public Map listIdentifiers(String s) throws BadResumptionTokenException, OAIInternalServerError {
+        logger.debug("listIdentifiers() is not implemented but being called");
         return null;
     }
 
     @Override
     public String getRecord(String identifier, String metadataPrefix) throws IdDoesNotExistException, CannotDisseminateFormatException, OAIInternalServerError {
         try {
+            logger.debug("Getting a record");
             Record record = null;
             String key = AdapterHelper.getEntityID(identifier);
             if (identifier.contains(Constants.PATH_FOR_ACTIVITIES)) {
@@ -124,6 +133,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
 
     @Override
     public void close() {
+        logger.debug("close() is not implemented but being called");
     }
 
     public String toFinestFrom(String from) {

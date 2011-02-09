@@ -15,6 +15,7 @@ import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.util.AbstractWriterOptions;
+import org.apache.log4j.Logger;
 
 import java.util.Properties;
 
@@ -25,6 +26,8 @@ import java.util.Properties;
  */
 public class RIFCSCrosswalk extends Crosswalk {
 
+    private Logger logger = Logger.getLogger(getClass());
+
     public RIFCSCrosswalk(Properties props) {
         super("http://services.ands.org.au/documentation/rifcs/schema/registryObjects.xsd");
     }
@@ -32,7 +35,7 @@ public class RIFCSCrosswalk extends Crosswalk {
     @Override
     public String createMetadata(Object nativeItem) throws CannotDisseminateFormatException {
         try {
-
+            logger.debug("Assembling a record");
             String xslFilePath = "";
             if (nativeItem instanceof ActivityVersion) {
                 xslFilePath = "/files/xslt/rifcs/atom2rifcs-" + Activity.class.getSimpleName().toLowerCase() + ".xsl";
