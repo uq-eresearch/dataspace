@@ -18,5 +18,5 @@
     <updated>2010-10-08T05:58:02.781Z</updated>
     <link href="http://e-research.sbs.uq.edu.au/aus_voting2007.html" rel="http://purl.org/cld/terms/isLocatedAt"/>
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy"
-          href="http://dataspace.metadata.net/collections/1"/>
+          href="http://localhost:9635//collections/1"/>
 </entry>

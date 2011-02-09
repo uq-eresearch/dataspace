@@ -17,11 +17,11 @@
               label="200503 - Australian Literature (excl. Aboriginal and Torres Strait Islander Literature)"/>
     <link href="http://espace.library.uq.edu.au/collection/UQ:3521" rel="http://purl.org/cld/terms/isLocatedAt"/>
     <!-- collection creator -->
-    <link href="http://dataspace.metadata.net/parties/1" rel="http://purl.org/dc/terms/creator"/>
+    <link href="http://localhost:9635/parties/1" rel="http://purl.org/dc/terms/creator"/>
     <!-- collection curator -->
-    <link href="http://dataspace.metadata.net/parties/1" rel="http://purl.org/dc/terms/publisher"/>
+    <link href="http://localhost:9635/parties/1" rel="http://purl.org/dc/terms/publisher"/>
     <!-- activity generating the collection -->
-    <link href="http://dataspace.metadata.net/activities/1"
+    <link href="http://localhost:9635/activities/1"
           rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"/>
-    <link href="http://localhost:8080/services/1" rel="http://purl.org/cld/terms/isAccessedVia"/>
+    <link href="http://localhost:9635/services/1" rel="http://purl.org/cld/terms/isAccessedVia"/>
 </entry>
