@@ -77,6 +77,8 @@ public class EntityRelationshipHelper {
             version.getSubjects().add(subject);
             if (subject.getId() == null) {
                 entityManager.persist(subject);
+            } else {
+                entityManager.merge(subject);
             }
         }
         Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_CREATOR);
@@ -119,6 +121,8 @@ public class EntityRelationshipHelper {
             version.getSubjects().add(subject);
             if (subject.getId() == null) {
                 entityManager.persist(subject);
+            } else {
+                entityManager.merge(subject);
             }
         }
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_COLLECTOR_OF);
