@@ -8,7 +8,7 @@
           Abdul Alabri, 2011-01
 
     -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -83,7 +83,7 @@
             </div>
         </div>
     </xsl:template>
-    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']">
+    <xsl:template match="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]">
         <div class="statement">
             <div class="property">
                 <p>Access</p>
@@ -162,7 +162,7 @@
 
     <!-- description publisher -->
     <xsl:template
-            match="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+            match="atom:category[@scheme=$NS_GROUP]">
         <p>Description published by
             <xsl:value-of select="@term"/>
             <xsl:apply-templates select="//atom:source"/>
@@ -231,7 +231,7 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
+    <xsl:template match="rdfa:meta[@property=$RDFA_TEMPORAL]">
         <p>
             <xsl:value-of select="@content"/>
         </p>
@@ -239,19 +239,19 @@
 
     <!-- displayed links -->
     <xsl:template
-            match="atom:link[@rel='http://purl.org/dc/terms/creator'
-            or @rel='http://purl.org/dc/terms/publisher'
-            or @rel='http://purl.org/cld/terms/isAccessedVia'
-            or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf'
-            or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy'
-            or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant'
-            or @rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput'
-            or @rel='http://purl.org/cld/terms/isLocatedAt'
-            or @rel='http://xmlns.com/foaf/0.1/made'
-            or @rel='http://xmlns.com/foaf/0.1/currentProject'
-            or @rel='related'
-            or @rel='alternate'
-            or @rel='latest-version']">
+            match="atom:link[@rel=$ATOM_CREATOR
+            or @rel=$ATOM_PUBLISHER
+            or @rel=$ATOM_IS_ACCESSED_VIA
+            or @rel=$ATOM_IS_OUTPUT_OF
+            or @rel=$ATOM_IS_SUPPORTED_BY
+            or @rel=$ATOM_HAS_PARTICIPANT
+            or @rel=$ATOM_HAS_OUTPUT
+            or @rel=$ATOM_IS_LOCATED_AT
+            or @rel=$ATOM_IS_COLLECTOR_OF
+            or @rel=$ATOM_IS_PARTICIPANT_IN
+            or @rel=$REL_RELATED
+            or @rel=$REL_ALTERNATE
+            or @rel=$REL_LATEST_VERSION]">
         <p>
             <a href="{@href}">
                 <xsl:choose>

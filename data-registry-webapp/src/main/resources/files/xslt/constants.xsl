@@ -1,5 +1,4 @@
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <!--Constants-->
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:variable name="NS_FOAF">http://xmlns.com/foaf/0.1/</xsl:variable>
     <xsl:variable name="NS_ANDS">http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#</xsl:variable>
     <xsl:variable name="NS_DC">http://purl.org/dc/terms/</xsl:variable>

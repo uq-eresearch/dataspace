@@ -8,7 +8,7 @@
           Nigel Ward, 2010-12
 
     -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns="http://www.w3.org/1999/xhtml"
@@ -119,8 +119,7 @@
     </xsl:template>
 
     <xsl:template
-            match="atom:category[@scheme != 'http://vivoweb.org/ontology/core#'
-            and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+            match="atom:category[@scheme != $NS_VIVO and @scheme!=$NS_GROUP]">
         <p>
             <xsl:choose>
                 <xsl:when test="@label">

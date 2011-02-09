@@ -8,7 +8,7 @@
           Abdul Alabri, 2010-11
 
     -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -38,23 +38,23 @@
     </xsl:template>
 
     <!-- location -->
-    <xsl:template match="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']">
+    <xsl:template match="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
         <cld:isLocatedAt rdf:resource="{@href}"/>
     </xsl:template>
 
     <!-- creator -->
-    <xsl:template match="atom:link[@rel='http://purl.org/dc/terms/creator']">
+    <xsl:template match="atom:link[@rel=$ATOM_CREATOR]">
         <dcterms:creator rdf:resource="{@href}"/>
     </xsl:template>
 
     <!-- curator -->
-    <xsl:template match="atom:link[@rel='http://purl.org/dc/terms/publisher']">
+    <xsl:template match="atom:link[@rel=$ATOM_PUBLISHER]">
         <dcterms:publisher rdf:resource="{@href}"/>
     </xsl:template>
 
     <!-- subjects -->
     <xsl:template
-            match="atom:category[@scheme!='http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php'and @scheme!='http://xmlns.com/foaf/0.1/']">
+            match="atom:category[@scheme!=$NS_DCMITYPE and @scheme!=$NS_GROUP and @scheme!=$NS_FOAF]">
         <dcterms:subject rdf:resource="{@term}"/>
     </xsl:template>
 
@@ -62,14 +62,14 @@
     <!-- TO DO -->
 
     <!-- temporal coverage -->
-    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
+    <xsl:template match="rdfa:meta[@property=$RDFA_TEMPORAL]">
         <dcterms:temporal>
             <xsl:value-of select="@content"/>
         </dcterms:temporal>
     </xsl:template>
 
     <!-- related info -->
-    <xsl:template match="atom:link[@rel='related']">
+    <xsl:template match="atom:link[@rel=$REL_RELATED]">
         <dcterms:relation>
             <rdf:Description rdf:about="{@href}">
                 <dcterms:title>
@@ -86,7 +86,7 @@
         </dcterms:rights>
     </xsl:template>
 
-    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']">
+    <xsl:template match="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]">
         <dcterms:accessRights>
             <xsl:value-of select="@content"/>
         </dcterms:accessRights>
@@ -102,7 +102,7 @@
 
     <!-- description publisher -->
     <xsl:template
-            match="atom:category[@scheme='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+            match="atom:category[@scheme=$NS_GROUP]">
         <dcterms:publisher>
             <xsl:value-of select="@term"/>
         </dcterms:publisher>
@@ -171,7 +171,7 @@
     </xsl:template>
 
     <!-- alternate formats for description -->
-    <xsl:template match="atom:link[@rel = 'alternate']">
+    <xsl:template match="atom:link[@rel = $REL_ALTERNATE]">
         <xsl:if test="@href">
             <dcterms:hasFormat>
                 <rdf:Description rdf:about="{@href}">

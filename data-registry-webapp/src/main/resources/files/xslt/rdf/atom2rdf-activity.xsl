@@ -8,7 +8,7 @@
           Nigel Ward, 2010-11
 
     -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -92,18 +92,18 @@
     <!-- *** collection description elements *** -->
 
     <!-- description type -->
-    <xsl:template match="atom:category[@scheme='http://xmlns.com/foaf/0.1/']">
+    <xsl:template match="atom:category[@scheme=$NS_FOAF]">
         <dcterms:type rdf:resource="{@term}"/>
     </xsl:template>
 
     <!-- has participant as party -->
     <xsl:template
-            match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant']">
+            match="atom:link[@rel=$ATOM_HAS_PARTICIPANT]">
         <ands:isOutputOf rdf:resource="{@href}"/>
     </xsl:template>
     <!-- has output as collection -->
     <xsl:template
-            match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput']">
+            match="atom:link[@rel=$ATOM_HAS_OUTPUT]">
         <ands:isOutputOf rdf:resource="{@href}"/>
     </xsl:template>
 

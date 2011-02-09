@@ -8,7 +8,7 @@
           Abdul Alabri, 2010-11
 
     -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
@@ -33,7 +33,7 @@
     </xsl:template>
 
     <!-- location -->
-    <xsl:template match="atom:link[@rel='http://purl.org/cld/terms/isLocatedAt']">
+    <xsl:template match="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
         <location>
             <address>
                 <electronic type="url">
@@ -48,7 +48,7 @@
     <!-- temporal coverage -->
     <!-- NB: the XSL below is fragile. It assumes a restricted DCMI Period encoding, with only start and end components,
 in that order, and encoded as W3CDTF dates-->
-    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/temporal']">
+    <xsl:template match="rdfa:meta[@property=$RDFA_TEMPORAL]">
         <coverage>
             <temporal>
                 <date type="from" dateFormat="W3CDTF">
@@ -62,7 +62,7 @@ in that order, and encoded as W3CDTF dates-->
     </xsl:template>
     <!-- subjects -->
     <xsl:template
-            match="atom:category[@scheme != 'http://purl.org/dc/dcmitype/' and @scheme!='https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php']">
+            match="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_GROUP]">
         <subject>
             <xsl:attribute name="type">
                 <xsl:choose>
@@ -90,14 +90,14 @@ in that order, and encoded as W3CDTF dates-->
         </description>
     </xsl:template>
 
-    <xsl:template match="rdfa:meta[@property='http://purl.org/dc/terms/accessRights']">
+    <xsl:template match="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]">
         <description type="accessRights">
             <xsl:value-of select="@content"/>
         </description>
     </xsl:template>
 
     <!-- related info -->
-    <xsl:template match="atom:link[@rel='related']">
+    <xsl:template match="atom:link[@rel=$REL_RELATED]">
         <relatedInfo>
             <identifier type="url">
                 <xsl:value-of select="@href"/>

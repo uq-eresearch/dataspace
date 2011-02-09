@@ -8,7 +8,7 @@
           Nigel Ward, 2010-12
 
     -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
@@ -65,7 +65,7 @@
     </xsl:template>
 
     <!-- collector (party) -->
-    <xsl:template match="atom:link[@rel='http://purl.org/dc/terms/creator']">
+    <xsl:template match="atom:link[@rel=$ATOM_CREATOR]">
         <relatedObject>
             <key>
                 <xsl:value-of select="@href"/>
@@ -75,7 +75,7 @@
     </xsl:template>
 
     <!-- curator / manager (party) -->
-    <xsl:template match="atom:link[@rel='http://purl.org/dc/terms/publisher']">
+    <xsl:template match="atom:link[@rel=$ATOM_PUBLISHER]">
         <relatedObject>
             <key>
                 <xsl:value-of select="@href"/>
@@ -86,7 +86,7 @@
 
     <!-- output of (activity) -->
     <xsl:template
-            match="atom:link[@rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf']">
+            match="atom:link[@rel=$ATOM_IS_OUTPUT_OF]">
         <relatedObject>
             <key>
                 <xsl:value-of select="@href"/>
