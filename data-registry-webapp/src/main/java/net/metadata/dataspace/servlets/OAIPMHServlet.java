@@ -56,7 +56,7 @@ public class OAIPMHServlet extends OAIHandler {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         logger.debug("Get Request is " + request.getRequestURL() + "?" + request.getQueryString());
         super.doGet(request, response);
-        logger.debug("Done Get Request");
+        logger.debug("End Get Request");
     }
 
     @Override
