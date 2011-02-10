@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class DateUtil extends org.apache.commons.lang.time.DateUtils {
 
-    public static final String[] OAI_DATE_FORMATS = new String[]{"yyyy-MM-dd", "yyyy-MM-dd'T'HH:mm:ss"};
+    public static final String[] OAI_DATE_FORMATS = new String[]{"yyyy-MM-dd", "yyyy-MM-dd'T'HH:mm:ss'Z'"};
     private static SimpleDateFormat sdfShort = new SimpleDateFormat(OAI_DATE_FORMATS[0]);
     private static SimpleDateFormat sdfLong = new SimpleDateFormat(OAI_DATE_FORMATS[1]);
 
