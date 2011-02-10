@@ -12,6 +12,7 @@
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns="http://ands.org.au/standards/rif-cs/registryObjects">
 
     <xsl:include href="common-rifcs.xsl"/>
@@ -26,7 +27,7 @@
     <!-- *** Atom entry ***-->
 
     <xsl:template match="atom:entry">
-        <registryObject group="{atom:category[@scheme=$NS_GROUP]/@term}">
+        <registryObject group="{atom:category[@scheme=$NS_GROUP]/@term}" xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/schema/registryObjects.xsd">
             <key>
                 <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
             </key>
