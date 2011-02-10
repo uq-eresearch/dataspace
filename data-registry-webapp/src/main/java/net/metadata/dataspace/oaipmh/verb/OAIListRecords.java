@@ -1,4 +1,4 @@
-package net.metadata.dataspace.oaipmh;
+package net.metadata.dataspace.oaipmh.verb;
 
 import ORG.oclc.oai.server.catalog.AbstractCatalog;
 import ORG.oclc.oai.server.crosswalk.Crosswalks;

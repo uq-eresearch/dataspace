@@ -5,7 +5,7 @@ import ORG.oclc.oai.server.catalog.AbstractCatalog;
 import ORG.oclc.oai.server.verb.OAIInternalServerError;
 import ORG.oclc.oai.server.verb.ServerVerb;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.oaipmh.OAIListRecords;
+import net.metadata.dataspace.oaipmh.verb.OAIListRecords;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
