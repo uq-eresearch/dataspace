@@ -5,6 +5,7 @@ import ORG.oclc.oai.server.catalog.AbstractCatalog;
 import ORG.oclc.oai.server.verb.OAIInternalServerError;
 import ORG.oclc.oai.server.verb.ServerVerb;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.oaipmh.verb.OAIGetRecord;
 import net.metadata.dataspace.oaipmh.verb.OAIListRecords;
 import org.apache.log4j.Logger;
 
@@ -82,6 +83,7 @@ public class OAIPMHServlet extends OAIHandler {
 
         HashMap serverVerbs = ServerVerb.getVerbs(properties);
         serverVerbs.put("ListRecords", OAIListRecords.class);
+        serverVerbs.put("GetRecord", OAIGetRecord.class);
         HashMap extensionVerbs = ServerVerb.getExtensionVerbs(properties);
 
         Transformer transformer =

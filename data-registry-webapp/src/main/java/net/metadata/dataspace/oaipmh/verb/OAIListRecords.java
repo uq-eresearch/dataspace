@@ -3,6 +3,7 @@ package net.metadata.dataspace.oaipmh.verb;
 import ORG.oclc.oai.server.catalog.AbstractCatalog;
 import ORG.oclc.oai.server.crosswalk.Crosswalks;
 import ORG.oclc.oai.server.verb.*;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +22,8 @@ import java.util.*;
  */
 
 public class OAIListRecords extends ServerVerb {
-    private static final boolean debug = false;
+
+    private static Logger logger = Logger.getLogger(OAIListRecords.class);
     private static ArrayList validParamNames1 = new ArrayList();
 
     static {
@@ -60,7 +62,7 @@ public class OAIListRecords extends ServerVerb {
                                    HttpServletRequest request, HttpServletResponse response,
                                    Transformer serverTransformer)
             throws OAIInternalServerError, TransformerException {
-        if (debug) System.out.println("ListRecords.construct: entered");
+        logger.debug("ListRecords.construct: entered");
 
         Properties properties = (Properties) context.get("OAIHandler.properties");
         AbstractCatalog abstractCatalog = (AbstractCatalog) context.get("OAIHandler.catalog");
@@ -100,30 +102,13 @@ public class OAIListRecords extends ServerVerb {
         sb.append("<responseDate>");
         sb.append(createResponseDate(new Date()));
         sb.append("</responseDate>");
-//         sb.append("<requestURL>");
-//         sb.append(getRequestURL(request));
-//         sb.append("</requestURL>");
-
         if (!abstractCatalog.isHarvestable()) {
             sb.append("<request verb=\"ListRecords\">");
             sb.append(baseURL);
             sb.append("</request>");
             sb.append("<error code=\"badArgument\">Database is unavailable for harvesting</error>");
         } else {
-// 	    if (debug) {
-// 		System.gc();
-// 		System.gc();
-// 		Runtime rt = Runtime.getRuntime();
-// 		long freeMemoryK = rt.freeMemory() / 1024;
-// 		long totalMemoryK = rt.totalMemory() / 1024;
-// 		System.out.print("ListRecords.construct: " + oldResumptionToken);
-// 		System.out.print(" freeMemory=" + freeMemoryK / 1024.0 + "M");
-// 		System.out.print(" of " + totalMemoryK / 1024.0 + "M ");
-// 		System.out.println("(" + (100 * freeMemoryK) / totalMemoryK + "%)");
-// 	    }
-
             Map listRecordsMap = null;
-
             ArrayList validParamNames = null;
             ArrayList requiredParamNames = null;
             if (oldResumptionToken == null) {
@@ -174,9 +159,6 @@ public class OAIListRecords extends ServerVerb {
                     sb.append(baseURL);
                     sb.append("</request>");
                     sb.append(e.getMessage());
-// 		} catch (BadGranularityException e) {
-// 		    sb.append(getRequestElement(request));
-// 		    sb.append(e.getMessage());
                 } catch (CannotDisseminateFormatException e) {
                     sb.append(getRequestElement(request, validParamNames, baseURL, xmlEncodeSetSpec));
                     sb.append(e.getMessage());
@@ -244,9 +226,9 @@ public class OAIListRecords extends ServerVerb {
             }
         }
         sb.append("</OAI-PMH>");
-        if (debug) {
-            System.out.println("ListRecords.constructListRecords: returning: " + sb.toString());
-        }
+
+        logger.debug("ListRecords.constructListRecords: returning: " + sb.toString());
+
         return render(response, "text/xml; charset=UTF-8", sb.toString(), serverTransformer);
     }
 }
