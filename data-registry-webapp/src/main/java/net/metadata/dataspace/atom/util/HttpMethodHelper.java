@@ -250,17 +250,16 @@ public class HttpMethodHelper {
         }
     }
 
-
-    public static ResponseContext getFeed(RequestContext request, Class clazz) throws ResponseContextException {
+    public static ResponseContext getFeed(RequestContext request, ResponseContext responseContext) throws ResponseContextException {
         String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-                return FeedHelper.getHtmlRepresentationOfFeed(request, getHtmlPage(clazz));
+                return FeedHelper.getHtmlRepresentationOfFeed(request, responseContext);
             } else {
                 throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
             }
         } else {
-            return FeedHelper.getHtmlRepresentationOfFeed(request, getHtmlPage(clazz));
+            return FeedHelper.getHtmlRepresentationOfFeed(request, responseContext);
         }
     }
 
@@ -415,7 +414,7 @@ public class HttpMethodHelper {
 
     private static String getHtmlPage(Class clazz) throws ResponseContextException {
         try {
-            return clazz.getSimpleName().toLowerCase() + ".jsp";
+            return clazz.getSimpleName().toLowerCase();
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }

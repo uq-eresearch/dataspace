@@ -100,7 +100,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
                             representationMimeType.equals(Constants.MIME_TYPE_ATOM))) {
                 return super.getFeed(request);
             } else {
-                return HttpMethodHelper.getFeed(request, Collection.class);
+//                return HttpMethodHelper.getFeed(request, Collection.class);
+                Feed feed = createFeedBase(request);
+                addFeedDetails(feed, request);
+                ResponseContext responseContext = buildGetFeedResponse(feed);
+
+                return HttpMethodHelper.getFeed(request, responseContext);
             }
         } catch (ResponseContextException e) {
             return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());

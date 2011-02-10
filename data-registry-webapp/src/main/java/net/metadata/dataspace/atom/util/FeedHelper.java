@@ -1,21 +1,17 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import org.apache.abdera.factory.Factory;
 import org.apache.abdera.model.*;
-import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.AbstractResponseContext;
 import org.apache.abdera.protocol.server.context.BaseResponseContext;
-import org.apache.abdera.protocol.server.context.MediaResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
@@ -38,20 +34,17 @@ public class FeedHelper {
         return representation;
     }
 
-    public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, String template) {
-        try {
-            URL url = new URL(Constants.ID_PREFIX + template);
-            URLConnection conn = url.openConnection();
-            conn.setDoOutput(true);
-            conn.setUseCaches(false);
-            MediaResponseContext rc = new MediaResponseContext(conn.getInputStream(), 200);
-            rc.setContentType(Constants.MIME_TYPE_HTML);
-            return rc;
-        } catch (IOException e) {
-            return ProviderHelper.servererror(request, e);
+    public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext) {
+        if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
+            responseContext.setContentType(Constants.MIME_TYPE_XHTML);
+        } else {
+            responseContext.setContentType(Constants.MIME_TYPE_HTML);
         }
+        String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
+        XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
+        responseContext.setWriter(writer);
+        return responseContext;
     }
-
 
     public static void prepareFeedSelfLink(Feed feed, String selfLinkHref, String mimeType) {
         feed.getSelfLink().setHref(selfLinkHref);

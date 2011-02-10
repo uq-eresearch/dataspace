@@ -100,7 +100,10 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
                             representationMimeType.equals(Constants.MIME_TYPE_ATOM))) {
                 return super.getFeed(request);
             } else {
-                return HttpMethodHelper.getFeed(request, Party.class);
+                Feed feed = createFeedBase(request);
+                addFeedDetails(feed, request);
+                ResponseContext responseContext = buildGetFeedResponse(feed);
+                return HttpMethodHelper.getFeed(request, responseContext);
             }
         } catch (ResponseContextException e) {
             return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
