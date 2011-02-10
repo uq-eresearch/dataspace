@@ -8,7 +8,7 @@
           Nigel Ward, 2010-12
 
     -->
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
@@ -19,7 +19,8 @@
     <xsl:output method="xml" media-type="application/rifcs+xml" indent="yes"/>
 
     <xsl:template match="/">
-        <registryObjects>
+        <registryObjects
+                xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/schema/registryObjects.xsd">
             <xsl:apply-templates/>
         </registryObjects>
     </xsl:template>
@@ -27,7 +28,7 @@
     <!-- *** Atom entry ***-->
 
     <xsl:template match="atom:entry">
-        <registryObject group="{atom:category[@scheme=$NS_GROUP]/@term}" xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/schema/registryObjects.xsd">
+        <registryObject group="{atom:category[@scheme=$NS_GROUP]/@term}">
             <key>
                 <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
             </key>

@@ -19,7 +19,8 @@
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
 
     <xsl:template match="/">
-        <registryObjects>
+        <registryObjects
+                xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/schema/registryObjects.xsd">
             <xsl:apply-templates/>
         </registryObjects>
     </xsl:template>
@@ -27,7 +28,7 @@
     <!-- *** Atom entry ***-->
 
     <xsl:template match="atom:entry">
-        <registryObject group="{atom:category[@scheme=$NS_GROUP]/@term}" xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/schema/registryObjects.xsd">
+        <registryObject group="{atom:category[@scheme=$NS_GROUP]/@term}">
 
             <key>
                 <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
