@@ -19,8 +19,7 @@
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
 
     <xsl:template match="/">
-        <registryObjects
-                xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/schema/registryObjects.xsd">
+        <registryObjects>
             <xsl:apply-templates/>
         </registryObjects>
     </xsl:template>
