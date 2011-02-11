@@ -65,6 +65,11 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         try {
             fromDate = DateUtil.parseDate(from, DateUtil.OAI_DATE_FORMATS);
             toDate = DateUtil.parseDate(until, DateUtil.OAI_DATE_FORMATS);
+            //Offset timezone
+            Date currentLocalDate = new Date();
+            int offset = currentLocalDate.getTimezoneOffset();
+            fromDate.setMinutes(fromDate.getMinutes() - offset);
+            toDate.setMinutes(toDate.getMinutes() - offset);
         }
         catch (ParseException pe) {
             throw new BadArgumentException();
