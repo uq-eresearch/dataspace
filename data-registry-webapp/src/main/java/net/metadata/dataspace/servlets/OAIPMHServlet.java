@@ -66,7 +66,7 @@ public class OAIPMHServlet extends OAIHandler {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        logger.debug("Get Request is " + request.getRequestURL() + "?" + request.getQueryString());
+        logger.info("Get Request is " + request.getRequestURL() + "?" + request.getQueryString());
         HashMap attributes = getAttributes(request.getPathInfo());
         if (!filterRequest(request, response)) {
             return;
