@@ -58,10 +58,9 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             NoItemsMatchException, NoSetHierarchyException,
             OAIInternalServerError {
         logger.debug("Listing identifiers");
-        Map<String, Iterator<String>> listIdentifiersMap = new HashMap<String, Iterator<String>>(2);
+
         Date fromDate = null;
         Date toDate = null;
-
         try {
             fromDate = DateUtil.parseDate(from, DateUtil.OAI_DATE_FORMATS);
             toDate = DateUtil.parseDate(until, DateUtil.OAI_DATE_FORMATS);
@@ -74,15 +73,14 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         catch (ParseException pe) {
             throw new BadArgumentException();
         }
-        //TODO create queries to return records between the given dates
         List<Activity> activityList = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getAllPublishedBetween(fromDate, toDate);
         List<net.metadata.dataspace.data.model.base.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublishedBetween(fromDate, toDate);
         List<Party> partyList = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao().getAllPublishedBetween(fromDate, toDate);
         List<Service> serviceList = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getAllPublishedBetween(fromDate, toDate);
-
         int size = activityList.size() + collectionList.size() + partyList.size() + serviceList.size();
         List<String> headers = new ArrayList<String>(size);
         List<String> identifiers = new ArrayList<String>(size);
+
         for (Activity activity : activityList) {
             identifiers.add(getRecordFactory().getOAIIdentifier(activity.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(activity.getPublished()), getRecordFactory().getDatestamp(activity.getPublished()), getRecordFactory().getSetSpecs(activity), !activity.isActive())[0]);
@@ -99,6 +97,8 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             identifiers.add(getRecordFactory().getOAIIdentifier(service.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(service.getPublished()), getRecordFactory().getDatestamp(service.getPublished()), getRecordFactory().getSetSpecs(service), !service.isActive())[0]);
         }
+
+        Map<String, Iterator<String>> listIdentifiersMap = new HashMap<String, Iterator<String>>(2);
         listIdentifiersMap.put("identifiers", identifiers.iterator());
         listIdentifiersMap.put("headers", headers.iterator());
         return listIdentifiersMap;
