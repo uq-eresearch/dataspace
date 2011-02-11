@@ -20,7 +20,7 @@
                     <a href="http://www.uq.edu.au/" title="Home" accesskey="1">The University of Queensland</a>
                 </h1>
                 <h2 style="z-index: 500;">
-                    <a href="/" title="UQ Data Space">UQ Data Collections Registry</a>
+                    <a href="/" title="UQ Data Space">UQ Data Collections Registry (beta)</a>
                 </h2>
                 <div id="mininav">
                     <ul>
