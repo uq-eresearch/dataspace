@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.base;
 
+import net.metadata.dataspace.data.model.types.Role;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;

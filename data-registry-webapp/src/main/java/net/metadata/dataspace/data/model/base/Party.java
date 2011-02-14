@@ -42,7 +42,7 @@ public class Party extends AbstractBaseEntity<PartyVersion> {
     }
 
     public String getContent() {
-        return this.published != null ? this.published.getContent() : this.versions.first().getContent();
+        return this.published != null ? this.published.getDescription() : this.versions.first().getDescription();
     }
 
     public Date getUpdated() {

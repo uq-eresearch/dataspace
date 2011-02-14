@@ -2,11 +2,14 @@ package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.*;
+import net.metadata.dataspace.data.model.types.CollectionType;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Author: alabri
@@ -19,6 +22,10 @@ public class CollectionVersion extends AbstractVersionEntity {
 
     @ManyToOne
     private Collection parent;
+
+    @NotNull
+    @Enumerated(STRING)
+    private CollectionType type;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Subject> subjects = new HashSet<Subject>();
@@ -86,4 +93,11 @@ public class CollectionVersion extends AbstractVersionEntity {
         this.location = location;
     }
 
+    public CollectionType getType() {
+        return type;
+    }
+
+    public void setType(CollectionType type) {
+        this.type = type;
+    }
 }

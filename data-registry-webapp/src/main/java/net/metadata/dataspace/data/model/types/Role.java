@@ -1,4 +1,4 @@
-package net.metadata.dataspace.data.model.base;
+package net.metadata.dataspace.data.model.types;
 
 /**
  * Author: alabri
@@ -6,5 +6,6 @@ package net.metadata.dataspace.data.model.base;
  * Time: 4:18:07 PM
  */
 public enum Role {
-    ADMIN, USER
+    ADMIN,
+    USER
 }

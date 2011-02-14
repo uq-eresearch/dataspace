@@ -338,7 +338,7 @@ public class AdapterHelper {
             }
             try {
                 version.setTitle(entry.getTitle());
-                version.setContent(content);
+                version.setDescription(content);
                 version.setUpdated(entry.getUpdated());
                 version.setAuthors(getAuthors(entry.getAuthors()));
             } catch (Throwable th) {
@@ -428,7 +428,7 @@ public class AdapterHelper {
             //<link rel="http://www.openarchives.org/ore/terms/describes" href="http://dataspace.metadata.net/collections/2#"/>
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
             entry.setTitle(version.getTitle());
-            entry.setContent(version.getContent());
+            entry.setContent(version.getDescription());
             entry.setUpdated(version.getUpdated());
             Set<String> authors = version.getAuthors();
             for (String author : authors) {

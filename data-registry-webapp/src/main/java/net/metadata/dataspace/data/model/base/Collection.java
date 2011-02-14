@@ -63,7 +63,7 @@ public class Collection extends AbstractBaseEntity<CollectionVersion> {
     }
 
     public String getContent() {
-        return this.published != null ? this.published.getContent() : this.versions.first().getContent();
+        return this.published != null ? this.published.getDescription() : this.versions.first().getDescription();
     }
 
     public Set<Subject> getSubjects() {

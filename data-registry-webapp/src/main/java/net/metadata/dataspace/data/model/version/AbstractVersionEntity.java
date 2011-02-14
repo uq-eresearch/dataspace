@@ -32,7 +32,7 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
 
     @NotNull
     @Column(length = 4096)
-    private String content;
+    private String description;
 
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -72,12 +72,12 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescription() {
+        return description;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getUpdated() {

@@ -89,14 +89,14 @@ public class PartyDaoImplTest {
         Long id = party.getId();
         Date now = new Date();
         String content = "Updated Content";
-        party.getVersions().first().setContent(content);
+        party.getVersions().first().setDescription(content);
         party.setUpdated(now);
         entityManager.merge(party);
         entityManager.getTransaction().commit();
         Party partyById = partyDao.getById(id);
         assertEquals("Modified and Retrieved parties are not the same", party, partyById);
         assertEquals("Update Date was not updated", now, partyById.getUpdated());
-        assertEquals("content was not updated", content, partyById.getVersions().first().getContent());
+        assertEquals("content was not updated", content, partyById.getVersions().first().getDescription());
     }
 
     @Test

@@ -174,7 +174,7 @@ public class AdapterHelperTest {
         Version version = entityCreator.getNextVersion(party);
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", party.getVersions().first().getTitle(), version.getTitle());
-        assertEquals("Entry content", party.getVersions().first().getContent(), version.getContent());
+        assertEquals("Entry content", party.getVersions().first().getDescription(), version.getDescription());
         assertTrue("Entry updated", party.getVersions().first().getUpdated().equals(version.getUpdated()));
     }
 
@@ -186,7 +186,7 @@ public class AdapterHelperTest {
         CollectionVersion version = (CollectionVersion) entityCreator.getNextVersion(collection);
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", collection.getVersions().first().getTitle(), version.getTitle());
-        assertEquals("Entry content", collection.getVersions().first().getContent(), version.getContent());
+        assertEquals("Entry content", collection.getVersions().first().getDescription(), version.getDescription());
         assertEquals("Entry location", collection.getVersions().first().getLocation(), version.getLocation());
         assertTrue("Entry updated", collection.getVersions().first().getUpdated().equals(version.getUpdated()));
     }
@@ -199,7 +199,7 @@ public class AdapterHelperTest {
         ServiceVersion version = (ServiceVersion) entityCreator.getNextVersion(service);
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
-        assertEquals("Entry content", service.getVersions().first().getContent(), version.getContent());
+        assertEquals("Entry content", service.getVersions().first().getDescription(), version.getDescription());
         assertEquals("Entry location", service.getVersions().first().getLocation(), version.getLocation());
         assertTrue("Entry updated", service.getVersions().first().getUpdated().equals(version.getUpdated()));
     }
@@ -212,7 +212,7 @@ public class AdapterHelperTest {
         Version version = entityCreator.getNextVersion(activity);
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", activity.getTitle(), version.getTitle());
-        assertEquals("Entry content", activity.getContent(), version.getContent());
+        assertEquals("Entry content", activity.getContent(), version.getDescription());
         assertTrue("Entry updated", activity.getUpdated().equals(version.getUpdated()));
     }
 

@@ -84,14 +84,14 @@ public class ActivityDaoImplTest {
         Long id = activity.getId();
         Date now = new Date();
         String content = "Updated content";
-        activity.getVersions().first().setContent(content);
+        activity.getVersions().first().setDescription(content);
         activity.setUpdated(now);
         entityManager.merge(activity);
         entityManager.getTransaction().commit();
         Activity activityById = activityDao.getById(id);
         Assert.assertEquals("Modified and Retrieved parties are not the same", activity, activityById);
         Assert.assertEquals("Update Date was not updated", now, activityById.getUpdated());
-        Assert.assertEquals("content was not updated", content, activityById.getVersions().first().getContent());
+        Assert.assertEquals("content was not updated", content, activityById.getVersions().first().getDescription());
     }
 
     @Test

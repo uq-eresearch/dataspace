@@ -67,7 +67,7 @@ public class FeedHelper {
                 String uri = feed.getId() + "/" + version.getUriKey();
                 entry.setId(uri);
                 entry.setTitle(version.getTitle());
-                entry.setContent(version.getContent());
+                entry.setContent(version.getDescription());
                 Link selfLink = entry.addLink(uri, Constants.REL_SELF);
                 selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
                 Set<String> authors = version.getAuthors();

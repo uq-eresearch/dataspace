@@ -24,7 +24,7 @@ public interface Version {
 
     String getTitle();
 
-    String getContent();
+    String getDescription();
 
     Set<String> getAuthors();
 
@@ -32,7 +32,7 @@ public interface Version {
 
     void setTitle(String title);
 
-    void setContent(String content);
+    void setDescription(String content);
 
     void setUpdated(Date updated);
 

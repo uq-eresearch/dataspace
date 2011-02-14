@@ -5,6 +5,7 @@ import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.base.Subject;
+import net.metadata.dataspace.data.model.types.CollectionType;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.PartyVersion;
@@ -34,7 +35,8 @@ public class PopulatorUtil {
         CollectionVersion collectionVersion = (CollectionVersion) entityCreator.getNextVersion(collection);
         collectionVersion.setParent(collection);
         collectionVersion.setTitle("Test Collection");
-        collectionVersion.setContent("Test Collection Content");
+        collectionVersion.setDescription("Test Collection Content");
+        collectionVersion.setType(CollectionType.COLLECTION);
         collectionVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Collection Author");
@@ -47,7 +49,7 @@ public class PopulatorUtil {
         PartyVersion partyVersion = (PartyVersion) entityCreator.getNextVersion(party);
         partyVersion.setParent(party);
         partyVersion.setTitle("Test Party Title");
-        partyVersion.setContent("Test Party Content");
+        partyVersion.setDescription("Test Party Content");
         partyVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Party Author");
@@ -60,7 +62,7 @@ public class PopulatorUtil {
         ServiceVersion serviceVersion = (ServiceVersion) entityCreator.getNextVersion(service);
         serviceVersion.setParent(service);
         serviceVersion.setTitle("Test Service Title");
-        serviceVersion.setContent("Test Service Content");
+        serviceVersion.setDescription("Test Service Content");
         serviceVersion.setUpdated(new Date());
         serviceVersion.setLocation("http://test.location.com.au/collection");
         Set<String> authors = new HashSet<String>();
@@ -73,7 +75,7 @@ public class PopulatorUtil {
         ActivityVersion activityVersion = (ActivityVersion) entityCreator.getNextVersion(activity);
         activityVersion.setParent(activity);
         activityVersion.setTitle("Test Activity Title");
-        activityVersion.setContent("Test Activity Content");
+        activityVersion.setDescription("Test Activity Content");
         activityVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Activity Author");
