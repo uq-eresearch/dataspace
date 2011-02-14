@@ -5,7 +5,10 @@ import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.base.Subject;
+import net.metadata.dataspace.data.model.types.ActivityType;
+import net.metadata.dataspace.data.model.types.AgentType;
 import net.metadata.dataspace.data.model.types.CollectionType;
+import net.metadata.dataspace.data.model.types.ServiceType;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.PartyVersion;
@@ -50,6 +53,7 @@ public class PopulatorUtil {
         partyVersion.setParent(party);
         partyVersion.setTitle("Test Party Title");
         partyVersion.setDescription("Test Party Content");
+        partyVersion.setType(AgentType.PERSON);
         partyVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Party Author");
@@ -63,6 +67,7 @@ public class PopulatorUtil {
         serviceVersion.setParent(service);
         serviceVersion.setTitle("Test Service Title");
         serviceVersion.setDescription("Test Service Content");
+        serviceVersion.setType(ServiceType.SYNDICATE);
         serviceVersion.setUpdated(new Date());
         serviceVersion.setLocation("http://test.location.com.au/collection");
         Set<String> authors = new HashSet<String>();
@@ -76,6 +81,7 @@ public class PopulatorUtil {
         activityVersion.setParent(activity);
         activityVersion.setTitle("Test Activity Title");
         activityVersion.setDescription("Test Activity Content");
+        activityVersion.setType(ActivityType.PROJECT);
         activityVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Activity Author");

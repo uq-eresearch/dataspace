@@ -5,10 +5,14 @@ import net.metadata.dataspace.data.model.base.Activity;
 import net.metadata.dataspace.data.model.base.Collection;
 import net.metadata.dataspace.data.model.base.Party;
 import net.metadata.dataspace.data.model.base.Subject;
+import net.metadata.dataspace.data.model.types.AgentType;
+import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Author: alabri
@@ -21,6 +25,10 @@ public class PartyVersion extends AbstractVersionEntity {
 
     @ManyToOne
     private Party parent;
+
+    @NotNull
+    @Enumerated(STRING)
+    private AgentType type;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Subject> subjects = new HashSet<Subject>();
@@ -68,5 +76,13 @@ public class PartyVersion extends AbstractVersionEntity {
 
     public void setParticipantIn(Set<Activity> participantIn) {
         isParticipantIn = participantIn;
+    }
+
+    public AgentType getType() {
+        return type;
+    }
+
+    public void setType(AgentType type) {
+        this.type = type;
     }
 }

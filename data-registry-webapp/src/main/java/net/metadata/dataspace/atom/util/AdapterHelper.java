@@ -7,6 +7,10 @@ import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.*;
+import net.metadata.dataspace.data.model.types.ActivityType;
+import net.metadata.dataspace.data.model.types.AgentType;
+import net.metadata.dataspace.data.model.types.CollectionType;
+import net.metadata.dataspace.data.model.types.ServiceType;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.PartyVersion;
@@ -109,6 +113,26 @@ public class AdapterHelper {
             }
         }
         return null;
+    }
+
+    private static void addType(Version version, Entry entry) throws ResponseContextException {
+        if (version == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+        } else {
+            if (version instanceof ActivityVersion) {
+                //TODO this need to be retrieved from the entry
+                ((ActivityVersion) version).setType(ActivityType.PROJECT);
+            } else if (version instanceof PartyVersion) {
+                //TODO this need to be retrieved from the entry
+                ((PartyVersion) version).setType(AgentType.PERSON);
+            } else if (version instanceof CollectionVersion) {
+                //TODO this need to be retrieved from the entry
+                ((CollectionVersion) version).setType(CollectionType.COLLECTION);
+            } else if (version instanceof ServiceVersion) {
+                //TODO this need to be retrieved from the entry
+                ((ServiceVersion) version).setType(ServiceType.SYNDICATE);
+            }
+        }
     }
 
     private static Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
@@ -344,6 +368,7 @@ public class AdapterHelper {
             } catch (Throwable th) {
                 throw new ResponseContextException(500, th);
             }
+            addType(version, entry);
             if (version instanceof CollectionVersion || version instanceof ServiceVersion) {
                 addLocation(version, entry);
             }

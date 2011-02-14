@@ -4,10 +4,14 @@ import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Activity;
 import net.metadata.dataspace.data.model.base.Collection;
 import net.metadata.dataspace.data.model.base.Party;
+import net.metadata.dataspace.data.model.types.ActivityType;
+import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Author: alabri
@@ -20,6 +24,10 @@ public class ActivityVersion extends AbstractVersionEntity {
 
     @ManyToOne
     private Activity parent;
+
+    @NotNull
+    @Enumerated(STRING)
+    private ActivityType type;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Collection> hasOutput = new HashSet<Collection>();
@@ -58,4 +66,11 @@ public class ActivityVersion extends AbstractVersionEntity {
         this.hasParticipant = hasParticipant;
     }
 
+    public ActivityType getType() {
+        return type;
+    }
+
+    public void setType(ActivityType type) {
+        this.type = type;
+    }
 }
