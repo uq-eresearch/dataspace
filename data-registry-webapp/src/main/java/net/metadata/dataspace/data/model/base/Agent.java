@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model.base;
 
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.base.resource.Subject;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
