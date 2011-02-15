@@ -1,8 +1,8 @@
 package net.metadata.dataspace.data.access.manager.impl;
 
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.Context;
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.Resource;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
@@ -52,7 +52,7 @@ public class EntityCreatorImpl implements EntityCreator {
     }
 
     @Override
-    public Resource getNextResource(Class clazz) {
+    public Context getNextResource(Class clazz) {
         if (clazz.equals(Source.class)) {
             return getNextSource();
         } else if (clazz.equals(Publication.class)) {

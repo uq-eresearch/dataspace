@@ -7,7 +7,7 @@ import java.util.Date;
  * Date: 15/02/2011
  * Time: 11:46:18 AM
  */
-public interface Resource {
+public interface Context {
     Long getId();
 
     String getUriKey();

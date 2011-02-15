@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.access.manager;
 
+import net.metadata.dataspace.data.model.Context;
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.Resource;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
@@ -16,7 +16,7 @@ public interface EntityCreator {
 
     Record getNextRecord(Class clazz);
 
-    Resource getNextResource(Class clazz);
+    Context getNextResource(Class clazz);
 
     Version getNextVersion(Record record);
 

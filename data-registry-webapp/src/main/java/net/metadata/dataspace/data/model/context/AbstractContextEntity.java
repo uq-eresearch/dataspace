@@ -1,6 +1,6 @@
 package net.metadata.dataspace.data.model.context;
 
-import net.metadata.dataspace.data.model.Resource;
+import net.metadata.dataspace.data.model.Context;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.validator.NotNull;
 
@@ -14,7 +14,7 @@ import java.util.Date;
  * Time: 11:45:18 AM
  */
 @MappedSuperclass
-public abstract class AbstractContextEntity implements Serializable, Resource {
+public abstract class AbstractContextEntity implements Serializable, Context {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
