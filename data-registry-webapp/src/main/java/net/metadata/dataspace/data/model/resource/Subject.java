@@ -1,12 +1,8 @@
 package net.metadata.dataspace.data.model.resource;
 
-import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.Entity;
-import java.util.Date;
-import java.util.SortedSet;
 
 /**
  * User: alabri
@@ -15,7 +11,7 @@ import java.util.SortedSet;
  */
 
 @Entity
-public class Subject extends AbstractRecordEntity {
+public class Subject extends AbstractResourceEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -72,32 +68,4 @@ public class Subject extends AbstractRecordEntity {
         return getVocabulary().equals(other.getVocabulary()) && getValue().equals(other.getValue());
     }
 
-    @Override
-    public SortedSet<Version> getVersions() {
-        return null;
-    }
-
-    @Override
-    public Version getPublished() {
-        return null;
-    }
-
-    @Override
-    public void setPublished(Version version) {
-    }
-
-    @Override
-    public Version getWorkingCopy() {
-        return null;
-    }
-
-    @Override
-    public void setUpdated(Date updated) {
-        //TODO: we might need to implement this (i.e. add updated column)
-    }
-
-    @Override
-    public Date getUpdated() {
-        return null;
-    }
 }
