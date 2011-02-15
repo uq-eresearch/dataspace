@@ -21,15 +21,15 @@ import static org.junit.Assert.assertTrue;
 public class SubjectAtomicSequencerTest {
 
     @Autowired
-    private SubjectAtomicSequencer subjectAtomicSequencer;
+    private SubjectSequencer subjectSequencer;
 
     @Autowired
     private EntityCreator entityCreaotr;
 
     @Test
     public void testNext() throws Exception {
-        int currentNumber = subjectAtomicSequencer.current();
-        assertTrue("Current number should be smaller than next number.", currentNumber < subjectAtomicSequencer.next());
+        int currentNumber = subjectSequencer.current();
+        assertTrue("Current number should be smaller than next number.", currentNumber < subjectSequencer.next());
     }
 
     @Test

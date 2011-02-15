@@ -60,23 +60,23 @@
         <property name="userDao" ref="userDao"/>
     </bean>
 
-    <bean id="agentAtomicSequencer" class="net.metadata.dataspace.data.sequencer.AgentAtomicSequencer">
+    <bean id="agentSequencer" class="net.metadata.dataspace.data.sequencer.AgentSequencer">
         <constructor-arg ref="agentDao"/>
     </bean>
 
-    <bean id="collectionAtomicSequencer" class="net.metadata.dataspace.data.sequencer.CollectionAtomicSequencer">
+    <bean id="collectionSequencer" class="net.metadata.dataspace.data.sequencer.CollectionSequencer">
         <constructor-arg ref="collectionDao"/>
     </bean>
 
-    <bean id="serviceAtomicSequencer" class="net.metadata.dataspace.data.sequencer.ServiceAtomicSequencer">
+    <bean id="serviceSequencer" class="net.metadata.dataspace.data.sequencer.ServiceSequencer">
         <constructor-arg ref="serviceDao"/>
     </bean>
 
-    <bean id="activityAtomicSequencer" class="net.metadata.dataspace.data.sequencer.ActivityAtomicSequencer">
+    <bean id="activitySequencer" class="net.metadata.dataspace.data.sequencer.ActivitySequencer">
         <constructor-arg ref="activityDao"/>
     </bean>
 
-    <bean id="subjectAtomicSequencer" class="net.metadata.dataspace.data.sequencer.SubjectAtomicSequencer">
+    <bean id="subjectSequencer" class="net.metadata.dataspace.data.sequencer.SubjectSequencer">
         <constructor-arg ref="subjectDao"/>
     </bean>
 
@@ -89,11 +89,13 @@
     </bean>
 
     <bean id="entityCreator" class="net.metadata.dataspace.data.access.manager.impl.EntityCreatorImpl">
-        <property name="agentAtomicSequencer" ref="agentAtomicSequencer"/>
-        <property name="collectionAtomicSequencer" ref="collectionAtomicSequencer"/>
-        <property name="subjectAtomicSequencer" ref="subjectAtomicSequencer"/>
-        <property name="serviceAtomicSequencer" ref="serviceAtomicSequencer"/>
-        <property name="activityAtomicSequencer" ref="activityAtomicSequencer"/>
+        <property name="agentSequencer" ref="agentSequencer"/>
+        <property name="collectionSequencer" ref="collectionSequencer"/>
+        <property name="serviceSequencer" ref="serviceSequencer"/>
+        <property name="activitySequencer" ref="activitySequencer"/>
+        <property name="subjectSequencer" ref="subjectSequencer"/>
+        <property name="publicationSequencer" ref="publicationSequencer"/>
+        <property name="sourceSequencer" ref="sourceSequencer"/>
     </bean>
 
     <bean id="authenticationManager" class="net.metadata.dataspace.auth.impl.AuthenticationManagerImpl"/>

@@ -26,11 +26,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class EntityCreatorImpl implements EntityCreator {
 
-    private AgentAtomicSequencer agentAtomicSequencer;
-    private CollectionAtomicSequencer collectionAtomicSequencer;
-    private SubjectAtomicSequencer subjectAtomicSequencer;
-    private ServiceAtomicSequencer serviceAtomicSequencer;
-    private ActivityAtomicSequencer activityAtomicSequencer;
+    private AgentSequencer agentSequencer;
+    private CollectionSequencer collectionSequencer;
+    private SubjectSequencer subjectSequencer;
+    private ServiceSequencer serviceSequencer;
+    private ActivitySequencer activitySequencer;
+    private PublicationSequencer publicationSequencer;
+    private SourceSequencer sourceSequencer;
 
     public EntityCreatorImpl() {
     }
@@ -81,85 +83,101 @@ public class EntityCreatorImpl implements EntityCreator {
     @Override
     public Publication getNextPublication() {
         Publication publication = new Publication();
-        publication.setAtomicNumber(subjectAtomicSequencer.next());
+        publication.setAtomicNumber(publicationSequencer.next());
         return publication;
     }
 
     @Override
     public Source getNextSource() {
         Source source = new Source();
-        source.setAtomicNumber(subjectAtomicSequencer.next());
+        source.setAtomicNumber(sourceSequencer.next());
         return source;
     }
 
     @Override
     public Subject getNextSubject() {
         Subject subject = new Subject();
-        subject.setAtomicNumber(subjectAtomicSequencer.next());
+        subject.setAtomicNumber(subjectSequencer.next());
         return subject;
     }
 
     private Agent getNextAgent() {
         Agent agent = new Agent();
-        agent.setAtomicNumber(agentAtomicSequencer.next());
+        agent.setAtomicNumber(agentSequencer.next());
         return agent;
     }
 
     private Collection getNextCollection() {
         Collection collection = new Collection();
-        collection.setAtomicNumber(collectionAtomicSequencer.next());
+        collection.setAtomicNumber(collectionSequencer.next());
         return collection;
     }
 
     private Service getNextService() {
         Service service = new Service();
-        service.setAtomicNumber(serviceAtomicSequencer.next());
+        service.setAtomicNumber(serviceSequencer.next());
         return service;
     }
 
     private Activity getNextActivity() {
         Activity activity = new Activity();
-        activity.setAtomicNumber(activityAtomicSequencer.next());
+        activity.setAtomicNumber(activitySequencer.next());
         return activity;
     }
 
-    public void setAgentAtomicSequencer(AgentAtomicSequencer agentAtomicSequencer) {
-        this.agentAtomicSequencer = agentAtomicSequencer;
+    public void setAgentSequencer(AgentSequencer agentSequencer) {
+        this.agentSequencer = agentSequencer;
     }
 
-    public AgentAtomicSequencer getAgentAtomicSequencer() {
-        return agentAtomicSequencer;
+    public AgentSequencer getAgentSequencer() {
+        return agentSequencer;
     }
 
-    public void setCollectionAtomicSequencer(CollectionAtomicSequencer collectionAtomicSequencer) {
-        this.collectionAtomicSequencer = collectionAtomicSequencer;
+    public void setCollectionSequencer(CollectionSequencer collectionSequencer) {
+        this.collectionSequencer = collectionSequencer;
     }
 
-    public CollectionAtomicSequencer getCollectionAtomicSequencer() {
-        return collectionAtomicSequencer;
+    public CollectionSequencer getCollectionSequencer() {
+        return collectionSequencer;
     }
 
-    public void setSubjectAtomicSequencer(SubjectAtomicSequencer subjectAtomicSequencer) {
-        this.subjectAtomicSequencer = subjectAtomicSequencer;
+    public void setSubjectSequencer(SubjectSequencer subjectSequencer) {
+        this.subjectSequencer = subjectSequencer;
     }
 
-    public SubjectAtomicSequencer getSubjectAtomicSequencer() {
-        return subjectAtomicSequencer;
+    public SubjectSequencer getSubjectSequencer() {
+        return subjectSequencer;
     }
 
-    public void setServiceAtomicSequencer(ServiceAtomicSequencer serviceAtomicSequencer) {
-        this.serviceAtomicSequencer = serviceAtomicSequencer;
+    public void setServiceSequencer(ServiceSequencer serviceSequencer) {
+        this.serviceSequencer = serviceSequencer;
     }
 
-    public ServiceAtomicSequencer getServiceAtomicSequencer() {
-        return serviceAtomicSequencer;
+    public ServiceSequencer getServiceSequencer() {
+        return serviceSequencer;
     }
 
-    public void setActivityAtomicSequencer(ActivityAtomicSequencer activityAtomicSequencer) {
-        this.activityAtomicSequencer = activityAtomicSequencer;
+    public void setActivitySequencer(ActivitySequencer activitySequencer) {
+        this.activitySequencer = activitySequencer;
     }
 
-    public ActivityAtomicSequencer getActivityAtomicSequencer() {
-        return activityAtomicSequencer;
+    public ActivitySequencer getActivitySequencer() {
+        return activitySequencer;
+    }
+
+    public void setPublicationSequencer(PublicationSequencer publicationSequencer) {
+        this.publicationSequencer = publicationSequencer;
+    }
+
+    public PublicationSequencer getPublicationSequencer() {
+        return publicationSequencer;
+    }
+
+    public void setSourceSequencer(SourceSequencer sourceSequencer) {
+        this.sourceSequencer = sourceSequencer;
+    }
+
+    public SourceSequencer getSourceSequencer() {
+        return sourceSequencer;
     }
 }

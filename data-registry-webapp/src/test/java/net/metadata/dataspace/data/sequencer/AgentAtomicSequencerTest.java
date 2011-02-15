@@ -21,15 +21,15 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class AgentAtomicSequencerTest {
     @Autowired
-    private AgentAtomicSequencer agentAtomicSequencer;
+    private AgentSequencer agentSequencer;
 
     @Autowired
     private EntityCreator entityCreator;
 
     @Test
     public void testNext() throws Exception {
-        int currentNumber = agentAtomicSequencer.current();
-        assertTrue("Current number should be smaller than next number.", currentNumber < agentAtomicSequencer.next());
+        int currentNumber = agentSequencer.current();
+        assertTrue("Current number should be smaller than next number.", currentNumber < agentSequencer.next());
     }
 
     @Test

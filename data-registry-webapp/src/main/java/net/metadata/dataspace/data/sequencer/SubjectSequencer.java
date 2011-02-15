@@ -11,9 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 26/10/2010
  * Time: 2:01:04 PM
  */
-public class SubjectAtomicSequencer extends AbstractAtomicSquencer {
+public class SubjectSequencer extends AbstractAtomicSquencer {
 
-    public SubjectAtomicSequencer(SubjectDao subjectDao) {
+    public SubjectSequencer(SubjectDao subjectDao) {
         Subject subject = subjectDao.getMostRecentInserted();
         if (subject == null) {
             atomicInterger = new AtomicInteger(0);

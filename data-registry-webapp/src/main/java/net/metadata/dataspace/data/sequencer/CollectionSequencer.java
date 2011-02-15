@@ -11,9 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 26/10/2010
  * Time: 2:01:19 PM
  */
-public class CollectionAtomicSequencer extends AbstractAtomicSquencer {
+public class CollectionSequencer extends AbstractAtomicSquencer {
 
-    public CollectionAtomicSequencer(CollectionDao collectionDao) {
+    public CollectionSequencer(CollectionDao collectionDao) {
         Collection collection = collectionDao.getMostRecentInserted();
         if (collection == null) {
             atomicInterger = new AtomicInteger(0);

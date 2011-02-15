@@ -21,15 +21,15 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class CollectionAtomicSequencerTest {
     @Autowired
-    private CollectionAtomicSequencer collectionAtomicSequencer;
+    private CollectionSequencer collectionSequencer;
 
     @Autowired
     private EntityCreator entityCreator;
 
     @Test
     public void testNext() throws Exception {
-        int currentNumber = collectionAtomicSequencer.current();
-        assertTrue("Current number should be smaller than next number.", currentNumber < collectionAtomicSequencer.next());
+        int currentNumber = collectionSequencer.current();
+        assertTrue("Current number should be smaller than next number.", currentNumber < collectionSequencer.next());
     }
 
     @Test

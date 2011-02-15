@@ -11,9 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 27/10/2010
  * Time: 1:11:38 PM
  */
-public class ServiceAtomicSequencer extends AbstractAtomicSquencer {
+public class ServiceSequencer extends AbstractAtomicSquencer {
 
-    public ServiceAtomicSequencer(ServiceDao serviceDao) {
+    public ServiceSequencer(ServiceDao serviceDao) {
         Service service = serviceDao.getMostRecentInserted();
         if (service == null) {
             atomicInterger = new AtomicInteger(0);
