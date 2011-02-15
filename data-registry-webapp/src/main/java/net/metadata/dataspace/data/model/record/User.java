@@ -70,7 +70,7 @@ public class User implements Serializable {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof AbstractBaseEntity)) {
+        if (!(obj instanceof AbstractRecordEntity)) {
             return false;
         }
         User other = (User) obj;

@@ -19,7 +19,7 @@ import java.util.TreeSet;
  * Time: 3:32:39 PM
  */
 @Entity
-public class Agent extends AbstractBaseEntity<AgentVersion> {
+public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     private static final long serialVersionUID = 1L;
 

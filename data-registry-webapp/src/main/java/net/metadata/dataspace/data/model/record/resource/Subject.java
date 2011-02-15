@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.model.record.resource;
 
 import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.record.AbstractBaseEntity;
+import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.Entity;
@@ -15,7 +15,7 @@ import java.util.SortedSet;
  */
 
 @Entity
-public class Subject extends AbstractBaseEntity {
+public class Subject extends AbstractRecordEntity {
 
     private static final long serialVersionUID = 1L;
 

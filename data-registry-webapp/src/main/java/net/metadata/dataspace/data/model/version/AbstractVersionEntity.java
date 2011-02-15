@@ -1,6 +1,6 @@
 package net.metadata.dataspace.data.model.version;
 
-import net.metadata.dataspace.data.model.record.AbstractBaseEntity;
+import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
@@ -118,7 +118,7 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof AbstractBaseEntity)) {
+        if (!(obj instanceof AbstractRecordEntity)) {
             return false;
         }
         AbstractVersionEntity other = (AbstractVersionEntity) obj;
