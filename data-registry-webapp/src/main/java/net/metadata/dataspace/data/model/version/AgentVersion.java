@@ -4,7 +4,7 @@ import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
-import net.metadata.dataspace.data.model.record.resource.Subject;
+import net.metadata.dataspace.data.model.resource.Subject;
 import net.metadata.dataspace.data.model.types.AgentType;
 import org.hibernate.validator.NotNull;
 

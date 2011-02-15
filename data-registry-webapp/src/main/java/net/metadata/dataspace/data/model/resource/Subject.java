@@ -1,4 +1,4 @@
-package net.metadata.dataspace.data.model.record.resource;
+package net.metadata.dataspace.data.model.resource;
 
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
