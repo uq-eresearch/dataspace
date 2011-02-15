@@ -2,11 +2,14 @@ package net.metadata.dataspace.data.access.manager.impl;
 
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.Resource;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
+import net.metadata.dataspace.data.model.resource.Publication;
+import net.metadata.dataspace.data.model.resource.Source;
 import net.metadata.dataspace.data.model.resource.Subject;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.AgentVersion;
@@ -42,6 +45,16 @@ public class EntityCreatorImpl implements EntityCreator {
             return getNextAgent();
         } else if (clazz.equals(Service.class)) {
             return getNextService();
+        }
+        return null;
+    }
+
+    @Override
+    public Resource getNextResource(Class clazz) {
+        if (clazz.equals(Source.class)) {
+            return getNextSource();
+        } else if (clazz.equals(Publication.class)) {
+            return getNextPublication();
         } else if (clazz.equals(Subject.class)) {
             return getNextSubject();
         }
@@ -65,6 +78,19 @@ public class EntityCreatorImpl implements EntityCreator {
         return version;
     }
 
+    @Override
+    public Publication getNextPublication() {
+        Publication publication = new Publication();
+        publication.setAtomicNumber(subjectAtomicSequencer.next());
+        return publication;
+    }
+
+    @Override
+    public Source getNextSource() {
+        Source source = new Source();
+        source.setAtomicNumber(subjectAtomicSequencer.next());
+        return source;
+    }
 
     @Override
     public Subject getNextSubject() {

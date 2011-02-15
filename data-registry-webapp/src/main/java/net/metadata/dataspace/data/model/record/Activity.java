@@ -6,7 +6,6 @@ import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -26,9 +25,6 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     @Sort(type = SortType.NATURAL)
     private SortedSet<ActivityVersion> versions = new TreeSet<ActivityVersion>();
 
-    @NotNull
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date updated;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ActivityVersion published;
@@ -42,14 +38,6 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
 
     public void setVersions(SortedSet<ActivityVersion> versions) {
         this.versions = versions;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 
     public String getTitle() {

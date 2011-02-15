@@ -6,6 +6,7 @@ import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.SortedSet;
 
 /**
@@ -26,12 +27,23 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
 
     private boolean isActive;
 
+    @NotNull
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date updated;
+
+    @NotNull
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date created;
+
     public AbstractRecordEntity() {
         this.isActive = true;
+        this.created = new Date();
     }
 
+    @Override
     abstract public SortedSet<V> getVersions();
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -40,24 +52,47 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
         this.id = id;
     }
 
+    @Override
     public String getUriKey() {
         return DaoHelper.fromDecimalToOtherBase(31, getAtomicNumber());
     }
 
+    @Override
     public Integer getAtomicNumber() {
         return atomicNumber;
     }
 
+    @Override
     public void setAtomicNumber(Integer atomicNumber) {
         this.atomicNumber = atomicNumber;
     }
 
+    @Override
     public boolean isActive() {
         return isActive;
     }
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    @Override
+    public Date getUpdated() {
+        return updated;
+    }
+
+    @Override
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    @Override
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     @Override
@@ -72,5 +107,4 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
         AbstractRecordEntity other = (AbstractRecordEntity) obj;
         return getId().equals(other.getId());
     }
-
 }

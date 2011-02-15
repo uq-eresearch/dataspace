@@ -1,5 +1,7 @@
 package net.metadata.dataspace.data.model;
 
+import java.util.Date;
+
 /**
  * Author: alabri
  * Date: 15/02/2011
@@ -15,4 +17,6 @@ public interface Resource {
     void setAtomicNumber(Integer atomicNumber);
 
     boolean isActive();
+
+    Date getCreated();
 }

@@ -37,10 +37,12 @@ public class ServiceVersion extends AbstractVersionEntity {
     public ServiceVersion() {
     }
 
+    @Override
     public Service getParent() {
         return parent;
     }
 
+    @Override
     public void setParent(Record parent) {
         this.parent = (Service) parent;
     }
@@ -57,6 +59,7 @@ public class ServiceVersion extends AbstractVersionEntity {
         return location;
     }
 
+    @Override
     public void setLocation(String location) {
         this.location = location;
     }

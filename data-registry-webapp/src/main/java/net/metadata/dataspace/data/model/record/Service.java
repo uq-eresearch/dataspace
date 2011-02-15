@@ -6,7 +6,6 @@ import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -26,10 +25,6 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     @Sort(type = SortType.NATURAL)
     private SortedSet<ServiceVersion> versions = new TreeSet<ServiceVersion>();
 
-    @NotNull
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date updated;
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ServiceVersion published;
 
@@ -42,14 +37,6 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
 
     public void setVersions(SortedSet<ServiceVersion> versions) {
         this.versions = versions;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 
     public String getTitle() {

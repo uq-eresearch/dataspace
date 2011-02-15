@@ -38,6 +38,7 @@ public class ActivityVersion extends AbstractVersionEntity {
     public ActivityVersion() {
     }
 
+    @Override
     public Activity getParent() {
         return parent;
     }
@@ -46,6 +47,7 @@ public class ActivityVersion extends AbstractVersionEntity {
     public void setLocation(String text) {
     }
 
+    @Override
     public void setParent(Record parent) {
         this.parent = (Activity) parent;
     }

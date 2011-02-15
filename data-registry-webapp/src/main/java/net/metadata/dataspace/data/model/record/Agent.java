@@ -8,7 +8,6 @@ import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -28,10 +27,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     @Sort(type = SortType.NATURAL)
     private SortedSet<AgentVersion> versions = new TreeSet<AgentVersion>();
 
-    @NotNull
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date updated;
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AgentVersion published;
 
@@ -44,14 +39,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     public String getContent() {
         return this.published != null ? this.published.getDescription() : this.versions.first().getDescription();
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 
     public Set<String> getAuthors() {

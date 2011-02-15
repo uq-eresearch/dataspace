@@ -38,10 +38,15 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
+    @NotNull
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date created;
+
     @CollectionOfElements
     private Set<String> authors = new HashSet<String>();
 
     public AbstractVersionEntity() {
+        this.created = new Date();
     }
 
     public Long getId() {
@@ -52,46 +57,57 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
         this.id = id;
     }
 
+    @Override
     public String getUriKey() {
         return DaoHelper.fromDecimalToOtherBase(31, getAtomicNumber());
     }
 
+    @Override
     public Integer getAtomicNumber() {
         return atomicNumber;
     }
 
+    @Override
     public void setAtomicNumber(Integer atomicNumber) {
         this.atomicNumber = atomicNumber;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
 
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
+    @Override
     public Date getUpdated() {
         return updated;
     }
 
+    @Override
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
 
+    @Override
     public Set<String> getAuthors() {
         return authors;
     }
 
+    @Override
     public void setAuthors(Set<String> authors) {
         this.authors = authors;
     }
@@ -125,4 +141,12 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
         return getId().equals(other.getId());
     }
 
+    @Override
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 }

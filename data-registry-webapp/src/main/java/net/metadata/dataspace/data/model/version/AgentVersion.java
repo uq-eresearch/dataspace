@@ -42,6 +42,7 @@ public class AgentVersion extends AbstractVersionEntity {
     public AgentVersion() {
     }
 
+    @Override
     public Agent getParent() {
         return parent;
     }
@@ -50,6 +51,7 @@ public class AgentVersion extends AbstractVersionEntity {
     public void setLocation(String text) {
     }
 
+    @Override
     public void setParent(Record parent) {
         this.parent = (Agent) parent;
     }

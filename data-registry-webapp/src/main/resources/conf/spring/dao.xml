@@ -39,6 +39,14 @@
         <constructor-arg ref="jpaConnector"/>
     </bean>
 
+    <bean id="sourceDao" class="net.metadata.dataspace.data.access.impl.SourceDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
+    <bean id="publicationDao" class="net.metadata.dataspace.data.access.impl.PublicationDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
     <bean id="userDao" class="net.metadata.dataspace.data.access.impl.UserDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>

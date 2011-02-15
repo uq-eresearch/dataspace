@@ -80,6 +80,14 @@
         <constructor-arg ref="subjectDao"/>
     </bean>
 
+    <bean id="sourceSequencer" class="net.metadata.dataspace.data.sequencer.SourceSequencer">
+        <constructor-arg ref="sourceDao"/>
+    </bean>
+
+    <bean id="publicationSequencer" class="net.metadata.dataspace.data.sequencer.PublicationSequencer">
+        <constructor-arg ref="publicationDao"/>
+    </bean>
+
     <bean id="entityCreator" class="net.metadata.dataspace.data.access.manager.impl.EntityCreatorImpl">
         <property name="agentAtomicSequencer" ref="agentAtomicSequencer"/>
         <property name="collectionAtomicSequencer" ref="collectionAtomicSequencer"/>

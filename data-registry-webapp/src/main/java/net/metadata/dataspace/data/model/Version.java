@@ -16,6 +16,8 @@ public interface Version {
 
     Date getUpdated();
 
+    Date getCreated();
+
     Record getParent();
 
     void setParent(Record parent);

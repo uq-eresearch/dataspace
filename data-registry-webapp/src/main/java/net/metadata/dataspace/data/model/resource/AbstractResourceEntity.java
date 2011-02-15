@@ -6,6 +6,7 @@ import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Author: alabri
@@ -25,10 +26,16 @@ public abstract class AbstractResourceEntity implements Serializable, Resource {
 
     private boolean isActive;
 
+    @NotNull
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date created;
+
     public AbstractResourceEntity() {
         this.isActive = true;
+        this.created = new Date();
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -37,18 +44,22 @@ public abstract class AbstractResourceEntity implements Serializable, Resource {
         this.id = id;
     }
 
+    @Override
     public String getUriKey() {
         return DaoHelper.fromDecimalToOtherBase(31, getAtomicNumber());
     }
 
+    @Override
     public Integer getAtomicNumber() {
         return atomicNumber;
     }
 
+    @Override
     public void setAtomicNumber(Integer atomicNumber) {
         this.atomicNumber = atomicNumber;
     }
 
+    @Override
     public boolean isActive() {
         return isActive;
     }
@@ -70,4 +81,12 @@ public abstract class AbstractResourceEntity implements Serializable, Resource {
         return getId().equals(other.getId());
     }
 
+    @Override
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 }

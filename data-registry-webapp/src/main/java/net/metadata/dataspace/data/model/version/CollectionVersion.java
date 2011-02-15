@@ -49,10 +49,12 @@ public class CollectionVersion extends AbstractVersionEntity {
     public CollectionVersion() {
     }
 
+    @Override
     public Record getParent() {
         return parent;
     }
 
+    @Override
     public void setParent(Record parent) {
         this.parent = (Collection) parent;
     }
@@ -93,6 +95,7 @@ public class CollectionVersion extends AbstractVersionEntity {
         this.supports = supports;
     }
 
+    @Override
     public void setLocation(String location) {
         this.location = location;
     }

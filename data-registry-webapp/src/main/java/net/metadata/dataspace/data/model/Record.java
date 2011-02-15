@@ -45,6 +45,8 @@ public interface Record {
 
     Date getUpdated();
 
+    Date getCreated();
+
     String getUriKey();
 
     Integer getAtomicNumber();
