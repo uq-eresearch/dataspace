@@ -3,9 +3,9 @@ package net.metadata.dataspace.data.access.manager;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Resource;
 import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.resource.Publication;
-import net.metadata.dataspace.data.model.resource.Source;
-import net.metadata.dataspace.data.model.resource.Subject;
+import net.metadata.dataspace.data.model.context.Publication;
+import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.context.Subject;
 
 /**
  * User: alabri

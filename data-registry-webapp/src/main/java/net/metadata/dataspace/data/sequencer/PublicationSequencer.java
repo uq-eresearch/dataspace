@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.sequencer;
 
 import net.metadata.dataspace.data.access.PublicationDao;
-import net.metadata.dataspace.data.model.resource.Publication;
+import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.util.DaoHelper;
 
 import java.util.concurrent.atomic.AtomicInteger;

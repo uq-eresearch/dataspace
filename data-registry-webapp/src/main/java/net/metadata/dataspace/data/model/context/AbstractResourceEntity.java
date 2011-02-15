@@ -1,4 +1,4 @@
-package net.metadata.dataspace.data.model.resource;
+package net.metadata.dataspace.data.model.context;
 
 import net.metadata.dataspace.data.model.Resource;
 import net.metadata.dataspace.util.DaoHelper;
