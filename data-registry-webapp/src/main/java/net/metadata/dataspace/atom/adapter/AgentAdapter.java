@@ -4,8 +4,8 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.atom.util.HttpMethodHelper;
-import net.metadata.dataspace.data.access.PartyDao;
-import net.metadata.dataspace.data.model.base.Party;
+import net.metadata.dataspace.data.access.AgentDao;
+import net.metadata.dataspace.data.model.base.Agent;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
@@ -28,15 +28,15 @@ import java.util.Set;
  * Date: 21/09/2010
  * Time: 4:59:19 PM
  */
-public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
+public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private PartyDao partyDao = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
+    private AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.postEntry(request, Party.class);
+            return HttpMethodHelper.postEntry(request, Agent.class);
         } catch (ResponseContextException e) {
             return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
         }
@@ -45,7 +45,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     @Override
     public ResponseContext postMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.postMedia(request, Party.class);
+            return HttpMethodHelper.postMedia(request, Agent.class);
         } catch (ResponseContextException e) {
             return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
         }
@@ -54,7 +54,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     @Override
     public ResponseContext putEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.putEntry(request, Party.class);
+            return HttpMethodHelper.putEntry(request, Agent.class);
         } catch (ResponseContextException e) {
             return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
         }
@@ -63,7 +63,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     @Override
     public ResponseContext putMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.putMedia(request, Party.class);
+            return HttpMethodHelper.putMedia(request, Agent.class);
         } catch (ResponseContextException e) {
             return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
         }
@@ -72,7 +72,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.deleteEntry(request, Party.class);
+            return HttpMethodHelper.deleteEntry(request, Agent.class);
         } catch (ResponseContextException e) {
             return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
         }
@@ -81,7 +81,7 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     @Override
     public ResponseContext getEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getEntry(request, Party.class);
+            return HttpMethodHelper.getEntry(request, Agent.class);
         } catch (ResponseContextException e) {
             return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
         }
@@ -112,10 +112,10 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        HttpMethodHelper.addFeedDetails(feed, request, Party.class);
-        Iterable<Party> entries = getEntries(request);
+        HttpMethodHelper.addFeedDetails(feed, request, Agent.class);
+        Iterable<Agent> entries = getEntries(request);
         if (entries != null) {
-            for (Party entryObj : entries) {
+            for (Agent entryObj : entries) {
                 Entry e = feed.addEntry();
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
@@ -129,8 +129,8 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
         }
     }
 
-    public List<Person> getAuthors(Party party, RequestContext request) throws ResponseContextException {
-        Set<String> authors = party.getAuthors();
+    public List<Person> getAuthors(Agent agent, RequestContext request) throws ResponseContextException {
+        Set<String> authors = agent.getAuthors();
         List<Person> personList = new ArrayList<Person>();
         for (String author : authors) {
             Person person = request.getAbdera().getFactory().newAuthor();
@@ -146,59 +146,59 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
     }
 
     @Override
-    public Party postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
+    public Agent postEntry(String title, IRI iri, String summary, Date updated, List<Person> authors, Content content,
                            RequestContext requestContext) throws ResponseContextException {
         return null;
     }
 
     @Override
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        partyDao.softDelete(key);
+        agentDao.softDelete(key);
     }
 
     @Override
-    public Object getContent(Party party, RequestContext requestContext) throws ResponseContextException {
+    public Object getContent(Agent agent, RequestContext requestContext) throws ResponseContextException {
         Content content = requestContext.getAbdera().getFactory().newContent(Content.Type.TEXT);
-        content.setText(party.getContent());
+        content.setText(agent.getContent());
         return content;
     }
 
     @Override
-    public Iterable<Party> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return HttpMethodHelper.getRecords(requestContext, Party.class);
+    public Iterable<Agent> getEntries(RequestContext requestContext) throws ResponseContextException {
+        return HttpMethodHelper.getRecords(requestContext, Agent.class);
     }
 
     @Override
-    public Party getEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        Party party = partyDao.getByKey(key);
-        if (party != null) {
-            partyDao.refresh(party);
+    public Agent getEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        Agent agent = agentDao.getByKey(key);
+        if (agent != null) {
+            agentDao.refresh(agent);
         }
-        return party;
+        return agent;
     }
 
     @Override
-    public String getId(Party party) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey();
+    public String getId(Agent agent) throws ResponseContextException {
+        return Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey();
     }
 
     @Override
-    public String getName(Party party) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey();
+    public String getName(Agent agent) throws ResponseContextException {
+        return Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey();
     }
 
     @Override
-    public String getTitle(Party party) throws ResponseContextException {
-        return party.getTitle();
+    public String getTitle(Agent agent) throws ResponseContextException {
+        return agent.getTitle();
     }
 
     @Override
-    public Date getUpdated(Party party) throws ResponseContextException {
-        return party.getUpdated();
+    public Date getUpdated(Agent agent) throws ResponseContextException {
+        return agent.getUpdated();
     }
 
     @Override
-    public void putEntry(Party party, String title, Date updated, List<Person> authors, String summary, Content content,
+    public void putEntry(Agent agent, String title, Date updated, List<Person> authors, String summary, Content content,
                          RequestContext requestContext) throws ResponseContextException {
         logger.warn("Method not supported");
     }
@@ -210,11 +210,11 @@ public class PartyAdapter extends AbstractEntityCollectionAdapter<Party> {
 
     @Override
     public String getId(RequestContext requestContext) {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES;
+        return Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS;
     }
 
     @Override
     public String getTitle(RequestContext requestContext) {
-        return Constants.TITLE_FOR_PARTIES;
+        return Constants.TITLE_FOR_AGENTS;
     }
 }

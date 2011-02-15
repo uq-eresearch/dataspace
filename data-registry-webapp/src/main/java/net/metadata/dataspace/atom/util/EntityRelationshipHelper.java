@@ -3,14 +3,14 @@ package net.metadata.dataspace.atom.util;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.data.access.ActivityDao;
+import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.CollectionDao;
-import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.*;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
-import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.model.Control;
 import org.apache.abdera.model.Entry;
@@ -28,7 +28,7 @@ import java.util.Set;
 public class EntityRelationshipHelper {
 
     private static CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
-    private static PartyDao partyDao = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
+    private static AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
     private static ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
     private static ServiceDao serviceDao = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
 
@@ -37,8 +37,8 @@ public class EntityRelationshipHelper {
             addRelationsToActivity(entry, (ActivityVersion) version);
         } else if (version instanceof CollectionVersion) {
             addRelationsCollection(entry, (CollectionVersion) version);
-        } else if (version instanceof PartyVersion) {
-            addRelationsParty(entry, (PartyVersion) version);
+        } else if (version instanceof AgentVersion) {
+            addRelationsAgent(entry, (AgentVersion) version);
         } else if (version instanceof ServiceVersion) {
             addRelationsService(entry, (ServiceVersion) version);
         }
@@ -55,13 +55,13 @@ public class EntityRelationshipHelper {
                 entityManager.merge(collection);
             }
         }
-        Set<String> partyUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_HAS_PARTICIPANT);
-        for (String partyKey : partyUriKeys) {
-            Party party = partyDao.getByKey(partyKey);
-            if (party != null) {
-                party.getParticipantIn().add(version.getParent());
-                version.getHasParticipant().add(party);
-                entityManager.merge(party);
+        Set<String> agentUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_HAS_PARTICIPANT);
+        for (String agentKey : agentUriKeys) {
+            Agent agent = agentDao.getByKey(agentKey);
+            if (agent != null) {
+                agent.getParticipantIn().add(version.getParent());
+                version.getHasParticipant().add(agent);
+                entityManager.merge(agent);
             }
         }
         setPublished(entry, version);
@@ -83,11 +83,11 @@ public class EntityRelationshipHelper {
         }
         Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_CREATOR);
         for (String uriKey : collectorUriKeys) {
-            Party party = partyDao.getByKey(uriKey);
-            if (party != null) {
-                party.getCollectorOf().add((Collection) version.getParent());
-                version.getCollector().add(party);
-                entityManager.merge(party);
+            Agent agent = agentDao.getByKey(uriKey);
+            if (agent != null) {
+                agent.getCollectorOf().add((Collection) version.getParent());
+                version.getCollector().add(agent);
+                entityManager.merge(agent);
             }
         }
         Set<String> outputOfUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_OUTPUT_OF);
@@ -114,7 +114,7 @@ public class EntityRelationshipHelper {
         version.getParent().setUpdated(now);
     }
 
-    private static void addRelationsParty(Entry entry, PartyVersion version) throws ResponseContextException {
+    private static void addRelationsAgent(Entry entry, AgentVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {

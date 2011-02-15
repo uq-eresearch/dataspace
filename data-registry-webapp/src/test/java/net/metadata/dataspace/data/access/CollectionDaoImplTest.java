@@ -94,14 +94,14 @@ public class CollectionDaoImplTest {
         entityManager.merge(collection);
         entityManager.getTransaction().commit();
         Collection collectionById = collectionDao.getById(id);
-        assertEquals("Modified and Retrieved parties are not the same", collection, collectionById);
+        assertEquals("Modified and Retrieved records are not the same", collection, collectionById);
         assertEquals("Update Date was not updated", now, collectionById.getUpdated());
         assertEquals("content was not updated", content, collectionById.getVersions().first().getDescription());
     }
 
 
     @Test
-    public void testRemovingParty() throws Exception {
+    public void testRemovingAgent() throws Exception {
         testAddingCollection();
         assertTrue("Table is empty", collectionDao.getAll().size() != 0);
         List<Collection> collectionList = collectionDao.getAll();

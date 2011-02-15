@@ -50,8 +50,8 @@
         <property name="jpaConnnector" ref="jpaConnector"/>
         <property name="collectionDao" ref="collectionDao"/>
         <property name="collectionVersionDao" ref="collectionVersionDao"/>
-        <property name="partyDao" ref="partyDao"/>
-        <property name="partyVersionDao" ref="partyVersionDao"/>
+        <property name="agentDao" ref="agentDao"/>
+        <property name="agentVersionDao" ref="agentVersionDao"/>
         <property name="serviceDao" ref="serviceDao"/>
         <property name="serviceVersionDao" ref="serviceVersionDao"/>
         <property name="activityDao" ref="activityDao"/>
@@ -60,8 +60,8 @@
         <property name="userDao" ref="userDao"/>
     </bean>
 
-    <bean id="partyAtomicSequencer" class="net.metadata.dataspace.data.sequencer.PartyAtomicSequencer">
-        <constructor-arg ref="partyDao"/>
+    <bean id="agentAtomicSequencer" class="net.metadata.dataspace.data.sequencer.AgentAtomicSequencer">
+        <constructor-arg ref="agentDao"/>
     </bean>
 
     <bean id="collectionAtomicSequencer" class="net.metadata.dataspace.data.sequencer.CollectionAtomicSequencer">
@@ -81,7 +81,7 @@
     </bean>
 
     <bean id="entityCreator" class="net.metadata.dataspace.data.access.manager.impl.EntityCreatorImpl">
-        <property name="partyAtomicSequencer" ref="partyAtomicSequencer"/>
+        <property name="agentAtomicSequencer" ref="agentAtomicSequencer"/>
         <property name="collectionAtomicSequencer" ref="collectionAtomicSequencer"/>
         <property name="subjectAtomicSequencer" ref="subjectAtomicSequencer"/>
         <property name="serviceAtomicSequencer" ref="serviceAtomicSequencer"/>

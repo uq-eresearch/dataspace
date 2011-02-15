@@ -64,7 +64,7 @@ public class Activity extends AbstractBaseEntity<ActivityVersion> {
         return this.published != null ? this.published.getHasOutput() : this.versions.first().getHasOutput();
     }
 
-    public Set<Party> getHasParticipant() {
+    public Set<Agent> getHasParticipant() {
         return this.published != null ? this.published.getHasParticipant() : this.versions.first().getHasParticipant();
     }
 

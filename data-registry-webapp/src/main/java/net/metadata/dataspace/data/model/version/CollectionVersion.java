@@ -31,7 +31,7 @@ public class CollectionVersion extends AbstractVersionEntity {
     private Set<Subject> subjects = new HashSet<Subject>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Party> collector = new HashSet<Party>();
+    private Set<Agent> collector = new HashSet<Agent>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Activity> isOutputOf = new HashSet<Activity>();
@@ -61,11 +61,11 @@ public class CollectionVersion extends AbstractVersionEntity {
         this.subjects = subjects;
     }
 
-    public Set<Party> getCollector() {
+    public Set<Agent> getCollector() {
         return collector;
     }
 
-    public void setCollector(Set<Party> collector) {
+    public void setCollector(Set<Agent> collector) {
         this.collector = collector;
     }
 

@@ -8,12 +8,12 @@ import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.base.Agent;
 import net.metadata.dataspace.data.model.base.Collection;
-import net.metadata.dataspace.data.model.base.Party;
 import net.metadata.dataspace.data.model.base.Service;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
-import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.model.Entry;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class AdapterHelperTest {
     @Autowired
     private SubjectDao subjectDao;
     @Autowired
-    private PartyDao partyDao;
+    private AgentDao agentDao;
     @Autowired
     private ServiceDao serviceDao;
     @Autowired
@@ -63,14 +63,14 @@ public class AdapterHelperTest {
         entityManager = jpaConnector.getEntityManager();
 
         entityManager.getTransaction().begin();
-        Party party = (Party) entityCreator.getNextRecord(Party.class);
-        party.setUpdated(new Date());
-        PartyVersion partyVersion = PopulatorUtil.getPartyVersion(party);
-        partyVersion.getSubjects().add(PopulatorUtil.getSubject());
-        partyVersion.getSubjects().add(PopulatorUtil.getSubject());
-        party.getVersions().add(partyVersion);
-        entityManager.persist(partyVersion);
-        entityManager.persist(party);
+        Agent agent = (Agent) entityCreator.getNextRecord(Agent.class);
+        agent.setUpdated(new Date());
+        AgentVersion agentVersion = PopulatorUtil.getAgentVersion(agent);
+        agentVersion.getSubjects().add(PopulatorUtil.getSubject());
+        agentVersion.getSubjects().add(PopulatorUtil.getSubject());
+        agent.getVersions().add(agentVersion);
+        entityManager.persist(agentVersion);
+        entityManager.persist(agent);
 
         Collection collection = (Collection) entityCreator.getNextRecord(Collection.class);
         collection.setUpdated(new Date());
@@ -78,8 +78,8 @@ public class AdapterHelperTest {
         collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
         collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
         collection.getVersions().add(collectionVersion);
-        collection.getCollector().add(party);
-        party.getCollectorOf().add(collection);
+        collection.getCollector().add(agent);
+        agent.getCollectorOf().add(collection);
         entityManager.persist(collectionVersion);
         entityManager.persist(collection);
 
@@ -97,8 +97,8 @@ public class AdapterHelperTest {
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
         activity.getVersions().add(activityVersion);
         activity.getHasOutput().add(collection);
-        activity.getHasParticipant().add(party);
-        party.getParticipantIn().add(activity);
+        activity.getHasParticipant().add(agent);
+        agent.getParticipantIn().add(activity);
         collection.getOutputOf().add(activity);
         entityManager.persist(activityVersion);
         entityManager.persist(activity);
@@ -106,15 +106,15 @@ public class AdapterHelperTest {
     }
 
     @Test
-    public void testGetEntryFromParty() throws Exception {
-        List<Party> parties = partyDao.getAll();
-        Party party = parties.get(0);
-        Entry entry = AdapterHelper.getEntryFromEntity(party.getVersions().first(), true);
-        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey());
-        assertEquals("Entry title", entry.getTitle(), party.getTitle());
-        assertEquals("Entry content", entry.getContent(), party.getContent());
-        assertEquals("Entry updated", entry.getUpdated(), party.getUpdated());
-        assertEquals("Entry authors", entry.getAuthors().size(), party.getAuthors().size());
+    public void testGetEntryFromAgent() throws Exception {
+        List<Agent> agents = agentDao.getAll();
+        Agent agent = agents.get(0);
+        Entry entry = AdapterHelper.getEntryFromEntity(agent.getVersions().first(), true);
+        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey());
+        assertEquals("Entry title", entry.getTitle(), agent.getTitle());
+        assertEquals("Entry content", entry.getContent(), agent.getContent());
+        assertEquals("Entry updated", entry.getUpdated(), agent.getUpdated());
+        assertEquals("Entry authors", entry.getAuthors().size(), agent.getAuthors().size());
         assertTrue("Entry should have at least 3 categories", entry.getCategories().size() > 2);
         assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_COLLECTOR_OF).size() >= 1);
     }
@@ -131,7 +131,7 @@ public class AdapterHelperTest {
         assertEquals("Entry authors", entry.getAuthors().size(), collection.getAuthors().size());
         assertTrue("Entry should have at least 3 categories", entry.getCategories().size() > 2);
         assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_IS_LOCATED_AT).size() >= 1);
-        assertTrue("Entry should have at least one party", entry.getLinks(Constants.REL_CREATOR).size() >= 1);
+        assertTrue("Entry should have at least one agent", entry.getLinks(Constants.REL_CREATOR).size() >= 1);
         assertTrue("Entry should have at least one service", entry.getLinks(Constants.REL_IS_ACCESSED_VIA).size() >= 1);
         assertTrue("Entry should have at least one activity", entry.getLinks(Constants.REL_IS_OUTPUT_OF).size() >= 1);
     }
@@ -147,7 +147,7 @@ public class AdapterHelperTest {
         assertEquals("Entry updated", entry.getUpdated(), activity.getUpdated());
         assertEquals("Entry authors", entry.getAuthors().size(), activity.getAuthors().size());
         assertTrue("Entry should have at least 2 categories", entry.getCategories().size() >= 2);
-        assertTrue("Entry should have at least one party", entry.getLinks(Constants.REL_HAS_PARTICIPANT).size() == 1);
+        assertTrue("Entry should have at least one agent", entry.getLinks(Constants.REL_HAS_PARTICIPANT).size() == 1);
         assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_HAS_OUTPUT).size() == 1);
     }
 
@@ -167,15 +167,15 @@ public class AdapterHelperTest {
     }
 
     @Test
-    public void testUpdatePartyFromEntry() throws Exception {
-        List<Party> parties = partyDao.getAll();
-        Party party = parties.get(0);
-        Entry entry = AdapterHelper.getEntryFromEntity(party.getVersions().first(), true);
-        Version version = entityCreator.getNextVersion(party);
+    public void testUpdateAgentFromEntry() throws Exception {
+        List<Agent> agents = agentDao.getAll();
+        Agent agent = agents.get(0);
+        Entry entry = AdapterHelper.getEntryFromEntity(agent.getVersions().first(), true);
+        Version version = entityCreator.getNextVersion(agent);
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
-        assertEquals("Entry title", party.getVersions().first().getTitle(), version.getTitle());
-        assertEquals("Entry content", party.getVersions().first().getDescription(), version.getDescription());
-        assertTrue("Entry updated", party.getVersions().first().getUpdated().equals(version.getUpdated()));
+        assertEquals("Entry title", agent.getVersions().first().getTitle(), version.getTitle());
+        assertEquals("Entry content", agent.getVersions().first().getDescription(), version.getDescription());
+        assertTrue("Entry updated", agent.getVersions().first().getUpdated().equals(version.getUpdated()));
     }
 
     @Test

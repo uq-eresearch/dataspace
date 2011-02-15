@@ -2,8 +2,8 @@ package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.base.Agent;
 import net.metadata.dataspace.data.model.base.Collection;
-import net.metadata.dataspace.data.model.base.Party;
 import net.metadata.dataspace.data.model.base.Subject;
 import net.metadata.dataspace.data.model.types.AgentType;
 import org.hibernate.validator.NotNull;
@@ -20,11 +20,11 @@ import static javax.persistence.EnumType.STRING;
  * Time: 9:27:44 AM
  */
 @Entity
-public class PartyVersion extends AbstractVersionEntity {
+public class AgentVersion extends AbstractVersionEntity {
     private static final long serialVersionUID = 1L;
 
     @ManyToOne
-    private Party parent;
+    private Agent parent;
 
     @NotNull
     @Enumerated(STRING)
@@ -39,10 +39,10 @@ public class PartyVersion extends AbstractVersionEntity {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Activity> isParticipantIn = new HashSet<Activity>();
 
-    public PartyVersion() {
+    public AgentVersion() {
     }
 
-    public Party getParent() {
+    public Agent getParent() {
         return parent;
     }
 
@@ -51,7 +51,7 @@ public class PartyVersion extends AbstractVersionEntity {
     }
 
     public void setParent(Record parent) {
-        this.parent = (Party) parent;
+        this.parent = (Agent) parent;
     }
 
     public Set<Subject> getSubjects() {

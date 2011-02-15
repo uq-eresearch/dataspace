@@ -99,14 +99,14 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @Override
     public int compareTo(Object o) {
 
-        net.metadata.dataspace.data.model.Version partyVersion = (net.metadata.dataspace.data.model.Version) o;
-        if (this.getUpdated().equals(partyVersion.getUpdated())) {
+        net.metadata.dataspace.data.model.Version version = (net.metadata.dataspace.data.model.Version) o;
+        if (this.getUpdated().equals(version.getUpdated())) {
             return 0;
         }
-        if (this.getUpdated().before(partyVersion.getUpdated())) {
+        if (this.getUpdated().before(version.getUpdated())) {
             return 1;
         }
-        if (this.getUpdated().after(partyVersion.getUpdated())) {
+        if (this.getUpdated().after(version.getUpdated())) {
             return -1;
         }
         return 0;

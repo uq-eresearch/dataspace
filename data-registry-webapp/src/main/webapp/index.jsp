@@ -19,9 +19,9 @@
                             href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
                         collections?repr=application/atom+xml</a>
                     </li>
-                    <li>Get a <strong>feed of a Party</strong> (atom): curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>parties?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        parties?repr=application/atom+xml</a>
+                    <li>Get a <strong>feed of an Agent</strong> (atom): curl -v -X GET <a
+                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>agents?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
+                        agents?repr=application/atom+xml</a>
                     </li>
                     <li>Get a <strong>feed of a Service</strong> (atom): curl -v -X GET <a
                             href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>services?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
@@ -67,11 +67,11 @@
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections" --data
                         @/location/collection.atom
                     </li>
-                    <li>Add a Party (atom): curl -v -b -X POST
+                    <li>Add an Agent (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
                         login?username=test&password=test" -X POST -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>parties" --data
-                        @/location/party.atom
+                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>agents" --data
+                        @/location/agent.atom
                     </li>
                     <li>Add a Service (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
@@ -95,11 +95,11 @@
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections" --data
                         @/location/collection.atom
                     </li>
-                    <li>Edit a Party (atom): curl -v -b -X POST
+                    <li>Edit an Agent (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
                         login?username=test&password=test" -X PUT -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>parties" --data
-                        @/location/party.atom
+                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>agents" --data
+                        @/location/agent.atom
                     </li>
                     <li>Edit a Service (atom): curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
@@ -121,10 +121,10 @@
                         login?username=test&password=test" -X
                         DELETE <%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1
                     </li>
-                    <li>Delete a Party: curl -v -b -X POST
+                    <li>Delete an Agent: curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
                         login?username=test&password=test" -X
-                        DELETE <%=RegistryApplication.getApplicationContext().getUriPrefix()%>parties/1
+                        DELETE <%=RegistryApplication.getApplicationContext().getUriPrefix()%>agents/1
                     </li>
                     <li>Delete a Service: curl -v -b -X POST
                         "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>

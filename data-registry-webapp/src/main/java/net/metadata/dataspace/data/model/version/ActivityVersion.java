@@ -2,8 +2,8 @@ package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.base.Agent;
 import net.metadata.dataspace.data.model.base.Collection;
-import net.metadata.dataspace.data.model.base.Party;
 import net.metadata.dataspace.data.model.types.ActivityType;
 import org.hibernate.validator.NotNull;
 
@@ -33,7 +33,7 @@ public class ActivityVersion extends AbstractVersionEntity {
     private Set<Collection> hasOutput = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Party> hasParticipant = new HashSet<Party>();
+    private Set<Agent> hasParticipant = new HashSet<Agent>();
 
     public ActivityVersion() {
     }
@@ -58,11 +58,11 @@ public class ActivityVersion extends AbstractVersionEntity {
         this.hasOutput = hasOutput;
     }
 
-    public Set<Party> getHasParticipant() {
+    public Set<Agent> getHasParticipant() {
         return hasParticipant;
     }
 
-    public void setHasParticipant(Set<Party> hasParticipant) {
+    public void setHasParticipant(Set<Agent> hasParticipant) {
         this.hasParticipant = hasParticipant;
     }
 

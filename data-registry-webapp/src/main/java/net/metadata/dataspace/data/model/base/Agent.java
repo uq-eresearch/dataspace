@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.model.base;
 
 import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.version.PartyVersion;
+import net.metadata.dataspace.data.model.version.AgentVersion;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
@@ -18,23 +18,23 @@ import java.util.TreeSet;
  * Time: 3:32:39 PM
  */
 @Entity
-public class Party extends AbstractBaseEntity<PartyVersion> {
+public class Agent extends AbstractBaseEntity<AgentVersion> {
 
     private static final long serialVersionUID = 1L;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
     @NotNull
     @Sort(type = SortType.NATURAL)
-    private SortedSet<PartyVersion> versions = new TreeSet<PartyVersion>();
+    private SortedSet<AgentVersion> versions = new TreeSet<AgentVersion>();
 
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private PartyVersion published;
+    private AgentVersion published;
 
-    public Party() {
+    public Agent() {
     }
 
     public String getTitle() {
@@ -69,22 +69,22 @@ public class Party extends AbstractBaseEntity<PartyVersion> {
         return this.published != null ? this.published.getParticipantIn() : this.versions.first().getParticipantIn();
     }
 
-    public SortedSet<PartyVersion> getVersions() {
+    public SortedSet<AgentVersion> getVersions() {
         return versions;
     }
 
-    public void setVersions(SortedSet<PartyVersion> versions) {
+    public void setVersions(SortedSet<AgentVersion> versions) {
         this.versions = versions;
     }
 
     @Override
-    public PartyVersion getPublished() {
+    public AgentVersion getPublished() {
         return published;
     }
 
     @Override
     public void setPublished(Version version) {
-        this.published = (PartyVersion) version;
+        this.published = (AgentVersion) version;
     }
 
     @Override

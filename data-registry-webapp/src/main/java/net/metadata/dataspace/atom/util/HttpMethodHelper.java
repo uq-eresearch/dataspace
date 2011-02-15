@@ -5,8 +5,8 @@ import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.ActivityDao;
+import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.CollectionDao;
-import net.metadata.dataspace.data.access.PartyDao;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
@@ -41,7 +41,7 @@ public class HttpMethodHelper {
 
     private static Logger logger = Logger.getLogger(HttpMethodHelper.class.getName());
     private static CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
-    private static PartyDao partyDao = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao();
+    private static AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
     private static ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
     private static ServiceDao serviceDao = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
     private static EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
@@ -325,9 +325,9 @@ public class HttpMethodHelper {
             } else if (clazz.equals(Collection.class)) {
                 list = collectionDao.getAllPublished();
                 list.addAll(collectionDao.getAllUnpublished());
-            } else if (clazz.equals(Party.class)) {
-                list = partyDao.getAllPublished();
-                list.addAll(partyDao.getAllUnpublished());
+            } else if (clazz.equals(Agent.class)) {
+                list = agentDao.getAllPublished();
+                list.addAll(agentDao.getAllUnpublished());
             } else if (clazz.equals(Service.class)) {
                 list = serviceDao.getAllPublished();
                 list.addAll(serviceDao.getAllUnpublished());
@@ -339,8 +339,8 @@ public class HttpMethodHelper {
                 list = activityDao.getAllPublished();
             } else if (clazz.equals(Collection.class)) {
                 list = collectionDao.getAllPublished();
-            } else if (clazz.equals(Party.class)) {
-                list = partyDao.getAllPublished();
+            } else if (clazz.equals(Agent.class)) {
+                list = agentDao.getAllPublished();
             } else if (clazz.equals(Service.class)) {
                 list = serviceDao.getAllPublished();
             } else {
@@ -355,8 +355,8 @@ public class HttpMethodHelper {
             return activityDao.getByKey(uriKey);
         } else if (clazz.equals(Collection.class)) {
             return collectionDao.getByKey(uriKey);
-        } else if (clazz.equals(Party.class)) {
-            return partyDao.getByKey(uriKey);
+        } else if (clazz.equals(Agent.class)) {
+            return agentDao.getByKey(uriKey);
         } else if (clazz.equals(Service.class)) {
             return serviceDao.getByKey(uriKey);
         }
@@ -369,8 +369,8 @@ public class HttpMethodHelper {
                 activityDao.refresh((Activity) record);
             } else if (clazz.equals(Collection.class)) {
                 collectionDao.refresh((Collection) record);
-            } else if (clazz.equals(Party.class)) {
-                partyDao.refresh((Party) record);
+            } else if (clazz.equals(Agent.class)) {
+                agentDao.refresh((Agent) record);
             } else if (clazz.equals(Service.class)) {
                 serviceDao.refresh((Service) record);
             }
@@ -385,8 +385,8 @@ public class HttpMethodHelper {
                 activityDao.softDelete(uriKey);
             } else if (clazz.equals(Collection.class)) {
                 collectionDao.softDelete(uriKey);
-            } else if (clazz.equals(Party.class)) {
-                partyDao.softDelete(uriKey);
+            } else if (clazz.equals(Agent.class)) {
+                agentDao.softDelete(uriKey);
             } else if (clazz.equals(Service.class)) {
                 serviceDao.softDelete(uriKey);
             }
@@ -401,8 +401,8 @@ public class HttpMethodHelper {
                 return activityDao.getByVersion(uriKey, versionKey);
             } else if (clazz.equals(Collection.class)) {
                 return collectionDao.getByVersion(uriKey, versionKey);
-            } else if (clazz.equals(Party.class)) {
-                return partyDao.getByVersion(uriKey, versionKey);
+            } else if (clazz.equals(Agent.class)) {
+                return agentDao.getByVersion(uriKey, versionKey);
             } else if (clazz.equals(Service.class)) {
                 return serviceDao.getByVersion(uriKey, versionKey);
             }
@@ -426,8 +426,8 @@ public class HttpMethodHelper {
                 return Constants.PATH_FOR_ACTIVITIES;
             } else if (clazz.equals(Collection.class)) {
                 return Constants.PATH_FOR_COLLECTIONS;
-            } else if (clazz.equals(Party.class)) {
-                return Constants.PATH_FOR_PARTIES;
+            } else if (clazz.equals(Agent.class)) {
+                return Constants.PATH_FOR_AGENTS;
             } else if (clazz.equals(Service.class)) {
                 return Constants.PATH_FOR_SERVICES;
             }
@@ -443,8 +443,8 @@ public class HttpMethodHelper {
                 return Constants.TITLE_FOR_ACTIVITIES;
             } else if (clazz.equals(Collection.class)) {
                 return Constants.TITLE_FOR_COLLECTIONS;
-            } else if (clazz.equals(Party.class)) {
-                return Constants.TITLE_FOR_PARTIES;
+            } else if (clazz.equals(Agent.class)) {
+                return Constants.TITLE_FOR_AGENTS;
             } else if (clazz.equals(Service.class)) {
                 return Constants.TITLE_FOR_SERVICES;
             }
@@ -459,8 +459,8 @@ public class HttpMethodHelper {
             return activityDao.getMostRecentUpdated();
         } else if (clazz.equals(Collection.class)) {
             return collectionDao.getMostRecentUpdated();
-        } else if (clazz.equals(Party.class)) {
-            return partyDao.getMostRecentUpdated();
+        } else if (clazz.equals(Agent.class)) {
+            return agentDao.getMostRecentUpdated();
         } else if (clazz.equals(Service.class)) {
             return serviceDao.getMostRecentUpdated();
         }

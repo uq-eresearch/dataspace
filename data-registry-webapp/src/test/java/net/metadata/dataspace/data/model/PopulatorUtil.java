@@ -4,14 +4,15 @@ import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.base.Subject;
+import net.metadata.dataspace.data.model.base.*;
+import net.metadata.dataspace.data.model.base.Collection;
 import net.metadata.dataspace.data.model.types.ActivityType;
 import net.metadata.dataspace.data.model.types.AgentType;
 import net.metadata.dataspace.data.model.types.CollectionType;
 import net.metadata.dataspace.data.model.types.ServiceType;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
-import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 
 import java.util.*;
@@ -48,18 +49,18 @@ public class PopulatorUtil {
         return collectionVersion;
     }
 
-    public static PartyVersion getPartyVersion(Record party) throws Exception {
-        PartyVersion partyVersion = (PartyVersion) entityCreator.getNextVersion(party);
-        partyVersion.setParent(party);
-        partyVersion.setTitle("Test Party Title");
-        partyVersion.setDescription("Test Party Content");
-        partyVersion.setType(AgentType.PERSON);
-        partyVersion.setUpdated(new Date());
+    public static AgentVersion getAgentVersion(Record agent) throws Exception {
+        AgentVersion agentVersion = (AgentVersion) entityCreator.getNextVersion(agent);
+        agentVersion.setParent(agent);
+        agentVersion.setTitle("Test Agent Title");
+        agentVersion.setDescription("Test Agent Content");
+        agentVersion.setType(AgentType.PERSON);
+        agentVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
-        authors.add("Test Party Author");
-        partyVersion.setAuthors(authors);
-        party.setUpdated(new Date());
-        return partyVersion;
+        authors.add("Test Agent Author");
+        agentVersion.setAuthors(authors);
+        agent.setUpdated(new Date());
+        return agentVersion;
     }
 
     public static ServiceVersion getServiceVersion(Record service) {
@@ -90,9 +91,9 @@ public class PopulatorUtil {
     }
 
     public static void cleanup() {
-        PartyDao partyDao = daoManager.getPartyDao();
-        PartyVersionDao partyVersionDao = daoManager.getPartyVersionDao();
-        deleteEntity(partyDao, partyVersionDao);
+        AgentDao agentDao = daoManager.getAgentDao();
+        AgentVersionDao agentVersionDao = daoManager.getAgentVersionDao();
+        deleteEntity(agentDao, agentVersionDao);
 
         CollectionDao collectionDao = daoManager.getCollectionDao();
         CollectionVersionDao collectionVersionDao = daoManager.getCollectionVersionDao();
@@ -108,37 +109,93 @@ public class PopulatorUtil {
     }
 
     private static void deleteEntity(Dao parentDao, Dao versionDao) {
-        List<Record> collectionList = parentDao.getAll();
-        for (Record collection : collectionList) {
-            SortedSet<Version> versions = collection.getVersions();
+        List<Record> recordList = parentDao.getAll();
+        for (Record record : recordList) {
+            SortedSet<Version> versions = record.getVersions();
             for (Version version : versions) {
-                if (parentDao instanceof PartyDao && versionDao instanceof PartyVersionDao) {
-                    PartyVersion ver = (PartyVersion) version;
-                    ver.getParticipantIn().removeAll(ver.getParticipantIn());
-                    ver.getCollectorOf().removeAll(ver.getCollectorOf());
+                if (parentDao instanceof AgentDao && versionDao instanceof AgentVersionDao) {
+                    AgentVersion ver = (AgentVersion) version;
+                    Set<Activity> activitySet = ver.getParticipantIn();
+                    for (Activity activity : activitySet) {
+                        SortedSet<ActivityVersion> activityVersions = activity.getVersions();
+                        for (ActivityVersion activityVersion : activityVersions) {
+                            activityVersion.getHasParticipant().remove(record);
+                        }
+                    }
+                    activitySet.removeAll(activitySet);
+                    Set<Collection> collectionSet = ver.getCollectorOf();
+                    for (Collection collection : collectionSet) {
+                        SortedSet<CollectionVersion> collectionVersions = collection.getVersions();
+                        for (CollectionVersion collectionVersion : collectionVersions) {
+                            collectionVersion.getCollector().remove(record);
+                        }
+                    }
+                    collectionSet.removeAll(collectionSet);
                     ver.getSubjects().removeAll(ver.getSubjects());
                 }
                 if (parentDao instanceof CollectionDao && versionDao instanceof CollectionVersionDao) {
                     CollectionVersion ver = (CollectionVersion) version;
-                    ver.getOutputOf().removeAll(ver.getOutputOf());
-                    ver.getSupports().removeAll(ver.getSupports());
-                    ver.getCollector().removeAll(ver.getCollector());
+                    Set<Activity> activities = ver.getOutputOf();
+                    for (Activity activity : activities) {
+                        SortedSet<ActivityVersion> activityVersions = activity.getVersions();
+                        for (ActivityVersion activityVersion : activityVersions) {
+                            activityVersion.getHasOutput().remove(record);
+                        }
+                    }
+                    activities.removeAll(activities);
+                    Set<Service> services = ver.getSupports();
+                    for (Service service : services) {
+                        SortedSet<ServiceVersion> serviceVersions = service.getVersions();
+                        for (ServiceVersion serviceVersion : serviceVersions) {
+                            serviceVersion.getSupportedBy().remove(record);
+                        }
+                    }
+                    services.removeAll(services);
+                    Set<Agent> agents = ver.getCollector();
+                    for (Agent agent : agents) {
+                        SortedSet<AgentVersion> agentVersions = agent.getVersions();
+                        for (AgentVersion agentVersion : agentVersions) {
+                            agentVersion.getCollectorOf().remove(record);
+                        }
+                    }
+                    agents.removeAll(agents);
                     ver.getSubjects().removeAll(ver.getSubjects());
                 }
                 if (parentDao instanceof ActivityDao && versionDao instanceof ActivityVersionDao) {
                     ActivityVersion ver = (ActivityVersion) version;
-                    ver.getHasOutput().removeAll(ver.getHasOutput());
-                    ver.getHasParticipant().removeAll(ver.getHasParticipant());
+                    Set<Collection> collections = ver.getHasOutput();
+                    for (Collection collection : collections) {
+                        SortedSet<CollectionVersion> collectionVersions = collection.getVersions();
+                        for (CollectionVersion collectionVersion : collectionVersions) {
+                            collectionVersion.getOutputOf().remove(record);
+                        }
+                    }
+                    collections.removeAll(collections);
+                    Set<Agent> agents = ver.getHasParticipant();
+                    for (Agent agent : agents) {
+                        SortedSet<AgentVersion> agentVersions = agent.getVersions();
+                        for (AgentVersion agentVersion : agentVersions) {
+                            agentVersion.getParticipantIn().remove(record);
+                        }
+                    }
+                    agents.removeAll(agents);
                 }
                 if (parentDao instanceof ServiceDao && versionDao instanceof ServiceVersionDao) {
                     ServiceVersion ver = (ServiceVersion) version;
-                    ver.getSupportedBy().removeAll(ver.getSupportedBy());
+                    Set<Collection> collections = ver.getSupportedBy();
+                    for (Collection collection : collections) {
+                        SortedSet<CollectionVersion> collectionVersions = collection.getVersions();
+                        for (CollectionVersion collectionVersion : collectionVersions) {
+                            collectionVersion.getSupports().remove(record);
+                        }
+                    }
+                    collections.removeAll(collections);
                 }
                 version.getAuthors().removeAll(version.getAuthors());
-                collection.getVersions().remove(version);
+                record.getVersions().remove(version);
                 versionDao.delete(version);
             }
-            parentDao.delete(collection);
+            parentDao.delete(record);
         }
     }
 

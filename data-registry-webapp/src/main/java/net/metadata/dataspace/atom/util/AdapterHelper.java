@@ -12,8 +12,8 @@ import net.metadata.dataspace.data.model.types.AgentType;
 import net.metadata.dataspace.data.model.types.CollectionType;
 import net.metadata.dataspace.data.model.types.ServiceType;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
-import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.text.UrlEncoding;
@@ -104,8 +104,8 @@ public class AdapterHelper {
         } else {
             if (version instanceof ActivityVersion) {
                 return getEntryFromActivity((ActivityVersion) version, isParentLevel);
-            } else if (version instanceof PartyVersion) {
-                return getEntryFromParty((PartyVersion) version, isParentLevel);
+            } else if (version instanceof AgentVersion) {
+                return getEntryFromAgent((AgentVersion) version, isParentLevel);
             } else if (version instanceof CollectionVersion) {
                 return getEntryFromCollection((CollectionVersion) version, isParentLevel);
             } else if (version instanceof ServiceVersion) {
@@ -122,9 +122,9 @@ public class AdapterHelper {
             if (version instanceof ActivityVersion) {
                 //TODO this need to be retrieved from the entry
                 ((ActivityVersion) version).setType(ActivityType.PROJECT);
-            } else if (version instanceof PartyVersion) {
+            } else if (version instanceof AgentVersion) {
                 //TODO this need to be retrieved from the entry
-                ((PartyVersion) version).setType(AgentType.PERSON);
+                ((AgentVersion) version).setType(AgentType.PERSON);
             } else if (version instanceof CollectionVersion) {
                 //TODO this need to be retrieved from the entry
                 ((CollectionVersion) version).setType(CollectionType.COLLECTION);
@@ -140,9 +140,9 @@ public class AdapterHelper {
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_ACTIVITY, version.getParent().getClass().getSimpleName());
         try {
-            Set<Party> partySet = version.getHasParticipant();
-            for (Party party : partySet) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey() + "#";
+            Set<Agent> agentSet = version.getHasParticipant();
+            for (Agent agent : agentSet) {
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_HAS_PARTICIPANT);
             }
             Set<Collection> collectionSet = version.getHasOutput();
@@ -158,10 +158,10 @@ public class AdapterHelper {
         return entry;
     }
 
-    private static Entry getEntryFromParty(PartyVersion version, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + version.getParent().getUriKey();
+    private static Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
+        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_PARTY_AS_AGENT, version.getParent().getClass().getSimpleName());
+        entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getParent().getClass().getSimpleName());
         try {
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
@@ -197,9 +197,9 @@ public class AdapterHelper {
             for (Subject sub : subjectSet) {
                 entry.addCategory(sub.getVocabulary(), sub.getValue(), sub.getLabel());
             }
-            Set<Party> parties = version.getCollector();
-            for (Party party : parties) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_PARTIES + "/" + party.getUriKey() + "#";
+            Set<Agent> agents = version.getCollector();
+            for (Agent agent : agents) {
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_CREATOR);
             }
             Set<Service> services = version.getSupports();

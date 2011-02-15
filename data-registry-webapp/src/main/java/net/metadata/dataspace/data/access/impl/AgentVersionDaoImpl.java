@@ -2,8 +2,8 @@ package net.metadata.dataspace.data.access.impl;
 
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
-import net.metadata.dataspace.data.access.PartyVersionDao;
-import net.metadata.dataspace.data.model.version.PartyVersion;
+import net.metadata.dataspace.data.access.AgentVersionDao;
+import net.metadata.dataspace.data.model.version.AgentVersion;
 
 import java.io.Serializable;
 
@@ -13,9 +13,9 @@ import java.io.Serializable;
  * Time: 11:44:59 AM
  */
 
-public class PartyVersionDaoImpl extends JpaDao<PartyVersion> implements PartyVersionDao, Serializable {
+public class AgentVersionDaoImpl extends JpaDao<AgentVersion> implements AgentVersionDao, Serializable {
 
-    public PartyVersionDaoImpl(EntityManagerSource entityManagerSource) {
+    public AgentVersionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 }

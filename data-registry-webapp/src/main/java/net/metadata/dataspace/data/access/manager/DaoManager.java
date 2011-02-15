@@ -12,9 +12,9 @@ public interface DaoManager {
 
     CollectionDao getCollectionDao();
 
-    PartyDao getPartyDao();
+    AgentDao getAgentDao();
 
-    PartyVersionDao getPartyVersionDao();
+    AgentVersionDao getAgentVersionDao();
 
     ServiceDao getServiceDao();
 

@@ -6,12 +6,12 @@ import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.base.Agent;
 import net.metadata.dataspace.data.model.base.Collection;
-import net.metadata.dataspace.data.model.base.Party;
 import net.metadata.dataspace.data.model.base.Service;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
-import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.util.AbstractWriterOptions;
@@ -41,8 +41,8 @@ public class RIFCSCrosswalk extends Crosswalk {
                 xslFilePath = "/files/xslt/rifcs/atom2rifcs-" + Activity.class.getSimpleName().toLowerCase() + ".xsl";
             } else if (nativeItem instanceof CollectionVersion) {
                 xslFilePath = "/files/xslt/rifcs/atom2rifcs-" + Collection.class.getSimpleName().toLowerCase() + ".xsl";
-            } else if (nativeItem instanceof PartyVersion) {
-                xslFilePath = "/files/xslt/rifcs/atom2rifcs-" + Party.class.getSimpleName().toLowerCase() + ".xsl";
+            } else if (nativeItem instanceof AgentVersion) {
+                xslFilePath = "/files/xslt/rifcs/atom2rifcs-" + Agent.class.getSimpleName().toLowerCase() + ".xsl";
             } else if (nativeItem instanceof ServiceVersion) {
                 xslFilePath = "/files/xslt/rifcs/atom2rifcs-" + Service.class.getSimpleName().toLowerCase() + ".xsl";
             }

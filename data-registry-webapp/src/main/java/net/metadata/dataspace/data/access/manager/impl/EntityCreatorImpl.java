@@ -5,8 +5,8 @@ import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.base.*;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
-import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import net.metadata.dataspace.data.sequencer.*;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class EntityCreatorImpl implements EntityCreator {
 
-    private PartyAtomicSequencer partyAtomicSequencer;
+    private AgentAtomicSequencer agentAtomicSequencer;
     private CollectionAtomicSequencer collectionAtomicSequencer;
     private SubjectAtomicSequencer subjectAtomicSequencer;
     private ServiceAtomicSequencer serviceAtomicSequencer;
@@ -34,8 +34,8 @@ public class EntityCreatorImpl implements EntityCreator {
             return getNextActivity();
         } else if (clazz.equals(Collection.class)) {
             return getNextCollection();
-        } else if (clazz.equals(Party.class)) {
-            return getNextParty();
+        } else if (clazz.equals(Agent.class)) {
+            return getNextAgent();
         } else if (clazz.equals(Service.class)) {
             return getNextService();
         } else if (clazz.equals(Subject.class)) {
@@ -51,8 +51,8 @@ public class EntityCreatorImpl implements EntityCreator {
             version = new ActivityVersion();
         } else if (record instanceof Collection) {
             version = new CollectionVersion();
-        } else if (record instanceof Party) {
-            version = new PartyVersion();
+        } else if (record instanceof Agent) {
+            version = new AgentVersion();
         } else if (record instanceof Service) {
             version = new ServiceVersion();
         }
@@ -69,10 +69,10 @@ public class EntityCreatorImpl implements EntityCreator {
         return subject;
     }
 
-    private Party getNextParty() {
-        Party party = new Party();
-        party.setAtomicNumber(partyAtomicSequencer.next());
-        return party;
+    private Agent getNextAgent() {
+        Agent agent = new Agent();
+        agent.setAtomicNumber(agentAtomicSequencer.next());
+        return agent;
     }
 
     private Collection getNextCollection() {
@@ -93,12 +93,12 @@ public class EntityCreatorImpl implements EntityCreator {
         return activity;
     }
 
-    public void setPartyAtomicSequencer(PartyAtomicSequencer partyAtomicSequencer) {
-        this.partyAtomicSequencer = partyAtomicSequencer;
+    public void setAgentAtomicSequencer(AgentAtomicSequencer agentAtomicSequencer) {
+        this.agentAtomicSequencer = agentAtomicSequencer;
     }
 
-    public PartyAtomicSequencer getPartyAtomicSequencer() {
-        return partyAtomicSequencer;
+    public AgentAtomicSequencer getAgentAtomicSequencer() {
+        return agentAtomicSequencer;
     }
 
     public void setCollectionAtomicSequencer(CollectionAtomicSequencer collectionAtomicSequencer) {

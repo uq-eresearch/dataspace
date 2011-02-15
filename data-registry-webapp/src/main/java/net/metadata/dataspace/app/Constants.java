@@ -21,7 +21,7 @@ public interface Constants {
     /**
      * Adapters
      */
-    String PATH_FOR_PARTIES = "parties";
+    String PATH_FOR_AGENTS = "agents";
     String PATH_FOR_COLLECTIONS = "collections";
     String PATH_FOR_ACTIVITIES = "activities";
     String PATH_FOR_SERVICES = "services";
@@ -29,7 +29,7 @@ public interface Constants {
     /**
      * Titles
      */
-    String TITLE_FOR_PARTIES = "Parties";
+    String TITLE_FOR_AGENTS = "Agents";
     String TITLE_FOR_COLLECTIONS = "Collections";
     String TITLE_FOR_ACTIVITIES = "Activities";
     String TITLE_FOR_SERVICES = "Services";
@@ -81,8 +81,8 @@ public interface Constants {
     String TERM_ANDS_GROUP = "The University of Queensland";
     String TERM_ACTIVITY = SCHEME_FOAF + "Project";
     String TERM_COLLECTION = SCHEME_DCMITYPE + "Collection";
-    String TERM_PARTY_AS_GROUP = SCHEME_FOAF + "Group";
-    String TERM_PARTY_AS_AGENT = SCHEME_FOAF + "Agent";
+    String TERM_AGENT_AS_GROUP = SCHEME_FOAF + "Group";
+    String TERM_AGENT_AS_AGENT = SCHEME_FOAF + "Agent";
     String TERM_SERVICE = SCHEME_VIVO + "Service";
 
     /**

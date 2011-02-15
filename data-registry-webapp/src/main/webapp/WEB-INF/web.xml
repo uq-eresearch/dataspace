@@ -40,7 +40,7 @@
     <!--Servlet Mappings-->
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/parties/*</url-pattern>
+        <url-pattern>/agents/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>

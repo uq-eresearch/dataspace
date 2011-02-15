@@ -70,7 +70,7 @@ public class Collection extends AbstractBaseEntity<CollectionVersion> {
         return this.published != null ? this.published.getSubjects() : this.versions.first().getSubjects();
     }
 
-    public Set<Party> getCollector() {
+    public Set<Agent> getCollector() {
         return this.published != null ? this.published.getCollector() : this.versions.first().getCollector();
     }
 

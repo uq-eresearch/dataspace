@@ -12,12 +12,12 @@ import net.metadata.dataspace.data.connector.JpaConnector;
 public class DaoManagerImpl implements DaoManager {
 
     private CollectionDao collectionDao;
-    private PartyDao partyDao;
+    private AgentDao agentDao;
     private ServiceDao serviceDao;
     private ActivityDao activityDao;
     private SubjectDao subjectDao;
     private JpaConnector jpaConnnector;
-    private PartyVersionDao partyVersionDao;
+    private AgentVersionDao agentVersionDao;
     private CollectionVersionDao collectionVersionDao;
     private ServiceVersionDao serviceVersionDao;
     private ActivityVersionDao activityVersionDao;
@@ -31,12 +31,12 @@ public class DaoManagerImpl implements DaoManager {
         return collectionDao;
     }
 
-    public void setPartyDao(PartyDao partyDao) {
-        this.partyDao = partyDao;
+    public void setAgentDao(AgentDao agentDao) {
+        this.agentDao = agentDao;
     }
 
-    public PartyDao getPartyDao() {
-        return partyDao;
+    public AgentDao getAgentDao() {
+        return agentDao;
     }
 
     public void setServiceDao(ServiceDao serviceDao) {
@@ -71,12 +71,12 @@ public class DaoManagerImpl implements DaoManager {
         return jpaConnnector;
     }
 
-    public void setPartyVersionDao(PartyVersionDao partyVersionDao) {
-        this.partyVersionDao = partyVersionDao;
+    public void setAgentVersionDao(AgentVersionDao agentVersionDao) {
+        this.agentVersionDao = agentVersionDao;
     }
 
-    public PartyVersionDao getPartyVersionDao() {
-        return partyVersionDao;
+    public AgentVersionDao getAgentVersionDao() {
+        return agentVersionDao;
     }
 
     public void setCollectionVersionDao(CollectionVersionDao collectionVersionDao) {

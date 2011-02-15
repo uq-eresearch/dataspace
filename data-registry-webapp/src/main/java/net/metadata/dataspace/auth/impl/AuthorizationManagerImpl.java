@@ -5,8 +5,8 @@ import net.metadata.dataspace.auth.policy.AccessLevel;
 import net.metadata.dataspace.data.model.base.*;
 import net.metadata.dataspace.data.model.types.Role;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
-import net.metadata.dataspace.data.model.version.PartyVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 
 import java.util.HashSet;
@@ -28,8 +28,8 @@ public class AuthorizationManagerImpl implements AuthorizationManager<User> {
         LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(Collection.class);
         LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(CollectionVersion.class);
 
-        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(Party.class);
-        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(PartyVersion.class);
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(Agent.class);
+        LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(AgentVersion.class);
 
         LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(Service.class);
         LOGGED_IN_USERS_CAN_CREATE_INSTANCES.add(ServiceVersion.class);
@@ -45,9 +45,9 @@ public class AuthorizationManagerImpl implements AuthorizationManager<User> {
         boolean canUpdate = false;
         boolean canDelete = false;
 
-        if (instance instanceof Party) {
-            canCreate = user != null; //logged in users can create Party
-            canRead = true; //anyone can read Party
+        if (instance instanceof Agent) {
+            canCreate = user != null; //logged in users can create Agent
+            canRead = true; //anyone can read Agent
             canUpdate = user != null; //Users can edit their own profiles
             canDelete = user != null; // only super users can delete profiles
         }

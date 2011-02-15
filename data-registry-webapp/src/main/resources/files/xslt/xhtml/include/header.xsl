@@ -80,7 +80,7 @@
                                     <a href="/collections">Collections</a>
                                 </li>
                                 <li>
-                                    <a href="/parties">Parties</a>
+                                    <a href="/agents">Agents</a>
                                 </li>
                                 <li>
                                     <a href="/services">Services</a>

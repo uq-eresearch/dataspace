@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.sequencer;
 
-import net.metadata.dataspace.data.access.PartyDao;
-import net.metadata.dataspace.data.model.base.Party;
+import net.metadata.dataspace.data.access.AgentDao;
+import net.metadata.dataspace.data.model.base.Agent;
 import net.metadata.dataspace.util.DaoHelper;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,16 +11,16 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 26/10/2010
  * Time: 11:17:47 AM
  */
-public class PartyAtomicSequencer extends AbstractAtomicSquencer {
+public class AgentAtomicSequencer extends AbstractAtomicSquencer {
 
-    public PartyAtomicSequencer(PartyDao partyDao) {
-        Party party = partyDao.getMostRecentInserted();
-        if (party == null) {
+    public AgentAtomicSequencer(AgentDao agentDao) {
+        Agent agent = agentDao.getMostRecentInserted();
+        if (agent == null) {
             atomicInterger = new AtomicInteger(0);
         } else {
-            partyDao.refresh(party);
+            agentDao.refresh(agent);
             final int BASE_THIRTY_ONE = 31;
-            String uriKey = party.getUriKey();
+            String uriKey = agent.getUriKey();
             atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }

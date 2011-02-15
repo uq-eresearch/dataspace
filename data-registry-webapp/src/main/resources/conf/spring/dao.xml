@@ -11,11 +11,11 @@
         <constructor-arg ref="jpaConnector"/>
     </bean>
 
-    <bean id="partyDao" class="net.metadata.dataspace.data.access.impl.PartyDaoImpl">
+    <bean id="agentDao" class="net.metadata.dataspace.data.access.impl.AgentDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>
 
-    <bean id="partyVersionDao" class="net.metadata.dataspace.data.access.impl.PartyVersionDaoImpl">
+    <bean id="agentVersionDao" class="net.metadata.dataspace.data.access.impl.AgentVersionDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>
 

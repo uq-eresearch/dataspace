@@ -3,8 +3,8 @@ package net.metadata.dataspace.servlets;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.adapter.ActivityAdapter;
+import net.metadata.dataspace.atom.adapter.AgentAdapter;
 import net.metadata.dataspace.atom.adapter.CollectionAdapter;
-import net.metadata.dataspace.atom.adapter.PartyAdapter;
 import net.metadata.dataspace.atom.adapter.ServiceAdapter;
 import net.metadata.dataspace.servlets.processor.VersionRequestProcessor;
 import org.apache.abdera.Abdera;
@@ -34,9 +34,9 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
         SimpleWorkspaceInfo registryWorkSpace = new SimpleWorkspaceInfo();
         registryWorkSpace.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle());
 
-        PartyAdapter partyAdapter = new PartyAdapter();
-        partyAdapter.setHref(Constants.PATH_FOR_PARTIES);
-        registryWorkSpace.addCollection(partyAdapter);
+        AgentAdapter agentAdapter = new AgentAdapter();
+        agentAdapter.setHref(Constants.PATH_FOR_AGENTS);
+        registryWorkSpace.addCollection(agentAdapter);
 
         CollectionAdapter collectionAdapter = new CollectionAdapter();
         collectionAdapter.setHref(Constants.PATH_FOR_COLLECTIONS);

@@ -7,7 +7,7 @@ import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.base.Activity;
-import net.metadata.dataspace.data.model.base.Party;
+import net.metadata.dataspace.data.model.base.Agent;
 import net.metadata.dataspace.data.model.base.Service;
 import net.metadata.dataspace.util.DateUtil;
 import org.apache.log4j.Logger;
@@ -75,9 +75,9 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         }
         List<Activity> activityList = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getAllPublishedBetween(fromDate, toDate);
         List<net.metadata.dataspace.data.model.base.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublishedBetween(fromDate, toDate);
-        List<Party> partyList = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao().getAllPublishedBetween(fromDate, toDate);
+        List<Agent> agentList = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao().getAllPublishedBetween(fromDate, toDate);
         List<Service> serviceList = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getAllPublishedBetween(fromDate, toDate);
-        int size = activityList.size() + collectionList.size() + partyList.size() + serviceList.size();
+        int size = activityList.size() + collectionList.size() + agentList.size() + serviceList.size();
         List<String> headers = new ArrayList<String>(size);
         List<String> identifiers = new ArrayList<String>(size);
 
@@ -89,9 +89,9 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             identifiers.add(getRecordFactory().getOAIIdentifier(collection.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(collection.getPublished()), getRecordFactory().getDatestamp(collection.getPublished()), getRecordFactory().getSetSpecs(collection), !collection.isActive())[0]);
         }
-        for (Party party : partyList) {
-            identifiers.add(getRecordFactory().getOAIIdentifier(party.getPublished()));
-            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(party.getPublished()), getRecordFactory().getDatestamp(party.getPublished()), getRecordFactory().getSetSpecs(party), !party.isActive())[0]);
+        for (Agent agent : agentList) {
+            identifiers.add(getRecordFactory().getOAIIdentifier(agent.getPublished()));
+            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(agent.getPublished()), getRecordFactory().getDatestamp(agent.getPublished()), getRecordFactory().getSetSpecs(agent), !agent.isActive())[0]);
         }
         for (Service service : serviceList) {
             identifiers.add(getRecordFactory().getOAIIdentifier(service.getPublished()));
@@ -120,8 +120,8 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
                 record = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_COLLECTIONS)) {
                 record = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getByKey(key);
-            } else if (identifier.contains(Constants.PATH_FOR_PARTIES)) {
-                record = RegistryApplication.getApplicationContext().getDaoManager().getPartyDao().getByKey(key);
+            } else if (identifier.contains(Constants.PATH_FOR_AGENTS)) {
+                record = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_SERVICES)) {
                 record = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getByKey(key);
             }

@@ -88,7 +88,7 @@ public class ServiceDaoImplTest {
         entityManager.merge(service);
         entityManager.getTransaction().commit();
         Service serviceById = serviceDao.getById(id);
-        Assert.assertEquals("Modified and Retrieved parties are not the same", service, serviceById);
+        Assert.assertEquals("Modified and Retrieved records are not the same", service, serviceById);
         Assert.assertEquals("Update Date was not updated", now, serviceById.getUpdated());
         Assert.assertEquals("content was not updated", content, serviceById.getVersions().first().getDescription());
     }
