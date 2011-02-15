@@ -30,7 +30,6 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
         }
         assert resultList.size() == 1 : "id should be unique";
         return (Subject) resultList.get(0);
-
     }
 
     @Override

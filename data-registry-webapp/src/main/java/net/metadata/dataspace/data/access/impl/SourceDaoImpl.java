@@ -4,7 +4,9 @@ import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.SourceDao;
 import net.metadata.dataspace.data.model.resource.Source;
+import net.metadata.dataspace.util.DaoHelper;
 
+import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -22,27 +24,49 @@ public class SourceDaoImpl extends JpaDao<Source> implements SourceDao, Serializ
 
     @Override
     public Source getById(Long id) {
-        return null;
+        List<?> resultList = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Source o WHERE o.id = :id").setParameter("id", id).getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Source) resultList.get(0);
     }
 
     @Override
     public Source getByKey(String uriKey) {
-        return null;
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Source o WHERE o.atomicNumber = :atomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Source) resultList.get(0);
     }
 
     @Override
     public int softDelete(String uriKey) {
-        return 0;
+        int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
+        entityManagerSource.getEntityManager().getTransaction().begin();
+        Query query = entityManagerSource.getEntityManager().createQuery("UPDATE Source o SET o.isActive = :isActive WHERE o.atomicNumber = :atomicNumber");
+        query.setParameter("atomicNumber", atomicNumber);
+        query.setParameter("isActive", false);
+        int updated = query.executeUpdate();
+        entityManagerSource.getEntityManager().getTransaction().commit();
+        return updated;
     }
 
     @Override
     public List<Source> getAllActive() {
-        return null;
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Source o WHERE o.isActive = true");
+        return query.getResultList();
     }
 
     @Override
     public List<Source> getAllInactive() {
-        return null;
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Source o WHERE o.isActive = false");
+        return query.getResultList();
     }
 
     @Override
@@ -62,11 +86,18 @@ public class SourceDaoImpl extends JpaDao<Source> implements SourceDao, Serializ
 
     @Override
     public Source getMostRecentUpdated() {
-        return null;
+        //TODO if a updated date property is added to Source table then this should be changed to get most recent updated Sourcel
+        return getMostRecentInserted();
     }
 
     @Override
     public Source getMostRecentInserted() {
-        return null;
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Source o WHERE o.atomicNumber = (SELECT MAX(o.atomicNumber) FROM Source o)");
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Source) resultList.get(0);
     }
 }
