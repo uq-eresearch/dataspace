@@ -14,7 +14,7 @@ import java.util.Date;
  * Time: 11:45:18 AM
  */
 @MappedSuperclass
-public abstract class AbstractResourceEntity implements Serializable, Resource {
+public abstract class AbstractContextEntity implements Serializable, Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,7 +30,7 @@ public abstract class AbstractResourceEntity implements Serializable, Resource {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
 
-    public AbstractResourceEntity() {
+    public AbstractContextEntity() {
         this.isActive = true;
         this.created = new Date();
     }
@@ -74,10 +74,10 @@ public abstract class AbstractResourceEntity implements Serializable, Resource {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof AbstractResourceEntity)) {
+        if (!(obj instanceof AbstractContextEntity)) {
             return false;
         }
-        AbstractResourceEntity other = (AbstractResourceEntity) obj;
+        AbstractContextEntity other = (AbstractContextEntity) obj;
         return getId().equals(other.getId());
     }
 

@@ -11,7 +11,7 @@ import javax.persistence.Entity;
  */
 
 @Entity
-public class Subject extends AbstractResourceEntity {
+public class Subject extends AbstractContextEntity {
 
     private static final long serialVersionUID = 1L;
 

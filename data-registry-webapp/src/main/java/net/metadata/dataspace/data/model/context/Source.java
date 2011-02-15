@@ -10,7 +10,7 @@ import javax.persistence.Entity;
  * Time: 10:40:38 AM
  */
 @Entity
-public class Source extends AbstractResourceEntity {
+public class Source extends AbstractContextEntity {
 
     private static final long serialVersionUID = 1L;
 
