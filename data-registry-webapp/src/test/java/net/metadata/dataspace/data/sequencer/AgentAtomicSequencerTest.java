@@ -3,7 +3,7 @@ package net.metadata.dataspace.data.sequencer;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.base.Agent;
+import net.metadata.dataspace.data.model.record.Agent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

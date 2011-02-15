@@ -3,7 +3,7 @@ package net.metadata.dataspace.data.access.impl;
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.ActivityDao;
-import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.util.DaoHelper;
 

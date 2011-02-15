@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.sequencer;
 
 import net.metadata.dataspace.data.access.ServiceDao;
-import net.metadata.dataspace.data.model.base.Service;
+import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.util.DaoHelper;
 
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,4 +1,4 @@
-package net.metadata.dataspace.data.model.base;
+package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.types.Role;
 import org.hibernate.validator.NotNull;

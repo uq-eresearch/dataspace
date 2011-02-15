@@ -1,6 +1,6 @@
 package net.metadata.dataspace.data.model.version;
 
-import net.metadata.dataspace.data.model.base.AbstractBaseEntity;
+import net.metadata.dataspace.data.model.record.AbstractBaseEntity;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;

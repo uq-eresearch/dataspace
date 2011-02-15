@@ -1,8 +1,8 @@
 package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.base.Collection;
-import net.metadata.dataspace.data.model.base.Service;
+import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.ServiceType;
 import org.hibernate.validator.NotNull;
 

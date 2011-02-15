@@ -1,7 +1,7 @@
 package net.metadata.dataspace.auth;
 
 import net.metadata.dataspace.auth.policy.AccessLevel;
-import net.metadata.dataspace.data.model.base.User;
+import net.metadata.dataspace.data.model.record.User;
 
 /**
  * Author: alabri

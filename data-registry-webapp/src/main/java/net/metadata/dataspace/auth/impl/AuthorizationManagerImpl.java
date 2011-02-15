@@ -2,7 +2,7 @@ package net.metadata.dataspace.auth.impl;
 
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.auth.policy.AccessLevel;
-import net.metadata.dataspace.data.model.base.*;
+import net.metadata.dataspace.data.model.record.*;
 import net.metadata.dataspace.data.model.types.Role;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.AgentVersion;

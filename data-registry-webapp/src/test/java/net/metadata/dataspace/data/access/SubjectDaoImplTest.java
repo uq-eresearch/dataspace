@@ -3,7 +3,7 @@ package net.metadata.dataspace.data.access;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.app.RegistryConfiguration;
 import net.metadata.dataspace.data.model.PopulatorUtil;
-import net.metadata.dataspace.data.model.base.resource.Subject;
+import net.metadata.dataspace.data.model.record.resource.Subject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

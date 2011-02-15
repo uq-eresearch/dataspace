@@ -1,11 +1,11 @@
 package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.base.Activity;
-import net.metadata.dataspace.data.model.base.Agent;
-import net.metadata.dataspace.data.model.base.Collection;
-import net.metadata.dataspace.data.model.base.Service;
-import net.metadata.dataspace.data.model.base.resource.Subject;
+import net.metadata.dataspace.data.model.record.Activity;
+import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.record.Service;
+import net.metadata.dataspace.data.model.record.resource.Subject;
 import net.metadata.dataspace.data.model.types.CollectionType;
 import org.hibernate.validator.NotNull;
 

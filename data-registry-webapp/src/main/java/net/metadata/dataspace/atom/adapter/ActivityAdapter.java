@@ -5,7 +5,7 @@ import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.FeedHelper;
 import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.data.access.ActivityDao;
-import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.record.Activity;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;

@@ -3,7 +3,7 @@ package net.metadata.dataspace.data.access.impl;
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.UserDao;
-import net.metadata.dataspace.data.model.base.User;
+import net.metadata.dataspace.data.model.record.User;
 
 import javax.persistence.Query;
 import java.io.Serializable;

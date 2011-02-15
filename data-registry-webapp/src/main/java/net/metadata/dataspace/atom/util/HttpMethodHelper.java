@@ -11,7 +11,7 @@ import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.base.*;
+import net.metadata.dataspace.data.model.record.*;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;

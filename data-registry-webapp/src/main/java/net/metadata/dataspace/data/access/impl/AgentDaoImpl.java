@@ -3,7 +3,7 @@ package net.metadata.dataspace.data.access.impl;
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.AgentDao;
-import net.metadata.dataspace.data.model.base.Agent;
+import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.util.DaoHelper;
 

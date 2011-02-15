@@ -5,7 +5,7 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.base.Activity;
+import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import org.junit.After;
 import org.junit.Assert;

@@ -1,4 +1,4 @@
-package net.metadata.dataspace.data.model.base;
+package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.util.DaoHelper;

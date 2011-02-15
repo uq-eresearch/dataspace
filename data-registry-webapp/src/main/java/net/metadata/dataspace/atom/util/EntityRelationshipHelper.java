@@ -7,11 +7,11 @@ import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.base.Activity;
-import net.metadata.dataspace.data.model.base.Agent;
-import net.metadata.dataspace.data.model.base.Collection;
-import net.metadata.dataspace.data.model.base.Service;
-import net.metadata.dataspace.data.model.base.resource.Subject;
+import net.metadata.dataspace.data.model.record.Activity;
+import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.record.Service;
+import net.metadata.dataspace.data.model.record.resource.Subject;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
@@ -131,7 +131,7 @@ public class EntityRelationshipHelper {
         }
         Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_COLLECTOR_OF);
         for (String uriKey : collectionUriKeys) {
-            net.metadata.dataspace.data.model.base.Collection collection = collectionDao.getByKey(uriKey);
+            net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
                 collection.getCollector().add(version.getParent());
                 version.getCollectorOf().add(collection);

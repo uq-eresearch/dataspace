@@ -6,9 +6,9 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.AdapterHelper;
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.base.Activity;
-import net.metadata.dataspace.data.model.base.Agent;
-import net.metadata.dataspace.data.model.base.Service;
+import net.metadata.dataspace.data.model.record.Activity;
+import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.util.DateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.ObjectNotFoundException;
@@ -74,7 +74,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             throw new BadArgumentException();
         }
         List<Activity> activityList = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getAllPublishedBetween(fromDate, toDate);
-        List<net.metadata.dataspace.data.model.base.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublishedBetween(fromDate, toDate);
+        List<net.metadata.dataspace.data.model.record.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublishedBetween(fromDate, toDate);
         List<Agent> agentList = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao().getAllPublishedBetween(fromDate, toDate);
         List<Service> serviceList = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getAllPublishedBetween(fromDate, toDate);
         int size = activityList.size() + collectionList.size() + agentList.size() + serviceList.size();
@@ -85,7 +85,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             identifiers.add(getRecordFactory().getOAIIdentifier(activity.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(activity.getPublished()), getRecordFactory().getDatestamp(activity.getPublished()), getRecordFactory().getSetSpecs(activity), !activity.isActive())[0]);
         }
-        for (net.metadata.dataspace.data.model.base.Collection collection : collectionList) {
+        for (net.metadata.dataspace.data.model.record.Collection collection : collectionList) {
             identifiers.add(getRecordFactory().getOAIIdentifier(collection.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(collection.getPublished()), getRecordFactory().getDatestamp(collection.getPublished()), getRecordFactory().getSetSpecs(collection), !collection.isActive())[0]);
         }

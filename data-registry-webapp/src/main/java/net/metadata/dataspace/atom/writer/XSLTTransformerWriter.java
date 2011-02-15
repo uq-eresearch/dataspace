@@ -3,7 +3,7 @@ package net.metadata.dataspace.atom.writer;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
-import net.metadata.dataspace.data.model.base.User;
+import net.metadata.dataspace.data.model.record.User;
 import org.apache.abdera.model.Base;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.RequestContext;

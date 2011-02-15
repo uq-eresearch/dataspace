@@ -1,7 +1,7 @@
-package net.metadata.dataspace.data.model.base.resource;
+package net.metadata.dataspace.data.model.record.resource;
 
 import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.base.AbstractBaseEntity;
+import net.metadata.dataspace.data.model.record.AbstractBaseEntity;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.Entity;

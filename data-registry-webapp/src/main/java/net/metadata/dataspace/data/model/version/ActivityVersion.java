@@ -1,9 +1,9 @@
 package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.base.Activity;
-import net.metadata.dataspace.data.model.base.Agent;
-import net.metadata.dataspace.data.model.base.Collection;
+import net.metadata.dataspace.data.model.record.Activity;
+import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.types.ActivityType;
 import org.hibernate.validator.NotNull;
 

@@ -4,7 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.access.UserDao;
-import net.metadata.dataspace.data.model.base.User;
+import net.metadata.dataspace.data.model.record.User;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;

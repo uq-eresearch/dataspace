@@ -1,6 +1,6 @@
-package net.metadata.dataspace.data.model.base;
+package net.metadata.dataspace.data.model.record;
 
-import net.metadata.dataspace.data.model.version.ServiceVersion;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
@@ -14,33 +14,33 @@ import java.util.TreeSet;
 /**
  * User: alabri
  * Date: 27/10/2010
- * Time: 10:30:19 AM
+ * Time: 10:30:02 AM
  */
 @Entity
-public class Service extends AbstractBaseEntity<ServiceVersion> {
+public class Activity extends AbstractBaseEntity<ActivityVersion> {
 
     private static final long serialVersionUID = 1L;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
     @NotNull
     @Sort(type = SortType.NATURAL)
-    private SortedSet<ServiceVersion> versions = new TreeSet<ServiceVersion>();
+    private SortedSet<ActivityVersion> versions = new TreeSet<ActivityVersion>();
 
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ServiceVersion published;
+    private ActivityVersion published;
 
-    public Service() {
+    public Activity() {
     }
 
-    public SortedSet<ServiceVersion> getVersions() {
+    public SortedSet<ActivityVersion> getVersions() {
         return versions;
     }
 
-    public void setVersions(SortedSet<ServiceVersion> versions) {
+    public void setVersions(SortedSet<ActivityVersion> versions) {
         this.versions = versions;
     }
 
@@ -60,31 +60,29 @@ public class Service extends AbstractBaseEntity<ServiceVersion> {
         return this.published != null ? this.published.getDescription() : this.versions.first().getDescription();
     }
 
-    public Set<Collection> getSupportedBy() {
-        return this.published != null ? this.published.getSupportedBy() : this.versions.first().getSupportedBy();
+    public Set<Collection> getHasOutput() {
+        return this.published != null ? this.published.getHasOutput() : this.versions.first().getHasOutput();
     }
 
-    public String getLocation() {
-        return this.published != null ? this.published.getLocation() : this.versions.first().getLocation();
+    public Set<Agent> getHasParticipant() {
+        return this.published != null ? this.published.getHasParticipant() : this.versions.first().getHasParticipant();
     }
-
 
     public Set<String> getAuthors() {
         return this.published != null ? this.published.getAuthors() : this.versions.first().getAuthors();
     }
 
     @Override
-    public ServiceVersion getPublished() {
+    public ActivityVersion getPublished() {
         return published;
-    }
-
-    @Override
-    public void setPublished(net.metadata.dataspace.data.model.Version published) {
-        this.published = (ServiceVersion) published;
     }
 
     @Override
     public net.metadata.dataspace.data.model.Version getWorkingCopy() {
         return this.versions.first();
+    }
+
+    public void setPublished(net.metadata.dataspace.data.model.Version published) {
+        this.published = (ActivityVersion) published;
     }
 }
