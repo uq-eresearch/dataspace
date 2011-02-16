@@ -8,6 +8,7 @@ import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -29,6 +30,11 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CollectionVersion published;
+
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "collection_same_as")
+    private Set<Collection> sameAs = new HashSet<Collection>();
 
     public Collection() {
 
@@ -87,5 +93,13 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     @Override
     public Version getWorkingCopy() {
         return this.versions.first();
+    }
+
+    public Set<Collection> getSameAs() {
+        return sameAs;
+    }
+
+    public void setSameAs(Set<Collection> sameAs) {
+        this.sameAs = sameAs;
     }
 }

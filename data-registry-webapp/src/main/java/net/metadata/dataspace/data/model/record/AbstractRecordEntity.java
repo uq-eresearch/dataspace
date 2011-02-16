@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Description;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.validator.NotNull;
 
@@ -34,6 +35,9 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
+
+    @ManyToOne
+    private Description isDescribedBy;
 
     public AbstractRecordEntity() {
         this.isActive = true;
@@ -106,5 +110,13 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
         }
         AbstractRecordEntity other = (AbstractRecordEntity) obj;
         return getId().equals(other.getId());
+    }
+
+    public Description getDescribedBy() {
+        return isDescribedBy;
+    }
+
+    public void setDescribedBy(Description describedBy) {
+        isDescribedBy = describedBy;
     }
 }

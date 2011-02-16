@@ -6,6 +6,7 @@ import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -28,6 +29,10 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ActivityVersion published;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "activity_same_as")
+    private Set<Activity> sameAs = new HashSet<Activity>();
 
     public Activity() {
     }
@@ -72,5 +77,13 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
 
     public void setPublished(net.metadata.dataspace.data.model.Version published) {
         this.published = (ActivityVersion) published;
+    }
+
+    public Set<Activity> getSameAs() {
+        return sameAs;
+    }
+
+    public void setSameAs(Set<Activity> sameAs) {
+        this.sameAs = sameAs;
     }
 }

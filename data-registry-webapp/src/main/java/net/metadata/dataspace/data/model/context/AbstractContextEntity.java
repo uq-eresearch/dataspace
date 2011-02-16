@@ -30,9 +30,14 @@ public abstract class AbstractContextEntity implements Serializable, Context {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
 
+    @NotNull
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date updated;
+
     public AbstractContextEntity() {
         this.isActive = true;
         this.created = new Date();
+        this.updated = new Date();
     }
 
     @Override
@@ -88,5 +93,13 @@ public abstract class AbstractContextEntity implements Serializable, Context {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 }

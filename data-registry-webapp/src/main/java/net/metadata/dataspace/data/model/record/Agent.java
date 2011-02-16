@@ -8,6 +8,7 @@ import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -29,6 +30,11 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AgentVersion published;
+
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "agent_same_as")
+    private Set<Agent> sameAs = new HashSet<Agent>();
 
     public Agent() {
     }
@@ -81,4 +87,11 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     }
 
 
+    public Set<Agent> getSameAs() {
+        return sameAs;
+    }
+
+    public void setSameAs(Set<Agent> sameAs) {
+        this.sameAs = sameAs;
+    }
 }

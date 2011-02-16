@@ -6,6 +6,7 @@ import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -27,6 +28,10 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ServiceVersion published;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "service_same_as")
+    private Set<Service> sameAs = new HashSet<Service>();
 
     public Service() {
     }
@@ -73,5 +78,13 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     @Override
     public net.metadata.dataspace.data.model.Version getWorkingCopy() {
         return this.versions.first();
+    }
+
+    public Set<Service> getSameAs() {
+        return sameAs;
+    }
+
+    public void setSameAs(Set<Service> sameAs) {
+        this.sameAs = sameAs;
     }
 }
