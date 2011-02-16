@@ -1,6 +1,8 @@
 package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Subject;
+import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.ServiceType;
@@ -28,11 +30,19 @@ public class ServiceVersion extends AbstractVersionEntity {
     @Enumerated(STRING)
     private ServiceType type;
 
+    private String page; //URI
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "services_collections_is_supported_by")
     private Set<Collection> isSupportedBy = new HashSet<Collection>();
 
-    @NotNull
-    private String page; //URI
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "services_agent_publishers")
+    private Set<Agent> publishers = new HashSet<Agent>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "services_subjects")
+    private Set<Subject> subjects = new HashSet<Subject>();
 
     public ServiceVersion() {
     }
@@ -70,5 +80,21 @@ public class ServiceVersion extends AbstractVersionEntity {
 
     public void setType(ServiceType type) {
         this.type = type;
+    }
+
+    public Set<Agent> getPublishers() {
+        return publishers;
+    }
+
+    public void setPublishers(Set<Agent> publishers) {
+        this.publishers = publishers;
+    }
+
+    public Set<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
     }
 }
