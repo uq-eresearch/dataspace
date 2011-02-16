@@ -34,6 +34,8 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @Column(length = 4096)
     private String description;
 
+    private String alternative;
+
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
@@ -148,5 +150,13 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public String getAlternative() {
+        return alternative;
+    }
+
+    public void setAlternative(String alternative) {
+        this.alternative = alternative;
     }
 }

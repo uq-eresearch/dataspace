@@ -144,7 +144,7 @@ public class AdapterHelper {
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_ACTIVITY, version.getParent().getClass().getSimpleName());
         try {
-            Set<Agent> agentSet = version.getHasParticipant();
+            Set<Agent> agentSet = version.getHasParticipants();
             for (Agent agent : agentSet) {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_HAS_PARTICIPANT);

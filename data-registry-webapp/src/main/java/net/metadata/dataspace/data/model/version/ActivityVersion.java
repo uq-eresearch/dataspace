@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
@@ -29,11 +30,19 @@ public class ActivityVersion extends AbstractVersionEntity {
     @Enumerated(STRING)
     private ActivityType type;
 
+    private String page;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "activities_collections_has_output")
     private Set<Collection> hasOutput = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Agent> hasParticipant = new HashSet<Agent>();
+    @JoinTable(name = "activities_agents_has_participants")
+    private Set<Agent> hasParticipants = new HashSet<Agent>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "activities_subjects")
+    private Set<Subject> subjects = new HashSet<Subject>();
 
     public ActivityVersion() {
     }
@@ -43,8 +52,13 @@ public class ActivityVersion extends AbstractVersionEntity {
         return parent;
     }
 
+    public String getPage() {
+        return page;
+    }
+
     @Override
-    public void setPage(String text) {
+    public void setPage(String page) {
+        this.page = page;
     }
 
     @Override
@@ -60,12 +74,12 @@ public class ActivityVersion extends AbstractVersionEntity {
         this.hasOutput = hasOutput;
     }
 
-    public Set<Agent> getHasParticipant() {
-        return hasParticipant;
+    public Set<Agent> getHasParticipants() {
+        return hasParticipants;
     }
 
-    public void setHasParticipant(Set<Agent> hasParticipant) {
-        this.hasParticipant = hasParticipant;
+    public void setHasParticipants(Set<Agent> hasParticipants) {
+        this.hasParticipants = hasParticipants;
     }
 
     public ActivityType getType() {
@@ -74,5 +88,13 @@ public class ActivityVersion extends AbstractVersionEntity {
 
     public void setType(ActivityType type) {
         this.type = type;
+    }
+
+    public Set<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
     }
 }

@@ -64,7 +64,7 @@ public class EntityRelationshipHelper {
             Agent agent = agentDao.getByKey(agentKey);
             if (agent != null) {
                 agent.getParticipantIn().add(version.getParent());
-                version.getHasParticipant().add(agent);
+                version.getHasParticipants().add(agent);
                 entityManager.merge(agent);
             }
         }

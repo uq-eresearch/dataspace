@@ -53,7 +53,7 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     }
 
     public Set<Agent> getHasParticipant() {
-        return this.published != null ? this.published.getHasParticipant() : this.versions.first().getHasParticipant();
+        return this.published != null ? this.published.getHasParticipants() : this.versions.first().getHasParticipants();
     }
 
     public Set<String> getAuthors() {

@@ -43,8 +43,6 @@ public class CollectionVersion extends AbstractVersionEntity {
     @Column(length = 4096)
     private String accessRights;
 
-    private String alternative;
-
     private String license;
 
     private String temporal;
@@ -154,14 +152,6 @@ public class CollectionVersion extends AbstractVersionEntity {
 
     public void setRights(String rights) {
         this.rights = rights;
-    }
-
-    public String getAlternative() {
-        return alternative;
-    }
-
-    public void setAlternative(String alternative) {
-        this.alternative = alternative;
     }
 
     public String getAccessRights() {

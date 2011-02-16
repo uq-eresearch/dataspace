@@ -124,7 +124,7 @@ public class PopulatorUtil {
                     for (Activity activity : activitySet) {
                         SortedSet<ActivityVersion> activityVersions = activity.getVersions();
                         for (ActivityVersion activityVersion : activityVersions) {
-                            activityVersion.getHasParticipant().remove(record);
+                            activityVersion.getHasParticipants().remove(record);
                         }
                     }
                     activitySet.removeAll(activitySet);
@@ -182,7 +182,7 @@ public class PopulatorUtil {
                         }
                     }
                     collections.removeAll(collections);
-                    Set<Agent> agents = ver.getHasParticipant();
+                    Set<Agent> agents = ver.getHasParticipants();
                     for (Agent agent : agents) {
                         SortedSet<AgentVersion> agentVersions = agent.getVersions();
                         for (AgentVersion agentVersion : agentVersions) {

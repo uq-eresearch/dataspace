@@ -33,8 +33,6 @@ public class AgentVersion extends AbstractVersionEntity {
     @NotNull
     private String mbox;
 
-    private String alternative;
-
     private String page; //URI
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -121,14 +119,6 @@ public class AgentVersion extends AbstractVersionEntity {
 
     public void setMbox(String mbox) {
         this.mbox = mbox;
-    }
-
-    public String getAlternative() {
-        return alternative;
-    }
-
-    public void setAlternative(String alternative) {
-        this.alternative = alternative;
     }
 
 }
