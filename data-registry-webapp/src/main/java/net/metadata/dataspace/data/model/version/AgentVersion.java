@@ -30,7 +30,15 @@ public class AgentVersion extends AbstractVersionEntity {
     @Enumerated(STRING)
     private AgentType type;
 
+    @NotNull
+    private String mbox;
+
+    private String alternative;
+
+    private String page; //URI
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "agents_subjects")
     private Set<Subject> subjects = new HashSet<Subject>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -38,11 +46,12 @@ public class AgentVersion extends AbstractVersionEntity {
     private Set<Collection> made = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "agents_collections_ismanagerof")
+    @JoinTable(name = "agents_collections_is_manager_of")
     private Set<Collection> isManagerOf = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Activity> isParticipantIn = new HashSet<Activity>();
+    @JoinTable(name = "agents_activities_current_projects")
+    private Set<Activity> currentProjects = new HashSet<Activity>();
 
     public AgentVersion() {
     }
@@ -53,7 +62,12 @@ public class AgentVersion extends AbstractVersionEntity {
     }
 
     @Override
-    public void setPage(String text) {
+    public void setPage(String page) {
+        this.page = page;
+    }
+
+    public String getPage() {
+        return page;
     }
 
     @Override
@@ -77,12 +91,12 @@ public class AgentVersion extends AbstractVersionEntity {
         this.isManagerOf = isManagerOf;
     }
 
-    public Set<Activity> getParticipantIn() {
-        return isParticipantIn;
+    public Set<Activity> getCurrentProjects() {
+        return currentProjects;
     }
 
-    public void setParticipantIn(Set<Activity> participantIn) {
-        isParticipantIn = participantIn;
+    public void setCurrentProjects(Set<Activity> currentProjects) {
+        this.currentProjects = currentProjects;
     }
 
     public AgentType getType() {
@@ -100,4 +114,21 @@ public class AgentVersion extends AbstractVersionEntity {
     public void setMade(Set<Collection> made) {
         this.made = made;
     }
+
+    public String getMbox() {
+        return mbox;
+    }
+
+    public void setMbox(String mbox) {
+        this.mbox = mbox;
+    }
+
+    public String getAlternative() {
+        return alternative;
+    }
+
+    public void setAlternative(String alternative) {
+        this.alternative = alternative;
+    }
+
 }

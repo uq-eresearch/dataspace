@@ -143,7 +143,7 @@ public class EntityRelationshipHelper {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
                 activity.getHasParticipant().add(version.getParent());
-                version.getParticipantIn().add(activity);
+                version.getCurrentProjects().add(activity);
                 entityManager.merge(activity);
             }
         }

@@ -54,7 +54,7 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     }
 
     public Set<Activity> getParticipantIn() {
-        return this.published != null ? this.published.getParticipantIn() : this.versions.first().getParticipantIn();
+        return this.published != null ? this.published.getCurrentProjects() : this.versions.first().getCurrentProjects();
     }
 
     public SortedSet<AgentVersion> getVersions() {

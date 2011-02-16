@@ -177,7 +177,7 @@ public class AdapterHelper {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_COLLECTOR_OF);
             }
-            Set<Activity> activities = version.getParticipantIn();
+            Set<Activity> activities = version.getCurrentProjects();
             for (Activity activity : activities) {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_PARTICIPANT_IN);

@@ -57,6 +57,7 @@ public class PopulatorUtil {
         AgentVersion agentVersion = (AgentVersion) entityCreator.getNextVersion(agent);
         agentVersion.setParent(agent);
         agentVersion.setTitle("Test Agent Title");
+        agentVersion.setMbox("email@company.com");
         agentVersion.setDescription("Test Agent Content");
         agentVersion.setType(AgentType.PERSON);
         agentVersion.setUpdated(new Date());
@@ -119,7 +120,7 @@ public class PopulatorUtil {
             for (Version version : versions) {
                 if (parentDao instanceof AgentDao && versionDao instanceof AgentVersionDao) {
                     AgentVersion ver = (AgentVersion) version;
-                    Set<Activity> activitySet = ver.getParticipantIn();
+                    Set<Activity> activitySet = ver.getCurrentProjects();
                     for (Activity activity : activitySet) {
                         SortedSet<ActivityVersion> activityVersions = activity.getVersions();
                         for (ActivityVersion activityVersion : activityVersions) {
@@ -185,7 +186,7 @@ public class PopulatorUtil {
                     for (Agent agent : agents) {
                         SortedSet<AgentVersion> agentVersions = agent.getVersions();
                         for (AgentVersion agentVersion : agentVersions) {
-                            agentVersion.getParticipantIn().remove(record);
+                            agentVersion.getCurrentProjects().remove(record);
                         }
                     }
                     agents.removeAll(agents);

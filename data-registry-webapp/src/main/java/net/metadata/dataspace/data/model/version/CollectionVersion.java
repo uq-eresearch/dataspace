@@ -58,18 +58,23 @@ public class CollectionVersion extends AbstractVersionEntity {
     private Set<Agent> publishers = new HashSet<Agent>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "collections_activities_is_output_of")
     private Set<Activity> isOutputOf = new HashSet<Activity>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "collections_activities_is_accessed_via")
     private Set<Service> isAccessedVia = new HashSet<Service>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "collections_subjects")
     private Set<Subject> subjects = new HashSet<Subject>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "collections_publications")
     private Set<Publication> isReferencedBy = new HashSet<Publication>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "collections_relations")
     private Set<Collection> relations = new HashSet<Collection>();
 
 
