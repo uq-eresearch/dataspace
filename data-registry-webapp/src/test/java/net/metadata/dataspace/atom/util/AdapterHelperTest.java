@@ -187,7 +187,7 @@ public class AdapterHelperTest {
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", collection.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", collection.getVersions().first().getDescription(), version.getDescription());
-        assertEquals("Entry location", collection.getVersions().first().getLocation(), version.getLocation());
+        assertEquals("Entry location", collection.getVersions().first().getPage(), version.getPage());
         assertTrue("Entry updated", collection.getVersions().first().getUpdated().equals(version.getUpdated()));
     }
 
@@ -200,7 +200,7 @@ public class AdapterHelperTest {
         assertTrue("Could not update entry", AdapterHelper.isValidVersionFromEntry(version, entry));
         assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", service.getVersions().first().getDescription(), version.getDescription());
-        assertEquals("Entry location", service.getVersions().first().getLocation(), version.getLocation());
+        assertEquals("Entry location", service.getVersions().first().getPage(), version.getPage());
         assertTrue("Entry updated", service.getVersions().first().getUpdated().equals(version.getUpdated()));
     }
 

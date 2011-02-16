@@ -90,7 +90,7 @@ public class EntityRelationshipHelper {
             Agent agent = agentDao.getByKey(uriKey);
             if (agent != null) {
                 agent.getCollectorOf().add((Collection) version.getParent());
-                version.getCollector().add(agent);
+                version.getCreators().add(agent);
                 entityManager.merge(agent);
             }
         }
@@ -108,7 +108,7 @@ public class EntityRelationshipHelper {
             Service service = serviceDao.getByKey(uriKey);
             if (service != null) {
                 service.getSupportedBy().add((Collection) version.getParent());
-                version.getSupports().add(service);
+                version.getAccessedVia().add(service);
                 entityManager.merge(service);
             }
         }
@@ -134,7 +134,7 @@ public class EntityRelationshipHelper {
             net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
                 collection.getCollector().add(version.getParent());
-                version.getCollectorOf().add(collection);
+                version.getIsManagerOf().add(collection);
                 entityManager.merge(collection);
             }
         }

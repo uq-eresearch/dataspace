@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
@@ -22,6 +23,7 @@ import static javax.persistence.EnumType.STRING;
  */
 @Entity
 public class CollectionVersion extends AbstractVersionEntity {
+
     private static final long serialVersionUID = 1L;
 
     @ManyToOne
@@ -31,20 +33,45 @@ public class CollectionVersion extends AbstractVersionEntity {
     @Enumerated(STRING)
     private CollectionType type;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Subject> subjects = new HashSet<Subject>();
+    @NotNull
+    private String page; //URI
+
+    @NotNull
+    @Column(length = 4096)
+    private String rights;
+
+    @Column(length = 4096)
+    private String accessRights;
+
+    private String alternative;
+
+    private String license;
+
+    private String temporal;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Agent> collector = new HashSet<Agent>();
+    @JoinTable(name = "collections_agents_creators")
+    private Set<Agent> creators = new HashSet<Agent>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "collection_agent_publishers")
+    private Set<Agent> publishers = new HashSet<Agent>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Activity> isOutputOf = new HashSet<Activity>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Service> supports = new HashSet<Service>();
+    private Set<Service> isAccessedVia = new HashSet<Service>();
 
-    @NotNull
-    private String location; //URI
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Subject> subjects = new HashSet<Subject>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Publication> isReferencedBy = new HashSet<Publication>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Collection> relations = new HashSet<Collection>();
+
 
     public CollectionVersion() {
     }
@@ -67,16 +94,12 @@ public class CollectionVersion extends AbstractVersionEntity {
         this.subjects = subjects;
     }
 
-    public Set<Agent> getCollector() {
-        return collector;
+    public Set<Agent> getCreators() {
+        return creators;
     }
 
-    public void setCollector(Set<Agent> collector) {
-        this.collector = collector;
-    }
-
-    public String getLocation() {
-        return location;
+    public void setCreators(Set<Agent> creators) {
+        this.creators = creators;
     }
 
     public Set<Activity> getOutputOf() {
@@ -87,17 +110,21 @@ public class CollectionVersion extends AbstractVersionEntity {
         isOutputOf = outputOf;
     }
 
-    public Set<Service> getSupports() {
-        return supports;
+    public Set<Service> getAccessedVia() {
+        return isAccessedVia;
     }
 
-    public void setSupports(Set<Service> supports) {
-        this.supports = supports;
+    public void setAccessedVia(Set<Service> accessedVia) {
+        this.isAccessedVia = accessedVia;
+    }
+
+    public String getPage() {
+        return page;
     }
 
     @Override
-    public void setLocation(String location) {
-        this.location = location;
+    public void setPage(String page) {
+        this.page = page;
     }
 
     public CollectionType getType() {
@@ -106,5 +133,69 @@ public class CollectionVersion extends AbstractVersionEntity {
 
     public void setType(CollectionType type) {
         this.type = type;
+    }
+
+    public Set<Agent> getPublishers() {
+        return publishers;
+    }
+
+    public void setPublishers(Set<Agent> publishers) {
+        this.publishers = publishers;
+    }
+
+    public String getRights() {
+        return rights;
+    }
+
+    public void setRights(String rights) {
+        this.rights = rights;
+    }
+
+    public String getAlternative() {
+        return alternative;
+    }
+
+    public void setAlternative(String alternative) {
+        this.alternative = alternative;
+    }
+
+    public String getAccessRights() {
+        return accessRights;
+    }
+
+    public void setAccessRights(String accessRights) {
+        this.accessRights = accessRights;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
+
+    public Set<Publication> getReferencedBy() {
+        return isReferencedBy;
+    }
+
+    public void setReferencedBy(Set<Publication> referencedBy) {
+        isReferencedBy = referencedBy;
+    }
+
+    public Set<Collection> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(Set<Collection> relations) {
+        this.relations = relations;
+    }
+
+    public String getTemporal() {
+        return temporal;
+    }
+
+    public void setTemporal(String temporal) {
+        this.temporal = temporal;
     }
 }

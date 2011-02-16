@@ -59,11 +59,11 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     }
 
     public Set<Agent> getCollector() {
-        return this.published != null ? this.published.getCollector() : this.versions.first().getCollector();
+        return this.published != null ? this.published.getCreators() : this.versions.first().getCreators();
     }
 
     public String getLocation() {
-        return this.published != null ? this.published.getLocation() : this.versions.first().getLocation();
+        return this.published != null ? this.published.getPage() : this.versions.first().getPage();
     }
 
     public Set<Activity> getOutputOf() {
@@ -71,7 +71,7 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     }
 
     public Set<Service> getSupports() {
-        return this.published != null ? this.published.getSupports() : this.versions.first().getSupports();
+        return this.published != null ? this.published.getAccessedVia() : this.versions.first().getAccessedVia();
     }
 
     @Override

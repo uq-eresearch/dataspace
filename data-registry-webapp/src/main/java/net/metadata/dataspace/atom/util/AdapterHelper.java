@@ -172,7 +172,7 @@ public class AdapterHelper {
                 entry.addCategory(sub.getVocabulary(), sub.getValue(), sub.getLabel());
             }
 
-            Set<Collection> collectionSet = version.getCollectorOf();
+            Set<Collection> collectionSet = version.getIsManagerOf();
             for (Collection collection : collectionSet) {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_COLLECTOR_OF);
@@ -196,17 +196,17 @@ public class AdapterHelper {
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         entry.addCategory(Constants.SCHEME_DCMITYPE, Constants.TERM_COLLECTION, version.getParent().getClass().getSimpleName());
         try {
-            entry.addLink(version.getLocation(), Constants.REL_IS_LOCATED_AT);
+            entry.addLink(version.getPage(), Constants.REL_IS_LOCATED_AT);
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
                 entry.addCategory(sub.getVocabulary(), sub.getValue(), sub.getLabel());
             }
-            Set<Agent> agents = version.getCollector();
+            Set<Agent> agents = version.getCreators();
             for (Agent agent : agents) {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_CREATOR);
             }
-            Set<Service> services = version.getSupports();
+            Set<Service> services = version.getAccessedVia();
             for (Service service : services) {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_ACCESSED_VIA);
@@ -229,7 +229,7 @@ public class AdapterHelper {
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         entry.addCategory(Constants.SCHEME_VIVO, Constants.TERM_SERVICE, version.getParent().getClass().getSimpleName());
         try {
-            entry.addLink(version.getLocation(), Constants.REL_IS_LOCATED_AT);
+            entry.addLink(version.getPage(), Constants.REL_IS_LOCATED_AT);
             Set<Collection> collectionSet = version.getSupportedBy();
             for (Collection collection : collectionSet) {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
@@ -384,7 +384,7 @@ public class AdapterHelper {
         try {
             Link link = entry.getLink(Constants.REL_IS_LOCATED_AT);
             String location = link.getHref().toString();
-            version.setLocation(location);
+            version.setPage(location);
         } catch (Throwable th) {
             throw new ResponseContextException(400, th);
         }

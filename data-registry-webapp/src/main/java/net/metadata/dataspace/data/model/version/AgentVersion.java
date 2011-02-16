@@ -34,7 +34,12 @@ public class AgentVersion extends AbstractVersionEntity {
     private Set<Subject> subjects = new HashSet<Subject>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Collection> collectorOf = new HashSet<Collection>();
+    @JoinTable(name = "agents_collections_made")
+    private Set<Collection> made = new HashSet<Collection>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "agents_collections_ismanagerof")
+    private Set<Collection> isManagerOf = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Activity> isParticipantIn = new HashSet<Activity>();
@@ -48,7 +53,7 @@ public class AgentVersion extends AbstractVersionEntity {
     }
 
     @Override
-    public void setLocation(String text) {
+    public void setPage(String text) {
     }
 
     @Override
@@ -64,12 +69,12 @@ public class AgentVersion extends AbstractVersionEntity {
         this.subjects = subjects;
     }
 
-    public Set<Collection> getCollectorOf() {
-        return collectorOf;
+    public Set<Collection> getIsManagerOf() {
+        return isManagerOf;
     }
 
-    public void setCollectorOf(Set<Collection> collectorOf) {
-        this.collectorOf = collectorOf;
+    public void setIsManagerOf(Set<Collection> isManagerOf) {
+        this.isManagerOf = isManagerOf;
     }
 
     public Set<Activity> getParticipantIn() {
@@ -86,5 +91,13 @@ public class AgentVersion extends AbstractVersionEntity {
 
     public void setType(AgentType type) {
         this.type = type;
+    }
+
+    public Set<Collection> getMade() {
+        return made;
+    }
+
+    public void setMade(Set<Collection> made) {
+        this.made = made;
     }
 }

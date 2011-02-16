@@ -44,7 +44,7 @@ public class ActivityVersion extends AbstractVersionEntity {
     }
 
     @Override
-    public void setLocation(String text) {
+    public void setPage(String text) {
     }
 
     @Override

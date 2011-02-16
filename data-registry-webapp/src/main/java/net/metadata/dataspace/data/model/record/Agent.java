@@ -50,7 +50,7 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     }
 
     public Set<Collection> getCollectorOf() {
-        return this.published != null ? this.published.getCollectorOf() : this.versions.first().getCollectorOf();
+        return this.published != null ? this.published.getIsManagerOf() : this.versions.first().getIsManagerOf();
     }
 
     public Set<Activity> getParticipantIn() {

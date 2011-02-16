@@ -30,7 +30,7 @@ public interface Version {
 
     Set<String> getAuthors();
 
-    void setLocation(String text);
+    void setPage(String text);
 
     void setTitle(String title);
 

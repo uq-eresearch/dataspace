@@ -52,7 +52,7 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     }
 
     public String getLocation() {
-        return this.published != null ? this.published.getLocation() : this.versions.first().getLocation();
+        return this.published != null ? this.published.getPage() : this.versions.first().getPage();
     }
 
 

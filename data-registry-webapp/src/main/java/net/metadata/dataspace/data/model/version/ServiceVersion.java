@@ -32,7 +32,7 @@ public class ServiceVersion extends AbstractVersionEntity {
     private Set<Collection> isSupportedBy = new HashSet<Collection>();
 
     @NotNull
-    private String location; //URI
+    private String page; //URI
 
     public ServiceVersion() {
     }
@@ -55,13 +55,13 @@ public class ServiceVersion extends AbstractVersionEntity {
         isSupportedBy = supportedBy;
     }
 
-    public String getLocation() {
-        return location;
+    public String getPage() {
+        return page;
     }
 
     @Override
-    public void setLocation(String location) {
-        this.location = location;
+    public void setPage(String page) {
+        this.page = page;
     }
 
     public ServiceType getType() {

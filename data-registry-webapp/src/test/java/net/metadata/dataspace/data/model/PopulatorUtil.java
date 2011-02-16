@@ -41,14 +41,15 @@ public class PopulatorUtil {
     public static CollectionVersion getCollectionVersion(Record collection) throws Exception {
         CollectionVersion collectionVersion = (CollectionVersion) entityCreator.getNextVersion(collection);
         collectionVersion.setParent(collection);
+        collectionVersion.setType(CollectionType.COLLECTION);
         collectionVersion.setTitle("Test Collection");
         collectionVersion.setDescription("Test Collection Content");
-        collectionVersion.setType(CollectionType.COLLECTION);
+        collectionVersion.setPage("http://test.location.com.au/collection");
+        collectionVersion.setRights("Test rights text");
         collectionVersion.setUpdated(new Date());
         Set<String> authors = new HashSet<String>();
         authors.add("Test Collection Author");
         collectionVersion.setAuthors(authors);
-        collectionVersion.setLocation("http://test.location.com.au/collection");
         return collectionVersion;
     }
 
@@ -73,7 +74,7 @@ public class PopulatorUtil {
         serviceVersion.setDescription("Test Service Content");
         serviceVersion.setType(ServiceType.SYNDICATE);
         serviceVersion.setUpdated(new Date());
-        serviceVersion.setLocation("http://test.location.com.au/collection");
+        serviceVersion.setPage("http://test.location.com.au/collection");
         Set<String> authors = new HashSet<String>();
         authors.add("Test Service Author");
         serviceVersion.setAuthors(authors);
@@ -126,11 +127,14 @@ public class PopulatorUtil {
                         }
                     }
                     activitySet.removeAll(activitySet);
-                    Set<Collection> collectionSet = ver.getCollectorOf();
+                    Set<Collection> collectionSet = ver.getIsManagerOf();
                     for (Collection collection : collectionSet) {
                         SortedSet<CollectionVersion> collectionVersions = collection.getVersions();
                         for (CollectionVersion collectionVersion : collectionVersions) {
-                            collectionVersion.getCollector().remove(record);
+                            collectionVersion.getCreators().remove(record);
+                        }
+                        for (CollectionVersion collectionVersion : collectionVersions) {
+                            collectionVersion.getPublishers().remove(record);
                         }
                     }
                     collectionSet.removeAll(collectionSet);
@@ -146,7 +150,7 @@ public class PopulatorUtil {
                         }
                     }
                     activities.removeAll(activities);
-                    Set<Service> services = ver.getSupports();
+                    Set<Service> services = ver.getAccessedVia();
                     for (Service service : services) {
                         SortedSet<ServiceVersion> serviceVersions = service.getVersions();
                         for (ServiceVersion serviceVersion : serviceVersions) {
@@ -154,11 +158,14 @@ public class PopulatorUtil {
                         }
                     }
                     services.removeAll(services);
-                    Set<Agent> agents = ver.getCollector();
+                    Set<Agent> agents = ver.getCreators();
                     for (Agent agent : agents) {
                         SortedSet<AgentVersion> agentVersions = agent.getVersions();
                         for (AgentVersion agentVersion : agentVersions) {
-                            agentVersion.getCollectorOf().remove(record);
+                            agentVersion.getIsManagerOf().remove(record);
+                        }
+                        for (AgentVersion agentVersion : agentVersions) {
+                            agentVersion.getMade().remove(record);
                         }
                     }
                     agents.removeAll(agents);
@@ -189,7 +196,7 @@ public class PopulatorUtil {
                     for (Collection collection : collections) {
                         SortedSet<CollectionVersion> collectionVersions = collection.getVersions();
                         for (CollectionVersion collectionVersion : collectionVersions) {
-                            collectionVersion.getSupports().remove(record);
+                            collectionVersion.getAccessedVia().remove(record);
                         }
                     }
                     collections.removeAll(collections);
