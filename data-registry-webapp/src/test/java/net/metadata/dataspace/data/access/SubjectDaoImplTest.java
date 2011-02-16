@@ -41,15 +41,15 @@ public class SubjectDaoImplTest {
         testAddingSubject();
         Subject subject = subjectDao.getAll().get(0);
         Long id = subject.getId();
-        String originalVocabUri = subject.getVocabulary();
+        String originalVocabUri = subject.getTerm();
         String newVocabURI = registryConfigurationImpl.getUriPrefix() + "subject/" + UUID.randomUUID().toString();
-        subject.setVocabulary(newVocabURI);
+        subject.setTerm(newVocabURI);
 
         subjectDao.update(subject);
         Subject subjectByID = subjectDao.getById(id);
         assertEquals("Subject and SubjectByID are not the same", subject, subjectByID);
-        assertEquals("Vocabulary URIs are not the same", newVocabURI, subjectByID.getVocabulary());
-        assertFalse("Vocabulary URI should be updated " + originalVocabUri + " Current: " + subjectByID.getVocabulary(), originalVocabUri.equals(subjectByID.getVocabulary()));
+        assertEquals("Vocabulary URIs are not the same", newVocabURI, subjectByID.getTerm());
+        assertFalse("Vocabulary URI should be updated " + originalVocabUri + " Current: " + subjectByID.getTerm(), originalVocabUri.equals(subjectByID.getTerm()));
     }
 
 //    @Test

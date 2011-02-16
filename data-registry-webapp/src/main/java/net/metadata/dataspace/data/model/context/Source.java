@@ -17,15 +17,13 @@ public class Source extends AbstractContextEntity {
     @NotNull
     private String sourceURI;
 
-    @NotNull
-    private String locatedOn;
+    private String title;
 
     public Source() {
     }
 
-    public Source(String sourceURI, String locatedOn) {
+    public Source(String sourceURI) {
         this.sourceURI = sourceURI;
-        this.locatedOn = locatedOn;
     }
 
     public String getSourceURI() {
@@ -36,11 +34,11 @@ public class Source extends AbstractContextEntity {
         this.sourceURI = sourceURI;
     }
 
-    public String getLocatedOn() {
-        return locatedOn;
+    public String getTitle() {
+        return title;
     }
 
-    public void setLocatedOn(String locatedOn) {
-        this.locatedOn = locatedOn;
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

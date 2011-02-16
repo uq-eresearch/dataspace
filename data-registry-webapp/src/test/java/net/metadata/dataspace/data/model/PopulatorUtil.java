@@ -33,8 +33,8 @@ public class PopulatorUtil {
         Subject subject = entityCreator.getNextSubject();
         UUID uuid = UUID.randomUUID();
         String vocabUriString = uuid.toString();
-        subject.setVocabulary(vocabUriString);
-        subject.setValue("Test Subject");
+        subject.setTerm(vocabUriString);
+        subject.setDefinedBy("Test Subject");
         return subject;
     }
 

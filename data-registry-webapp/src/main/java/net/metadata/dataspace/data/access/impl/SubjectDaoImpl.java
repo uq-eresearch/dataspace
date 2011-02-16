@@ -107,7 +107,7 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
 
     @Override
     public Subject getSubject(String vocabulary, String value) {
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.vocabulary = :vocabulary AND o.value = :value");
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.term = :vocabulary AND o.isDefinedBy = :value");
         query.setParameter("vocabulary", vocabulary);
         query.setParameter("value", value);
         List<?> resultList = query.getResultList();

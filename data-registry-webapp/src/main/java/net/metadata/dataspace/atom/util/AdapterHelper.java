@@ -169,7 +169,7 @@ public class AdapterHelper {
         try {
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
-                entry.addCategory(sub.getVocabulary(), sub.getValue(), sub.getLabel());
+                entry.addCategory(sub.getTerm(), sub.getDefinedBy(), sub.getLabel());
             }
 
             Set<Collection> collectionSet = version.getIsManagerOf();
@@ -199,7 +199,7 @@ public class AdapterHelper {
             entry.addLink(version.getPage(), Constants.REL_IS_LOCATED_AT);
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
-                entry.addCategory(sub.getVocabulary(), sub.getValue(), sub.getLabel());
+                entry.addCategory(sub.getTerm(), sub.getDefinedBy(), sub.getLabel());
             }
             Set<Agent> agents = version.getCreators();
             for (Agent agent : agents) {
@@ -415,8 +415,8 @@ public class AdapterHelper {
                         if (subject == null) {
                             subject = entityCreator.getNextSubject();
                         }
-                        subject.setVocabulary(vocabulary);
-                        subject.setValue(value);
+                        subject.setTerm(vocabulary);
+                        subject.setDefinedBy(value);
                         subject.setLabel(category.getLabel());
                         subjects.add(subject);
                     }

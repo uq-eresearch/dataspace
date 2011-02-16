@@ -1,7 +1,5 @@
 package net.metadata.dataspace.data.model.context;
 
-import org.hibernate.validator.NotNull;
-
 import javax.persistence.Entity;
 
 /**
@@ -15,36 +13,34 @@ public class Subject extends AbstractContextEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull
-    private String vocabulary;
+    private String term;
 
-    @NotNull
-    private String value;
+    private String isDefinedBy;
 
     private String label;
 
     public Subject() {
     }
 
-    public Subject(String vocabulary, String value) {
-        this.vocabulary = vocabulary;
-        this.value = value;
+    public Subject(String term, String isDefinedBy) {
+        this.term = term;
+        this.isDefinedBy = isDefinedBy;
     }
 
-    public String getVocabulary() {
-        return vocabulary;
+    public String getTerm() {
+        return term;
     }
 
-    public void setVocabulary(String vocabulary) {
-        this.vocabulary = vocabulary;
+    public void setTerm(String term) {
+        this.term = term;
     }
 
-    public String getValue() {
-        return value;
+    public String getDefinedBy() {
+        return isDefinedBy;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setDefinedBy(String definedBy) {
+        this.isDefinedBy = definedBy;
     }
 
     public String getLabel() {
@@ -65,7 +61,7 @@ public class Subject extends AbstractContextEntity {
             return false;
         }
         Subject other = (Subject) obj;
-        return getVocabulary().equals(other.getVocabulary()) && getValue().equals(other.getValue());
+        return getTerm().equals(other.getTerm()) && getDefinedBy().equals(other.getDefinedBy());
     }
 
 }
