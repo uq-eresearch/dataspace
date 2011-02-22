@@ -3,6 +3,7 @@ package net.metadata.dataspace.auth.impl;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
+import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.UserDao;
 import net.metadata.dataspace.data.model.record.User;
 import org.apache.abdera.Abdera;
@@ -14,10 +15,7 @@ import org.apache.log4j.Logger;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
+import javax.naming.directory.*;
 import java.util.Hashtable;
 
 /**
@@ -70,19 +68,19 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                         env.put(Context.SECURITY_PRINCIPAL, dn);
                         env.put(Context.SECURITY_CREDENTIALS, password);
                         ctx = new InitialDirContext(env);
-/*
-                    NamingEnumeration namingEnum = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
-                    if (namingEnum.hasMore()) {
-                        for (NamingEnumeration attrs = ((SearchResult) namingEnum.next()).getAttributes().getAll(); attrs.hasMore();) {
-                            Attribute attr = (Attribute) attrs.next();
-                            System.out.println("attribute: " + attr.getID());
 
-                            *//* print each value *//*
-                            for (NamingEnumeration e = attr.getAll(); e.hasMore(); System.out.println("\tvalue: " + e.next()))
-                                ;
+                        NamingEnumeration namingEnum = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
+                        if (namingEnum.hasMore()) {
+                            for (NamingEnumeration attrs = ((SearchResult) namingEnum.next()).getAttributes().getAll(); attrs.hasMore();) {
+                                Attribute attr = (Attribute) attrs.next();
+                                System.out.println("attribute: " + attr.getID());
+
+                                //* print each value *//*
+                                for (NamingEnumeration e = attr.getAll(); e.hasMore(); System.out.println("\tvalue: " + e.next()))
+                                    ;
+                            }
                         }
-                    }
-*/
+
                         //TODO how do users get into our system? DO we add them when they authenticate here?
                         UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
                         User user = userDao.getByUsername(userName);
@@ -90,6 +88,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                             user = new User(userName);
                             userDao.save(user);
                         }
+
+                        //Create an Agent from user
+                        AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
+//                        Agent agent = agentDao.getByEmail();
+
                         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
 
                         logger.info("Authenticated user: " + userName);

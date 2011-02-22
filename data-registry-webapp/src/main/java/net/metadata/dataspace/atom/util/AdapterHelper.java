@@ -6,6 +6,7 @@ import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
@@ -33,10 +34,7 @@ import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 /**
  * User: alabri
@@ -356,7 +354,7 @@ public class AdapterHelper {
         }
     }
 
-    public static boolean isValidVersionFromEntry(Version version, Entry entry) throws ResponseContextException {
+    public static boolean assembleAndValidateVersionFromEntry(Version version, Entry entry) throws ResponseContextException {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return false;
         } else {
@@ -375,6 +373,25 @@ public class AdapterHelper {
             addType(version, entry);
             if (version instanceof CollectionVersion || version instanceof ServiceVersion) {
                 addLocation(version, entry);
+            }
+            return true;
+        }
+    }
+
+    public static boolean assembleAndValidateSourceFromEntry(Source source, Entry entry) throws ResponseContextException {
+        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
+            return false;
+        } else {
+            org.apache.abdera.model.Source abderaSource = entry.getSource();
+            if (abderaSource == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+            }
+            try {
+                source.setTitle(entry.getSource().getTitle());
+                source.setSourceURI(entry.getSource().getId().toString());
+                source.setUpdated(new Date());
+            } catch (Throwable th) {
+                throw new ResponseContextException(500, th);
             }
             return true;
         }

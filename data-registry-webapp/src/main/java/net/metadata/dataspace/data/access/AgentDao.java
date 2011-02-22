@@ -12,4 +12,6 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 public interface AgentDao extends Dao<Agent>, RegistryDao<Agent> {
 
     AgentVersion getByVersion(String uriKey, String version);
+
+    Agent getByEmail(String email);
 }

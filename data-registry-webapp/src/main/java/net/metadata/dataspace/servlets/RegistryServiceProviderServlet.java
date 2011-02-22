@@ -28,7 +28,6 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 
     private Logger logger = Logger.getLogger(getClass());
 
-
     protected Provider createProvider() {
 
         SimpleWorkspaceInfo registryWorkSpace = new SimpleWorkspaceInfo();

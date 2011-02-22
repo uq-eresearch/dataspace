@@ -5,6 +5,7 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.junit.After;
@@ -45,7 +46,7 @@ public class CollectionDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-        PopulatorUtil.cleanup();
+//        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
     }
 
@@ -65,6 +66,9 @@ public class CollectionDaoImplTest {
         collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
         collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
         collection.getVersions().add(collectionVersion);
+        Source source = PopulatorUtil.getSource();
+        collectionVersion.setLocatedOn(source);
+        entityManager.persist(source);
         entityManager.persist(collectionVersion);
         entityManager.persist(collection);
         entityManager.getTransaction().commit();

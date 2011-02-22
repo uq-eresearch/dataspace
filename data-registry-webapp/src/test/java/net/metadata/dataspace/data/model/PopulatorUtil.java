@@ -4,6 +4,7 @@ import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
@@ -38,9 +39,17 @@ public class PopulatorUtil {
         return subject;
     }
 
+    public static Source getSource() throws Exception {
+        Source source = entityCreator.getNextSource();
+        source.setSourceURI("http://uq.edu.au");
+        source.setTitle("The university of queensland");
+        return source;
+    }
+
     public static CollectionVersion getCollectionVersion(Record collection) throws Exception {
         CollectionVersion collectionVersion = (CollectionVersion) entityCreator.getNextVersion(collection);
         collectionVersion.setParent(collection);
+
         collectionVersion.setType(CollectionType.COLLECTION);
         collectionVersion.setTitle("Test Collection");
         collectionVersion.setDescription("Test Collection Content");
@@ -140,6 +149,7 @@ public class PopulatorUtil {
                     }
                     collectionSet.removeAll(collectionSet);
                     ver.getSubjects().removeAll(ver.getSubjects());
+
                 }
                 if (parentDao instanceof CollectionDao && versionDao instanceof CollectionVersionDao) {
                     CollectionVersion ver = (CollectionVersion) version;

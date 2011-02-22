@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import org.junit.After;
@@ -46,7 +47,7 @@ public class AgentDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-        PopulatorUtil.cleanup();
+//        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
     }
 
@@ -66,6 +67,9 @@ public class AgentDaoImplTest {
         agentVersion.getSubjects().add(PopulatorUtil.getSubject());
         agentVersion.getSubjects().add(PopulatorUtil.getSubject());
         agent.getVersions().add(agentVersion);
+        Source source = PopulatorUtil.getSource();
+        agentVersion.setLocatedOn(source);
+        entityManager.persist(source);
         entityManager.persist(agentVersion);
         entityManager.persist(agent);
         entityManager.getTransaction().commit();

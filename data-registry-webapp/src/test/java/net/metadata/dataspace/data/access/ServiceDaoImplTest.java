@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.junit.After;
@@ -44,7 +45,7 @@ public class ServiceDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-        PopulatorUtil.cleanup();
+//        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
     }
 
@@ -61,6 +62,9 @@ public class ServiceDaoImplTest {
         int originalTableSize = serviceDao.getAll().size();
         ServiceVersion serviceVersion = PopulatorUtil.getServiceVersion(service);
         service.getVersions().add(serviceVersion);
+        Source source = PopulatorUtil.getSource();
+        serviceVersion.setLocatedOn(source);
+        entityManager.persist(source);
         entityManager.persist(serviceVersion);
         entityManager.persist(service);
         entityManager.getTransaction().commit();

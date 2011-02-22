@@ -1,5 +1,19 @@
 package net.metadata.dataspace.app;
 
+import net.metadata.dataspace.data.access.AgentDao;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.types.AgentType;
+import net.metadata.dataspace.data.model.version.AgentVersion;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * User: alabri
  * Date: 20/09/2010
@@ -14,6 +28,42 @@ public class RegistryApplication {
 
     public void setApplicationContext(RegistryConfiguration context) {
         RegistryApplication.context = context;
+        createFirstAgent();
     }
 
+    private void createFirstAgent() {
+        AgentDao agentDao = getApplicationContext().getDaoManager().getAgentDao();
+        if (agentDao.getByEmail("info@dataspace.uq.edu.au") == null) {
+            EntityCreator entityCreator = getApplicationContext().getEntityCreator();
+            EntityManager entityManager = getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
+
+            Record record = entityCreator.getNextRecord(Agent.class);
+            AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(record));
+            version.setTitle("The University of Queensland");
+            version.setDescription("The University of Queensland (UQ) is one of Australia's premier learning and research institutions. It is the oldest university in Queensland and has produced almost 180,000 graduates since opening in 1911. Its graduates have gone on to become leaders in all areas of society and industry.");
+            Date now = new Date();
+            version.setUpdated(now);
+            Set<String> authors = new HashSet<String>();
+            authors.add("The University of Queensland DataSpace");
+            version.setAuthors(authors);
+            version.setType(AgentType.GROUP);
+            version.setMbox("info@dataspace.uq.edu.au");
+            version.setPage("http://uq.edu.au");
+            Source source = entityCreator.getNextSource();
+            source.setTitle("The University of Queensland");
+            source.setSourceURI("http://uq.edu.au");
+            source.setUpdated(now);
+            transaction.begin();
+            version.setParent(record);
+            record.getVersions().add(version);
+            version.getParent().setPublished(version);
+            version.setLocatedOn(source);
+            record.setUpdated(now);
+            entityManager.persist(source);
+            entityManager.persist(version);
+            entityManager.persist(record);
+            transaction.commit();
+        }
+    }
 }

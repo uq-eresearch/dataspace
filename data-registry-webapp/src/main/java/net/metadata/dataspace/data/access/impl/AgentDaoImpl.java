@@ -133,4 +133,17 @@ public class AgentDaoImpl extends JpaDao<Agent> implements AgentDao, Serializabl
         assert resultList.size() == 1 : "id should be unique";
         return (Agent) resultList.get(0);
     }
+
+    @Override
+    public Agent getByEmail(String email) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Agent o WHERE o = (SELECT DISTINCT(v.parent) FROM AgentVersion v WHERE v.mbox =:email)");
+        query.setParameter("email", email);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Agent) resultList.get(0);
+    }
+
 }

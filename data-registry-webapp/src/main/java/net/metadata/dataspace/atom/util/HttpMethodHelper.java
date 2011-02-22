@@ -11,6 +11,7 @@ import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.*;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Document;
@@ -61,13 +62,16 @@ public class HttpMethodHelper {
                 Entry entry = getEntryFromRequest(request);
                 Record record = entityCreator.getNextRecord(clazz);
                 Version version = entityCreator.getNextVersion(record);
-                boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(version, entry);
-                if (!isValidEntry) {
+                Source source = entityCreator.getNextSource();
+                boolean isValidEntry = AdapterHelper.assembleAndValidateVersionFromEntry(version, entry);
+                boolean isValidSource = AdapterHelper.assembleAndValidateSourceFromEntry(source, entry);
+                if (!isValidEntry && isValidSource) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                 } else {
                     try {
                         transaction.begin();
                         version.setParent(record);
+
                         record.getVersions().add(version);
                         Date now = new Date();
                         version.setUpdated(now);
@@ -111,7 +115,7 @@ public class HttpMethodHelper {
                     refreshRecord(record, clazz);
                     if (record.isActive()) {
                         Version version = entityCreator.getNextVersion(record);
-                        boolean isValidEntry = AdapterHelper.isValidVersionFromEntry(version, entry);
+                        boolean isValidEntry = AdapterHelper.assembleAndValidateVersionFromEntry(version, entry);
                         if (!isValidEntry) {
                             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                         } else {
