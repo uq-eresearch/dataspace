@@ -60,7 +60,6 @@
         <property name="userDao" ref="userDao"/>
         <property name="sourceDao" ref="sourceDao"/>
         <property name="publicationDao" ref="publicationDao"/>
-        <property name="descriptionDao" ref="descriptionDao"/>
     </bean>
 
     <bean id="agentSequencer" class="net.metadata.dataspace.data.sequencer.AgentSequencer">
@@ -91,10 +90,6 @@
         <constructor-arg ref="publicationDao"/>
     </bean>
 
-    <bean id="descriptionSequencer" class="net.metadata.dataspace.data.sequencer.DescriptionSequencer">
-        <constructor-arg ref="descriptionDao"/>
-    </bean>
-
     <bean id="entityCreator" class="net.metadata.dataspace.data.access.manager.impl.EntityCreatorImpl">
         <property name="agentSequencer" ref="agentSequencer"/>
         <property name="collectionSequencer" ref="collectionSequencer"/>
@@ -103,7 +98,6 @@
         <property name="subjectSequencer" ref="subjectSequencer"/>
         <property name="publicationSequencer" ref="publicationSequencer"/>
         <property name="sourceSequencer" ref="sourceSequencer"/>
-        <property name="descriptionSequencer" ref="descriptionSequencer"/>
     </bean>
 
     <bean id="authenticationManager" class="net.metadata.dataspace.auth.impl.AuthenticationManagerImpl"/>

@@ -4,7 +4,6 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Context;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.context.Description;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -34,7 +33,6 @@ public class EntityCreatorImpl implements EntityCreator {
     private ActivitySequencer activitySequencer;
     private PublicationSequencer publicationSequencer;
     private SourceSequencer sourceSequencer;
-    private DescriptionSequencer descriptionSequencer;
 
     public EntityCreatorImpl() {
     }
@@ -87,13 +85,6 @@ public class EntityCreatorImpl implements EntityCreator {
         Publication publication = new Publication();
         publication.setAtomicNumber(publicationSequencer.next());
         return publication;
-    }
-
-    @Override
-    public Description getNextDescription() {
-        Description description = new Description();
-        description.setAtomicNumber(descriptionSequencer.next());
-        return description;
     }
 
     @Override
@@ -190,11 +181,5 @@ public class EntityCreatorImpl implements EntityCreator {
         return sourceSequencer;
     }
 
-    public void setDescriptionSequencer(DescriptionSequencer descriptionSequencer) {
-        this.descriptionSequencer = descriptionSequencer;
-    }
 
-    public DescriptionSequencer getDescriptionSequencer() {
-        return descriptionSequencer;
-    }
 }
