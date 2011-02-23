@@ -33,6 +33,10 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     @JoinTable(name = "service_same_as")
     private Set<Service> sameAs = new HashSet<Service>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "service_description_creators")
+    private Set<Agent> creators = new HashSet<Agent>();
+
     public Service() {
     }
 

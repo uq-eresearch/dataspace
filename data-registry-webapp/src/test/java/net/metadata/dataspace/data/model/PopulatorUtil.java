@@ -4,6 +4,7 @@ import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
@@ -44,6 +45,13 @@ public class PopulatorUtil {
         source.setSourceURI("http://uq.edu.au");
         source.setTitle("The university of queensland");
         return source;
+    }
+
+    public static Publication getPublication() {
+        Publication publication = entityCreator.getNextPublication();
+        publication.setPublicationURI("http://uq.edu.au/publication");
+        publication.setTitle("Test publication");
+        return publication;
     }
 
     public static CollectionVersion getCollectionVersion(Record collection) throws Exception {

@@ -31,10 +31,13 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CollectionVersion published;
 
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "collection_same_as")
     private Set<Collection> sameAs = new HashSet<Collection>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "collection_description_creators")
+    private Set<Agent> creators = new HashSet<Agent>();
 
     public Collection() {
 

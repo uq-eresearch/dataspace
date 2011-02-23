@@ -34,6 +34,10 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     @JoinTable(name = "activity_same_as")
     private Set<Activity> sameAs = new HashSet<Activity>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "activities_description_creators")
+    private Set<Agent> creators = new HashSet<Agent>();
+
     public Activity() {
     }
 
