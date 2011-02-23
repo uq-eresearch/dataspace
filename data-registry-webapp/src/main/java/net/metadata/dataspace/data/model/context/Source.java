@@ -2,6 +2,7 @@ package net.metadata.dataspace.data.model.context;
 
 import org.hibernate.validator.NotNull;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 /**
@@ -15,6 +16,7 @@ public class Source extends AbstractContextEntity {
     private static final long serialVersionUID = 1L;
 
     @NotNull
+    @Column(unique = true)
     private String sourceURI;
 
     private String title;

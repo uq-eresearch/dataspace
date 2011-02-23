@@ -36,6 +36,10 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     @JoinTable(name = "agent_same_as")
     private Set<Agent> sameAs = new HashSet<Agent>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "agent_description_creators")
+    private Set<Agent> creators = new HashSet<Agent>();
+
     public Agent() {
     }
 
@@ -93,5 +97,13 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     public void setSameAs(Set<Agent> sameAs) {
         this.sameAs = sameAs;
+    }
+
+    public Set<Agent> getCreators() {
+        return creators;
+    }
+
+    public void setCreators(Set<Agent> creators) {
+        this.creators = creators;
     }
 }

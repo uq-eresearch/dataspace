@@ -22,6 +22,12 @@ public interface DaoManager {
 
     SubjectDao getSubjectDao();
 
+    SourceDao getSourceDao();
+
+    PublicationDao getPublicationDao();
+
+    DescriptionDao getDescriptionDao();
+
     UserDao getUserDao();
 
     CollectionVersionDao getCollectionVersionDao();

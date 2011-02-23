@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.context.Description;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.validator.NotNull;
 
@@ -36,8 +36,56 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
 
+    @NotNull
     @ManyToOne
-    private Description isDescribedBy;
+    private Agent publisher;
+
+    @NotNull
+    @ManyToOne
+    private Source locatedOn;
+
+    @NotNull
+    @ManyToOne
+    private Source source;
+
+    private String rights;
+
+    private String license;
+
+//    @ManyToOne
+//    private Description isDescribedBy;
+
+    public Source getLocatedOn() {
+        return locatedOn;
+    }
+
+    public void setLocatedOn(Source locatedOn) {
+        this.locatedOn = locatedOn;
+    }
+
+    public Source getSource() {
+        return source;
+    }
+
+    public void setSource(Source source) {
+        this.source = source;
+    }
+
+    public String getRights() {
+        return rights;
+    }
+
+    public void setRights(String rights) {
+        this.rights = rights;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
 
     public AbstractRecordEntity() {
         this.isActive = true;
@@ -112,11 +160,19 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
         return getId().equals(other.getId());
     }
 
-    public Description getDescribedBy() {
-        return isDescribedBy;
+//    public Description getDescribedBy() {
+//        return isDescribedBy;
+//    }
+//
+//    public void setDescribedBy(Description describedBy) {
+//        isDescribedBy = describedBy;
+//    }
+
+    public Agent getPublisher() {
+        return publisher;
     }
 
-    public void setDescribedBy(Description describedBy) {
-        isDescribedBy = describedBy;
+    public void setPublisher(Agent publisher) {
+        this.publisher = publisher;
     }
 }

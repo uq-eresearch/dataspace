@@ -18,7 +18,7 @@ public class Description extends AbstractContextEntity {
     private static final long serialVersionUID = 1L;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "agents_agents_creators")
+    @JoinTable(name = "description_agents_creators")
     private Set<Agent> creators = new HashSet<Agent>();
 
     @NotNull

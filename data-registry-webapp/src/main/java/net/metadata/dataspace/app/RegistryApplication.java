@@ -2,7 +2,6 @@ package net.metadata.dataspace.app;
 
 import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.types.AgentType;
@@ -38,11 +37,19 @@ public class RegistryApplication {
             EntityManager entityManager = getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
 
-            Record record = entityCreator.getNextRecord(Agent.class);
-            AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(record));
+            Date now = new Date();
+
+            Source source = entityCreator.getNextSource();
+            source.setTitle("The University of Queensland");
+            source.setSourceURI(Constants.UQ_SOURCE_URI);
+            source.setUpdated(now);
+
+
+            Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
+            AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
             version.setTitle("The University of Queensland");
             version.setDescription("The University of Queensland (UQ) is one of Australia's premier learning and research institutions. It is the oldest university in Queensland and has produced almost 180,000 graduates since opening in 1911. Its graduates have gone on to become leaders in all areas of society and industry.");
-            Date now = new Date();
+            version.setAlternative("UQ");
             version.setUpdated(now);
             Set<String> authors = new HashSet<String>();
             authors.add("The University of Queensland DataSpace");
@@ -50,19 +57,19 @@ public class RegistryApplication {
             version.setType(AgentType.GROUP);
             version.setMbox("info@dataspace.uq.edu.au");
             version.setPage("http://uq.edu.au");
-            Source source = entityCreator.getNextSource();
-            source.setTitle("The University of Queensland");
-            source.setSourceURI("http://uq.edu.au");
-            source.setUpdated(now);
             transaction.begin();
-            version.setParent(record);
-            record.getVersions().add(version);
+            version.setParent(agent);
             version.getParent().setPublished(version);
-            version.setLocatedOn(source);
-            record.setUpdated(now);
+            agent.getVersions().add(version);
+            agent.setUpdated(now);
+            agent.setLocatedOn(source);
+            agent.setSource(source);
+            agent.setPublisher(agent);
+            agent.getCreators().add(agent);
+
             entityManager.persist(source);
             entityManager.persist(version);
-            entityManager.persist(record);
+            entityManager.persist(agent);
             transaction.commit();
         }
     }

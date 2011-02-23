@@ -35,7 +35,7 @@ public interface Constants {
     String TITLE_FOR_SERVICES = "Services";
 
     String ID_PREFIX = RegistryApplication.getApplicationContext().getUriPrefix();
-
+    String UQ_SOURCE_URI = "http://uq.edu.au";
     /**
      * Target Type names
      */

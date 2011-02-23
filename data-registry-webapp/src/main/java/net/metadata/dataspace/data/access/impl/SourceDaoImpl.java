@@ -100,4 +100,16 @@ public class SourceDaoImpl extends JpaDao<Source> implements SourceDao, Serializ
         assert resultList.size() == 1 : "id should be unique";
         return (Source) resultList.get(0);
     }
+
+    @Override
+    public Source getBySourceURI(String sourceUri) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Source o WHERE o.sourceURI = :sourceUri");
+        query.setParameter("sourceUri", sourceUri);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Source) resultList.get(0);
+    }
 }

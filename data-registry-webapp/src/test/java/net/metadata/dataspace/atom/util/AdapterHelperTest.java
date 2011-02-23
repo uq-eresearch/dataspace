@@ -7,7 +7,6 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
@@ -70,9 +69,9 @@ public class AdapterHelperTest {
         agentVersion.getSubjects().add(PopulatorUtil.getSubject());
         agentVersion.getSubjects().add(PopulatorUtil.getSubject());
         agent.getVersions().add(agentVersion);
-        Source source = PopulatorUtil.getSource();
-        agentVersion.setLocatedOn(source);
-        entityManager.persist(source);
+//        Source source = PopulatorUtil.getSource();
+//        agentVersion.setLocatedOn(source);
+//        entityManager.persist(source);
         entityManager.persist(agentVersion);
         entityManager.persist(agent);
 
@@ -84,7 +83,7 @@ public class AdapterHelperTest {
         collection.getVersions().add(collectionVersion);
         collection.getCollector().add(agent);
         agent.getCollectorOf().add(collection);
-        collectionVersion.setLocatedOn(source);
+//        collectionVersion.setLocatedOn(source);
         entityManager.persist(collectionVersion);
         entityManager.persist(collection);
 
@@ -94,7 +93,7 @@ public class AdapterHelperTest {
         service.getVersions().add(serviceVersion);
         service.getSupportedBy().add(collection);
         collection.getSupports().add(service);
-        serviceVersion.setLocatedOn(source);
+//        serviceVersion.setLocatedOn(source);
         entityManager.persist(serviceVersion);
         entityManager.persist(service);
 
@@ -106,7 +105,7 @@ public class AdapterHelperTest {
         activity.getHasParticipant().add(agent);
         agent.getParticipantIn().add(activity);
         collection.getOutputOf().add(activity);
-        activityVersion.setLocatedOn(source);
+//        activityVersion.setLocatedOn(source);
         entityManager.persist(activityVersion);
         entityManager.persist(activity);
         entityManager.getTransaction().commit();

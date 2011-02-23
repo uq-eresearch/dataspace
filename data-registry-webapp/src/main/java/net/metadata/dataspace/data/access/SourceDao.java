@@ -9,4 +9,7 @@ import net.metadata.dataspace.data.model.context.Source;
  * Time: 1:46:12 PM
  */
 public interface SourceDao extends Dao<Source>, RegistryDao<Source> {
+
+    Source getBySourceURI(String sourceUri);
+
 }

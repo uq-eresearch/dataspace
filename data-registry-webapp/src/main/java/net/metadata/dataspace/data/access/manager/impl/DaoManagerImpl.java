@@ -22,6 +22,9 @@ public class DaoManagerImpl implements DaoManager {
     private ServiceVersionDao serviceVersionDao;
     private ActivityVersionDao activityVersionDao;
     private UserDao userDao;
+    private SourceDao sourceDao;
+    private PublicationDao publicationDao;
+    private DescriptionDao descriptionDao;
 
     public void setCollectionDao(CollectionDao collectionDao) {
         this.collectionDao = collectionDao;
@@ -109,5 +112,29 @@ public class DaoManagerImpl implements DaoManager {
 
     public UserDao getUserDao() {
         return userDao;
+    }
+
+    public void setSourceDao(SourceDao sourceDao) {
+        this.sourceDao = sourceDao;
+    }
+
+    public SourceDao getSourceDao() {
+        return sourceDao;
+    }
+
+    public void setPublicationDao(PublicationDao publicationDao) {
+        this.publicationDao = publicationDao;
+    }
+
+    public PublicationDao getPublicationDao() {
+        return publicationDao;
+    }
+
+    public void setDescriptionDao(DescriptionDao descriptionDao) {
+        this.descriptionDao = descriptionDao;
+    }
+
+    public DescriptionDao getDescriptionDao() {
+        return descriptionDao;
     }
 }

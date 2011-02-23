@@ -1,6 +1,5 @@
 package net.metadata.dataspace.data.model.version;
 
-import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.annotations.CollectionOfElements;
@@ -44,10 +43,6 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
-
-    @NotNull
-    @ManyToOne
-    private Source locatedOn;
 
     @CollectionOfElements
     private Set<String> authors = new HashSet<String>();
@@ -165,11 +160,4 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
         this.alternative = alternative;
     }
 
-    public Source getLocatedOn() {
-        return locatedOn;
-    }
-
-    public void setLocatedOn(Source locatedOn) {
-        this.locatedOn = locatedOn;
-    }
 }
