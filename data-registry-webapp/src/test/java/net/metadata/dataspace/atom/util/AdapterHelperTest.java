@@ -7,6 +7,8 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
@@ -16,6 +18,7 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.model.Entry;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,19 +62,23 @@ public class AdapterHelperTest {
 
     @Before
     public void setUp() throws Exception {
-//        PopulatorUtil.cleanup();
+        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
-
         entityManager.getTransaction().begin();
         Agent agent = (Agent) entityCreator.getNextRecord(Agent.class);
         agent.setUpdated(new Date());
         AgentVersion agentVersion = PopulatorUtil.getAgentVersion(agent);
-        agentVersion.getSubjects().add(PopulatorUtil.getSubject());
-        agentVersion.getSubjects().add(PopulatorUtil.getSubject());
+        Subject subject1 = PopulatorUtil.getSubject();
+        agentVersion.getSubjects().add(subject1);
+        Subject subject2 = PopulatorUtil.getSubject();
+        agentVersion.getSubjects().add(subject2);
         agent.getVersions().add(agentVersion);
-//        Source source = PopulatorUtil.getSource();
-//        agentVersion.setLocatedOn(source);
-//        entityManager.persist(source);
+        Source source = PopulatorUtil.getSource();
+        agent.setLocatedOn(source);
+        agent.setSource(source);
+        entityManager.persist(source);
+        entityManager.persist(subject1);
+        entityManager.persist(subject2);
         entityManager.persist(agentVersion);
         entityManager.persist(agent);
 
@@ -83,7 +90,8 @@ public class AdapterHelperTest {
         collection.getVersions().add(collectionVersion);
         collection.getCollector().add(agent);
         agent.getCollectorOf().add(collection);
-//        collectionVersion.setLocatedOn(source);
+        collection.setLocatedOn(source);
+        collection.setSource(source);
         entityManager.persist(collectionVersion);
         entityManager.persist(collection);
 
@@ -93,7 +101,8 @@ public class AdapterHelperTest {
         service.getVersions().add(serviceVersion);
         service.getSupportedBy().add(collection);
         collection.getSupports().add(service);
-//        serviceVersion.setLocatedOn(source);
+        service.setLocatedOn(source);
+        service.setSource(source);
         entityManager.persist(serviceVersion);
         entityManager.persist(service);
 
@@ -105,17 +114,24 @@ public class AdapterHelperTest {
         activity.getHasParticipant().add(agent);
         agent.getParticipantIn().add(activity);
         collection.getOutputOf().add(activity);
-//        activityVersion.setLocatedOn(source);
+        activity.setLocatedOn(source);
+        activity.setSource(source);
         entityManager.persist(activityVersion);
         entityManager.persist(activity);
         entityManager.getTransaction().commit();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        PopulatorUtil.cleanup();
     }
 
     @Test
     public void testGetEntryFromAgent() throws Exception {
         List<Agent> agents = agentDao.getAll();
         Agent agent = agents.get(0);
-        Entry entry = AdapterHelper.getEntryFromEntity(agent.getVersions().first(), true);
+        AgentVersion agentVersion = agent.getVersions().first();
+        Entry entry = AdapterHelper.getEntryFromEntity(agentVersion, true);
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey());
         assertEquals("Entry title", entry.getTitle(), agent.getTitle());
         assertEquals("Entry content", entry.getContent(), agent.getContent());
@@ -133,7 +149,7 @@ public class AdapterHelperTest {
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         assertEquals("Entry title", entry.getTitle(), collection.getTitle());
         assertEquals("Entry content", entry.getContent(), collection.getContent());
-        assertEquals("Entry updated", entry.getUpdated(), collection.getUpdated());
+        assertEquals("Entry updated", entry.getUpdated().toGMTString(), collection.getUpdated().toGMTString());
         assertEquals("Entry authors", entry.getAuthors().size(), collection.getAuthors().size());
         assertTrue("Entry should have at least 3 categories", entry.getCategories().size() > 2);
         assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_IS_LOCATED_AT).size() >= 1);

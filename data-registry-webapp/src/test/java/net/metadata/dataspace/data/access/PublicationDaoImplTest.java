@@ -4,6 +4,8 @@ import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.app.RegistryConfiguration;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Publication;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,16 @@ public class PublicationDaoImplTest {
     private RegistryConfiguration registryConfigurationImpl;
     @Autowired
     private PublicationDao publicationDao;
+
+    @Before
+    public void setUp() throws Exception {
+        PopulatorUtil.cleanup();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        PopulatorUtil.cleanup();
+    }
 
     @Test
     public void testAddingPublication() throws Exception {

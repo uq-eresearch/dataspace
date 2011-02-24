@@ -1,16 +1,13 @@
 package net.metadata.dataspace.data.model;
 
-import au.edu.uq.itee.maenad.dataaccess.Dao;
-import net.metadata.dataspace.data.access.*;
+import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
-import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
-import net.metadata.dataspace.data.model.record.Collection;
-import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.ActivityType;
 import net.metadata.dataspace.data.model.types.AgentType;
 import net.metadata.dataspace.data.model.types.CollectionType;
@@ -20,7 +17,13 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 
-import java.util.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * User: alabri
@@ -42,7 +45,7 @@ public class PopulatorUtil {
 
     public static Source getSource() throws Exception {
         Source source = entityCreator.getNextSource();
-        source.setSourceURI("http://uq.edu.au");
+        source.setSourceURI("http://uq.edu.au" + UUID.randomUUID().toString());
         source.setTitle("The university of queensland");
         return source;
     }
@@ -113,119 +116,14 @@ public class PopulatorUtil {
     }
 
     public static void cleanup() {
-        AgentDao agentDao = daoManager.getAgentDao();
-        AgentVersionDao agentVersionDao = daoManager.getAgentVersionDao();
-        deleteEntity(agentDao, agentVersionDao);
-
-        CollectionDao collectionDao = daoManager.getCollectionDao();
-        CollectionVersionDao collectionVersionDao = daoManager.getCollectionVersionDao();
-        deleteEntity(collectionDao, collectionVersionDao);
-
-        ActivityDao activityDao = daoManager.getActivityDao();
-        ActivityVersionDao activityVersionDao = daoManager.getActivityVersionDao();
-        deleteEntity(activityDao, activityVersionDao);
-
-        ServiceDao serviceDao = daoManager.getServiceDao();
-        ServiceVersionDao serviceVersionDao = daoManager.getServiceVersionDao();
-        deleteEntity(serviceDao, serviceVersionDao);
-    }
-
-    private static void deleteEntity(Dao parentDao, Dao versionDao) {
-        List<Record> recordList = parentDao.getAll();
-        for (Record record : recordList) {
-            SortedSet<Version> versions = record.getVersions();
-            for (Version version : versions) {
-                if (parentDao instanceof AgentDao && versionDao instanceof AgentVersionDao) {
-                    AgentVersion ver = (AgentVersion) version;
-                    Set<Activity> activitySet = ver.getCurrentProjects();
-                    for (Activity activity : activitySet) {
-                        SortedSet<ActivityVersion> activityVersions = activity.getVersions();
-                        for (ActivityVersion activityVersion : activityVersions) {
-                            activityVersion.getHasParticipants().remove(record);
-                        }
-                    }
-                    activitySet.removeAll(activitySet);
-                    Set<Collection> collectionSet = ver.getIsManagerOf();
-                    for (Collection collection : collectionSet) {
-                        SortedSet<CollectionVersion> collectionVersions = collection.getVersions();
-                        for (CollectionVersion collectionVersion : collectionVersions) {
-                            collectionVersion.getCreators().remove(record);
-                        }
-                        for (CollectionVersion collectionVersion : collectionVersions) {
-                            collectionVersion.getPublishers().remove(record);
-                        }
-                    }
-                    collectionSet.removeAll(collectionSet);
-                    ver.getSubjects().removeAll(ver.getSubjects());
-
-                }
-                if (parentDao instanceof CollectionDao && versionDao instanceof CollectionVersionDao) {
-                    CollectionVersion ver = (CollectionVersion) version;
-                    Set<Activity> activities = ver.getOutputOf();
-                    for (Activity activity : activities) {
-                        SortedSet<ActivityVersion> activityVersions = activity.getVersions();
-                        for (ActivityVersion activityVersion : activityVersions) {
-                            activityVersion.getHasOutput().remove(record);
-                        }
-                    }
-                    activities.removeAll(activities);
-                    Set<Service> services = ver.getAccessedVia();
-                    for (Service service : services) {
-                        SortedSet<ServiceVersion> serviceVersions = service.getVersions();
-                        for (ServiceVersion serviceVersion : serviceVersions) {
-                            serviceVersion.getSupportedBy().remove(record);
-                        }
-                    }
-                    services.removeAll(services);
-                    Set<Agent> agents = ver.getCreators();
-                    for (Agent agent : agents) {
-                        SortedSet<AgentVersion> agentVersions = agent.getVersions();
-                        for (AgentVersion agentVersion : agentVersions) {
-                            agentVersion.getIsManagerOf().remove(record);
-                        }
-                        for (AgentVersion agentVersion : agentVersions) {
-                            agentVersion.getMade().remove(record);
-                        }
-                    }
-                    agents.removeAll(agents);
-                    ver.getSubjects().removeAll(ver.getSubjects());
-                }
-                if (parentDao instanceof ActivityDao && versionDao instanceof ActivityVersionDao) {
-                    ActivityVersion ver = (ActivityVersion) version;
-                    Set<Collection> collections = ver.getHasOutput();
-                    for (Collection collection : collections) {
-                        SortedSet<CollectionVersion> collectionVersions = collection.getVersions();
-                        for (CollectionVersion collectionVersion : collectionVersions) {
-                            collectionVersion.getOutputOf().remove(record);
-                        }
-                    }
-                    collections.removeAll(collections);
-                    Set<Agent> agents = ver.getHasParticipants();
-                    for (Agent agent : agents) {
-                        SortedSet<AgentVersion> agentVersions = agent.getVersions();
-                        for (AgentVersion agentVersion : agentVersions) {
-                            agentVersion.getCurrentProjects().remove(record);
-                        }
-                    }
-                    agents.removeAll(agents);
-                }
-                if (parentDao instanceof ServiceDao && versionDao instanceof ServiceVersionDao) {
-                    ServiceVersion ver = (ServiceVersion) version;
-                    Set<Collection> collections = ver.getSupportedBy();
-                    for (Collection collection : collections) {
-                        SortedSet<CollectionVersion> collectionVersions = collection.getVersions();
-                        for (CollectionVersion collectionVersion : collectionVersions) {
-                            collectionVersion.getAccessedVia().remove(record);
-                        }
-                    }
-                    collections.removeAll(collections);
-                }
-                version.getAuthors().removeAll(version.getAuthors());
-                record.getVersions().remove(version);
-                versionDao.delete(version);
-            }
-            parentDao.delete(record);
-        }
+        EntityManager entityManager = daoManager.getJpaConnnector().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        Query dropQuery = entityManager.createNativeQuery("DROP SCHEMA registry if exists;");
+        dropQuery.executeUpdate();
+        Query createQuery = entityManager.createNativeQuery("CREATE SCHEMA registry;");
+        createQuery.executeUpdate();
+        transaction.commit();
     }
 
     public void setEntityCreator(EntityCreator entityCreator) {
@@ -242,5 +140,52 @@ public class PopulatorUtil {
 
     public DaoManager getDaoManager() {
         return daoManager;
+    }
+
+    private static void createFirstAgent() throws Exception {
+        AgentDao agentDao = daoManager.getAgentDao();
+        if (agentDao.getByEmail("info@dataspace.uq.edu.au") == null) {
+            EntityManager entityManager = daoManager.getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
+            transaction.begin();
+            Date now = new Date();
+            Source source = entityCreator.getNextSource();
+            source.setTitle("The University of Queensland");
+            source.setSourceURI(Constants.UQ_SOURCE_URI);
+            source.setUpdated(now);
+            Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
+            AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
+            version.setTitle("The University of Queensland");
+            version.setDescription("The University of Queensland (UQ) is one of Australia's premier learning and research institutions. It is the oldest university in Queensland and has produced almost 180,000 graduates since opening in 1911. Its graduates have gone on to become leaders in all areas of society and industry.");
+            version.setAlternative("UQ");
+            version.setUpdated(now);
+            Set<String> authors = new HashSet<String>();
+            authors.add("The University of Queensland DataSpace");
+            version.setAuthors(authors);
+            version.setType(AgentType.GROUP);
+            version.setMbox("info@dataspace.uq.edu.au");
+            version.setPage("http://uq.edu.au");
+
+            Subject subject1 = PopulatorUtil.getSubject();
+            version.getSubjects().add(subject1);
+            Subject subject2 = PopulatorUtil.getSubject();
+            version.getSubjects().add(subject2);
+
+            version.setParent(agent);
+            version.getParent().setPublished(version);
+            agent.getVersions().add(version);
+            agent.setUpdated(now);
+            agent.setLocatedOn(source);
+            agent.setSource(source);
+            agent.setPublisher(agent);
+            agent.getCreators().add(agent);
+
+            entityManager.persist(source);
+            entityManager.persist(subject1);
+            entityManager.persist(subject2);
+            entityManager.persist(version);
+            entityManager.persist(agent);
+            transaction.commit();
+        }
     }
 }

@@ -27,7 +27,7 @@ public class RegistryApplication {
 
     public void setApplicationContext(RegistryConfiguration context) {
         RegistryApplication.context = context;
-        createFirstAgent();
+//        createFirstAgent();
     }
 
     private void createFirstAgent() {

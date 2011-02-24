@@ -4,7 +4,8 @@ import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
-import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.junit.After;
@@ -33,8 +34,6 @@ public class CollectionDaoImplTest {
 
     @Autowired
     private CollectionDao collectionDao;
-    @Autowired
-    private SubjectDao subjectDao;
 
     @Autowired
     private EntityCreator entityCreator;
@@ -45,7 +44,7 @@ public class CollectionDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-//        PopulatorUtil.cleanup();
+        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
     }
 
@@ -57,17 +56,22 @@ public class CollectionDaoImplTest {
     @Test
     public void testAddingCollection() throws Exception {
 
-        Record collection = entityCreator.getNextRecord(Collection.class);
+        Collection collection = (Collection) entityCreator.getNextRecord(Collection.class);
         collection.setUpdated(new Date());
         entityManager.getTransaction().begin();
         int originalTableSize = collectionDao.getAll().size();
         CollectionVersion collectionVersion = PopulatorUtil.getCollectionVersion(collection);
-        collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
-        collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
+        Subject subject1 = PopulatorUtil.getSubject();
+        collectionVersion.getSubjects().add(subject1);
+        Subject subject2 = PopulatorUtil.getSubject();
+        collectionVersion.getSubjects().add(subject2);
         collection.getVersions().add(collectionVersion);
-//        Source source = PopulatorUtil.getSource();
-//        collectionVersion.setLocatedOn(source);
-//        entityManager.persist(source);
+        Source source = PopulatorUtil.getSource();
+        collection.setLocatedOn(source);
+        collection.setSource(source);
+        entityManager.persist(source);
+        entityManager.persist(subject1);
+        entityManager.persist(subject2);
         entityManager.persist(collectionVersion);
         entityManager.persist(collection);
         entityManager.getTransaction().commit();

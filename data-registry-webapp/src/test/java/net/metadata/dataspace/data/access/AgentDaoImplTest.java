@@ -4,6 +4,8 @@ import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
+import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import org.junit.After;
@@ -31,10 +33,6 @@ import static org.junit.Assert.assertTrue;
 public class AgentDaoImplTest {
 
     @Autowired
-    private CollectionDao collectionDao;
-    @Autowired
-    private SubjectDao subjectDao;
-    @Autowired
     private AgentDao agentDao;
     @Autowired
     private EntityCreator entityCreator;
@@ -46,7 +44,7 @@ public class AgentDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-//        PopulatorUtil.cleanup();
+        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
     }
 
@@ -63,12 +61,20 @@ public class AgentDaoImplTest {
         entityManager.getTransaction().begin();
         int originalTableSize = agentDao.getAll().size();
         AgentVersion agentVersion = PopulatorUtil.getAgentVersion(agent);
-        agentVersion.getSubjects().add(PopulatorUtil.getSubject());
-        agentVersion.getSubjects().add(PopulatorUtil.getSubject());
+        Subject subject1 = PopulatorUtil.getSubject();
+        agentVersion.getSubjects().add(subject1);
+        Subject subject2 = PopulatorUtil.getSubject();
+        agentVersion.getSubjects().add(subject2);
         agent.getVersions().add(agentVersion);
-//        Source source = PopulatorUtil.getSource();
-//        agentVersion.setLocatedOn(source);
-//        entityManager.persist(source);
+        Source source = PopulatorUtil.getSource();
+        agent.getCreators().add(agent);
+        agent.setLocatedOn(source);
+        agent.setSource(source);
+        agent.setPublisher(agent);
+
+        entityManager.persist(source);
+        entityManager.persist(subject1);
+        entityManager.persist(subject2);
         entityManager.persist(agentVersion);
         entityManager.persist(agent);
         entityManager.getTransaction().commit();

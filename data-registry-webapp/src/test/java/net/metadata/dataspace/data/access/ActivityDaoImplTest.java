@@ -4,7 +4,7 @@ import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
-import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import org.junit.After;
@@ -31,7 +31,6 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class ActivityDaoImplTest {
 
-
     @Autowired
     private ActivityDao activityDao;
 
@@ -45,7 +44,7 @@ public class ActivityDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-//        PopulatorUtil.cleanup();
+        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
     }
 
@@ -56,15 +55,16 @@ public class ActivityDaoImplTest {
 
     @Test
     public void testAddingActivity() throws Exception {
-        Record activity = entityCreator.getNextRecord(Activity.class);
+        Activity activity = (Activity) entityCreator.getNextRecord(Activity.class);
         activity.setUpdated(new Date());
         entityManager.getTransaction().begin();
         int originalTableSize = activityDao.getAll().size();
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
         activity.getVersions().add(activityVersion);
-//        Source source = PopulatorUtil.getSource();
-//        activityVersion.setLocatedOn(source);
-//        entityManager.persist(source);
+        Source source = PopulatorUtil.getSource();
+        activity.setLocatedOn(source);
+        activity.setSource(source);
+        entityManager.persist(source);
         entityManager.persist(activityVersion);
         entityManager.persist(activity);
         entityManager.getTransaction().commit();

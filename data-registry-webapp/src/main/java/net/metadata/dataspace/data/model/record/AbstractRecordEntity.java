@@ -36,16 +36,15 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
 
-    @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Agent publisher;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source locatedOn;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source source;
 
     private String rights;
