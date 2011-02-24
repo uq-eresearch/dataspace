@@ -39,11 +39,9 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Agent publisher;
 
-    @NotNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source locatedOn;
 
-    @NotNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source source;
 

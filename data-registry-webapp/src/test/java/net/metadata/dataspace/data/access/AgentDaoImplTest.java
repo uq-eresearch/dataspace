@@ -34,6 +34,7 @@ public class AgentDaoImplTest {
 
     @Autowired
     private AgentDao agentDao;
+
     @Autowired
     private EntityCreator entityCreator;
 

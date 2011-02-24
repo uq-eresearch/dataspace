@@ -2,7 +2,10 @@ package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
-import net.metadata.dataspace.data.access.*;
+import net.metadata.dataspace.data.access.ActivityDao;
+import net.metadata.dataspace.data.access.AgentDao;
+import net.metadata.dataspace.data.access.CollectionDao;
+import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
@@ -45,8 +48,6 @@ public class AdapterHelperTest {
     @Autowired
     private CollectionDao collectionDao;
     @Autowired
-    private SubjectDao subjectDao;
-    @Autowired
     private AgentDao agentDao;
     @Autowired
     private ServiceDao serviceDao;
@@ -85,8 +86,10 @@ public class AdapterHelperTest {
         Collection collection = (Collection) entityCreator.getNextRecord(Collection.class);
         collection.setUpdated(new Date());
         CollectionVersion collectionVersion = PopulatorUtil.getCollectionVersion(collection);
-        collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
-        collectionVersion.getSubjects().add(PopulatorUtil.getSubject());
+        Subject subject3 = PopulatorUtil.getSubject();
+        collectionVersion.getSubjects().add(subject3);
+        Subject subject4 = PopulatorUtil.getSubject();
+        collectionVersion.getSubjects().add(subject4);
         collection.getVersions().add(collectionVersion);
         collection.getCollector().add(agent);
         agent.getCollectorOf().add(collection);
@@ -145,7 +148,8 @@ public class AdapterHelperTest {
     public void testGetEnteryFromCollection() throws Exception {
         List<Collection> collections = collectionDao.getAll();
         Collection collection = collections.get(0);
-        Entry entry = AdapterHelper.getEntryFromEntity(collection.getVersions().first(), true);
+        CollectionVersion version = collection.getVersions().first();
+        Entry entry = AdapterHelper.getEntryFromEntity(version, true);
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         assertEquals("Entry title", entry.getTitle(), collection.getTitle());
         assertEquals("Entry content", entry.getContent(), collection.getContent());
@@ -166,11 +170,11 @@ public class AdapterHelperTest {
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         assertEquals("Entry title", entry.getTitle(), activity.getTitle());
         assertEquals("Entry content", entry.getContent(), activity.getContent());
-        assertEquals("Entry updated", entry.getUpdated(), activity.getUpdated());
+        assertEquals("Entry updated", entry.getUpdated().toGMTString(), activity.getUpdated().toGMTString());
         assertEquals("Entry authors", entry.getAuthors().size(), activity.getAuthors().size());
         assertTrue("Entry should have at least 2 categories", entry.getCategories().size() >= 2);
-        assertTrue("Entry should have at least one agent", entry.getLinks(Constants.REL_HAS_PARTICIPANT).size() == 1);
-        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_HAS_OUTPUT).size() == 1);
+        assertTrue("Entry should have at least one agent", entry.getLinks(Constants.REL_HAS_PARTICIPANT).size() >= 1);
+        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_HAS_OUTPUT).size() >= 1);
     }
 
     @Test
@@ -181,11 +185,11 @@ public class AdapterHelperTest {
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         assertEquals("Entry title", entry.getTitle(), service.getTitle());
         assertEquals("Entry content", entry.getContent(), service.getContent());
-        assertEquals("Entry updated", entry.getUpdated(), service.getUpdated());
+        assertEquals("Entry updated", entry.getUpdated().toGMTString(), service.getUpdated().toGMTString());
         assertEquals("Entry authors", entry.getAuthors().size(), service.getAuthors().size());
         assertTrue("Entry should have at least 2 categories", entry.getCategories().size() >= 2);
-        assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_IS_LOCATED_AT).size() == 1);
-        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_SUPPORTED_BY).size() == 1);
+        assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_IS_LOCATED_AT).size() >= 1);
+        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_SUPPORTED_BY).size() >= 1);
     }
 
     @Test
@@ -197,7 +201,7 @@ public class AdapterHelperTest {
         assertTrue("Could not update entry", AdapterHelper.assembleAndValidateVersionFromEntry(version, entry));
         assertEquals("Entry title", agent.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", agent.getVersions().first().getDescription(), version.getDescription());
-        assertTrue("Entry updated", agent.getVersions().first().getUpdated().equals(version.getUpdated()));
+        assertEquals("Entry updated", agent.getVersions().first().getUpdated().toGMTString(), version.getUpdated().toGMTString());
     }
 
     @Test
@@ -210,7 +214,7 @@ public class AdapterHelperTest {
         assertEquals("Entry title", collection.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", collection.getVersions().first().getDescription(), version.getDescription());
         assertEquals("Entry location", collection.getVersions().first().getPage(), version.getPage());
-        assertTrue("Entry updated", collection.getVersions().first().getUpdated().equals(version.getUpdated()));
+        assertEquals("Entry updated", collection.getVersions().first().getUpdated().toGMTString(), version.getUpdated().toGMTString());
     }
 
     @Test
@@ -223,7 +227,7 @@ public class AdapterHelperTest {
         assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", service.getVersions().first().getDescription(), version.getDescription());
         assertEquals("Entry location", service.getVersions().first().getPage(), version.getPage());
-        assertTrue("Entry updated", service.getVersions().first().getUpdated().equals(version.getUpdated()));
+        assertEquals("Entry updated", service.getVersions().first().getUpdated().toGMTString(), version.getUpdated().toGMTString());
     }
 
     @Test
@@ -235,7 +239,7 @@ public class AdapterHelperTest {
         assertTrue("Could not update entry", AdapterHelper.assembleAndValidateVersionFromEntry(version, entry));
         assertEquals("Entry title", activity.getTitle(), version.getTitle());
         assertEquals("Entry content", activity.getContent(), version.getDescription());
-        assertTrue("Entry updated", activity.getUpdated().equals(version.getUpdated()));
+        assertEquals("Entry updated", activity.getUpdated().toGMTString(), version.getUpdated().toGMTString());
     }
 
 }

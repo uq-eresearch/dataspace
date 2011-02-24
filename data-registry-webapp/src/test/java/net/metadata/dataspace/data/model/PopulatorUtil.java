@@ -1,13 +1,10 @@
 package net.metadata.dataspace.data.model;
 
-import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
-import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.types.ActivityType;
 import net.metadata.dataspace.data.model.types.AgentType;
 import net.metadata.dataspace.data.model.types.CollectionType;
@@ -119,10 +116,8 @@ public class PopulatorUtil {
         EntityManager entityManager = daoManager.getJpaConnnector().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
-        Query dropQuery = entityManager.createNativeQuery("DROP SCHEMA registry if exists;");
+        Query dropQuery = entityManager.createNativeQuery("DROP SCHEMA registry if exists; CREATE SCHEMA registry;");
         dropQuery.executeUpdate();
-        Query createQuery = entityManager.createNativeQuery("CREATE SCHEMA registry;");
-        createQuery.executeUpdate();
         transaction.commit();
     }
 
@@ -142,50 +137,4 @@ public class PopulatorUtil {
         return daoManager;
     }
 
-    private static void createFirstAgent() throws Exception {
-        AgentDao agentDao = daoManager.getAgentDao();
-        if (agentDao.getByEmail("info@dataspace.uq.edu.au") == null) {
-            EntityManager entityManager = daoManager.getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-            transaction.begin();
-            Date now = new Date();
-            Source source = entityCreator.getNextSource();
-            source.setTitle("The University of Queensland");
-            source.setSourceURI(Constants.UQ_SOURCE_URI);
-            source.setUpdated(now);
-            Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
-            AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
-            version.setTitle("The University of Queensland");
-            version.setDescription("The University of Queensland (UQ) is one of Australia's premier learning and research institutions. It is the oldest university in Queensland and has produced almost 180,000 graduates since opening in 1911. Its graduates have gone on to become leaders in all areas of society and industry.");
-            version.setAlternative("UQ");
-            version.setUpdated(now);
-            Set<String> authors = new HashSet<String>();
-            authors.add("The University of Queensland DataSpace");
-            version.setAuthors(authors);
-            version.setType(AgentType.GROUP);
-            version.setMbox("info@dataspace.uq.edu.au");
-            version.setPage("http://uq.edu.au");
-
-            Subject subject1 = PopulatorUtil.getSubject();
-            version.getSubjects().add(subject1);
-            Subject subject2 = PopulatorUtil.getSubject();
-            version.getSubjects().add(subject2);
-
-            version.setParent(agent);
-            version.getParent().setPublished(version);
-            agent.getVersions().add(version);
-            agent.setUpdated(now);
-            agent.setLocatedOn(source);
-            agent.setSource(source);
-            agent.setPublisher(agent);
-            agent.getCreators().add(agent);
-
-            entityManager.persist(source);
-            entityManager.persist(subject1);
-            entityManager.persist(subject2);
-            entityManager.persist(version);
-            entityManager.persist(agent);
-            transaction.commit();
-        }
-    }
 }
