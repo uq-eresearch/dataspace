@@ -7,6 +7,8 @@
     </content>
     <author>
         <name>Nigel Ward</name>
+        <uri>http://localhost:9635/agents/1</uri>
+        <email>n.ward5@uq.edu.au</email>
     </author>
     <updated>2010-10-08T05:58:02.781Z</updated>
     <app:control>
@@ -25,4 +27,10 @@
     <link href="http://localhost:9635/activities/1"
           rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"/>
     <link href="http://localhost:9635/services/1" rel="http://purl.org/cld/terms/isAccessedVia"/>
+    <rights>The data is the property of The University of Queensland. Permission is required to use this material.
+    </rights>
+    <source>
+        <id>http://uq.edu.au/</id>
+        <title>The University of Queensland</title>
+    </source>
 </entry>

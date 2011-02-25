@@ -12,6 +12,8 @@
     </content>
     <author>
         <name>Nigel Ward</name>
+        <uri>http://localhost:9635/agents/1</uri>
+        <email>n.ward5@uq.edu.au</email>
     </author>
     <app:control>
         <app:draft>no</app:draft>
@@ -20,4 +22,8 @@
     <link href="http://e-research.sbs.uq.edu.au/aus_voting2007.html" rel="http://purl.org/cld/terms/isLocatedAt"/>
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy"
           href="http://localhost:9635/collections/1"/>
+    <source>
+        <id>http://uq.edu.au/</id>
+        <title>The University of Queensland</title>
+    </source>
 </entry>

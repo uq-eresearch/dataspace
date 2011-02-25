@@ -62,8 +62,8 @@ public class XSLTTransformerWriter {
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //publish Entry
-        String fileName = "/files/put/published-party.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_PARTIES);
+        String fileName = "/files/put/published-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 

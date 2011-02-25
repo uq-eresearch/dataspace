@@ -6,6 +6,8 @@
     <content type="text">Updated: We will be partying</content>
     <author>
         <name>Nigel Ward</name>
+        <uri>http://localhost:9635/agents/1</uri>
+        <email>n.ward5@uq.edu.au</email>
     </author>
     <app:control>
         <app:draft>yes</app:draft>
@@ -16,4 +18,8 @@
               label="2005033 - Australian Literature (excl. Aboriginal and Torres Strait Islander Literature)"/>
     <link href="http://localhost:9635/collections/1" rel="http://xmlns.com/foaf/0.1/made"/>
     <link href="http://localhost:9635/activities/1" rel="http://xmlns.com/foaf/0.1/currentProject"/>
+    <source>
+        <id>http://uq.edu.au/</id>
+        <title>The University of Queensland</title>
+    </source>
 </entry>

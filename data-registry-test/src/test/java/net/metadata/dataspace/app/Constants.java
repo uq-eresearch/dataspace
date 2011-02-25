@@ -23,7 +23,7 @@ public interface Constants {
     /**
      * Adapters
      */
-    String PATH_FOR_PARTIES = "parties";
+    String PATH_FOR_AGENTS = "agents";
     String PATH_FOR_COLLECTIONS = "collections";
     String PATH_FOR_ACTIVITIES = "activities";
     String PATH_FOR_SERVICES = "services";
@@ -31,13 +31,13 @@ public interface Constants {
     /**
      * Titles
      */
-    String TITLE_FOR_PARTIES = "Parties";
+    String TITLE_FOR_AGENTS = "Agents";
     String TITLE_FOR_COLLECTIONS = "Collections";
     String TITLE_FOR_ACTIVITIES = "Activities";
     String TITLE_FOR_SERVICES = "Services";
 
-    String URL_PREFIX = "http://localhost:9635/";
-//    String URL_PREFIX = "http://localhost:8080/";
+//    String URL_PREFIX = "http://localhost:9635/";
+    String URL_PREFIX = "http://localhost:8080/";
 
     /**
      * Target Type names

@@ -6,6 +6,8 @@
     <updated>2010-10-28T01:03:29.877Z</updated>
     <author>
         <name>Nigel Ward</name>
+        <uri>http://localhost:9635/agents/1</uri>
+        <email>n.ward5@uq.edu.au</email>
     </author>
     <app:control>
         <app:draft>no</app:draft>
@@ -14,4 +16,8 @@
           rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"/>
     <link href="http://localhost:9635/collections/1"
           rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"/>
+    <source>
+        <id>http://uq.edu.au/</id>
+        <title>The University of Queensland</title>
+    </source>
 </entry>

@@ -30,18 +30,18 @@ import static junit.framework.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
-public class PartyTest {
+public class AgentTest {
 
     @Test
-    public void testPartyCRUD() throws Exception {
+    public void testAgentCRUD() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-party.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_PARTIES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
         //Get entry
@@ -54,7 +54,7 @@ public class PartyTest {
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/working-copy", Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get working copy after post", 200, getMethod.getStatusCode());
         //Edit Entry
-        fileName = "/files/put/update-party.xml";
+        fileName = "/files/put/update-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not edit entry", 200, putMethod.getStatusCode());
         //get second version
@@ -72,13 +72,13 @@ public class PartyTest {
     }
 
     @Test
-    public void testPartyUnauthorized() throws Exception {
+    public void testAgentUnauthorized() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
 
         //post without authentication
-        String fileName = "/files/post/new-party.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_PARTIES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Posting without authenticating, Wrong status code", 401, postMethod.getStatusCode());
 
         //login
@@ -86,7 +86,7 @@ public class PartyTest {
         assertEquals("Could not authenticate", 200, status);
 
         //post with authentication
-        postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_PARTIES);
+        postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
@@ -111,7 +111,7 @@ public class PartyTest {
         assertEquals("Get version history without authenticating, Wrong status code", 401, getMethod.getStatusCode());
 
         //Edit without authenticating
-        fileName = "/files/put/update-party.xml";
+        fileName = "/files/put/update-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Editing without authenticating, Wrong status code", 401, putMethod.getStatusCode());
 
@@ -121,20 +121,20 @@ public class PartyTest {
     }
 
     @Test
-    public void testPartyPublishing() throws Exception {
+    public void testAgentPublishing() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-party.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_PARTIES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
         //publish entry
-        fileName = "/files/put/published-party.xml";
+        fileName = "/files/put/published-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
 
@@ -148,20 +148,20 @@ public class PartyTest {
     }
 
     @Test
-    public void testPartyFeed() throws Exception {
+    public void testAgentFeed() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-party.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_PARTIES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
         //publish entry
-        fileName = "/files/put/published-party.xml";
+        fileName = "/files/put/published-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
 
@@ -169,14 +169,15 @@ public class PartyTest {
         status = ClientHelper.logout(client);
         assertEquals("Could not logout", 200, status);
 
-        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_PARTIES;
+        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_AGENTS;
         //get without authenticating
         GetMethod getMethod = ClientHelper.getEntry(client, feedUrl, Constants.ATOM_FEED_MIMETYPE);
         assertEquals("Could not get feed", 200, getMethod.getStatusCode());
     }
 
+/*
     @Test
-    public void testPartyRecordContent() throws Exception {
+    public void testAgentRecordContent() throws Exception {
 
         //create a client
         HttpClient client = new HttpClient();
@@ -184,8 +185,8 @@ public class PartyTest {
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-party.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_PARTIES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
@@ -196,7 +197,7 @@ public class PartyTest {
 
         String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
         assertNotNull("Entry missing id", id);
-        assertTrue("Entry's id does not contain path to entry", id.contains(Constants.PATH_FOR_PARTIES));
+        assertTrue("Entry's id does not contain path to entry", id.contains(Constants.PATH_FOR_AGENTS));
 
         String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromStream);
         assertNotNull("Entry missing title", title);
@@ -225,7 +226,7 @@ public class PartyTest {
 
 
         //publish entry
-        fileName = "/files/put/published-party.xml";
+        fileName = "/files/put/published-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
         docFromStream = XPathHelper.getDocFromStream(putMethod.getResponseBodyAsStream());
@@ -256,26 +257,27 @@ public class PartyTest {
         String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
         assertEquals(expectedRifcsLink, rifcsLink);
     }
+*/
 
     @Test
-    public void testPartyFeedContent() throws Exception {
+    public void testAgentFeedContent() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-party.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_PARTIES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
         //publish entry
-        fileName = "/files/put/published-party.xml";
+        fileName = "/files/put/published-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
 
-        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_PARTIES;
+        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_AGENTS;
         //get without authenticating
         GetMethod getMethod = ClientHelper.getEntry(client, feedUrl, Constants.ATOM_FEED_MIMETYPE);
         assertEquals("Could not get feed", 200, getMethod.getStatusCode());
@@ -286,11 +288,11 @@ public class PartyTest {
 
         String id = xpath.evaluate(Constants.FEED_ID_PATH, docFromStream);
         assertNotNull("Feed missing id", id);
-        assertTrue("Feed's id does not contain path to entry", id.contains(Constants.PATH_FOR_PARTIES));
+        assertTrue("Feed's id does not contain path to entry", id.contains(Constants.PATH_FOR_AGENTS));
 
         String title = xpath.evaluate(Constants.FEED_TITLE_PATH, docFromStream);
         assertNotNull("Feed missing title", title);
-        assertEquals("Feed's title is incorrect", Constants.TITLE_FOR_PARTIES, title);
+        assertEquals("Feed's title is incorrect", Constants.TITLE_FOR_AGENTS, title);
 
         String updated = xpath.evaluate(Constants.FEED_UPDATED_PATH, docFromStream);
         assertNotNull("Feed missing updated", updated);
@@ -315,7 +317,7 @@ public class PartyTest {
 
         String entryId = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_ID_PATH, entry);
         assertNotNull("Feed entry missing id", entryId);
-        assertTrue("Feed entry's id does not contain path to entry", entryId.contains(Constants.PATH_FOR_PARTIES));
+        assertTrue("Feed entry's id does not contain path to entry", entryId.contains(Constants.PATH_FOR_AGENTS));
 
         String entryTitle = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_TITLE_PATH, entry);
         assertNotNull("Feed entry missing title", entryTitle);
