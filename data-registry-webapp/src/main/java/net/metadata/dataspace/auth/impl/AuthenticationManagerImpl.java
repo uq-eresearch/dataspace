@@ -3,15 +3,9 @@ package net.metadata.dataspace.auth.impl;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
-import net.metadata.dataspace.data.access.AgentDao;
-import net.metadata.dataspace.data.access.SourceDao;
+import net.metadata.dataspace.auth.util.LDAPUtil;
 import net.metadata.dataspace.data.access.UserDao;
-import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.context.Source;
-import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.User;
-import net.metadata.dataspace.data.model.types.AgentType;
-import net.metadata.dataspace.data.model.version.AgentVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -21,10 +15,12 @@ import org.apache.log4j.Logger;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.*;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import java.util.*;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Author: alabri
@@ -85,7 +81,8 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                             user = new User(userName);
                             userDao.save(user);
                         }
-                        createLoggedInAgent(namingEnum);
+                        Map<String, String> attributesMap = LDAPUtil.getAttributesAsMap(namingEnum);
+                        LDAPUtil.createLoggedInAgent(attributesMap);
                         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
                         logger.info("Authenticated user: " + userName);
                         return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
@@ -110,64 +107,4 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
     }
 
-    private void createLoggedInAgent(NamingEnumeration namingEnum) throws NamingException {
-        AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
-        SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
-        Map<String, String> attributesMap = getAttributes(namingEnum);
-        String uqMail = attributesMap.get("uqmail");
-        if (agentDao.getByEmail(uqMail) == null) {
-            EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-
-            Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
-            AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
-            Source systemSource = sourceDao.getBySourceURI(Constants.UQ_SOURCE_URI);
-            transaction.begin();
-            String name = attributesMap.get("cn");
-            version.setTitle(name);
-            String description = attributesMap.get("title");
-            version.setDescription(description);
-            Date now = new Date();
-            version.setUpdated(now);
-            Set<String> authors = new HashSet<String>();
-            authors.add("The University of Queensland DataSpace");
-            version.setAuthors(authors);
-            version.setType(AgentType.PERSON);
-            version.setMbox(uqMail);
-            version.setAlternative(attributesMap.get("pub-displayname"));
-
-            version.setParent(agent);
-            agent.getVersions().add(version);
-            version.getParent().setPublished(version);
-            agent.setUpdated(now);
-
-            agent.setUpdated(now);
-            agent.setLocatedOn(systemSource);
-            agent.setSource(systemSource);
-            agent.getCreators().add(agent);
-
-
-            entityManager.persist(version);
-            entityManager.persist(agent);
-            transaction.commit();
-        }
-    }
-
-    private Map<String, String> getAttributes(NamingEnumeration namingEnum) throws NamingException {
-        Map<String, String> attributes = new HashMap<String, String>();
-        if (namingEnum.hasMore()) {
-            for (NamingEnumeration attrs = ((SearchResult) namingEnum.next()).getAttributes().getAll(); attrs.hasMore();) {
-                Attribute attr = (Attribute) attrs.next();
-                String id = attr.getID();
-                NamingEnumeration values = attr.getAll();
-                String result = "";
-                while (values.hasMore()) {
-                    result = result + values.next() + " ";
-                }
-                attributes.put(id, result.trim());
-            }
-        }
-        return attributes;
-    }
 }
