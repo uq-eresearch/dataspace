@@ -366,7 +366,7 @@ public class AdapterHelper {
                 version.setTitle(entry.getTitle());
                 version.setDescription(content);
                 version.setUpdated(entry.getUpdated());
-                version.setAuthors(getAuthors(entry.getAuthors()));
+//                version.setAuthors(getAuthors(entry.getAuthors()));
             } catch (Throwable th) {
                 throw new ResponseContextException(500, th);
             }
@@ -378,22 +378,29 @@ public class AdapterHelper {
         }
     }
 
-    public static boolean assembleAndValidateSourceFromEntry(Source source, Entry entry) throws ResponseContextException {
+    public static Source assembleAndValidateSourceFromEntry(Entry entry) throws ResponseContextException {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            return false;
+            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
         } else {
             org.apache.abdera.model.Source abderaSource = entry.getSource();
             if (abderaSource == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
             }
             try {
-                source.setTitle(entry.getSource().getTitle());
-                source.setSourceURI(entry.getSource().getId().toString());
-                source.setUpdated(new Date());
+                String sourceUri = entry.getSource().getId().toString();
+                Source existingSource = daoManager.getSourceDao().getBySourceURI(sourceUri);
+                if (existingSource == null) {
+                    Source source = entityCreator.getNextSource();
+                    source.setTitle(entry.getSource().getTitle());
+                    source.setSourceURI(sourceUri);
+                    source.setUpdated(new Date());
+                    return source;
+                } else {
+                    return existingSource;
+                }
             } catch (Throwable th) {
                 throw new ResponseContextException(500, th);
             }
-            return true;
         }
     }
 

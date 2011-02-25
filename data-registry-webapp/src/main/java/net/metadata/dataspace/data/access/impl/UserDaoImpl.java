@@ -5,9 +5,9 @@ import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.UserDao;
 import net.metadata.dataspace.data.model.record.User;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Author: alabri
@@ -23,11 +23,10 @@ public class UserDaoImpl extends JpaDao<User> implements UserDao, Serializable {
     public User getByUsername(String username) {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM AppUser o WHERE o.username = :username");
         query.setParameter("username", username);
-        List<?> resultList = query.getResultList();
-        if (resultList.isEmpty()) {
+        try {
+            return (User) query.getSingleResult();
+        } catch (NoResultException ex) {
             return null;
         }
-        assert resultList.size() == 1 : "id should be unique";
-        return (User) resultList.get(0);
     }
 }

@@ -91,4 +91,12 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     public void setSameAs(Set<Service> sameAs) {
         this.sameAs = sameAs;
     }
+
+    public Set<Agent> getCreators() {
+        return creators;
+    }
+
+    public void setCreators(Set<Agent> creators) {
+        this.creators = creators;
+    }
 }

@@ -62,10 +62,9 @@ public class HttpMethodHelper {
                 Entry entry = getEntryFromRequest(request);
                 Record record = entityCreator.getNextRecord(clazz);
                 Version version = entityCreator.getNextVersion(record);
-                Source source = entityCreator.getNextSource();
                 boolean isValidEntry = AdapterHelper.assembleAndValidateVersionFromEntry(version, entry);
-                boolean isValidSource = AdapterHelper.assembleAndValidateSourceFromEntry(source, entry);
-                if (!isValidEntry && isValidSource) {
+                Source source = AdapterHelper.assembleAndValidateSourceFromEntry(entry);
+                if (!isValidEntry) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                 } else {
                     try {
@@ -75,10 +74,14 @@ public class HttpMethodHelper {
                         record.getVersions().add(version);
                         Date now = new Date();
                         version.setUpdated(now);
+                        record.setSource(source);
+                        record.setLocatedOn(source);
                         record.setUpdated(now);
-                        entityManager.persist(version);
-                        entityManager.persist(record);
+
                         EntityRelationshipHelper.addRelations(entry, version);
+                        entityManager.persist(version);
+//                        entityManager.persist(source);
+                        entityManager.persist(record);
                         transaction.commit();
                         Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
                         return AdapterHelper.getContextResponseForPost(createdEntry);

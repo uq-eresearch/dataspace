@@ -37,9 +37,6 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
     private Date created;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Agent publisher;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source locatedOn;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -49,44 +46,10 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
 
     private String license;
 
-//    @ManyToOne
-//    private Description isDescribedBy;
-
-    public Source getLocatedOn() {
-        return locatedOn;
-    }
-
-    public void setLocatedOn(Source locatedOn) {
-        this.locatedOn = locatedOn;
-    }
-
-    public Source getSource() {
-        return source;
-    }
-
-    public void setSource(Source source) {
-        this.source = source;
-    }
-
-    public String getRights() {
-        return rights;
-    }
-
-    public void setRights(String rights) {
-        this.rights = rights;
-    }
-
-    public String getLicense() {
-        return license;
-    }
-
-    public void setLicense(String license) {
-        this.license = license;
-    }
-
     public AbstractRecordEntity() {
         this.isActive = true;
         this.created = new Date();
+        this.updated = new Date();
     }
 
     @Override
@@ -144,6 +107,39 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
         this.created = created;
     }
 
+
+    public Source getLocatedOn() {
+        return locatedOn;
+    }
+
+    public void setLocatedOn(Source locatedOn) {
+        this.locatedOn = locatedOn;
+    }
+
+    public Source getSource() {
+        return source;
+    }
+
+    public void setSource(Source source) {
+        this.source = source;
+    }
+
+    public String getRights() {
+        return rights;
+    }
+
+    public void setRights(String rights) {
+        this.rights = rights;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -155,21 +151,5 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
         }
         AbstractRecordEntity other = (AbstractRecordEntity) obj;
         return getId().equals(other.getId());
-    }
-
-//    public Description getDescribedBy() {
-//        return isDescribedBy;
-//    }
-//
-//    public void setDescribedBy(Description describedBy) {
-//        isDescribedBy = describedBy;
-//    }
-
-    public Agent getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(Agent publisher) {
-        this.publisher = publisher;
     }
 }

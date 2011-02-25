@@ -71,7 +71,6 @@ public class AgentDaoImplTest {
         agent.getCreators().add(agent);
         agent.setLocatedOn(source);
         agent.setSource(source);
-        agent.setPublisher(agent);
 
         entityManager.persist(source);
         entityManager.persist(subject1);

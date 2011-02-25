@@ -145,7 +145,6 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
             agent.setUpdated(now);
             agent.setLocatedOn(systemSource);
             agent.setSource(systemSource);
-            agent.setPublisher(agent);
             agent.getCreators().add(agent);
 
 

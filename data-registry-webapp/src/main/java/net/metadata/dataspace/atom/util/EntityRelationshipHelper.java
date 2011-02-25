@@ -76,6 +76,7 @@ public class EntityRelationshipHelper {
 
     private static void addRelationsCollection(Entry entry, CollectionVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        version.setRights(entry.getRights());
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {
             version.getSubjects().add(subject);
@@ -120,6 +121,9 @@ public class EntityRelationshipHelper {
 
     private static void addRelationsAgent(Entry entry, AgentVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        //TODO add the mbox from the creating agent
+        String email = entry.getAuthors().get(0).getEmail();
+        version.setMbox(email);
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {
             version.getSubjects().add(subject);

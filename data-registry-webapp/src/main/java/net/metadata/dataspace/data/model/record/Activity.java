@@ -90,4 +90,12 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     public void setSameAs(Set<Activity> sameAs) {
         this.sameAs = sameAs;
     }
+
+    public Set<Agent> getCreators() {
+        return creators;
+    }
+
+    public void setCreators(Set<Agent> creators) {
+        this.creators = creators;
+    }
 }

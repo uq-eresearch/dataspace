@@ -27,6 +27,8 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @JoinColumn(name = "parent")
     private Integer atomicNumber;
 
+    private boolean isActive;
+
     @NotNull
     private String title; //name
 
@@ -48,7 +50,9 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     private Set<String> authors = new HashSet<String>();
 
     public AbstractVersionEntity() {
+        this.isActive = true;
         this.created = new Date();
+        this.updated = new Date();
     }
 
     public Long getId() {
@@ -72,6 +76,14 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @Override
     public void setAtomicNumber(Integer atomicNumber) {
         this.atomicNumber = atomicNumber;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     @Override

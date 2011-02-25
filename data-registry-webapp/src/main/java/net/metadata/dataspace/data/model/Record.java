@@ -1,5 +1,7 @@
 package net.metadata.dataspace.data.model;
 
+import net.metadata.dataspace.data.model.context.Source;
+
 import java.util.Date;
 import java.util.SortedSet;
 
@@ -54,4 +56,8 @@ public interface Record {
     void setAtomicNumber(Integer atomicNumber);
 
     boolean isActive();
+
+    void setLocatedOn(Source source);
+
+    void setSource(Source source);
 }

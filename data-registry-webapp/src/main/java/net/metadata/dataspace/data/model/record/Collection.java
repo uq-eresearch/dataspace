@@ -105,4 +105,12 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     public void setSameAs(Set<Collection> sameAs) {
         this.sameAs = sameAs;
     }
+
+    public Set<Agent> getCreators() {
+        return creators;
+    }
+
+    public void setCreators(Set<Agent> creators) {
+        this.creators = creators;
+    }
 }

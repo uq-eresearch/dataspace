@@ -64,7 +64,6 @@ public class RegistryApplication {
             agent.setUpdated(now);
             agent.setLocatedOn(source);
             agent.setSource(source);
-            agent.setPublisher(agent);
             agent.getCreators().add(agent);
 
             entityManager.persist(source);
