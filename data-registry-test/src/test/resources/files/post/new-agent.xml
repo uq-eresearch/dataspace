@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app">
-    <id>http://localhost:9635/parties/1</id>
+    <id>http://localhost:9635/agents/1</id>
     <title type="text">Atom Party</title>
     <updated>2010-10-19T01:38:40.899Z</updated>
     <content type="text">We will be partying</content>
