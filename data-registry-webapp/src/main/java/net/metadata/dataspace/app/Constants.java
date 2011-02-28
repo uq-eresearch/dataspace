@@ -46,44 +46,51 @@ public interface Constants {
     String TARGET_LOGOUT = "logout";
 
     /**
+     * Namespaces
+     */
+    String NS_ANDS_GROUP = "https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php";
+    String NS_FOAF = "http://xmlns.com/foaf/0.1/";
+    String NS_ANDS = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#";
+    String NS_DC = "http://purl.org/dc/terms/";
+    String NS_DCMITYPE = "http://purl.org/dc/dcmitype/";
+    String NS_CLD = "http://purl.org/cld/terms/";
+    String NS_VIVO = "http://vivoweb.org/ontology/core#";
+    String NS_ORE = "http://www.openarchives.org/ore/terms/";
+    String NS_GEORSS = "http://www.georss.org/georss/";
+    String NS_RDFA = "http://www.w3.org/ns/rdfa#";
+
+    /**
      * rel attribute types
      */
     String REL_ALTERNATE = "alternate";
-    String REL_CREATOR = "http://purl.org/dc/terms/creator";
-    String REL_DESCRIBES = "http://www.openarchives.org/ore/terms/describes";
-    String REL_HAS_PARTICIPANT = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant";
-    String REL_HAS_OUTPUT = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput";
-    String REL_IS_ACCESSED_VIA = "http://purl.org/cld/terms/isAccessedVia";
-    String REL_IS_COLLECTOR_OF = "http://xmlns.com/foaf/0.1/made";
-    String REL_IS_LOCATED_AT = "http://purl.org/cld/terms/isLocatedAt";
-    String REL_IS_OUTPUT_OF = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf";
-    String REL_IS_PARTICIPANT_IN = "http://xmlns.com/foaf/0.1/currentProject";
-    String REL_IS_SUPPORTED_BY = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy";
+    String REL_CREATOR = NS_DC + "creator";
+    String REL_DESCRIBES = NS_ORE + "describes";
+    String REL_HAS_PARTICIPANT = NS_ANDS + "hasParticipant";
+    String REL_HAS_OUTPUT = NS_ANDS + "hasOutput";
+    String REL_IS_ACCESSED_VIA = NS_CLD + "isAccessedVia";
+    String REL_IS_COLLECTOR_OF = NS_FOAF + "made";
+    String REL_IS_LOCATED_AT = NS_CLD + "isLocatedAt";
+    String REL_IS_OUTPUT_OF = NS_ANDS + "isOutputOf";
+    String REL_IS_PARTICIPANT_IN = NS_FOAF + "currentProject";
+    String REL_IS_SUPPORTED_BY = NS_ANDS + "isSupportedBy";
     String REL_LATEST_VERSION = "latest-version";
+    String REL_PAGE = NS_FOAF + "page";
     String REL_PREDECESSOR_VERSION = "predecessor-version";
-    String REL_PUBLISHER = "http://purl.org/dc/terms/publisher";
+    String REL_PUBLISHER = NS_DC + "publisher";
     String REL_SELF = "self";
     String REL_SUCCESSOR_VERSION = "successor-version";
     String REL_VIA = "via";
-
-    /**
-     * scheme attributes
-     */
-    String SCHEME_DCMITYPE = "http://purl.org/dc/dcmitype/";
-    String SCHEME_VIVO = "http://vivoweb.org/ontology/core#";
-    String SCHEME_FOAF = "http://xmlns.com/foaf/0.1/";
-    String SCHEME_ANDS_GROUP = "https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php";
 
 
     /**
      * term attributes
      */
     String TERM_ANDS_GROUP = "The University of Queensland";
-    String TERM_ACTIVITY = SCHEME_FOAF + "Project";
-    String TERM_COLLECTION = SCHEME_DCMITYPE + "Collection";
-    String TERM_AGENT_AS_GROUP = SCHEME_FOAF + "Group";
-    String TERM_AGENT_AS_AGENT = SCHEME_FOAF + "Agent";
-    String TERM_SERVICE = SCHEME_VIVO + "Service";
+    String TERM_ACTIVITY = NS_FOAF + "Project";
+    String TERM_COLLECTION = NS_DCMITYPE + "Collection";
+    String TERM_AGENT_AS_GROUP = NS_FOAF + "Group";
+    String TERM_AGENT_AS_AGENT = NS_FOAF + "Agent";
+    String TERM_SERVICE = NS_VIVO + "Service";
 
     /**
      * HTTP Status messages

@@ -140,7 +140,7 @@ public class AdapterHelper {
     private static Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_ACTIVITY, version.getParent().getClass().getSimpleName());
+        entry.addCategory(Constants.NS_FOAF, Constants.TERM_ACTIVITY, version.getParent().getClass().getSimpleName());
         try {
             Set<Agent> agentSet = version.getHasParticipants();
             for (Agent agent : agentSet) {
@@ -163,7 +163,7 @@ public class AdapterHelper {
     private static Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.SCHEME_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getParent().getClass().getSimpleName());
+        entry.addCategory(Constants.NS_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getParent().getClass().getSimpleName());
         try {
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
@@ -192,9 +192,9 @@ public class AdapterHelper {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
         //<category scheme="http://purl.org/dc/dcmitype/" term="http://purl.org/dc/dcmitype/Collection" label="Collection"/>
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.SCHEME_DCMITYPE, Constants.TERM_COLLECTION, version.getParent().getClass().getSimpleName());
         try {
-            entry.addLink(version.getPage(), Constants.REL_IS_LOCATED_AT);
+            entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getParent().getClass().getSimpleName());
+            entry.addLink(version.getPage(), Constants.REL_PAGE);
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
                 entry.addCategory(sub.getTerm(), sub.getDefinedBy(), sub.getLabel());
@@ -204,16 +204,22 @@ public class AdapterHelper {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_CREATOR);
             }
-            Set<Service> services = version.getAccessedVia();
-            for (Service service : services) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_IS_ACCESSED_VIA);
+            Set<Agent> publishers = version.getPublishers();
+            for (Agent publisher : publishers) {
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + publisher.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_PUBLISHER);
             }
             Set<Activity> activities = version.getOutputOf();
             for (Activity activity : activities) {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_OUTPUT_OF);
             }
+            Set<Service> services = version.getAccessedVia();
+            for (Service service : services) {
+                String href = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
+                entry.addLink(href, Constants.REL_IS_ACCESSED_VIA);
+            }
+            entry.setRights(version.getRights());
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
@@ -225,7 +231,7 @@ public class AdapterHelper {
     private static Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.SCHEME_VIVO, Constants.TERM_SERVICE, version.getParent().getClass().getSimpleName());
+        entry.addCategory(Constants.NS_VIVO, Constants.TERM_SERVICE, version.getParent().getClass().getSimpleName());
         try {
             entry.addLink(version.getPage(), Constants.REL_IS_LOCATED_AT);
             Set<Collection> collectionSet = version.getSupportedBy();
@@ -431,7 +437,7 @@ public class AdapterHelper {
         try {
             List<Category> categories = entry.getCategories();
             for (Category category : categories) {
-                if (!category.getScheme().toString().equals(Constants.SCHEME_DCMITYPE)) {
+                if (!category.getScheme().toString().equals(Constants.NS_DCMITYPE)) {
                     String vocabulary = category.getScheme().toString();
                     String value = category.getTerm();
                     if (vocabulary != null && value != null) {
@@ -483,12 +489,16 @@ public class AdapterHelper {
             entry.setTitle(version.getTitle());
             entry.setContent(version.getDescription());
             entry.setUpdated(version.getUpdated());
+            Date publishedDate = version.getParent().getPublishDate();
+            if (publishedDate != null) {
+                entry.setPublished(publishedDate);
+            }
             Set<String> authors = version.getAuthors();
             for (String author : authors) {
                 entry.addAuthor(author);
             }
             prepareSelfLink(entry, parentUrl);
-            entry.addCategory(Constants.SCHEME_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);
+            entry.addCategory(Constants.NS_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to set mandatory attributes", 500);
         }

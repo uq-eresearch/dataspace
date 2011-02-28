@@ -179,6 +179,7 @@ public class EntityRelationshipHelper {
         Control control = entry.getControl();
         if (control != null && !control.isDraft()) {
             version.getParent().setPublished(version);
+            version.getParent().setPublishDate(new Date());
         }
     }
 }

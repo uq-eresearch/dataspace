@@ -36,6 +36,9 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
 
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date publishDate;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source locatedOn;
 
@@ -151,5 +154,13 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
         }
         AbstractRecordEntity other = (AbstractRecordEntity) obj;
         return getId().equals(other.getId());
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
     }
 }

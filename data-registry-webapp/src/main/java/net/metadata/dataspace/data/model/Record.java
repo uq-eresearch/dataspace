@@ -60,4 +60,8 @@ public interface Record {
     void setLocatedOn(Source source);
 
     void setSource(Source source);
+
+    void setPublishDate(Date publishDate);
+
+    Date getPublishDate();
 }
