@@ -36,6 +36,8 @@ public interface Constants {
 
     String ID_PREFIX = RegistryApplication.getApplicationContext().getUriPrefix();
     String UQ_SOURCE_URI = "http://uq.edu.au";
+    String UQ_TITLE = "The University of Queensland";
+    String UQ_EMAIL = "info@dataspace.uq.edu.au";
     /**
      * Target Type names
      */

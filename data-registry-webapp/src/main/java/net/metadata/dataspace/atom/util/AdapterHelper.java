@@ -140,8 +140,12 @@ public class AdapterHelper {
     private static Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.NS_FOAF, Constants.TERM_ACTIVITY, version.getParent().getClass().getSimpleName());
         try {
+            entry.addCategory(Constants.NS_FOAF, Constants.TERM_ACTIVITY, version.getParent().getClass().getSimpleName());
+            String page = version.getPage();
+            if (page != null) {
+                entry.addLink(page, Constants.REL_PAGE);
+            }
             Set<Agent> agentSet = version.getHasParticipants();
             for (Agent agent : agentSet) {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
@@ -156,6 +160,7 @@ public class AdapterHelper {
             throw new ResponseContextException(500, th);
         }
         FeedHelper.setPublished(version, entry);
+        addContributor(entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -163,8 +168,12 @@ public class AdapterHelper {
     private static Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.NS_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getParent().getClass().getSimpleName());
         try {
+            entry.addCategory(Constants.NS_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getParent().getClass().getSimpleName());
+            String page = version.getPage();
+            if (page != null) {
+                entry.addLink(page, Constants.REL_PAGE);
+            }
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
                 entry.addCategory(sub.getTerm(), sub.getDefinedBy(), sub.getLabel());
@@ -184,6 +193,7 @@ public class AdapterHelper {
             throw new ResponseContextException(500, th);
         }
         FeedHelper.setPublished(version, entry);
+        addContributor(entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -194,7 +204,10 @@ public class AdapterHelper {
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getParent().getClass().getSimpleName());
-            entry.addLink(version.getPage(), Constants.REL_PAGE);
+            String page = version.getPage();
+            if (page != null) {
+                entry.addLink(page, Constants.REL_PAGE);
+            }
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
                 entry.addCategory(sub.getTerm(), sub.getDefinedBy(), sub.getLabel());
@@ -224,6 +237,7 @@ public class AdapterHelper {
             throw new ResponseContextException(500, th);
         }
         FeedHelper.setPublished(version, entry);
+        addContributor(entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -231,9 +245,12 @@ public class AdapterHelper {
     private static Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
-        entry.addCategory(Constants.NS_VIVO, Constants.TERM_SERVICE, version.getParent().getClass().getSimpleName());
         try {
-            entry.addLink(version.getPage(), Constants.REL_IS_LOCATED_AT);
+            entry.addCategory(Constants.NS_VIVO, Constants.TERM_SERVICE, version.getParent().getClass().getSimpleName());
+            String page = version.getPage();
+            if (page != null) {
+                entry.addLink(page, Constants.REL_PAGE);
+            }
             Set<Collection> collectionSet = version.getSupportedBy();
             for (Collection collection : collectionSet) {
                 String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
@@ -243,6 +260,7 @@ public class AdapterHelper {
             throw new ResponseContextException(500, th);
         }
         FeedHelper.setPublished(version, entry);
+        addContributor(entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -531,6 +549,14 @@ public class AdapterHelper {
             }
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to add link elements to entry", 400);
+        }
+    }
+
+    private static void addContributor(Entry entry) throws ResponseContextException {
+        try {
+            entry.addContributor(Constants.UQ_TITLE, Constants.UQ_EMAIL, Constants.UQ_SOURCE_URI);
+        } catch (Throwable th) {
+            throw new ResponseContextException("Failed to add contributor", 500);
         }
     }
 
