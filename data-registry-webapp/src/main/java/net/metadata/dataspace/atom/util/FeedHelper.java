@@ -4,6 +4,8 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.record.Agent;
+import org.apache.abdera.Abdera;
 import org.apache.abdera.factory.Factory;
 import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -12,9 +14,7 @@ import org.apache.abdera.protocol.server.context.AbstractResponseContext;
 import org.apache.abdera.protocol.server.context.BaseResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 import static org.apache.abdera.protocol.server.ProviderHelper.calculateEntityTag;
 
@@ -70,10 +70,23 @@ public class FeedHelper {
                 entry.setContent(version.getDescription());
                 Link selfLink = entry.addLink(uri, Constants.REL_SELF);
                 selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
-                Set<String> authors = version.getAuthors();
-                for (String author : authors) {
-                    entry.addAuthor(author);
+
+
+//                Set<String> authors = version.getAuthors();
+//                for (String author : authors) {
+//                    entry.addAuthor(author);
+//                }
+                Set<Agent> authors = record.getAuthors();
+                List<Person> personList = new ArrayList<Person>();
+                for (Agent author : authors) {
+                    Person person = new Abdera().getFactory().newAuthor();
+                    person.setName(author.getTitle());
+                    person.setEmail(author.getMBox());
+                    person.setUri(Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
+                    personList.add(person);
                 }
+
+
                 entry.setUpdated(version.getUpdated());
                 setPublished(version, entry);
             }

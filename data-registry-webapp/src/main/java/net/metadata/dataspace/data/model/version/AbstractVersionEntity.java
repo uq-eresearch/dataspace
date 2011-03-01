@@ -2,14 +2,11 @@ package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.util.DaoHelper;
-import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Author: alabri
@@ -45,9 +42,6 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
-
-    @CollectionOfElements
-    private Set<String> authors = new HashSet<String>();
 
     public AbstractVersionEntity() {
         this.isActive = true;
@@ -114,16 +108,6 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @Override
     public void setUpdated(Date updated) {
         this.updated = updated;
-    }
-
-    @Override
-    public Set<String> getAuthors() {
-        return authors;
-    }
-
-    @Override
-    public void setAuthors(Set<String> authors) {
-        this.authors = authors;
     }
 
     @Override

@@ -48,19 +48,19 @@ public class CollectionVersion extends AbstractVersionEntity {
     private String temporal;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "collections_agents_creators")
+    @JoinTable(name = "collections_creators")
     private Set<Agent> creators = new HashSet<Agent>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "collection_agent_publishers")
+    @JoinTable(name = "collection_publishers")
     private Set<Agent> publishers = new HashSet<Agent>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "collections_activities_is_output_of")
+    @JoinTable(name = "collections_is_output_of")
     private Set<Activity> isOutputOf = new HashSet<Activity>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "collections_activities_is_accessed_via")
+    @JoinTable(name = "collections_is_accessed_via")
     private Set<Service> isAccessedVia = new HashSet<Service>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

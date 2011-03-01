@@ -8,6 +8,7 @@ import org.hibernate.validator.NotNull;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import java.util.SortedSet;
 
 /**
@@ -57,6 +58,9 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
 
     @Override
     abstract public SortedSet<V> getVersions();
+
+    @Override
+    abstract public Set<Agent> getAuthors();
 
     @Override
     public Long getId() {

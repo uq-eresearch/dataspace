@@ -33,11 +33,11 @@ public class ActivityVersion extends AbstractVersionEntity {
     private String page;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "activities_collections_has_output")
+    @JoinTable(name = "activities_has_output")
     private Set<Collection> hasOutput = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "activities_agents_has_participants")
+    @JoinTable(name = "activities_has_participants")
     private Set<Agent> hasParticipants = new HashSet<Agent>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -34,8 +34,8 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     private Set<Service> sameAs = new HashSet<Service>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "service_description_creators")
-    private Set<Agent> creators = new HashSet<Agent>();
+    @JoinTable(name = "service_description_authors")
+    private Set<Agent> authors = new HashSet<Agent>();
 
     public Service() {
     }
@@ -64,11 +64,6 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
         return this.published != null ? this.published.getPage() : this.versions.first().getPage();
     }
 
-
-    public Set<String> getAuthors() {
-        return this.published != null ? this.published.getAuthors() : this.versions.first().getAuthors();
-    }
-
     @Override
     public ServiceVersion getPublished() {
         return published;
@@ -92,11 +87,13 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
         this.sameAs = sameAs;
     }
 
-    public Set<Agent> getCreators() {
-        return creators;
+    @Override
+    public Set<Agent> getAuthors() {
+        return this.authors;
     }
 
-    public void setCreators(Set<Agent> creators) {
-        this.creators = creators;
+    @Override
+    public void setAuthors(Set<Agent> authors) {
+        this.authors = authors;
     }
 }

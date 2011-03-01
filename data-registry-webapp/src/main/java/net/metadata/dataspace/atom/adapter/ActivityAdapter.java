@@ -128,6 +128,10 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
         }
     }
 
+    public List<Person> getAuthors(Activity activity, RequestContext request) throws ResponseContextException {
+        return HttpMethodHelper.getAuthors(activity, request);
+    }
+
     @Override
     public String[] getAccepts(RequestContext request) {
         return new String[]{Constants.MIME_TYPE_ATOM_ENTRY};

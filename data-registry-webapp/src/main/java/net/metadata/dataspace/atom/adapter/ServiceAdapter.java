@@ -127,6 +127,9 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         }
     }
 
+    public List<Person> getAuthors(Service service, RequestContext request) throws ResponseContextException {
+        return HttpMethodHelper.getAuthors(service, request);
+    }
 
     @Override
     public String[] getAccepts(RequestContext request) {

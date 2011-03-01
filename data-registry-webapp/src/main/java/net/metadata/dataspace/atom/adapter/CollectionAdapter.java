@@ -18,10 +18,8 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * User: alabri
@@ -132,14 +130,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     }
 
     public List<Person> getAuthors(net.metadata.dataspace.data.model.record.Collection collection, RequestContext request) throws ResponseContextException {
-        Set<String> authors = collection.getAuthors();
-        List<Person> personList = new ArrayList<Person>();
-        for (String author : authors) {
-            Person person = request.getAbdera().getFactory().newAuthor();
-            person.setName(author);
-            personList.add(person);
-        }
-        return personList;
+        return HttpMethodHelper.getAuthors(collection, request);
     }
 
     @Override

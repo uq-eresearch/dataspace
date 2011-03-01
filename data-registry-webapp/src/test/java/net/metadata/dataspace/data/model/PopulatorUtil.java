@@ -18,8 +18,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -64,9 +62,6 @@ public class PopulatorUtil {
         collectionVersion.setPage("http://test.location.com.au/collection");
         collectionVersion.setRights("Test rights text");
         collectionVersion.setUpdated(new Date());
-        Set<String> authors = new HashSet<String>();
-        authors.add("Test Collection Author");
-        collectionVersion.setAuthors(authors);
         return collectionVersion;
     }
 
@@ -78,9 +73,6 @@ public class PopulatorUtil {
         agentVersion.setDescription("Test Agent Content");
         agentVersion.setType(AgentType.PERSON);
         agentVersion.setUpdated(new Date());
-        Set<String> authors = new HashSet<String>();
-        authors.add("Test Agent Author");
-        agentVersion.setAuthors(authors);
         agent.setUpdated(new Date());
         return agentVersion;
     }
@@ -93,9 +85,6 @@ public class PopulatorUtil {
         serviceVersion.setType(ServiceType.SYNDICATE);
         serviceVersion.setUpdated(new Date());
         serviceVersion.setPage("http://test.location.com.au/collection");
-        Set<String> authors = new HashSet<String>();
-        authors.add("Test Service Author");
-        serviceVersion.setAuthors(authors);
         return serviceVersion;
     }
 
@@ -106,9 +95,6 @@ public class PopulatorUtil {
         activityVersion.setDescription("Test Activity Content");
         activityVersion.setType(ActivityType.PROJECT);
         activityVersion.setUpdated(new Date());
-        Set<String> authors = new HashSet<String>();
-        authors.add("Test Activity Author");
-        activityVersion.setAuthors(authors);
         return activityVersion;
     }
 

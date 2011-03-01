@@ -17,6 +17,7 @@ import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Feed;
+import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.ParseException;
 import org.apache.abdera.parser.Parser;
 import org.apache.abdera.protocol.server.ProviderHelper;
@@ -30,8 +31,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Author: alabri
@@ -70,14 +73,13 @@ public class HttpMethodHelper {
                     try {
                         transaction.begin();
                         version.setParent(record);
-
                         record.getVersions().add(version);
                         Date now = new Date();
                         version.setUpdated(now);
                         record.setSource(source);
                         record.setLocatedOn(source);
                         record.setUpdated(now);
-
+                        AdapterHelper.addAuthors(record, entry.getAuthors());
                         EntityRelationshipHelper.addRelations(entry, version);
                         entityManager.persist(version);
 //                        entityManager.persist(source);
@@ -355,6 +357,19 @@ public class HttpMethodHelper {
             }
         }
         return list;
+    }
+
+    public static List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
+        Set<Agent> authors = record.getAuthors();
+        List<Person> personList = new ArrayList<Person>();
+        for (Agent author : authors) {
+            Person person = request.getAbdera().getFactory().newAuthor();
+            person.setName(author.getTitle());
+            person.setEmail(author.getMBox());
+            person.setUri(Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
+            personList.add(person);
+        }
+        return personList;
     }
 
     private static Record getExistingRecord(String uriKey, Class clazz) {

@@ -33,11 +33,11 @@ public class ServiceVersion extends AbstractVersionEntity {
     private String page; //URI
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "services_collections_is_supported_by")
+    @JoinTable(name = "services_is_supported_by")
     private Set<Collection> isSupportedBy = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "services_agent_publishers")
+    @JoinTable(name = "services_publishers")
     private Set<Agent> publishers = new HashSet<Agent>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

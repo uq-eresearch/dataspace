@@ -71,6 +71,7 @@ public interface Constants {
     String REL_HAS_OUTPUT = NS_ANDS + "hasOutput";
     String REL_IS_ACCESSED_VIA = NS_CLD + "isAccessedVia";
     String REL_IS_COLLECTOR_OF = NS_FOAF + "made";
+    String REL_IS_DESCRIBED_BY = NS_ORE + "isDescribedBy";
     String REL_IS_LOCATED_AT = NS_CLD + "isLocatedAt";
     String REL_IS_OUTPUT_OF = NS_ANDS + "isOutputOf";
     String REL_IS_PARTICIPANT_IN = NS_FOAF + "currentProject";

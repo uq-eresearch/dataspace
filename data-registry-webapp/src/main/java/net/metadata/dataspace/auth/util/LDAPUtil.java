@@ -49,8 +49,8 @@ public class LDAPUtil {
 
     public static void createLoggedInAgent(Map<String, String> attributesMap) throws NamingException {
         AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
-        String uqMail = attributesMap.get("mail");
-        if (agentDao.getByEmail(uqMail) == null) {
+        String mail = attributesMap.get("mail");
+        if (agentDao.getByEmail(mail) == null) {
             EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
             EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
@@ -68,9 +68,8 @@ public class LDAPUtil {
             version.setUpdated(now);
             Set<String> authors = new HashSet<String>();
             authors.add("The University of Queensland DataSpace");
-            version.setAuthors(authors);
             version.setType(AgentType.PERSON);
-            version.setMbox(uqMail);
+            version.setMbox(mail);
             version.setAlternative(attributesMap.get("pub-displayname"));
 
             version.setParent(agent);
@@ -81,7 +80,7 @@ public class LDAPUtil {
             agent.setUpdated(now);
             agent.setLocatedOn(systemSource);
             agent.setSource(systemSource);
-            agent.getCreators().add(agent);
+            agent.getAuthors().add(agent);
 
 
             entityManager.persist(version);
@@ -105,5 +104,46 @@ public class LDAPUtil {
             }
         }
         return attributes;
+    }
+
+    public static Agent createAgent(Map<String, String> attributesMap) {
+        AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
+        String mail = attributesMap.get("mail");
+        if (agentDao.getByEmail(mail) == null) {
+            EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
+            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+            EntityTransaction transaction = entityManager.getTransaction();
+
+            Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
+            AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
+            SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
+            Source systemSource = sourceDao.getBySourceURI(Constants.UQ_SOURCE_URI);
+            transaction.begin();
+            String name = attributesMap.get("cn");
+            version.setTitle(name);
+            version.setDescription("Staff Member");
+            Date now = new Date();
+            version.setUpdated(now);
+            version.setType(AgentType.PERSON);
+            version.setMbox(mail);
+
+            version.setParent(agent);
+            agent.getVersions().add(version);
+            version.getParent().setPublished(version);
+            agent.setUpdated(now);
+
+            agent.setUpdated(now);
+            agent.setLocatedOn(systemSource);
+            agent.setSource(systemSource);
+            agent.getAuthors().add(agent);
+
+
+            entityManager.persist(version);
+            entityManager.persist(agent);
+            transaction.commit();
+
+            return agent;
+        }
+        return null;
     }
 }

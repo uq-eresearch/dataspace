@@ -68,7 +68,7 @@ public class AgentDaoImplTest {
         agentVersion.getSubjects().add(subject2);
         agent.getVersions().add(agentVersion);
         Source source = PopulatorUtil.getSource();
-        agent.getCreators().add(agent);
+        agent.getAuthors().add(agent);
         agent.setLocatedOn(source);
         agent.setSource(source);
 

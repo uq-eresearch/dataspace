@@ -40,15 +40,15 @@ public class AgentVersion extends AbstractVersionEntity {
     private Set<Subject> subjects = new HashSet<Subject>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "agents_collections_made")
+    @JoinTable(name = "agents_made")
     private Set<Collection> made = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "agents_collections_is_manager_of")
+    @JoinTable(name = "agents_is_manager_of")
     private Set<Collection> isManagerOf = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "agents_activities_current_projects")
+    @JoinTable(name = "agents_current_projects")
     private Set<Activity> currentProjects = new HashSet<Activity>();
 
     public AgentVersion() {

@@ -35,8 +35,8 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     private Set<Activity> sameAs = new HashSet<Activity>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "activities_description_creators")
-    private Set<Agent> creators = new HashSet<Agent>();
+    @JoinTable(name = "activities_description_authors")
+    private Set<Agent> authors = new HashSet<Agent>();
 
     public Activity() {
     }
@@ -65,10 +65,6 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
         return this.published != null ? this.published.getHasParticipants() : this.versions.first().getHasParticipants();
     }
 
-    public Set<String> getAuthors() {
-        return this.published != null ? this.published.getAuthors() : this.versions.first().getAuthors();
-    }
-
     @Override
     public ActivityVersion getPublished() {
         return published;
@@ -91,11 +87,13 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
         this.sameAs = sameAs;
     }
 
-    public Set<Agent> getCreators() {
-        return creators;
+    @Override
+    public Set<Agent> getAuthors() {
+        return this.authors;
     }
 
-    public void setCreators(Set<Agent> creators) {
-        this.creators = creators;
+    @Override
+    public void setAuthors(Set<Agent> authors) {
+        this.authors = authors;
     }
 }

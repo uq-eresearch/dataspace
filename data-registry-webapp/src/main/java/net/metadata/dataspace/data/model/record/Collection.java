@@ -36,8 +36,8 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     private Set<Collection> sameAs = new HashSet<Collection>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "collection_description_creators")
-    private Set<Agent> creators = new HashSet<Agent>();
+    @JoinTable(name = "collection_description_authors")
+    private Set<Agent> authors = new HashSet<Agent>();
 
     public Collection() {
 
@@ -53,10 +53,6 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
 
     public String getTitle() {
         return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
-    }
-
-    public Set<String> getAuthors() {
-        return this.published != null ? this.published.getAuthors() : this.versions.first().getAuthors();
     }
 
     public String getContent() {
@@ -106,11 +102,13 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
         this.sameAs = sameAs;
     }
 
-    public Set<Agent> getCreators() {
-        return creators;
+    @Override
+    public Set<Agent> getAuthors() {
+        return this.authors;
     }
 
-    public void setCreators(Set<Agent> creators) {
-        this.creators = creators;
+    @Override
+    public void setAuthors(Set<Agent> authors) {
+        this.authors = authors;
     }
 }

@@ -37,8 +37,8 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     private Set<Agent> sameAs = new HashSet<Agent>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "agent_description_creators")
-    private Set<Agent> creators = new HashSet<Agent>();
+    @JoinTable(name = "agent_description_authors")
+    private Set<Agent> authors = new HashSet<Agent>();
 
     public Agent() {
     }
@@ -51,10 +51,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
         return this.published != null ? this.published.getDescription() : this.versions.first().getDescription();
     }
 
-    public Set<String> getAuthors() {
-        return this.published != null ? this.published.getAuthors() : this.versions.first().getAuthors();
-    }
-
     public Set<Subject> getSubjects() {
         return this.published != null ? this.published.getSubjects() : this.versions.first().getSubjects();
     }
@@ -65,6 +61,10 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     public Set<Activity> getParticipantIn() {
         return this.published != null ? this.published.getCurrentProjects() : this.versions.first().getCurrentProjects();
+    }
+
+    public String getMBox() {
+        return this.published != null ? this.published.getMbox() : this.versions.first().getMbox();
     }
 
     public SortedSet<AgentVersion> getVersions() {
@@ -99,11 +99,13 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
         this.sameAs = sameAs;
     }
 
-    public Set<Agent> getCreators() {
-        return creators;
+    @Override
+    public void setAuthors(Set<Agent> authors) {
+        this.authors = authors;
     }
 
-    public void setCreators(Set<Agent> creators) {
-        this.creators = creators;
+    @Override
+    public Set<Agent> getAuthors() {
+        return this.authors;
     }
 }

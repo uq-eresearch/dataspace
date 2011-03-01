@@ -3,8 +3,10 @@ package net.metadata.dataspace.atom.util;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
+import net.metadata.dataspace.auth.util.LDAPUtil;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -34,6 +36,7 @@ import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 
+import javax.naming.NamingEnumeration;
 import java.util.*;
 
 /**
@@ -141,7 +144,8 @@ public class AdapterHelper {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            entry.addCategory(Constants.NS_FOAF, Constants.TERM_ACTIVITY, version.getParent().getClass().getSimpleName());
+            entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
+            entry.addCategory(Constants.NS_FOAF, Constants.TERM_ACTIVITY, version.getType().toString());
             String page = version.getPage();
             if (page != null) {
                 entry.addLink(page, Constants.REL_PAGE);
@@ -169,7 +173,8 @@ public class AdapterHelper {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            entry.addCategory(Constants.NS_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getParent().getClass().getSimpleName());
+            entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
+            entry.addCategory(Constants.NS_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getType().toString());
             String page = version.getPage();
             if (page != null) {
                 entry.addLink(page, Constants.REL_PAGE);
@@ -203,7 +208,8 @@ public class AdapterHelper {
         //<category scheme="http://purl.org/dc/dcmitype/" term="http://purl.org/dc/dcmitype/Collection" label="Collection"/>
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getParent().getClass().getSimpleName());
+            entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
+            entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getType().toString());
             String page = version.getPage();
             if (page != null) {
                 entry.addLink(page, Constants.REL_PAGE);
@@ -246,7 +252,8 @@ public class AdapterHelper {
         String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            entry.addCategory(Constants.NS_VIVO, Constants.TERM_SERVICE, version.getParent().getClass().getSimpleName());
+            entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
+            entry.addCategory(Constants.NS_VIVO, Constants.TERM_SERVICE, version.getType().toString());
             String page = version.getPage();
             if (page != null) {
                 entry.addLink(page, Constants.REL_PAGE);
@@ -390,7 +397,6 @@ public class AdapterHelper {
                 version.setTitle(entry.getTitle());
                 version.setDescription(content);
                 version.setUpdated(entry.getUpdated());
-//                version.setAuthors(getAuthors(entry.getAuthors()));
             } catch (Throwable th) {
                 throw new ResponseContextException(500, th);
             }
@@ -438,16 +444,29 @@ public class AdapterHelper {
         }
     }
 
-    private static Set<String> getAuthors(List<Person> persons) throws ResponseContextException {
-        Set<String> authors = new HashSet<String>();
+    public static void addAuthors(Record record, List<Person> persons) throws ResponseContextException {
         try {
             for (Person person : persons) {
-                authors.add(person.getName());
+                String email = person.getEmail();
+                if (email == null) {
+                    throw new ResponseContextException("Author does not have an email address", 400);
+                } else {
+                    Agent agent = daoManager.getAgentDao().getByEmail(email);
+                    if (agent == null) {
+                        NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email);
+                        Map<String, String> map = LDAPUtil.getAttributesAsMap(namingEnumeration);
+                        agent = LDAPUtil.createAgent(map);
+                        if (agent != null) {
+                            record.getAuthors().add(agent);
+                        }
+                    } else {
+                        record.getAuthors().add(agent);
+                    }
+                }
             }
         } catch (Throwable th) {
             throw new ResponseContextException("Cannot extract authors", 500);
         }
-        return authors;
     }
 
     public static Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
@@ -511,9 +530,9 @@ public class AdapterHelper {
             if (publishedDate != null) {
                 entry.setPublished(publishedDate);
             }
-            Set<String> authors = version.getAuthors();
-            for (String author : authors) {
-                entry.addAuthor(author);
+            Set<Agent> authors = version.getParent().getAuthors();
+            for (Agent author : authors) {
+                entry.addAuthor(author.getPublished().getTitle(), author.getPublished().getMbox(), Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
             }
             prepareSelfLink(entry, parentUrl);
             entry.addCategory(Constants.NS_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);
