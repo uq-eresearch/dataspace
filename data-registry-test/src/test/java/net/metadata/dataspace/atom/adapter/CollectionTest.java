@@ -1,12 +1,27 @@
 package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.atom.util.ClientHelper;
+import net.metadata.dataspace.atom.util.XPathHelper;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.DeleteMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import static junit.framework.Assert.assertEquals;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import java.io.InputStream;
+
+import static junit.framework.Assert.*;
 
 /**
  * Author: alabri
@@ -18,10 +33,6 @@ import static junit.framework.Assert.assertEquals;
 public class CollectionTest {
 
     @Test
-    public void dummyTest() throws Exception {
-        assertEquals(1, 1);
-    }
-    /*@Test
     public void testCollectionCRUD() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
@@ -31,7 +42,7 @@ public class CollectionTest {
         //Post Entry
         String fileName = "/files/post/new-collection.xml";
         PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_COLLECTIONS);
-        assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+        assertEquals(postMethod.getResponseBodyAsString(), 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
         //Get entry
         GetMethod getMethod = ClientHelper.getEntry(client, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
@@ -324,5 +335,5 @@ public class CollectionTest {
         assertNotNull("Feed Entry missing draft element", draft);
         assertFalse("Feed entry draft is empty", entryContent.isEmpty());
 
-    }*/
+    }
 }
