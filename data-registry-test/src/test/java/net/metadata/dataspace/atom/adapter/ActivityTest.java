@@ -1,12 +1,28 @@
 package net.metadata.dataspace.atom.adapter;
 
+
 import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.atom.util.ClientHelper;
+import net.metadata.dataspace.atom.util.XPathHelper;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.DeleteMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import static junit.framework.Assert.assertEquals;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import java.io.InputStream;
+
+import static junit.framework.Assert.*;
 
 /**
  * Author: alabri
@@ -17,11 +33,6 @@ import static junit.framework.Assert.assertEquals;
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
 public class ActivityTest {
 
-    @Test
-    public void dummyTest() throws Exception {
-        assertEquals(1, 1);
-    }
-    /*@Test
     public void testActivityCRUD() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
@@ -165,7 +176,7 @@ public class ActivityTest {
 
     }
 
-    *//*   @Test
+    /*   @Test
         public void testActivityRecordContent() throws Exception {
 
             //create a client
@@ -246,7 +257,7 @@ public class ActivityTest {
             assertEquals(expectedRifcsLink, rifcsLink);
 
         }
-    *//*
+    */
 
     @Test
     public void testActivityFeedContent() throws Exception {
@@ -324,7 +335,7 @@ public class ActivityTest {
         assertNotNull("Feed Entry missing draft element", draft);
         assertFalse("Feed entry draft is empty", entryContent.isEmpty());
 
-    }*/
+    }
 
 
 }
