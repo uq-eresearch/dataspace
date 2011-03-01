@@ -3,7 +3,6 @@ package net.metadata.dataspace.atom.util;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
-import net.metadata.dataspace.auth.util.LDAPUtil;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
@@ -36,7 +35,6 @@ import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 
-import javax.naming.NamingEnumeration;
 import java.util.*;
 
 /**
@@ -385,26 +383,21 @@ public class AdapterHelper {
         }
     }
 
-    public static boolean assembleAndValidateVersionFromEntry(Version version, Entry entry) throws ResponseContextException {
+    public static Version assembleAndValidateVersionFromEntry(Record record, Entry entry) throws ResponseContextException {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            return false;
+            return null;
         } else {
             String content = entry.getContent();
             if (content == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
             }
-            try {
-                version.setTitle(entry.getTitle());
-                version.setDescription(content);
-                version.setUpdated(entry.getUpdated());
-            } catch (Throwable th) {
-                throw new ResponseContextException(500, th);
-            }
+            Version version = entityCreator.getNextVersion(record);
+            version.setTitle(entry.getTitle());
+            version.setDescription(content);
+            version.setUpdated(new Date());
             addType(version, entry);
-            if (version instanceof CollectionVersion || version instanceof ServiceVersion) {
-                addLocation(version, entry);
-            }
-            return true;
+            addPage(version, entry);
+            return version;
         }
     }
 
@@ -434,32 +427,39 @@ public class AdapterHelper {
         }
     }
 
-    private static void addLocation(Version version, Entry entry) throws ResponseContextException {
-        try {
-            Link link = entry.getLink(Constants.REL_IS_LOCATED_AT);
-            String location = link.getHref().toString();
-            version.setPage(location);
-        } catch (Throwable th) {
-            throw new ResponseContextException(400, th);
+    private static void addPage(Version version, Entry entry) throws ResponseContextException {
+        Link link = entry.getLink(Constants.REL_PAGE);
+        if (version instanceof CollectionVersion) {
+            if (link == null) {
+                throw new ResponseContextException(Constants.REL_PAGE + " link element is missing", 400);
+            } else {
+                String page = link.getHref().toString();
+                version.setPage(page);
+            }
+        } else {
+            if (link != null) {
+                String page = link.getHref().toString();
+                version.setPage(page);
+            }
         }
     }
 
     public static void addAuthors(Record record, List<Person> persons) throws ResponseContextException {
         try {
             for (Person person : persons) {
+                String name = person.getName();
                 String email = person.getEmail();
-                if (email == null) {
-                    throw new ResponseContextException("Author does not have an email address", 400);
+                String uri = person.getUri().toString();
+                if (name == null) {
+                    throw new ResponseContextException("Author missing name", 400);
+                } else if (email == null) {
+                    throw new ResponseContextException("Author missing email address", 400);
+                } else if (uri == null) {
+                    throw new ResponseContextException("Author missing uri", 400);
                 } else {
-                    Agent agent = daoManager.getAgentDao().getByEmail(email);
-                    if (agent == null) {
-                        NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email);
-                        Map<String, String> map = LDAPUtil.getAttributesAsMap(namingEnumeration);
-                        agent = LDAPUtil.createAgent(map);
-                        if (agent != null) {
-                            record.getAuthors().add(agent);
-                        }
-                    } else {
+                    String uriKey = getEntityID(uri);
+                    Agent agent = daoManager.getAgentDao().getByKey(uriKey);
+                    if (agent != null) {
                         record.getAuthors().add(agent);
                     }
                 }

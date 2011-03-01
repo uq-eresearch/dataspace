@@ -60,27 +60,29 @@ public class HttpMethodHelper {
             MimeType mimeType = request.getContentType();
             String baseType = mimeType.getBaseType();
             if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
-                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-                EntityTransaction transaction = entityManager.getTransaction();
                 Entry entry = getEntryFromRequest(request);
                 Record record = entityCreator.getNextRecord(clazz);
-                Version version = entityCreator.getNextVersion(record);
-                boolean isValidEntry = AdapterHelper.assembleAndValidateVersionFromEntry(version, entry);
-                Source source = AdapterHelper.assembleAndValidateSourceFromEntry(entry);
-                if (!isValidEntry) {
+                Version version = AdapterHelper.assembleAndValidateVersionFromEntry(record, entry);
+                if (version == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                 } else {
+                    EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+                    EntityTransaction transaction = entityManager.getTransaction();
                     try {
+                        if (transaction.isActive()) {
+                            transaction.commit();
+                        }
                         transaction.begin();
+                        Source source = AdapterHelper.assembleAndValidateSourceFromEntry(entry);
                         version.setParent(record);
                         record.getVersions().add(version);
                         Date now = new Date();
                         version.setUpdated(now);
                         record.setSource(source);
                         record.setLocatedOn(source);
-                        record.setUpdated(now);
-                        AdapterHelper.addAuthors(record, entry.getAuthors());
                         EntityRelationshipHelper.addRelations(entry, version);
+                        AdapterHelper.addAuthors(record, entry.getAuthors());
+                        record.setUpdated(now);
                         entityManager.persist(version);
 //                        entityManager.persist(source);
                         entityManager.persist(record);
@@ -109,8 +111,6 @@ public class HttpMethodHelper {
             logger.info("Updating Entry");
             String mimeBaseType = request.getContentType().getBaseType();
             if (mimeBaseType.equals(Constants.MIME_TYPE_ATOM)) {
-                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-                EntityTransaction transaction = entityManager.getTransaction();
                 Entry entry = getEntryFromRequest(request);
                 String uriKey = AdapterHelper.getEntryID(request);
                 Record record = getExistingRecord(uriKey, clazz);
@@ -119,13 +119,17 @@ public class HttpMethodHelper {
                 } else {
                     refreshRecord(record, clazz);
                     if (record.isActive()) {
-                        Version version = entityCreator.getNextVersion(record);
-                        boolean isValidEntry = AdapterHelper.assembleAndValidateVersionFromEntry(version, entry);
-                        if (!isValidEntry) {
+                        Version version = AdapterHelper.assembleAndValidateVersionFromEntry(record, entry);
+                        if (version == null) {
                             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                         } else {
                             if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
+                                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+                                EntityTransaction transaction = entityManager.getTransaction();
                                 try {
+                                    if (transaction.isActive()) {
+                                        transaction.commit();
+                                    }
                                     transaction.begin();
                                     record.getVersions().add(version);
                                     version.setParent(record);

@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -200,8 +201,8 @@ public class AdapterHelperTest {
         List<Agent> agents = agentDao.getAll();
         Agent agent = agents.get(0);
         Entry entry = AdapterHelper.getEntryFromEntity(agent.getVersions().first(), true);
-        Version version = entityCreator.getNextVersion(agent);
-        assertTrue("Could not update entry", AdapterHelper.assembleAndValidateVersionFromEntry(version, entry));
+        Version version = AdapterHelper.assembleAndValidateVersionFromEntry(agent, entry);
+        assertNotNull("Could not update entry", version);
         assertEquals("Entry title", agent.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", agent.getVersions().first().getDescription(), version.getDescription());
         assertEquals("Entry updated", agent.getVersions().first().getUpdated().toGMTString(), version.getUpdated().toGMTString());
@@ -212,8 +213,8 @@ public class AdapterHelperTest {
         List<Collection> collections = collectionDao.getAll();
         Collection collection = collections.get(0);
         Entry entry = AdapterHelper.getEntryFromEntity(collection.getVersions().first(), true);
-        CollectionVersion version = (CollectionVersion) entityCreator.getNextVersion(collection);
-        assertTrue("Could not update entry", AdapterHelper.assembleAndValidateVersionFromEntry(version, entry));
+        CollectionVersion version = (CollectionVersion) AdapterHelper.assembleAndValidateVersionFromEntry(collection, entry);
+        assertNotNull("Could not update entry", version);
         assertEquals("Entry title", collection.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", collection.getVersions().first().getDescription(), version.getDescription());
         assertEquals("Entry location", collection.getVersions().first().getPage(), version.getPage());
@@ -225,8 +226,8 @@ public class AdapterHelperTest {
         List<Service> services = serviceDao.getAll();
         Service service = services.get(0);
         Entry entry = AdapterHelper.getEntryFromEntity(service.getVersions().first(), true);
-        ServiceVersion version = (ServiceVersion) entityCreator.getNextVersion(service);
-        assertTrue("Could not update entry", AdapterHelper.assembleAndValidateVersionFromEntry(version, entry));
+        ServiceVersion version = (ServiceVersion) AdapterHelper.assembleAndValidateVersionFromEntry(service, entry);
+        assertNotNull("Could not update entry", version);
         assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", service.getVersions().first().getDescription(), version.getDescription());
         assertEquals("Entry location", service.getVersions().first().getPage(), version.getPage());
@@ -238,8 +239,8 @@ public class AdapterHelperTest {
         List<Activity> activities = activityDao.getAll();
         Activity activity = activities.get(0);
         Entry entry = AdapterHelper.getEntryFromEntity(activity.getVersions().first(), true);
-        Version version = entityCreator.getNextVersion(activity);
-        assertTrue("Could not update entry", AdapterHelper.assembleAndValidateVersionFromEntry(version, entry));
+        Version version = AdapterHelper.assembleAndValidateVersionFromEntry(activity, entry);
+        assertNotNull("Could not update entry", version);
         assertEquals("Entry title", activity.getTitle(), version.getTitle());
         assertEquals("Entry content", activity.getContent(), version.getDescription());
         assertEquals("Entry updated", activity.getUpdated().toGMTString(), version.getUpdated().toGMTString());

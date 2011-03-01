@@ -82,7 +82,6 @@ public class LDAPUtil {
             agent.setSource(systemSource);
             agent.getAuthors().add(agent);
 
-
             entityManager.persist(version);
             entityManager.persist(agent);
             transaction.commit();
