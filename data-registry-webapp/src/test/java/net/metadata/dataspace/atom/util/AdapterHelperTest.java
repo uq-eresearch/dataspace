@@ -139,7 +139,6 @@ public class AdapterHelperTest {
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey());
         assertEquals("Entry title", entry.getTitle(), agent.getTitle());
         assertEquals("Entry content", entry.getContent(), agent.getContent());
-        assertEquals("Entry updated", entry.getUpdated(), agent.getUpdated());
         assertEquals("Entry authors", entry.getAuthors().size(), agent.getAuthors().size());
         assertTrue("Entry should have at least 3 categories", entry.getCategories().size() > 2);
         assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_COLLECTOR_OF).size() >= 1);
@@ -154,10 +153,9 @@ public class AdapterHelperTest {
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         assertEquals("Entry title", entry.getTitle(), collection.getTitle());
         assertEquals("Entry content", entry.getContent(), collection.getContent());
-        assertEquals("Entry updated", entry.getUpdated().toGMTString(), collection.getUpdated().toGMTString());
         assertEquals("Entry authors", entry.getAuthors().size(), collection.getAuthors().size());
         assertTrue("Entry should have at least 3 categories", entry.getCategories().size() > 2);
-        assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_IS_LOCATED_AT).size() >= 1);
+        assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_PAGE).size() >= 1);
         //TODO this needs to be fixed after the new data model is fixed up
 //        assertTrue("Entry should have at least one agent", entry.getLinks(Constants.REL_CREATOR).size() >= 1);
 //        assertTrue("Entry should have at least one service", entry.getLinks(Constants.REL_IS_ACCESSED_VIA).size() >= 1);
@@ -172,7 +170,6 @@ public class AdapterHelperTest {
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         assertEquals("Entry title", entry.getTitle(), activity.getTitle());
         assertEquals("Entry content", entry.getContent(), activity.getContent());
-        assertEquals("Entry updated", entry.getUpdated().toGMTString(), activity.getUpdated().toGMTString());
         assertEquals("Entry authors", entry.getAuthors().size(), activity.getAuthors().size());
         assertTrue("Entry should have at least 2 categories", entry.getCategories().size() >= 2);
 //TODO this needs to be fixed after the new data model is fixed up
@@ -188,10 +185,9 @@ public class AdapterHelperTest {
         assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         assertEquals("Entry title", entry.getTitle(), service.getTitle());
         assertEquals("Entry content", entry.getContent(), service.getContent());
-        assertEquals("Entry updated", entry.getUpdated().toGMTString(), service.getUpdated().toGMTString());
         assertEquals("Entry authors", entry.getAuthors().size(), service.getAuthors().size());
         assertTrue("Entry should have at least 2 categories", entry.getCategories().size() >= 2);
-        assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_IS_LOCATED_AT).size() >= 1);
+        assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_PAGE).size() >= 1);
         //TODO this needs to be fixed after the new data model is fixed up
 //        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_SUPPORTED_BY).size() >= 1);
     }
@@ -205,7 +201,6 @@ public class AdapterHelperTest {
         assertNotNull("Could not update entry", version);
         assertEquals("Entry title", agent.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", agent.getVersions().first().getDescription(), version.getDescription());
-        assertEquals("Entry updated", agent.getVersions().first().getUpdated().toGMTString(), version.getUpdated().toGMTString());
     }
 
     @Test
@@ -218,7 +213,6 @@ public class AdapterHelperTest {
         assertEquals("Entry title", collection.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", collection.getVersions().first().getDescription(), version.getDescription());
         assertEquals("Entry location", collection.getVersions().first().getPage(), version.getPage());
-        assertEquals("Entry updated", collection.getVersions().first().getUpdated().toGMTString(), version.getUpdated().toGMTString());
     }
 
     @Test
@@ -231,7 +225,6 @@ public class AdapterHelperTest {
         assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", service.getVersions().first().getDescription(), version.getDescription());
         assertEquals("Entry location", service.getVersions().first().getPage(), version.getPage());
-        assertEquals("Entry updated", service.getVersions().first().getUpdated().toGMTString(), version.getUpdated().toGMTString());
     }
 
     @Test
@@ -243,7 +236,6 @@ public class AdapterHelperTest {
         assertNotNull("Could not update entry", version);
         assertEquals("Entry title", activity.getTitle(), version.getTitle());
         assertEquals("Entry content", activity.getContent(), version.getDescription());
-        assertEquals("Entry updated", activity.getUpdated().toGMTString(), version.getUpdated().toGMTString());
     }
 
 }

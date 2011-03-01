@@ -461,6 +461,8 @@ public class AdapterHelper {
                     Agent agent = daoManager.getAgentDao().getByKey(uriKey);
                     if (agent != null) {
                         record.getAuthors().add(agent);
+                    } else {
+                        //TODO how do we add the agent now?
                     }
                 }
             }
