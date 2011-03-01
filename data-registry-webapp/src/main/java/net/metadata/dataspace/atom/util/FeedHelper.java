@@ -81,7 +81,7 @@ public class FeedHelper {
                 for (Agent author : authors) {
                     Person person = new Abdera().getFactory().newAuthor();
                     person.setName(author.getTitle());
-                    person.setEmail(author.getMBox());
+                    person.setEmail(author.getMBoxes().iterator().next());
                     person.setUri(Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
                     personList.add(person);
                 }

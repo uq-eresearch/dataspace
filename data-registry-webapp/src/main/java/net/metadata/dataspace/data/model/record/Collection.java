@@ -67,10 +67,6 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
         return this.published != null ? this.published.getCreators() : this.versions.first().getCreators();
     }
 
-    public String getLocation() {
-        return this.published != null ? this.published.getPage() : this.versions.first().getPage();
-    }
-
     public Set<Activity> getOutputOf() {
         return this.published != null ? this.published.getOutputOf() : this.versions.first().getOutputOf();
     }

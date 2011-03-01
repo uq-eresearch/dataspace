@@ -369,7 +369,7 @@ public class HttpMethodHelper {
         for (Agent author : authors) {
             Person person = request.getAbdera().getFactory().newAuthor();
             person.setName(author.getTitle());
-            person.setEmail(author.getMBox());
+            person.setEmail(author.getMBoxes().iterator().next());
             person.setUri(Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
             personList.add(person);
         }

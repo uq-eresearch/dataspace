@@ -144,8 +144,8 @@ public class AdapterHelper {
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_FOAF, Constants.TERM_ACTIVITY, version.getType().toString());
-            String page = version.getPage();
-            if (page != null) {
+            Set<String> pages = version.getPages();
+            for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
             }
             Set<Agent> agentSet = version.getHasParticipants();
@@ -173,8 +173,8 @@ public class AdapterHelper {
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getType().toString());
-            String page = version.getPage();
-            if (page != null) {
+            Set<String> pages = version.getPages();
+            for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
             }
             Set<Subject> subjectSet = version.getSubjects();
@@ -208,8 +208,8 @@ public class AdapterHelper {
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getType().toString());
-            String page = version.getPage();
-            if (page != null) {
+            Set<String> pages = version.getPages();
+            for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
             }
             Set<Subject> subjectSet = version.getSubjects();
@@ -252,8 +252,8 @@ public class AdapterHelper {
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_VIVO, Constants.TERM_SERVICE, version.getType().toString());
-            String page = version.getPage();
-            if (page != null) {
+            Set<String> pages = version.getPages();
+            for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
             }
             Set<Collection> collectionSet = version.getSupportedBy();
@@ -396,7 +396,7 @@ public class AdapterHelper {
             version.setDescription(content);
             version.setUpdated(new Date());
             addType(version, entry);
-            addPage(version, entry);
+            addPages(version, entry);
             return version;
         }
     }
@@ -427,20 +427,14 @@ public class AdapterHelper {
         }
     }
 
-    private static void addPage(Version version, Entry entry) throws ResponseContextException {
-        Link link = entry.getLink(Constants.REL_PAGE);
-        if (version instanceof CollectionVersion) {
-            if (link == null) {
-                throw new ResponseContextException(Constants.REL_PAGE + " link element is missing", 400);
-            } else {
-                String page = link.getHref().toString();
-                version.setPage(page);
-            }
-        } else {
-            if (link != null) {
-                String page = link.getHref().toString();
-                version.setPage(page);
-            }
+    private static void addPages(Version version, Entry entry) throws ResponseContextException {
+        List<Link> links = entry.getLinks(Constants.REL_PAGE);
+        if (version instanceof CollectionVersion && links.isEmpty()) {
+            throw new ResponseContextException(Constants.REL_PAGE + " link element is missing", 400);
+        }
+        for (Link link : links) {
+            String page = link.getHref().toString();
+            version.getPages().add(page);
         }
     }
 
@@ -534,7 +528,7 @@ public class AdapterHelper {
             }
             Set<Agent> authors = version.getParent().getAuthors();
             for (Agent author : authors) {
-                entry.addAuthor(author.getPublished().getTitle(), author.getPublished().getMbox(), Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
+                entry.addAuthor(author.getPublished().getTitle(), author.getPublished().getMboxes().iterator().next(), Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
             }
             prepareSelfLink(entry, parentUrl);
             entry.addCategory(Constants.NS_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);

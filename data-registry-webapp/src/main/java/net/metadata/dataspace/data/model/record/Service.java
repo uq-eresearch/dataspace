@@ -60,10 +60,6 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
         return this.published != null ? this.published.getSupportedBy() : this.versions.first().getSupportedBy();
     }
 
-    public String getLocation() {
-        return this.published != null ? this.published.getPage() : this.versions.first().getPage();
-    }
-
     @Override
     public ServiceVersion getPublished() {
         return published;

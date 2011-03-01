@@ -30,8 +30,6 @@ public class ServiceVersion extends AbstractVersionEntity {
     @Enumerated(STRING)
     private ServiceType type;
 
-    private String page; //URI
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "services_is_supported_by")
     private Set<Collection> isSupportedBy = new HashSet<Collection>();
@@ -63,15 +61,6 @@ public class ServiceVersion extends AbstractVersionEntity {
 
     public void setSupportedBy(Set<Collection> supportedBy) {
         isSupportedBy = supportedBy;
-    }
-
-    public String getPage() {
-        return page;
-    }
-
-    @Override
-    public void setPage(String page) {
-        this.page = page;
     }
 
     public ServiceType getType() {

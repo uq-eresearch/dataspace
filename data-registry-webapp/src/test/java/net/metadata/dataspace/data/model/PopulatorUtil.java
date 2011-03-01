@@ -59,7 +59,7 @@ public class PopulatorUtil {
         collectionVersion.setType(CollectionType.COLLECTION);
         collectionVersion.setTitle("Test Collection");
         collectionVersion.setDescription("Test Collection Content");
-        collectionVersion.setPage("http://test.location.com.au/collection");
+        collectionVersion.getPages().add("http://test.location.com.au/collection");
         collectionVersion.setRights("Test rights text");
         collectionVersion.setUpdated(new Date());
         return collectionVersion;
@@ -69,7 +69,7 @@ public class PopulatorUtil {
         AgentVersion agentVersion = (AgentVersion) entityCreator.getNextVersion(agent);
         agentVersion.setParent(agent);
         agentVersion.setTitle("Test Agent Title");
-        agentVersion.setMbox("email@company.com");
+        agentVersion.getMboxes().add("email@company.com");
         agentVersion.setDescription("Test Agent Content");
         agentVersion.setType(AgentType.PERSON);
         agentVersion.setUpdated(new Date());
@@ -84,7 +84,7 @@ public class PopulatorUtil {
         serviceVersion.setDescription("Test Service Content");
         serviceVersion.setType(ServiceType.SYNDICATE);
         serviceVersion.setUpdated(new Date());
-        serviceVersion.setPage("http://test.location.com.au/collection");
+        serviceVersion.getPages().add("http://test.location.com.au/collection");
         return serviceVersion;
     }
 

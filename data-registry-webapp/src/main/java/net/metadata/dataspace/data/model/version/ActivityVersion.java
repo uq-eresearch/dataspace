@@ -30,8 +30,6 @@ public class ActivityVersion extends AbstractVersionEntity {
     @Enumerated(STRING)
     private ActivityType type;
 
-    private String page;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "activities_has_output")
     private Set<Collection> hasOutput = new HashSet<Collection>();
@@ -52,14 +50,6 @@ public class ActivityVersion extends AbstractVersionEntity {
         return parent;
     }
 
-    public String getPage() {
-        return page;
-    }
-
-    @Override
-    public void setPage(String page) {
-        this.page = page;
-    }
 
     @Override
     public void setParent(Record parent) {
@@ -97,4 +87,5 @@ public class ActivityVersion extends AbstractVersionEntity {
     public void setSubjects(Set<Subject> subjects) {
         this.subjects = subjects;
     }
+
 }

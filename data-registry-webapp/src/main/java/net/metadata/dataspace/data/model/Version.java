@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Author: alabri
@@ -27,7 +28,9 @@ public interface Version {
 
     String getDescription();
 
-    void setPage(String text);
+    void setPages(Set<String> pages);
+
+    Set<String> getPages();
 
     void setTitle(String title);
 

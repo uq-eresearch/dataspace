@@ -8,6 +8,7 @@ import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.CollectionType;
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
@@ -34,18 +35,25 @@ public class CollectionVersion extends AbstractVersionEntity {
     private CollectionType type;
 
     @NotNull
-    private String page; //URI
-
-    @NotNull
     @Column(length = 4096)
     private String rights;
 
-    @Column(length = 4096)
-    private String accessRights;
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> accessRights = new HashSet<String>();
 
     private String license;
 
-    private String temporal;
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> temporals = new HashSet<String>();
+
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> geoRssPoints = new HashSet<String>();
+
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> geoRssPloygons = new HashSet<String>();
+
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> geoRssFeatureNames = new HashSet<String>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "collections_creators")
@@ -121,15 +129,6 @@ public class CollectionVersion extends AbstractVersionEntity {
         this.isAccessedVia = accessedVia;
     }
 
-    public String getPage() {
-        return page;
-    }
-
-    @Override
-    public void setPage(String page) {
-        this.page = page;
-    }
-
     public CollectionType getType() {
         return type;
     }
@@ -152,14 +151,6 @@ public class CollectionVersion extends AbstractVersionEntity {
 
     public void setRights(String rights) {
         this.rights = rights;
-    }
-
-    public String getAccessRights() {
-        return accessRights;
-    }
-
-    public void setAccessRights(String accessRights) {
-        this.accessRights = accessRights;
     }
 
     public String getLicense() {
@@ -186,11 +177,43 @@ public class CollectionVersion extends AbstractVersionEntity {
         this.relations = relations;
     }
 
-    public String getTemporal() {
-        return temporal;
+    public Set<String> getAccessRights() {
+        return accessRights;
     }
 
-    public void setTemporal(String temporal) {
-        this.temporal = temporal;
+    public void setAccessRights(Set<String> accessRights) {
+        this.accessRights = accessRights;
+    }
+
+    public Set<String> getTemporals() {
+        return temporals;
+    }
+
+    public void setTemporals(Set<String> temporals) {
+        this.temporals = temporals;
+    }
+
+    public Set<String> getGeoRssPoints() {
+        return geoRssPoints;
+    }
+
+    public void setGeoRssPoints(Set<String> geoRssPoints) {
+        this.geoRssPoints = geoRssPoints;
+    }
+
+    public Set<String> getGeoRssPloygons() {
+        return geoRssPloygons;
+    }
+
+    public void setGeoRssPloygons(Set<String> geoRssPloygons) {
+        this.geoRssPloygons = geoRssPloygons;
+    }
+
+    public Set<String> getGeoRssFeatureNames() {
+        return geoRssFeatureNames;
+    }
+
+    public void setGeoRssFeatureNames(Set<String> geoRssFeatureNames) {
+        this.geoRssFeatureNames = geoRssFeatureNames;
     }
 }

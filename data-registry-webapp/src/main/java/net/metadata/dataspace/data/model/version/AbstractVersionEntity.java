@@ -2,11 +2,14 @@ package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.util.DaoHelper;
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Author: alabri
@@ -33,7 +36,11 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
     @Column(length = 4096)
     private String description;
 
-    private String alternative;
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> alternatives = new HashSet<String>();
+
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> pages = new HashSet<String>();
 
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -148,12 +155,19 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable,
         this.created = created;
     }
 
-    public String getAlternative() {
-        return alternative;
+    public Set<String> getAlternatives() {
+        return alternatives;
     }
 
-    public void setAlternative(String alternative) {
-        this.alternative = alternative;
+    public void setAlternatives(Set<String> alternatives) {
+        this.alternatives = alternatives;
     }
 
+    public Set<String> getPages() {
+        return pages;
+    }
+
+    public void setPages(Set<String> pages) {
+        this.pages = pages;
+    }
 }

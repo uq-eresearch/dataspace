@@ -6,6 +6,7 @@ import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.types.AgentType;
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
@@ -30,10 +31,8 @@ public class AgentVersion extends AbstractVersionEntity {
     @Enumerated(STRING)
     private AgentType type;
 
-    @NotNull
-    private String mbox;
-
-    private String page; //URI
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> mboxes = new HashSet<String>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "agents_subjects")
@@ -57,15 +56,6 @@ public class AgentVersion extends AbstractVersionEntity {
     @Override
     public Agent getParent() {
         return parent;
-    }
-
-    @Override
-    public void setPage(String page) {
-        this.page = page;
-    }
-
-    public String getPage() {
-        return page;
     }
 
     @Override
@@ -113,12 +103,11 @@ public class AgentVersion extends AbstractVersionEntity {
         this.made = made;
     }
 
-    public String getMbox() {
-        return mbox;
+    public Set<String> getMboxes() {
+        return mboxes;
     }
 
-    public void setMbox(String mbox) {
-        this.mbox = mbox;
+    public void setMboxes(Set<String> mboxes) {
+        this.mboxes = mboxes;
     }
-
 }

@@ -123,7 +123,7 @@ public class EntityRelationshipHelper {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         //TODO add the mbox from the creating agent
         String email = entry.getAuthors().get(0).getEmail();
-        version.setMbox(email);
+        version.getMboxes().add(email);
         Set<Subject> subjects = AdapterHelper.getSubjects(entry);
         for (Subject subject : subjects) {
             version.getSubjects().add(subject);

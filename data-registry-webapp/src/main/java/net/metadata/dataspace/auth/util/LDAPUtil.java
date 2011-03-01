@@ -17,7 +17,10 @@ import javax.naming.NamingException;
 import javax.naming.directory.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Author: alabri
@@ -60,24 +63,29 @@ public class LDAPUtil {
             SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
             Source systemSource = sourceDao.getBySourceURI(Constants.UQ_SOURCE_URI);
             transaction.begin();
+            if (systemSource == null) {
+                systemSource = entityCreator.getNextSource();
+                systemSource.setTitle(Constants.UQ_TITLE);
+                systemSource.setSourceURI(Constants.UQ_SOURCE_URI);
+                systemSource.setUpdated(new Date());
+            }
             String name = attributesMap.get("cn");
             version.setTitle(name);
             String description = attributesMap.get("title");
             version.setDescription(description);
             Date now = new Date();
             version.setUpdated(now);
-            Set<String> authors = new HashSet<String>();
-            authors.add("The University of Queensland DataSpace");
             version.setType(AgentType.PERSON);
-            version.setMbox(mail);
-            version.setAlternative(attributesMap.get("pub-displayname"));
+            version.getMboxes().add(mail);
+            version.getAlternatives().add(attributesMap.get("pub-displayname"));
 
             version.setParent(agent);
             agent.getVersions().add(version);
             version.getParent().setPublished(version);
             agent.setUpdated(now);
-
-            agent.setUpdated(now);
+            agent.setPublishDate(now);
+            agent.setLicense("UQ License here");
+            agent.setRights("UQ Rights here");
             agent.setLocatedOn(systemSource);
             agent.setSource(systemSource);
             agent.getAuthors().add(agent);
@@ -124,7 +132,7 @@ public class LDAPUtil {
             Date now = new Date();
             version.setUpdated(now);
             version.setType(AgentType.PERSON);
-            version.setMbox(mail);
+            version.getMboxes().add(mail);
 
             version.setParent(agent);
             agent.getVersions().add(version);

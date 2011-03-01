@@ -63,8 +63,8 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
         return this.published != null ? this.published.getCurrentProjects() : this.versions.first().getCurrentProjects();
     }
 
-    public String getMBox() {
-        return this.published != null ? this.published.getMbox() : this.versions.first().getMbox();
+    public Set<String> getMBoxes() {
+        return this.published != null ? this.published.getMboxes() : this.versions.first().getMboxes();
     }
 
     public SortedSet<AgentVersion> getVersions() {
