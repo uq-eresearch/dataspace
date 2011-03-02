@@ -136,7 +136,7 @@ public class AdapterHelperTest {
         Agent agent = agents.get(0);
         AgentVersion agentVersion = agent.getVersions().first();
         Entry entry = AdapterHelper.getEntryFromEntity(agentVersion, true);
-        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey());
         assertEquals("Entry title", entry.getTitle(), agent.getTitle());
         assertEquals("Entry content", entry.getContent(), agent.getContent());
         assertEquals("Entry authors", entry.getAuthors().size(), agent.getAuthors().size());
@@ -150,7 +150,7 @@ public class AdapterHelperTest {
         Collection collection = collections.get(0);
         CollectionVersion version = collection.getVersions().first();
         Entry entry = AdapterHelper.getEntryFromEntity(version, true);
-        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         assertEquals("Entry title", entry.getTitle(), collection.getTitle());
         assertEquals("Entry content", entry.getContent(), collection.getContent());
         assertEquals("Entry authors", entry.getAuthors().size(), collection.getAuthors().size());
@@ -167,7 +167,7 @@ public class AdapterHelperTest {
         List<Activity> activities = activityDao.getAll();
         Activity activity = activities.get(0);
         Entry entry = AdapterHelper.getEntryFromEntity(activity.getVersions().first(), true);
-        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         assertEquals("Entry title", entry.getTitle(), activity.getTitle());
         assertEquals("Entry content", entry.getContent(), activity.getContent());
         assertEquals("Entry authors", entry.getAuthors().size(), activity.getAuthors().size());
@@ -182,7 +182,7 @@ public class AdapterHelperTest {
         List<Service> services = serviceDao.getAll();
         Service service = services.get(0);
         Entry entry = AdapterHelper.getEntryFromEntity(service.getVersions().first(), true);
-        assertEquals("Entry id", entry.getId().toString(), Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         assertEquals("Entry title", entry.getTitle(), service.getTitle());
         assertEquals("Entry content", entry.getContent(), service.getContent());
         assertEquals("Entry authors", entry.getAuthors().size(), service.getAuthors().size());

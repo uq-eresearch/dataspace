@@ -171,12 +171,12 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public String getId(Service entry) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + entry.getUriKey();
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + entry.getUriKey();
     }
 
     @Override
     public String getName(Service entry) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + entry.getUriKey();
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + entry.getUriKey();
     }
 
     @Override
@@ -201,7 +201,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public String getId(RequestContext request) {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES;
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES;
     }
 
     @Override

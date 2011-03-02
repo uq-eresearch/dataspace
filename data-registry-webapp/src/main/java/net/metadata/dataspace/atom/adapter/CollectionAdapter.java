@@ -172,12 +172,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
 
     @Override
     public String getId(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
     }
 
     @Override
     public String getName(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
     }
 
     @Override
@@ -203,7 +203,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
 
     @Override
     public String getId(RequestContext requestContext) {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS;
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS;
     }
 
     @Override

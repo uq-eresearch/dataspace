@@ -20,6 +20,7 @@
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.RegistryConfigurationImpl">
         <property name="registryTitle" value="${data.registry.title}"/>
+        <property name="registryEmail" value="${data.registry.email}"/>
         <property name="version" value="${data.registry.version}.${revision}"/>
         <property name="uriPrefix" value="${data.registry.uri.prefix}"/>
         <property name="daoManager" ref="daoManager"/>

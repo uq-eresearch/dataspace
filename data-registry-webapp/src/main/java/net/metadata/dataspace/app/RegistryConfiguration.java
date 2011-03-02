@@ -35,6 +35,21 @@ public interface RegistryConfiguration {
      */
     void setVersion(String version);
 
+
+    /**
+     * Get the email address of the registry application
+     *
+     * @return email address
+     */
+    String getRegistryEmail();
+
+    /**
+     * Set the email for the registry
+     *
+     * @param registryEmail
+     */
+    void setRegistryEmail(String registryEmail);
+
     /**
      * Retrieve the application version
      *

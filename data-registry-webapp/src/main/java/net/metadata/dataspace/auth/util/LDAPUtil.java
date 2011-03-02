@@ -61,12 +61,12 @@ public class LDAPUtil {
             Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
             AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
             SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
-            Source systemSource = sourceDao.getBySourceURI(Constants.UQ_SOURCE_URI);
+            Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
             transaction.begin();
             if (systemSource == null) {
                 systemSource = entityCreator.getNextSource();
-                systemSource.setTitle(Constants.UQ_TITLE);
-                systemSource.setSourceURI(Constants.UQ_SOURCE_URI);
+                systemSource.setTitle(Constants.UQ_REGISTRY_TITLE);
+                systemSource.setSourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
                 systemSource.setUpdated(new Date());
             }
             String name = attributesMap.get("cn");
@@ -124,7 +124,7 @@ public class LDAPUtil {
             Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
             AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
             SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
-            Source systemSource = sourceDao.getBySourceURI(Constants.UQ_SOURCE_URI);
+            Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
             transaction.begin();
             String name = attributesMap.get("cn");
             version.setTitle(name);
@@ -143,7 +143,6 @@ public class LDAPUtil {
             agent.setLocatedOn(systemSource);
             agent.setSource(systemSource);
             agent.getAuthors().add(agent);
-
 
             entityManager.persist(version);
             entityManager.persist(agent);

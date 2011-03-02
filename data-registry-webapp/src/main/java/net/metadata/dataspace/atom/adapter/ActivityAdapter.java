@@ -171,12 +171,12 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public String getId(Activity entry) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + entry.getUriKey();
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + entry.getUriKey();
     }
 
     @Override
     public String getName(Activity entry) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + entry.getUriKey();
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + entry.getUriKey();
     }
 
     @Override
@@ -201,7 +201,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public String getId(RequestContext request) {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES;
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES;
     }
 
     @Override

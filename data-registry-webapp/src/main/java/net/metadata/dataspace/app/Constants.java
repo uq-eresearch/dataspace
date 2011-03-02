@@ -34,10 +34,9 @@ public interface Constants {
     String TITLE_FOR_ACTIVITIES = "Activities";
     String TITLE_FOR_SERVICES = "Services";
 
-    String ID_PREFIX = RegistryApplication.getApplicationContext().getUriPrefix();
-    String UQ_SOURCE_URI = "http://uq.edu.au";
-    String UQ_TITLE = "The University of Queensland";
-    String UQ_EMAIL = "info@dataspace.uq.edu.au";
+    String UQ_REGISTRY_URI_PREFIX = RegistryApplication.getApplicationContext().getUriPrefix();
+    String UQ_REGISTRY_TITLE = RegistryApplication.getApplicationContext().getRegistryTitle();
+    String UQ_REGISTRY_EMAIL = RegistryApplication.getApplicationContext().getRegistryEmail();
     /**
      * Target Type names
      */

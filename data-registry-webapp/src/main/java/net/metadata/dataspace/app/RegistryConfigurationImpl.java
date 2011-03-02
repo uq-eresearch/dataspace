@@ -23,6 +23,7 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     private AuthorizationManager authorizationManager;
     private RIFCSOaiCatalog oaiCatalog;
     private OAIProperties oaiProperties;
+    private String registryEmail;
 
     public RegistryConfigurationImpl() {
     }
@@ -38,6 +39,14 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
 
     public String getRegistryTitle() {
         return registryTitle;
+    }
+
+    public void setRegistryEmail(String registryEmail) {
+        this.registryEmail = registryEmail;
+    }
+
+    public String getRegistryEmail() {
+        return registryEmail;
     }
 
     @Override

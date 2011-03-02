@@ -29,7 +29,6 @@ import org.apache.log4j.Logger;
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -84,12 +83,14 @@ public class HttpMethodHelper {
                         AdapterHelper.addAuthors(record, entry.getAuthors());
                         record.setUpdated(now);
                         entityManager.persist(version);
-//                        entityManager.persist(source);
+                        if (source.getId() == null) {
+                            entityManager.persist(source);
+                        }
                         entityManager.persist(record);
                         transaction.commit();
                         Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
                         return AdapterHelper.getContextResponseForPost(createdEntry);
-                    } catch (PersistenceException th) {
+                    } catch (Exception th) {
                         logger.warn("Invalid Entry, Rolling back database", th);
                         if (transaction.isActive()) {
                             transaction.rollback();
@@ -139,7 +140,7 @@ public class HttpMethodHelper {
                                     transaction.commit();
                                     Entry updatedEntry = AdapterHelper.getEntryFromEntity(version, false);
                                     return AdapterHelper.getContextResponseForGetEntry(request, updatedEntry, clazz);
-                                } catch (PersistenceException th) {
+                                } catch (Exception th) {
                                     logger.fatal("Invalid Entry, Rolling back database", th);
                                     if (transaction.isActive()) {
                                         transaction.rollback();
@@ -295,8 +296,8 @@ public class HttpMethodHelper {
                 representationMimeType = Constants.MIME_TYPE_HTML;
             }
         }
-        String atomFeedUrl = Constants.ID_PREFIX + getPath(clazz) + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
-        String htmlFeedUrl = Constants.ID_PREFIX + getPath(clazz);
+        String atomFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getPath(clazz) + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
+        String htmlFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getPath(clazz);
         if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
             FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
             FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
@@ -370,7 +371,7 @@ public class HttpMethodHelper {
             Person person = request.getAbdera().getFactory().newAuthor();
             person.setName(author.getTitle());
             person.setEmail(author.getMBoxes().iterator().next());
-            person.setUri(Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
+            person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
             personList.add(person);
         }
         return personList;

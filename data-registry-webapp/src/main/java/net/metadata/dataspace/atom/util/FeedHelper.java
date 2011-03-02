@@ -82,7 +82,7 @@ public class FeedHelper {
                     Person person = new Abdera().getFactory().newAuthor();
                     person.setName(author.getTitle());
                     person.setEmail(author.getMBoxes().iterator().next());
-                    person.setUri(Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
+                    person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
                     personList.add(person);
                 }
 
@@ -106,7 +106,7 @@ public class FeedHelper {
         Factory factory = request.getAbdera().getFactory();
         Feed feed = factory.newFeed();
         String uri = request.getUri().toString();
-        feed.setId(Constants.ID_PREFIX + uri.substring(1));
+        feed.setId(Constants.UQ_REGISTRY_URI_PREFIX + uri.substring(1));
         feed.setTitle("Version History");
         feed.addLink(uri, "self");
         return feed;

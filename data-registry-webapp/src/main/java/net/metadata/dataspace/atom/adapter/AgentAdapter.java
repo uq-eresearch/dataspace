@@ -170,12 +170,12 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
 
     @Override
     public String getId(Agent agent) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey();
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey();
     }
 
     @Override
     public String getName(Agent agent) throws ResponseContextException {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey();
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey();
     }
 
     @Override
@@ -201,7 +201,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
 
     @Override
     public String getId(RequestContext requestContext) {
-        return Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS;
+        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS;
     }
 
     @Override

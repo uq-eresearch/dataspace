@@ -139,7 +139,7 @@ public class AdapterHelper {
     }
 
     private static Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
+        String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
@@ -150,12 +150,12 @@ public class AdapterHelper {
             }
             Set<Agent> agentSet = version.getHasParticipants();
             for (Agent agent : agentSet) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_HAS_PARTICIPANT);
             }
             Set<Collection> collectionSet = version.getHasOutput();
             for (Collection collection : collectionSet) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_HAS_OUTPUT);
             }
         } catch (Throwable th) {
@@ -168,7 +168,7 @@ public class AdapterHelper {
     }
 
     private static Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
+        String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
@@ -184,12 +184,12 @@ public class AdapterHelper {
 
             Set<Collection> collectionSet = version.getIsManagerOf();
             for (Collection collection : collectionSet) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_COLLECTOR_OF);
             }
             Set<Activity> activities = version.getCurrentProjects();
             for (Activity activity : activities) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_PARTICIPANT_IN);
             }
         } catch (Throwable th) {
@@ -202,7 +202,7 @@ public class AdapterHelper {
     }
 
     private static Entry getEntryFromCollection(CollectionVersion version, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
+        String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
         //<category scheme="http://purl.org/dc/dcmitype/" term="http://purl.org/dc/dcmitype/Collection" label="Collection"/>
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
@@ -218,22 +218,22 @@ public class AdapterHelper {
             }
             Set<Agent> agents = version.getCreators();
             for (Agent agent : agents) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_CREATOR);
             }
             Set<Agent> publishers = version.getPublishers();
             for (Agent publisher : publishers) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + publisher.getUriKey() + "#";
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + publisher.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_PUBLISHER);
             }
             Set<Activity> activities = version.getOutputOf();
             for (Activity activity : activities) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_OUTPUT_OF);
             }
             Set<Service> services = version.getAccessedVia();
             for (Service service : services) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_ACCESSED_VIA);
             }
             entry.setRights(version.getRights());
@@ -247,7 +247,7 @@ public class AdapterHelper {
     }
 
     private static Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.ID_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
+        String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
@@ -258,7 +258,7 @@ public class AdapterHelper {
             }
             Set<Collection> collectionSet = version.getSupportedBy();
             for (Collection collection : collectionSet) {
-                String href = Constants.ID_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 entry.addLink(href, Constants.REL_IS_SUPPORTED_BY);
             }
         } catch (Throwable th) {
@@ -528,7 +528,7 @@ public class AdapterHelper {
             }
             Set<Agent> authors = version.getParent().getAuthors();
             for (Agent author : authors) {
-                entry.addAuthor(author.getPublished().getTitle(), author.getPublished().getMboxes().iterator().next(), Constants.ID_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
+                entry.addAuthor(author.getPublished().getTitle(), author.getPublished().getMboxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
             }
             prepareSelfLink(entry, parentUrl);
             entry.addCategory(Constants.NS_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);
@@ -569,7 +569,7 @@ public class AdapterHelper {
 
     private static void addContributor(Entry entry) throws ResponseContextException {
         try {
-            entry.addContributor(Constants.UQ_TITLE, Constants.UQ_EMAIL, Constants.UQ_SOURCE_URI);
+            entry.addContributor(Constants.UQ_REGISTRY_TITLE, Constants.UQ_REGISTRY_EMAIL, Constants.UQ_REGISTRY_URI_PREFIX);
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to add contributor", 500);
         }
