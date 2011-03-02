@@ -131,6 +131,7 @@ public class AdapterHelper {
             } else if (version instanceof CollectionVersion) {
                 //TODO this need to be retrieved from the entry
                 ((CollectionVersion) version).setType(CollectionType.COLLECTION);
+                ((CollectionVersion) version).setRights(entry.getRights());
             } else if (version instanceof ServiceVersion) {
                 //TODO this need to be retrieved from the entry
                 ((ServiceVersion) version).setType(ServiceType.SYNDICATE);
@@ -396,7 +397,6 @@ public class AdapterHelper {
             version.setDescription(content);
             version.setUpdated(new Date());
             addType(version, entry);
-            addPages(version, entry);
             return version;
         }
     }
@@ -427,18 +427,7 @@ public class AdapterHelper {
         }
     }
 
-    private static void addPages(Version version, Entry entry) throws ResponseContextException {
-        List<Link> links = entry.getLinks(Constants.REL_PAGE);
-        if (version instanceof CollectionVersion && links.isEmpty()) {
-            throw new ResponseContextException(Constants.REL_PAGE + " link element is missing", 400);
-        }
-        for (Link link : links) {
-            String page = link.getHref().toString();
-            version.getPages().add(page);
-        }
-    }
-
-    public static void addAuthors(Record record, List<Person> persons) throws ResponseContextException {
+    public static void addDescriptionAuthors(Record record, List<Person> persons) throws ResponseContextException {
         try {
             for (Person person : persons) {
                 String name = person.getName();
@@ -527,8 +516,9 @@ public class AdapterHelper {
                 entry.setPublished(publishedDate);
             }
             Set<Agent> authors = version.getParent().getAuthors();
-            for (Agent author : authors) {
-                entry.addAuthor(author.getPublished().getTitle(), author.getPublished().getMboxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
+            for (Agent agent : authors) {
+                AgentVersion workingCopy = (AgentVersion) agent.getWorkingCopy();
+                entry.addAuthor(workingCopy.getTitle(), workingCopy.getMboxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
             }
             prepareSelfLink(entry, parentUrl);
             entry.addCategory(Constants.NS_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);

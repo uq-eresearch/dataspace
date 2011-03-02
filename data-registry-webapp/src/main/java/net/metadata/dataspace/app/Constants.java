@@ -37,6 +37,8 @@ public interface Constants {
     String UQ_REGISTRY_URI_PREFIX = RegistryApplication.getApplicationContext().getUriPrefix();
     String UQ_REGISTRY_TITLE = RegistryApplication.getApplicationContext().getRegistryTitle();
     String UQ_REGISTRY_EMAIL = RegistryApplication.getApplicationContext().getRegistryEmail();
+    String UQ_REGISTRY_LICENSE = RegistryApplication.getApplicationContext().getRegistryLicense();
+    String UQ_REGISTRY_RIGHTS = RegistryApplication.getApplicationContext().getRegistryRights();
     /**
      * Target Type names
      */

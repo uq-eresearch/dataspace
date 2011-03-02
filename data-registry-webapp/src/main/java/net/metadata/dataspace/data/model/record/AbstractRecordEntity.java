@@ -1,7 +1,6 @@
 package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.validator.NotNull;
 
@@ -39,12 +38,6 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date publishDate;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Source locatedOn;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Source source;
 
     private String rights;
 
@@ -112,23 +105,6 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
 
     public void setCreated(Date created) {
         this.created = created;
-    }
-
-
-    public Source getLocatedOn() {
-        return locatedOn;
-    }
-
-    public void setLocatedOn(Source locatedOn) {
-        this.locatedOn = locatedOn;
-    }
-
-    public Source getSource() {
-        return source;
-    }
-
-    public void setSource(Source source) {
-        this.source = source;
     }
 
     public String getRights() {

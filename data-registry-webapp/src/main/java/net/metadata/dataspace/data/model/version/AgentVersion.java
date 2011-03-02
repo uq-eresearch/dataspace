@@ -50,6 +50,13 @@ public class AgentVersion extends AbstractVersionEntity {
     @JoinTable(name = "agents_current_projects")
     private Set<Activity> currentProjects = new HashSet<Activity>();
 
+
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> alternatives = new HashSet<String>();
+
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> pages = new HashSet<String>();
+
     public AgentVersion() {
     }
 
@@ -109,5 +116,21 @@ public class AgentVersion extends AbstractVersionEntity {
 
     public void setMboxes(Set<String> mboxes) {
         this.mboxes = mboxes;
+    }
+
+    public Set<String> getAlternatives() {
+        return alternatives;
+    }
+
+    public void setAlternatives(Set<String> alternatives) {
+        this.alternatives = alternatives;
+    }
+
+    public Set<String> getPages() {
+        return pages;
+    }
+
+    public void setPages(Set<String> pages) {
+        this.pages = pages;
     }
 }

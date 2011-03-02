@@ -83,6 +83,11 @@ public class CollectionVersion extends AbstractVersionEntity {
     @JoinTable(name = "collections_relations")
     private Set<Collection> relations = new HashSet<Collection>();
 
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> alternatives = new HashSet<String>();
+
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> pages = new HashSet<String>();
 
     public CollectionVersion() {
     }
@@ -215,5 +220,21 @@ public class CollectionVersion extends AbstractVersionEntity {
 
     public void setGeoRssFeatureNames(Set<String> geoRssFeatureNames) {
         this.geoRssFeatureNames = geoRssFeatureNames;
+    }
+
+    public Set<String> getAlternatives() {
+        return alternatives;
+    }
+
+    public void setAlternatives(Set<String> alternatives) {
+        this.alternatives = alternatives;
+    }
+
+    public Set<String> getPages() {
+        return pages;
+    }
+
+    public void setPages(Set<String> pages) {
+        this.pages = pages;
     }
 }

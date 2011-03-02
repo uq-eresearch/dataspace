@@ -6,6 +6,7 @@ import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.types.ActivityType;
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
@@ -41,6 +42,12 @@ public class ActivityVersion extends AbstractVersionEntity {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "activities_subjects")
     private Set<Subject> subjects = new HashSet<Subject>();
+
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> alternatives = new HashSet<String>();
+
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> pages = new HashSet<String>();
 
     public ActivityVersion() {
     }
@@ -88,4 +95,19 @@ public class ActivityVersion extends AbstractVersionEntity {
         this.subjects = subjects;
     }
 
+    public Set<String> getAlternatives() {
+        return alternatives;
+    }
+
+    public void setAlternatives(Set<String> alternatives) {
+        this.alternatives = alternatives;
+    }
+
+    public Set<String> getPages() {
+        return pages;
+    }
+
+    public void setPages(Set<String> pages) {
+        this.pages = pages;
+    }
 }

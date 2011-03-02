@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.record;
 
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
@@ -34,9 +35,15 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     @JoinTable(name = "activity_same_as")
     private Set<Activity> sameAs = new HashSet<Activity>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "activities_description_authors")
     private Set<Agent> authors = new HashSet<Agent>();
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Source locatedOn;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Source source;
 
     public Activity() {
     }
@@ -95,5 +102,23 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     @Override
     public void setAuthors(Set<Agent> authors) {
         this.authors = authors;
+    }
+
+    public Source getLocatedOn() {
+        return locatedOn;
+    }
+
+    @Override
+    public void setLocatedOn(Source locatedOn) {
+        this.locatedOn = locatedOn;
+    }
+
+    public Source getSource() {
+        return source;
+    }
+
+    @Override
+    public void setSource(Source source) {
+        this.source = source;
     }
 }

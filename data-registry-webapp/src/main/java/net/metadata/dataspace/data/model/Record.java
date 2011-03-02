@@ -70,4 +70,12 @@ public interface Record {
     Set<Agent> getAuthors();
 
     void setAuthors(Set<Agent> authors);
+
+    String getRights();
+
+    void setRights(String rights);
+
+    String getLicense();
+
+    void setLicense(String license);
 }

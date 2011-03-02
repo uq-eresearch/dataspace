@@ -24,6 +24,8 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     private RIFCSOaiCatalog oaiCatalog;
     private OAIProperties oaiProperties;
     private String registryEmail;
+    private String registryLicense;
+    private String registryRights;
 
     public RegistryConfigurationImpl() {
     }
@@ -114,5 +116,21 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
 
     public OAIProperties getOaiProperties() {
         return oaiProperties;
+    }
+
+    public void setRegistryLicense(String license) {
+        this.registryLicense = license;
+    }
+
+    public String getRegistryLicense() {
+        return registryLicense;
+    }
+
+    public void setRegistryRights(String registryRights) {
+        this.registryRights = registryRights;
+    }
+
+    public String getRegistryRights() {
+        return registryRights;
     }
 }

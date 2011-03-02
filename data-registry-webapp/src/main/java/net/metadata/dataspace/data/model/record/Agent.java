@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import org.hibernate.annotations.Sort;
@@ -36,15 +37,25 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     @JoinTable(name = "agent_same_as")
     private Set<Agent> sameAs = new HashSet<Agent>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "agent_description_authors")
     private Set<Agent> authors = new HashSet<Agent>();
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Source locatedOn;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Source source;
 
     public Agent() {
     }
 
     public String getTitle() {
-        return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
+        return this.published != null ? this.published.getTitle() : this.getWorkingCopy().getTitle();
+    }
+
+    public Set<String> getMboxes() {
+        return this.published != null ? this.published.getMboxes() : ((AgentVersion) this.getWorkingCopy()).getMboxes();
     }
 
     public String getContent() {
@@ -107,5 +118,23 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     @Override
     public Set<Agent> getAuthors() {
         return this.authors;
+    }
+
+    public Source getLocatedOn() {
+        return locatedOn;
+    }
+
+    @Override
+    public void setLocatedOn(Source locatedOn) {
+        this.locatedOn = locatedOn;
+    }
+
+    public Source getSource() {
+        return source;
+    }
+
+    @Override
+    public void setSource(Source source) {
+        this.source = source;
     }
 }

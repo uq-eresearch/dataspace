@@ -99,6 +99,39 @@ public interface RegistryConfiguration {
      */
     RIFCSOaiCatalog getOaiCatalog();
 
+    /**
+     * Get the properties for the OAI-CAT library
+     *
+     * @return
+     */
     OAIProperties getOaiProperties();
+
+    /**
+     * Sets the license text for the registry application
+     *
+     * @param license
+     */
+    void setRegistryLicense(String license);
+
+    /**
+     * gets the license text for the registry application
+     *
+     * @return
+     */
+    String getRegistryLicense();
+
+    /**
+     * Sets the rights text for the registry application
+     *
+     * @param registryRights
+     */
+    void setRegistryRights(String registryRights);
+
+    /**
+     * gets the rights text for the registry application
+     *
+     * @return
+     */
+    String getRegistryRights();
 
 }

@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.hibernate.annotations.Sort;
@@ -35,9 +36,15 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     @JoinTable(name = "collection_same_as")
     private Set<Collection> sameAs = new HashSet<Collection>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "collection_description_authors")
     private Set<Agent> authors = new HashSet<Agent>();
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Source locatedOn;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Source source;
 
     public Collection() {
 
@@ -106,5 +113,23 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     @Override
     public void setAuthors(Set<Agent> authors) {
         this.authors = authors;
+    }
+
+    public Source getLocatedOn() {
+        return locatedOn;
+    }
+
+    @Override
+    public void setLocatedOn(Source locatedOn) {
+        this.locatedOn = locatedOn;
+    }
+
+    public Source getSource() {
+        return source;
+    }
+
+    @Override
+    public void setSource(Source source) {
+        this.source = source;
     }
 }

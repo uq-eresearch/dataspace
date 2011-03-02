@@ -71,22 +71,26 @@ public class HttpMethodHelper {
                         if (transaction.isActive()) {
                             transaction.commit();
                         }
-                        transaction.begin();
                         Source source = AdapterHelper.assembleAndValidateSourceFromEntry(entry);
+                        transaction.begin();
+                        if (source.getId() == null) {
+                            entityManager.persist(source);
+                        }
                         version.setParent(record);
-                        record.getVersions().add(version);
                         Date now = new Date();
                         version.setUpdated(now);
                         record.setSource(source);
                         record.setLocatedOn(source);
-                        EntityRelationshipHelper.addRelations(entry, version);
-                        AdapterHelper.addAuthors(record, entry.getAuthors());
+                        record.setLicense(Constants.UQ_REGISTRY_LICENSE);
+                        record.setRights(Constants.UQ_REGISTRY_RIGHTS);
+                        record.getVersions().add(version);
                         record.setUpdated(now);
                         entityManager.persist(version);
-                        if (source.getId() == null) {
-                            entityManager.persist(source);
-                        }
                         entityManager.persist(record);
+                        EntityRelationshipHelper.addRelations(entry, version);
+                        AdapterHelper.addDescriptionAuthors(record, entry.getAuthors());
+                        entityManager.merge(version);
+                        entityManager.merge(record);
                         transaction.commit();
                         Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
                         return AdapterHelper.getContextResponseForPost(createdEntry);
@@ -135,6 +139,7 @@ public class HttpMethodHelper {
                                     record.getVersions().add(version);
                                     version.setParent(record);
                                     EntityRelationshipHelper.addRelations(entry, version);
+                                    record.setUpdated(new Date());
                                     entityManager.persist(version);
                                     entityManager.merge(record);
                                     transaction.commit();
