@@ -152,12 +152,14 @@ public class AdapterHelper {
             Set<Agent> agentSet = version.getHasParticipants();
             for (Agent agent : agentSet) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_HAS_PARTICIPANT);
+                Link link = entry.addLink(href, Constants.REL_HAS_PARTICIPANT);
+                link.setTitle(agent.getTitle());
             }
             Set<Collection> collectionSet = version.getHasOutput();
             for (Collection collection : collectionSet) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_HAS_OUTPUT);
+                Link link = entry.addLink(href, Constants.REL_HAS_OUTPUT);
+                link.setTitle(collection.getTitle());
             }
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
@@ -186,12 +188,14 @@ public class AdapterHelper {
             Set<Collection> collectionSet = version.getIsManagerOf();
             for (Collection collection : collectionSet) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_IS_COLLECTOR_OF);
+                Link link = entry.addLink(href, Constants.REL_MADE);
+                link.setTitle(collection.getTitle());
             }
             Set<Activity> activities = version.getCurrentProjects();
             for (Activity activity : activities) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_CURRENT_PROJECT);
+                Link link = entry.addLink(href, Constants.REL_CURRENT_PROJECT);
+                link.setTitle(activity.getTitle());
             }
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
@@ -308,7 +312,8 @@ public class AdapterHelper {
             Set<Collection> collectionSet = version.getSupportedBy();
             for (Collection collection : collectionSet) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_IS_SUPPORTED_BY);
+                Link link = entry.addLink(href, Constants.REL_IS_SUPPORTED_BY);
+                link.setTitle(collection.getTitle());
             }
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);

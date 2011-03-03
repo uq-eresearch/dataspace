@@ -59,27 +59,31 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     }
 
     public String getTitle() {
-        return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
+        return this.versions.first().getTitle();
     }
 
     public String getContent() {
-        return this.published != null ? this.published.getDescription() : this.versions.first().getDescription();
+        return this.versions.first().getDescription();
     }
 
     public Set<Subject> getSubjects() {
-        return this.published != null ? this.published.getSubjects() : this.versions.first().getSubjects();
+        return this.versions.first().getSubjects();
     }
 
-    public Set<Agent> getCollector() {
-        return this.published != null ? this.published.getCreators() : this.versions.first().getCreators();
+    public Set<Agent> getCreators() {
+        return this.versions.first().getCreators();
+    }
+
+    public Set<Agent> getPublishers() {
+        return this.versions.first().getPublishers();
     }
 
     public Set<Activity> getOutputOf() {
-        return this.published != null ? this.published.getOutputOf() : this.versions.first().getOutputOf();
+        return this.versions.first().getOutputOf();
     }
 
     public Set<Service> getSupports() {
-        return this.published != null ? this.published.getAccessedVia() : this.versions.first().getAccessedVia();
+        return this.versions.first().getAccessedVia();
     }
 
     @Override

@@ -51,31 +51,31 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     }
 
     public String getTitle() {
-        return this.published != null ? this.published.getTitle() : this.getWorkingCopy().getTitle();
-    }
-
-    public Set<String> getMboxes() {
-        return this.published != null ? this.published.getMboxes() : ((AgentVersion) this.getWorkingCopy()).getMboxes();
+        return this.versions.first().getTitle();
     }
 
     public String getContent() {
-        return this.published != null ? this.published.getDescription() : this.versions.first().getDescription();
+        return this.versions.first().getDescription();
     }
 
     public Set<Subject> getSubjects() {
-        return this.published != null ? this.published.getSubjects() : this.versions.first().getSubjects();
+        return this.versions.first().getSubjects();
     }
 
-    public Set<Collection> getCollectorOf() {
-        return this.published != null ? this.published.getIsManagerOf() : this.versions.first().getIsManagerOf();
+    public Set<Collection> getIsManagerOf() {
+        return this.versions.first().getIsManagerOf();
+    }
+
+    public Set<Collection> getMade() {
+        return this.versions.first().getMade();
     }
 
     public Set<Activity> getParticipantIn() {
-        return this.published != null ? this.published.getCurrentProjects() : this.versions.first().getCurrentProjects();
+        return this.versions.first().getCurrentProjects();
     }
 
     public Set<String> getMBoxes() {
-        return this.published != null ? this.published.getMboxes() : this.versions.first().getMboxes();
+        return this.versions.first().getMboxes();
     }
 
     public SortedSet<AgentVersion> getVersions() {

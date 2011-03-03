@@ -57,19 +57,19 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     }
 
     public String getTitle() {
-        return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
+        return this.versions.first().getTitle();
     }
 
     public String getContent() {
-        return this.published != null ? this.published.getDescription() : this.versions.first().getDescription();
+        return this.versions.first().getDescription();
     }
 
     public Set<Collection> getHasOutput() {
-        return this.published != null ? this.published.getHasOutput() : this.versions.first().getHasOutput();
+        return this.versions.first().getHasOutput();
     }
 
     public Set<Agent> getHasParticipant() {
-        return this.published != null ? this.published.getHasParticipants() : this.versions.first().getHasParticipants();
+        return this.versions.first().getHasParticipants();
     }
 
     @Override

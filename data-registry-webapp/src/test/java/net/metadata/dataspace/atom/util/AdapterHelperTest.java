@@ -92,8 +92,8 @@ public class AdapterHelperTest {
         Subject subject4 = PopulatorUtil.getSubject();
         collectionVersion.getSubjects().add(subject4);
         collection.getVersions().add(collectionVersion);
-        collection.getCollector().add(agent);
-        agent.getCollectorOf().add(collection);
+        collection.getCreators().add(agent);
+        agent.getMade().add(collection);
         collection.setLocatedOn(source);
         collection.setSource(source);
         entityManager.persist(collectionVersion);
@@ -141,7 +141,7 @@ public class AdapterHelperTest {
         assertEquals("Entry content", entry.getContent(), agent.getContent());
         assertEquals("Entry authors", entry.getAuthors().size(), agent.getAuthors().size());
         assertTrue("Entry should have at least 3 categories", entry.getCategories().size() > 2);
-        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_COLLECTOR_OF).size() >= 1);
+        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_MADE).size() >= 1);
     }
 
     @Test

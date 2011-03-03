@@ -52,24 +52,12 @@
                     <xsl:call-template name="latest-version"/>
                     <!-- type -->
                     <xsl:call-template name="type"/>
-                    <!-- creators -->
-                    <xsl:call-template name="creators"/>
-                    <!-- curators -->
-                    <xsl:call-template name="curators"/>
-                    <!-- accesses -->
-                    <xsl:call-template name="collections"/>
+
+                    <xsl:call-template name="supportedBy"/>
                     <!-- location -->
                     <xsl:call-template name="locations"/>
                     <!-- rights -->
-                    <xsl:apply-templates
-                            select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <xsl:apply-templates select="atom:rights"/>
-                    <!-- spatial -->
-                    <xsl:call-template name="spatial"/>
-                    <!-- temporal -->
-                    <xsl:call-template name="temporal"/>
-                    <!-- related info -->
-                    <xsl:call-template name="related"/>
                     <!-- representations -->
                     <xsl:call-template name="representations"/>
                     <!-- metadata about the description -->
@@ -103,13 +91,12 @@
             </div>
         </xsl:if>
     </xsl:template>
-
     <!-- collections -->
-    <xsl:template name="collections">
+    <xsl:template name="supportedBy">
         <xsl:if test="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]">
             <div class="statement">
                 <div class="property">
-                    <p>Accesses</p>
+                    <p>Supported By</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]"/>

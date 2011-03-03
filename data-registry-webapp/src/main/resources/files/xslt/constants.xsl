@@ -21,6 +21,9 @@
     <xsl:variable name="ATOM_CREATOR">
         <xsl:value-of select="concat($NS_DC ,'creator')"/>
     </xsl:variable>
+    <xsl:variable name="ATOM_IS_MANAGER_OF">
+        <xsl:value-of select="concat($NS_ANDS ,'isManagerOf')"/>
+    </xsl:variable>
     <xsl:variable name="ATOM_PUBLISHER">
         <xsl:value-of select="concat($NS_DC ,'publisher')"/>
     </xsl:variable>

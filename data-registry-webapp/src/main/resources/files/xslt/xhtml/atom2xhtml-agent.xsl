@@ -54,23 +54,17 @@
                     <xsl:call-template name="type"/>
                     <!-- creators -->
                     <xsl:call-template name="creators"/>
-                    <!-- curators -->
-                    <xsl:call-template name="curators"/>
                     <!-- collections -->
                     <xsl:call-template name="collections"/>
+
+                    <xsl:call-template name="isManagerOf"/>
                     <!-- activities -->
                     <xsl:call-template name="activities"/>
                     <!-- rights -->
                     <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <xsl:apply-templates select="atom:rights"/>
-                    <!-- spatial -->
-                    <xsl:call-template name="spatial"/>
-                    <!-- temporal -->
-                    <xsl:call-template name="temporal"/>
                     <!-- subjects -->
                     <xsl:call-template name="subjects"/>
-                    <!-- related info -->
-                    <xsl:call-template name="related"/>
                     <!-- representations -->
                     <xsl:call-template name="representations"/>
                     <!-- metadata about the description -->
@@ -114,6 +108,20 @@
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- collections -->
+    <xsl:template name="isManagerOf">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_MANAGER_OF]">
+            <div class="statement">
+                <div class="property">
+                    <p>Manager Of</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_MANAGER_OF]"/>
                 </div>
             </div>
         </xsl:if>

@@ -56,15 +56,15 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     }
 
     public String getTitle() {
-        return this.published != null ? this.published.getTitle() : this.versions.first().getTitle();
+        return this.versions.first().getTitle();
     }
 
     public String getContent() {
-        return this.published != null ? this.published.getDescription() : this.versions.first().getDescription();
+        return this.versions.first().getDescription();
     }
 
     public Set<Collection> getSupportedBy() {
-        return this.published != null ? this.published.getSupportedBy() : this.versions.first().getSupportedBy();
+        return this.versions.first().getSupportedBy();
     }
 
     @Override

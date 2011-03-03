@@ -52,25 +52,12 @@
                     <xsl:call-template name="latest-version"/>
                     <!-- type -->
                     <xsl:call-template name="type"/>
-                    <!-- creators -->
-                    <xsl:call-template name="creators"/>
-                    <!-- curators -->
-                    <xsl:call-template name="curators"/>
                     <!-- accesses -->
                     <xsl:call-template name="participants"/>
                     <!-- accesses -->
                     <xsl:call-template name="output"/>
                     <!-- rights -->
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <xsl:apply-templates select="atom:rights"/>
-                    <!-- spatial -->
-                    <xsl:call-template name="spatial"/>
-                    <!-- temporal -->
-                    <xsl:call-template name="temporal"/>
-                    <!-- subjects -->
-                    <!--<xsl:call-template name="subjects"/>-->
-                    <!-- related info -->
-                    <xsl:call-template name="related"/>
                     <!-- representations -->
                     <xsl:call-template name="representations"/>
                     <!-- metadata about the description -->
