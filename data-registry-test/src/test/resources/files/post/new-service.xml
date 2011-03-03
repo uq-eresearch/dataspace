@@ -21,6 +21,7 @@
     <link href="http://e-research.sbs.uq.edu.au/aus_voting2007.html" rel="http://purl.org/cld/terms/isLocatedAt"/>
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy"
           href="http://localhost:9635//collections/1"/>
+    <link rel="http://xmlns.com/foaf/0.1/page" href="http://coralwatch.org"/>
     <source>
         <id>http://uq.edu.au/</id>
         <title>The University of Queensland</title>
