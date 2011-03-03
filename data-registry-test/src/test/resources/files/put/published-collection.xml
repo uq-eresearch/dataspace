@@ -1,19 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app">
+<entry xmlns="http://www.w3.org/2005/Atom"
+       xmlns:app="http://www.w3.org/2007/app"
+       xmlns:georss="http://www.georss.org/georss/"
+       xmlns:rdfa="http://www.w3.org/ns/rdfa#">
     <id>http://localhost:9635/collections/1</id>
-    <title type="text">Updated: Digitised images of Carter Brown Book Covers</title>
-    <content type="text">Updated: A collection of digitised images of covers of Carter Brown books published in the
-        1950s ...
+    <title type="text">Digitised images of Carter Brown Book Covers</title>
+    <content type="text">A collection of digitised images of covers of Carter Brown books published in the 1950s ...
     </content>
     <author>
         <name>Nigel Ward</name>
         <uri>http://localhost:9635/agents/1</uri>
         <email>a.alabri@uq.edu.au</email>
     </author>
-    <updated>2010-10-08T05:58:02.781Z</updated>
     <app:control>
         <app:draft>no</app:draft>
     </app:control>
+    <updated>2010-10-08T05:58:02.781Z</updated>
     <category scheme="http://purl.org/anzsrc/for/#field_" term="200502"
               label="200502 - Australian Literature (excl. Aboriginal and Torres Strait Islander Literature)"/>
     <category scheme="http://purl.org/anzsrc/for/#field_" term="200503"
@@ -28,8 +30,25 @@
           rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"/>
     <link href="http://localhost:9635/services/1" rel="http://purl.org/cld/terms/isAccessedVia"/>
     <link rel="http://xmlns.com/foaf/0.1/page" href="http://www.uq.edu.au/eco-lab/index.html?page=39442"/>
+
+    <rdfa:meta property="http://purl.org/dc/terms/temporal" content="start=2007-08"
+               datatype="http://purl.org/dc/terms/Period"/>
+
+    <georss:box>-10.5 140 -17 145.5</georss:box>
+    <georss:featureName>Cape York Peninsula</georss:featureName>
+    <link rel="http://purl.org/dc/terms/spatial" href="http://sws.geonames.org/2172406/"/>
+    <!--     related publications -->
+    <link rel="related"
+          title="Diving through the thermal window: Implications for a warming world"
+          href="http://rspb.royalsocietypublishing.org/content/277/1701/3837.full.pdf?ijkey=PU6AhDOGVtlZzAO&amp;keytype=finite"/>
+    <link rel="related"
+          title="Estuarine crocodiles ride surface currents to facilitate long-distance travel"
+          href="http://www.journalofanimalecology.org/details/journalArticle/808347/Estuarine_crocodiles_ride_surface_currents_to_facilitate_longdistance_travel_.html"/>
     <rights>The data is the property of The University of Queensland. Permission is required to use this material.
     </rights>
+    <!--     access rights -->
+    <rdfa:meta property="http://purl.org/dc/terms/accessRights"
+               content="Some of the data is available in abbreviated format in scientific journals. Contact the data curator regarding permission and procedures for accessing the original data."/>
     <source>
         <id>http://uq.edu.au/</id>
         <title>The University of Queensland</title>
