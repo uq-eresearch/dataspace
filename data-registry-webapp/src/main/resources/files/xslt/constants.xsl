@@ -28,7 +28,7 @@
         <xsl:value-of select="concat($NS_CLD ,'isAccessedVia')"/>
     </xsl:variable>
     <xsl:variable name="ATOM_IS_LOCATED_AT">
-        <xsl:value-of select="concat($NS_CLD ,'isLocatedAt')"/>
+        <xsl:value-of select="concat($NS_FOAF ,'page')"/>
     </xsl:variable>
     <xsl:variable name="ATOM_IS_OUTPUT_OF">
         <xsl:value-of select="concat($NS_ANDS ,'isOutputOf')"/>

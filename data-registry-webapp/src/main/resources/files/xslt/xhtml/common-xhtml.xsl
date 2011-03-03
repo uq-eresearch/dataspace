@@ -15,7 +15,7 @@
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
                 xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-                xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:georss="http://www.georss.org/georss"
+                xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:georss="http://www.georss.org/georss/"
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
     <xsl:include href="../constants.xsl"/>
@@ -143,7 +143,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
             <div class="statement">
                 <div class="property">
-                    <p>Location</p>
+                    <p>Location(s)</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
@@ -184,14 +184,14 @@
 
     <!-- spatial -->
     <xsl:template name="spatial">
-        <xsl:if test="georss">
+        <xsl:if test="georss:box or georss:point or georss:featureName">
             <div class="statement">
                 <div class="property">
-                    <p>Coverage</p>
+                    <p>Spatial Coverage</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="georss:point"/>
-                    <xsl:apply-templates select="georss:polygon"/>
+                    <xsl:apply-templates select="georss:box"/>
                     <xsl:apply-templates select="georss:featureName"/>
                 </div>
             </div>
@@ -204,7 +204,7 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="georss:polygon">
+    <xsl:template match="georss:box">
         <p>
             <xsl:value-of select="text()"/>
         </p>
