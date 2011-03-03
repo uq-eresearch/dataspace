@@ -78,7 +78,7 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     }
 
     @Override
-    public net.metadata.dataspace.data.model.Version getWorkingCopy() {
+    public ActivityVersion getWorkingCopy() {
         return this.versions.first();
     }
 

@@ -59,7 +59,8 @@ public class EntityRelationshipHelper {
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
             if (collection != null) {
-                collection.getOutputOf().add(version.getParent());
+                Activity parent = version.getParent();
+                collection.getOutputOf().add(parent);
                 version.getHasOutput().add(collection);
                 entityManager.merge(collection);
             }
@@ -68,7 +69,8 @@ public class EntityRelationshipHelper {
         for (String agentKey : agentUriKeys) {
             Agent agent = agentDao.getByKey(agentKey);
             if (agent != null) {
-                agent.getParticipantIn().add(version.getParent());
+                Activity parent = version.getParent();
+                agent.getParticipantIn().add(parent);
                 version.getHasParticipants().add(agent);
                 entityManager.merge(agent);
             }
@@ -94,7 +96,8 @@ public class EntityRelationshipHelper {
             Agent agent = agentDao.getByKey(uriKey);
             if (agent != null) {
                 version.getCreators().add(agent);
-                agent.getMade().add((Collection) version.getParent());
+                Collection parent = version.getParent();
+                agent.getMade().add(parent);
                 entityManager.merge(agent);
             }
         }
@@ -103,7 +106,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : publishersUriKeys) {
             Agent publisher = agentDao.getByKey(uriKey);
             if (publisher != null) {
-                publisher.getIsManagerOf().add((Collection) version.getParent());
+                Collection parent = version.getParent();
+                publisher.getIsManagerOf().add(parent);
                 version.getPublishers().add(publisher);
                 entityManager.merge(publisher);
             }
@@ -112,7 +116,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : outputOfUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
-                activity.getHasOutput().add((Collection) version.getParent());
+                Collection parent = version.getParent();
+                activity.getHasOutput().add(parent);
                 version.getOutputOf().add(activity);
                 entityManager.merge(activity);
             }
@@ -121,7 +126,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : supportUriKeys) {
             Service service = serviceDao.getByKey(uriKey);
             if (service != null) {
-                service.getSupportedBy().add((Collection) version.getParent());
+                Collection parent = version.getParent();
+                service.getSupportedBy().add(parent);
                 version.getAccessedVia().add(service);
                 entityManager.merge(service);
             }
@@ -172,7 +178,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : collectionUriKeys) {
             net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
-                collection.getCreators().add(version.getParent());
+                Agent parent = version.getParent();
+                collection.getCreators().add(parent);
                 version.getMade().add(collection);
                 entityManager.merge(collection);
             }
@@ -182,7 +189,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : publishedCollectionsUriKeys) {
             net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
-                collection.getPublishers().add(version.getParent());
+                Agent parent = version.getParent();
+                collection.getPublishers().add(parent);
                 version.getIsManagerOf().add(collection);
                 entityManager.merge(collection);
             }
@@ -191,7 +199,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : isParticipantInUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
-                activity.getHasParticipant().add(version.getParent());
+                Agent parent = version.getParent();
+                activity.getHasParticipant().add(parent);
                 version.getCurrentProjects().add(activity);
                 entityManager.merge(activity);
             }
@@ -208,7 +217,8 @@ public class EntityRelationshipHelper {
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
-                collection.getSupports().add(version.getParent());
+                Service parent = version.getParent();
+                collection.getSupports().add(parent);
                 version.getSupportedBy().add(collection);
                 entityManager.merge(collection);
             }

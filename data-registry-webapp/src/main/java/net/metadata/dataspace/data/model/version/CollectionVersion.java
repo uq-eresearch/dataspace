@@ -93,7 +93,7 @@ public class CollectionVersion extends AbstractVersionEntity {
     }
 
     @Override
-    public Record getParent() {
+    public Collection getParent() {
         return parent;
     }
 

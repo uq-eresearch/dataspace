@@ -78,7 +78,7 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     }
 
     @Override
-    public net.metadata.dataspace.data.model.Version getWorkingCopy() {
+    public ServiceVersion getWorkingCopy() {
         return this.versions.first();
     }
 

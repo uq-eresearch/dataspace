@@ -97,7 +97,7 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     }
 
     @Override
-    public Version getWorkingCopy() {
+    public CollectionVersion getWorkingCopy() {
         return this.versions.first();
     }
 

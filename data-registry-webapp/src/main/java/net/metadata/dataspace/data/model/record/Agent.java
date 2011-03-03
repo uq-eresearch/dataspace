@@ -97,7 +97,7 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     }
 
     @Override
-    public Version getWorkingCopy() {
+    public AgentVersion getWorkingCopy() {
         return this.versions.first();
     }
 
