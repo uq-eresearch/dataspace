@@ -334,18 +334,18 @@ public class AdapterHelper {
         if (accept.equals(Constants.MIME_TYPE_ATOM_ENTRY) || accept.equals(Constants.MIME_TYPE_ATOM)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS);
-            responseContext.setContentType(Constants.MIME_TYPE_ATOM_ENTRY);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
+            responseContext.setContentType(Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
             PrettyWriter writer = new PrettyWriter();
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_RDF)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
             responseContext.setContentType(Constants.MIME_TYPE_RDF);
             String xslFilePath = "/files/xslt/rdf/atom2rdf-" + clazz.getSimpleName().toLowerCase() + ".xsl";
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
@@ -353,9 +353,9 @@ public class AdapterHelper {
         } else if (accept.equals(Constants.MIME_TYPE_XHTML)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
             if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
                 responseContext.setContentType(Constants.MIME_TYPE_XHTML);
             } else {
@@ -367,9 +367,9 @@ public class AdapterHelper {
         } else if (accept.equals(Constants.MIME_TYPE_RIFCS)) {
             String selfLinkHref = entry.getId().toString();
             prepareSelfLink(entry, selfLinkHref);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF);
-            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
             responseContext.setContentType(Constants.MIME_TYPE_RIFCS);
             String xslFilePath = "/files/xslt/rifcs/atom2rifcs-" + clazz.getSimpleName().toLowerCase() + ".xsl";
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
@@ -426,12 +426,13 @@ public class AdapterHelper {
         }
     }
 
-    private static void prepareAlternateLink(Entry entry, String href, String mimeType) throws ResponseContextException {
+    private static void prepareAlternateLink(Entry entry, String href, String mimeType, String title) throws ResponseContextException {
         try {
             Link alternateLink = entry.addLink(entry.getId().toString());
             alternateLink.setHref(href + "?repr=" + mimeType);
             alternateLink.setMimeType(mimeType);
             alternateLink.setRel(Constants.REL_ALTERNATE);
+            alternateLink.setTitle(title);
         } catch (Throwable th) {
             throw new ResponseContextException("Cannot build alternate link", 500);
         }

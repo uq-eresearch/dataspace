@@ -21,6 +21,13 @@ public interface Constants {
     String MIME_TYPE_XHTML = "application/xhtml+xml";
 
     /**
+     * Mime types names
+     */
+    String MIM_TYPE_NAME_ATOM = "atom";
+    String MIM_TYPE_NAME_RDF = "rdf";
+    String MIM_TYPE_NAME_RIFCS = "rifcs";
+    String MIM_TYPE_NAME_XHTML = "xhtml";
+    /**
      * Adapters
      */
     String PATH_FOR_AGENTS = "agents";
