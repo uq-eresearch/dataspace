@@ -1,5 +1,7 @@
 package net.metadata.dataspace.app;
 
+import javax.xml.namespace.QName;
+
 /**
  * User: alabri
  * Date: 06/10/2010
@@ -65,6 +67,7 @@ public interface Constants {
     /**
      * rel attribute types
      */
+    String REL_ACCESS_RIGHTS = NS_DC + "accessRights";
     String REL_ALTERNATE = "alternate";
     String REL_CREATOR = NS_DC + "creator";
     String REL_DESCRIBES = NS_ORE + "describes";
@@ -81,8 +84,11 @@ public interface Constants {
     String REL_PAGE = NS_FOAF + "page";
     String REL_PREDECESSOR_VERSION = "predecessor-version";
     String REL_PUBLISHER = NS_DC + "publisher";
+    String REL_RELATED = "related";
     String REL_SELF = "self";
     String REL_SUCCESSOR_VERSION = "successor-version";
+    String REL_TEMPORAL = NS_DC + "temporal";
+    String REL_SPATIAL = NS_DC + "spatial";
     String REL_VIA = "via";
 
 
@@ -111,4 +117,13 @@ public interface Constants {
      */
     String SESSION_ATTRIBUTE_CURRENT_USER = "currentUser";
     String SESSION_ATTRIBUTE_LDAP_CONTEXT = "currentUser";
+
+    /**
+     * QNames
+     */
+    QName QNAME_RDFA_META = new QName(Constants.NS_RDFA, "meta", "rdfa");
+    QName QNAME_GEO_RSS_POINT = new QName(Constants.NS_GEORSS, "point", "georss");
+    QName QNAME_GEO_RSS_BOX = new QName(Constants.NS_GEORSS, "box", "georss");
+    QName QNAME_GEO_RSS_FEATURE_NAME = new QName(Constants.NS_GEORSS, "featureName", "georss");
+
 }

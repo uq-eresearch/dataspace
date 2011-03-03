@@ -50,7 +50,7 @@ public class CollectionVersion extends AbstractVersionEntity {
     private Set<String> geoRssPoints = new HashSet<String>();
 
     @CollectionOfElements(fetch = FetchType.LAZY)
-    private Set<String> geoRssPloygons = new HashSet<String>();
+    private Set<String> geoRssBoxes = new HashSet<String>();
 
     @CollectionOfElements(fetch = FetchType.LAZY)
     private Set<String> geoRssFeatureNames = new HashSet<String>();
@@ -206,12 +206,12 @@ public class CollectionVersion extends AbstractVersionEntity {
         this.geoRssPoints = geoRssPoints;
     }
 
-    public Set<String> getGeoRssPloygons() {
-        return geoRssPloygons;
+    public Set<String> getGeoRssBoxes() {
+        return geoRssBoxes;
     }
 
-    public void setGeoRssPloygons(Set<String> geoRssPloygons) {
-        this.geoRssPloygons = geoRssPloygons;
+    public void setGeoRssBoxes(Set<String> geoRssBoxes) {
+        this.geoRssBoxes = geoRssBoxes;
     }
 
     public Set<String> getGeoRssFeatureNames() {

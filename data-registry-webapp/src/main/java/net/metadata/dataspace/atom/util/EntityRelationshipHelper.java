@@ -7,6 +7,7 @@ import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
@@ -17,6 +18,7 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.model.Control;
+import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Link;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
@@ -87,6 +89,10 @@ public class EntityRelationshipHelper {
 //                entityManager.merge(subject);
 //            }
         }
+        Set<Publication> publications = AdapterHelper.getPublications(entry);
+        for (Publication publication : publications) {
+            version.getReferencedBy().add(publication);
+        }
         Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_CREATOR);
         for (String uriKey : collectorUriKeys) {
             Agent agent = agentDao.getByKey(uriKey);
@@ -94,6 +100,16 @@ public class EntityRelationshipHelper {
 //                agent.getCollectorOf().add((Collection) version.getParent());
                 version.getCreators().add(agent);
 //                entityManager.merge(agent);
+            }
+        }
+
+        Set<String> publishersUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_CREATOR);
+        for (String uriKey : publishersUriKeys) {
+            Agent publisher = agentDao.getByKey(uriKey);
+            if (publisher != null) {
+//                publisher.getCollectorOf().add((Collection) version.getParent());
+                version.getPublishers().add(publisher);
+//                entityManager.merge(publisher);
             }
         }
         Set<String> outputOfUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_OUTPUT_OF);
@@ -113,6 +129,33 @@ public class EntityRelationshipHelper {
                 version.getAccessedVia().add(service);
 //                entityManager.merge(service);
             }
+        }
+
+        List<Element> extensions = entry.getExtensions(Constants.QNAME_RDFA_META);
+        for (Element extension : extensions) {
+            String property = extension.getAttributeValue("property");
+            if (property.equals(Constants.REL_TEMPORAL)) {
+                String content = extension.getAttributeValue("content");
+                version.getTemporals().add(content);
+            } else if (property.equals(Constants.REL_ACCESS_RIGHTS)) {
+                String content = extension.getAttributeValue("content");
+                version.getAccessRights().add(content);
+            }
+        }
+
+        List<Element> geoRssPointExtensions = entry.getExtensions(Constants.QNAME_GEO_RSS_POINT);
+        for (Element extension : geoRssPointExtensions) {
+            version.getGeoRssPoints().add(extension.getText());
+        }
+
+        List<Element> geoRssBoxExtensions = entry.getExtensions(Constants.QNAME_GEO_RSS_BOX);
+        for (Element extension : geoRssBoxExtensions) {
+            version.getGeoRssBoxes().add(extension.getText());
+        }
+
+        List<Element> geoRssFeatureNameExtensions = entry.getExtensions(Constants.QNAME_GEO_RSS_FEATURE_NAME);
+        for (Element extension : geoRssFeatureNameExtensions) {
+            version.getGeoRssFeatureNames().add(extension.getText());
         }
         setPublished(entry, version);
         Date now = new Date();

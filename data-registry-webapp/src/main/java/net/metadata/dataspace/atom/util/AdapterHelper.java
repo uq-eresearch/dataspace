@@ -7,6 +7,7 @@ import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
@@ -23,10 +24,7 @@ import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.text.UrlEncoding;
-import org.apache.abdera.model.Category;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Link;
-import org.apache.abdera.model.Person;
+import org.apache.abdera.model.*;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -36,6 +34,8 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 
 import java.util.*;
+
+import net.metadata.dataspace.data.model.record.Collection;
 
 /**
  * User: alabri
@@ -204,40 +204,88 @@ public class AdapterHelper {
 
     private static Entry getEntryFromCollection(CollectionVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
-        //<category scheme="http://purl.org/dc/dcmitype/" term="http://purl.org/dc/dcmitype/Collection" label="Collection"/>
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getType().toString());
+            //Pages
             Set<String> pages = version.getPages();
             for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
             }
+            //Subjects
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
                 entry.addCategory(sub.getTerm(), sub.getDefinedBy(), sub.getLabel());
             }
+            //Creators
             Set<Agent> agents = version.getCreators();
             for (Agent agent : agents) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_CREATOR);
+                Link link = entry.addLink(href, Constants.REL_CREATOR);
+                link.setTitle(agent.getTitle());
             }
+            //Publishers
             Set<Agent> publishers = version.getPublishers();
             for (Agent publisher : publishers) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + publisher.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_PUBLISHER);
+                Link link = entry.addLink(href, Constants.REL_PUBLISHER);
+                link.setTitle(publisher.getTitle());
             }
+            //Is Output of
             Set<Activity> activities = version.getOutputOf();
             for (Activity activity : activities) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_IS_OUTPUT_OF);
+                Link link = entry.addLink(href, Constants.REL_IS_OUTPUT_OF);
+                link.setTitle(activity.getTitle());
             }
+            //Accessed via
             Set<Service> services = version.getAccessedVia();
             for (Service service : services) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_IS_ACCESSED_VIA);
+                Link link = entry.addLink(href, Constants.REL_IS_ACCESSED_VIA);
+                link.setTitle(service.getTitle());
             }
+            //Publications
+            Set<Publication> publications = version.getReferencedBy();
+            for (Publication publication : publications) {
+                String href = publication.getPublicationURI();
+                Link link = entry.addLink(href, Constants.REL_RELATED);
+                link.setTitle(publication.getTitle());
+            }
+            //Rights
             entry.setRights(version.getRights());
+            //Access Rights
+            Set<String> accessRights = version.getAccessRights();
+            for (String accessRight : accessRights) {
+                Element accessRightElement = entry.addExtension(Constants.QNAME_RDFA_META);
+                accessRightElement.setAttributeValue("property", Constants.REL_ACCESS_RIGHTS);
+                accessRightElement.setAttributeValue("content", accessRight);
+            }
+            //Temporal
+            Set<String> temporals = version.getTemporals();
+            for (String temporal : temporals) {
+                Element temporalElement = entry.addExtension(Constants.QNAME_RDFA_META);
+                temporalElement.setAttributeValue("property", Constants.REL_TEMPORAL);
+                temporalElement.setAttributeValue("content", temporal);
+            }
+            //GeoRss Points
+            Set<String> geoRssPoints = version.getGeoRssPoints();
+            for (String geoRssPoint : geoRssPoints) {
+                entry.addSimpleExtension(Constants.QNAME_GEO_RSS_POINT, geoRssPoint);
+            }
+            //GeoRss Boxes
+            Set<String> geoRssBoxes = version.getGeoRssBoxes();
+            for (String geoRssBox : geoRssBoxes) {
+                entry.addSimpleExtension(Constants.QNAME_GEO_RSS_BOX, geoRssBox);
+            }
+            //GeoRss Feature Names
+            Set<String> geoRssFeatureNames = version.getGeoRssFeatureNames();
+            for (String geoRssFeatureName : geoRssFeatureNames) {
+                entry.addSimpleExtension(Constants.QNAME_GEO_RSS_FEATURE_NAME, geoRssFeatureName);
+            }
+
+
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
@@ -478,6 +526,28 @@ public class AdapterHelper {
             throw new ResponseContextException("Cannot extract subjects from entry", 400);
         }
         return subjects;
+    }
+
+    public static Set<Publication> getPublications(Entry entry) throws ResponseContextException {
+        Set<Publication> publications = new HashSet<Publication>();
+        try {
+            List<Link> links = entry.getLinks(Constants.REL_RELATED);
+            for (Link link : links) {
+                String publicationUri = link.getHref().toString();
+                String publicationTitle = link.getTitle();
+                if (publicationUri != null && publicationTitle != null) {
+                    Publication publication = entityCreator.getNextPublication();
+                    publication.setPublicationURI(publicationUri);
+                    publication.setTitle(publicationTitle);
+                    publications.add(publication);
+                } else {
+                    throw new ResponseContextException("Publication contains no href or title attributes", 400);
+                }
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException("Cannot extract publications from entry", 400);
+        }
+        return publications;
     }
 
     public static Set<String> getUriKeysFromLink(Entry entry, String rel) throws ResponseContextException {
