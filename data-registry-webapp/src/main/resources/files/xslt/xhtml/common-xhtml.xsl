@@ -171,15 +171,18 @@
 
     <!-- subjects -->
     <xsl:template name="subjects">
-        <div class="statement">
-            <div class="property">
-                <p>Subjects</p>
-            </div>
-            <div class="content">
-                <xsl:apply-templates select="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
+        <xsl:if test="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
+                and @scheme!=$NS_FOAF and @scheme!=$NS_GROUP]">
+            <div class="statement">
+                <div class="property">
+                    <p>Subjects</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
                 and @scheme!=$NS_FOAF and @scheme!=$NS_GROUP]"/>
+                </div>
             </div>
-        </div>
+        </xsl:if>
     </xsl:template>
 
     <!-- spatial -->
