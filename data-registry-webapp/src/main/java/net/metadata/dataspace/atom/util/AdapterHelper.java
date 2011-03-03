@@ -191,7 +191,7 @@ public class AdapterHelper {
             Set<Activity> activities = version.getCurrentProjects();
             for (Activity activity : activities) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
-                entry.addLink(href, Constants.REL_IS_PARTICIPANT_IN);
+                entry.addLink(href, Constants.REL_CURRENT_PROJECT);
             }
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);

@@ -186,7 +186,7 @@ public class EntityRelationshipHelper {
 //                entityManager.merge(collection);
             }
         }
-        Set<String> isParticipantInUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_PARTICIPANT_IN);
+        Set<String> isParticipantInUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_CURRENT_PROJECT);
         for (String uriKey : isParticipantInUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {

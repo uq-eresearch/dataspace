@@ -78,7 +78,7 @@ public interface Constants {
     String REL_IS_DESCRIBED_BY = NS_ORE + "isDescribedBy";
     String REL_IS_LOCATED_AT = NS_CLD + "isLocatedAt";
     String REL_IS_OUTPUT_OF = NS_ANDS + "isOutputOf";
-    String REL_IS_PARTICIPANT_IN = NS_FOAF + "currentProject";
+    String REL_CURRENT_PROJECT = NS_FOAF + "currentProject";
     String REL_IS_SUPPORTED_BY = NS_ANDS + "isSupportedBy";
     String REL_LATEST_VERSION = "latest-version";
     String REL_PAGE = NS_FOAF + "page";
