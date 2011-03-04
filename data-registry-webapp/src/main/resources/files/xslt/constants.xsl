@@ -12,6 +12,8 @@
         <xsl:value-of select="'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php'"/>
     </xsl:variable>
 
+    <xsl:variable name="TYPE_ATOM_FEED">application/atom+xml; type=feed</xsl:variable>
+
     <xsl:variable name="REL_SELF">self</xsl:variable>
     <xsl:variable name="REL_VIA">via</xsl:variable>
     <xsl:variable name="REL_RELATED">related</xsl:variable>

@@ -17,18 +17,26 @@ body a {
     margin: auto;
     margin-bottom: 2em;
     background: #fff;
-    padding: 1.5em;
+    padding: 1.1em;
     font-family: Helvetica, Arial, sans-serif;
     min-height: 600px;
 }
 
-.bread-crumbs {
+.bread-crumbs-nav {
     width: 70%;
+    padding: 0.8em 0 0.5em 0;
     margin: auto;
-    background: #fff;
-    padding: 0.8em 0 0 0;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 0.8em;
+    text-align: right;
+}
+
+.bread-crumbs {
+    float: left;
+    display: inline;
+    font-size: 0.8em
+}
+
+.bread-crumbs-options {
+    display: inline;
 }
 
 .content ul {
@@ -72,21 +80,27 @@ body a {
     text-align: right;
 }
 
-.controls #edit-link {
+#edit-record-link {
     font-size: 0.8em;
-    height: 0.9em;
     color: #339900;
 }
 
-.controls #delete-link {
+#subscribe-link {
     font-size: 0.8em;
-    height: 0.9em;
+}
+
+#new-record-link {
+    color: #339900;
+    font-size: 0.8em
+}
+
+#delete-record-link {
+    font-size: 0.8em;
     color: #ff0000;
 }
 
-.controls #view-link {
+#view-record-link {
     font-size: 0.8em;
-    height: 0.9em;
     color: #3399ff;
 }
 

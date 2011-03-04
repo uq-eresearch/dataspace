@@ -14,6 +14,7 @@
                 exclude-result-prefixes="atom">
 
     <xsl:include href="common-feed-xhtml.xsl"/>
+    <xsl:include href="../../constants.xsl"/>
     <xsl:include href="../../xhtml/include/header.xsl"/>
     <xsl:include href="../../xhtml/include/head.xsl"/>
     <xsl:include href="../../xhtml/include/footer.xsl"/>
@@ -37,11 +38,17 @@
         </head>
         <body>
             <xsl:call-template name="header"/>
-            <div class="bread-crumbs">
-                <a href="/">Browse</a>
-                >>
-                <xsl:value-of select="atom:title"/>
-            </div>
+            <ul class="bread-crumbs-nav">
+                <li class="bread-crumbs">
+                    <a href="/">Browse</a>
+                    >>
+                    <xsl:value-of select="atom:title"/>
+                </li>
+                <li class="bread-crumbs-options">
+                    <a id="new-record-link" href="#" title="Add Record">new</a>
+                    <a id="subscribe-link" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">subscribe</a>
+                </li>
+            </ul>
             <div class="wrapper">
                 <div class="description">
                     <div id="result">

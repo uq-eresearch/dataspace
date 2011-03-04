@@ -42,24 +42,33 @@
             </xsl:text>
             <xsl:comment>Collection description</xsl:comment>
             <xsl:call-template name="header"/>
-            <div class="bread-crumbs">
-                <a href="/">Browse</a>
-                >>
-                <a href="/agents">Agents</a>
-                <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
+            <ul class="bread-crumbs-nav">
+                <li class="bread-crumbs">
+                    <a href="/">Browse</a>
                     >>
-                    <a href="{atom:link[@rel = $REL_SELF]/@href}">
-                        <xsl:choose>
-                            <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
-                                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                    <a href="/agents">Agents</a>
+                    <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
+                        >>
+                        <a href="{atom:link[@rel = $REL_SELF]/@href}">
+                            <xsl:choose>
+                                <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
+                                    <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </a>
+                    </xsl:if>
+                </li>
+                <li class="bread-crumbs-options">
+                    <a id="new-record-link" href="#" title="Add Record">new</a>
+                    <a id="edit-record-link" href="#" title="Edit Record">edit</a>
+                    <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:id}'); " title="Delete Record">
+                        delete
                     </a>
-                </xsl:if>
-            </div>
+                </li>
+            </ul>
             <div class="wrapper">
                 <div class="description">
                     <!-- name -->
