@@ -45,7 +45,9 @@
                     <xsl:value-of select="atom:title"/>
                 </li>
                 <li class="bread-crumbs-options">
-                    <a id="new-record-link" href="#" title="Add Record">new</a>
+                    <xsl:if test="$currentUser">
+                        <a id="new-record-link" href="#" title="Add Record">new</a>
+                    </xsl:if>
                     <a id="subscribe-link" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">subscribe</a>
                 </li>
             </ul>

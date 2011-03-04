@@ -61,13 +61,15 @@
                         </a>
                     </xsl:if>
                 </li>
-                <li class="bread-crumbs-options">
-                    <a id="new-record-link" href="#" title="Add Record">new</a>
-                    <a id="edit-record-link" href="#" title="Edit Record">edit</a>
-                    <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:id}'); " title="Delete Record">
-                        delete
-                    </a>
-                </li>
+                <xsl:if test="$currentUser">
+                    <li class="bread-crumbs-options">
+                        <a id="new-record-link" href="#" title="Add Record">new</a>
+                        <a id="edit-record-link" href="#" title="Edit Record">edit</a>
+                        <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:id}'); " title="Delete Record">
+                            delete
+                        </a>
+                    </li>
+                </xsl:if>
             </ul>
             <div class="wrapper">
                 <div class="description">
