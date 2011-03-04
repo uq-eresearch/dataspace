@@ -185,12 +185,20 @@ public class AdapterHelper {
                 entry.addCategory(sub.getTerm(), sub.getDefinedBy(), sub.getLabel());
             }
 
-            Set<Collection> collectionSet = version.getIsManagerOf();
+            Set<Collection> collectionSet = version.getMade();
             for (Collection collection : collectionSet) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_MADE);
                 link.setTitle(collection.getTitle());
             }
+
+            Set<Collection> collections = version.getIsManagerOf();
+            for (Collection collection : collections) {
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                Link link = entry.addLink(href, Constants.REL_IS_MANAGER_OF);
+                link.setTitle(collection.getTitle());
+            }
+
             Set<Activity> activities = version.getCurrentProjects();
             for (Activity activity : activities) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";

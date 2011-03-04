@@ -251,6 +251,7 @@
             or @rel=$ATOM_HAS_OUTPUT
             or @rel=$ATOM_IS_LOCATED_AT
             or @rel=$ATOM_IS_COLLECTOR_OF
+            or @rel=$ATOM_IS_MANAGER_OF
             or @rel=$ATOM_IS_PARTICIPANT_IN
             or @rel=$REL_RELATED
             or @rel=$REL_ALTERNATE

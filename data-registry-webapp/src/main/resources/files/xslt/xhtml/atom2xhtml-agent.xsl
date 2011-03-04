@@ -52,17 +52,12 @@
                     <xsl:call-template name="latest-version"/>
                     <!-- type -->
                     <xsl:call-template name="type"/>
-                    <!-- creators -->
-                    <xsl:call-template name="creators"/>
                     <!-- collections -->
                     <xsl:call-template name="collections"/>
 
                     <xsl:call-template name="isManagerOf"/>
                     <!-- activities -->
                     <xsl:call-template name="activities"/>
-                    <!-- rights -->
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
-                    <xsl:apply-templates select="atom:rights"/>
                     <!-- subjects -->
                     <xsl:call-template name="subjects"/>
                     <!-- representations -->
@@ -118,7 +113,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_IS_MANAGER_OF]">
             <div class="statement">
                 <div class="property">
-                    <p>Manager Of</p>
+                    <p>Curator Of</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_MANAGER_OF]"/>
