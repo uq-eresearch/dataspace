@@ -38,7 +38,9 @@
         <body>
             <xsl:call-template name="header"/>
             <div class="bread-crumbs">
-                <a href="collections">Browse >></a>
+                <a href="/">Browse</a>
+                >>
+                <xsl:value-of select="atom:title"/>
             </div>
             <div class="wrapper">
                 <div class="description">

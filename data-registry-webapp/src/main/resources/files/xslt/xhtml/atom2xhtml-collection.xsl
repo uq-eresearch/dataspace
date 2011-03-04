@@ -43,11 +43,22 @@
             <xsl:comment>Collection description</xsl:comment>
             <xsl:call-template name="header"/>
             <div class="bread-crumbs">
-                <a href="browse">Browse</a>
+                <a href="/">Browse</a>
                 >>
                 <a href="/collections">Data Collections</a>
-                >>
-                <xsl:value-of select="atom:id"/>
+                <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
+                    >>
+                    <a href="{atom:link[@rel = $REL_SELF]/@href}">
+                        <xsl:choose>
+                            <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
+                                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </a>
+                </xsl:if>
             </div>
             <div class="wrapper">
                 <div class="description">

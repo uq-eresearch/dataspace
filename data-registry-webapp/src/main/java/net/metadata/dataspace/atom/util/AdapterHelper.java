@@ -141,6 +141,7 @@ public class AdapterHelper {
 
     private static Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
+
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
@@ -341,7 +342,7 @@ public class AdapterHelper {
         responseContext.setHeader("Vary", "Accept");
         if (accept.equals(Constants.MIME_TYPE_ATOM_ENTRY) || accept.equals(Constants.MIME_TYPE_ATOM)) {
             String selfLinkHref = entry.getId().toString();
-            prepareSelfLink(entry, selfLinkHref);
+//            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
@@ -350,7 +351,7 @@ public class AdapterHelper {
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_RDF)) {
             String selfLinkHref = entry.getId().toString();
-            prepareSelfLink(entry, selfLinkHref);
+//            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
@@ -360,7 +361,7 @@ public class AdapterHelper {
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_XHTML)) {
             String selfLinkHref = entry.getId().toString();
-            prepareSelfLink(entry, selfLinkHref);
+//            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
@@ -374,7 +375,7 @@ public class AdapterHelper {
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_RIFCS)) {
             String selfLinkHref = entry.getId().toString();
-            prepareSelfLink(entry, selfLinkHref);
+//            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
@@ -421,7 +422,7 @@ public class AdapterHelper {
         }
     }
 
-    private static void prepareSelfLink(Entry entry, String href) throws ResponseContextException {
+    private static void prepareSelfLink(Entry entry, String href, String title) throws ResponseContextException {
         try {
             Link selfLink = entry.getSelfLink();
             if (selfLink == null) {
@@ -429,6 +430,7 @@ public class AdapterHelper {
             }
             selfLink.setHref(href);
             selfLink.setRel(Constants.REL_SELF);
+            selfLink.setTitle(title);
         } catch (Throwable th) {
             throw new ResponseContextException("Cannot build self link", 500);
         }
@@ -590,6 +592,8 @@ public class AdapterHelper {
                 parentUrl = parentUrl + "/" + version.getUriKey();
             }
             entry.setId(parentUrl);
+            String title = version.getParent().getUriKey();
+            prepareSelfLink(entry, parentUrl, title);
             //<link rel="http://www.openarchives.org/ore/terms/describes" href="http://dataspace.metadata.net/collections/2#"/>
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
             entry.setTitle(version.getTitle());
@@ -604,7 +608,7 @@ public class AdapterHelper {
                 AgentVersion workingCopy = (AgentVersion) agent.getWorkingCopy();
                 entry.addAuthor(workingCopy.getTitle(), workingCopy.getMboxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
             }
-            prepareSelfLink(entry, parentUrl);
+//            prepareSelfLink(entry, parentUrl);
             entry.addCategory(Constants.NS_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to set mandatory attributes", 500);
@@ -614,7 +618,8 @@ public class AdapterHelper {
 
     private static void addNavigationLinks(Version version, Entry entry, String parentUrl) throws ResponseContextException {
         try {
-            entry.addLink(parentUrl, Constants.REL_LATEST_VERSION);
+            Link link = entry.addLink(parentUrl, Constants.REL_LATEST_VERSION);
+            link.setTitle(version.getUriKey());
             SortedSet<Version> versions = version.getParent().getVersions();
             Version[] versionArray = new Version[versions.size()];
             versionArray = (Version[]) version.getParent().getVersions().toArray(versionArray);

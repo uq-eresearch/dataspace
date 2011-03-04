@@ -240,6 +240,21 @@
         </p>
     </xsl:template>
 
+    <xsl:template name="record-id">
+        <xsl:if test="atom:link[@rel=$REL_LATEST_VERSION]">
+            <a href="{@href}">
+                <xsl:choose>
+                    <xsl:when test="@title">
+                        <xsl:value-of select="@title"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="@href"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </a>
+        </xsl:if>
+    </xsl:template>
+
     <!-- displayed links -->
     <xsl:template
             match="atom:link[@rel=$ATOM_CREATOR
