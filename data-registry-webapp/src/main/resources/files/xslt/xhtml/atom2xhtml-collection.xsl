@@ -45,7 +45,7 @@
             <div class="bread-crumbs">
                 <a href="/">Browse</a>
                 >>
-                <a href="/collections">Data Collections</a>
+                <a href="/collections">Collections</a>
                 <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
                     >>
                     <a href="{atom:link[@rel = $REL_SELF]/@href}">

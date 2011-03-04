@@ -23,10 +23,13 @@
                     <span class="record-date">
                         <xsl:value-of select="atom:updated"/>
                     </span>
-                    <span class="controls">
+                    <div class="controls">
+                        <a id="view-link" href="{atom:id}" title="View Record">view</a>
                         <a id="edit-link" href="#" title="Edit Record">edit</a>
-                        <a id="delete-link" href="#" title="Delete Record">delete</a>
-                    </span>
+                        <a id="delete-link" href="#" onclick="deleteRecord('{atom:id}'); " title="Delete Record">
+                            delete
+                        </a>
+                    </div>
                 </xsl:when>
                 <xsl:otherwise>
                     <a href="{atom:id}">

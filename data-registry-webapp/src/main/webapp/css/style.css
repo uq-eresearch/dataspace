@@ -48,7 +48,7 @@ body a {
 }
 
 #result .record {
-    border-top: 1px dashed #BE87E9;
+    border-bottom: 1px dashed #BE87E9;
     padding: 0.3em;
 }
 
@@ -66,14 +66,28 @@ body a {
     color: #ff0000;
 }
 
+.controls {
+    width: 100%;
+    height: 1em;
+    text-align: right;
+}
+
 .controls #edit-link {
     font-size: 0.8em;
+    height: 0.9em;
     color: #339900;
 }
 
 .controls #delete-link {
     font-size: 0.8em;
+    height: 0.9em;
     color: #ff0000;
+}
+
+.controls #view-link {
+    font-size: 0.8em;
+    height: 0.9em;
+    color: #3399ff;
 }
 
 /* Global, Common and Reset Settings

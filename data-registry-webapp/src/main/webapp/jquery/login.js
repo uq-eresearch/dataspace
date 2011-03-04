@@ -26,6 +26,7 @@ function getLoginLink() {
                 $('a#signin-link').attr('href', '#');
                 $('a#signin-link').attr('class', 'signin');
                 getLoginLink();
+                location.reload();
             }
         });
 
@@ -67,10 +68,11 @@ function login() {
                         $('a#signin-link').attr('href', '#');
                         $('a#signin-link').attr('class', 'signin');
                         getLoginLink();
+                        location.reload();
                     }
                 });
-
             });
+            location.reload();
         },
         error: function(xhr, textStatus, errorThrown) {
             $('#login-error').html('Authentication Failed: incorrect username or password');
