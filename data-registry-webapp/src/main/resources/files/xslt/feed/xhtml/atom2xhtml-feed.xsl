@@ -37,6 +37,9 @@
         </head>
         <body>
             <xsl:call-template name="header"/>
+            <div class="bread-crumbs">
+                <a href="collections">Browse >></a>
+            </div>
             <div class="wrapper">
                 <div class="description">
                     <div id="result">

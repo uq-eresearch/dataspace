@@ -42,6 +42,13 @@
             </xsl:text>
             <xsl:comment>Collection description</xsl:comment>
             <xsl:call-template name="header"/>
+            <div class="bread-crumbs">
+                <a href="browse">Browse</a>
+                >>
+                <a href="/agents">Agents</a>
+                >>
+                <xsl:value-of select="atom:id"/>
+            </div>
             <div class="wrapper">
                 <div class="description">
                     <!-- name -->

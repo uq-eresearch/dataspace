@@ -8,8 +8,10 @@
     <xsl:template match="atom:entry">
         <div class="record">
             <xsl:choose>
-                <xsl:when test="$currentUser and app:control/app:draft='yes'">
-                    <span class="draft">(draft)</span>
+                <xsl:when test="$currentUser">
+                    <xsl:if test="app:control/app:draft='yes'">
+                        <span class="draft">(draft)</span>
+                    </xsl:if>
                     <a href="{atom:id}">
                         <xsl:value-of select="atom:title"/>
                     </a>
@@ -20,6 +22,10 @@
                     <xsl:value-of select="atom:content"/>
                     <span class="record-date">
                         <xsl:value-of select="atom:updated"/>
+                    </span>
+                    <span class="controls">
+                        <a id="edit-link" href="#" title="Edit Record">edit</a>
+                        <a id="delete-link" href="#" title="Delete Record">delete</a>
                     </span>
                 </xsl:when>
                 <xsl:otherwise>
