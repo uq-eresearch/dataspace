@@ -60,8 +60,9 @@ public class EntityRelationshipHelper {
             Collection collection = collectionDao.getByKey(key);
             if (collection != null) {
                 Activity parent = version.getParent();
-                collection.getOutputOf().add(parent);
                 version.getHasOutput().add(collection);
+                collection.getOutputOf().add(parent);
+
                 entityManager.merge(collection);
             }
         }
@@ -107,8 +108,8 @@ public class EntityRelationshipHelper {
             Agent publisher = agentDao.getByKey(uriKey);
             if (publisher != null) {
                 Collection parent = version.getParent();
-                publisher.getIsManagerOf().add(parent);
                 version.getPublishers().add(publisher);
+                publisher.getIsManagerOf().add(parent);
                 entityManager.merge(publisher);
             }
         }
@@ -117,8 +118,8 @@ public class EntityRelationshipHelper {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
                 Collection parent = version.getParent();
-                activity.getHasOutput().add(parent);
                 version.getOutputOf().add(activity);
+                activity.getHasOutput().add(parent);
                 entityManager.merge(activity);
             }
         }
@@ -127,8 +128,8 @@ public class EntityRelationshipHelper {
             Service service = serviceDao.getByKey(uriKey);
             if (service != null) {
                 Collection parent = version.getParent();
-                service.getSupportedBy().add(parent);
                 version.getAccessedVia().add(service);
+                service.getSupportedBy().add(parent);
                 entityManager.merge(service);
             }
         }
@@ -218,8 +219,8 @@ public class EntityRelationshipHelper {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
                 Service parent = version.getParent();
-                collection.getSupports().add(parent);
                 version.getSupportedBy().add(collection);
+                collection.getAccessedVia().add(parent);
                 entityManager.merge(collection);
             }
         }

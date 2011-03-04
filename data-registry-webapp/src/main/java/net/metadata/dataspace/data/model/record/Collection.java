@@ -82,7 +82,7 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
         return this.versions.first().getOutputOf();
     }
 
-    public Set<Service> getSupports() {
+    public Set<Service> getAccessedVia() {
         return this.versions.first().getAccessedVia();
     }
 

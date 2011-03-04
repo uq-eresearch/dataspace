@@ -104,7 +104,7 @@ public class AdapterHelperTest {
         ServiceVersion serviceVersion = PopulatorUtil.getServiceVersion(service);
         service.getVersions().add(serviceVersion);
         service.getSupportedBy().add(collection);
-        collection.getSupports().add(service);
+        collection.getAccessedVia().add(service);
         service.setLocatedOn(source);
         service.setSource(source);
         entityManager.persist(serviceVersion);
