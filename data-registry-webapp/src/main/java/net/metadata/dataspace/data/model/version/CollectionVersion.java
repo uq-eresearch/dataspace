@@ -55,6 +55,9 @@ public class CollectionVersion extends AbstractVersionEntity {
     @CollectionOfElements(fetch = FetchType.LAZY)
     private Set<String> geoRssFeatureNames = new HashSet<String>();
 
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> keywords = new HashSet<String>();
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "collections_creators")
     private Set<Agent> creators = new HashSet<Agent>();
@@ -236,5 +239,13 @@ public class CollectionVersion extends AbstractVersionEntity {
 
     public void setPages(Set<String> pages) {
         this.pages = pages;
+    }
+
+    public Set<String> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(Set<String> keywords) {
+        this.keywords = keywords;
     }
 }
