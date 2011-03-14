@@ -25,7 +25,7 @@
                     </span>
                     <div class="controls">
                         <a id="view-record-link" href="{atom:id}" title="View Record">view</a>
-                        <a id="edit-record-link" href="#" title="Edit Record">edit</a>
+                        <a id="edit-record-link" href="{atom:id}?v=edit" title="Edit Record">edit</a>
                         <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:id}'); " title="Delete Record">
                             delete
                         </a>
