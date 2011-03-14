@@ -286,15 +286,14 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="atom:title">
-        <input value="{atom.title}"/>/>
-    </xsl:template>
-
-    <!-- description -->
-    <xsl:template match="atom:content">
-        <p>
-            <xsl:value-of select="text()"/>
-        </p>
+    <xsl:template name="bread-crumbs-options">
+        <li class="bread-crumbs-options">
+            <a id="new-record-link" href="#" title="Add Record">new</a>
+            <a id="edit-record-link" href="{atom:id}?v=edit" title="Edit Record">edit</a>
+            <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:id}'); " title="Delete Record">
+                delete
+            </a>
+        </li>
     </xsl:template>
 
 
