@@ -1,6 +1,3 @@
-$(document).ready(function() {
-    getLoginLink();
-});
 function getLoginLink() {
     $(".signin").click(function(e) {
         e.preventDefault();

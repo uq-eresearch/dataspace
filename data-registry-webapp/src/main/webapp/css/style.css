@@ -105,6 +105,29 @@ body a {
     color: #3399ff;
 }
 
+.ui-tabs .ui-tabs-nav li a {
+    font-size: 0.7em;
+}
+
+#edit-table {
+    width: 100%;
+}
+
+#edit-table th {
+    vertical-align: middle;
+    background-color: #dbdbdb;
+    font-size: 0.7em;
+    padding: 0.5em 0;
+}
+
+#edit-table td {
+    vertical-align: middle;
+}
+
+#edit-table td input {
+    width: 100%;
+}
+
 /* Global, Common and Reset Settings
 -----------------------------------------------------------------------------*/
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
@@ -130,7 +153,6 @@ body {
 * {
     margin: 0;
     padding: 0;
-    border: none;
 }
 
 img {

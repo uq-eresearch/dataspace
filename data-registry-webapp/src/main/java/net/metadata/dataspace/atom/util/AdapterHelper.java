@@ -372,7 +372,7 @@ public class AdapterHelper {
             }
             String xslFilePath = "/files/xslt/xhtml/atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
             if (viewRepresentation != null && viewRepresentation.equals("edit")) {
-                xslFilePath = "/files/xslt/xhtml/edit/atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
+                xslFilePath = "/files/xslt/xhtml/edit/edit-atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
             }
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
             responseContext.setWriter(writer);

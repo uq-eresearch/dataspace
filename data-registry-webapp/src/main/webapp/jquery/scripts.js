@@ -1,3 +1,7 @@
+$(document).ready(function() {
+    $("#edit-tabs").tabs();
+    getLoginLink();
+});
 function deleteRecord(url) {
     if (confirm("Are you sure you want to delete this record?")) {
         $.ajax({

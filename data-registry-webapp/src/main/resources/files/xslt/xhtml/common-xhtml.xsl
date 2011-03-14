@@ -285,4 +285,17 @@
             </a>
         </p>
     </xsl:template>
+
+    <xsl:template match="atom:title">
+        <input value="{atom.title}"/>/>
+    </xsl:template>
+
+    <!-- description -->
+    <xsl:template match="atom:content">
+        <p>
+            <xsl:value-of select="text()"/>
+        </p>
+    </xsl:template>
+
+
 </xsl:stylesheet>
