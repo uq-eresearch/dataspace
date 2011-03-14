@@ -13,17 +13,17 @@
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="atom rdfa">
-    <xsl:include href="common-xhtml.xsl"/>
-    <xsl:include href="include/header.xsl"/>
-    <xsl:include href="include/head.xsl"/>
-    <xsl:include href="include/footer.xsl"/>
+
+    <xsl:include href="../common-xhtml.xsl"/>
+    <xsl:include href="../include/header.xsl"/>
+    <xsl:include href="../include/head.xsl"/>
+    <xsl:include href="../include/footer.xsl"/>
 
     <xsl:output method="html" media-type="application/xhtml+xml" omit-xml-declaration="yes"
                 doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
                 doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" indent="yes"/>
-
     <xsl:template match="/">
-        <html>
+        <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
             <xsl:apply-templates/>
         </html>
     </xsl:template>
@@ -48,7 +48,7 @@
                 <li class="bread-crumbs">
                     <a href="/">Browse</a>
                     >>
-                    <a href="/agents">Agents</a>
+                    <a href="/collections">Collections</a>
                     <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
                         >>
                         <a href="{atom:link[@rel = $REL_SELF]/@href}">
@@ -61,6 +61,7 @@
                                 </xsl:otherwise>
                             </xsl:choose>
                         </a>
+                        (edit)
                     </xsl:if>
                 </li>
                 <xsl:if test="$currentUser">
@@ -83,14 +84,27 @@
                     <xsl:call-template name="latest-version"/>
                     <!-- type -->
                     <xsl:call-template name="type"/>
-                    <!-- collections -->
-                    <xsl:call-template name="collections"/>
-
-                    <xsl:call-template name="isManagerOf"/>
-                    <!-- activities -->
-                    <xsl:call-template name="activities"/>
+                    <!-- creators -->
+                    <xsl:call-template name="creators"/>
+                    <!-- curators -->
+                    <xsl:call-template name="curators"/>
+                    <!-- projects -->
+                    <xsl:call-template name="projects"/>
+                    <!-- services -->
+                    <xsl:call-template name="services"/>
+                    <!-- location -->
+                    <xsl:call-template name="locations"/>
+                    <!-- rights -->
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
+                    <xsl:apply-templates select="atom:rights"/>
+                    <!-- spatial -->
+                    <xsl:call-template name="spatial"/>
+                    <!-- temporal -->
+                    <xsl:call-template name="temporal"/>
                     <!-- subjects -->
                     <xsl:call-template name="subjects"/>
+                    <!-- related info -->
+                    <xsl:call-template name="related"/>
                     <!-- representations -->
                     <xsl:call-template name="representations"/>
                     <!-- metadata about the description -->
@@ -111,64 +125,52 @@
 
     <!-- object type -->
     <xsl:template name="type">
-        <xsl:if test="atom:category[@term=$ENTITY_PARTY]">
+        <xsl:if test="atom:category[@term=$ENTITY_COLLECTION]">
             <div class="statement">
                 <div class="property">
                     <p>Type</p>
                 </div>
                 <div class="content">
                     <p>
-                        <xsl:value-of select="atom:category[@term=$ENTITY_PARTY]/@label"/>
+                        <xsl:value-of select="atom:category[@term=$ENTITY_COLLECTION]/@label"/>
                     </p>
                 </div>
             </div>
         </xsl:if>
     </xsl:template>
 
-    <!-- collections -->
-    <xsl:template name="collections">
-        <xsl:if test="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]">
+    <!-- projects -->
+    <xsl:template name="projects">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_OUTPUT_OF]">
             <div class="statement">
                 <div class="property">
-                    <p>Collector Of</p>
+                    <p>Project (s)</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]"/>
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_OUTPUT_OF]"/>
                 </div>
             </div>
         </xsl:if>
     </xsl:template>
 
-    <!-- collections -->
-    <xsl:template name="isManagerOf">
-        <xsl:if test="atom:link[@rel=$ATOM_IS_MANAGER_OF]">
+    <!-- services -->
+    <xsl:template name="services">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]">
             <div class="statement">
                 <div class="property">
-                    <p>Curator Of</p>
+                    <p>Accessed Via</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_MANAGER_OF]"/>
-                </div>
-            </div>
-        </xsl:if>
-    </xsl:template>
-
-    <!-- Activities -->
-    <xsl:template name="activities">
-        <xsl:if test="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]">
-            <div class="statement">
-                <div class="property">
-                    <p>Participate In</p>
-                </div>
-                <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]"/>
+                    <xsl:apply-templates
+                            select="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]"/>
                 </div>
             </div>
         </xsl:if>
     </xsl:template>
 
     <xsl:template
-            match="atom:category[@scheme != $NS_FOAF and @scheme!=$NS_GROUP]">
+            match="atom:category[@scheme != $NS_DCMITYPE
+            and @scheme!=$NS_GROUP]">
         <p>
             <xsl:choose>
                 <xsl:when test="@label">

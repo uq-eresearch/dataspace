@@ -336,7 +336,6 @@ public class AdapterHelper {
     public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry, Class clazz) throws ResponseContextException {
 
         String accept = getAcceptHeader(request);
-
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
         responseContext.setLocation(entry.getId().toString());
         responseContext.setHeader("Vary", "Accept");
@@ -360,17 +359,21 @@ public class AdapterHelper {
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_XHTML)) {
+            String viewRepresentation = getViewRepresentation(request);
             String selfLinkHref = entry.getId().toString();
 //            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
             if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
-                responseContext.setContentType(Constants.MIME_TYPE_XHTML);
-            } else {
                 responseContext.setContentType(Constants.MIME_TYPE_HTML);
+            } else {
+                responseContext.setContentType(Constants.MIME_TYPE_XHTML);
             }
             String xslFilePath = "/files/xslt/xhtml/atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
+            if (viewRepresentation != null && viewRepresentation.equals("edit")) {
+                xslFilePath = "/files/xslt/xhtml/edit/atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
+            }
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_RIFCS)) {
@@ -388,6 +391,11 @@ public class AdapterHelper {
         }
 
         return responseContext;
+    }
+
+    private static String getViewRepresentation(RequestContext request) {
+        String parameter = request.getParameter("v");
+        return parameter;
     }
 
     private static String getAcceptHeader(RequestContext request) {

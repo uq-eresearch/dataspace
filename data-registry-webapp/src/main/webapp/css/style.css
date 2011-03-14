@@ -931,7 +931,7 @@ p.centenary {
 #signin_submit {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    background: #39d url('images/bg-btn-blue.png') repeat-x scroll 0 0;
+    background: #39d url('../images/bg-btn-blue.png') repeat-x scroll 0 0;
     border: 1px solid #39D;
     color: #fff;
     text-shadow: 0 -1px 0 #39d;

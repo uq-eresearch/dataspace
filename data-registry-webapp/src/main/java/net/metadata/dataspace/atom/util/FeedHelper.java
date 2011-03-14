@@ -36,9 +36,9 @@ public class FeedHelper {
 
     public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext) {
         if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
-            responseContext.setContentType(Constants.MIME_TYPE_XHTML);
-        } else {
             responseContext.setContentType(Constants.MIME_TYPE_HTML);
+        } else {
+            responseContext.setContentType(Constants.MIME_TYPE_XHTML);
         }
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
         XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
