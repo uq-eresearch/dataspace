@@ -27,6 +27,7 @@
     </xsl:template>
     <xsl:template name="alternative-title">
         <input id="alternative-title-text" name="alternative-title-text" type="text" value=""/>
+        <a id="new-record-link" href="#" title="Add Title">new</a>
     </xsl:template>
     <xsl:template name="type">
         <select id="type-combobox" name="type-combobox">
@@ -41,5 +42,56 @@
     </xsl:template>
     <xsl:template name="page">
         <input id="page-text" name="page-text" type="text" value=""/>
+    </xsl:template>
+
+    <xsl:template name="edit-creators">
+        <table id="edit-creators-table">
+            <tr>
+                <td>
+                    <input id="creator-0" value="" type="text"/>
+                </td>
+                <td>
+                    <a id="lookup-creator-link" href="#" title="Lookup">lookup</a>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+        <div>
+            <a id="add-creator-link" href="#" title="Add Creator">add creator</a>
+        </div>
+    </xsl:template>
+
+    <xsl:template name="edit-custodians">
+        <table id="edit-custodians-table">
+            <tr>
+                <td>
+                    <input id="custodian-0" value="" type="text"/>
+                </td>
+                <td>
+                    <a id="lookup-custodian-link" href="#" title="Lookup">lookup</a>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+        <div>
+            <a id="add-custodian-link" href="#" title="Add Custodian">add custodian</a>
+        </div>
+    </xsl:template>
+
+    <xsl:template name="edit-projects">
+        <table id="edit-projects-table">
+            <tr>
+                <td>
+                    <input id="project-0" value="" type="text"/>
+                </td>
+                <td>
+                    <a id="lookup-project-link" href="#" title="Lookup">lookup</a>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+        <div>
+            <a id="add-project-link" href="#" title="Add Project">add project</a>
+        </div>
     </xsl:template>
 </xsl:stylesheet>

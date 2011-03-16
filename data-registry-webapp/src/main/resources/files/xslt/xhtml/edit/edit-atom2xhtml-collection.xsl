@@ -101,7 +101,7 @@
                         </li>
                     </ul>
                     <div id="fragment-1">
-                        <table id="edit-table">
+                        <table id="edit-general-table" class="edit-table">
                             <tr>
                                 <th>Title</th>
                                 <td>
@@ -135,19 +135,106 @@
                         </table>
                     </div>
                     <div id="fragment-2">
-                        <p>Tab 2 content</p>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Creators</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-creators"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Custodians/Contacts</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-custodians"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Projects</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-projects"/>
+                            </div>
+                        </fieldset>
                     </div>
                     <div id="fragment-3">
-                        <p>Tab 2 content</p>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Fields of Research</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-creators"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Socio-economic Impact</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-custodians"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Type of Activity</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-projects"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Keywords</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-projects"/>
+                            </div>
+                        </fieldset>
                     </div>
                     <div id="fragment-4">
-                        <p>Tab 2 content</p>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Time Period</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-creators"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Locations</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-custodians"/>
+                            </div>
+                        </fieldset>
                     </div>
                     <div id="fragment-5">
-                        <p>Tab 2 content</p>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Related Collections</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-creators"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Related Services</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-custodians"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Related Publications</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-projects"/>
+                            </div>
+                        </fieldset>
                     </div>
                     <div id="fragment-6">
-                        <p>Tab 2 content</p>
+                        <table id="edit-rights-table" class="edit-table">
+                            <tr>
+                                <th>Rights</th>
+                                <td>
+                                    <xsl:apply-templates select="atom:content"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Access Rights</th>
+                                <td>
+                                    <xsl:apply-templates select="atom:content"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>License</th>
+                                <td>
+                                    <xsl:call-template name="type"/>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

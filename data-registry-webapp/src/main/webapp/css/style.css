@@ -81,16 +81,11 @@ body a {
     text-align: right;
 }
 
-#edit-record-link {
-    font-size: 0.8em;
-    color: #339900;
-}
-
 #subscribe-link {
     font-size: 0.8em;
 }
 
-#new-record-link {
+#edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link {
     color: #339900;
     font-size: 0.8em
 }
@@ -100,7 +95,7 @@ body a {
     color: #ff0000;
 }
 
-#view-record-link {
+#lookup-custodian-link, #lookup-project-link, #lookup-creator-link, #view-record-link {
     font-size: 0.8em;
     color: #3399ff;
 }
@@ -109,23 +104,50 @@ body a {
     font-size: 0.7em;
 }
 
-#edit-table {
+.edit-table {
     width: 100%;
 }
 
-#edit-table th {
+.edit-table table {
+    width: 100%;
+}
+
+.edit-table th {
     vertical-align: middle;
     background-color: #dbdbdb;
     font-size: 0.7em;
     padding: 0.5em 0;
 }
 
-#edit-table td {
+.edit-table td {
     vertical-align: middle;
 }
 
-#edit-table td input {
-    width: 100%;
+.edit-table td input {
+    width: 90%;
+}
+
+#edit-tabs fieldset {
+    margin: 0.8em 0;
+}
+
+fieldset legend {
+    width: 30%;
+    padding: 0.2em 0.5em;
+    font-size: 0.7em;
+}
+
+fieldset legend div {
+    margin: 0.3em 0.5em;
+}
+
+fieldset .field {
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
+fieldset .field label {
+    margin-right: 0.4em;
 }
 
 /* Global, Common and Reset Settings
