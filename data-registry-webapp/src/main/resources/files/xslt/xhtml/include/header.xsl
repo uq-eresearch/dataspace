@@ -73,23 +73,7 @@
                         <a href="/">Home</a>
                     </li>
                     <li>
-                        <a href="/browse" class="browse" id="browse">Browse</a>
-                        <fieldset id="browse_menu">
-                            <ul id="browse_submenu" class="submenu">
-                                <li>
-                                    <a href="/collections">Collections</a>
-                                </li>
-                                <li>
-                                    <a href="/agents">Agents</a>
-                                </li>
-                                <li>
-                                    <a href="/services">Services</a>
-                                </li>
-                                <li>
-                                    <a href="/activities">Activities</a>
-                                </li>
-                            </ul>
-                        </fieldset>
+                        <a href="/browse">Browse</a>
                     </li>
                     <li>
                         <a href="/search">Search</a>

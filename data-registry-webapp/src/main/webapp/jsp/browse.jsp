@@ -14,7 +14,20 @@
 </ul>
 <div class="wrapper">
     <div class="content">
-        <h1 align="center">Hello World!</h1>
+        <ul id="browse_submenu" class="submenu">
+            <li>
+                <a href="/collections">Collections</a>
+            </li>
+            <li>
+                <a href="/agents">Agents</a>
+            </li>
+            <li>
+                <a href="/services">Services</a>
+            </li>
+            <li>
+                <a href="/activities">Activities</a>
+            </li>
+        </ul>
     </div>
 </div>
 <jsp:include page="../include/footer.jsp"/>

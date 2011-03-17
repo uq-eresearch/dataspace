@@ -516,14 +516,6 @@ h6 {
     padding: 12px 8px 12px 8px;
 }
 
-#topnav #browse_submenu li a {
-    text-transform: none;
-    text-decoration: none;
-    color: #ffffff;
-    margin: 0;
-    padding: 0px 25px 0 0;
-}
-
 #topnav li a:link {
     color: rgb(223, 223, 223);
     text-decoration: none;
@@ -539,10 +531,6 @@ h6 {
     text-decoration: none;
     background: transparent url('../images/top_nav_bg_active.gif') repeat-x scroll right bottom;
     border-bottom: 1px solid rgb(229, 229, 229);
-}
-
-#browse_submenu li a:hover {
-    background: none;
 }
 
 #topnav li a:active {
@@ -960,7 +948,7 @@ p.centenary {
     margin: 0;
 }
 
-#signin_menu a, #browse_menu a {
+#signin_menu a {
     color: #6AC;
 }
 

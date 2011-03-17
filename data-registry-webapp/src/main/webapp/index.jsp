@@ -5,6 +5,11 @@
 </head>
 <body>
 <jsp:include page="include/header.jsp"/>
+<ul class="bread-crumbs-nav">
+    <li class="bread-crumbs">
+        <a href="/">Home</a>
+    </li>
+</ul>
 <div class="wrapper">
     <div class="content">
         <h3>cURL Examples</h3>
