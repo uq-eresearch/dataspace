@@ -45,7 +45,7 @@
         <ul>
             <li><a href="/">Home</a></li>
             <li>
-                <a href="#" class="browse" id="browse">Browse</a>
+                <a href="/browse" class="browse" id="browse">Browse</a>
                 <fieldset id="browse_menu">
                     <ul id="browse_submenu" class="submenu">
                         <li>

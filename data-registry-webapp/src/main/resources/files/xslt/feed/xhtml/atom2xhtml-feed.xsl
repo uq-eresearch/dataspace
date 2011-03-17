@@ -42,7 +42,9 @@
             <xsl:call-template name="header"/>
             <ul class="bread-crumbs-nav">
                 <li class="bread-crumbs">
-                    <a href="/">Browse</a>
+                    <a href="/">Home</a>
+                    >>
+                    <a href="/browse">Browse</a>
                     >>
                     <xsl:value-of select="atom:title"/>
                 </li>

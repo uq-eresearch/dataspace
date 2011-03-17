@@ -44,26 +44,10 @@
             </xsl:text>
             <xsl:call-template name="header"/>
             <ul class="bread-crumbs-nav">
-                <li class="bread-crumbs">
-                    <a href="/">Browse</a>
-                    >>
-                    <a href="/activities">Activities</a>
-                    <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
-                        >>
-                        <a href="{atom:link[@rel = $REL_SELF]/@href}">
-                            <xsl:choose>
-                                <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
-                                    <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </a>
-                        (edit)
-                    </xsl:if>
-                </li>
-
+                <xsl:call-template name="edit-bread-crumbs">
+                    <xsl:with-param name="path">activities</xsl:with-param>
+                    <xsl:with-param name="title">Activities</xsl:with-param>
+                </xsl:call-template>
             </ul>
             <div class="wrapper">
                 <div id="edit-tabs">

@@ -21,7 +21,33 @@
     <xsl:include href="../../constants.xsl"/>
     <xsl:param name="currentUser"/>
     <xsl:output method="html" media-type="application/xhtml+xml" indent="yes"/>
-
+    <xsl:template name="edit-bread-crumbs">
+        <xsl:param name="path"/>
+        <xsl:param name="title"/>
+        <li class="bread-crumbs">
+            <a href="/">Home</a>
+            >>
+            <a href="/browse">Browse</a>
+            >>
+            <a href="/{$path}">
+                <xsl:value-of select="$title"/>
+            </a>
+            <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
+                >>
+                <a href="{atom:link[@rel = $REL_SELF]/@href}">
+                    <xsl:choose>
+                        <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
+                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </a>
+                (edit)
+            </xsl:if>
+        </li>
+    </xsl:template>
     <xsl:template match="atom:title">
         <input id="title-text" name="title-text" type="text" value="{text()}"/>
     </xsl:template>

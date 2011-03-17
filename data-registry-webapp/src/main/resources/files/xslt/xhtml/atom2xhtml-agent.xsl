@@ -45,24 +45,10 @@
             <xsl:comment>Collection description</xsl:comment>
             <xsl:call-template name="header"/>
             <ul class="bread-crumbs-nav">
-                <li class="bread-crumbs">
-                    <a href="/">Browse</a>
-                    >>
-                    <a href="/agents">Agents</a>
-                    <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
-                        >>
-                        <a href="{atom:link[@rel = $REL_SELF]/@href}">
-                            <xsl:choose>
-                                <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
-                                    <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </a>
-                    </xsl:if>
-                </li>
+                <xsl:call-template name="bread-crumbs">
+                    <xsl:with-param name="path">agents</xsl:with-param>
+                    <xsl:with-param name="title">Agents</xsl:with-param>
+                </xsl:call-template>
                 <xsl:if test="$currentUser">
                     <xsl:call-template name="bread-crumbs-options"/>
                 </xsl:if>
