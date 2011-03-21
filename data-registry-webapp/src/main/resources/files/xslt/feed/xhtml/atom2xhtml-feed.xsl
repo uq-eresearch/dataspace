@@ -50,7 +50,7 @@
                 </li>
                 <li class="bread-crumbs-options">
                     <xsl:if test="$currentUser">
-                        <a id="new-record-link" href="#" title="Add Record">new</a>
+                        <a id="new-record-link" href="{atom:id}?v=new" title="Add Record">new</a>
                     </xsl:if>
                     <a id="subscribe-link" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">subscribe</a>
                 </li>

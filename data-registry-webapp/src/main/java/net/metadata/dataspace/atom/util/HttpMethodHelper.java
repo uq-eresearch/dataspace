@@ -269,16 +269,16 @@ public class HttpMethodHelper {
         }
     }
 
-    public static ResponseContext getFeed(RequestContext request, ResponseContext responseContext) throws ResponseContextException {
+    public static ResponseContext getFeed(RequestContext request, ResponseContext responseContext, Class clazz) throws ResponseContextException {
         String representationMimeType = FeedHelper.getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-                return FeedHelper.getHtmlRepresentationOfFeed(request, responseContext);
+                return FeedHelper.getHtmlRepresentationOfFeed(request, responseContext, clazz);
             } else {
                 throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
             }
         } else {
-            return FeedHelper.getHtmlRepresentationOfFeed(request, responseContext);
+            return FeedHelper.getHtmlRepresentationOfFeed(request, responseContext, clazz);
         }
     }
 

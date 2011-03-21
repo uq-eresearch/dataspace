@@ -14,20 +14,10 @@
 </ul>
 <div class="wrapper">
     <div class="content">
-        <ul id="browse_submenu" class="submenu">
-            <li>
-                <a href="/collections">Collections</a>
-            </li>
-            <li>
-                <a href="/agents">Agents</a>
-            </li>
-            <li>
-                <a href="/services">Services</a>
-            </li>
-            <li>
-                <a href="/activities">Activities</a>
-            </li>
-        </ul>
+        <div class="browse-portlet"><a href="/collections">Collections</a></div>
+        <div class="browse-portlet"><a href="/agents">Agents</a></div>
+        <div class="browse-portlet"><a href="/services">Services</a></div>
+        <div class="browse-portlet"><a href="/activities">Activities</a></div>
     </div>
 </div>
 <jsp:include page="../include/footer.jsp"/>

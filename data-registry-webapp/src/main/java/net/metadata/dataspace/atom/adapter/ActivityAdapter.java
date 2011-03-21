@@ -102,7 +102,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 addFeedDetails(feed, request);
                 ResponseContext responseContext = buildGetFeedResponse(feed);
 
-                return HttpMethodHelper.getFeed(request, responseContext);
+                return HttpMethodHelper.getFeed(request, responseContext, Activity.class);
             }
         } catch (ResponseContextException e) {
             return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());

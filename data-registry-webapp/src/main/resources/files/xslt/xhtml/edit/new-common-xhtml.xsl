@@ -32,31 +32,11 @@
             <a href="/{$path}">
                 <xsl:value-of select="$title"/>
             </a>
-            <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
-                >>
-                <a href="{atom:link[@rel = $REL_SELF]/@href}">
-                    <xsl:choose>
-                        <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
-                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </a>
-                (edit)
-            </xsl:if>
+            >> (new)
         </li>
     </xsl:template>
     <xsl:template name="title">
-        <xsl:choose>
-            <xsl:when test="{atom:title}">
-                <input id="edit-title-text" name="title-text" type="text" value="{text()}"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <input id="title-text" name="title-text" type="text" value=""/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <input id="title-text" name="title-text" type="text" value=""/>
     </xsl:template>
     <xsl:template name="alternative-title">
         <input id="alternative-title-text" name="alternative-title-text" type="text" value=""/>

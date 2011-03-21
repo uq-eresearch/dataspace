@@ -34,13 +34,17 @@ public class FeedHelper {
         return representation;
     }
 
-    public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext) {
+    public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class clazz) {
         if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
             responseContext.setContentType(Constants.MIME_TYPE_HTML);
         } else {
             responseContext.setContentType(Constants.MIME_TYPE_XHTML);
         }
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
+        String viewRepresentation = getViewRepresentation(request);
+        if (viewRepresentation != null && viewRepresentation.equals("new")) {
+            xslFilePath = "/files/xslt/xhtml/edit/new-atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
+        }
         XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
         responseContext.setWriter(writer);
         return responseContext;
@@ -132,5 +136,10 @@ public class FeedHelper {
         } else {
             control.setDraft(true);
         }
+    }
+
+    private static String getViewRepresentation(RequestContext request) {
+        String parameter = request.getParameter("v");
+        return parameter;
     }
 }

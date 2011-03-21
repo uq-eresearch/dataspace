@@ -14,7 +14,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="atom rdfa">
 
-    <xsl:include href="edit-common-xhtml.xsl"/>
+    <xsl:include href="new-common-xhtml.xsl"/>
     <xsl:include href="../include/header.xsl"/>
     <xsl:include href="../include/head.xsl"/>
     <xsl:include href="../include/footer.xsl"/>
@@ -24,17 +24,15 @@
                 doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" indent="yes"/>
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
-            <xsl:apply-templates/>
+            <xsl:call-template name="content"/>
         </html>
     </xsl:template>
 
     <!-- *** Atom entry ***-->
 
-    <xsl:template match="atom:entry">
+    <xsl:template name="content">
         <head>
-            <title>
-                <xsl:value-of select="atom:title"/>
-            </title>
+            <title>New Record</title>
             <link href="/description.css" rel="stylesheet" type="text/css"/>
             <xsl:call-template name="head"/>
         </head>

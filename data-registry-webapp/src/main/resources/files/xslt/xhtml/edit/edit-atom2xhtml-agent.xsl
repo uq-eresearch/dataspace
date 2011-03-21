@@ -88,7 +88,7 @@
                             <tr>
                                 <th>Title</th>
                                 <td>
-                                    <xsl:apply-templates select="atom:title"/>
+                                    <xsl:call-template name="title"/>
                                 </td>
                             </tr>
                             <tr>

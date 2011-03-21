@@ -150,6 +150,14 @@ fieldset .field label {
     margin-right: 0.4em;
 }
 
+.browse-portlet {
+    float: left;
+    margin: 0.5em;
+    min-height: 200px;
+    width: 45%;
+    border: solid 1px #999999;
+}
+
 /* Global, Common and Reset Settings
 -----------------------------------------------------------------------------*/
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
