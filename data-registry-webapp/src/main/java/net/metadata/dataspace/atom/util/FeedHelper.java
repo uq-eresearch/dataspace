@@ -43,7 +43,7 @@ public class FeedHelper {
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
         String viewRepresentation = getViewRepresentation(request);
         if (viewRepresentation != null && viewRepresentation.equals("new")) {
-            xslFilePath = "/files/xslt/xhtml/edit/new-atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
+            xslFilePath = "/files/xslt/xhtml/add/new-atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
         }
         XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
         responseContext.setWriter(writer);
