@@ -85,7 +85,8 @@ body a {
     font-size: 0.8em;
 }
 
-#edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link {
+#edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link, #other-emails-link,
+#alternative-name-link {
     color: #339900;
     font-size: 0.8em
 }

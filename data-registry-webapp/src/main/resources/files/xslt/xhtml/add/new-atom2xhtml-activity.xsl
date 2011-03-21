@@ -40,8 +40,8 @@
             <xsl:call-template name="header"/>
             <ul class="bread-crumbs-nav">
                 <xsl:call-template name="edit-bread-crumbs">
-                    <xsl:with-param name="path">collections</xsl:with-param>
-                    <xsl:with-param name="title">Collections</xsl:with-param>
+                    <xsl:with-param name="path">activities</xsl:with-param>
+                    <xsl:with-param name="title">Activities</xsl:with-param>
                 </xsl:call-template>
             </ul>
             <div class="wrapper">
@@ -54,27 +54,12 @@
                         </li>
                         <li>
                             <a href="#fragment-2">
-                                <span>People &amp; Projects</span>
+                                <span>People</span>
                             </a>
                         </li>
                         <li>
                             <a href="#fragment-3">
                                 <span>Subjects</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#fragment-4">
-                                <span>Time &amp; Space</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#fragment-5">
-                                <span>Related Info</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#fragment-6">
-                                <span>Rights</span>
                             </a>
                         </li>
                     </ul>
@@ -95,7 +80,7 @@
                             <tr>
                                 <th>Type</th>
                                 <td>
-                                    <xsl:call-template name="collection-type"/>
+                                    <xsl:call-template name="activity-type"/>
                                 </td>
                             </tr>
                             <tr>
@@ -157,62 +142,6 @@
                                 <xsl:call-template name="edit-projects"/>
                             </div>
                         </fieldset>
-                    </div>
-                    <div id="fragment-4">
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Time Period</legend>
-                            <div class="field">
-                                <xsl:call-template name="edit-creators"/>
-                            </div>
-                        </fieldset>
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Locations</legend>
-                            <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div id="fragment-5">
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Related Collections</legend>
-                            <div class="field">
-                                <xsl:call-template name="edit-creators"/>
-                            </div>
-                        </fieldset>
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Related Services</legend>
-                            <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
-                            </div>
-                        </fieldset>
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Related Publications</legend>
-                            <div class="field">
-                                <xsl:call-template name="edit-projects"/>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div id="fragment-6">
-                        <table id="edit-rights-table" class="edit-table">
-                            <tr>
-                                <th>Rights</th>
-                                <td>
-                                    <xsl:call-template name="rights"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Access Rights</th>
-                                <td>
-                                    <xsl:call-template name="access-rights"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>License</th>
-                                <td>
-                                    <xsl:call-template name="licence-type"/>
-                                </td>
-                            </tr>
-                        </table>
                     </div>
                 </div>
             </div>

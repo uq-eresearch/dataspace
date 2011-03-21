@@ -6,13 +6,13 @@ package net.metadata.dataspace.data.model.types;
  * Time: 3:47:00 PM
  */
 public enum ServiceType {
+    ANNOTATE,
+    ASSEMBLE,
     CREATE,
     GENERATE,
-    REPORT,
-    ANNOTATE,
-    TRANSFORM,
-    ASSEMBLE,
     HARVEST,
+    REPORT,
     SEARCH,
-    SYNDICATE
+    SYNDICATE,
+    TRANSFORM
 }
