@@ -85,8 +85,7 @@ body a {
     font-size: 0.8em;
 }
 
-#edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link, #other-emails-link,
-#alternative-name-link {
+#edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link {
     color: #339900;
     font-size: 0.8em
 }
@@ -115,17 +114,27 @@ body a {
 
 .edit-table th {
     vertical-align: middle;
-    background-color: #dbdbdb;
     font-size: 0.7em;
     padding: 0.5em 0;
 }
 
 .edit-table td {
     vertical-align: middle;
+    padding: 0.2em;
 }
 
 .edit-table td input {
     width: 90%;
+}
+
+.edit-table .remove-link {
+    font-size: 0.7em;
+    color: #ff0000;
+}
+
+.edit-table .new-link {
+    font-size: 0.7em;
+    color: #339900;
 }
 
 #edit-tabs fieldset {
@@ -157,6 +166,21 @@ fieldset .field label {
     min-height: 200px;
     width: 45%;
     border: solid 1px #999999;
+}
+
+.save-links-div {
+    margin: auto;
+    text-align: right;
+}
+
+.save-links-div .save-link {
+    font-size: 0.8em;
+    color: #339900;
+}
+
+.save-links-div .publish-link {
+    font-size: 0.8em;
+    color: #3399ff;
 }
 
 /* Global, Common and Reset Settings

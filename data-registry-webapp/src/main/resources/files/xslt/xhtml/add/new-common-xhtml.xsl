@@ -40,11 +40,15 @@
     </xsl:template>
     <xsl:template name="alternative-title">
         <input id="alternative-title-text" name="alternative-title-text" type="text" value=""/>
-        <a id="alternative-name-link" class="new-link" href="#" title="Add Title">new</a>
+        <a id="alternative-name-link" class="new-link" href="#"
+           onclick="replicate('alternative-title-text'); return false;" title="Add Title">new
+        </a>
     </xsl:template>
     <xsl:template name="other-emails">
-        <input id="other-email-0" name="other-email-0" type="text" value=""/>
-        <a id="other-emails-link" class="new-link" href="#" title="Add Email">new</a>
+        <input id="other-email-text" name="other-email-text" type="text" value=""/>
+        <a id="other-emails-link" class="new-link" href="#"
+           onclick="replicate('other-email-text'); return false;" title="Add Email">new
+        </a>
     </xsl:template>
     <xsl:template name="collection-type">
         <select id="collection-type-combobox" name="type-combobox">
@@ -98,7 +102,7 @@
             </tr>
         </table>
         <div>
-            <a id="add-creator-link" href="#" title="Add Creator">add creator</a>
+            <a class="new-link" id="add-creator-link" href="#" title="Add Creator">add creator</a>
         </div>
     </xsl:template>
 
