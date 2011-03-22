@@ -64,5 +64,5 @@ function styleTables() {
     $(".edit-table > tr:even").css("background-color", "#F4F4F8");
     $(".edit-table > tr:odd").css("background-color", "#d4d4d4");
     $(".lookup-table > tbody > tr:even").css("background-color", "#F4F4F8");
-    $(".lookup-table > tbody >tr:odd").css("background-color", "#d4d4d4");
+    $(".lookup-table > tbody > tr:odd").css("background-color", "#d4d4d4");
 }

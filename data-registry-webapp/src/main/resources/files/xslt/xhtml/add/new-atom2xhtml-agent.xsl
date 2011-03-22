@@ -111,7 +111,13 @@
                     </div>
                     <div id="fragment-2">
                         <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Projects</legend>
+                            <legend class="ui-widget-header ui-corner-all">Created</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-collection"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Participating In</legend>
                             <div class="field">
                                 <xsl:call-template name="edit-projects"/>
                             </div>

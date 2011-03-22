@@ -49,14 +49,7 @@
         </li>
     </xsl:template>
     <xsl:template name="title">
-        <xsl:choose>
-            <xsl:when test="{atom:title}">
-                <input id="edit-title-text" name="title-text" type="text" value="{text()}"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <input id="title-text" name="title-text" type="text" value=""/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <input id="edit-title-text" name="title-text" type="text" value="{text()}"/>
     </xsl:template>
     <xsl:template name="alternative-title">
         <input id="alternative-title-text" name="alternative-title-text" type="text" value=""/>
