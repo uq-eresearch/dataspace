@@ -92,7 +92,7 @@
                             <tr>
                                 <th>Email</th>
                                 <td>
-                                    <xsl:call-template name="page"/>
+                                    <xsl:call-template name="email"/>
                                 </td>
                             </tr>
                             <tr>
@@ -111,18 +111,6 @@
                     </div>
                     <div id="fragment-2">
                         <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Creators</legend>
-                            <div class="field">
-                                <xsl:call-template name="edit-creators"/>
-                            </div>
-                        </fieldset>
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Custodians/Contacts</legend>
-                            <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
-                            </div>
-                        </fieldset>
-                        <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Projects</legend>
                             <div class="field">
                                 <xsl:call-template name="edit-projects"/>
@@ -133,25 +121,27 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Fields of Research</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-creators"/>
+                                <xsl:call-template name="edit-fields-of-research"/>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Socio-economic Impact</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
+                                <xsl:call-template name="edit-socio-economic-impact"/>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Type of Activity</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-projects"/>
+                                <div id="type-of-activities">
+                                    <xsl:call-template name="type-of-activities"/>
+                                </div>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Keywords</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-projects"/>
+                                <xsl:call-template name="keywords"/>
                             </div>
                         </fieldset>
                     </div>

@@ -50,6 +50,11 @@
                                 <span>General</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="#fragment-2">
+                                <span>Related</span>
+                            </a>
+                        </li>
                     </ul>
                     <div id="fragment-1">
                         <table id="edit-general-table" class="edit-table">
@@ -84,6 +89,20 @@
                                 </td>
                             </tr>
                         </table>
+                    </div>
+                    <div id="fragment-2">
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Publisher</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-custodians"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Supported By</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-collection"/>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
                 <div class="save-links-div">
