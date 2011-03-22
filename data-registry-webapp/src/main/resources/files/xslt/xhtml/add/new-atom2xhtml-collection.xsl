@@ -142,19 +142,21 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Socio-economic Impact</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
+                                <xsl:call-template name="edit-socio-economic-impact"/>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Type of Activity</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-projects"/>
+                                <div id="type-of-activities">
+                                    <xsl:call-template name="type-of-activities"/>
+                                </div>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Keywords</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-projects"/>
+                                <xsl:call-template name="keywords"/>
                             </div>
                         </fieldset>
                     </div>

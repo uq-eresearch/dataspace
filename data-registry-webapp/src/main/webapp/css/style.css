@@ -85,7 +85,8 @@ body a {
     font-size: 0.8em;
 }
 
-#edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link {
+#edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link,
+#add-socio-economic-impact-link {
     color: #339900;
     font-size: 0.8em
 }
@@ -95,7 +96,7 @@ body a {
     color: #ff0000;
 }
 
-#lookup-custodian-link, #lookup-project-link, #lookup-creator-link, #view-record-link {
+#lookup-custodian-link, #lookup-project-link, #lookup-creator-link, #view-record-link, #lookup-impact-link {
     font-size: 0.8em;
     color: #3399ff;
 }
@@ -189,6 +190,30 @@ fieldset .field label {
 .save-links-div .publish-link {
     font-size: 0.8em;
     color: #3399ff;
+}
+
+#type-of-activities {
+    font-size: 0.8em;
+}
+
+#keywords-list {
+    margin: auto;
+    text-align: left;
+}
+
+#keywords-table #add-link {
+    font-size: 0.8em;
+    color: #339900;
+}
+
+.keyword {
+    display: inline-block;
+    margin-right: 0.5em;
+}
+
+#keywords-list li .remove-keyword {
+    color: #ff0000;
+    margin-left: 0.2em;
 }
 
 /* Global, Common and Reset Settings

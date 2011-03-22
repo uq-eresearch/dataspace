@@ -45,6 +45,21 @@ function replicateLookupField(inputField) {
     return false;
 }
 
+function addKeyword(inputFieldId, listId) {
+    var inputField = $('#' + inputFieldId);
+    var keyword = inputField.val();
+    if (keyword) {
+        var list = $('#' + listId);
+        list.append('<li class="keyword">' + keyword + '<a class="remove-keyword" id="' + keyword + '" href="#" title="Remove Keyword">x</a></li>');
+        $('#' + keyword).click(function() {
+            $(this).parent().remove();
+        });
+        inputField.val('');
+        styleTables();
+    }
+    return false;
+}
+
 function styleTables() {
     $(".edit-table > tr:even").css("background-color", "#F4F4F8");
     $(".edit-table > tr:odd").css("background-color", "#d4d4d4");

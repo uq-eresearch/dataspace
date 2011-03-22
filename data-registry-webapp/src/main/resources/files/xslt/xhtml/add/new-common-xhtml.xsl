@@ -128,7 +128,7 @@
             </tbody>
         </table>
         <div>
-            <a id="add-custodian-link" href="#" title="Add Custodian"
+            <a class="new-link" id="add-custodian-link" href="#" title="Add Custodian"
                onclick="replicateLookupField('custodian'); return false;">add custodian
             </a>
         </div>
@@ -149,10 +149,63 @@
             </tbody>
         </table>
         <div>
-            <a id="add-project-link" href="#" title="Add Project"
+            <a class="new-link" id="add-project-link" href="#" title="Add Project"
                onclick="replicateLookupField('project'); return false;">add project
             </a>
         </div>
+    </xsl:template>
+    <xsl:template name="edit-socio-economic-impact">
+        <table id="edit-socio-economic-impact-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="impact-name" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-impact-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-socio-economic-impact-link" href="#" title="Add Term"
+               onclick="replicateLookupField('impact-name'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+
+    <xsl:template name="type-of-activities">
+        <input type="checkbox" class="type-of-activity" name="applied-research" value="applied-research"/>
+        Applied Research
+        <input type="checkbox" class="type-of-activity" name="pure-basic-research" value="pure basic research"/>
+        Pure Basic Research
+        <input type="checkbox" class="type-of-activity" name="experimental-development"
+               value="experimental development"/>
+        Experimental Development
+        <input type="checkbox" class="type-of-activity" name="strategic-basic-research"
+               value="strategic basic research"/>
+        Strategic Basic Research
+    </xsl:template>
+    <xsl:template name="keywords">
+        <table id="keywords-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <ul id="keywords-list">
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input id="keyword" value="" type="text"/>
+                        <a class="new-link" id="add-link" href="#" title="Add"
+                           onclick="addKeyword('keyword', 'keywords-list')">add
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </xsl:template>
     <xsl:template name="rights">
         <textarea id="rights-textarea" name="rights-textarea" cols="50" rows="5">
