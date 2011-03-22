@@ -86,7 +86,8 @@ body a {
 }
 
 #edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link,
-#add-socio-economic-impact-link {
+#add-socio-economic-impact-link, #add-fields-of-research-link, #add-locations-link, #add-related-collection-link,
+#add-related-service-link, #add-related-publication-link {
     color: #339900;
     font-size: 0.8em
 }
@@ -96,7 +97,8 @@ body a {
     color: #ff0000;
 }
 
-#lookup-custodian-link, #lookup-project-link, #lookup-creator-link, #view-record-link, #lookup-impact-link {
+#lookup-custodian-link, #lookup-project-link, #lookup-creator-link, #view-record-link, #lookup-impact-link,
+#lookup-field-link, #lookup-location-link, #lookup-related-collection-link, #lookup-related-service-link {
     font-size: 0.8em;
     color: #3399ff;
 }

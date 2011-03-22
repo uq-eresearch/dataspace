@@ -108,7 +108,7 @@
         </table>
         <div>
             <a class="new-link" id="add-creator-link" href="#" title="Add Creator"
-               onclick="replicateLookupField('creator'); return false;">add creator
+               onclick="replicateLookupField('creator'); return false;">add
             </a>
         </div>
     </xsl:template>
@@ -129,7 +129,7 @@
         </table>
         <div>
             <a class="new-link" id="add-custodian-link" href="#" title="Add Custodian"
-               onclick="replicateLookupField('custodian'); return false;">add custodian
+               onclick="replicateLookupField('custodian'); return false;">add
             </a>
         </div>
     </xsl:template>
@@ -150,7 +150,7 @@
         </table>
         <div>
             <a class="new-link" id="add-project-link" href="#" title="Add Project"
-               onclick="replicateLookupField('project'); return false;">add project
+               onclick="replicateLookupField('project'); return false;">add
             </a>
         </div>
     </xsl:template>
@@ -171,6 +171,26 @@
         <div>
             <a class="new-link" id="add-socio-economic-impact-link" href="#" title="Add Term"
                onclick="replicateLookupField('impact-name'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+    <xsl:template name="edit-fields-of-research">
+        <table id="edit-fields-of-research-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="research-field-name" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-field-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-fields-of-research-link" href="#" title="Add Term"
+               onclick="replicateLookupField('research-field-name'); return false;">add
             </a>
         </div>
     </xsl:template>
@@ -206,6 +226,107 @@
                 </tr>
             </tbody>
         </table>
+    </xsl:template>
+    <xsl:template name="edit-time-period">
+        <table id="time-period-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        Start Time:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        End Time:
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </xsl:template>
+    <xsl:template name="edit-locations">
+        <table id="edit-locations-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="location-name" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-location-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-locations-link" href="#" title="Add Location"
+               onclick="replicateLookupField('location-name'); return false;">add
+            </a>
+        </div>
+        <h4>Region</h4>
+        <div id="region-map">
+            map here
+        </div>
+    </xsl:template>
+    <xsl:template name="edit-related-collections">
+        <table id="edit-related-collections-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="related-collection" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-related-collection-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-related-collection-link" href="#" title="Add Collection"
+               onclick="replicateLookupField('related-collection'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+    <xsl:template name="edit-related-services">
+        <table id="edit-related-services-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="related-service" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-related-service-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-related-service-link" href="#" title="Add Collection"
+               onclick="replicateLookupField('related-service'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+    <xsl:template name="edit-related-publications">
+        <table id="edit-related-publications-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        Title
+                        <input id="publication-title" value="" type="text"/>
+                    </td>
+                    <td>
+                        URL
+                        <input id="publication-url" value="" type="text"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-related-publication-link" href="#" title="Add Collection"
+               onclick="replicateLookupField('publication-title'); return false;">add
+            </a>
+        </div>
     </xsl:template>
     <xsl:template name="rights">
         <textarea id="rights-textarea" name="rights-textarea" cols="50" rows="5">
