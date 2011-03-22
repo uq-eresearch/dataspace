@@ -137,6 +137,14 @@ body a {
     color: #339900;
 }
 
+.lookup-table {
+    width: 100%;
+}
+
+.lookup-table .lookup-result {
+    width: 100%;
+}
+
 #edit-tabs fieldset {
     margin: 0.8em 0;
 }

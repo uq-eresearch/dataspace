@@ -41,13 +41,13 @@
     <xsl:template name="alternative-title">
         <input id="alternative-title-text" name="alternative-title-text" type="text" value=""/>
         <a id="alternative-name-link" class="new-link" href="#"
-           onclick="replicate('alternative-title-text'); return false;" title="Add Title">new
+           onclick="replicateSimpleField('alternative-title-text'); return false;" title="Add Title">new
         </a>
     </xsl:template>
     <xsl:template name="other-emails">
         <input id="other-email-text" name="other-email-text" type="text" value=""/>
         <a id="other-emails-link" class="new-link" href="#"
-           onclick="replicate('other-email-text'); return false;" title="Add Email">new
+           onclick="replicateSimpleField('other-email-text'); return false;" title="Add Email">new
         </a>
     </xsl:template>
     <xsl:template name="collection-type">
@@ -87,56 +87,71 @@
     </xsl:template>
     <xsl:template name="page">
         <input id="page-text" name="page-text" type="text" value=""/>
+        <a id="other-pages-link" class="new-link" href="#"
+           onclick="replicateSimpleField('page-text'); return false;" title="Add Web Page">new
+        </a>
     </xsl:template>
 
     <xsl:template name="edit-creators">
-        <table id="edit-creators-table">
-            <tr>
-                <td>
-                    <input id="creator-0" value="" type="text"/>
-                </td>
-                <td>
-                    <a id="lookup-creator-link" href="#" title="Lookup">lookup</a>
-                </td>
-                <td></td>
-            </tr>
+        <table class="lookup-table" id="edit-creators-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="creator" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-creator-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
         </table>
         <div>
-            <a class="new-link" id="add-creator-link" href="#" title="Add Creator">add creator</a>
+            <a class="new-link" id="add-creator-link" href="#" title="Add Creator"
+               onclick="replicateLookupField('creator'); return false;">add creator
+            </a>
         </div>
     </xsl:template>
 
     <xsl:template name="edit-custodians">
-        <table id="edit-custodians-table">
-            <tr>
-                <td>
-                    <input id="custodian-0" value="" type="text"/>
-                </td>
-                <td>
-                    <a id="lookup-custodian-link" href="#" title="Lookup">lookup</a>
-                </td>
-                <td></td>
-            </tr>
+        <table id="edit-custodians-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="custodian" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-custodian-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
         </table>
         <div>
-            <a id="add-custodian-link" href="#" title="Add Custodian">add custodian</a>
+            <a id="add-custodian-link" href="#" title="Add Custodian"
+               onclick="replicateLookupField('custodian'); return false;">add custodian
+            </a>
         </div>
     </xsl:template>
 
     <xsl:template name="edit-projects">
-        <table id="edit-projects-table">
-            <tr>
-                <td>
-                    <input id="project-0" value="" type="text"/>
-                </td>
-                <td>
-                    <a id="lookup-project-link" href="#" title="Lookup">lookup</a>
-                </td>
-                <td></td>
-            </tr>
+        <table id="edit-projects-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="project" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-project-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
         </table>
         <div>
-            <a id="add-project-link" href="#" title="Add Project">add project</a>
+            <a id="add-project-link" href="#" title="Add Project"
+               onclick="replicateLookupField('project'); return false;">add project
+            </a>
         </div>
     </xsl:template>
     <xsl:template name="rights">
@@ -149,6 +164,7 @@
     </xsl:template>
     <xsl:template name="licence-type">
         <select id="licence-type-combobox" name="type-combobox">
+            <option value="none">None</option>
             <option value="cc-by">CC-BY</option>
             <option value="cc-by-sa">CC-BY-SA</option>
             <option value="cc-by-nd">CC-BY-ND</option>
