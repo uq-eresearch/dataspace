@@ -286,8 +286,7 @@
             </a>
         </div>
         <h4>Region</h4>
-        <div id="region-map">
-            map here
+        <div id="map-canvas" style="width: 500px; height: 400px">
         </div>
     </xsl:template>
     <xsl:template name="edit-related-collections">
