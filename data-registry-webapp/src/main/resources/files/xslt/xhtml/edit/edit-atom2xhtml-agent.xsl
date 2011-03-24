@@ -84,7 +84,7 @@
                         </li>
                     </ul>
                     <div id="fragment-1">
-                        <table id="edit-table">
+                        <table id="edit-general-table" class="edit-table">
                             <tr>
                                 <th>Title</th>
                                 <td>
@@ -106,7 +106,7 @@
                             <tr>
                                 <th>Description</th>
                                 <td>
-                                    <xsl:apply-templates select="atom:content"/>
+                                    <xsl:call-template name="content"/>
                                 </td>
                             </tr>
                             <tr>

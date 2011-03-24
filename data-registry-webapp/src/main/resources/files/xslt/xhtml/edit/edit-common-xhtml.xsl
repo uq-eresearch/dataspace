@@ -58,34 +58,79 @@
         </a>
     </xsl:template>
     <xsl:template name="type">
-        <select id="type-combobox" name="type-combobox">
-            <option value="collection">Collection</option>
-            <option value="dataset">Dataset</option>
-        </select>
+        <xsl:choose>
+            <xsl:when test="atom:category[@scheme=$NS_DCMITYPE]">
+                <select id="collection-type-combobox" name="type-combobox">
+                    <option value="collection">Collection</option>
+                    <option value="dataset">Dataset</option>
+                </select>
+            </xsl:when>
+            <xsl:when test="atom:category[@scheme=$NS_FOAF]">
+                <xsl:choose>
+                    <xsl:when test="atom:category[@term=$ENTITY_PARTY]">
+                        <select id="agent-type-combobox" name="type-combobox">
+                            <option value="group">Group</option>
+                            <option value="person">Person</option>
+                        </select>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <select id="activity-type-combobox" name="type-combobox">
+                            <option value="program">Program</option>
+                            <option value="project">Project</option>
+                        </select>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <select id="service-type-combobox" name="type-combobox">
+                    <option value="annotate">Annotate</option>
+                    <option value="assemble">Assemble</option>
+                    <option value="create">Create</option>
+                    <option value="Generate">Generate</option>
+                    <option value="harvest">Harvest</option>
+                    <option value="report">Report</option>
+                    <option value="search">Search</option>
+                    <option value="syndicate">Syndicate</option>
+                    <option value="transform">Transform</option>
+                </select>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
-    <xsl:template match="atom:content">
+
+    <xsl:template name="content">
         <textarea id="content-textarea" name="content-textarea" cols="50" rows="5">
-            <xsl:value-of select="text()"/>
+            <xsl:value-of select="atom:content"/>
         </textarea>
     </xsl:template>
+
     <xsl:template name="page">
-        <xsl:for-each select="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
-            <xsl:variable name="index" select="position() - 1"/>
-            <xsl:choose>
-                <xsl:when test="$index = 0">
-                    <input id="page-text" name="page-text" type="text" value="{@href}"/>
-                    <a id="other-pages-link" class="new-link" href="#"
-                       onclick="replicateSimpleField('page-text'); return false;" title="Add Web Page">new
-                    </a>
-                </xsl:when>
-                <xsl:otherwise>
-                    <input id="page-text-{$index}" name="page-text" type="text" value="{@href}"/>
-                    <a id="page-text-{$index}-remove-link" class="remove-link" href="#"
-                       onclick="$('#page-text-{$index}').remove(); $(this).remove();">remove
-                    </a>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:for-each>
+        <xsl:choose>
+            <xsl:when test="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
+                <xsl:for-each select="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
+                    <xsl:variable name="index" select="position() - 1"/>
+                    <xsl:choose>
+                        <xsl:when test="$index = 0">
+                            <input id="page-text" name="page-text" type="text" value="{@href}"/>
+                            <a id="other-pages-link" class="new-link" href="#"
+                               onclick="replicateSimpleField('page-text'); return false;" title="Add Web Page">new
+                            </a>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <input id="page-text-{$index}" name="page-text" type="text" value="{@href}"/>
+                            <a id="page-text-{$index}-remove-link" class="remove-link" href="#"
+                               onclick="$('#page-text-{$index}').remove(); $(this).remove();">remove
+                            </a>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+                <input id="page-text" name="page-text" type="text" value="{@href}"/>
+                <a id="other-pages-link" class="new-link" href="#"
+                   onclick="replicateSimpleField('page-text'); return false;" title="Add Web Page">new
+                </a>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="edit-creators">

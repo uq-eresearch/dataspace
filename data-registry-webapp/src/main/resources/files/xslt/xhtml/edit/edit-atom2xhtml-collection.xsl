@@ -103,7 +103,7 @@
                             <tr>
                                 <th>Description</th>
                                 <td>
-                                    <xsl:apply-templates select="atom:content"/>
+                                    <xsl:call-template name="content"/>
                                 </td>
                             </tr>
                             <tr>

@@ -64,6 +64,10 @@
         <xsl:value-of select="concat($NS_DC ,'accessRights')"/>
     </xsl:variable>
 
+    <xsl:variable name="RDFA_ALTERNATIVE">
+        <xsl:value-of select="concat($NS_DC ,'alternative')"/>
+    </xsl:variable>
+
     <xsl:variable name="ENTITY_ACTIVITY">
         <xsl:value-of select="concat($NS_FOAF , 'Project')"/>
     </xsl:variable>
