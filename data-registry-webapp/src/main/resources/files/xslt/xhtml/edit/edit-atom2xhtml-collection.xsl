@@ -39,10 +39,6 @@
             <xsl:call-template name="head"/>
         </head>
         <body>
-            <!-- the collection description itself -->
-            <xsl:text>
-            </xsl:text>
-            <xsl:comment>Collection description</xsl:comment>
             <xsl:call-template name="header"/>
             <ul class="bread-crumbs-nav">
                 <xsl:call-template name="edit-bread-crumbs">

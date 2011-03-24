@@ -22,13 +22,13 @@ function deleteRecord(url) {
 
 function replicateSimpleField(inputField) {
     var parentTd = $('#' + inputField).parent();
-    var numberOfFields = parentTd.children().length;
+    var numberOfFields = parentTd.find('input').length;
     var newInputField = $('#' + inputField).clone(true);
-    var newFieldId = inputField + numberOfFields;
+    var newFieldId = inputField + '-' + numberOfFields;
     newInputField.attr('id', newFieldId);
     parentTd.append(newInputField);
     newInputField.val("");
-    parentTd.append('<a href="#" class="remove-link" id="' + newFieldId + '-remove-link">remove</a>');
+    parentTd.append(' <a href="#" class="remove-link" id="' + newFieldId + '-remove-link">remove</a>');
     $('#' + newFieldId + '-remove-link').click(function() {
         $('#' + newFieldId).remove();
         $(this).remove();
