@@ -199,19 +199,19 @@
                             <tr>
                                 <th>Rights</th>
                                 <td>
-                                    <xsl:apply-templates select="atom:content"/>
+                                    <xsl:call-template name="rights"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Access Rights</th>
                                 <td>
-                                    <xsl:apply-templates select="atom:content"/>
+                                    <xsl:call-template name="access-rights"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>License</th>
                                 <td>
-                                    <xsl:call-template name="type"/>
+                                    <xsl:call-template name="licence-type"/>
                                 </td>
                             </tr>
                         </table>

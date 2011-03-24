@@ -52,7 +52,6 @@
         <input id="edit-title-text" name="title-text" type="text" value="{atom:title}"/>
     </xsl:template>
     <xsl:template name="alternative-title">
-
         <xsl:choose>
             <xsl:when test="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
                 <xsl:for-each select="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
@@ -210,4 +209,24 @@
             <a id="add-project-link" href="#" title="Add Project">add project</a>
         </div>
     </xsl:template>
+
+    <xsl:template name="rights">
+        <textarea id="rights-textarea" name="rights-textarea" cols="50" rows="5">
+            <xsl:value-of select="atom:rights"/>
+        </textarea>
+    </xsl:template>
+    <xsl:template name="access-rights">
+        <textarea id="access-rights-textarea" name="access-rights-textarea" cols="50" rows="5">
+            <xsl:value-of select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]/@content"/>
+        </textarea>
+    </xsl:template>
+    <xsl:template name="licence-type">
+        <select id="licence-type-combobox" name="type-combobox">
+            <option value="none">None</option>
+            <option value="cc-by">CC-BY</option>
+            <option value="cc-by-sa">CC-BY-SA</option>
+            <option value="cc-by-nd">CC-BY-ND</option>
+        </select>
+    </xsl:template>
+
 </xsl:stylesheet>
