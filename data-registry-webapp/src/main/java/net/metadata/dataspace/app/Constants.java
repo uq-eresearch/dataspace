@@ -96,6 +96,7 @@ public interface Constants {
     String REL_SELF = "self";
     String REL_SUCCESSOR_VERSION = "successor-version";
     String REL_TEMPORAL = NS_DC + "temporal";
+    String REL_ALTERNATIVE = NS_DC + "alternative";
     String REL_SPATIAL = NS_DC + "spatial";
     String REL_VIA = "via";
 

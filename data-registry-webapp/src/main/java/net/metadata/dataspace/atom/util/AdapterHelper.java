@@ -146,6 +146,13 @@ public class AdapterHelper {
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_FOAF, Constants.TERM_ACTIVITY, version.getType().toString());
+            Set<String> alternatives = version.getAlternatives();
+            for (String alternativeName : alternatives) {
+                Element alternativeElement = entry.addExtension(Constants.QNAME_RDFA_META);
+                alternativeElement.setAttributeValue("property", Constants.REL_ALTERNATIVE);
+                alternativeElement.setAttributeValue("content", alternativeName);
+            }
+
             Set<String> pages = version.getPages();
             for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
@@ -177,6 +184,12 @@ public class AdapterHelper {
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getType().toString());
+            Set<String> alternatives = version.getAlternatives();
+            for (String alternativeName : alternatives) {
+                Element alternativeElement = entry.addExtension(Constants.QNAME_RDFA_META);
+                alternativeElement.setAttributeValue("property", Constants.REL_ALTERNATIVE);
+                alternativeElement.setAttributeValue("content", alternativeName);
+            }
             Set<String> pages = version.getPages();
             for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
@@ -221,6 +234,12 @@ public class AdapterHelper {
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getType().toString());
+            Set<String> alternatives = version.getAlternatives();
+            for (String alternativeName : alternatives) {
+                Element alternativeElement = entry.addExtension(Constants.QNAME_RDFA_META);
+                alternativeElement.setAttributeValue("property", Constants.REL_ALTERNATIVE);
+                alternativeElement.setAttributeValue("content", alternativeName);
+            }
             //Pages
             Set<String> pages = version.getPages();
             for (String page : pages) {
@@ -314,6 +333,12 @@ public class AdapterHelper {
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_VIVO, Constants.TERM_SERVICE, version.getType().toString());
+            Set<String> alternatives = version.getAlternatives();
+            for (String alternativeName : alternatives) {
+                Element alternativeElement = entry.addExtension(Constants.QNAME_RDFA_META);
+                alternativeElement.setAttributeValue("property", Constants.REL_ALTERNATIVE);
+                alternativeElement.setAttributeValue("content", alternativeName);
+            }
             Set<String> pages = version.getPages();
             for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);

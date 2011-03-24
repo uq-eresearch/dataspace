@@ -51,11 +51,38 @@
     <xsl:template name="title">
         <input id="edit-title-text" name="title-text" type="text" value="{atom:title}"/>
     </xsl:template>
-    <xsl:template name="alternative-title" match="atom:title[@rel = @REL_ALTERNATE]">
-        <input id="alternative-title-text" name="alternative-title-text" type="text" value="{@title}"/>
-        <a id="alternative-name-link" class="new-link" href="#"
-           onclick="replicateSimpleField('alternative-title-text'); return false;" title="Add Title">new
-        </a>
+    <xsl:template name="alternative-title">
+
+        <xsl:choose>
+            <xsl:when test="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
+                <xsl:for-each select="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
+                    <xsl:variable name="index" select="position() - 1"/>
+                    <xsl:choose>
+                        <xsl:when test="$index = 0">
+                            <input id="alternative-title-text" name="alternative-title-text" type="text"
+                                   value="{@content}"/>
+                            <a id="alternative-name-link" class="new-link" href="#"
+                               onclick="replicateSimpleField('alternative-title-text'); return false;"
+                               title="Add Title">new
+                            </a>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <input id="alternative-title-text-{$index}" name="alternative-title-text" type="text"
+                                   value="{@content}"/>
+                            <a id="alternative-title-text-{$index}-remove-link" class="remove-link" href="#"
+                               onclick="$('#alternative-title-text-{$index}').remove(); $(this).remove();">remove
+                            </a>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+                <input id="alternative-title-text" name="alternative-title-text" type="text" value=""/>
+                <a id="alternative-name-link" class="new-link" href="#"
+                   onclick="replicateSimpleField('alternative-title-text'); return false;" title="Add Title">new
+                </a>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="type">
         <xsl:choose>
