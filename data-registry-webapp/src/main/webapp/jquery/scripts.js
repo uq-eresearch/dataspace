@@ -41,7 +41,7 @@ function replicateLookupField(inputField) {
     var newRow = parentRow.clone(true);
     var numberOfRows = parentRow.parent().find('tr').length;
     var newFieldId = inputField + '-' + numberOfRows;
-    newRow.find('td').eq(1).append(' <a href="#" class="remove-link" id="' + newFieldId + '-remove-link">remove</a>');
+    newRow.find('td').eq(2).append(' <a href="#" class="remove-link" id="' + newFieldId + '-remove-link">remove</a>');
     newRow.find('input').val('');
     parentRow.parent().append(newRow);
     $('#' + newFieldId + '-remove-link').click(function() {

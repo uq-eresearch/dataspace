@@ -101,6 +101,7 @@ body a {
 #lookup-field-link, #lookup-location-link, #lookup-related-collection-link, #lookup-related-service-link,
 #lookup-collection-link {
     font-size: 0.8em;
+    padding: 0 0.5em;
     color: #3399ff;
 }
 
