@@ -116,12 +116,8 @@ body a {
     width: 100%;
 }
 
-#edit-related-publications-table {
-    font-size: 0.8em;
-}
-
 #edit-related-publications-table td input {
-    width: 80%;
+    width: 60%;
 }
 
 .edit-table th {
@@ -141,6 +137,11 @@ body a {
 
 .edit-table .remove-link {
     font-size: 0.7em;
+    color: #ff0000;
+}
+
+.lookup-table .remove-link {
+    font-size: 0.8em;
     color: #ff0000;
 }
 
