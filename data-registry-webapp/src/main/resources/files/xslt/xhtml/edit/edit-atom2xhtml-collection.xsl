@@ -138,25 +138,27 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Fields of Research</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-creators"/>
+                                <xsl:call-template name="edit-fields-of-research"/>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Socio-economic Impact</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
+                                <xsl:call-template name="edit-socio-economic-impact"/>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Type of Activity</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-projects"/>
+                                <div id="type-of-activities">
+                                    <xsl:call-template name="type-of-activities"/>
+                                </div>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Keywords</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-projects"/>
+                                <xsl:call-template name="keywords"/>
                             </div>
                         </fieldset>
                     </div>
@@ -164,13 +166,13 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Time Period</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-creators"/>
+                                <xsl:call-template name="edit-time-period"/>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Locations</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
+                                <xsl:call-template name="edit-locations"/>
                             </div>
                         </fieldset>
                     </div>
@@ -178,19 +180,19 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Related Collections</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-creators"/>
+                                <xsl:call-template name="edit-related-collections"/>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Related Services</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
+                                <xsl:call-template name="edit-related-services"/>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Related Publications</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-projects"/>
+                                <xsl:call-template name="edit-related-publications"/>
                             </div>
                         </fieldset>
                     </div>

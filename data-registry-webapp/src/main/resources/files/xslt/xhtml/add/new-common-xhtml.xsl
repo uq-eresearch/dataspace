@@ -324,7 +324,7 @@
             </tbody>
         </table>
         <div>
-            <a class="new-link" id="add-related-service-link" href="#" title="Add Collection"
+            <a class="new-link" id="add-related-service-link" href="#" title="Add Service"
                onclick="replicateLookupField('related-service'); return false;">add
             </a>
         </div>
@@ -345,7 +345,7 @@
             </tbody>
         </table>
         <div>
-            <a class="new-link" id="add-related-publication-link" href="#" title="Add Collection"
+            <a class="new-link" id="add-related-publication-link" href="#" title="Add Publication"
                onclick="replicateLookupField('publication-title'); return false;">add
             </a>
         </div>

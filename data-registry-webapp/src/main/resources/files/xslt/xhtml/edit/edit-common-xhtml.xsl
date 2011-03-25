@@ -210,6 +210,184 @@
         </div>
     </xsl:template>
 
+    <xsl:template name="edit-socio-economic-impact">
+        <table id="edit-socio-economic-impact-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="impact-name" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-impact-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-socio-economic-impact-link" href="#" title="Add Term"
+               onclick="replicateLookupField('impact-name'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+    <xsl:template name="edit-fields-of-research">
+        <table id="edit-fields-of-research-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="research-field-name" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-field-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-fields-of-research-link" href="#" title="Add Term"
+               onclick="replicateLookupField('research-field-name'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+
+    <xsl:template name="type-of-activities">
+        <input type="checkbox" class="type-of-activity" name="applied-research" value="applied-research"/>
+        Applied Research
+        <input type="checkbox" class="type-of-activity" name="pure-basic-research" value="pure basic research"/>
+        Pure Basic Research
+        <input type="checkbox" class="type-of-activity" name="experimental-development"
+               value="experimental development"/>
+        Experimental Development
+        <input type="checkbox" class="type-of-activity" name="strategic-basic-research"
+               value="strategic basic research"/>
+        Strategic Basic Research
+    </xsl:template>
+    <xsl:template name="keywords">
+        <table id="keywords-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <ul id="keywords-list">
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input id="keyword" value="" type="text"/>
+                        <a class="new-link" id="add-link" href="#" title="Add"
+                           onclick="addKeyword('keyword', 'keywords-list')">add
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </xsl:template>
+
+    <xsl:template name="edit-time-period">
+        <table id="time-period-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        Start Time:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        End Time:
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </xsl:template>
+    <xsl:template name="edit-locations">
+        <table id="edit-locations-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="location-name" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-location-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-locations-link" href="#" title="Add Location"
+               onclick="replicateLookupField('location-name'); return false;">add
+            </a>
+        </div>
+        <h4>Region</h4>
+        <div id="map-canvas" style="width: 500px; height: 400px">
+        </div>
+    </xsl:template>
+
+
+    <xsl:template name="edit-related-collections">
+        <table id="edit-related-collections-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="related-collection" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-related-collection-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-related-collection-link" href="#" title="Add Collection"
+               onclick="replicateLookupField('related-collection'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+    <xsl:template name="edit-related-services">
+        <table id="edit-related-services-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="related-service" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-related-service-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-related-service-link" href="#" title="Add Service"
+               onclick="replicateLookupField('related-service'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+    <xsl:template name="edit-related-publications">
+        <table id="edit-related-publications-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        Title
+                        <input id="publication-title" value="" type="text"/>
+                    </td>
+                    <td>
+                        URL
+                        <input id="publication-url" value="" type="text"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-related-publication-link" href="#" title="Add Publication"
+               onclick="replicateLookupField('publication-title'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+
+
     <xsl:template name="rights">
         <textarea id="rights-textarea" name="rights-textarea" cols="50" rows="5">
             <xsl:value-of select="atom:rights"/>
