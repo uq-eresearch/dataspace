@@ -59,7 +59,7 @@
                         </li>
                         <li>
                             <a href="#fragment-2">
-                                <span>People &amp; Projects</span>
+                                <span>Related</span>
                             </a>
                         </li>
                         <li>
