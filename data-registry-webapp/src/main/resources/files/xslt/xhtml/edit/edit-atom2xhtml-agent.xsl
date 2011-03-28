@@ -59,27 +59,12 @@
                         </li>
                         <li>
                             <a href="#fragment-2">
-                                <span>People &amp; Projects</span>
+                                <span>Projects</span>
                             </a>
                         </li>
                         <li>
                             <a href="#fragment-3">
                                 <span>Subjects</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#fragment-4">
-                                <span>Time &amp; Space</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#fragment-5">
-                                <span>Related Info</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#fragment-6">
-                                <span>Rights</span>
                             </a>
                         </li>
                     </ul>
@@ -110,6 +95,18 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th>Email</th>
+                                <td>
+                                    <xsl:call-template name="email"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Other Emails</th>
+                                <td>
+                                    <xsl:call-template name="other-emails"/>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Webpage</th>
                                 <td>
                                     <xsl:call-template name="page"/>
@@ -118,19 +115,46 @@
                         </table>
                     </div>
                     <div id="fragment-2">
-                        <p>Tab 2 content</p>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Created</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-collection"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Participating In</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-projects"/>
+                            </div>
+                        </fieldset>
                     </div>
                     <div id="fragment-3">
-                        <p>Tab 2 content</p>
-                    </div>
-                    <div id="fragment-4">
-                        <p>Tab 2 content</p>
-                    </div>
-                    <div id="fragment-5">
-                        <p>Tab 2 content</p>
-                    </div>
-                    <div id="fragment-6">
-                        <p>Tab 2 content</p>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Fields of Research</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-fields-of-research"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Socio-economic Impact</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-socio-economic-impact"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Type of Activity</legend>
+                            <div class="field">
+                                <div id="type-of-activities">
+                                    <xsl:call-template name="type-of-activities"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Keywords</legend>
+                            <div class="field">
+                                <xsl:call-template name="keywords"/>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
                 <div class="save-links-div">

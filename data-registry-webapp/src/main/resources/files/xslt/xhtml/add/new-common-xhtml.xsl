@@ -341,6 +341,9 @@
                         URL
                         <input id="publication-url" value="" type="text"/>
                     </td>
+                    <td>
+
+                    </td>
                 </tr>
             </tbody>
         </table>

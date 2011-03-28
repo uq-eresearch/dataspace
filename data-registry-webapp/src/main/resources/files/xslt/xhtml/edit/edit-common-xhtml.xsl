@@ -129,6 +129,10 @@
         </textarea>
     </xsl:template>
 
+    <xsl:template name="email">
+        <input id="email-text" name="other-email-text" type="text" value="{atom:author/atom:email}"/>
+    </xsl:template>
+
     <xsl:template name="page">
         <xsl:choose>
             <xsl:when test="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
@@ -158,7 +162,12 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-
+    <xsl:template name="other-emails">
+        <input id="other-email-text" name="other-email-text" type="text" value=""/>
+        <a id="other-emails-link" class="new-link" href="#"
+           onclick="replicateSimpleField('other-email-text'); return false;" title="Add Email">new
+        </a>
+    </xsl:template>
     <xsl:template name="edit-creators">
         <table id="edit-creators-table">
             <tr>
@@ -209,6 +218,28 @@
             <a id="add-project-link" href="#" title="Add Project">add project</a>
         </div>
     </xsl:template>
+
+    <xsl:template name="edit-collection">
+        <table id="edit-collections-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="collection" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-collection-link" href="#" title="Lookup">lookup</a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-collection-link" href="#" title="Add Project"
+               onclick="replicateLookupField('collection'); return false;">add
+            </a>
+        </div>
+    </xsl:template>
+
 
     <xsl:template name="edit-socio-economic-impact">
         <table id="edit-socio-economic-impact-table" class="lookup-table">
