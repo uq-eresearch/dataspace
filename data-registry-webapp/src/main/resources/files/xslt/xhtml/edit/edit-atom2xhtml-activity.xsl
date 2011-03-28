@@ -67,21 +67,6 @@
                                 <span>Subjects</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="#fragment-4">
-                                <span>Time &amp; Space</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#fragment-5">
-                                <span>Related Info</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#fragment-6">
-                                <span>Rights</span>
-                            </a>
-                        </li>
                     </ul>
                     <div id="fragment-1">
                         <table id="edit-general-table" class="edit-table">
@@ -118,19 +103,46 @@
                         </table>
                     </div>
                     <div id="fragment-2">
-                        <p>Tab 2 content</p>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Participants</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-custodians"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Output</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-collection"/>
+                            </div>
+                        </fieldset>
                     </div>
                     <div id="fragment-3">
-                        <p>Tab 2 content</p>
-                    </div>
-                    <div id="fragment-4">
-                        <p>Tab 2 content</p>
-                    </div>
-                    <div id="fragment-5">
-                        <p>Tab 2 content</p>
-                    </div>
-                    <div id="fragment-6">
-                        <p>Tab 2 content</p>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Fields of Research</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-fields-of-research"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Socio-economic Impact</legend>
+                            <div class="field">
+                                <xsl:call-template name="edit-socio-economic-impact"/>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Type of Activity</legend>
+                            <div class="field">
+                                <div id="type-of-activities">
+                                    <xsl:call-template name="type-of-activities"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="ui-widget ui-widget-content">
+                            <legend class="ui-widget-header ui-corner-all">Keywords</legend>
+                            <div class="field">
+                                <xsl:call-template name="keywords"/>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
                 <div class="save-links-div">
