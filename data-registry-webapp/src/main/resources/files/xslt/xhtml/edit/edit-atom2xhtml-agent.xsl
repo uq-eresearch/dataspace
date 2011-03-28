@@ -101,12 +101,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Other Emails</th>
-                                <td>
-                                    <xsl:call-template name="other-emails"/>
-                                </td>
-                            </tr>
-                            <tr>
                                 <th>Webpage</th>
                                 <td>
                                     <xsl:call-template name="page"/>

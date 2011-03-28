@@ -129,10 +129,6 @@
         </textarea>
     </xsl:template>
 
-    <xsl:template name="email">
-        <input id="email-text" name="other-email-text" type="text" value="{atom:author/atom:email}"/>
-    </xsl:template>
-
     <xsl:template name="page">
         <xsl:choose>
             <xsl:when test="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
@@ -162,11 +158,35 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template name="other-emails">
-        <input id="other-email-text" name="other-email-text" type="text" value=""/>
-        <a id="other-emails-link" class="new-link" href="#"
-           onclick="replicateSimpleField('other-email-text'); return false;" title="Add Email">new
-        </a>
+
+    <xsl:template name="email">
+        <xsl:choose>
+            <xsl:when test="atom:link[@rel=$ATOM_MBOX]">
+                <xsl:for-each select="atom:link[@rel=$ATOM_MBOX]">
+                    <xsl:variable name="index" select="position() - 1"/>
+                    <xsl:choose>
+                        <xsl:when test="$index = 0">
+                            <input id="email-text" name="email-text" type="text" value="{@title}"/>
+                            <a id="add-email-link" class="new-link" href="#"
+                               onclick="replicateSimpleField('email-text'); return false;" title="Add Email">new
+                            </a>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <input id="email-text-{$index}" name="email-text" type="text" value="{@title}"/>
+                            <a id="email-text-{$index}-remove-link" class="remove-link" href="#"
+                               onclick="$('#email-text-{$index}').remove(); $(this).remove();">remove
+                            </a>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+                <input id="email-text" name="email-text" type="text" value=""/>
+                <a id="add-email-link" class="new-link" href="#"
+                   onclick="replicateSimpleField('email-text'); return false;" title="Add Email">new
+                </a>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="edit-creators">
         <table id="edit-creators-table">

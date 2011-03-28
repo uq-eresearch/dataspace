@@ -45,12 +45,9 @@
         </a>
     </xsl:template>
     <xsl:template name="email">
-        <input id="email-text" name="other-email-text" type="text" value=""/>
-    </xsl:template>
-    <xsl:template name="other-emails">
-        <input id="other-email-text" name="other-email-text" type="text" value=""/>
-        <a id="other-emails-link" class="new-link" href="#"
-           onclick="replicateSimpleField('other-email-text'); return false;" title="Add Email">new
+        <input id="email-text" name="email-text" type="text" value=""/>
+        <a id="add-email-link" class="new-link" href="#"
+           onclick="replicateSimpleField('email-text'); return false;" title="Add Email">new
         </a>
     </xsl:template>
     <xsl:template name="collection-type">
