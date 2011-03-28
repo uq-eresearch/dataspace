@@ -63,6 +63,8 @@
                     <xsl:call-template name="latest-version"/>
                     <!-- type -->
                     <xsl:call-template name="type"/>
+                    <!-- email -->
+                    <xsl:call-template name="mbox"/>
                     <!-- collections -->
                     <xsl:call-template name="collections"/>
 
@@ -114,6 +116,20 @@
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- mbox -->
+    <xsl:template name="mbox">
+        <xsl:if test="atom:link[@rel=$ATOM_MBOX]">
+            <div class="statement">
+                <div class="property">
+                    <p>Email(s)</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_MBOX]"/>
                 </div>
             </div>
         </xsl:if>

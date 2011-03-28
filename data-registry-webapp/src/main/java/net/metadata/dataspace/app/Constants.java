@@ -83,6 +83,7 @@ public interface Constants {
     String REL_IS_MANAGER_OF = NS_ANDS + "isManagerOf";
     String REL_IS_ACCESSED_VIA = NS_CLD + "isAccessedVia";
     String REL_MADE = NS_FOAF + "made";
+    String REL_MBOX = NS_FOAF + "mbox";
     String REL_IS_DESCRIBED_BY = NS_ORE + "isDescribedBy";
     String REL_IS_LOCATED_AT = NS_CLD + "isLocatedAt";
     String REL_IS_OUTPUT_OF = NS_ANDS + "isOutputOf";

@@ -50,6 +50,9 @@
     <xsl:variable name="ATOM_IS_COLLECTOR_OF">
         <xsl:value-of select="concat($NS_FOAF ,'made')"/>
     </xsl:variable>
+    <xsl:variable name="ATOM_MBOX">
+        <xsl:value-of select="concat($NS_FOAF ,'mbox')"/>
+    </xsl:variable>
     <xsl:variable name="ATOM_IS_PARTICIPANT_IN">
         <xsl:value-of select="concat($NS_FOAF ,'currentProject')"/>
     </xsl:variable>

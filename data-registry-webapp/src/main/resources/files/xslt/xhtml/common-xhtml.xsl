@@ -269,6 +269,7 @@
             or @rel=$ATOM_IS_COLLECTOR_OF
             or @rel=$ATOM_IS_MANAGER_OF
             or @rel=$ATOM_IS_PARTICIPANT_IN
+            or @rel=$ATOM_MBOX
             or @rel=$REL_RELATED
             or @rel=$REL_ALTERNATE
             or @rel=$REL_LATEST_VERSION]">
