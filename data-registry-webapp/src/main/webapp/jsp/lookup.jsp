@@ -9,4 +9,9 @@
         </tbody>
     </table>
 </form>
-<p><c:out value="${result}"/></p>
+<ul>
+    <c:forEach items="${result}" var="res">
+        <li><input type="checkbox"/> <c:out value="${res}"/></li>
+    </c:forEach>
+    <li><input type="button" value="Select"/></li>
+</ul>

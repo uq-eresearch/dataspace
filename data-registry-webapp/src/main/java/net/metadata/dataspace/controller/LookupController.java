@@ -8,6 +8,8 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: alabri
@@ -28,7 +30,13 @@ public class LookupController extends SimpleFormController {
             String keyword = request.getParameter("keyword");
             Assert.notNull(keyword, "keyword has not been set.");
             ModelAndView searchModelView = new ModelAndView("lookup");
-            searchModelView.addObject("result", keyword);
+            if (keyword != null && !keyword.isEmpty()) {
+                List<String> result = new ArrayList<String>();
+                result.add("Result 1");
+                result.add("Result 2");
+                result.add("Result 3");
+                searchModelView.addObject("result", result);
+            }
             return searchModelView;
         }
         return null;
