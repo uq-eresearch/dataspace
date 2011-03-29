@@ -2,6 +2,7 @@ $(document).ready(function() {
     $("#edit-tabs").tabs();
     getLoginLink();
     styleTables();
+    createLookupDialog();
 });
 function deleteRecord(url) {
     if (confirm("Are you sure you want to delete this record?")) {
@@ -66,21 +67,23 @@ function addKeyword(inputFieldId, listId) {
     return false;
 }
 
-function styleTables() {
-    $(".edit-table > tr:even").css("background-color", "#F4F4F8");
-    $(".edit-table > tr:odd").css("background-color", "#d4d4d4");
-    $(".lookup-table > tbody > tr:even").css("background-color", "#F4F4F8");
-    $(".lookup-table > tbody > tr:odd").css("background-color", "#d4d4d4");
-}
+function createLookupDialog() {
 
-function doLookup(field) {
-    $('<div>').dialog({
+}
+function doLookup() {
+    $('#lookup-div').dialog({
         modal: true,
-        open: function () {
-            $(this).load('lookup');
+        open: function() {
+            $(this).style.display = '';
         },
         height: 400,
         width: 600,
         title: 'Lookup'
     });
+}
+function styleTables() {
+    $(".edit-table > tr:even").css("background-color", "#F4F4F8");
+    $(".edit-table > tr:odd").css("background-color", "#d4d4d4");
+    $(".lookup-table > tbody > tr:even").css("background-color", "#F4F4F8");
+    $(".lookup-table > tbody > tr:odd").css("background-color", "#d4d4d4");
 }

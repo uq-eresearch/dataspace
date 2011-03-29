@@ -101,7 +101,7 @@
                     </td>
                     <td>
                         <a id="lookup-creator-link" href="#" title="Lookup"
-                           onclick="doLookup('creator'); return false;">lookup
+                           onclick="doLookup(); return false;">lookup
                         </a>
                     </td>
                     <td class="lookup-result"></td>
@@ -123,7 +123,8 @@
                         <input id="custodian" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-custodian-link" href="#" title="Lookup">lookup</a>
+                        <a id="lookup-custodian-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
+                        </a>
                     </td>
                     <td class="lookup-result"></td>
                 </tr>
@@ -144,7 +145,8 @@
                         <input id="project" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-project-link" href="#" title="Lookup">lookup</a>
+                        <a id="lookup-project-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
+                        </a>
                     </td>
                     <td class="lookup-result"></td>
                 </tr>
@@ -164,7 +166,9 @@
                         <input id="collection" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-collection-link" href="#" title="Lookup">lookup</a>
+                        <a id="lookup-collection-link" href="#" title="Lookup" onclick="doLookup(); return false;">
+                            lookup
+                        </a>
                     </td>
                     <td class="lookup-result"></td>
                 </tr>
@@ -184,7 +188,8 @@
                         <input id="impact-name" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-impact-link" href="#" title="Lookup">lookup</a>
+                        <a id="lookup-impact-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
+                        </a>
                     </td>
                     <td class="lookup-result"></td>
                 </tr>
@@ -204,7 +209,7 @@
                         <input id="research-field-name" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-field-link" href="#" title="Lookup">lookup</a>
+                        <a id="lookup-field-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup</a>
                     </td>
                     <td class="lookup-result"></td>
                 </tr>
@@ -273,7 +278,8 @@
                         <input id="location-name" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-location-link" href="#" title="Lookup">lookup</a>
+                        <a id="lookup-location-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
+                        </a>
                     </td>
                     <td class="lookup-result"></td>
                 </tr>
@@ -296,7 +302,9 @@
                         <input id="related-collection" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-related-collection-link" href="#" title="Lookup">lookup</a>
+                        <a id="lookup-related-collection-link" href="#" title="Lookup"
+                           onclick="doLookup(); return false;">lookup
+                        </a>
                     </td>
                     <td class="lookup-result"></td>
                 </tr>
@@ -316,7 +324,9 @@
                         <input id="related-service" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-related-service-link" href="#" title="Lookup">lookup</a>
+                        <a id="lookup-related-service-link" href="#" title="Lookup" onclick="doLookup(); return false;">
+                            lookup
+                        </a>
                     </td>
                     <td class="lookup-result"></td>
                 </tr>
@@ -367,5 +377,25 @@
             <option value="cc-by-sa">CC-BY-SA</option>
             <option value="cc-by-nd">CC-BY-ND</option>
         </select>
+    </xsl:template>
+    <xsl:template name="lookup-form">
+        <div id="lookup-div" style="display:none;">
+            <form id="lookup-form" method="post" action="lookup" onsubmit="doLookup();return false;">
+                <table width="100%">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="text" id="keyword" name="keyword" value=""/>
+                            </td>
+                            <td>
+                                <input type="submit" name="lookup-submit" id="lookup-submit" value="Search"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+            <ul id="lookup-result">
+            </ul>
+        </div>
     </xsl:template>
 </xsl:stylesheet>
