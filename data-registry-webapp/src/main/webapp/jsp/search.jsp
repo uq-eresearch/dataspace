@@ -18,7 +18,7 @@
             <table width="100%">
                 <tbody>
                 <tr>
-                    <td><input type="text" id="search-field" name="search-field" value=""/></td>
+                    <td><input type="text" id="search" name="search" value=""/></td>
                     <td><input type="submit" name="search-submit" id="search-submit" value="Search"/></td>
                 </tr>
                 </tbody>

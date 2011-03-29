@@ -385,7 +385,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <input type="text" id="keyword" name="keyword" value=""/>
+                                <input type="text" id="lookup-keyword" name="lookup-keyword" value=""/>
                             </td>
                             <td>
                                 <input type="submit" name="lookup-submit" id="lookup-submit" value="Search"/>
