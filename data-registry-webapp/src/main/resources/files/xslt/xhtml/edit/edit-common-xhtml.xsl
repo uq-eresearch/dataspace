@@ -189,53 +189,68 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template name="edit-creators">
-        <table id="edit-creators-table">
-            <tr>
-                <td>
-                    <input id="creator-0" value="" type="text"/>
-                </td>
-                <td>
-                    <a id="lookup-creator-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup</a>
-                </td>
-                <td></td>
-            </tr>
+        <table id="edit-creators-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="creator" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-creator-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
+                        </a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
         </table>
         <div>
-            <a id="add-creator-link" href="#" title="Add Creator">add creator</a>
+            <a class="new-link" id="add-creator-link" href="#" title="Add Creator"
+               onclick="replicateLookupField('creator'); return false;">add
+            </a>
         </div>
     </xsl:template>
 
     <xsl:template name="edit-custodians">
-        <table id="edit-custodians-table">
-            <tr>
-                <td>
-                    <input id="custodian-0" value="" type="text"/>
-                </td>
-                <td>
-                    <a id="lookup-custodian-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup</a>
-                </td>
-                <td></td>
-            </tr>
+        <table id="edit-custodians-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="custodian" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-custodian-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
+                        </a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
         </table>
         <div>
-            <a id="add-custodian-link" href="#" title="Add Custodian">add custodian</a>
+            <a class="new-link" id="add-custodian-link" href="#" title="Add Custodian"
+               onclick="replicateLookupField('custodian'); return false;">add
+            </a>
         </div>
     </xsl:template>
 
     <xsl:template name="edit-projects">
-        <table id="edit-projects-table">
-            <tr>
-                <td>
-                    <input id="project-0" value="" type="text"/>
-                </td>
-                <td>
-                    <a id="lookup-project-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup</a>
-                </td>
-                <td></td>
-            </tr>
+        <table id="edit-projects-table" class="lookup-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="project" value="" type="text"/>
+                    </td>
+                    <td>
+                        <a id="lookup-project-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
+                        </a>
+                    </td>
+                    <td class="lookup-result"></td>
+                </tr>
+            </tbody>
         </table>
         <div>
-            <a id="add-project-link" href="#" title="Add Project">add project</a>
+            <a class="new-link" id="add-project-link" href="#" title="Add Project"
+               onclick="replicateLookupField('project'); return false;">add
+            </a>
         </div>
     </xsl:template>
 
@@ -475,7 +490,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <input type="text" id="keyword" name="keyword" value=""/>
+                                <input type="text" id="lookup-keyword" name="lookup-keyword" value=""/>
                             </td>
                             <td>
                                 <input type="submit" name="lookup-submit" id="lookup-submit" value="Search"/>
@@ -485,9 +500,7 @@
                 </table>
             </form>
             <ul id="lookup-result">
-                <li>
-                    <input type="button" value="Select"/>
-                </li>
+
             </ul>
         </div>
     </xsl:template>

@@ -2,7 +2,6 @@ $(document).ready(function() {
     $("#edit-tabs").tabs();
     getLoginLink();
     styleTables();
-    createLookupDialog();
 });
 function deleteRecord(url) {
     if (confirm("Are you sure you want to delete this record?")) {
@@ -67,9 +66,6 @@ function addKeyword(inputFieldId, listId) {
     return false;
 }
 
-function createLookupDialog() {
-
-}
 function doLookup() {
     $('#lookup-div').dialog({
         modal: true,

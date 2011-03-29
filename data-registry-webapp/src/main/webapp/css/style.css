@@ -136,6 +136,10 @@ body a {
     width: 90%;
 }
 
+#lookup-keyword {
+    width: 90%;
+}
+
 .edit-table .remove-link {
     font-size: 0.7em;
     color: #ff0000;
