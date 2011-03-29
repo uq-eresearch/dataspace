@@ -97,12 +97,22 @@ body a {
     color: #ff0000;
 }
 
-#lookup-custodian-link, #lookup-project-link, #lookup-creator-link, #view-record-link, #lookup-impact-link,
-#lookup-field-link, #lookup-location-link, #lookup-related-collection-link, #lookup-related-service-link,
-#lookup-collection-link {
+#view-record-link, #lookup-impact-link,
+#lookup-field-link, #lookup-location-link, #lookup-related-collection-link {
     font-size: 0.8em;
     padding: 0 0.5em;
     color: #3399ff;
+}
+
+.ui-widget-content .lookup-link {
+    font-size: 0.8em;
+    padding: 0 0.5em;
+    color: #3399ff;
+}
+
+.ui-widget-content .new-link {
+    font-size: 0.8em;
+    color: #339900;
 }
 
 .ui-tabs .ui-tabs-nav li a {
@@ -152,11 +162,6 @@ body a {
 .lookup-table .remove-link {
     font-size: 0.8em;
     color: #ff0000;
-}
-
-.edit-table .new-link {
-    font-size: 0.7em;
-    color: #339900;
 }
 
 .lookup-table {

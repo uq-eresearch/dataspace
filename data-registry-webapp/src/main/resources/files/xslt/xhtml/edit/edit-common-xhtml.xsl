@@ -206,7 +206,7 @@
                                             <input id="{$field}" value="{@title}" type="text"/>
                                         </td>
                                         <td>
-                                            <a id="lookup-{$field}-link" href="#" title="Lookup"
+                                            <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
                                                onclick="doLookup(); return false;">
                                                 lookup
                                             </a>
@@ -222,7 +222,7 @@
                                             <input id="{$field}-{$index}" value="{@title}" type="text"/>
                                         </td>
                                         <td>
-                                            <a id="lookup-{$field}-link" href="#" title="Lookup"
+                                            <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
                                                onclick="doLookup(); return false;">
                                                 lookup
                                             </a>
@@ -244,7 +244,7 @@
                                 <input id="{$field}" value="" type="text"/>
                             </td>
                             <td>
-                                <a id="lookup-{$field}-link" href="#" title="Lookup"
+                                <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
                                    onclick="doLookup(); return false;">
                                     lookup
                                 </a>
