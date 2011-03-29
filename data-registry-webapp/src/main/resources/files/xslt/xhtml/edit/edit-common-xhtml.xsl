@@ -190,13 +190,14 @@
     </xsl:template>
 
 
-    <xsl:template name="edit-creators">
+    <xsl:template name="lookup-edit">
         <xsl:param name="field"/>
+        <xsl:param name="relation"/>
         <table id="edit-{$field}-table" class="lookup-table">
             <tbody>
                 <xsl:choose>
-                    <xsl:when test="atom:link[@rel=$ATOM_CREATOR]">
-                        <xsl:for-each select="atom:link[@rel=$ATOM_CREATOR]">
+                    <xsl:when test="atom:link[@rel=$relation]">
+                        <xsl:for-each select="atom:link[@rel=$relation]">
                             <xsl:variable name="index" select="position() - 1"/>
                             <xsl:choose>
                                 <xsl:when test="$index = 0">

@@ -118,21 +118,34 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Creators</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-creators">
+                                <xsl:call-template name="lookup-edit">
                                     <xsl:with-param name="field">creator</xsl:with-param>
+                                    <xsl:with-param name="relation">
+                                        <xsl:value-of select="$ATOM_CREATOR"/>
+                                    </xsl:with-param>
                                 </xsl:call-template>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Custodians/Contacts</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
+                                <xsl:call-template name="lookup-edit">
+                                    <xsl:with-param name="field">publisher</xsl:with-param>
+                                    <xsl:with-param name="relation">
+                                        <xsl:value-of select="$ATOM_PUBLISHER"/>
+                                    </xsl:with-param>
+                                </xsl:call-template>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Projects</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-projects"/>
+                                <xsl:call-template name="lookup-edit">
+                                    <xsl:with-param name="field">isoutputof</xsl:with-param>
+                                    <xsl:with-param name="relation">
+                                        <xsl:value-of select="$ATOM_IS_OUTPUT_OF"/>
+                                    </xsl:with-param>
+                                </xsl:call-template>
                             </div>
                         </fieldset>
                     </div>
@@ -188,7 +201,12 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Related Services</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-related-services"/>
+                                <xsl:call-template name="lookup-edit">
+                                    <xsl:with-param name="field">isaccessedvia</xsl:with-param>
+                                    <xsl:with-param name="relation">
+                                        <xsl:value-of select="$ATOM_IS_ACCESSED_VIA"/>
+                                    </xsl:with-param>
+                                </xsl:call-template>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
