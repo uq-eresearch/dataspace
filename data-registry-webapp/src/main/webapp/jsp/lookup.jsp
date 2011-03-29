@@ -1,5 +1,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
-<form id="lookup-form" method="post" action="/lookup">
+<script type="text/javascript">
+    function submit() {
+        $.ajax({
+            type: "POST",
+            url: $("#lookup-form").attr('action'),
+            data: $("#lookup-form").serializeArray(),
+            dataType: 'html',
+            success: function(data) {
+                $("#lookup-result").append('<li>Result 1</li>');
+                $("#lookup-result").append('<li>Result 2</li>');
+            }
+        });
+    }
+</script>
+<form id="lookup-form" method="post" action="lookup" onsubmit="submit();return false;">
     <table width="100%">
         <tbody>
         <tr>
@@ -9,9 +23,6 @@
         </tbody>
     </table>
 </form>
-<ul>
-    <c:forEach items="${result}" var="res">
-        <li><input type="checkbox"/> <c:out value="${res}"/></li>
-    </c:forEach>
+<ul id="lookup-result">
     <li><input type="button" value="Select"/></li>
 </ul>

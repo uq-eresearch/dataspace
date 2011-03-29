@@ -72,3 +72,15 @@ function styleTables() {
     $(".lookup-table > tbody > tr:even").css("background-color", "#F4F4F8");
     $(".lookup-table > tbody > tr:odd").css("background-color", "#d4d4d4");
 }
+
+function doLookup(field) {
+    $('<div>').dialog({
+        modal: true,
+        open: function () {
+            $(this).load('lookup');
+        },
+        height: 400,
+        width: 600,
+        title: 'Lookup'
+    });
+}

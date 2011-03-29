@@ -100,7 +100,9 @@
                         <input id="creator" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-creator-link" href="#" title="Lookup">lookup</a>
+                        <a id="lookup-creator-link" href="#" title="Lookup"
+                           onclick="doLookup('creator'); return false;">lookup
+                        </a>
                     </td>
                     <td class="lookup-result"></td>
                 </tr>
