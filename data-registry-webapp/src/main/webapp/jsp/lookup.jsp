@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <form id="lookup-form" method="post" action="/lookup">
     <table width="100%">
         <tbody>
@@ -8,3 +9,4 @@
         </tbody>
     </table>
 </form>
+<p><c:out value="${result}"/></p>

@@ -1,5 +1,6 @@
 package net.metadata.dataspace.controller;
 
+import net.metadata.dataspace.controller.command.SearchCommand;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,6 +18,7 @@ public class LookupController extends SimpleFormController {
 
     public LookupController() {
         super();
+        setCommandClass(SearchCommand.class);
         setFormView("lookup");
     }
 
