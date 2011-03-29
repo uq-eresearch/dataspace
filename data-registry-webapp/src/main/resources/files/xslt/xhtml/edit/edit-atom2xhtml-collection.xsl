@@ -118,7 +118,9 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Creators</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-creators"/>
+                                <xsl:call-template name="edit-creators">
+                                    <xsl:with-param name="field">creator</xsl:with-param>
+                                </xsl:call-template>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">

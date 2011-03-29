@@ -188,27 +188,79 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
+
     <xsl:template name="edit-creators">
-        <table id="edit-creators-table" class="lookup-table">
+        <xsl:param name="field"/>
+        <table id="edit-{$field}-table" class="lookup-table">
             <tbody>
-                <tr>
-                    <td>
-                        <input id="creator" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-creator-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
+                <xsl:choose>
+                    <xsl:when test="atom:link[@rel=$ATOM_CREATOR]">
+                        <xsl:for-each select="atom:link[@rel=$ATOM_CREATOR]">
+                            <xsl:variable name="index" select="position() - 1"/>
+                            <xsl:choose>
+                                <xsl:when test="$index = 0">
+                                    <tr>
+                                        <td>
+                                            <input id="{$field}" value="{@title}" type="text"/>
+                                        </td>
+                                        <td>
+                                            <a id="lookup-{$field}-link" href="#" title="Lookup"
+                                               onclick="doLookup(); return false;">
+                                                lookup
+                                            </a>
+                                        </td>
+                                        <td class="lookup-result">
+                                            <xsl:value-of select="@title"/>
+                                        </td>
+                                    </tr>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <tr>
+                                        <td>
+                                            <input id="{$field}-{$index}" value="{@title}" type="text"/>
+                                        </td>
+                                        <td>
+                                            <a id="lookup-{$field}-link" href="#" title="Lookup"
+                                               onclick="doLookup(); return false;">
+                                                lookup
+                                            </a>
+                                        </td>
+                                        <td class="lookup-result">
+                                            <a id="{$field}-{$index}-remove-link" class="remove-link" href="#"
+                                               onclick="$(this).parent().parent().remove();">remove
+                                            </a>
+                                            <xsl:value-of select="@title"/>
+                                        </td>
+                                    </tr>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <tr>
+                            <td>
+                                <input id="{$field}" value="" type="text"/>
+                            </td>
+                            <td>
+                                <a id="lookup-{$field}-link" href="#" title="Lookup"
+                                   onclick="doLookup(); return false;">
+                                    lookup
+                                </a>
+                            </td>
+                            <td class="lookup-result"></td>
+                        </tr>
+                    </xsl:otherwise>
+                </xsl:choose>
             </tbody>
         </table>
         <div>
-            <a class="new-link" id="add-creator-link" href="#" title="Add Creator"
-               onclick="replicateLookupField('creator'); return false;">add
+            <a class="new-link" id="add-{$field}-link" href="#" title="Add"
+               onclick="replicateLookupField('{$field}'); return false;">add
             </a>
         </div>
     </xsl:template>
+
 
     <xsl:template name="edit-custodians">
         <table id="edit-custodians-table" class="lookup-table">
