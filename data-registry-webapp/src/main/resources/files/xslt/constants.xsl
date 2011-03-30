@@ -56,6 +56,9 @@
     <xsl:variable name="ATOM_IS_PARTICIPANT_IN">
         <xsl:value-of select="concat($NS_FOAF ,'currentProject')"/>
     </xsl:variable>
+    <xsl:variable name="ATOM_RELATION">
+        <xsl:value-of select="concat($NS_DC ,'relation')"/>
+    </xsl:variable>
 
     <xsl:variable name="RDF_DESCRIBES">
         <xsl:value-of select="concat($NS_ORE, 'describes')"/>

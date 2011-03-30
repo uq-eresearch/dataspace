@@ -262,75 +262,6 @@
         </div>
     </xsl:template>
 
-
-    <xsl:template name="edit-custodians">
-        <table id="edit-custodians-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="custodian" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-custodian-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-custodian-link" href="#" title="Add Custodian"
-               onclick="replicateLookupField('custodian'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
-
-    <xsl:template name="edit-projects">
-        <table id="edit-projects-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="project" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-project-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-project-link" href="#" title="Add Project"
-               onclick="replicateLookupField('project'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
-
-    <xsl:template name="edit-collection">
-        <table id="edit-collections-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="collection" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-collection-link" href="#" title="Lookup" onclick="doLookup(); return false;">
-                            lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-collection-link" href="#" title="Add Project"
-               onclick="replicateLookupField('collection'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
-
-
     <xsl:template name="edit-socio-economic-impact">
         <table id="edit-socio-economic-impact-table" class="lookup-table">
             <tbody>
@@ -447,51 +378,6 @@
         </div>
     </xsl:template>
 
-
-    <xsl:template name="edit-related-collections">
-        <table id="edit-related-collections-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="related-collection" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-related-collection-link" href="#" title="Lookup"
-                           onclick="doLookup(); return false;">lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-related-collection-link" href="#" title="Add Collection"
-               onclick="replicateLookupField('related-collection'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
-    <xsl:template name="edit-related-services">
-        <table id="edit-related-services-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="related-service" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-related-service-link" href="#" title="Lookup" onclick="doLookup(); return false;">
-                            lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-related-service-link" href="#" title="Add Service"
-               onclick="replicateLookupField('related-service'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
     <xsl:template name="edit-related-publications">
         <table id="edit-related-publications-table" class="lookup-table">
             <tbody>

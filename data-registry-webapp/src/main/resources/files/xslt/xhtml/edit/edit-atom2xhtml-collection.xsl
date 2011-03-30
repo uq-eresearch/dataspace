@@ -195,7 +195,12 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Related Collections</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-related-collections"/>
+                                <xsl:call-template name="lookup-edit">
+                                    <xsl:with-param name="field">relation</xsl:with-param>
+                                    <xsl:with-param name="relation">
+                                        <xsl:value-of select="$ATOM_RELATION"/>
+                                    </xsl:with-param>
+                                </xsl:call-template>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
