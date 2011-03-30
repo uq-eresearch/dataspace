@@ -273,15 +273,18 @@
         </div>
     </xsl:template>
 
-    <xsl:template name="edit-socio-economic-impact">
-        <table id="edit-socio-economic-impact-table" class="lookup-table">
+    <xsl:template name="edit-subject">
+        <xsl:param name="type"/>
+        <xsl:param name="scheme"/>
+        <table id="edit-{$type}-table" class="lookup-table">
             <tbody>
                 <tr>
                     <td>
-                        <input id="impact-name" value="" type="text"/>
+                        <input id="{$type}" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-impact-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
+                        <a id="lookup-{$type}-link" class="lookup-link" href="#" title="Lookup"
+                           onclick="doLookup(); return false;">lookup
                         </a>
                     </td>
                     <td class="lookup-result"></td>
@@ -289,28 +292,8 @@
             </tbody>
         </table>
         <div>
-            <a class="new-link" id="add-socio-economic-impact-link" href="#" title="Add Term"
+            <a class="new-link" id="add-{$type}-link" href="#" title="Add Term"
                onclick="replicateLookupField('impact-name'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
-    <xsl:template name="edit-fields-of-research">
-        <table id="edit-fields-of-research-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="research-field-name" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-field-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup</a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-fields-of-research-link" href="#" title="Add Term"
-               onclick="replicateLookupField('research-field-name'); return false;">add
             </a>
         </div>
     </xsl:template>
