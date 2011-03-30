@@ -84,28 +84,26 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template name="type">
+        <xsl:param name="entity"/>
         <xsl:choose>
-            <xsl:when test="atom:category[@scheme=$NS_DCMITYPE]">
+            <!--atom:category[@scheme=$NS_DCMITYPE]-->
+            <xsl:when test="$entity = 'collection'">
                 <select id="collection-type-combobox" name="type-combobox">
                     <option value="collection">Collection</option>
                     <option value="dataset">Dataset</option>
                 </select>
             </xsl:when>
-            <xsl:when test="atom:category[@scheme=$NS_FOAF]">
-                <xsl:choose>
-                    <xsl:when test="atom:category[@term=$ENTITY_PARTY]">
-                        <select id="agent-type-combobox" name="type-combobox">
-                            <option value="group">Group</option>
-                            <option value="person">Person</option>
-                        </select>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <select id="activity-type-combobox" name="type-combobox">
-                            <option value="program">Program</option>
-                            <option value="project">Project</option>
-                        </select>
-                    </xsl:otherwise>
-                </xsl:choose>
+            <xsl:when test="$entity = 'agent'">
+                <select id="agent-type-combobox" name="type-combobox">
+                    <option value="group">Group</option>
+                    <option value="person">Person</option>
+                </select>
+            </xsl:when>
+            <xsl:when test="$entity = 'activity'">
+                <select id="activity-type-combobox" name="type-combobox">
+                    <option value="program">Program</option>
+                    <option value="project">Project</option>
+                </select>
             </xsl:when>
             <xsl:otherwise>
                 <select id="service-type-combobox" name="type-combobox">

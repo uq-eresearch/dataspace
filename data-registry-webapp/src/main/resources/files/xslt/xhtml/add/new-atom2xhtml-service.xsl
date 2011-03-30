@@ -73,7 +73,9 @@
                             <tr>
                                 <th>Type</th>
                                 <td>
-                                    <xsl:call-template name="service-type"/>
+                                    <xsl:call-template name="type">
+                                        <xsl:with-param name="entity">service</xsl:with-param>
+                                    </xsl:call-template>
                                 </td>
                             </tr>
                             <tr>
@@ -94,13 +96,23 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Publisher</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-custodians"/>
+                                <xsl:call-template name="lookup-edit">
+                                    <xsl:with-param name="field">publisher</xsl:with-param>
+                                    <xsl:with-param name="relation">
+                                        <xsl:value-of select="$ATOM_PUBLISHER"/>
+                                    </xsl:with-param>
+                                </xsl:call-template>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Supported By</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-collection"/>
+                                <xsl:call-template name="lookup-edit">
+                                    <xsl:with-param name="field">issupportedby</xsl:with-param>
+                                    <xsl:with-param name="relation">
+                                        <xsl:value-of select="$ATOM_IS_SUPPORTED_BY"/>
+                                    </xsl:with-param>
+                                </xsl:call-template>
                             </div>
                         </fieldset>
                     </div>

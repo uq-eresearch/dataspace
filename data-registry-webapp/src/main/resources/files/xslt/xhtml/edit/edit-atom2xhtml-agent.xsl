@@ -85,7 +85,9 @@
                             <tr>
                                 <th>Type</th>
                                 <td>
-                                    <xsl:call-template name="type"/>
+                                    <xsl:call-template name="type">
+                                        <xsl:with-param name="entity">agent</xsl:with-param>
+                                    </xsl:call-template>
                                 </td>
                             </tr>
                             <tr>

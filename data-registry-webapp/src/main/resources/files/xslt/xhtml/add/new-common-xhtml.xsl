@@ -50,36 +50,42 @@
            onclick="replicateSimpleField('email-text'); return false;" title="Add Email">new
         </a>
     </xsl:template>
-    <xsl:template name="collection-type">
-        <select id="collection-type-combobox" name="type-combobox">
-            <option value="collection">Collection</option>
-            <option value="dataset">Dataset</option>
-        </select>
-    </xsl:template>
-    <xsl:template name="agent-type">
-        <select id="agent-type-combobox" name="type-combobox">
-            <option value="group">Group</option>
-            <option value="person">Person</option>
-        </select>
-    </xsl:template>
-    <xsl:template name="activity-type">
-        <select id="activity-type-combobox" name="type-combobox">
-            <option value="program">Program</option>
-            <option value="project">Project</option>
-        </select>
-    </xsl:template>
-    <xsl:template name="service-type">
-        <select id="service-type-combobox" name="type-combobox">
-            <option value="annotate">Annotate</option>
-            <option value="assemble">Assemble</option>
-            <option value="create">Create</option>
-            <option value="Generate">Generate</option>
-            <option value="harvest">Harvest</option>
-            <option value="report">Report</option>
-            <option value="search">Search</option>
-            <option value="syndicate">Syndicate</option>
-            <option value="transform">Transform</option>
-        </select>
+    <xsl:template name="type">
+        <xsl:param name="entity"/>
+        <xsl:choose>
+            <!--atom:category[@scheme=$NS_DCMITYPE]-->
+            <xsl:when test="$entity = 'collection'">
+                <select id="collection-type-combobox" name="type-combobox">
+                    <option value="collection">Collection</option>
+                    <option value="dataset">Dataset</option>
+                </select>
+            </xsl:when>
+            <xsl:when test="$entity = 'agent'">
+                <select id="agent-type-combobox" name="type-combobox">
+                    <option value="group">Group</option>
+                    <option value="person">Person</option>
+                </select>
+            </xsl:when>
+            <xsl:when test="$entity = 'activity'">
+                <select id="activity-type-combobox" name="type-combobox">
+                    <option value="program">Program</option>
+                    <option value="project">Project</option>
+                </select>
+            </xsl:when>
+            <xsl:otherwise>
+                <select id="service-type-combobox" name="type-combobox">
+                    <option value="annotate">Annotate</option>
+                    <option value="assemble">Assemble</option>
+                    <option value="create">Create</option>
+                    <option value="Generate">Generate</option>
+                    <option value="harvest">Harvest</option>
+                    <option value="report">Report</option>
+                    <option value="search">Search</option>
+                    <option value="syndicate">Syndicate</option>
+                    <option value="transform">Transform</option>
+                </select>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="description">
         <textarea id="content-textarea" name="content-textarea" cols="50" rows="5">
@@ -92,94 +98,6 @@
         </a>
     </xsl:template>
 
-    <xsl:template name="edit-creators">
-        <table class="lookup-table" id="edit-creators-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="creator" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-creator-link" href="#" title="Lookup"
-                           onclick="doLookup(); return false;">lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-creator-link" href="#" title="Add Creator"
-               onclick="replicateLookupField('creator'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
-
-    <xsl:template name="edit-custodians">
-        <table id="edit-custodians-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="custodian" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-custodian-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-custodian-link" href="#" title="Add Custodian"
-               onclick="replicateLookupField('custodian'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
-
-    <xsl:template name="edit-projects">
-        <table id="edit-projects-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="project" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-project-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-project-link" href="#" title="Add Project"
-               onclick="replicateLookupField('project'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
-    <xsl:template name="edit-collection">
-        <table id="edit-collections-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="collection" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-collection-link" href="#" title="Lookup" onclick="doLookup(); return false;">
-                            lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-collection-link" href="#" title="Add Project"
-               onclick="replicateLookupField('collection'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
     <xsl:template name="edit-socio-economic-impact">
         <table id="edit-socio-economic-impact-table" class="lookup-table">
             <tbody>
@@ -294,50 +212,6 @@
         <div id="map-canvas" style="width: 500px; height: 400px">
         </div>
     </xsl:template>
-    <xsl:template name="edit-related-collections">
-        <table id="edit-related-collections-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="related-collection" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-related-collection-link" href="#" title="Lookup"
-                           onclick="doLookup(); return false;">lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-related-collection-link" href="#" title="Add Collection"
-               onclick="replicateLookupField('related-collection'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
-    <xsl:template name="edit-related-services">
-        <table id="edit-related-services-table" class="lookup-table">
-            <tbody>
-                <tr>
-                    <td>
-                        <input id="related-service" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-related-service-link" href="#" title="Lookup" onclick="doLookup(); return false;">
-                            lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <a class="new-link" id="add-related-service-link" href="#" title="Add Service"
-               onclick="replicateLookupField('related-service'); return false;">add
-            </a>
-        </div>
-    </xsl:template>
     <xsl:template name="edit-related-publications">
         <table id="edit-related-publications-table" class="lookup-table">
             <tbody>
@@ -378,6 +252,7 @@
             <option value="cc-by-nd">CC-BY-ND</option>
         </select>
     </xsl:template>
+
     <xsl:template name="lookup-form">
         <div id="lookup-div" style="display:none;">
             <form id="lookup-form" method="post" action="lookup" onsubmit="doLookup();return false;">
@@ -396,6 +271,78 @@
             </form>
             <ul id="lookup-result">
             </ul>
+        </div>
+    </xsl:template>
+
+    <xsl:template name="lookup-edit">
+        <xsl:param name="field"/>
+        <xsl:param name="relation"/>
+        <table id="edit-{$field}-table" class="lookup-table">
+            <tbody>
+                <xsl:choose>
+                    <xsl:when test="atom:link[@rel=$relation]">
+                        <xsl:for-each select="atom:link[@rel=$relation]">
+                            <xsl:variable name="index" select="position() - 1"/>
+                            <xsl:choose>
+                                <xsl:when test="$index = 0">
+                                    <tr>
+                                        <td>
+                                            <input id="{$field}" value="{@title}" type="text"/>
+                                        </td>
+                                        <td>
+                                            <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
+                                               onclick="doLookup(); return false;">
+                                                lookup
+                                            </a>
+                                        </td>
+                                        <td class="lookup-result">
+                                            <xsl:value-of select="@title"/>
+                                        </td>
+                                    </tr>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <tr>
+                                        <td>
+                                            <input id="{$field}-{$index}" value="{@title}" type="text"/>
+                                        </td>
+                                        <td>
+                                            <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
+                                               onclick="doLookup(); return false;">
+                                                lookup
+                                            </a>
+                                        </td>
+                                        <td class="lookup-result">
+                                            <a id="{$field}-{$index}-remove-link" class="remove-link" href="#"
+                                               onclick="$(this).parent().parent().remove();">remove
+                                            </a>
+                                            <xsl:value-of select="@title"/>
+                                        </td>
+                                    </tr>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <tr>
+                            <td>
+                                <input id="{$field}" value="" type="text"/>
+                            </td>
+                            <td>
+                                <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
+                                   onclick="doLookup(); return false;">
+                                    lookup
+                                </a>
+                            </td>
+                            <td class="lookup-result"></td>
+                        </tr>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </tbody>
+        </table>
+        <div>
+            <a class="new-link" id="add-{$field}-link" href="#" title="Add"
+               onclick="replicateLookupField('{$field}'); return false;">add
+            </a>
         </div>
     </xsl:template>
 </xsl:stylesheet>

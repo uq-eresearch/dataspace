@@ -80,7 +80,9 @@
                             <tr>
                                 <th>Type</th>
                                 <td>
-                                    <xsl:call-template name="agent-type"/>
+                                    <xsl:call-template name="type">
+                                        <xsl:with-param name="entity">agent</xsl:with-param>
+                                    </xsl:call-template>
                                 </td>
                             </tr>
                             <tr>
@@ -107,13 +109,23 @@
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Created</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-collection"/>
+                                <xsl:call-template name="lookup-edit">
+                                    <xsl:with-param name="field">iscollectorof</xsl:with-param>
+                                    <xsl:with-param name="relation">
+                                        <xsl:value-of select="$ATOM_IS_COLLECTOR_OF"/>
+                                    </xsl:with-param>
+                                </xsl:call-template>
                             </div>
                         </fieldset>
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Participating In</legend>
                             <div class="field">
-                                <xsl:call-template name="edit-projects"/>
+                                <xsl:call-template name="lookup-edit">
+                                    <xsl:with-param name="field">isparticipantin</xsl:with-param>
+                                    <xsl:with-param name="relation">
+                                        <xsl:value-of select="$ATOM_IS_PARTICIPANT_IN"/>
+                                    </xsl:with-param>
+                                </xsl:call-template>
                             </div>
                         </fieldset>
                     </div>
