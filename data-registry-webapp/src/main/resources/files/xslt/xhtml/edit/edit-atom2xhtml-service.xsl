@@ -54,17 +54,17 @@
                 <div id="edit-tabs">
                     <ul>
                         <li>
-                            <a href="#fragment-1">
+                            <a href="#general">
                                 <span>General</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#fragment-2">
+                            <a href="#related">
                                 <span>Related</span>
                             </a>
                         </li>
                     </ul>
-                    <div id="fragment-1">
+                    <div id="general">
                         <table id="edit-general-table" class="edit-table">
                             <tr>
                                 <th>Title</th>
@@ -100,7 +100,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div id="fragment-2">
+                    <div id="related">
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Publisher</legend>
                             <div class="field">

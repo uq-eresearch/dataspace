@@ -50,37 +50,37 @@
                 <div id="edit-tabs">
                     <ul>
                         <li>
-                            <a href="#fragment-1">
+                            <a href="#general">
                                 <span>General</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#fragment-2">
+                            <a href="#related">
                                 <span>People &amp; Projects</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#fragment-3">
+                            <a href="#subjects">
                                 <span>Subjects</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#fragment-4">
+                            <a href="#spacio-temporal">
                                 <span>Time &amp; Space</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#fragment-5">
+                            <a href="#related-info">
                                 <span>Related Info</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#fragment-6">
+                            <a href="#rights">
                                 <span>Rights</span>
                             </a>
                         </li>
                     </ul>
-                    <div id="fragment-1">
+                    <div id="general">
                         <table id="edit-general-table" class="edit-table">
                             <tr>
                                 <th>Title</th>
@@ -116,7 +116,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div id="fragment-2">
+                    <div id="related">
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Creators</legend>
                             <div class="field">
@@ -151,7 +151,7 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div id="fragment-3">
+                    <div id="subjects">
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Fields of Research</legend>
                             <div class="field">
@@ -185,7 +185,7 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div id="fragment-4">
+                    <div id="spacio-temporal">
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Time Period</legend>
                             <div class="field">
@@ -199,7 +199,7 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div id="fragment-5">
+                    <div id="related-info">
                         <fieldset class="ui-widget ui-widget-content">
                             <legend class="ui-widget-header ui-corner-all">Related Collections</legend>
                             <div class="field">
@@ -229,7 +229,7 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div id="fragment-6">
+                    <div id="rights">
                         <table id="edit-rights-table" class="edit-table">
                             <tr>
                                 <th>Rights</th>
