@@ -135,7 +135,10 @@
                             <tr>
                                 <th>Description</th>
                                 <td>
-                                    <xsl:call-template name="content"/>
+                                    <xsl:call-template name="text-area">
+                                        <xsl:with-param name="field">content</xsl:with-param>
+                                        <xsl:with-param name="path"/>
+                                    </xsl:call-template>
                                 </td>
                             </tr>
                             <tr>
@@ -264,13 +267,19 @@
                             <tr>
                                 <th>Rights</th>
                                 <td>
-                                    <xsl:call-template name="rights"/>
+                                    <xsl:call-template name="text-area">
+                                        <xsl:with-param name="field">rights</xsl:with-param>
+                                        <xsl:with-param name="path"/>
+                                    </xsl:call-template>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Access Rights</th>
                                 <td>
-                                    <xsl:call-template name="access-rights"/>
+                                    <xsl:call-template name="text-area">
+                                        <xsl:with-param name="field">access-rights</xsl:with-param>
+                                        <xsl:with-param name="path"/>
+                                    </xsl:call-template>
                                 </td>
                             </tr>
                             <tr>

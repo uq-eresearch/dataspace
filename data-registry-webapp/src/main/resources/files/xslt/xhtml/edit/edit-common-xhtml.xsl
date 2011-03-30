@@ -126,15 +126,17 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template name="content">
+    <xsl:template name="text-area">
+        <xsl:param name="field"/>
+        <xsl:param name="path"/>
         <xsl:choose>
-            <xsl:when test="atom:content">
-                <textarea id="content-textarea" name="content-textarea" cols="50" rows="5">
-                    <xsl:value-of select="atom:content"/>
+            <xsl:when test="$path">
+                <textarea id="{$field}-textarea" name="{$field}-textarea" cols="50" rows="5">
+                    <xsl:value-of select="$path"/>
                 </textarea>
             </xsl:when>
             <xsl:otherwise>
-                <textarea id="content-textarea" name="content-textarea" cols="50" rows="5">
+                <textarea id="{$field}-textarea" name="{$field}-textarea" cols="50" rows="5">
                 </textarea>
             </xsl:otherwise>
         </xsl:choose>
@@ -395,18 +397,6 @@
                onclick="replicateLookupField('publication-title'); return false;">add
             </a>
         </div>
-    </xsl:template>
-
-
-    <xsl:template name="rights">
-        <textarea id="rights-textarea" name="rights-textarea" cols="50" rows="5">
-            <xsl:value-of select="atom:rights"/>
-        </textarea>
-    </xsl:template>
-    <xsl:template name="access-rights">
-        <textarea id="access-rights-textarea" name="access-rights-textarea" cols="50" rows="5">
-            <xsl:value-of select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]/@content"/>
-        </textarea>
     </xsl:template>
     <xsl:template name="licence-type">
         <select id="licence-type-combobox" name="type-combobox">

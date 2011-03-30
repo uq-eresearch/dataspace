@@ -93,7 +93,12 @@
                             <tr>
                                 <th>Description</th>
                                 <td>
-                                    <xsl:call-template name="content"/>
+                                    <xsl:call-template name="text-area">
+                                        <xsl:with-param name="field">content</xsl:with-param>
+                                        <xsl:with-param name="path">
+                                            <xsl:value-of select="atom:content"/>
+                                        </xsl:with-param>
+                                    </xsl:call-template>
                                 </td>
                             </tr>
                             <tr>
