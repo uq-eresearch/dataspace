@@ -14,7 +14,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="atom rdfa">
 
-    <xsl:include href="new-common-xhtml.xsl"/>
+    <xsl:include href="../edit/edit-common-xhtml.xsl"/>
     <xsl:include href="../include/header.xsl"/>
     <xsl:include href="../include/head.xsl"/>
     <xsl:include href="../include/footer.xsl"/>
@@ -24,13 +24,13 @@
                 doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" indent="yes"/>
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
-            <xsl:call-template name="content"/>
+            <xsl:call-template name="new-service"/>
         </html>
     </xsl:template>
 
-    <xsl:template name="content">
+    <xsl:template name="new-service">
         <head>
-            <title>New Record</title>
+            <title>New Service</title>
             <link href="/description.css" rel="stylesheet" type="text/css"/>
             <xsl:call-template name="head"/>
         </head>
@@ -81,7 +81,7 @@
                             <tr>
                                 <th>Description</th>
                                 <td>
-                                    <xsl:call-template name="description"/>
+                                    <xsl:call-template name="content"/>
                                 </td>
                             </tr>
                             <tr>

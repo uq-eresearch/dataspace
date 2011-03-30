@@ -32,20 +32,25 @@
             <a href="/{$path}">
                 <xsl:value-of select="$title"/>
             </a>
-            <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
-                >>
-                <a href="{atom:link[@rel = $REL_SELF]/@href}">
-                    <xsl:choose>
-                        <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
-                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </a>
-                (edit)
-            </xsl:if>
+            <xsl:choose>
+                <xsl:when test="atom:link[@rel = $REL_SELF]/@href">
+                    >>
+                    <a href="{atom:link[@rel = $REL_SELF]/@href}">
+                        <xsl:choose>
+                            <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
+                                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </a>
+                    <span>(edit)</span>
+                </xsl:when>
+                <xsl:otherwise>
+                    <span>>> (new)</span>
+                </xsl:otherwise>
+            </xsl:choose>
         </li>
     </xsl:template>
     <xsl:template name="title">
@@ -122,9 +127,17 @@
     </xsl:template>
 
     <xsl:template name="content">
-        <textarea id="content-textarea" name="content-textarea" cols="50" rows="5">
-            <xsl:value-of select="atom:content"/>
-        </textarea>
+        <xsl:choose>
+            <xsl:when test="atom:content">
+                <textarea id="content-textarea" name="content-textarea" cols="50" rows="5">
+                    <xsl:value-of select="atom:content"/>
+                </textarea>
+            </xsl:when>
+            <xsl:otherwise>
+                <textarea id="content-textarea" name="content-textarea" cols="50" rows="5">
+                </textarea>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="page">
