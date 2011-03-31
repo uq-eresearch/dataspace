@@ -251,8 +251,9 @@ public class HttpMethodHelper {
                     }
                 } else {
                     if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
-                        Feed versionHistoryFeed = FeedHelper.createVersionFeed(request);
-                        return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, record);
+//                        Feed versionHistoryFeed = FeedHelper.createVersionFeed(request);
+//                        return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, record);
+                        version = record.getWorkingCopy();
                     } else {
                         version = record.getPublished();
                     }
