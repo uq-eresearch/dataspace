@@ -97,6 +97,16 @@ body a {
     color: #ff0000;
 }
 
+#view-record-history-link {
+    font-size: 0.8em;
+    color: #4a3201;
+}
+
+#view-record-working-copy-link {
+    font-size: 0.8em;
+    color: #cc33ff;
+}
+
 #view-record-link, #lookup-impact-link,
 #lookup-field-link, #lookup-location-link, #lookup-related-collection-link {
     font-size: 0.8em;

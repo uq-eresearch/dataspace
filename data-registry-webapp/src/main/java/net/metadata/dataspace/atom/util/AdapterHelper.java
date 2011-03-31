@@ -675,8 +675,9 @@ public class AdapterHelper {
 
     private static void addNavigationLinks(Version version, Entry entry, String parentUrl) throws ResponseContextException {
         try {
-            Link link = entry.addLink(parentUrl, Constants.REL_LATEST_VERSION);
-            link.setTitle(version.getUriKey());
+            String workingCopyKey = version.getParent().getWorkingCopy().getUriKey();
+            Link link = entry.addLink(parentUrl + "/" + workingCopyKey, Constants.REL_LATEST_VERSION);
+            link.setTitle(workingCopyKey);
             SortedSet<Version> versions = version.getParent().getVersions();
             Version[] versionArray = new Version[versions.size()];
             versionArray = (Version[]) version.getParent().getVersions().toArray(versionArray);
