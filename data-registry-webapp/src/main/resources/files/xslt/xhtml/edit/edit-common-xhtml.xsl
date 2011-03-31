@@ -280,37 +280,89 @@
         <xsl:param name="scheme"/>
         <table id="edit-{$type}-table" class="lookup-table">
             <tbody>
-                <tr>
-                    <td>
-                        <input id="{$type}" value="" type="text"/>
-                    </td>
-                    <td>
-                        <a id="lookup-{$type}-link" class="lookup-link" href="#" title="Lookup"
-                           onclick="doLookup(); return false;">lookup
-                        </a>
-                    </td>
-                    <td class="lookup-result"></td>
-                </tr>
+                <xsl:choose>
+                    <xsl:when test="atom:category[@scheme=$scheme]">
+                        <xsl:for-each select="atom:category[@scheme=$scheme]">
+                            <xsl:variable name="index" select="position() - 1"/>
+                            <xsl:choose>
+                                <xsl:when test="$index = 0">
+                                    <tr>
+                                        <td>
+                                            <input id="{$type}" value="{@label}" type="text"/>
+                                        </td>
+                                        <td>
+                                            <a id="lookup-{$type}-link" class="lookup-link" href="#" title="Lookup"
+                                               onclick="doLookup(); return false;">lookup
+                                            </a>
+                                        </td>
+                                        <td class="lookup-result">
+                                            <a href="{@term}">
+                                                <xsl:value-of select="@label"/>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <tr>
+                                        <td>
+                                            <input id="{$type}-{$index}" value="{@label}" type="text"/>
+                                        </td>
+                                        <td>
+                                            <a id="lookup-{$type}-{$index}-link" class="lookup-link" href="#"
+                                               title="Lookup"
+                                               onclick="doLookup(); return false;">lookup
+                                            </a>
+                                        </td>
+                                        <td class="lookup-result">
+                                            <a href="{@term}">
+                                                <xsl:value-of select="@label"/>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <tr>
+                            <td>
+                                <input id="{$type}" value="" type="text"/>
+                            </td>
+                            <td>
+                                <a id="lookup-{$type}-link" class="lookup-link" href="#" title="Lookup"
+                                   onclick="doLookup(); return false;">lookup
+                                </a>
+                            </td>
+                            <td class="lookup-result"></td>
+                        </tr>
+                    </xsl:otherwise>
+                </xsl:choose>
             </tbody>
         </table>
         <div>
-            <a class="new-link" id="add-{$type}-link" href="#" title="Add Term"
-               onclick="replicateLookupField('impact-name'); return false;">add
+            <a class="new-link" id="add-{$type}-link" href="#" title="Add"
+               onclick="replicateLookupField('{$type}'); return false;">add
             </a>
         </div>
     </xsl:template>
 
     <xsl:template name="type-of-activities">
-        <input type="checkbox" class="type-of-activity" name="applied-research" value="applied-research"/>
-        Applied Research
-        <input type="checkbox" class="type-of-activity" name="pure-basic-research" value="pure basic research"/>
-        Pure Basic Research
-        <input type="checkbox" class="type-of-activity" name="experimental-development"
-               value="experimental development"/>
-        Experimental Development
-        <input type="checkbox" class="type-of-activity" name="strategic-basic-research"
-               value="strategic basic research"/>
-        Strategic Basic Research
+        <xsl:choose>
+            <xsl:when test="atom:category[@scheme=$SCHEME_TOA]">
+            </xsl:when>
+            <xsl:otherwise>
+                <input type="checkbox" class="type-of-activity" name="applied-research" value="applied-research"/>
+                Applied research
+                <input type="checkbox" class="type-of-activity" name="pure-basic-research" value="pure basic research"/>
+                Pure basic research
+                <input type="checkbox" class="type-of-activity" name="experimental-development"
+                       value="experimental development"/>
+                Experimental development
+                <input type="checkbox" class="type-of-activity" name="strategic-basic-research"
+                       value="strategic basic research"/>
+                Strategic basic research
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="keywords">
         <table id="keywords-table" class="lookup-table">

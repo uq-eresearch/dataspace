@@ -87,4 +87,7 @@
         <xsl:value-of select="concat($NS_VIVO,'Service')"/>
     </xsl:variable>
 
+    <xsl:variable name="SCHEME_FOR">http://purl.org/anzsrc/for/#</xsl:variable>
+    <xsl:variable name="SCHEME_SEO">http://purl.org/anzsrc/seo/#</xsl:variable>
+    <xsl:variable name="SCHEME_TOA">http://purl.org/anzsrc/toa/#</xsl:variable>
 </xsl:stylesheet>
