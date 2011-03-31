@@ -63,7 +63,7 @@ public class FeedHelper {
         feed.getAlternateLink().setMimeType(mimeType);
     }
 
-    public static ResponseContext getVersionHistoryFeed(Feed feed, Record record) throws ResponseContextException {
+    public static ResponseContext getVersionHistoryFeed(RequestContext request, Feed feed, Record record, Class clazz) throws ResponseContextException {
         try {
             SortedSet<Version> versions = record.getVersions();
             for (Version version : versions) {
@@ -100,7 +100,21 @@ public class FeedHelper {
             Document<Feed> document = feed.getDocument();
             AbstractResponseContext responseContext = new BaseResponseContext<Document<Feed>>(document);
             responseContext.setEntityTag(calculateEntityTag(document.getRoot()));
-            return responseContext;
+
+            String accept = AdapterHelper.getAcceptHeader(request);
+            responseContext.setLocation(feed.getId().toString());
+            responseContext.setHeader("Vary", "Accept");
+            if (accept.equals(Constants.MIME_TYPE_XHTML)) {
+                ResponseContext htmlRepresentationOfFeed = getHtmlRepresentationOfFeed(request, responseContext, clazz);
+                if (request.getHeader("user-agent").indexOf("MSIE ") > -1) {
+                    responseContext.setContentType(Constants.MIME_TYPE_HTML);
+                } else {
+                    responseContext.setContentType(Constants.MIME_TYPE_XHTML);
+                }
+                return htmlRepresentationOfFeed;
+            } else {
+                return responseContext;
+            }
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }

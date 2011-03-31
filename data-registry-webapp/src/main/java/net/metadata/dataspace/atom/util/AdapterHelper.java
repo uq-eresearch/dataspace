@@ -437,7 +437,7 @@ public class AdapterHelper {
         return parameter;
     }
 
-    private static String getAcceptHeader(RequestContext request) {
+    public static String getAcceptHeader(RequestContext request) {
         String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();

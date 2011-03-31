@@ -240,7 +240,8 @@ public class HttpMethodHelper {
                     if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
                         if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
                             Feed versionHistoryFeed = FeedHelper.createVersionFeed(request);
-                            return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, record);
+                            ResponseContext versionHistoryFeed1 = FeedHelper.getVersionHistoryFeed(request, versionHistoryFeed, record, clazz);
+                            return versionHistoryFeed1;
                         } else if (versionKey.equals(Constants.TARGET_TYPE_WORKING_COPY)) {
                             version = record.getWorkingCopy();
                         } else {
