@@ -157,6 +157,12 @@ public class AdapterHelper {
             for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
             }
+
+            Set<Subject> subjectSet = version.getSubjects();
+            for (Subject sub : subjectSet) {
+                entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
+            }
+
             Set<Agent> agentSet = version.getHasParticipants();
             for (Agent agent : agentSet) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
@@ -204,7 +210,7 @@ public class AdapterHelper {
             }
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
-                entry.addCategory(sub.getTerm(), sub.getDefinedBy(), sub.getLabel());
+                entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
             }
 
             Set<Collection> collectionSet = version.getMade();
@@ -256,7 +262,7 @@ public class AdapterHelper {
             //Subjects
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
-                entry.addCategory(sub.getTerm(), sub.getDefinedBy(), sub.getLabel());
+                entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
             }
             //Creators
             Set<Agent> agents = version.getCreators();
@@ -565,15 +571,25 @@ public class AdapterHelper {
             List<Category> categories = entry.getCategories();
             for (Category category : categories) {
                 if (!category.getScheme().toString().equals(Constants.NS_DCMITYPE)) {
-                    String vocabulary = category.getScheme().toString();
-                    String value = category.getTerm();
-                    if (vocabulary != null && value != null) {
-                        Subject subject = daoManager.getSubjectDao().getSubject(vocabulary, value);
+                    String scheme = category.getScheme().toString();
+                    String term = category.getTerm();
+                    if (scheme != null && term != null) {
+                        Subject subject = daoManager.getSubjectDao().getSubject(scheme, term);
                         if (subject == null) {
                             subject = entityCreator.getNextSubject();
                         }
-                        subject.setTerm(vocabulary);
-                        subject.setDefinedBy(value);
+                        subject.setTerm(term);
+                        subject.setDefinedBy(scheme);
+                        subject.setLabel(category.getLabel());
+                        subjects.add(subject);
+                    } else {
+                        String label = category.getLabel();
+                        Subject subject = daoManager.getSubjectDao().getSubject(Constants.SCHEME_KEYWORD, Constants.TERM_KEYWORD, label);
+                        if (subject == null) {
+                            subject = entityCreator.getNextSubject();
+                        }
+                        subject.setTerm(Constants.TERM_KEYWORD);
+                        subject.setDefinedBy(Constants.SCHEME_KEYWORD);
                         subject.setLabel(category.getLabel());
                         subjects.add(subject);
                     }

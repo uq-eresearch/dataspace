@@ -370,9 +370,20 @@
                 <tr>
                     <td>
                         <ul id="keywords-list">
+                            <xsl:if test="atom:category[@term='keyword']">
+                                <xsl:for-each select="atom:category[@term='keyword']">
+                                    <li class="keyword">
+                                        <xsl:value-of select="@label"/>
+                                        <a id="{@label}" href="#" class="remove-keyword" title="Remove Keyword"
+                                           onclick="$('#{@label}').parent().remove();">x
+                                        </a>
+                                    </li>
+                                </xsl:for-each>
+                            </xsl:if>
                         </ul>
                     </td>
                 </tr>
+
                 <tr>
                     <td>
                         <input id="keyword" value="" type="text"/>

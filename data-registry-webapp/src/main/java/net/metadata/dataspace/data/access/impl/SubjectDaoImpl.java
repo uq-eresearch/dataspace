@@ -106,10 +106,24 @@ public class SubjectDaoImpl extends JpaDao<Subject> implements SubjectDao, Seria
     }
 
     @Override
-    public Subject getSubject(String vocabulary, String value) {
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.term = :vocabulary AND o.isDefinedBy = :value");
-        query.setParameter("vocabulary", vocabulary);
-        query.setParameter("value", value);
+    public Subject getSubject(String scheme, String term) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.term = :term AND o.isDefinedBy = :scheme");
+        query.setParameter("scheme", scheme);
+        query.setParameter("term", term);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Subject) resultList.get(0);
+    }
+
+    @Override
+    public Subject getSubject(String scheme, String term, String label) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Subject o WHERE o.term = :term AND o.isDefinedBy = :scheme AND o.label = :label");
+        query.setParameter("scheme", scheme);
+        query.setParameter("term", term);
+        query.setParameter("label", label);
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;

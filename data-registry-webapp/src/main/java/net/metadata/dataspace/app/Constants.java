@@ -111,6 +111,9 @@ public interface Constants {
     String TERM_AGENT_AS_GROUP = NS_FOAF + "Group";
     String TERM_AGENT_AS_AGENT = NS_FOAF + "Agent";
     String TERM_SERVICE = NS_VIVO + "Service";
+    String TERM_KEYWORD = "keyword";
+
+    String SCHEME_KEYWORD = UQ_REGISTRY_URI_PREFIX + "keyword";
 
     /**
      * HTTP Status messages

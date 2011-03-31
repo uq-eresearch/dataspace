@@ -10,5 +10,7 @@ import net.metadata.dataspace.data.model.context.Subject;
  */
 public interface SubjectDao extends Dao<Subject>, RegistryDao<Subject> {
 
-    Subject getSubject(String vocabulary, String value);
+    Subject getSubject(String scheme, String term);
+
+    Subject getSubject(String scheme, String term, String label);
 }
