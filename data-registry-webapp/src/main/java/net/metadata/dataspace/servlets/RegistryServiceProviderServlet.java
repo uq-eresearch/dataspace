@@ -57,13 +57,9 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
             public void init(Abdera abdera, Map<String, String> properties) {
                 super.init(abdera, properties);
                 this.requestProcessors.put(TargetType.get(Constants.TARGET_TYPE_VERSION, true), new VersionRequestProcessor());
+//                this.requestProcessors.put(TargetType.get(Constants.TARGET_TYPE_WORKING_COPY, true), new VersionRequestProcessor());
                 this.targetResolver.addRoute(new Route(Constants.TARGET_TYPE_VERSION, "/:collection/:entry/:version"), TargetType.get(Constants.TARGET_TYPE_VERSION));
-
-//                this.requestProcessors.put(TargetType.get(Constants.TARGET_LOGIN, true), new AuthenticationRequestProcessor());
-//                this.targetResolver.addRoute(new Route(Constants.TARGET_LOGIN, "/:login"), TargetType.get(Constants.TARGET_LOGIN));
-//
-//                this.requestProcessors.put(TargetType.get(Constants.TARGET_LOGOUT, true), new AuthenticationRequestProcessor());
-//                this.targetResolver.addRoute(new Route(Constants.TARGET_LOGOUT, "/:logout"), TargetType.get(Constants.TARGET_LOGOUT));
+//                this.targetResolver.addRoute(new Route(Constants.TARGET_TYPE_WORKING_COPY, "/:collection/:entry/:working-copy"), TargetType.get(Constants.TARGET_TYPE_WORKING_COPY));
             }
 
             public ResponseContext process(RequestContext request) {

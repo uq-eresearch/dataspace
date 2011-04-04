@@ -90,7 +90,7 @@ public class AdapterHelper {
     }
 
     public static String getRepresentationMimeType(RequestContext request) {
-        if (request.getTarget().getType() != TargetType.TYPE_ENTRY) {
+        if (request.getTarget().getType() != TargetType.TYPE_ENTRY && request.getTarget().getType() != TargetType.get(Constants.TARGET_TYPE_VERSION, true)) {
             return null;
         }
         String fullUrl = request.getUri().toString();
