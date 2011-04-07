@@ -1,5 +1,6 @@
 $(document).ready(function() {
     $("#edit-tabs").tabs();
+    $('.date-picker').datepicker();
     getLoginLink();
     styleTables();
 });

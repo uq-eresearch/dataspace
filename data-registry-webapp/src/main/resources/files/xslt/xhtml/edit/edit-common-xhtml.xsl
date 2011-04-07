@@ -402,11 +402,13 @@
                 <tr>
                     <td>
                         Start Time:
+                        <input name="start-date" id="start-date" class="date-picker"/>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         End Time:
+                        <input name="end-date" id="end-date" class="date-picker"/>
                     </td>
                 </tr>
             </tbody>
