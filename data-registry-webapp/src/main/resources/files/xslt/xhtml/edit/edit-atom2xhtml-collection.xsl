@@ -37,8 +37,10 @@
             </title>
             <link href="/description.css" rel="stylesheet" type="text/css"/>
             <xsl:call-template name="head"/>
+            <script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js">;</script>
+            <script type="text/javascript" src="/js/map/google-map.js">;</script>
         </head>
-        <body>
+        <body onload="init();">
             <xsl:call-template name="header"/>
             <ul class="bread-crumbs-nav">
                 <xsl:call-template name="edit-bread-crumbs">

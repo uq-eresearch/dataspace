@@ -433,8 +433,24 @@
             </a>
         </div>
         <h4>Region</h4>
-        <div id="map-canvas" style="width: 500px; height: 400px">
+        <div id="map" class="smallmap" style="width: 500px; height: 400px">
         </div>
+        <ul id="controlToggle">
+            <li>
+                <input type="radio" name="type" value="none" id="noneToggle"
+                       onclick="toggleControl(this);" checked="checked"/>
+                <label for="noneToggle">navigate</label>
+
+            </li>
+            <li>
+                <input type="radio" name="type" value="point" id="pointToggle" onclick="toggleControl(this);"/>
+                <label for="pointToggle">draw point</label>
+            </li>
+            <li>
+                <input type="radio" name="type" value="polygon" id="polygonToggle" onclick="toggleControl(this);"/>
+                <label for="polygonToggle">draw polygon</label>
+            </li>
+        </ul>
     </xsl:template>
 
     <xsl:template name="edit-related-publications">

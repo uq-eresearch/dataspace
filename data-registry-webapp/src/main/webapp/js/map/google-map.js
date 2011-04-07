@@ -1,27 +1,39 @@
-var shape;
-function initialize() {
-    var mapDiv = document.getElementById('map-canvas');
-    var map = new google.maps.Map(mapDiv, {
-        center: new google.maps.LatLng(24.886436490787712, -70.2685546875),
-        zoom: 4,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
+var map, drawControls;
+function init() {
+    map = new OpenLayers.Map('map');
 
-    shape = new google.maps.Polygon({
-        strokeColor: '#ff0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#ff0000',
-        fillOpacity: 0.35
-    });
+    var wmsLayer = new OpenLayers.Layer.WMS("OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0?", {layers: 'basic'});
 
-    shape.setMap(map);
+    var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
+    var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 
-    google.maps.event.addListener(map, 'click', addPoint);
+    map.addLayers([wmsLayer, pointLayer, polygonLayer]);
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+    map.addControl(new OpenLayers.Control.MousePosition());
+
+    drawControls = {
+        point: new OpenLayers.Control.DrawFeature(pointLayer,
+                OpenLayers.Handler.Point),
+        polygon: new OpenLayers.Control.DrawFeature(polygonLayer,
+                OpenLayers.Handler.Polygon)
+    };
+
+    for (var key in drawControls) {
+        map.addControl(drawControls[key]);
+    }
+
+    map.setCenter(new OpenLayers.LonLat(0, 0), 3);
+
+    document.getElementById('noneToggle').checked = true;
 }
 
-function addPoint(e) {
-    var vertices = shape.getPath();
-
-    vertices.push(e.latLng);
+function toggleControl(element) {
+    for (key in drawControls) {
+        var control = drawControls[key];
+        if (element.value == key && element.checked) {
+            control.activate();
+        } else {
+            control.deactivate();
+        }
+    }
 }
