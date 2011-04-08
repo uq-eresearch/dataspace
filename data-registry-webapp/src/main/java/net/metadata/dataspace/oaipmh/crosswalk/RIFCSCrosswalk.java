@@ -2,7 +2,7 @@ package net.metadata.dataspace.oaipmh.crosswalk;
 
 import ORG.oclc.oai.server.crosswalk.Crosswalk;
 import ORG.oclc.oai.server.verb.CannotDisseminateFormatException;
-import net.metadata.dataspace.atom.util.AdapterHelper;
+import net.metadata.dataspace.atom.util.AdapterOutputHelper;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.record.Activity;
@@ -47,7 +47,7 @@ public class RIFCSCrosswalk extends Crosswalk {
                 xslFilePath = "/files/xslt/rifcs/atom2rifcs-" + Service.class.getSimpleName().toLowerCase() + ".xsl";
             }
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
-            Entry entry = AdapterHelper.getEntryFromEntity((Version) nativeItem, true);
+            Entry entry = AdapterOutputHelper.getEntryFromEntity((Version) nativeItem, true);
             AbstractWriterOptions writerOptions = new AbstractWriterOptions() {
             };
             writerOptions.setCharset("UTF8");

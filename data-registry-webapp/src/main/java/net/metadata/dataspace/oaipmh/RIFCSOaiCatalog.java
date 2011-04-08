@@ -4,7 +4,7 @@ import ORG.oclc.oai.server.catalog.AbstractCatalog;
 import ORG.oclc.oai.server.verb.*;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.atom.util.AdapterHelper;
+import net.metadata.dataspace.atom.util.AdapterOutputHelper;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
@@ -69,8 +69,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             int offset = currentLocalDate.getTimezoneOffset();
             fromDate.setMinutes(fromDate.getMinutes() - offset);
             toDate.setMinutes(toDate.getMinutes() - offset);
-        }
-        catch (ParseException pe) {
+        } catch (ParseException pe) {
             throw new BadArgumentException();
         }
         List<Activity> activityList = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getAllPublishedBetween(fromDate, toDate);
@@ -115,7 +114,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         try {
             logger.debug("Getting a record");
             Record record = null;
-            String key = AdapterHelper.getEntityID(identifier);
+            String key = AdapterOutputHelper.getEntityID(identifier);
             if (identifier.contains(Constants.PATH_FOR_ACTIVITIES)) {
                 record = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_COLLECTIONS)) {

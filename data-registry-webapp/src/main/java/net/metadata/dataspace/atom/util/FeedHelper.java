@@ -101,7 +101,7 @@ public class FeedHelper {
             AbstractResponseContext responseContext = new BaseResponseContext<Document<Feed>>(document);
             responseContext.setEntityTag(calculateEntityTag(document.getRoot()));
 
-            String accept = AdapterHelper.getAcceptHeader(request);
+            String accept = AdapterOutputHelper.getAcceptHeader(request);
             responseContext.setLocation(feed.getId().toString());
             responseContext.setHeader("Vary", "Accept");
             if (accept.equals(Constants.MIME_TYPE_XHTML)) {

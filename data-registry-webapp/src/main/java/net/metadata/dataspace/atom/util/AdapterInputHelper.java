@@ -33,7 +33,7 @@ import java.util.Set;
  * Date: 17/11/2010
  * Time: 9:54:40 AM
  */
-public class EntityRelationshipHelper {
+public class AdapterInputHelper {
 
     private static CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
     private static AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
@@ -54,7 +54,7 @@ public class EntityRelationshipHelper {
 
     private static void addRelationsToActivity(Entry entry, ActivityVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_HAS_OUTPUT);
+        Set<String> collectionUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_HAS_OUTPUT);
         addPages(version, entry);
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
@@ -66,7 +66,7 @@ public class EntityRelationshipHelper {
                 entityManager.merge(collection);
             }
         }
-        Set<String> agentUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_HAS_PARTICIPANT);
+        Set<String> agentUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_HAS_PARTICIPANT);
         for (String agentKey : agentUriKeys) {
             Agent agent = agentDao.getByKey(agentKey);
             if (agent != null) {
@@ -84,15 +84,15 @@ public class EntityRelationshipHelper {
     private static void addRelationsCollection(Entry entry, CollectionVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
         addPages(version, entry);
-        Set<Subject> subjects = AdapterHelper.getSubjects(entry);
+        Set<Subject> subjects = AdapterOutputHelper.getSubjects(entry);
         for (Subject subject : subjects) {
             version.getSubjects().add(subject);
         }
-        Set<Publication> publications = AdapterHelper.getPublications(entry);
+        Set<Publication> publications = AdapterOutputHelper.getPublications(entry);
         for (Publication publication : publications) {
             version.getReferencedBy().add(publication);
         }
-        Set<String> collectorUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_CREATOR);
+        Set<String> collectorUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_CREATOR);
         for (String uriKey : collectorUriKeys) {
             Agent agent = agentDao.getByKey(uriKey);
             if (agent != null) {
@@ -103,7 +103,7 @@ public class EntityRelationshipHelper {
             }
         }
 
-        Set<String> publishersUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_PUBLISHER);
+        Set<String> publishersUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_PUBLISHER);
         for (String uriKey : publishersUriKeys) {
             Agent publisher = agentDao.getByKey(uriKey);
             if (publisher != null) {
@@ -113,7 +113,7 @@ public class EntityRelationshipHelper {
                 entityManager.merge(publisher);
             }
         }
-        Set<String> outputOfUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_OUTPUT_OF);
+        Set<String> outputOfUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_IS_OUTPUT_OF);
         for (String uriKey : outputOfUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
@@ -123,7 +123,7 @@ public class EntityRelationshipHelper {
                 entityManager.merge(activity);
             }
         }
-        Set<String> supportUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_ACCESSED_VIA);
+        Set<String> supportUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_IS_ACCESSED_VIA);
         for (String uriKey : supportUriKeys) {
             Service service = serviceDao.getByKey(uriKey);
             if (service != null) {
@@ -171,11 +171,11 @@ public class EntityRelationshipHelper {
         String email = entry.getAuthors().get(0).getEmail();
         version.getMboxes().add(email);
         addPages(version, entry);
-        Set<Subject> subjects = AdapterHelper.getSubjects(entry);
+        Set<Subject> subjects = AdapterOutputHelper.getSubjects(entry);
         for (Subject subject : subjects) {
             version.getSubjects().add(subject);
         }
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_MADE);
+        Set<String> collectionUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_MADE);
         for (String uriKey : collectionUriKeys) {
             net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
@@ -186,7 +186,7 @@ public class EntityRelationshipHelper {
             }
         }
 
-        Set<String> publishedCollectionsUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_MANAGER_OF);
+        Set<String> publishedCollectionsUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_IS_MANAGER_OF);
         for (String uriKey : publishedCollectionsUriKeys) {
             net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
@@ -196,7 +196,7 @@ public class EntityRelationshipHelper {
                 entityManager.merge(collection);
             }
         }
-        Set<String> isParticipantInUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_CURRENT_PROJECT);
+        Set<String> isParticipantInUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_CURRENT_PROJECT);
         for (String uriKey : isParticipantInUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
             if (activity != null) {
@@ -213,7 +213,7 @@ public class EntityRelationshipHelper {
 
     private static void addRelationsService(Entry entry, ServiceVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        Set<String> collectionUriKeys = AdapterHelper.getUriKeysFromLink(entry, Constants.REL_IS_SUPPORTED_BY);
+        Set<String> collectionUriKeys = AdapterOutputHelper.getUriKeysFromLink(entry, Constants.REL_IS_SUPPORTED_BY);
         addPages(version, entry);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);

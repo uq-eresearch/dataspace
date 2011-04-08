@@ -42,9 +42,9 @@ import net.metadata.dataspace.data.model.record.Collection;
  * Date: 06/10/2010
  * Time: 11:30:29 AM
  */
-public class AdapterHelper {
+public class AdapterOutputHelper {
 
-    private static Logger logger = Logger.getLogger(AdapterHelper.class);
+    private static Logger logger = Logger.getLogger(AdapterOutputHelper.class);
     private static final EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
     private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
 
@@ -438,7 +438,7 @@ public class AdapterHelper {
     }
 
     public static String getAcceptHeader(RequestContext request) {
-        String representationMimeType = AdapterHelper.getRepresentationMimeType(request);
+        String representationMimeType = AdapterOutputHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
             if (acceptHeader != null) {

@@ -61,7 +61,7 @@ public class HttpMethodHelper {
             if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
                 Entry entry = getEntryFromRequest(request);
                 Record record = entityCreator.getNextRecord(clazz);
-                Version version = AdapterHelper.assembleAndValidateVersionFromEntry(record, entry);
+                Version version = AdapterOutputHelper.assembleAndValidateVersionFromEntry(record, entry);
                 if (version == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                 } else {
@@ -71,7 +71,7 @@ public class HttpMethodHelper {
                         if (transaction.isActive()) {
                             transaction.commit();
                         }
-                        Source source = AdapterHelper.assembleAndValidateSourceFromEntry(entry);
+                        Source source = AdapterOutputHelper.assembleAndValidateSourceFromEntry(entry);
                         transaction.begin();
                         if (source.getId() == null) {
                             entityManager.persist(source);
@@ -87,13 +87,13 @@ public class HttpMethodHelper {
                         record.setUpdated(now);
                         entityManager.persist(version);
                         entityManager.persist(record);
-                        EntityRelationshipHelper.addRelations(entry, version);
-                        AdapterHelper.addDescriptionAuthors(record, entry.getAuthors());
+                        AdapterInputHelper.addRelations(entry, version);
+                        AdapterOutputHelper.addDescriptionAuthors(record, entry.getAuthors());
                         entityManager.merge(version);
                         entityManager.merge(record);
                         transaction.commit();
-                        Entry createdEntry = AdapterHelper.getEntryFromEntity(version, true);
-                        return AdapterHelper.getContextResponseForPost(createdEntry);
+                        Entry createdEntry = AdapterOutputHelper.getEntryFromEntity(version, true);
+                        return AdapterOutputHelper.getContextResponseForPost(createdEntry);
                     } catch (Exception th) {
                         logger.warn("Invalid Entry, Rolling back database", th);
                         if (transaction.isActive()) {
@@ -117,14 +117,14 @@ public class HttpMethodHelper {
             String mimeBaseType = request.getContentType().getBaseType();
             if (mimeBaseType.equals(Constants.MIME_TYPE_ATOM)) {
                 Entry entry = getEntryFromRequest(request);
-                String uriKey = AdapterHelper.getEntryID(request);
+                String uriKey = AdapterOutputHelper.getEntryID(request);
                 Record record = getExistingRecord(uriKey, clazz);
                 if (record == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
                 } else {
                     refreshRecord(record, clazz);
                     if (record.isActive()) {
-                        Version version = AdapterHelper.assembleAndValidateVersionFromEntry(record, entry);
+                        Version version = AdapterOutputHelper.assembleAndValidateVersionFromEntry(record, entry);
                         if (version == null) {
                             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                         } else {
@@ -138,13 +138,13 @@ public class HttpMethodHelper {
                                     transaction.begin();
                                     record.getVersions().add(version);
                                     version.setParent(record);
-                                    EntityRelationshipHelper.addRelations(entry, version);
+                                    AdapterInputHelper.addRelations(entry, version);
                                     record.setUpdated(new Date());
                                     entityManager.persist(version);
                                     entityManager.merge(record);
                                     transaction.commit();
-                                    Entry updatedEntry = AdapterHelper.getEntryFromEntity(version, false);
-                                    return AdapterHelper.getContextResponseForGetEntry(request, updatedEntry, clazz);
+                                    Entry updatedEntry = AdapterOutputHelper.getEntryFromEntity(version, false);
+                                    return AdapterOutputHelper.getContextResponseForGetEntry(request, updatedEntry, clazz);
                                 } catch (Exception th) {
                                     logger.fatal("Invalid Entry, Rolling back database", th);
                                     if (transaction.isActive()) {
@@ -205,7 +205,7 @@ public class HttpMethodHelper {
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
-            String uriKey = AdapterHelper.getEntryID(request);
+            String uriKey = AdapterOutputHelper.getEntryID(request);
             Record record = getExistingRecord(uriKey, clazz);
             if (record == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
@@ -226,14 +226,14 @@ public class HttpMethodHelper {
     }
 
     public static ResponseContext getEntry(RequestContext request, Class clazz) throws ResponseContextException {
-        String uriKey = AdapterHelper.getEntryID(request);
+        String uriKey = AdapterOutputHelper.getEntryID(request);
         Record record = getExistingRecord(uriKey, clazz);
         if (record == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
         } else {
             refreshRecord(record, clazz);
             if (record.isActive()) {
-                String versionKey = AdapterHelper.getEntryVersionID(request);
+                String versionKey = AdapterOutputHelper.getEntryVersionID(request);
                 User user = authenticationManager.getCurrentUser(request);
                 Version version;
                 if (versionKey != null) {
@@ -262,8 +262,8 @@ public class HttpMethodHelper {
                 if (version == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
                 } else {
-                    Entry entry = AdapterHelper.getEntryFromEntity(version, versionKey == null);
-                    return AdapterHelper.getContextResponseForGetEntry(request, entry, clazz);
+                    Entry entry = AdapterOutputHelper.getEntryFromEntity(version, versionKey == null);
+                    return AdapterOutputHelper.getContextResponseForGetEntry(request, entry, clazz);
                 }
             } else {
                 throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
