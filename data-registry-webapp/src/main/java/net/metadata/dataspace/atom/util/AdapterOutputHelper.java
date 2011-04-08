@@ -5,37 +5,31 @@ import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Publication;
-import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
-import net.metadata.dataspace.data.model.types.ActivityType;
-import net.metadata.dataspace.data.model.types.AgentType;
-import net.metadata.dataspace.data.model.types.CollectionType;
-import net.metadata.dataspace.data.model.types.ServiceType;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
-import org.apache.abdera.i18n.text.UrlEncoding;
-import org.apache.abdera.model.*;
+import org.apache.abdera.model.Element;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Link;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
-import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 
-import java.util.*;
-
-import net.metadata.dataspace.data.model.record.Collection;
+import java.util.Date;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * User: alabri
@@ -48,58 +42,6 @@ public class AdapterOutputHelper {
     private static final EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
     private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
 
-    public static String getEntityID(String fullUrl) {
-        if (fullUrl.contains("?")) {
-            fullUrl = fullUrl.split("\\?")[0];
-        }
-        String[] segments = fullUrl.split("/");
-        return UrlEncoding.decode(segments[segments.length - 1]);
-    }
-
-    public static String getEntryID(RequestContext request) {
-        if (request.getTarget().getType() != TargetType.TYPE_ENTRY && request.getTarget().getType() != TargetType.get(Constants.TARGET_TYPE_VERSION)) {
-            return null;
-        }
-        String fullUrl = request.getUri().toString();
-        if (fullUrl.contains("?")) {
-            fullUrl = fullUrl.split("\\?")[0];
-        }
-        String[] segments = fullUrl.split("/");
-        int segmentPos = segments.length - 1;
-        if (request.getTarget().getType() == TargetType.get(Constants.TARGET_TYPE_VERSION)) {
-            return UrlEncoding.decode(segments[segmentPos - 1]);
-        }
-        return UrlEncoding.decode(segments[segmentPos]);
-    }
-
-    public static String getEntryVersionID(RequestContext request) throws ResponseContextException {
-        try {
-            if (request.getTarget().getType() != TargetType.get(Constants.TARGET_TYPE_VERSION)) {
-                return null;
-            }
-            String fullUrl = request.getUri().toString();
-            if (fullUrl.contains("?")) {
-                fullUrl = fullUrl.split("\\?")[0];
-            }
-            String[] segments = fullUrl.split("/");
-            int segmentPos = segments.length - 1;
-            return UrlEncoding.decode(segments[segmentPos]);
-        } catch (Throwable th) {
-            throw new ResponseContextException(500, th);
-        }
-    }
-
-    public static String getRepresentationMimeType(RequestContext request) {
-        if (request.getTarget().getType() != TargetType.TYPE_ENTRY && request.getTarget().getType() != TargetType.get(Constants.TARGET_TYPE_VERSION, true)) {
-            return null;
-        }
-        String fullUrl = request.getUri().toString();
-        String representation = null;
-        if (fullUrl.contains("?repr")) {
-            representation = fullUrl.split("repr=")[1];
-        }
-        return representation;
-    }
 
     public static Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
         if (version == null) {
@@ -116,27 +58,6 @@ public class AdapterOutputHelper {
             }
         }
         return null;
-    }
-
-    private static void addType(Version version, Entry entry) throws ResponseContextException {
-        if (version == null) {
-            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-        } else {
-            if (version instanceof ActivityVersion) {
-                //TODO this need to be retrieved from the entry
-                ((ActivityVersion) version).setType(ActivityType.PROJECT);
-            } else if (version instanceof AgentVersion) {
-                //TODO this need to be retrieved from the entry
-                ((AgentVersion) version).setType(AgentType.PERSON);
-            } else if (version instanceof CollectionVersion) {
-                //TODO this need to be retrieved from the entry
-                ((CollectionVersion) version).setType(CollectionType.COLLECTION);
-                ((CollectionVersion) version).setRights(entry.getRights());
-            } else if (version instanceof ServiceVersion) {
-                //TODO this need to be retrieved from the entry
-                ((ServiceVersion) version).setType(ServiceType.SYNDICATE);
-            }
-        }
     }
 
     private static Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
@@ -374,7 +295,7 @@ public class AdapterOutputHelper {
 
     public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry, Class clazz) throws ResponseContextException {
 
-        String accept = getAcceptHeader(request);
+        String accept = OperationHelper.getAcceptHeader(request);
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
         responseContext.setLocation(entry.getId().toString());
         responseContext.setHeader("Vary", "Accept");
@@ -398,7 +319,7 @@ public class AdapterOutputHelper {
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_XHTML)) {
-            String viewRepresentation = getViewRepresentation(request);
+            String viewRepresentation = OperationHelper.getViewRepresentation(request);
             String selfLinkHref = entry.getId().toString();
 //            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
@@ -430,32 +351,6 @@ public class AdapterOutputHelper {
         }
 
         return responseContext;
-    }
-
-    private static String getViewRepresentation(RequestContext request) {
-        String parameter = request.getParameter("v");
-        return parameter;
-    }
-
-    public static String getAcceptHeader(RequestContext request) {
-        String representationMimeType = AdapterOutputHelper.getRepresentationMimeType(request);
-        if (representationMimeType == null) {
-            String acceptHeader = request.getAccept();
-            if (acceptHeader != null) {
-                if (acceptHeader.contains(Constants.MIME_TYPE_ATOM_ENTRY) || acceptHeader.contains(Constants.MIME_TYPE_ATOM)) {
-                    representationMimeType = Constants.MIME_TYPE_ATOM;
-                } else if (acceptHeader.contains(Constants.MIME_TYPE_RDF)) {
-                    representationMimeType = Constants.MIME_TYPE_RDF;
-                } else if (acceptHeader.contains(Constants.MIME_TYPE_RIFCS)) {
-                    representationMimeType = Constants.MIME_TYPE_RIFCS;
-                } else {
-                    representationMimeType = Constants.MIME_TYPE_XHTML;
-                }
-            } else {
-                representationMimeType = Constants.MIME_TYPE_XHTML;
-            }
-        }
-        return representationMimeType;
     }
 
     public static ResponseContext getContextResponseForPost(Entry entry) throws ResponseContextException {
@@ -493,150 +388,6 @@ public class AdapterOutputHelper {
         } catch (Throwable th) {
             throw new ResponseContextException("Cannot build alternate link", 500);
         }
-    }
-
-    public static Version assembleAndValidateVersionFromEntry(Record record, Entry entry) throws ResponseContextException {
-        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            return null;
-        } else {
-            String content = entry.getContent();
-            if (content == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-            }
-            Version version = entityCreator.getNextVersion(record);
-            version.setTitle(entry.getTitle());
-            version.setDescription(content);
-            version.setUpdated(new Date());
-            addType(version, entry);
-            return version;
-        }
-    }
-
-    public static Source assembleAndValidateSourceFromEntry(Entry entry) throws ResponseContextException {
-        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-        } else {
-            org.apache.abdera.model.Source abderaSource = entry.getSource();
-            if (abderaSource == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
-            }
-            try {
-                String sourceUri = entry.getSource().getId().toString();
-                Source existingSource = daoManager.getSourceDao().getBySourceURI(sourceUri);
-                if (existingSource == null) {
-                    Source source = entityCreator.getNextSource();
-                    source.setTitle(entry.getSource().getTitle());
-                    source.setSourceURI(sourceUri);
-                    source.setUpdated(new Date());
-                    return source;
-                } else {
-                    return existingSource;
-                }
-            } catch (Throwable th) {
-                throw new ResponseContextException(500, th);
-            }
-        }
-    }
-
-    public static void addDescriptionAuthors(Record record, List<Person> persons) throws ResponseContextException {
-        try {
-            for (Person person : persons) {
-                String name = person.getName();
-                String email = person.getEmail();
-                String uri = person.getUri().toString();
-                if (name == null) {
-                    throw new ResponseContextException("Author missing name", 400);
-                } else if (email == null) {
-                    throw new ResponseContextException("Author missing email address", 400);
-                } else if (uri == null) {
-                    throw new ResponseContextException("Author missing uri", 400);
-                } else {
-                    String uriKey = getEntityID(uri);
-                    Agent agent = daoManager.getAgentDao().getByKey(uriKey);
-                    if (agent != null) {
-                        record.getAuthors().add(agent);
-                    } else {
-                        //TODO how do we add the agent now?
-                    }
-                }
-            }
-        } catch (Throwable th) {
-            throw new ResponseContextException("Cannot extract authors", 500);
-        }
-    }
-
-    public static Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
-        Set<Subject> subjects = new HashSet<Subject>();
-        try {
-            List<Category> categories = entry.getCategories();
-            for (Category category : categories) {
-                if (!category.getScheme().toString().equals(Constants.NS_DCMITYPE)) {
-                    String scheme = category.getScheme().toString();
-                    String term = category.getTerm();
-                    if (scheme != null && term != null) {
-                        Subject subject = daoManager.getSubjectDao().getSubject(scheme, term);
-                        if (subject == null) {
-                            subject = entityCreator.getNextSubject();
-                        }
-                        subject.setTerm(term);
-                        subject.setDefinedBy(scheme);
-                        subject.setLabel(category.getLabel());
-                        subjects.add(subject);
-                    } else {
-                        String label = category.getLabel();
-                        Subject subject = daoManager.getSubjectDao().getSubject(Constants.SCHEME_KEYWORD, Constants.TERM_KEYWORD, label);
-                        if (subject == null) {
-                            subject = entityCreator.getNextSubject();
-                        }
-                        subject.setTerm(Constants.TERM_KEYWORD);
-                        subject.setDefinedBy(Constants.SCHEME_KEYWORD);
-                        subject.setLabel(category.getLabel());
-                        subjects.add(subject);
-                    }
-                }
-            }
-        } catch (Throwable th) {
-            throw new ResponseContextException("Cannot extract subjects from entry", 400);
-        }
-        return subjects;
-    }
-
-    public static Set<Publication> getPublications(Entry entry) throws ResponseContextException {
-        Set<Publication> publications = new HashSet<Publication>();
-        try {
-            List<Link> links = entry.getLinks(Constants.REL_RELATED);
-            for (Link link : links) {
-                String publicationUri = link.getHref().toString();
-                String publicationTitle = link.getTitle();
-                if (publicationUri != null && publicationTitle != null) {
-                    Publication publication = entityCreator.getNextPublication();
-                    publication.setPublicationURI(publicationUri);
-                    publication.setTitle(publicationTitle);
-                    publications.add(publication);
-                } else {
-                    throw new ResponseContextException("Publication contains no href or title attributes", 400);
-                }
-            }
-        } catch (Throwable th) {
-            throw new ResponseContextException("Cannot extract publications from entry", 400);
-        }
-        return publications;
-    }
-
-    public static Set<String> getUriKeysFromLink(Entry entry, String rel) throws ResponseContextException {
-        Set<String> uriKeys = new HashSet<String>();
-        try {
-            List<Link> links = entry.getLinks(rel);
-            for (Link link : links) {
-                String id = getEntityID(link.getHref().toString());
-                if (id != null) {
-                    uriKeys.add(id);
-                }
-            }
-        } catch (Throwable th) {
-            throw new ResponseContextException("Cannot extract href from link", 400);
-        }
-        return uriKeys;
     }
 
     private static Entry setCommonAttributes(Version version, boolean isParentLevel, String parentUrl) throws ResponseContextException {

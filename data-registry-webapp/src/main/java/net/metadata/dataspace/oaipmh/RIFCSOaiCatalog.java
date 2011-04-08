@@ -4,7 +4,7 @@ import ORG.oclc.oai.server.catalog.AbstractCatalog;
 import ORG.oclc.oai.server.verb.*;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.atom.util.AdapterOutputHelper;
+import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
@@ -114,7 +114,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         try {
             logger.debug("Getting a record");
             Record record = null;
-            String key = AdapterOutputHelper.getEntityID(identifier);
+            String key = OperationHelper.getEntityID(identifier);
             if (identifier.contains(Constants.PATH_FOR_ACTIVITIES)) {
                 record = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_COLLECTIONS)) {

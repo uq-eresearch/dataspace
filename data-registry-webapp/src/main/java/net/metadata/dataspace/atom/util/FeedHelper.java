@@ -41,7 +41,7 @@ public class FeedHelper {
             responseContext.setContentType(Constants.MIME_TYPE_XHTML);
         }
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
-        String viewRepresentation = getViewRepresentation(request);
+        String viewRepresentation = OperationHelper.getViewRepresentation(request);
         if (viewRepresentation != null && viewRepresentation.equals("new")) {
             xslFilePath = "/files/xslt/xhtml/add/new-atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
         }
@@ -101,7 +101,7 @@ public class FeedHelper {
             AbstractResponseContext responseContext = new BaseResponseContext<Document<Feed>>(document);
             responseContext.setEntityTag(calculateEntityTag(document.getRoot()));
 
-            String accept = AdapterOutputHelper.getAcceptHeader(request);
+            String accept = OperationHelper.getAcceptHeader(request);
             responseContext.setLocation(feed.getId().toString());
             responseContext.setHeader("Vary", "Accept");
             if (accept.equals(Constants.MIME_TYPE_XHTML)) {
@@ -152,8 +152,4 @@ public class FeedHelper {
         }
     }
 
-    private static String getViewRepresentation(RequestContext request) {
-        String parameter = request.getParameter("v");
-        return parameter;
-    }
 }

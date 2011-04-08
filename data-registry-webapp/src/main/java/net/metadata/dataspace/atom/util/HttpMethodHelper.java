@@ -61,7 +61,7 @@ public class HttpMethodHelper {
             if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
                 Entry entry = getEntryFromRequest(request);
                 Record record = entityCreator.getNextRecord(clazz);
-                Version version = AdapterOutputHelper.assembleAndValidateVersionFromEntry(record, entry);
+                Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
                 if (version == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                 } else {
@@ -71,7 +71,7 @@ public class HttpMethodHelper {
                         if (transaction.isActive()) {
                             transaction.commit();
                         }
-                        Source source = AdapterOutputHelper.assembleAndValidateSourceFromEntry(entry);
+                        Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
                         transaction.begin();
                         if (source.getId() == null) {
                             entityManager.persist(source);
@@ -88,7 +88,8 @@ public class HttpMethodHelper {
                         entityManager.persist(version);
                         entityManager.persist(record);
                         AdapterInputHelper.addRelations(entry, version);
-                        AdapterOutputHelper.addDescriptionAuthors(record, entry.getAuthors());
+                        List<Person> authors = entry.getAuthors();
+                        AdapterInputHelper.addDescriptionAuthors(record, authors);
                         entityManager.merge(version);
                         entityManager.merge(record);
                         transaction.commit();
@@ -117,14 +118,14 @@ public class HttpMethodHelper {
             String mimeBaseType = request.getContentType().getBaseType();
             if (mimeBaseType.equals(Constants.MIME_TYPE_ATOM)) {
                 Entry entry = getEntryFromRequest(request);
-                String uriKey = AdapterOutputHelper.getEntryID(request);
+                String uriKey = OperationHelper.getEntryID(request);
                 Record record = getExistingRecord(uriKey, clazz);
                 if (record == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
                 } else {
                     refreshRecord(record, clazz);
                     if (record.isActive()) {
-                        Version version = AdapterOutputHelper.assembleAndValidateVersionFromEntry(record, entry);
+                        Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
                         if (version == null) {
                             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                         } else {
@@ -205,7 +206,7 @@ public class HttpMethodHelper {
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
-            String uriKey = AdapterOutputHelper.getEntryID(request);
+            String uriKey = OperationHelper.getEntryID(request);
             Record record = getExistingRecord(uriKey, clazz);
             if (record == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
@@ -226,14 +227,14 @@ public class HttpMethodHelper {
     }
 
     public static ResponseContext getEntry(RequestContext request, Class clazz) throws ResponseContextException {
-        String uriKey = AdapterOutputHelper.getEntryID(request);
+        String uriKey = OperationHelper.getEntryID(request);
         Record record = getExistingRecord(uriKey, clazz);
         if (record == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
         } else {
             refreshRecord(record, clazz);
             if (record.isActive()) {
-                String versionKey = AdapterOutputHelper.getEntryVersionID(request);
+                String versionKey = OperationHelper.getEntryVersionID(request);
                 User user = authenticationManager.getCurrentUser(request);
                 Version version;
                 if (versionKey != null) {
@@ -441,14 +442,6 @@ public class HttpMethodHelper {
                 return serviceDao.getByVersion(uriKey, versionKey);
             }
             return null;
-        } catch (Throwable th) {
-            throw new ResponseContextException(500, th);
-        }
-    }
-
-    private static String getHtmlPage(Class clazz) throws ResponseContextException {
-        try {
-            return clazz.getSimpleName().toLowerCase();
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
