@@ -80,7 +80,6 @@ public class HttpMethodHelper {
                         Date now = new Date();
                         version.setUpdated(now);
                         record.setSource(source);
-                        record.setLocatedOn(source);
                         record.setLicense(Constants.UQ_REGISTRY_LICENSE);
                         record.setRights(Constants.UQ_REGISTRY_RIGHTS);
                         record.getVersions().add(version);

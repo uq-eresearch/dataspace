@@ -40,9 +40,6 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     private Set<Agent> authors = new HashSet<Agent>();
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Source locatedOn;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source source;
 
     public Activity() {
@@ -104,14 +101,6 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
         this.authors = authors;
     }
 
-    public Source getLocatedOn() {
-        return locatedOn;
-    }
-
-    @Override
-    public void setLocatedOn(Source locatedOn) {
-        this.locatedOn = locatedOn;
-    }
 
     public Source getSource() {
         return source;

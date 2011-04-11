@@ -59,8 +59,6 @@ public interface Record {
 
     boolean isActive();
 
-    void setLocatedOn(Source source);
-
     void setSource(Source source);
 
     void setPublishDate(Date publishDate);

@@ -86,7 +86,6 @@ public class LDAPUtil {
             agent.setPublishDate(now);
             agent.setLicense("UQ License here");
             agent.setRights("UQ Rights here");
-            agent.setLocatedOn(systemSource);
             agent.setSource(systemSource);
             agent.getAuthors().add(agent);
 
@@ -140,7 +139,6 @@ public class LDAPUtil {
             agent.setUpdated(now);
 
             agent.setUpdated(now);
-            agent.setLocatedOn(systemSource);
             agent.setSource(systemSource);
             agent.getAuthors().add(agent);
 
