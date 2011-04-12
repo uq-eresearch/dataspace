@@ -100,7 +100,7 @@ public class AdapterOutputHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        FeedHelper.setPublished(version, entry);
+        FeedOutputHelper.setPublished(version, entry);
         addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
@@ -159,7 +159,7 @@ public class AdapterOutputHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        FeedHelper.setPublished(version, entry);
+        FeedOutputHelper.setPublished(version, entry);
         addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
@@ -269,7 +269,7 @@ public class AdapterOutputHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        FeedHelper.setPublished(version, entry);
+        FeedOutputHelper.setPublished(version, entry);
         addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
@@ -300,7 +300,7 @@ public class AdapterOutputHelper {
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
-        FeedHelper.setPublished(version, entry);
+        FeedOutputHelper.setPublished(version, entry);
         addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;

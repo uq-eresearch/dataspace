@@ -2,7 +2,7 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.atom.util.FeedHelper;
+import net.metadata.dataspace.atom.util.FeedOutputHelper;
 import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.record.Service;
@@ -88,7 +88,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
     @Override
     public ResponseContext getFeed(RequestContext request) {
         try {
-            String representationMimeType = FeedHelper.getRepresentationMimeType(request);
+            String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
             String accept = request.getAccept();
             if (representationMimeType == null) {
                 representationMimeType = accept;
@@ -117,7 +117,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 Entry e = feed.addEntry();
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
-                FeedHelper.setPublished(entryObj, e);
+                FeedOutputHelper.setPublished(entryObj, e);
                 if (isMediaEntry(entryObj)) {
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {

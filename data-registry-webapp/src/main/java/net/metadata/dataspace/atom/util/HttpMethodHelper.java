@@ -240,8 +240,8 @@ public class HttpMethodHelper {
                 if (versionKey != null) {
                     if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
                         if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
-                            Feed versionHistoryFeed = FeedHelper.createVersionFeed(request);
-                            ResponseContext versionHistoryFeed1 = FeedHelper.getVersionHistoryFeed(request, versionHistoryFeed, record, clazz);
+                            Feed versionHistoryFeed = FeedOutputHelper.createVersionFeed(request);
+                            ResponseContext versionHistoryFeed1 = FeedOutputHelper.getVersionHistoryFeed(request, versionHistoryFeed, record, clazz);
                             return versionHistoryFeed1;
                         } else if (versionKey.equals(Constants.TARGET_TYPE_WORKING_COPY)) {
                             version = record.getWorkingCopy();
@@ -253,8 +253,8 @@ public class HttpMethodHelper {
                     }
                 } else {
                     if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
-//                        Feed versionHistoryFeed = FeedHelper.createVersionFeed(request);
-//                        return FeedHelper.getVersionHistoryFeed(versionHistoryFeed, record);
+//                        Feed versionHistoryFeed = FeedOutputHelper.createVersionFeed(request);
+//                        return FeedOutputHelper.getVersionHistoryFeed(versionHistoryFeed, record);
                         version = record.getWorkingCopy();
                     } else {
                         version = record.getPublished();
@@ -273,15 +273,15 @@ public class HttpMethodHelper {
     }
 
     public static ResponseContext getFeed(RequestContext request, ResponseContext responseContext, Class clazz) throws ResponseContextException {
-        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-                return FeedHelper.getHtmlRepresentationOfFeed(request, responseContext, clazz);
+                return FeedOutputHelper.getHtmlRepresentationOfFeed(request, responseContext, clazz);
             } else {
                 throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
             }
         } else {
-            return FeedHelper.getHtmlRepresentationOfFeed(request, responseContext, clazz);
+            return FeedOutputHelper.getHtmlRepresentationOfFeed(request, responseContext, clazz);
         }
     }
 
@@ -295,7 +295,7 @@ public class HttpMethodHelper {
             feed.setUpdated(new Date());
         }
 
-        String representationMimeType = FeedHelper.getRepresentationMimeType(request);
+        String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
             if (acceptHeader.equals(Constants.MIME_TYPE_HTML) || acceptHeader.equals(Constants.MIME_TYPE_ATOM_FEED)) {
@@ -307,11 +307,11 @@ public class HttpMethodHelper {
         String atomFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getPath(clazz) + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
         String htmlFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getPath(clazz);
         if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-            FeedHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
-            FeedHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
+            FeedOutputHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
+            FeedOutputHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
         } else if (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) || representationMimeType.equals(Constants.MIME_TYPE_ATOM)) {
-            FeedHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
-            FeedHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
+            FeedOutputHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
+            FeedOutputHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
         }
         feed.setTitle(getTitle(clazz));
     }

@@ -23,7 +23,7 @@ import static org.apache.abdera.protocol.server.ProviderHelper.calculateEntityTa
  * Date: 20/10/2010
  * Time: 2:13:08 PM
  */
-public class FeedHelper {
+public class FeedOutputHelper {
 
     public static String getRepresentationMimeType(RequestContext request) {
         String fullUrl = request.getUri().toString();
