@@ -20,6 +20,7 @@ import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Link;
+import org.apache.abdera.model.Source;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -100,7 +101,7 @@ public class AdapterOutputHelper {
             throw new ResponseContextException(500, th);
         }
         FeedHelper.setPublished(version, entry);
-        addContributor(entry);
+        addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -108,6 +109,7 @@ public class AdapterOutputHelper {
     private static Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
+
         try {
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getType().toString());
@@ -158,7 +160,7 @@ public class AdapterOutputHelper {
             throw new ResponseContextException(500, th);
         }
         FeedHelper.setPublished(version, entry);
-        addContributor(entry);
+        addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -167,6 +169,14 @@ public class AdapterOutputHelper {
         String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
+
+            entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
+            Set<Agent> authors = version.getCreators();
+            for (Agent agent : authors) {
+                AgentVersion workingCopy = agent.getWorkingCopy();
+                entry.addAuthor(workingCopy.getTitle(), workingCopy.getMboxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
+            }
+
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getType().toString());
             Set<String> alternatives = version.getAlternatives();
@@ -259,7 +269,7 @@ public class AdapterOutputHelper {
             throw new ResponseContextException(500, th);
         }
         FeedHelper.setPublished(version, entry);
-        addContributor(entry);
+        addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -290,7 +300,7 @@ public class AdapterOutputHelper {
             throw new ResponseContextException(500, th);
         }
         FeedHelper.setPublished(version, entry);
-        addContributor(entry);
+        addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
     }
@@ -401,25 +411,20 @@ public class AdapterOutputHelper {
                 //TODO this should accommodate external ids
                 parentUrl = parentUrl + "/" + version.getUriKey();
             }
-            entry.setId(parentUrl);
-            String title = version.getParent().getUriKey();
-            prepareSelfLink(entry, parentUrl, title);
-            //<link rel="http://www.openarchives.org/ore/terms/describes" href="http://dataspace.metadata.net/collections/2#"/>
-            entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
+            if (version instanceof CollectionVersion && ((CollectionVersion) version).getOriginalId() != null) {
+                entry.setId(((CollectionVersion) version).getOriginalId());
+            } else {
+                entry.setId(parentUrl);
+            }
             entry.setTitle(version.getTitle());
             entry.setContent(version.getDescription());
+            String uriKey = version.getParent().getUriKey();
+            prepareSelfLink(entry, parentUrl, uriKey);
             entry.setUpdated(version.getUpdated());
-            Date publishedDate = version.getParent().getPublishDate();
+            Date publishedDate = version.getParent().getCreated();
             if (publishedDate != null) {
                 entry.setPublished(publishedDate);
             }
-            Set<Agent> authors = version.getParent().getAuthors();
-            for (Agent agent : authors) {
-                AgentVersion workingCopy = (AgentVersion) agent.getWorkingCopy();
-                entry.addAuthor(workingCopy.getTitle(), workingCopy.getMboxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
-            }
-//            prepareSelfLink(entry, parentUrl);
-            entry.addCategory(Constants.NS_ANDS_GROUP, Constants.TERM_ANDS_GROUP, Constants.TERM_ANDS_GROUP);
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to set mandatory attributes", 500);
         }
@@ -457,9 +462,21 @@ public class AdapterOutputHelper {
         }
     }
 
-    private static void addContributor(Entry entry) throws ResponseContextException {
+    private static void addSource(Version version, Entry entry) throws ResponseContextException {
         try {
-            entry.addContributor(Constants.UQ_REGISTRY_TITLE, Constants.UQ_REGISTRY_EMAIL, Constants.UQ_REGISTRY_URI_PREFIX);
+            Source source = Abdera.getNewFactory().newSource(entry);
+            net.metadata.dataspace.data.model.context.Source registrySource = version.getParent().getSource();
+            if (registrySource != null) {
+                source.setId(registrySource.getSourceURI());
+                source.setTitle(registrySource.getTitle());
+            }
+            Set<Agent> authors = version.getParent().getAuthors();
+            for (Agent author : authors) {
+                source.addAuthor(author.getTitle(), author.getMBoxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
+            }
+            source.addLink(Constants.UQ_URL, Constants.REL_PUBLISHER);
+            source.setRights(Constants.UQ_REGISTRY_RIGHTS);
+            source.addLink(Constants.REL_LICENSE, Constants.UQ_REGISTRY_LICENSE);
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to add contributor", 500);
         }

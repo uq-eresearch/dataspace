@@ -61,6 +61,8 @@ public interface Record {
 
     void setSource(Source source);
 
+    Source getSource();
+
     void setPublishDate(Date publishDate);
 
     Date getPublishDate();

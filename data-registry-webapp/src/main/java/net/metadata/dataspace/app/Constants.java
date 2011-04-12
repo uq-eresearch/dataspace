@@ -48,6 +48,7 @@ public interface Constants {
     String UQ_REGISTRY_EMAIL = RegistryApplication.getApplicationContext().getRegistryEmail();
     String UQ_REGISTRY_LICENSE = RegistryApplication.getApplicationContext().getRegistryLicense();
     String UQ_REGISTRY_RIGHTS = RegistryApplication.getApplicationContext().getRegistryRights();
+    String UQ_URL = "http://uq.edu.au";
     /**
      * Target Type names
      */
@@ -98,6 +99,7 @@ public interface Constants {
     String REL_PUBLISHER = NS_DC + "publisher";
     String REL_RELATED = "related";
     String REL_SELF = "self";
+    String REL_LICENSE = "license";
     String REL_SUCCESSOR_VERSION = "successor-version";
     String REL_TEMPORAL = NS_DC + "temporal";
     String REL_ALTERNATIVE = NS_DC + "alternative";

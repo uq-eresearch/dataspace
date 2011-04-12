@@ -80,6 +80,7 @@ public class HttpMethodHelper {
                         Date now = new Date();
                         version.setUpdated(now);
                         record.setSource(source);
+                        //TODO these values (i.e. rights, license) should come from the entry
                         record.setLicense(Constants.UQ_REGISTRY_LICENSE);
                         record.setRights(Constants.UQ_REGISTRY_RIGHTS);
                         record.getVersions().add(version);
