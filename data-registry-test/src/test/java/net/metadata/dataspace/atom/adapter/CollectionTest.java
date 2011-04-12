@@ -132,12 +132,12 @@ public class CollectionTest {
         PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_COLLECTIONS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
-
+        postMethod.releaseConnection();
         //publish entry
         fileName = "/files/put/published-collection.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
-
+        putMethod.releaseConnection();
         //logout
         status = ClientHelper.logout(client);
         assertEquals("Could not logout", 200, status);
@@ -145,6 +145,7 @@ public class CollectionTest {
         //get without authenticating
         GetMethod getMethod = ClientHelper.getEntry(client, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Get without authenticating should now return OK", 200, getMethod.getStatusCode());
+        getMethod.releaseConnection();
     }
 
     @Test

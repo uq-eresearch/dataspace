@@ -1,57 +1,131 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<entry xmlns="http://www.w3.org/2005/Atom"
-       xmlns:app="http://www.w3.org/2007/app"
-       xmlns:georss="http://www.georss.org/georss/"
-       xmlns:rdfa="http://www.w3.org/ns/rdfa#">
-    <id>http://localhost:9635/collections/1</id>
-    <title type="text">Digitised images of Carter Brown Book Covers</title>
-    <content type="text">Updated: A collection of digitised images of covers of Carter Brown books published in the
-        1950s ...
-    </content>
-    <author>
-        <name>Nigel Ward</name>
-        <uri>http://localhost:9635/agents/1</uri>
-        <email>a.alabri@uq.edu.au</email>
-    </author>
-    <app:control>
-        <app:draft>yes</app:draft>
-    </app:control>
-    <updated>2010-10-08T05:58:02.781Z</updated>
-    <category scheme="http://purl.org/anzsrc/for/#field_" term="200502"
-              label="200502 - Australian Literature (excl. Aboriginal and Torres Strait Islander Literature)"/>
-    <category scheme="http://purl.org/anzsrc/for/#field_" term="200503"
-              label="200503 - Australian Literature (excl. Aboriginal and Torres Strait Islander Literature)"/>
-    <link href="http://espace.library.uq.edu.au/collection/UQ:3521" rel="http://purl.org/cld/terms/isLocatedAt"/>
-    <!-- collection creator -->
-    <link href="http://localhost:9635/agents/1" rel="http://purl.org/dc/terms/creator"/>
-    <!-- collection curator -->
-    <link href="http://localhost:9635/agents/1" rel="http://purl.org/dc/terms/publisher"/>
-    <!-- activity generating the collection -->
-    <link href="http://localhost:9635/activities/1"
-          rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"/>
-    <link href="http://localhost:9635/services/1" rel="http://purl.org/cld/terms/isAccessedVia"/>
-    <link rel="http://xmlns.com/foaf/0.1/page" href="http://www.uq.edu.au/eco-lab/index.html?page=39442"/>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+       xmlns:georss="http://www.georss.org/georss" xmlns:app="http://www.w3.org/2007/app">
 
+    <!-- *** metadata about the collection *** -->
+    <!--     id for the collection -->
+    <id>http://oztrak.uq.edu.au/collection/abc123</id>
+    <link rel='http://www.openarchives.org/ore/terms/describes' href='http://oztrak.uq.edu.au/collection/abc123'/>
+
+    <!--     collection type -->
+    <category scheme="http://purl.org/dc/dcmitype/" term="http://purl.org/dc/dcmitype/Collection"
+              label="Collection"/>
+
+    <!--     collection title -->
+    <title type="text">Location and temperature data for estuarine crocodiles on Cape York Peninsula
+        measured using acoustic telemetry
+    </title>
+    <rdfa:meta property='http://purl.org/dc/terms/alternative' content='Crocodile acoustic array data'/>
+    <!--     collection description -->
+    <content type="text">Updated: Estuarine crocodile location and temperature observations recorded using
+        acoustic telemetry since 2007 on Cape York Peninsula, Queensland, Australia. The data comes
+        from sensors attached to more than sixty estuarine crocodiles. The sensors continuously
+        transmit observations via acoustic signal. Receivers deployed along river systems and the
+        coast of the peninsula record data whenever a crocodile is within range. The project team
+        periodically retrieves data from storage on the receiver. Variables measured include
+        location, depth, environmental temperature and body temperature. Location data is available
+        for all crocodiles. Temperature and depth data is only available for some crocodiles. Data
+        is available from 2007 onwards, and the transmitters will last for around 10 years. The
+        University of Queensland, Australia Zoo and the Queensland Parks and Wildlife Service are
+        involved in collecting the data.
+    </content>
+
+    <!--     web page describing the collection -->
+    <link rel="http://xmlns.com/foaf/0.1/page"
+          href="http://www.uq.edu.au/eco-lab/index.html?page=39442"/>
+
+    <!--     collection subjects -->
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_060800"
+              label="060800 - ZOOLOGY"/>
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_050202"
+              label="050202 - Conservation and Biodiversity"/>
+    <category scheme="http://purl.org/anzsrc/seo" term="http://purl.org/anzsrc/seo/#field_950305"
+              label="950305 - Conserving Natural Heritage"/>
+    <category scheme="http://purl.org/anzsrc/toa" term="http://purl.org/anzsrc/toa/#field_0001"
+              label="001 - Appplied Research"/>
+    <category term="Ecology"/>
+    <category term="Zoology"/>
+
+    <!--     collection creator -->
+    <author>
+        <name>Dr Hamish Campbell</name>
+        <email>hamish.campbell@uq.edu.au</email>
+    </author>
+    <!--     collection manager -->
+    <link rel="http://purl.org/dc/terms/publisher" href="mailto:c.franklin@uq.edu.au"
+          title="Dr Craig Franklin"/>
+
+    <!--     activity generating the collection -->
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"
+          href="http://www.uq.edu.au/uqresearchers/researcher/franklince.html?uv_category=prj&amp;prj=810449"
+          title="Tracking crocodiles in 3-dimensions: A remote monitoring study of movement patterns and diving behaviour"/>
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"
+          href="http://www.uq.edu.au/uqresearchers/researcher/franklince.html?uv_category=prj&amp;prj=814378"
+          title="Movement patterns and behavioural strategies of Estuarine Crocodiles: A long-term remote monitoring study using an underwater acoustic array."/>
+
+    <!--     temporal coverage -->
     <rdfa:meta property="http://purl.org/dc/terms/temporal" content="start=2007-08"
                datatype="http://purl.org/dc/terms/Period"/>
 
-    <georss:box>-10.5 140 -17 145.5</georss:box>
-    <georss:featureName>Cape York Peninsula</georss:featureName>
-    <link rel="http://purl.org/dc/terms/spatial" href="http://sws.geonames.org/2172406/"/>
+    <!--     spatial coverage -->
+    <!--       spatial point, not named -->
+    <georss:point>-12 142.5</georss:point>
+    <!--       spatial polygon, not named -->
+    <georss:polygon>-10.5 140 -17 140 -17 145.5 -10 145.5 -10.5 140</georss:polygon>
+    <!--       a place named in geonames -->
+    <link rel="http://purl.org/dc/terms/spatial" href="http://sws.geonames.org/2172406/" title="Cape York Peninsula"/>
+
+    <!--     data access service -->
+    <link rel="http://purl.org/cld/terms/isAccessedVia" href="http://oztrack.uq.edu.au/access"
+          title="Oztrack data access portal"/>
+
+    <!--     related collection -->
+    <link rel="related" href="http://dataspace.uq.edu.au/collections/4b2" title="Location and environmental data for estuarine crocodiles on Cape York Peninsula
+	        measured using satellite trackers"/>
+
     <!--     related publications -->
-    <link rel="related"
+    <link rel="http://purl.org/dc/terms/isReferencedBy"
           title="Diving through the thermal window: Implications for a warming world"
           href="http://rspb.royalsocietypublishing.org/content/277/1701/3837.full.pdf?ijkey=PU6AhDOGVtlZzAO&amp;keytype=finite"/>
-    <link rel="related"
+    <link rel="http://purl.org/dc/terms/isReferencedBy"
           title="Estuarine crocodiles ride surface currents to facilitate long-distance travel"
           href="http://www.journalofanimalecology.org/details/journalArticle/808347/Estuarine_crocodiles_ride_surface_currents_to_facilitate_longdistance_travel_.html"/>
-    <rights>The data is the property of The University of Queensland. Permission is required to use this material.
+
+    <!--     rights -->
+    <rights>The data is the property of The University of Queensland. Permission is required to use
+        this material.
     </rights>
+    <link rel="license" type="application/rdf+xml" href="http://creativecommons.org/licenses/by-nc/2.5/rdf"/>
     <!--     access rights -->
     <rdfa:meta property="http://purl.org/dc/terms/accessRights"
                content="Some of the data is available in abbreviated format in scientific journals. Contact the data curator regarding permission and procedures for accessing the original data."/>
+
+
+    <!-- *** metadata about the description *** -->
+    <!--     description URI  -->
+    <link rel="self" href="http://oztrack.uq.edu.au/collection/abc123.atom"/>
+
+    <!--     description first published -->
+    <published>2010-10-08T05:58:02.781Z</published>
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02.781Z</updated>
+
     <source>
-        <id>http://uq.edu.au/</id>
-        <title>The University of Queensland</title>
+        <!-- source for the description -->
+        <id>http://oztrack.uq.edu.au</id>
+        <title>OzTrack System</title>
+
+        <!-- description creator -->
+        <author>
+            <name>Matthew Watts</name>
+            <email>m.watts@uq.edu.au</email>
+        </author>
     </source>
+
+    <app:control>
+        <app:draft>yes</app:draft>
+    </app:control>
+    <!--     alternate representations of the description -->
+    <link rel="alternate" type="application/xhtml+xml"
+          href="http://oztrack.uq.edu.au/collection/abc123"/>
 </entry>

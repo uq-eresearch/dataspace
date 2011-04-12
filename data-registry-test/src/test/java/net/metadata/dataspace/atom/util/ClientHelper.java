@@ -27,12 +27,12 @@ public class ClientHelper {
         return client.executeMethod(postMethod);
     }
 
-    public static PostMethod postEntry(HttpClient client, String fileName, String pathForActivities) throws Exception {
-        String fullURL = Constants.URL_PREFIX + pathForActivities;
+    public static PostMethod postEntry(HttpClient client, String fileName, String path) throws Exception {
+        String fullURL = Constants.URL_PREFIX + path;
         PostMethod post = new PostMethod(fullURL);
         URL resource = ClientHelper.class.getResource(fileName);
-        String path = resource.getPath();
-        File inputFile = new File(path);
+        String pathToFile = resource.getPath();
+        File inputFile = new File(pathToFile);
         RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
         post.setRequestEntity(entity);
         client.executeMethod(post);
