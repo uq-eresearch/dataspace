@@ -179,6 +179,7 @@ public class AdapterOutputHelper {
 
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getType().toString());
+
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
                 Element alternativeElement = entry.addExtension(Constants.QNAME_RDFA_META);

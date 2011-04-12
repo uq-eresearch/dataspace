@@ -30,6 +30,10 @@ public interface Version {
 
     void setPages(Set<String> pages);
 
+    Set<String> getAlternatives();
+
+    void setAlternatives(Set<String> alternatives);
+
     Set<String> getPages();
 
     void setTitle(String title);

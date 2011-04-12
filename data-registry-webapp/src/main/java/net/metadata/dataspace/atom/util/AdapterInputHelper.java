@@ -98,6 +98,8 @@ public class AdapterInputHelper {
             version.setOriginalId(entry.getId().toString());
         }
 
+        addAlternativeTitles(version, entry);
+
         //Add web pages
         addPages(version, entry);
 
@@ -441,6 +443,17 @@ public class AdapterInputHelper {
         if (control != null && !control.isDraft()) {
             version.getParent().setPublished(version);
             version.getParent().setPublishDate(new Date());
+        }
+    }
+
+    private static void addAlternativeTitles(Version version, Entry entry) {
+        List<Element> extensions = entry.getExtensions(Constants.QNAME_RDFA_META);
+        for (Element extension : extensions) {
+            String property = extension.getAttributeValue("property");
+            if (property.equals(Constants.REL_ALTERNATIVE)) {
+                String content = extension.getAttributeValue("content");
+                version.getAlternatives().add(content);
+            }
         }
     }
 
