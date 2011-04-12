@@ -117,14 +117,14 @@ public class LDAPUtil {
         String mail = attributesMap.get("mail");
         if (agentDao.getByEmail(mail) == null) {
             EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
+//            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+//            EntityTransaction transaction = entityManager.getTransaction();
 
             Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
             AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
             SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
             Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
-            transaction.begin();
+//            transaction.begin();
             String name = attributesMap.get("cn");
             version.setTitle(name);
             version.setDescription("Staff Member");
@@ -142,9 +142,9 @@ public class LDAPUtil {
             agent.setSource(systemSource);
             agent.getAuthors().add(agent);
 
-            entityManager.persist(version);
-            entityManager.persist(agent);
-            transaction.commit();
+//            entityManager.persist(version);
+//            entityManager.persist(agent);
+//            transaction.commit();
 
             return agent;
         }

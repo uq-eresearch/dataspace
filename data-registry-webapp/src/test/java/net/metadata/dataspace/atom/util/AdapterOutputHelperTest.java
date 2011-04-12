@@ -76,7 +76,6 @@ public class AdapterOutputHelperTest {
         agentVersion.getSubjects().add(subject2);
         agent.getVersions().add(agentVersion);
         Source source = PopulatorUtil.getSource();
-        agent.setLocatedOn(source);
         agent.setSource(source);
         entityManager.persist(source);
         entityManager.persist(subject1);
@@ -94,7 +93,6 @@ public class AdapterOutputHelperTest {
         collection.getVersions().add(collectionVersion);
         collection.getCreators().add(agent);
         agent.getMade().add(collection);
-        collection.setLocatedOn(source);
         collection.setSource(source);
         entityManager.persist(collectionVersion);
         entityManager.persist(collection);
@@ -105,7 +103,6 @@ public class AdapterOutputHelperTest {
         service.getVersions().add(serviceVersion);
         service.getSupportedBy().add(collection);
         collection.getAccessedVia().add(service);
-        service.setLocatedOn(source);
         service.setSource(source);
         entityManager.persist(serviceVersion);
         entityManager.persist(service);
@@ -118,7 +115,6 @@ public class AdapterOutputHelperTest {
         activity.getHasParticipant().add(agent);
         agent.getParticipantIn().add(activity);
         collection.getOutputOf().add(activity);
-        activity.setLocatedOn(source);
         activity.setSource(source);
         entityManager.persist(activityVersion);
         entityManager.persist(activity);
@@ -197,7 +193,7 @@ public class AdapterOutputHelperTest {
         List<Agent> agents = agentDao.getAll();
         Agent agent = agents.get(0);
         Entry entry = AdapterOutputHelper.getEntryFromEntity(agent.getVersions().first(), true);
-        Version version = AdapterOutputHelper.assembleAndValidateVersionFromEntry(agent, entry);
+        Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(agent, entry);
         assertNotNull("Could not update entry", version);
         assertEquals("Entry title", agent.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", agent.getVersions().first().getDescription(), version.getDescription());
@@ -208,7 +204,7 @@ public class AdapterOutputHelperTest {
         List<Collection> collections = collectionDao.getAll();
         Collection collection = collections.get(0);
         Entry entry = AdapterOutputHelper.getEntryFromEntity(collection.getVersions().first(), true);
-        CollectionVersion version = (CollectionVersion) AdapterOutputHelper.assembleAndValidateVersionFromEntry(collection, entry);
+        CollectionVersion version = (CollectionVersion) AdapterInputHelper.assembleAndValidateVersionFromEntry(collection, entry);
         assertNotNull("Could not update entry", version);
         assertEquals("Entry title", collection.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", collection.getVersions().first().getDescription(), version.getDescription());
@@ -221,7 +217,7 @@ public class AdapterOutputHelperTest {
         List<Service> services = serviceDao.getAll();
         Service service = services.get(0);
         Entry entry = AdapterOutputHelper.getEntryFromEntity(service.getVersions().first(), true);
-        ServiceVersion version = (ServiceVersion) AdapterOutputHelper.assembleAndValidateVersionFromEntry(service, entry);
+        ServiceVersion version = (ServiceVersion) AdapterInputHelper.assembleAndValidateVersionFromEntry(service, entry);
         assertNotNull("Could not update entry", version);
         assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", service.getVersions().first().getDescription(), version.getDescription());
@@ -234,7 +230,7 @@ public class AdapterOutputHelperTest {
         List<Activity> activities = activityDao.getAll();
         Activity activity = activities.get(0);
         Entry entry = AdapterOutputHelper.getEntryFromEntity(activity.getVersions().first(), true);
-        Version version = AdapterOutputHelper.assembleAndValidateVersionFromEntry(activity, entry);
+        Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(activity, entry);
         assertNotNull("Could not update entry", version);
         assertEquals("Entry title", activity.getTitle(), version.getTitle());
         assertEquals("Entry content", activity.getContent(), version.getDescription());

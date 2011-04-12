@@ -87,7 +87,7 @@ public class HttpMethodHelper {
                         entityManager.persist(version);
                         entityManager.persist(record);
                         AdapterInputHelper.addRelations(entry, version);
-                        List<Person> authors = entry.getAuthors();
+                        List<Person> authors = entry.getSource().getAuthors();
                         AdapterInputHelper.addDescriptionAuthors(record, authors);
                         entityManager.merge(version);
                         entityManager.merge(record);

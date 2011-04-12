@@ -2,10 +2,8 @@ package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.data.access.ActivityDao;
-import net.metadata.dataspace.data.access.AgentDao;
-import net.metadata.dataspace.data.access.CollectionDao;
-import net.metadata.dataspace.data.access.ServiceDao;
+import net.metadata.dataspace.auth.util.LDAPUtil;
+import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
@@ -25,15 +23,16 @@ import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
+import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 
+import javax.naming.NamingEnumeration;
 import javax.persistence.EntityManager;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import net.metadata.dataspace.data.model.record.Collection;
 
 /**
  * Author: alabri
@@ -63,8 +62,9 @@ public class AdapterInputHelper {
 
     private static void addRelationsToActivity(Entry entry, ActivityVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_HAS_OUTPUT);
+        List<Person> authors = entry.getAuthors();
         addPages(version, entry);
+        Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_HAS_OUTPUT);
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
             if (collection != null) {
@@ -92,26 +92,25 @@ public class AdapterInputHelper {
 
     private static void addRelationsCollection(Entry entry, CollectionVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+
+        //Add the original id
+        if (entry.getId() != null) {
+            version.setOriginalId(entry.getId().toString());
+        }
+
+        //Add web pages
         addPages(version, entry);
+
+        //Add subjects
         Set<Subject> subjects = getSubjects(entry);
         for (Subject subject : subjects) {
             version.getSubjects().add(subject);
         }
-        Set<Publication> publications = getPublications(entry);
-        for (Publication publication : publications) {
-            version.getReferencedBy().add(publication);
-        }
-        Set<String> collectorUriKeys = getUriKeysFromLink(entry, Constants.REL_CREATOR);
-        for (String uriKey : collectorUriKeys) {
-            Agent agent = agentDao.getByKey(uriKey);
-            if (agent != null) {
-                version.getCreators().add(agent);
-                Collection parent = version.getParent();
-                agent.getMade().add(parent);
-                entityManager.merge(agent);
-            }
-        }
 
+        //Add creators of this collection
+        addCollectionCreator(version, entry.getAuthors());
+
+        //Add publishers
         Set<String> publishersUriKeys = getUriKeysFromLink(entry, Constants.REL_PUBLISHER);
         for (String uriKey : publishersUriKeys) {
             Agent publisher = agentDao.getByKey(uriKey);
@@ -122,6 +121,8 @@ public class AdapterInputHelper {
                 entityManager.merge(publisher);
             }
         }
+
+        //Add outputof
         Set<String> outputOfUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_OUTPUT_OF);
         for (String uriKey : outputOfUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
@@ -132,6 +133,7 @@ public class AdapterInputHelper {
                 entityManager.merge(activity);
             }
         }
+
         Set<String> supportUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_ACCESSED_VIA);
         for (String uriKey : supportUriKeys) {
             Service service = serviceDao.getByKey(uriKey);
@@ -140,6 +142,15 @@ public class AdapterInputHelper {
                 version.getAccessedVia().add(service);
                 service.getSupportedBy().add(parent);
                 entityManager.merge(service);
+            }
+        }
+
+        Set<String> relatedCollectionsUriKeys = getUriKeysFromLink(entry, Constants.REL_RELATED);
+        for (String uriKey : relatedCollectionsUriKeys) {
+            Collection collection = collectionDao.getByKey(uriKey);
+            if (collection != null) {
+                version.getRelations().add(collection);
+                entityManager.merge(collection);
             }
         }
 
@@ -160,15 +171,21 @@ public class AdapterInputHelper {
             version.getGeoRssPoints().add(extension.getText());
         }
 
-        List<Element> geoRssBoxExtensions = entry.getExtensions(Constants.QNAME_GEO_RSS_BOX);
-        for (Element extension : geoRssBoxExtensions) {
-            version.getGeoRssBoxes().add(extension.getText());
+        List<Element> geoRssPolygonExtensions = entry.getExtensions(Constants.QNAME_GEO_RSS_POLYGON);
+        for (Element extension : geoRssPolygonExtensions) {
+            version.getGeoRssPolygons().add(extension.getText());
         }
 
-        List<Element> geoRssFeatureNameExtensions = entry.getExtensions(Constants.QNAME_GEO_RSS_FEATURE_NAME);
-        for (Element extension : geoRssFeatureNameExtensions) {
-            version.getGeoRssFeatureNames().add(extension.getText());
+        List<Link> links = entry.getLinks(Constants.REL_SPATIAL);
+        for (Link link : links) {
+            version.getGeoRssFeatureNames().add(link.getTitle());
         }
+
+        Set<Publication> publications = getPublications(entry);
+        for (Publication publication : publications) {
+            version.getReferencedBy().add(publication);
+        }
+
         setPublished(entry, version);
         Date now = new Date();
         version.setUpdated(now);
@@ -286,20 +303,32 @@ public class AdapterInputHelper {
             for (Person person : persons) {
                 String name = person.getName();
                 String email = person.getEmail();
-                String uri = person.getUri().toString();
+                IRI uri = person.getUri();
                 if (name == null) {
                     throw new ResponseContextException("Author missing name", 400);
-                } else if (email == null) {
+                }
+                if (email == null) {
                     throw new ResponseContextException("Author missing email address", 400);
-                } else if (uri == null) {
-                    throw new ResponseContextException("Author missing uri", 400);
-                } else {
-                    String uriKey = OperationHelper.getEntityID(uri);
+                }
+                if (uri != null) {
+                    String uriKey = OperationHelper.getEntityID(uri.toString());
                     Agent agent = daoManager.getAgentDao().getByKey(uriKey);
                     if (agent != null) {
                         record.getAuthors().add(agent);
                     } else {
-                        //TODO how do we add the agent now?
+                        Agent newAgent = findOrCreateAgent(name, email);
+                        if (newAgent == null) {
+                            throw new ResponseContextException("Description Author cannot be found", 400);
+                        } else {
+                            record.getAuthors().add(newAgent);
+                        }
+                    }
+                } else {
+                    Agent newAgent = findOrCreateAgent(name, email);
+                    if (newAgent == null) {
+                        throw new ResponseContextException("Description Author cannot be found", 400);
+                    } else {
+                        record.getAuthors().add(newAgent);
                     }
                 }
             }
@@ -308,34 +337,74 @@ public class AdapterInputHelper {
         }
     }
 
-    public static Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
+    public static void addCollectionCreator(CollectionVersion version, List<Person> persons) throws ResponseContextException {
+        try {
+            for (Person person : persons) {
+                String name = person.getName();
+                String email = person.getEmail();
+                IRI uri = person.getUri();
+                if (name == null) {
+                    throw new ResponseContextException("Author missing name", 400);
+                }
+                if (email == null) {
+                    throw new ResponseContextException("Author missing email address", 400);
+                }
+                if (uri != null) {
+                    String uriKey = OperationHelper.getEntityID(uri.toString());
+                    Agent agent = daoManager.getAgentDao().getByKey(uriKey);
+                    if (agent != null) {
+                        version.getCreators().add(agent);
+                    } else {
+                        Agent newAgent = findOrCreateAgent(name, email);
+                        if (newAgent == null) {
+                            throw new ResponseContextException("Author cannot be found", 400);
+                        } else {
+                            version.getCreators().add(newAgent);
+                        }
+                    }
+                } else {
+                    Agent newAgent = findOrCreateAgent(name, email);
+                    if (newAgent == null) {
+                        throw new ResponseContextException("Author cannot be found", 400);
+                    } else {
+                        version.getCreators().add(newAgent);
+                    }
+                }
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException("Cannot extract authors", 500);
+        }
+    }
+
+    private static Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
         Set<Subject> subjects = new HashSet<Subject>();
         try {
             List<Category> categories = entry.getCategories();
             for (Category category : categories) {
-                if (!category.getScheme().toString().equals(Constants.NS_DCMITYPE)) {
-                    String scheme = category.getScheme().toString();
-                    String term = category.getTerm();
-                    if (scheme != null && term != null) {
-                        Subject subject = daoManager.getSubjectDao().getSubject(scheme, term);
+                IRI scheme = category.getScheme();
+                String term = category.getTerm();
+                if (scheme != null) {
+                    if (scheme.equals(Constants.SCHEME_ANZSRC_FOR) || scheme.equals(Constants.SCHEME_ANZSRC_SEO) || scheme.equals(Constants.SCHEME_ANZSRC_TOA)) {
+                        Subject subject = daoManager.getSubjectDao().getSubject(scheme.toString(), term);
                         if (subject == null) {
                             subject = entityCreator.getNextSubject();
+                            subject.setTerm(term);
+                            subject.setDefinedBy(scheme.toString());
+                            subject.setLabel(category.getLabel());
                         }
-                        subject.setTerm(term);
-                        subject.setDefinedBy(scheme);
-                        subject.setLabel(category.getLabel());
-                        subjects.add(subject);
-                    } else {
-                        String label = category.getLabel();
-                        Subject subject = daoManager.getSubjectDao().getSubject(Constants.SCHEME_KEYWORD, Constants.TERM_KEYWORD, label);
-                        if (subject == null) {
-                            subject = entityCreator.getNextSubject();
-                        }
-                        subject.setTerm(Constants.TERM_KEYWORD);
-                        subject.setDefinedBy(Constants.SCHEME_KEYWORD);
-                        subject.setLabel(category.getLabel());
                         subjects.add(subject);
                     }
+                } else {
+                    //It is a keyword
+                    String label = category.getLabel();
+                    Subject subject = daoManager.getSubjectDao().getSubject(Constants.SCHEME_KEYWORD, term, Constants.LABEL_KEYWORD);
+                    if (subject == null) {
+                        subject = entityCreator.getNextSubject();
+                        subject.setTerm(term);
+                        subject.setDefinedBy(Constants.SCHEME_KEYWORD);
+                        subject.setLabel(Constants.LABEL_KEYWORD);
+                    }
+                    subjects.add(subject);
                 }
             }
         } catch (Throwable th) {
@@ -344,10 +413,11 @@ public class AdapterInputHelper {
         return subjects;
     }
 
-    public static Set<Publication> getPublications(Entry entry) throws ResponseContextException {
+
+    private static Set<Publication> getPublications(Entry entry) throws ResponseContextException {
         Set<Publication> publications = new HashSet<Publication>();
         try {
-            List<Link> links = entry.getLinks(Constants.REL_RELATED);
+            List<Link> links = entry.getLinks(Constants.REL_IS_REFERENCED_BY);
             for (Link link : links) {
                 String publicationUri = link.getHref().toString();
                 String publicationTitle = link.getTitle();
@@ -385,7 +455,6 @@ public class AdapterInputHelper {
         }
     }
 
-
     private static void addType(Version version, Entry entry) throws ResponseContextException {
         if (version == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
@@ -421,5 +490,44 @@ public class AdapterInputHelper {
             throw new ResponseContextException("Cannot extract href from link", 400);
         }
         return uriKeys;
+    }
+
+    private static Agent findOrCreateAgent(String name, String email) throws ResponseContextException {
+        try {
+            NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email);
+            Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
+            Agent agent = LDAPUtil.createAgent(attributesAsMap);
+            if (agent == null) {
+                agent = createBasicAgent(name, email);
+            }
+            return agent;
+        } catch (Throwable th) {
+            throw new ResponseContextException("Could not find agent", 500);
+        }
+    }
+
+    private static Agent createBasicAgent(String name, String email) {
+        Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
+        AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
+        SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
+        Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
+//        transaction.begin();
+//        String name = attributesMap.get("cn");
+        version.setTitle(name);
+        version.setDescription(name);
+        Date now = new Date();
+        version.setUpdated(now);
+        version.setType(AgentType.PERSON);
+        version.getMboxes().add(email);
+
+        version.setParent(agent);
+        agent.getVersions().add(version);
+        version.getParent().setPublished(version);
+        agent.setUpdated(now);
+
+        agent.setUpdated(now);
+        agent.setSource(systemSource);
+        agent.getAuthors().add(agent);
+        return agent;
     }
 }

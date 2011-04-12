@@ -30,6 +30,8 @@ public class CollectionVersion extends AbstractVersionEntity {
     @ManyToOne
     private Collection parent;
 
+    private String originalId;
+
     @NotNull
     @Enumerated(STRING)
     private CollectionType type;
@@ -50,7 +52,7 @@ public class CollectionVersion extends AbstractVersionEntity {
     private Set<String> geoRssPoints = new HashSet<String>();
 
     @CollectionOfElements(fetch = FetchType.LAZY)
-    private Set<String> geoRssBoxes = new HashSet<String>();
+    private Set<String> geoRssPolygons = new HashSet<String>();
 
     @CollectionOfElements(fetch = FetchType.LAZY)
     private Set<String> geoRssFeatureNames = new HashSet<String>();
@@ -103,6 +105,14 @@ public class CollectionVersion extends AbstractVersionEntity {
     @Override
     public void setParent(Record parent) {
         this.parent = (Collection) parent;
+    }
+
+    public String getOriginalId() {
+        return originalId;
+    }
+
+    public void setOriginalId(String originalId) {
+        this.originalId = originalId;
     }
 
     public Set<Subject> getSubjects() {
@@ -209,12 +219,12 @@ public class CollectionVersion extends AbstractVersionEntity {
         this.geoRssPoints = geoRssPoints;
     }
 
-    public Set<String> getGeoRssBoxes() {
-        return geoRssBoxes;
+    public Set<String> getGeoRssPolygons() {
+        return geoRssPolygons;
     }
 
-    public void setGeoRssBoxes(Set<String> geoRssBoxes) {
-        this.geoRssBoxes = geoRssBoxes;
+    public void setGeoRssPolygons(Set<String> geoRssBoxes) {
+        this.geoRssPolygons = geoRssBoxes;
     }
 
     public Set<String> getGeoRssFeatureNames() {

@@ -57,15 +57,17 @@ public interface Constants {
     String TARGET_LOGIN = "login";
     String TARGET_LOGOUT = "logout";
 
+    String PERSISTENT_URL = "http://purl.org/";
     /**
      * Namespaces
      */
     String NS_ANDS_GROUP = "https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php";
     String NS_FOAF = "http://xmlns.com/foaf/0.1/";
     String NS_ANDS = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#";
-    String NS_DC = "http://purl.org/dc/terms/";
-    String NS_DCMITYPE = "http://purl.org/dc/dcmitype/";
-    String NS_CLD = "http://purl.org/cld/terms/";
+    String NS_DC = PERSISTENT_URL + "dc/terms/";
+    String NS_DCMITYPE = PERSISTENT_URL + "dc/dcmitype/";
+    String NS_CLD = PERSISTENT_URL + "cld/terms/";
+    String NS_ANZSRC = PERSISTENT_URL + "anzsrc/";
     String NS_VIVO = "http://vivoweb.org/ontology/core#";
     String NS_ORE = "http://www.openarchives.org/ore/terms/";
     String NS_GEORSS = "http://www.georss.org/georss/";
@@ -87,6 +89,7 @@ public interface Constants {
     String REL_IS_DESCRIBED_BY = NS_ORE + "isDescribedBy";
     String REL_IS_LOCATED_AT = NS_CLD + "isLocatedAt";
     String REL_IS_OUTPUT_OF = NS_ANDS + "isOutputOf";
+    String REL_IS_REFERENCED_BY = NS_DC + "isReferencedBy";
     String REL_CURRENT_PROJECT = NS_FOAF + "currentProject";
     String REL_IS_SUPPORTED_BY = NS_ANDS + "isSupportedBy";
     String REL_LATEST_VERSION = "latest-version";
@@ -111,9 +114,12 @@ public interface Constants {
     String TERM_AGENT_AS_GROUP = NS_FOAF + "Group";
     String TERM_AGENT_AS_AGENT = NS_FOAF + "Agent";
     String TERM_SERVICE = NS_VIVO + "Service";
-    String TERM_KEYWORD = "keyword";
+    String LABEL_KEYWORD = "keyword";
 
     String SCHEME_KEYWORD = UQ_REGISTRY_URI_PREFIX + "keyword";
+    String SCHEME_ANZSRC_FOR = NS_ANZSRC + "for";
+    String SCHEME_ANZSRC_SEO = NS_ANZSRC + "seo";
+    String SCHEME_ANZSRC_TOA = NS_ANZSRC + "toa";
 
     /**
      * HTTP Status messages
@@ -136,7 +142,6 @@ public interface Constants {
      */
     QName QNAME_RDFA_META = new QName(Constants.NS_RDFA, "meta", "rdfa");
     QName QNAME_GEO_RSS_POINT = new QName(Constants.NS_GEORSS, "point", "georss");
-    QName QNAME_GEO_RSS_BOX = new QName(Constants.NS_GEORSS, "box", "georss");
-    QName QNAME_GEO_RSS_FEATURE_NAME = new QName(Constants.NS_GEORSS, "featureName", "georss");
+    QName QNAME_GEO_RSS_POLYGON = new QName(Constants.NS_GEORSS, "polygon", "georss");
 
 }

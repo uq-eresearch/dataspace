@@ -242,14 +242,16 @@ public class AdapterOutputHelper {
                 entry.addSimpleExtension(Constants.QNAME_GEO_RSS_POINT, geoRssPoint);
             }
             //GeoRss Boxes
-            Set<String> geoRssBoxes = version.getGeoRssBoxes();
-            for (String geoRssBox : geoRssBoxes) {
-                entry.addSimpleExtension(Constants.QNAME_GEO_RSS_BOX, geoRssBox);
+            Set<String> geoRssPolygons = version.getGeoRssPolygons();
+            for (String geoRssPolygon : geoRssPolygons) {
+                entry.addSimpleExtension(Constants.QNAME_GEO_RSS_POLYGON, geoRssPolygon);
             }
             //GeoRss Feature Names
             Set<String> geoRssFeatureNames = version.getGeoRssFeatureNames();
             for (String geoRssFeatureName : geoRssFeatureNames) {
-                entry.addSimpleExtension(Constants.QNAME_GEO_RSS_FEATURE_NAME, geoRssFeatureName);
+                //TODO need to add the href in the data model
+                Link link = entry.addLink("", Constants.REL_SPATIAL);
+                link.setTitle(geoRssFeatureName);
             }
 
 

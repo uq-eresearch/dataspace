@@ -67,7 +67,6 @@ public class CollectionDaoImplTest {
         collectionVersion.getSubjects().add(subject2);
         collection.getVersions().add(collectionVersion);
         Source source = PopulatorUtil.getSource();
-        collection.setLocatedOn(source);
         collection.setSource(source);
         entityManager.persist(source);
         entityManager.persist(subject1);
