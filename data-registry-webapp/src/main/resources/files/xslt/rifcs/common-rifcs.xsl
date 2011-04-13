@@ -63,8 +63,12 @@
         <coverage>
             <temporal>
                 <xsl:for-each select="tokenize(@content,';')">
-                    <xsl:variable name="field"><xsl:value-of select="substring-before(.,'=')"/></xsl:variable>
-                    <xsl:variable name="value"><xsl:value-of select="substring-after(.,'=')"/></xsl:variable>
+                    <xsl:variable name="field">
+                        <xsl:value-of select="substring-before(.,'=')"/>
+                    </xsl:variable>
+                    <xsl:variable name="value">
+                        <xsl:value-of select="substring-after(.,'=')"/>
+                    </xsl:variable>
                     <xsl:choose>
                         <xsl:when test="$field = 'start'">
                             <date type="from" dateFormat="W3CDTF">
@@ -81,22 +85,28 @@
             </temporal>
         </coverage>
     </xsl:template>
-    
+
     <!-- subjects -->
-    <xsl:template match="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_GROUP]">
+    <xsl:template match="atom:category[@scheme != $NS_DCMITYPE]">
         <subject>
-            <xsl:attribute name="type">
-                <xsl:choose>
-                    <xsl:when test="@scheme = 'http://purl.org/anzsrc/for/#field_'"
-                        >anzsrc-for</xsl:when>
-                    <xsl:when test="@scheme = 'http://purl.org/anzsrc/seo/#field_'"
-                        >anzsrc-seo</xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="@scheme"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:attribute>
-            <xsl:value-of select="@term"/>
+            <xsl:choose>
+                <xsl:when test="@scheme = $SCHEME_FOR">
+                    <xsl:attribute name="type">anzsrc-for</xsl:attribute>
+                    <xsl:value-of select="substring-after(@term, $PREFIX_FOR)"/>
+                </xsl:when>
+                <xsl:when test="@scheme = $SCHEME_SEO">
+                    <xsl:attribute name="type">anzsrc-seo</xsl:attribute>
+                    <xsl:value-of select="substring-after(@term, $PREFIX_SEO)"/>
+                </xsl:when>
+                <xsl:when test="@scheme = $SCHEME_TOA">
+                    <xsl:attribute name="type">anzsrc-toa</xsl:attribute>
+                    <xsl:value-of select="substring-after(@term, $PREFIX_TOA)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:attribute name="type"><xsl:value-of select="@scheme"/></xsl:attribute>
+                    <xsl:value-of select="@term"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </subject>
     </xsl:template>
 
@@ -118,7 +128,7 @@
             <xsl:value-of select="@content"/>
         </description>
     </xsl:template>
-    
+
     <xsl:template match="atom:link[@rel=$REL_LICENSE]">
         <xsl:if test="@title">
             <description type="rights">
@@ -130,7 +140,7 @@
     <!-- related info -->
     <xsl:template match="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
         <relatedInfo>
-            <identifier type="url">
+            <identifier type="uri">
                 <xsl:value-of select="@href"/>
             </identifier>
             <title>

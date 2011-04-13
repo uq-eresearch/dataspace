@@ -58,7 +58,7 @@
                     <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
                     <!-- subjects -->
                     <xsl:apply-templates
-                        select="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_GROUP]"/>
+                        select="atom:category[@scheme != $NS_DCMITYPE]"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->

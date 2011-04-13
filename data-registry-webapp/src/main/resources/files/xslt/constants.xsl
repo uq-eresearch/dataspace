@@ -8,9 +8,6 @@
     <xsl:variable name="NS_ORE">http://www.openarchives.org/ore/terms/</xsl:variable>
     <xsl:variable name="NS_GEORSS">http://www.georss.org/georss/</xsl:variable>
     <xsl:variable name="NS_RDFA">http://www.w3.org/ns/rdfa#</xsl:variable>
-    <xsl:variable name="NS_GROUP">
-        <xsl:value-of select="'https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php'"/>
-    </xsl:variable>
 
     <xsl:variable name="TYPE_ATOM_FEED">application/atom+xml; type=feed</xsl:variable>
 
@@ -94,7 +91,16 @@
         <xsl:value-of select="concat($NS_VIVO,'Service')"/>
     </xsl:variable>
 
-    <xsl:variable name="SCHEME_FOR">http://purl.org/anzsrc/for/#</xsl:variable>
-    <xsl:variable name="SCHEME_SEO">http://purl.org/anzsrc/seo/#</xsl:variable>
-    <xsl:variable name="SCHEME_TOA">http://purl.org/anzsrc/toa/#</xsl:variable>
+    <xsl:variable name="SCHEME_FOR">http://purl.org/anzsrc/for</xsl:variable>
+    <xsl:variable name="PREFIX_FOR">
+        <xsl:value-of select="concat($SCHEME_FOR, '/#field_')"></xsl:value-of>
+    </xsl:variable>
+    <xsl:variable name="SCHEME_SEO">http://purl.org/anzsrc/seo</xsl:variable>
+    <xsl:variable name="PREFIX_SEO">
+        <xsl:value-of select="concat($SCHEME_SEO, '/#field_')"></xsl:value-of>
+    </xsl:variable>
+    <xsl:variable name="SCHEME_TOA">http://purl.org/anzsrc/toa</xsl:variable>
+    <xsl:variable name="PREFIX_TOA">
+        <xsl:value-of select="concat($SCHEME_TOA, '/#field_')"></xsl:value-of>
+    </xsl:variable>
 </xsl:stylesheet>
