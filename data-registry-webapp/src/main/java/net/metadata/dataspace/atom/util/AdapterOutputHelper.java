@@ -200,13 +200,7 @@ public class AdapterOutputHelper {
                     entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
                 }
             }
-            //Creators
-            Set<Agent> agents = version.getCreators();
-            for (Agent agent : agents) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
-                Link link = entry.addLink(href, Constants.REL_CREATOR);
-                link.setTitle(agent.getTitle());
-            }
+
             //Publishers
             Set<Agent> publishers = version.getPublishers();
             for (Agent publisher : publishers) {
@@ -228,15 +222,32 @@ public class AdapterOutputHelper {
                 Link link = entry.addLink(href, Constants.REL_IS_ACCESSED_VIA);
                 link.setTitle(service.getTitle());
             }
+
+            Set<Collection> collections = version.getRelations();
+            for (Collection collection : collections) {
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                Link link = entry.addLink(href, Constants.REL_RELATED);
+                link.setTitle(collection.getTitle());
+            }
+
             //Publications
             Set<Publication> publications = version.getReferencedBy();
             for (Publication publication : publications) {
                 String href = publication.getPublicationURI();
-                Link link = entry.addLink(href, Constants.REL_RELATED);
+                Link link = entry.addLink(href, Constants.REL_IS_REFERENCED_BY);
                 link.setTitle(publication.getTitle());
             }
             //Rights
-            entry.setRights(version.getRights());
+            String rights = version.getRights();
+            if (rights != null) {
+                entry.setRights(rights);
+            }
+
+            String license = version.getLicense();
+            if (license != null) {
+                Link link = entry.addLink(license, Constants.REL_LICENSE);
+                link.setMimeType(Constants.MIME_TYPE_RDF);
+            }
             //Access Rights
             Set<String> accessRights = version.getAccessRights();
             for (String accessRight : accessRights) {
@@ -269,6 +280,7 @@ public class AdapterOutputHelper {
                 link.setTitle(geoRssFeatureName);
             }
 
+            //
 
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
@@ -479,9 +491,11 @@ public class AdapterOutputHelper {
             for (Agent author : authors) {
                 source.addAuthor(author.getTitle(), author.getMBoxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
             }
-            source.addLink(Constants.UQ_URL, Constants.REL_PUBLISHER);
+            Link publisher = source.addLink(Constants.UQ_URL, Constants.REL_PUBLISHER);
+            publisher.setTitle(Constants.TERM_ANDS_GROUP);
             source.setRights(Constants.UQ_REGISTRY_RIGHTS);
-            source.addLink(Constants.REL_LICENSE, Constants.UQ_REGISTRY_LICENSE);
+            Link licenseLink = source.addLink(Constants.REL_LICENSE, Constants.UQ_REGISTRY_LICENSE);
+            licenseLink.setMimeType(Constants.MIME_TYPE_RDF);
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to add contributor", 500);
         }

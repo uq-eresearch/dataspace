@@ -30,6 +30,7 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 
 import javax.naming.NamingEnumeration;
 import javax.persistence.EntityManager;
+import javax.xml.namespace.QName;
 import java.util.*;
 
 import net.metadata.dataspace.data.model.record.Collection;
@@ -168,7 +169,13 @@ public class AdapterInputHelper {
             }
         }
 
-        List<Element> geoRssPointExtensions = entry.getExtensions(Constants.QNAME_GEO_RSS_POINT);
+        Link license = entry.getLink(Constants.REL_LICENSE);
+        if (license != null) {
+            version.setLicense(license.getHref().toString());
+        }
+
+        QName qnameGeoRssPoint = Constants.QNAME_GEO_RSS_POINT;
+        List<Element> geoRssPointExtensions = entry.getExtensions(qnameGeoRssPoint);
         for (Element extension : geoRssPointExtensions) {
             version.getGeoRssPoints().add(extension.getText());
         }
@@ -180,14 +187,14 @@ public class AdapterInputHelper {
 
         List<Link> links = entry.getLinks(Constants.REL_SPATIAL);
         for (Link link : links) {
+            //TODO we need to add the href to the geo names service
             version.getGeoRssFeatureNames().add(link.getTitle());
         }
-
+        //add publications
         Set<Publication> publications = getPublications(entry);
         for (Publication publication : publications) {
             version.getReferencedBy().add(publication);
         }
-
         setPublished(entry, version);
         Date now = new Date();
         version.setUpdated(now);
