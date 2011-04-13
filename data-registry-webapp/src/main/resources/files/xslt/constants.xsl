@@ -19,6 +19,7 @@
     <xsl:variable name="REL_RELATED">related</xsl:variable>
     <xsl:variable name="REL_ALTERNATE">alternate</xsl:variable>
     <xsl:variable name="REL_LATEST_VERSION">latest-version</xsl:variable>
+    <xsl:variable name="REL_LICENSE">license</xsl:variable>
 
     <xsl:variable name="ATOM_CREATOR">
         <xsl:value-of select="concat($NS_DC ,'creator')"/>
@@ -58,6 +59,12 @@
     </xsl:variable>
     <xsl:variable name="ATOM_RELATION">
         <xsl:value-of select="concat($NS_DC ,'relation')"/>
+    </xsl:variable>
+    <xsl:variable name="ATOM_SPATIAL">
+        <xsl:value-of select="concat($NS_DC ,'spatial')"/>
+    </xsl:variable>
+    <xsl:variable name="ATOM_IS_REFERENCED_BY">
+        <xsl:value-of select="concat($NS_DC, 'isReferencedBy')"/>
     </xsl:variable>
 
     <xsl:variable name="RDF_DESCRIBES">
