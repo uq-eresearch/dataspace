@@ -370,7 +370,7 @@ public class AdapterOutputHelper {
         try {
             ResponseContext responseContext = ProviderHelper.returnBase(entry, 201, entry.getUpdated());
             responseContext.setEntityTag(ProviderHelper.calculateEntityTag(entry));
-            responseContext.setLocation(entry.getId().toString());
+            responseContext.setLocation(entry.getLink(Constants.REL_SELF).getHref().toString());
             return responseContext;
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
