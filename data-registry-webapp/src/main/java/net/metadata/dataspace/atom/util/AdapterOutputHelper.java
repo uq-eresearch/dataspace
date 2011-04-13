@@ -194,7 +194,11 @@ public class AdapterOutputHelper {
             //Subjects
             Set<Subject> subjectSet = version.getSubjects();
             for (Subject sub : subjectSet) {
-                entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
+                if (sub.getLabel().equals(Constants.LABEL_KEYWORD)) {
+                    entry.addCategory(sub.getTerm());
+                } else {
+                    entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
+                }
             }
             //Creators
             Set<Agent> agents = version.getCreators();
