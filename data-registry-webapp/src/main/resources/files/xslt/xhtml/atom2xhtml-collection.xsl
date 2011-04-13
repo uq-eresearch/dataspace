@@ -92,7 +92,7 @@
                     <xsl:comment>Metadata about the description</xsl:comment>
                     <div class="about">
                         <!-- publisher -->
-                        <xsl:apply-templates select="atom:category[@scheme = $NS_GROUP]"/>
+                        <xsl:apply-templates select="atom:source/atom:link[@rel = $ATOM_PUBLISHER]"/>
                         <!-- updated and updater -->
                         <xsl:call-template name="updated"/>
                     </div>
@@ -148,8 +148,7 @@
     </xsl:template>
 
     <xsl:template
-            match="atom:category[@scheme != $NS_DCMITYPE
-            and @scheme!=$NS_GROUP]">
+            match="atom:category[@scheme != $NS_DCMITYPE]">
         <p>
             <xsl:choose>
                 <xsl:when test="@label">

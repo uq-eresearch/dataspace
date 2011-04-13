@@ -163,24 +163,24 @@
 
     <!-- description publisher -->
     <xsl:template
-            match="atom:category[@scheme=$NS_GROUP]">
+            match="atom:source">
         <p>Description published by
-            <xsl:value-of select="@term"/>
-            <xsl:apply-templates select="//atom:source"/>
+            <xsl:value-of select="atom:link[@rel = $ATOM_PUBLISHER]"/>
+            <!--<xsl:apply-templates select="//atom:source"/>-->
         </p>
     </xsl:template>
 
     <!-- subjects -->
     <xsl:template name="subjects">
         <xsl:if test="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
-                and @scheme!=$NS_FOAF and @scheme!=$NS_GROUP]">
+                and @scheme!=$NS_FOAF]">
             <div class="statement">
                 <div class="property">
                     <p>Subjects</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
-                and @scheme!=$NS_FOAF and @scheme!=$NS_GROUP]"/>
+                and @scheme!=$NS_FOAF]"/>
                 </div>
             </div>
         </xsl:if>
