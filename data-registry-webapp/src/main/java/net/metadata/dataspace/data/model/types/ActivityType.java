@@ -6,6 +6,6 @@ package net.metadata.dataspace.data.model.types;
  * Time: 3:46:37 PM
  */
 public enum ActivityType {
-    PROJECT,
-    PROGRAM
+    Project,
+    Program
 }
