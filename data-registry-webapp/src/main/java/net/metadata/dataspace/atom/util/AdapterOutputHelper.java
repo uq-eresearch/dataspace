@@ -276,7 +276,7 @@ public class AdapterOutputHelper {
             Set<String> geoRssFeatureNames = version.getGeoRssFeatureNames();
             for (String geoRssFeatureName : geoRssFeatureNames) {
                 //TODO need to add the href in the data model
-                Link link = entry.addLink("", Constants.REL_SPATIAL);
+                Link link = entry.addLink("http://sws.geonames.org/2172406/", Constants.REL_SPATIAL);
                 link.setTitle(geoRssFeatureName);
             }
 

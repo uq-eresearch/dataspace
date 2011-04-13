@@ -190,34 +190,36 @@
 
     <!-- spatial -->
     <xsl:template name="spatial">
-        <xsl:if test="georss:box or georss:point or georss:featureName">
-            <div class="statement">
-                <div class="property">
-                    <p>Spatial Coverage</p>
-                </div>
-                <div class="content">
-                    <xsl:apply-templates select="georss:point"/>
-                    <xsl:apply-templates select="georss:box"/>
-                    <xsl:apply-templates select="georss:featureName"/>
-                </div>
+        <div class="statement">
+            <div class="property">
+                <p>Spatial Coverage</p>
             </div>
-        </xsl:if>
+            <div class="content">
+                <xsl:if test="georss:point">
+                    <xsl:apply-templates select="georss:point"/>
+                </xsl:if>
+                <xsl:if test="georss:polygon">
+                    <xsl:apply-templates select="georss:polygon"/>
+                </xsl:if>
+                <xsl:if test="atom:link[@rel=$ATOM_SPATIAL]">
+                    <p>Feature Name:
+                        <xsl:value-of select="atom:link[@rel=$ATOM_SPATIAL]"/>
+                    </p>
+                </xsl:if>
+            </div>
+        </div>
     </xsl:template>
 
     <xsl:template match="georss:point">
         <p>
+            Point:
             <xsl:value-of select="text()"/>
         </p>
     </xsl:template>
 
-    <xsl:template match="georss:box">
+    <xsl:template match="georss:polygon">
         <p>
-            <xsl:value-of select="text()"/>
-        </p>
-    </xsl:template>
-
-    <xsl:template match="georss:featureName">
-        <p>
+            Polygon:
             <xsl:value-of select="text()"/>
         </p>
     </xsl:template>
