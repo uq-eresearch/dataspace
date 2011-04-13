@@ -386,7 +386,9 @@ public class AdapterInputHelper {
                 IRI scheme = category.getScheme();
                 String term = category.getTerm();
                 if (scheme != null) {
-                    if (scheme.equals(Constants.SCHEME_ANZSRC_FOR) || scheme.equals(Constants.SCHEME_ANZSRC_SEO) || scheme.equals(Constants.SCHEME_ANZSRC_TOA)) {
+                    if (scheme.toString().equals(Constants.SCHEME_ANZSRC_FOR) ||
+                            scheme.toString().equals(Constants.SCHEME_ANZSRC_SEO) ||
+                            scheme.toString().equals(Constants.SCHEME_ANZSRC_TOA)) {
                         Subject subject = daoManager.getSubjectDao().getSubject(scheme.toString(), term);
                         if (subject == null) {
                             subject = entityCreator.getNextSubject();
@@ -507,11 +509,17 @@ public class AdapterInputHelper {
 
     private static Agent findOrCreateAgent(String name, String email) throws ResponseContextException {
         try {
-            NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email);
-            Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
-            Agent agent = LDAPUtil.createAgent(attributesAsMap);
+            //Find the agent in our system first
+            Agent agent = daoManager.getAgentDao().getByEmail(email);
             if (agent == null) {
-                agent = createBasicAgent(name, email);
+                //Try finding the agent from the UQ LDAP
+                NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email);
+                Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
+                agent = LDAPUtil.createAgent(attributesAsMap);
+                if (agent == null) {
+                    //Else create it from email and name
+                    agent = createBasicAgent(name, email);
+                }
             }
             return agent;
         } catch (Throwable th) {

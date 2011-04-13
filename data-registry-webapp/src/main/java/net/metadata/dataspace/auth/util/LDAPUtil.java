@@ -115,12 +115,13 @@ public class LDAPUtil {
     public static Agent createAgent(Map<String, String> attributesMap) {
         AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
         String mail = attributesMap.get("mail");
-        if (agentDao.getByEmail(mail) == null) {
+        Agent agent = agentDao.getByEmail(mail);
+        if (agent == null) {
             EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
 //            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 //            EntityTransaction transaction = entityManager.getTransaction();
 
-            Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
+            agent = ((Agent) entityCreator.getNextRecord(Agent.class));
             AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
             SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
             Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
