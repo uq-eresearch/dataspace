@@ -114,16 +114,7 @@ public class AdapterInputHelper {
         addCollectionCreator(version, entry.getAuthors());
 
         //Add publishers
-        Set<String> publishersUriKeys = getUriKeysFromLink(entry, Constants.REL_PUBLISHER);
-        for (String uriKey : publishersUriKeys) {
-            Agent publisher = agentDao.getByKey(uriKey);
-            if (publisher != null) {
-                Collection parent = version.getParent();
-                version.getPublishers().add(publisher);
-                publisher.getIsManagerOf().add(parent);
-                entityManager.merge(publisher);
-            }
-        }
+        addCollectionPublishers(version, entry.getLinks(Constants.REL_PUBLISHER));
 
         //Add outputof
         Set<String> outputOfUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_OUTPUT_OF);
@@ -385,6 +376,45 @@ public class AdapterInputHelper {
         }
     }
 
+    public static void addCollectionPublishers(CollectionVersion version, List<Link> publishers) throws ResponseContextException {
+        try {
+            for (Link publisherLink : publishers) {
+                String rel = publisherLink.getRel();
+                String title = publisherLink.getTitle();
+                if (title == null) {
+                    throw new ResponseContextException("Publisher link missing title", 400);
+                }
+                IRI href = publisherLink.getHref();
+                if (href == null || href.toString().isEmpty()) {
+                    throw new ResponseContextException("Publisher link missing href", 400);
+                } else {
+                    String hrefValue = href.toString().trim();
+                    String token = "mailto:";
+                    if (hrefValue.startsWith(token)) {
+                        String email = hrefValue.substring(hrefValue.indexOf(":") + 1);
+                        Agent newAgent = findOrCreateAgent(title, email);
+                        if (newAgent != null) {
+                            version.getPublishers().add(newAgent);
+                        } else {
+                            //cannot do much here
+                        }
+                    } else {
+                        //Href is uri
+                        String uriKey = OperationHelper.getEntityID(hrefValue);
+                        Agent agent = daoManager.getAgentDao().getByKey(uriKey);
+                        if (agent != null) {
+                            version.getPublishers().add(agent);
+                        } else {
+                            //Cannot do much here
+                        }
+                    }
+                }
+            }
+        } catch (Throwable th) {
+            throw new ResponseContextException("Cannot extract authors", 500);
+        }
+    }
+
     private static Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
         Set<Subject> subjects = new HashSet<Subject>();
         try {
@@ -483,17 +513,17 @@ public class AdapterInputHelper {
         } else {
             if (version instanceof ActivityVersion) {
                 //TODO this need to be retrieved from the entry
-                ((ActivityVersion) version).setType(ActivityType.PROJECT);
+                ((ActivityVersion) version).setType(ActivityType.Project);
             } else if (version instanceof AgentVersion) {
                 //TODO this need to be retrieved from the entry
-                ((AgentVersion) version).setType(AgentType.PERSON);
+                ((AgentVersion) version).setType(AgentType.Person);
             } else if (version instanceof CollectionVersion) {
                 //TODO this need to be retrieved from the entry
-                ((CollectionVersion) version).setType(CollectionType.COLLECTION);
+                ((CollectionVersion) version).setType(CollectionType.Collection);
                 ((CollectionVersion) version).setRights(entry.getRights());
             } else if (version instanceof ServiceVersion) {
                 //TODO this need to be retrieved from the entry
-                ((ServiceVersion) version).setType(ServiceType.SYNDICATE);
+                ((ServiceVersion) version).setType(ServiceType.Syndicate);
             }
         }
     }
@@ -545,7 +575,7 @@ public class AdapterInputHelper {
         version.setDescription(name);
         Date now = new Date();
         version.setUpdated(now);
-        version.setType(AgentType.PERSON);
+        version.setType(AgentType.Person);
         version.getMboxes().add(email);
 
         version.setParent(agent);
