@@ -73,9 +73,6 @@
                     <xsl:call-template name="services"/>
                     <!-- location -->
                     <xsl:call-template name="locations"/>
-                    <!-- rights -->
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
-                    <xsl:apply-templates select="atom:rights"/>
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
                     <!-- temporal -->
@@ -84,6 +81,9 @@
                     <xsl:call-template name="subjects"/>
                     <!-- related info -->
                     <xsl:call-template name="related"/>
+                    <!-- rights -->
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
+                    <xsl:apply-templates select="atom:rights"/>
                     <!-- representations -->
                     <xsl:call-template name="representations"/>
                     <!-- metadata about the description -->

@@ -53,7 +53,7 @@
     <xsl:template name="updated">
         <p>Last updated
             <xsl:value-of select="atom:updated"/> by
-            <xsl:value-of select="atom:author/atom:name"/>
+            <xsl:value-of select="atom:source/atom:author/atom:name"/>
         </p>
     </xsl:template>
 
@@ -113,16 +113,18 @@
 
     <!-- creators -->
     <xsl:template name="creators">
-        <xsl:if test="atom:link[@rel=$ATOM_CREATOR]">
-            <div class="statement">
-                <div class="property">
-                    <p>Creator(s)</p>
-                </div>
-                <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
-                </div>
+        <div class="statement">
+            <div class="property">
+                <p>Creator(s)</p>
             </div>
-        </xsl:if>
+            <div class="content">
+                <p>
+                    <a href="{atom:author/atom:uri}">
+                        <xsl:value-of select="atom:author/atom:name"/>
+                    </a>
+                </p>
+            </div>
+        </div>
     </xsl:template>
 
     <!-- curators -->
