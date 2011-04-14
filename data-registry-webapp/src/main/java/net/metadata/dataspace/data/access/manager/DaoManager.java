@@ -26,6 +26,8 @@ public interface DaoManager {
 
     PublicationDao getPublicationDao();
 
+    FullNameDao getFullNameDao();
+
     UserDao getUserDao();
 
     CollectionVersionDao getCollectionVersionDao();

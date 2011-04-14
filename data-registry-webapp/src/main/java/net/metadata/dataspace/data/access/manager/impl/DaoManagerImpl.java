@@ -24,6 +24,7 @@ public class DaoManagerImpl implements DaoManager {
     private UserDao userDao;
     private SourceDao sourceDao;
     private PublicationDao publicationDao;
+    private FullNameDao fullNameDao;
 
     public void setCollectionDao(CollectionDao collectionDao) {
         this.collectionDao = collectionDao;
@@ -129,4 +130,11 @@ public class DaoManagerImpl implements DaoManager {
         return publicationDao;
     }
 
+    public void setFullNameDao(FullNameDao fullNameDao) {
+        this.fullNameDao = fullNameDao;
+    }
+
+    public FullNameDao getFullNameDao() {
+        return fullNameDao;
+    }
 }
