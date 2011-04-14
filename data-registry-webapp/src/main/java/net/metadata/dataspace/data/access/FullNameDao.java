@@ -1,6 +1,5 @@
 package net.metadata.dataspace.data.access;
 
-import au.edu.uq.itee.maenad.dataaccess.Dao;
 import net.metadata.dataspace.data.model.context.FullName;
 
 /**
@@ -8,5 +7,5 @@ import net.metadata.dataspace.data.model.context.FullName;
  * Date: 14/04/11
  * Time: 10:37 AM
  */
-public interface FullNameDao extends Dao<FullName>, RegistryDao<FullName> {
+public interface FullNameDao extends RegistryDao<FullName> {
 }

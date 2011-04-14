@@ -1,5 +1,7 @@
 package net.metadata.dataspace.data.access;
 
+import au.edu.uq.itee.maenad.dataaccess.Dao;
+
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +10,7 @@ import java.util.List;
  * Date: 27/10/2010
  * Time: 10:48:15 AM
  */
-public interface RegistryDao<T> {
+public interface RegistryDao<T> extends Dao<T> {
 
     /**
      * Retrieve an entity T from the database by the provided id
