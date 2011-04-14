@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <entry xmlns="http://www.w3.org/2005/Atom" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
-       xmlns:georss="http://www.georss.org/georss" xmlns:app="http://www.w3.org/2007/app">
+       xmlns:georss="http://www.georss.org/georss/" xmlns:app="http://www.w3.org/2007/app">
 
     <!-- *** metadata about the collection *** -->
     <!--     id for the collection -->
-    <id>http://oztrak.uq.edu.au/collection/abc123</id>
-    <link rel='http://www.openarchives.org/ore/terms/describes' href='http://oztrak.uq.edu.au/collection/abc123'/>
+    <id>http://oztrack.uq.edu.au/collections/abc123</id>
+    <link rel='http://www.openarchives.org/ore/terms/describes' href='http://oztrack.uq.edu.au/collection/abc123'/>
 
     <!--     collection type -->
     <category scheme="http://purl.org/dc/dcmitype/" term="http://purl.org/dc/dcmitype/Collection"
@@ -52,8 +52,7 @@
         <email>hamish.campbell@uq.edu.au</email>
     </author>
     <!--     collection manager -->
-    <link rel="http://purl.org/dc/terms/publisher" href="mailto:c.franklin@uq.edu.au"
-          title="Dr Craig Franklin"/>
+    <link rel="http://purl.org/dc/terms/publisher" href="mailto:c.franklin@uq.edu.au" title="Dr Craig Franklin"/>
 
     <!--     activity generating the collection -->
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"
