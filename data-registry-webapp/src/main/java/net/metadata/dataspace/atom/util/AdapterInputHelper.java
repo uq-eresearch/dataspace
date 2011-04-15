@@ -8,6 +8,7 @@ import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -220,6 +221,41 @@ public class AdapterInputHelper {
                         version.getMboxes().add(mailTo);
                     }
                 }
+            }
+        }
+
+        if (version.getType().equals(AgentType.PERSON)) {
+            List<Element> extensions = entry.getExtensions(Constants.QNAME_RDFA_META);
+            String fullNameTitle = null;
+            String givenName = null;
+            String familyName = null;
+            for (Element extension : extensions) {
+                String property = extension.getAttributeValue("property");
+                if (property.equals(Constants.PROPERTY_TITLE)) {
+                    fullNameTitle = extension.getAttributeValue("content");
+                }
+                if (property.equals(Constants.PROPERTY_GIVEN_NAME)) {
+                    givenName = extension.getAttributeValue("content");
+                }
+                if (property.equals(Constants.PROPERTY_FAMILY_NAME)) {
+                    familyName = extension.getAttributeValue("content");
+                }
+            }
+            if (fullNameTitle != null && givenName != null && familyName != null) {
+                FullName fullName = version.getParent().getFullName();
+                if (fullName == null) {
+                    fullName = entityCreator.getFullName();
+                    fullName.setTitle(fullNameTitle);
+                    fullName.setGivenName(givenName);
+                    fullName.setFamilyName(familyName);
+                    version.getParent().setFullName(fullName);
+                } else {
+                    fullName.setTitle(fullNameTitle);
+                    fullName.setGivenName(givenName);
+                    fullName.setFamilyName(familyName);
+                }
+            } else {
+                throw new ResponseContextException("Agent missing full name elements i.e. title, given name, family name", 400);
             }
         }
 

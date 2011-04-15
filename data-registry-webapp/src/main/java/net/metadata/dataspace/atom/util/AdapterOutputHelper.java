@@ -6,6 +6,7 @@ import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
@@ -121,7 +122,19 @@ public class AdapterOutputHelper {
                 alternativeElement.setAttributeValue("property", Constants.REL_ALTERNATIVE);
                 alternativeElement.setAttributeValue("content", alternativeName);
             }
-            //TODO the full name details go here
+
+            FullName fullName = version.getParent().getFullName();
+            if (fullName != null) {
+                Element fullNameTitle = entry.addExtension(Constants.QNAME_RDFA_META);
+                fullNameTitle.setAttributeValue("property", Constants.PROPERTY_TITLE);
+                fullNameTitle.setAttributeValue("content", fullName.getTitle());
+                Element givenNameElement = entry.addExtension(Constants.QNAME_RDFA_META);
+                givenNameElement.setAttributeValue("property", Constants.PROPERTY_GIVEN_NAME);
+                givenNameElement.setAttributeValue("content", fullName.getGivenName());
+                Element familyNameElement = entry.addExtension(Constants.QNAME_RDFA_META);
+                familyNameElement.setAttributeValue("property", Constants.PROPERTY_FAMILY_NAME);
+                familyNameElement.setAttributeValue("content", fullName.getFamilyName());
+            }
 
             Set<String> mboxes = version.getMboxes();
             for (String mbox : mboxes) {

@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.version.AgentVersion;
@@ -43,6 +44,8 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source source;
+
+    private FullName fullName;
 
     public Agent() {
     }
@@ -124,5 +127,13 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     @Override
     public void setSource(Source source) {
         this.source = source;
+    }
+
+    public FullName getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(FullName fullName) {
+        this.fullName = fullName;
     }
 }
