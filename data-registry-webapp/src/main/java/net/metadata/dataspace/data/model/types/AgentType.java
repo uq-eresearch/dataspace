@@ -6,6 +6,6 @@ package net.metadata.dataspace.data.model.types;
  * Time: 3:46:00 PM
  */
 public enum AgentType {
-    Person,
-    Group
+    PERSON,
+    GROUP
 }

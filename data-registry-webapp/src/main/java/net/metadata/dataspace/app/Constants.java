@@ -118,10 +118,15 @@ public interface Constants {
     String TERM_SERVICE = NS_VIVO + "Service";
     String LABEL_KEYWORD = "keyword";
 
+    String SCHEME_DCMITYPE = NS_DCMITYPE;
     String SCHEME_KEYWORD = UQ_REGISTRY_URI_PREFIX + "keyword";
     String SCHEME_ANZSRC_FOR = NS_ANZSRC + "for";
     String SCHEME_ANZSRC_SEO = NS_ANZSRC + "seo";
     String SCHEME_ANZSRC_TOA = NS_ANZSRC + "toa";
+
+    String PROPERTY_TITLE = NS_FOAF + "title";
+    String PROPERTY_GIVEN_NAME = NS_FOAF + "givenName";
+    String PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
 
     /**
      * HTTP Status messages

@@ -27,6 +27,8 @@ public class AgentVersion extends AbstractVersionEntity {
     @ManyToOne
     private Agent parent;
 
+    private String originalId;
+
     @NotNull
     @Enumerated(STRING)
     private AgentType type;
@@ -68,6 +70,14 @@ public class AgentVersion extends AbstractVersionEntity {
     @Override
     public void setParent(Record parent) {
         this.parent = (Agent) parent;
+    }
+
+    public String getOriginalId() {
+        return originalId;
+    }
+
+    public void setOriginalId(String originalId) {
+        this.originalId = originalId;
     }
 
     public Set<Subject> getSubjects() {

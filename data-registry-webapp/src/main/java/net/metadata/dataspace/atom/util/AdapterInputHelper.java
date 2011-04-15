@@ -193,14 +193,42 @@ public class AdapterInputHelper {
 
     private static void addRelationsAgent(Entry entry, AgentVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        //TODO add the mbox from the creating agent
-        String email = entry.getAuthors().get(0).getEmail();
-        version.getMboxes().add(email);
+
+        //Add the original id
+        if (entry.getId() != null) {
+            version.setOriginalId(entry.getId().toString());
+        }
+
+
+        List<Link> emails = entry.getLinks(Constants.REL_MBOX);
+        if (emails.isEmpty()) {
+            throw new ResponseContextException("Email (mbox) element is missing", 400);
+        } else {
+            for (Link emailLink : emails) {
+                IRI href = emailLink.getHref();
+                if (href != null) {
+                    String token = "mailto:";
+                    String mailTo = href.toString();
+                    if (mailTo.startsWith(token)) {
+                        version.getMboxes().add(mailTo.substring(mailTo.indexOf(":") + 1));
+                    } else {
+                        version.getMboxes().add(mailTo);
+                    }
+                }
+            }
+        }
+
+        addAlternativeTitles(version, entry);
+
+        //Add web pages
         addPages(version, entry);
+
+        //Add subjects
         Set<Subject> subjects = getSubjects(entry);
         for (Subject subject : subjects) {
             version.getSubjects().add(subject);
         }
+
         Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_MADE);
         for (String uriKey : collectionUriKeys) {
             net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(uriKey);
@@ -222,6 +250,7 @@ public class AdapterInputHelper {
                 entityManager.merge(collection);
             }
         }
+
         Set<String> isParticipantInUriKeys = getUriKeysFromLink(entry, Constants.REL_CURRENT_PROJECT);
         for (String uriKey : isParticipantInUriKeys) {
             Activity activity = activityDao.getByKey(uriKey);
@@ -299,30 +328,22 @@ public class AdapterInputHelper {
     }
 
     public static void addDescriptionAuthors(Record record, List<Person> persons) throws ResponseContextException {
-        try {
-            for (Person person : persons) {
-                String name = person.getName();
-                String email = person.getEmail();
-                IRI uri = person.getUri();
-                if (name == null) {
-                    throw new ResponseContextException("Author missing name", 400);
-                }
-                if (email == null) {
-                    throw new ResponseContextException("Author missing email address", 400);
-                }
-                if (uri != null) {
-                    String uriKey = OperationHelper.getEntityID(uri.toString());
-                    Agent agent = daoManager.getAgentDao().getByKey(uriKey);
-                    if (agent != null) {
-                        record.getAuthors().add(agent);
-                    } else {
-                        Agent newAgent = findOrCreateAgent(name, email);
-                        if (newAgent == null) {
-                            throw new ResponseContextException("Description Author cannot be found", 400);
-                        } else {
-                            record.getAuthors().add(newAgent);
-                        }
-                    }
+
+        for (Person person : persons) {
+            String name = person.getName();
+            String email = person.getEmail();
+            IRI uri = person.getUri();
+            if (name == null) {
+                throw new ResponseContextException("Description Author missing name", 400);
+            }
+            if (email == null) {
+                throw new ResponseContextException("Description Author missing email address", 400);
+            }
+            if (uri != null) {
+                String uriKey = OperationHelper.getEntityID(uri.toString());
+                Agent agent = daoManager.getAgentDao().getByKey(uriKey);
+                if (agent != null) {
+                    record.getAuthors().add(agent);
                 } else {
                     Agent newAgent = findOrCreateAgent(name, email);
                     if (newAgent == null) {
@@ -331,37 +352,33 @@ public class AdapterInputHelper {
                         record.getAuthors().add(newAgent);
                     }
                 }
+            } else {
+                Agent newAgent = findOrCreateAgent(name, email);
+                if (newAgent == null) {
+                    throw new ResponseContextException("Description Author cannot be found", 400);
+                } else {
+                    record.getAuthors().add(newAgent);
+                }
             }
-        } catch (Throwable th) {
-            throw new ResponseContextException("Cannot extract authors", 500);
         }
     }
 
     public static void addCollectionCreator(CollectionVersion version, List<Person> persons) throws ResponseContextException {
-        try {
-            for (Person person : persons) {
-                String name = person.getName();
-                String email = person.getEmail();
-                IRI uri = person.getUri();
-                if (name == null) {
-                    throw new ResponseContextException("Author missing name", 400);
-                }
-                if (email == null) {
-                    throw new ResponseContextException("Author missing email address", 400);
-                }
-                if (uri != null) {
-                    String uriKey = OperationHelper.getEntityID(uri.toString());
-                    Agent agent = daoManager.getAgentDao().getByKey(uriKey);
-                    if (agent != null) {
-                        version.getCreators().add(agent);
-                    } else {
-                        Agent newAgent = findOrCreateAgent(name, email);
-                        if (newAgent == null) {
-                            throw new ResponseContextException("Author cannot be found", 400);
-                        } else {
-                            version.getCreators().add(newAgent);
-                        }
-                    }
+        for (Person person : persons) {
+            String name = person.getName();
+            String email = person.getEmail();
+            IRI uri = person.getUri();
+            if (name == null) {
+                throw new ResponseContextException("Author missing name", 400);
+            }
+            if (email == null) {
+                throw new ResponseContextException("Author missing email address", 400);
+            }
+            if (uri != null) {
+                String uriKey = OperationHelper.getEntityID(uri.toString());
+                Agent agent = daoManager.getAgentDao().getByKey(uriKey);
+                if (agent != null) {
+                    version.getCreators().add(agent);
                 } else {
                     Agent newAgent = findOrCreateAgent(name, email);
                     if (newAgent == null) {
@@ -370,48 +387,49 @@ public class AdapterInputHelper {
                         version.getCreators().add(newAgent);
                     }
                 }
+            } else {
+                Agent newAgent = findOrCreateAgent(name, email);
+                if (newAgent == null) {
+                    throw new ResponseContextException("Author cannot be found", 400);
+                } else {
+                    version.getCreators().add(newAgent);
+                }
             }
-        } catch (Throwable th) {
-            throw new ResponseContextException("Cannot extract authors", 500);
         }
     }
 
     public static void addCollectionPublishers(CollectionVersion version, List<Link> publishers) throws ResponseContextException {
-        try {
-            for (Link publisherLink : publishers) {
-                String rel = publisherLink.getRel();
-                String title = publisherLink.getTitle();
-                if (title == null) {
-                    throw new ResponseContextException("Publisher link missing title", 400);
-                }
-                IRI href = publisherLink.getHref();
-                if (href == null || href.toString().isEmpty()) {
-                    throw new ResponseContextException("Publisher link missing href", 400);
-                } else {
-                    String hrefValue = href.toString().trim();
-                    String token = "mailto:";
-                    if (hrefValue.startsWith(token)) {
-                        String email = hrefValue.substring(hrefValue.indexOf(":") + 1);
-                        Agent newAgent = findOrCreateAgent(title, email);
-                        if (newAgent != null) {
-                            version.getPublishers().add(newAgent);
-                        } else {
-                            //cannot do much here
-                        }
+        for (Link publisherLink : publishers) {
+            String rel = publisherLink.getRel();
+            String title = publisherLink.getTitle();
+            if (title == null) {
+                throw new ResponseContextException("Publisher link missing title", 400);
+            }
+            IRI href = publisherLink.getHref();
+            if (href == null || href.toString().isEmpty()) {
+                throw new ResponseContextException("Publisher link missing href", 400);
+            } else {
+                String hrefValue = href.toString().trim();
+                String token = "mailto:";
+                if (hrefValue.startsWith(token)) {
+                    String email = hrefValue.substring(hrefValue.indexOf(":") + 1);
+                    Agent newAgent = findOrCreateAgent(title, email);
+                    if (newAgent != null) {
+                        version.getPublishers().add(newAgent);
                     } else {
-                        //Href is uri
-                        String uriKey = OperationHelper.getEntityID(hrefValue);
-                        Agent agent = daoManager.getAgentDao().getByKey(uriKey);
-                        if (agent != null) {
-                            version.getPublishers().add(agent);
-                        } else {
-                            //Cannot do much here
-                        }
+                        //cannot do much here
+                    }
+                } else {
+                    //Href is uri
+                    String uriKey = OperationHelper.getEntityID(hrefValue);
+                    Agent agent = daoManager.getAgentDao().getByKey(uriKey);
+                    if (agent != null) {
+                        version.getPublishers().add(agent);
+                    } else {
+                        //Cannot do much here
                     }
                 }
             }
-        } catch (Throwable th) {
-            throw new ResponseContextException("Cannot extract authors", 500);
         }
     }
 
@@ -511,19 +529,32 @@ public class AdapterInputHelper {
         if (version == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
         } else {
-            if (version instanceof ActivityVersion) {
-                //TODO this need to be retrieved from the entry
-                ((ActivityVersion) version).setType(ActivityType.Project);
-            } else if (version instanceof AgentVersion) {
-                //TODO this need to be retrieved from the entry
-                ((AgentVersion) version).setType(AgentType.Person);
-            } else if (version instanceof CollectionVersion) {
-                //TODO this need to be retrieved from the entry
-                ((CollectionVersion) version).setType(CollectionType.Collection);
-                ((CollectionVersion) version).setRights(entry.getRights());
-            } else if (version instanceof ServiceVersion) {
-                //TODO this need to be retrieved from the entry
-                ((ServiceVersion) version).setType(ServiceType.Syndicate);
+            List<Category> categories = entry.getCategories(Constants.SCHEME_DCMITYPE);
+            if (categories.size() != 1) {
+                throw new ResponseContextException("Entry missing Type or assigned to more than one type", 400);
+            } else {
+                for (Category category : categories) {
+                    String entryType = category.getLabel();
+                    if (entryType == null) {
+                        throw new ResponseContextException("Entry type is missing label", 400);
+                    } else {
+                        entryType = entryType.toUpperCase();
+                        if (version instanceof ActivityVersion) {
+                            ActivityType type = ActivityType.valueOf(entryType);
+                            ((ActivityVersion) version).setType(type);
+                        } else if (version instanceof AgentVersion) {
+                            AgentType type = AgentType.valueOf(entryType);
+                            ((AgentVersion) version).setType(type);
+                        } else if (version instanceof CollectionVersion) {
+                            CollectionType type = CollectionType.valueOf(entryType);
+                            ((CollectionVersion) version).setType(type);
+                            ((CollectionVersion) version).setRights(entry.getRights());
+                        } else if (version instanceof ServiceVersion) {
+                            ServiceType type = ServiceType.valueOf(entryType);
+                            ((ServiceVersion) version).setType(type);
+                        }
+                    }
+                }
             }
         }
     }
@@ -575,7 +606,7 @@ public class AdapterInputHelper {
         version.setDescription(name);
         Date now = new Date();
         version.setUpdated(now);
-        version.setType(AgentType.Person);
+        version.setType(AgentType.PERSON);
         version.getMboxes().add(email);
 
         version.setParent(agent);

@@ -75,7 +75,7 @@ public class LDAPUtil {
             version.setDescription(description);
             Date now = new Date();
             version.setUpdated(now);
-            version.setType(AgentType.Person);
+            version.setType(AgentType.PERSON);
             version.getMboxes().add(mail);
             version.getAlternatives().add(attributesMap.get("pub-displayname"));
 
@@ -131,7 +131,7 @@ public class LDAPUtil {
             version.setDescription("Staff Member");
             Date now = new Date();
             version.setUpdated(now);
-            version.setType(AgentType.Person);
+            version.setType(AgentType.PERSON);
             version.getMboxes().add(mail);
 
             version.setParent(agent);
