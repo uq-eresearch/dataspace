@@ -63,6 +63,12 @@ public class AdapterInputHelper {
 
     private static void addRelationsToActivity(Entry entry, ActivityVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+
+        //Add the original id
+        if (entry.getId() != null) {
+            version.setOriginalId(entry.getId().toString());
+        }
+
         List<Person> authors = entry.getAuthors();
         addPages(version, entry);
         Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_HAS_OUTPUT);
@@ -199,7 +205,6 @@ public class AdapterInputHelper {
             version.setOriginalId(entry.getId().toString());
         }
 
-
         List<Link> emails = entry.getLinks(Constants.REL_MBOX);
         if (emails.isEmpty()) {
             throw new ResponseContextException("Email (mbox) element is missing", 400);
@@ -268,8 +273,14 @@ public class AdapterInputHelper {
 
     private static void addRelationsService(Entry entry, ServiceVersion version) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-        Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_SUPPORTED_BY);
+
+        //Add the original id
+        if (entry.getId() != null) {
+            version.setOriginalId(entry.getId().toString());
+        }
+
         addPages(version, entry);
+        Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_SUPPORTED_BY);
         for (String uriKey : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {

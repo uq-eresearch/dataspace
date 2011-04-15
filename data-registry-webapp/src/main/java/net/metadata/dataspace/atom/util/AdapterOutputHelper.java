@@ -180,7 +180,6 @@ public class AdapterOutputHelper {
                 entry.addAuthor(workingCopy.getTitle(), workingCopy.getMboxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
             }
 
-            entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
             String collectionTypeLabel = version.getType().toString();
             entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_DCMITYPE + collectionTypeLabel, collectionTypeLabel);
 
@@ -426,8 +425,8 @@ public class AdapterOutputHelper {
                 //TODO this should accommodate external ids
                 parentUrl = parentUrl + "/" + version.getUriKey();
             }
-            if (version instanceof CollectionVersion && ((CollectionVersion) version).getOriginalId() != null) {
-                entry.setId(((CollectionVersion) version).getOriginalId());
+            if (version.getOriginalId() != null) {
+                entry.setId(version.getOriginalId());
             } else {
                 entry.setId(parentUrl);
             }

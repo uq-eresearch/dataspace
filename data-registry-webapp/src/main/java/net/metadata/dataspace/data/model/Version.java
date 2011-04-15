@@ -41,4 +41,8 @@ public interface Version {
     void setDescription(String content);
 
     void setUpdated(Date updated);
+
+    void setOriginalId(String originalId);
+
+    String getOriginalId();
 }

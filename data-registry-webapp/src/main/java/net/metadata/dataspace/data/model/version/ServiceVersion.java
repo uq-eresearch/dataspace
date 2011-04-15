@@ -27,6 +27,8 @@ public class ServiceVersion extends AbstractVersionEntity {
     @ManyToOne
     private Service parent;
 
+    private String originalId;
+
     @NotNull
     @Enumerated(STRING)
     private ServiceType type;
@@ -60,6 +62,14 @@ public class ServiceVersion extends AbstractVersionEntity {
     @Override
     public void setParent(Record parent) {
         this.parent = (Service) parent;
+    }
+
+    public String getOriginalId() {
+        return originalId;
+    }
+
+    public void setOriginalId(String originalId) {
+        this.originalId = originalId;
     }
 
     public Set<Collection> getSupportedBy() {
