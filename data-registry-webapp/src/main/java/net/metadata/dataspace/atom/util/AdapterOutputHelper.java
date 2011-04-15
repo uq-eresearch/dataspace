@@ -111,14 +111,17 @@ public class AdapterOutputHelper {
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
 
         try {
-            entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
-            entry.addCategory(Constants.NS_FOAF, Constants.TERM_AGENT_AS_AGENT, version.getType().toString());
+            entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
+            String agentTypelabel = version.getType().toString();
+            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_FOAF + agentTypelabel, agentTypelabel);
+
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
                 Element alternativeElement = entry.addExtension(Constants.QNAME_RDFA_META);
                 alternativeElement.setAttributeValue("property", Constants.REL_ALTERNATIVE);
                 alternativeElement.setAttributeValue("content", alternativeName);
             }
+            //TODO the full name details go here
 
             Set<String> mboxes = version.getMboxes();
             for (String mbox : mboxes) {
@@ -130,10 +133,6 @@ public class AdapterOutputHelper {
             Set<String> pages = version.getPages();
             for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
-            }
-            Set<Subject> subjectSet = version.getSubjects();
-            for (Subject sub : subjectSet) {
-                entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
             }
 
             Set<Collection> collectionSet = version.getMade();
@@ -156,6 +155,10 @@ public class AdapterOutputHelper {
                 Link link = entry.addLink(href, Constants.REL_CURRENT_PROJECT);
                 link.setTitle(activity.getTitle());
             }
+
+            Set<Subject> subjectSet = version.getSubjects();
+            addSubjectToEntry(entry, subjectSet);
+
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
@@ -178,7 +181,8 @@ public class AdapterOutputHelper {
             }
 
             entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
-            entry.addCategory(Constants.NS_DCMITYPE, Constants.TERM_COLLECTION, version.getType().toString());
+            String collectionTypeLabel = version.getType().toString();
+            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_DCMITYPE + collectionTypeLabel, collectionTypeLabel);
 
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
@@ -193,13 +197,7 @@ public class AdapterOutputHelper {
             }
             //Subjects
             Set<Subject> subjectSet = version.getSubjects();
-            for (Subject sub : subjectSet) {
-                if (sub.getLabel().equals(Constants.LABEL_KEYWORD)) {
-                    entry.addCategory(sub.getTerm());
-                } else {
-                    entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
-                }
-            }
+            addSubjectToEntry(entry, subjectSet);
 
             //Publishers
             Set<Agent> publishers = version.getPublishers();
@@ -498,6 +496,16 @@ public class AdapterOutputHelper {
             licenseLink.setMimeType(Constants.MIME_TYPE_RDF);
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to add contributor", 500);
+        }
+    }
+
+    private static void addSubjectToEntry(Entry entry, Set<Subject> subjectSet) {
+        for (Subject sub : subjectSet) {
+            if (sub.getLabel().equals(Constants.LABEL_KEYWORD)) {
+                entry.addCategory(sub.getTerm());
+            } else {
+                entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
+            }
         }
     }
 
