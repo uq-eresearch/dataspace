@@ -1,23 +1,95 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app">
-    <id>http://localhost:9635/activities/1</id>
-    <title type="text">Activity Name</title>
-    <content type="text">Activity Content</content>
-    <updated>2010-10-28T01:03:29.877Z</updated>
-    <author>
-        <name>Nigel Ward</name>
-        <uri>http://localhost:9635/agents/1</uri>
-        <email>a.alabri@uq.edu.au</email>
-    </author>
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
+       xmlns:rdfa="http://www.w3.org/ns/rdfa#">
+
+    <!-- *** metadata about the activity *** -->
+    <!--     id for the activity in the original source system-->
+    <id>http://oztrak.uq.edu.au/project/abc</id>
+    <link rel="http://www.openarchives.org/ore/terms/describes" href="http://dataspace.edu.au/activities/123#"/>
+
+    <!--     type of agent -->
+    <category scheme="http://purl.org/dc/dcmitype/" term="http://xmlns.com/foaf/0.1/Project" label="Project"/>
+
+    <!--     activity name-->
+    <title type="text">Tracking crocodiles in 3-dimensions: A remote monitoring study of movement patterns and diving
+        behaviour
+    </title>
+    <!--     alternative name  -->
+    <rdfa:meta property="http://purl.org/dc/terms/alternative" content="3D croc tracking"/>
+
+    <!--     activity description -->
+    <content type="text">ARC Linkage Project between the University of Queensland, the Queensland
+        Environmental Protection Agency and Australia Zoo. The result from this study will promote a
+        better understanding and appreciation of crocodiles and will help to assist conservation
+        managers in determining population dynamics and movements of crocodiles in Queensland. This
+        study will showcase, on an international stage, Australia as being a leader in crocodilian
+        research and conservation, with the results from this study being actively presented and
+        profiled in both the scientific and general media. Finally this project will encourage and
+        promote a long term research association between the University of Queensland, Australia Zoo
+        and Queensland Parks and Wildlife Service that will stimulate scientific discovery, and
+        promote effective conservation through education and research.
+    </content>
+
+    <!--    agent email and webpage -->
+    <link rel="http://xmlns.com/foaf/0.1/page" href="http://www.uq.edu.au/eco-lab/dr-hamish-campbell"/>
+
+    <!--    participants -->
+    <link rel='http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant'
+          href='http://dataspace.edu.au/agents/123#'/>
+
+    <!--    funded by -->
+    <link rel='http://vivoweb.org/ontology/core#fundedBy' href='http://dataspace.uq.edu.au/agents/421#'
+          title='Australian Research Council'/>
+
+    <!--    created collections -->
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
+          href="http://dataspace.uq.edu.au/collections/1bc#"
+          title="Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using acoustic telemetry"/>
+
+    <!--    manages collections -->
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf"
+          title="Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using acoustic telemetry"
+          href="http://dataspace.uq.edu.au/collections/1bc#"/>
+
+    <!--    webpage about the activity -->
+    <link rel="http://xmlns.com/foaf/0.1/page"
+          href="http://www.uq.edu.au/uqresearchers/researcher/franklince.html?uv_category=prj&amp;prj=810449"/>
+
+    <!--     subjects -->
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_060801"
+              label="060801 Animal Behaviour"/>
+    <category label="habitat utilisation"/>
+
+
+    <!-- *** metadata about the description *** -->
+    <!--     description URI  -->
+    <link rel="self" href="http://dataspace.edu.au/activities/123"/>
+
+    <!--     description first published -->
+    <published>2010-10-08T05:58:02.781Z</published>
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02.781Z</updated>
+
+    <source>
+        <!-- source for the description -->
+        <id>http://oztrack.uq.edu.au</id>
+        <title>OzTrack System</title>
+
+        <!-- description creator -->
+        <author>
+            <name>Matthew Watts</name>
+            <email>m.watts@uq.edu.au</email>
+            <uri>http://oztrack.uq.edu.au</uri>
+        </author>
+
+        <link rel="http://purl.org/dc/terms/publisher" href="http://uq.edu.au" title="The University of Queensland"/>
+
+        <!-- description rights -->
+        <rights>This description is licensed under Creative Commons Attribution-Share Alike 3.0 Australia.</rights>
+        <link rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/rdf"/>
+    </source>
+
     <app:control>
         <app:draft>yes</app:draft>
     </app:control>
-    <link href="http://localhost:8080/agents/1"
-          rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"/>
-    <link href="http://localhost:9635/collections/1"
-          rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"/>
-    <source>
-        <id>http://uq.edu.au/</id>
-        <title>The University of Queensland</title>
-    </source>
 </entry>
