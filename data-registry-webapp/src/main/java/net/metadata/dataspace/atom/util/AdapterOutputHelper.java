@@ -306,8 +306,8 @@ public class AdapterOutputHelper {
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
-            String agentTypelabel = version.getType().toString();
-            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_EFS + agentTypelabel, agentTypelabel);
+            String serviceTypelabel = version.getType().toString();
+            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_EFS + serviceTypelabel, serviceTypelabel);
 
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
