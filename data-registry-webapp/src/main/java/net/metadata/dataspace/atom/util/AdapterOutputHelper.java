@@ -496,6 +496,9 @@ public class AdapterOutputHelper {
             if (registrySource != null) {
                 source.setId(registrySource.getSourceURI());
                 source.setTitle(registrySource.getTitle());
+            } else {
+                source.setId(Constants.UQ_REGISTRY_URI_PREFIX);
+                source.setTitle(Constants.UQ_REGISTRY_TITLE);
             }
             Set<Agent> authors = version.getParent().getAuthors();
             for (Agent author : authors) {
@@ -507,7 +510,7 @@ public class AdapterOutputHelper {
             Link licenseLink = source.addLink(Constants.REL_LICENSE, Constants.UQ_REGISTRY_LICENSE);
             licenseLink.setMimeType(Constants.MIME_TYPE_RDF);
         } catch (Throwable th) {
-            throw new ResponseContextException("Failed to add contributor", 500);
+            throw new ResponseContextException("Failed to add source", 500);
         }
     }
 
