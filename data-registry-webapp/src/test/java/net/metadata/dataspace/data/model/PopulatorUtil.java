@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model;
 
+import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.context.Publication;
@@ -33,8 +34,9 @@ public class PopulatorUtil {
         Subject subject = entityCreator.getNextSubject();
         UUID uuid = UUID.randomUUID();
         String vocabUriString = uuid.toString();
-        subject.setTerm(vocabUriString);
-        subject.setDefinedBy("Test Subject");
+        subject.setDefinedBy(Constants.SCHEME_ANZSRC_FOR);
+        subject.setTerm(Constants.SCHEME_ANZSRC_FOR + "/" + vocabUriString);
+        subject.setLabel(vocabUriString);
         return subject;
     }
 
