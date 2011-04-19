@@ -38,18 +38,13 @@
           href='http://dataspace.edu.au/agents/123#'/>
 
     <!--    funded by -->
-    <link rel='http://vivoweb.org/ontology/core#fundedBy' href='http://dataspace.uq.edu.au/agents/421#'
+    <link rel='http://vivoweb.org/ontology/core#fundedBy' href='http://dataspace.uq.edu.au/agents/1'
           title='Australian Research Council'/>
 
     <!--    created collections -->
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
-          href="http://dataspace.uq.edu.au/collections/1bc#"
+          href="http://dataspace.uq.edu.au/collections/1"
           title="Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using acoustic telemetry"/>
-
-    <!--    manages collections -->
-    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf"
-          title="Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using acoustic telemetry"
-          href="http://dataspace.uq.edu.au/collections/1bc#"/>
 
     <!--    webpage about the activity -->
     <link rel="http://xmlns.com/foaf/0.1/page"
