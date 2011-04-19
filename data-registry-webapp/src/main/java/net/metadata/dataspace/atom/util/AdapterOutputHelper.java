@@ -67,8 +67,10 @@ public class AdapterOutputHelper {
 
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
-            entry.addCategory(Constants.NS_FOAF, Constants.TERM_ACTIVITY, version.getType().toString());
+            entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
+            String activityTypelabel = version.getType().toString();
+            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_FOAF + activityTypelabel, activityTypelabel);
+
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
                 Element alternativeElement = entry.addExtension(Constants.QNAME_RDFA_META);
@@ -79,11 +81,6 @@ public class AdapterOutputHelper {
             Set<String> pages = version.getPages();
             for (String page : pages) {
                 entry.addLink(page, Constants.REL_PAGE);
-            }
-
-            Set<Subject> subjectSet = version.getSubjects();
-            for (Subject sub : subjectSet) {
-                entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
             }
 
             Set<Agent> agentSet = version.getHasParticipants();
@@ -98,6 +95,9 @@ public class AdapterOutputHelper {
                 Link link = entry.addLink(href, Constants.REL_HAS_OUTPUT);
                 link.setTitle(collection.getTitle());
             }
+
+            Set<Subject> subjectSet = version.getSubjects();
+            addSubjectToEntry(entry, subjectSet);
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
@@ -305,8 +305,10 @@ public class AdapterOutputHelper {
         String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
-            entry.addLink(parentUrl, Constants.REL_IS_DESCRIBED_BY);
-            entry.addCategory(Constants.NS_VIVO, Constants.TERM_SERVICE, version.getType().toString());
+            entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
+            String agentTypelabel = version.getType().toString();
+            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_EFS + agentTypelabel, agentTypelabel);
+
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
                 Element alternativeElement = entry.addExtension(Constants.QNAME_RDFA_META);

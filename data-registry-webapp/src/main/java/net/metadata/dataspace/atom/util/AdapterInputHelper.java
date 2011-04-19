@@ -70,8 +70,17 @@ public class AdapterInputHelper {
             version.setOriginalId(entry.getId().toString());
         }
 
-        List<Person> authors = entry.getAuthors();
+        addAlternativeTitles(version, entry);
+
+        //Add web pages
         addPages(version, entry);
+
+        //Add subjects
+        Set<Subject> subjects = getSubjects(entry);
+        for (Subject subject : subjects) {
+            version.getSubjects().add(subject);
+        }
+
         Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_HAS_OUTPUT);
         for (String key : collectionUriKeys) {
             Collection collection = collectionDao.getByKey(key);
@@ -79,7 +88,6 @@ public class AdapterInputHelper {
                 Activity parent = version.getParent();
                 version.getHasOutput().add(collection);
                 collection.getOutputOf().add(parent);
-
                 entityManager.merge(collection);
             }
         }
