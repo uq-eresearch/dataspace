@@ -49,9 +49,6 @@
             <url>http://maven.metadata.net/artifactory/libs-snapshots-local</url>
         </snapshotRepository>
     </distributionManagement>
-    <properties>
-        <restletVersion>1.1.8</restletVersion>
-    </properties>
     <build>
         <plugins>
             <plugin>
@@ -234,11 +231,7 @@
             <artifactId>spring-webmvc</artifactId>
             <version>2.5.6</version>
         </dependency>
-        <dependency>
-            <groupId>org.restlet</groupId>
-            <artifactId>org.restlet</artifactId>
-            <version>${restletVersion}</version>
-        </dependency>
+
         <!--Local libraries-->
         <dependency>
             <groupId>au.edu.uq.itee.maenad</groupId>
@@ -316,11 +309,6 @@
             <id>eResearch</id>
             <name>maenad-releases</name>
             <url>http://maven.metadata.net/artifactory/repo</url>
-        </repository>
-        <repository>
-            <id>maven-restlet</id>
-            <name>Public online Restlet repository</name>
-            <url>http://maven.restlet.org</url>
         </repository>
         <repository>
             <id>maven.ala.org.au</id>
