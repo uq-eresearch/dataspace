@@ -45,7 +45,7 @@ public class ServiceDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-//        PopulatorUtil.cleanup();
+        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
     }
 

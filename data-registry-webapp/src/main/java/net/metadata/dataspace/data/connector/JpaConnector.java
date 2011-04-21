@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 public class JpaConnector implements EntityManagerSource, Serializable {
 
-    private final EntityManagerFactory emf;
+    private EntityManagerFactory emf;
     private final ThreadLocal<EntityManager> entityManagerTL = new ThreadLocal<EntityManager>();
 
     public JpaConnector(EntityManagerFactory emf) {

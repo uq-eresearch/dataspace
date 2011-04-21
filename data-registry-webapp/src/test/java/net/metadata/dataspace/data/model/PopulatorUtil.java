@@ -3,6 +3,7 @@ package net.metadata.dataspace.data.model;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -101,11 +102,11 @@ public class PopulatorUtil {
     }
 
     public static void cleanup() {
-        EntityManager entityManager = daoManager.getJpaConnnector().getEntityManager();
+        JpaConnector jpaConnnector = daoManager.getJpaConnnector();
+        EntityManager entityManager = jpaConnnector.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         Query dropQuery = entityManager.createNativeQuery("DROP SCHEMA registry if exists; CREATE SCHEMA registry;");
-        dropQuery.executeUpdate();
         transaction.commit();
     }
 

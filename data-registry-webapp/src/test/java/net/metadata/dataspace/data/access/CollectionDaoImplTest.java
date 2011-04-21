@@ -44,8 +44,8 @@ public class CollectionDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
+        PopulatorUtil.cleanup();
     }
 
     @After
