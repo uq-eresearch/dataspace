@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
@@ -17,7 +18,6 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.model.Entry;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,8 +44,8 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
-@TransactionConfiguration(transactionManager = "transactionManager")
-@Transactional
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+@Transactional()
 public class AdapterOutputHelperTest {
 
     @Autowired
@@ -56,7 +56,8 @@ public class AdapterOutputHelperTest {
 
     @Before
     public void setUp() throws Exception {
-        EntityManager entityManager = daoManager.getJpaConnnector().getEntityManager();
+        JpaConnector jpaConnnector = daoManager.getJpaConnnector();
+        EntityManager entityManager = jpaConnnector.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         Agent agent = (Agent) entityCreator.getNextRecord(Agent.class);
@@ -124,22 +125,19 @@ public class AdapterOutputHelperTest {
         entityManager.persist(serviceVersion);
         entityManager.persist(activity);
         entityManager.persist(activityVersion);
-
         transaction.commit();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        PopulatorUtil.cleanup();
-    }
+//    @After
+//    public void tearDown() throws Exception {
+//        PopulatorUtil.cleanup();
+//    }
 
     @Test
     @Rollback(true)
     public void testGetEntryFromAgent() throws Exception {
         List<Agent> agents = daoManager.getAgentDao().getAll();
-
-        System.out.println("Agents-------" + agents.size());
-        Agent agent = agents.get(0);
+        Agent agent = agents.get(agents.size() - 1);
         AgentVersion agentVersion = agent.getVersions().first();
         Entry entry = AdapterOutputHelper.getEntryFromEntity(agentVersion, true);
         assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey());
@@ -151,11 +149,11 @@ public class AdapterOutputHelperTest {
     }
 
     @Test
+    @Transactional
     @Rollback(true)
     public void testGetEnteryFromCollection() throws Exception {
         List<Collection> collections = daoManager.getCollectionDao().getAll();
-        System.out.println("Col-------" + collections.size());
-        Collection collection = collections.get(0);
+        Collection collection = collections.get(collections.size() - 1);
         CollectionVersion version = collection.getVersions().first();
         Entry entry = AdapterOutputHelper.getEntryFromEntity(version, true);
         assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
@@ -172,8 +170,7 @@ public class AdapterOutputHelperTest {
     @Test
     public void testGetEnteryFromActivity() throws Exception {
         List<Activity> activities = daoManager.getActivityDao().getAll();
-        Activity activity = activities.get(0);
-        System.out.println("Activities-------" + activities.size());
+        Activity activity = activities.get(activities.size() - 1);
         ActivityVersion version = activity.getVersions().first();
         Entry entry = AdapterOutputHelper.getEntryFromEntity(version, true);
         assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
@@ -181,15 +178,14 @@ public class AdapterOutputHelperTest {
         assertEquals("Entry content", entry.getContent(), activity.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), activity.getAuthors().size());
         assertTrue("Entry should have at least 1 category", entry.getCategories().size() >= 1);
-//        assertTrue("Entry should have at least one agent", entry.getLinks(Constants.REL_HAS_PARTICIPANT).size() >= 1);
-//        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_HAS_OUTPUT).size() >= 1);
+        assertTrue("Entry should have at least one agent", entry.getLinks(Constants.REL_HAS_PARTICIPANT).size() >= 1);
+        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_HAS_OUTPUT).size() >= 1);
     }
 
     @Test
     public void testGetEnteryFromService() throws Exception {
         List<Service> services = daoManager.getServiceDao().getAll();
-        System.out.println("Services-------" + services.size());
-        Service service = services.get(0);
+        Service service = services.get(services.size() - 1);
         Entry entry = AdapterOutputHelper.getEntryFromEntity(service.getVersions().first(), true);
         assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         assertEquals("Entry title", entry.getTitle(), service.getTitle());
@@ -197,16 +193,16 @@ public class AdapterOutputHelperTest {
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), service.getAuthors().size());
         assertTrue("Entry should have at least 1 category", entry.getCategories().size() >= 1);
         assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_PAGE).size() >= 1);
-//        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_SUPPORTED_BY).size() >= 1);
+        assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_SUPPORTED_BY).size() >= 1);
     }
 
     @Test
     public void testUpdateAgentFromEntry() throws Exception {
         List<Agent> agents = daoManager.getAgentDao().getAll();
-        Agent agent = agents.get(0);
+        Agent agent = agents.get(agents.size() - 1);
         Entry entry = AdapterOutputHelper.getEntryFromEntity(agent.getVersions().first(), true);
         Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(agent, entry);
-//        assertNotNull("Could not update entry", version);
+        assertNotNull("Could not update entry", version);
         assertEquals("Entry title", agent.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", agent.getVersions().first().getDescription(), version.getDescription());
     }
@@ -214,7 +210,7 @@ public class AdapterOutputHelperTest {
     @Test
     public void testUpdateCollectionFromEntry() throws Exception {
         List<Collection> collections = daoManager.getCollectionDao().getAll();
-        Collection collection = collections.get(0);
+        Collection collection = collections.get(collections.size() - 1);
         CollectionVersion firstVersion = collection.getVersions().first();
         Entry entry = AdapterOutputHelper.getEntryFromEntity(firstVersion, true);
         CollectionVersion version = (CollectionVersion) AdapterInputHelper.assembleAndValidateVersionFromEntry(collection, entry);
@@ -224,26 +220,26 @@ public class AdapterOutputHelperTest {
         assertEquals("Entry content", firstVersion.getDescription(), version.getDescription());
     }
 
-//    @Test
-//    public void testUpdateServiceFromEntry() throws Exception {
-//        List<Service> services = daoManager.getServiceDao().getAll();
-//        Service service = services.get(0);
-//        Entry entry = AdapterOutputHelper.getEntryFromEntity(service.getVersions().first(), true);
-//        ServiceVersion version = (ServiceVersion) AdapterInputHelper.assembleAndValidateVersionFromEntry(service, entry);
-//        assertNotNull("Could not update entry", version);
-//        assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
-//        assertEquals("Entry content", service.getVersions().first().getDescription(), version.getDescription());
-//    }
+    @Test
+    public void testUpdateServiceFromEntry() throws Exception {
+        List<Service> services = daoManager.getServiceDao().getAll();
+        Service service = services.get(services.size() - 1);
+        Entry entry = AdapterOutputHelper.getEntryFromEntity(service.getVersions().first(), true);
+        ServiceVersion version = (ServiceVersion) AdapterInputHelper.assembleAndValidateVersionFromEntry(service, entry);
+        assertNotNull("Could not update entry", version);
+        assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
+        assertEquals("Entry content", service.getVersions().first().getDescription(), version.getDescription());
+    }
 
-//    @Test
-//    public void testUpdateActivityFromEntry() throws Exception {
-//        List<Activity> activities = daoManager.getActivityDao().getAll();
-//        Activity activity = activities.get(0);
-//        Entry entry = AdapterOutputHelper.getEntryFromEntity(activity.getVersions().first(), true);
-//        Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(activity, entry);
-//        assertNotNull("Could not update entry", version);
-//        assertEquals("Entry title", activity.getTitle(), version.getTitle());
-//        assertEquals("Entry content", activity.getContent(), version.getDescription());
-//    }
+    @Test
+    public void testUpdateActivityFromEntry() throws Exception {
+        List<Activity> activities = daoManager.getActivityDao().getAll();
+        Activity activity = activities.get(activities.size() - 1);
+        Entry entry = AdapterOutputHelper.getEntryFromEntity(activity.getVersions().first(), true);
+        Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(activity, entry);
+        assertNotNull("Could not update entry", version);
+        assertEquals("Entry title", activity.getTitle(), version.getTitle());
+        assertEquals("Entry content", activity.getContent(), version.getDescription());
+    }
 
 }
