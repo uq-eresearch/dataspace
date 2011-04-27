@@ -62,7 +62,6 @@ public interface Constants {
     /**
      * Namespaces
      */
-    String NS_ANDS_GROUP = "https://services.ands.org.au/home/orca/services/getRegistryObjectGroups.php";
     String NS_FOAF = "http://xmlns.com/foaf/0.1/";
     String NS_ANDS = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#";
     String NS_DC = PERSISTENT_URL + "dc/terms/";
