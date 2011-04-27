@@ -86,3 +86,88 @@ function styleTables() {
     $(".lookup-table > tbody > tr:even").css("background-color", "#F4F4F8");
     $(".lookup-table > tbody > tr:odd").css("background-color", "#d4d4d4");
 }
+
+
+function getCollectionAtom() {
+    var collection = getAtomEntryElement();
+    var id = getSimpleElementWithText('id', 'http://localhost:8080/collections/abc')
+    collection.append(id);
+    var titleValue = $('#edit-title-text').val();
+    var title = getSimpleElementWithText('title', titleValue);
+    title.attr('type', 'text');
+    collection.append(title);
+    var collectionType = $('#collection-type-combobox').val();
+    var typeCategory = getCategoryElement('', '', collectionType);
+    collection.append(typeCategory);
+    var contentValue = $('#content-textarea').val();
+    var content = getSimpleElementWithText('content', contentValue);
+    content.attr('type', 'text');
+    collection.append(content);
+    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+    collection.append(updated);
+    $('#outerhtml').append(collection);
+//    return collection;
+}
+
+function getAtomEntryElement() {
+    var attributes = [
+        {name: "xmlns", value:"http://www.w3.org/2005/Atom"},
+        {name: "xmlns:app", value:"http://www.w3.org/2007/app"},
+        {name: "xmlns:georss", value:"http://www.georss.org/georss/"},
+        {name: "xmlns:rdfa", value:"http://www.w3.org/ns/rdfa#"}
+    ];
+    var entry = getElementWithAttributes("entry", attributes);
+    return entry;
+}
+
+function getLinkElement(href, rel, title) {
+    var attributes = [
+        {name:'href',value: href},
+        {name:'rel',value: rel},
+        {name:'title',value: title}
+    ];
+    var link = getElementWithAttributes('link', attributes);
+    return link;
+}
+
+function getCategoryElement(scheme, term, label) {
+    var attributes = [
+        {name:'scheme',value: scheme},
+        {name:'term',value: term},
+        {name:'label',value: label}
+    ];
+    var category = getElementWithAttributes('category', attributes);
+    return category;
+}
+
+function getAuthorElement(name, email, uri) {
+    var author = getSimpleElement('author');
+    var nameElement = getSimpleElement('name');
+    nameElement.text(name);
+    author.append(nameElement);
+    var emailElement = getSimpleElement('email');
+    emailElement.text(email);
+    author.append(emailElement);
+    var uriElement = getSimpleElement('uri');
+    uriElement.text(uri);
+    author.append(uriElement);
+    return author;
+}
+
+function getSimpleElementWithText(name, text) {
+    var element = getSimpleElement(name);
+    element.text(text);
+    return element;
+}
+
+function getElementWithAttributes(name, attributes) {
+    var element = getSimpleElement(name);
+    for each (var attribute in attributes) {
+        element.attr(attribute.name, attribute.value);
+    }
+    return element;
+}
+
+function getSimpleElement(name) {
+    return $('<' + name + '>');
+}

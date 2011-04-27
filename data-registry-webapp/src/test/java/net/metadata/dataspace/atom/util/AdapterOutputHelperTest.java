@@ -22,7 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -134,7 +133,6 @@ public class AdapterOutputHelperTest {
 //    }
 
     @Test
-    @Rollback(true)
     public void testGetEntryFromAgent() throws Exception {
         List<Agent> agents = daoManager.getAgentDao().getAll();
         Agent agent = agents.get(agents.size() - 1);
@@ -149,8 +147,6 @@ public class AdapterOutputHelperTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     public void testGetEnteryFromCollection() throws Exception {
         List<Collection> collections = daoManager.getCollectionDao().getAll();
         Collection collection = collections.get(collections.size() - 1);
@@ -241,5 +237,4 @@ public class AdapterOutputHelperTest {
         assertEquals("Entry title", activity.getTitle(), version.getTitle());
         assertEquals("Entry content", activity.getContent(), version.getDescription());
     }
-
 }

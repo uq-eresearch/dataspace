@@ -94,33 +94,33 @@
             <!--atom:category[@scheme=$NS_DCMITYPE]-->
             <xsl:when test="$entity = 'collection'">
                 <select id="collection-type-combobox" name="type-combobox">
-                    <option value="collection">Collection</option>
-                    <option value="dataset">Dataset</option>
+                    <option value="Collection">Collection</option>
+                    <option value="Dataset">Dataset</option>
                 </select>
             </xsl:when>
             <xsl:when test="$entity = 'agent'">
                 <select id="agent-type-combobox" name="type-combobox">
-                    <option value="group">Group</option>
-                    <option value="person">Person</option>
+                    <option value="Group">Group</option>
+                    <option value="Person">Person</option>
                 </select>
             </xsl:when>
             <xsl:when test="$entity = 'activity'">
                 <select id="activity-type-combobox" name="type-combobox">
-                    <option value="program">Program</option>
-                    <option value="project">Project</option>
+                    <option value="Program">Program</option>
+                    <option value="Project">Project</option>
                 </select>
             </xsl:when>
             <xsl:otherwise>
                 <select id="service-type-combobox" name="type-combobox">
-                    <option value="annotate">Annotate</option>
-                    <option value="assemble">Assemble</option>
-                    <option value="create">Create</option>
+                    <option value="Annotate">Annotate</option>
+                    <option value="Assemble">Assemble</option>
+                    <option value="Create">Create</option>
                     <option value="Generate">Generate</option>
-                    <option value="harvest">Harvest</option>
-                    <option value="report">Report</option>
-                    <option value="search">Search</option>
-                    <option value="syndicate">Syndicate</option>
-                    <option value="transform">Transform</option>
+                    <option value="Harvest">Harvest</option>
+                    <option value="Report">Report</option>
+                    <option value="Search">Search</option>
+                    <option value="Syndicate">Syndicate</option>
+                    <option value="Transform">Transform</option>
                 </select>
             </xsl:otherwise>
         </xsl:choose>
