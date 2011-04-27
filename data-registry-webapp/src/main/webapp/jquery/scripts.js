@@ -184,24 +184,62 @@ function getCollectionAtom() {
     content.attr('type', 'text');
     collection.append(content);
 
+    //pages
+    addPages(collection);
+
+    //rights
+    var rightsValue = $('#rights-textarea').val();
+    var rights = getSimpleElementWithText('rights', rightsValue);
+    collection.append(rights);
+
+    //access rights
+    addAccessRights(collection);
+
     var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
     collection.append(updated);
 
     $('#outerhtml').append(collection);
 //    return collection;
 }
-function addAlternativeTitles(record) {
-    //TODO add a loop to collect all alternative titles
-    var alternativeTitle = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
+
+/**
+ *
+ * Specific functions
+ *
+ */
+
+function addAccessRights(record) {
+    var accessRights = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
     var attributes = [
-        {name: 'property', value: REL_ALTERNATIVE },
-        {name: 'content', value:$('#alternative-title-text').val() }
+        {name: 'property', value: REL_ACCESS_RIGHTS },
+        {name: 'content', value:$('#access-rights-textarea').val() }
     ];
     for each (var attribute in attributes) {
-        alternativeTitle.attr(attribute.name, attribute.value);
+        accessRights.attr(attribute.name, attribute.value);
     }
-//    var alternativeTitle = getElementWithAttributes('rdfa:meta', attributes);
-    record.append(alternativeTitle);
+    record.append(accessRights);
+
+}
+
+function addAlternativeTitles(record) {
+    $('input[id|="alternative-title-text"]').each(function () {
+        var alternativeTitle = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
+        var attributes = [
+            {name: 'property', value: REL_ALTERNATIVE },
+            {name: 'content', value:$(this).val() }
+        ];
+        for each (var attribute in attributes) {
+            alternativeTitle.attr(attribute.name, attribute.value);
+        }
+        record.append(alternativeTitle);
+    });
+}
+
+function addPages(record) {
+    $('input[id|="page-text"]').each(function () {
+        var linkElement = getLinkElement($(this).val(), REL_PAGE);
+        record.append(linkElement);
+    });
 }
 
 function getAtomEntryElement() {
@@ -249,6 +287,12 @@ function getAuthorElement(name, email, uri) {
     return author;
 }
 
+
+/**
+ *
+ * Generic Functions
+ *
+ * */
 function getSimpleElementWithText(name, text) {
     var element = getSimpleElement(name);
     element.text(text);
