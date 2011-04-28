@@ -482,9 +482,12 @@
     <xsl:template name="licence-type">
         <select id="licence-type-combobox" name="type-combobox">
             <option value="none">None</option>
-            <option value="cc-by">CC-BY</option>
-            <option value="cc-by-sa">CC-BY-SA</option>
-            <option value="cc-by-nd">CC-BY-ND</option>
+            <option value="http://creativecommons.org/licenses/by/3.0/rdf">CC-BY</option>
+            <option value="http://creativecommons.org/licenses/by-sa/3.0/rdf">CC-BY-SA</option>
+            <option value="http://creativecommons.org/licenses/by-nd/3.0/rdf">CC-BY-ND</option>
+            <option value="http://creativecommons.org/licenses/by-nc/3.0/rdf">CC-BY-NC</option>
+            <option value="http://creativecommons.org/licenses/by-nc-sa/3.0/rdf">CC-BY-NC-SA</option>
+            <option value="http://creativecommons.org/licenses/by-nc-nd/3.0/rdf">CC-BY-NC-ND</option>
         </select>
     </xsl:template>
     <xsl:template name="lookup-form">

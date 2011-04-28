@@ -261,7 +261,7 @@
                 </div>
                 <div class="save-links-div">
                     <a href="#" class="save-link" id="save-link" title="Save Record"
-                       onclick="getCollectionAtom(); return false;">save
+                       onclick="getCollectionAtom(true, true); return false;">save
                     </a>
                     <a href="#" class="publish-link" id="publish-link" title="Publish Record">publish</a>
                     <div id="outerhtml"></div>

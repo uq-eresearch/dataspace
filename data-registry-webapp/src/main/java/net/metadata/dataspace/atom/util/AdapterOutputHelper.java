@@ -509,7 +509,7 @@ public class AdapterOutputHelper {
             Link publisher = source.addLink(Constants.UQ_URL, Constants.REL_PUBLISHER);
             publisher.setTitle(Constants.TERM_ANDS_GROUP);
             source.setRights(Constants.UQ_REGISTRY_RIGHTS);
-            Link licenseLink = source.addLink(Constants.REL_LICENSE, Constants.UQ_REGISTRY_LICENSE);
+            Link licenseLink = source.addLink(Constants.UQ_REGISTRY_LICENSE, Constants.REL_LICENSE);
             licenseLink.setMimeType(Constants.MIME_TYPE_RDF);
         } catch (Throwable th) {
             throw new ResponseContextException("Failed to add source", 500);

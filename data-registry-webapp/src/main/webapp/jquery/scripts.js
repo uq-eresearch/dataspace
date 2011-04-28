@@ -103,7 +103,8 @@ var NS_ORE = "http://www.openarchives.org/ore/terms/";
 var NS_GEORSS = "http://www.georss.org/georss/";
 var NS_RDFA = "http://www.w3.org/ns/rdfa#";
 var NS_EFS = "http://www.e-framework.org/Contributions/ServiceGenres/";
-
+var NS_ATOM = "http://www.w3.org/2005/Atom";
+var NS_APP = "http://www.w3.org/2007/app";
 /**
  * rel attribute types
  */
@@ -158,45 +159,84 @@ var PROPERTY_TITLE = NS_FOAF + "title";
 var PROPERTY_GIVEN_NAME = NS_FOAF + "givenName";
 var PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
 
-function getCollectionAtom() {
+function getCollectionAtom(isNew, isPublished) {
     var collection = getAtomEntryElement();
 
     //id
     var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'collections/abc');
+    if (!isNew) {
+        //TODO id needs to be retrieved from UI
+    }
     collection.append(id);
 
     //type
     var collectionType = $('#collection-type-combobox').val();
-    var typeCategory = getCategoryElement(NS_DCMITYPE, NS_DCMITYPE + collectionType, collectionType);
-    collection.append(typeCategory);
-
+    if (collectionType) {
+        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_DCMITYPE + collectionType, collectionType);
+        collection.append(typeCategory);
+    }
     //title
     var titleValue = $('#edit-title-text').val();
-    var title = getSimpleElementWithText('title', titleValue);
-    title.attr('type', 'text');
-    collection.append(title);
+    if (titleValue) {
+        var title = getSimpleElementWithText('title', titleValue);
+        title.attr('type', 'text');
+        collection.append(title);
+    }
 
     //Alternative titles
     addAlternativeTitles(collection);
 
     var contentValue = $('#content-textarea').val();
-    var content = getSimpleElementWithText('content', contentValue);
-    content.attr('type', 'text');
-    collection.append(content);
-
+    if (contentValue) {
+        var content = getSimpleElementWithText('content', contentValue);
+        content.attr('type', 'text');
+        collection.append(content);
+    }
     //pages
     addPages(collection);
 
+    //add authors
+    addAuthors(collection);
+
+    //add publishers
+    addPublishers(collection);
+
+    addOutputOf(collection);
+
+    //add TOA
+    addTOA(collection);
+
+    //keywords
+    addKeywordToCollection(collection);
+
+    //temporal
+    addTemporal(collection);
+
+    //spatial
+    addSpatial(collection);
+
+    //publications
+    addPublications(collection);
+
     //rights
     var rightsValue = $('#rights-textarea').val();
-    var rights = getSimpleElementWithText('rights', rightsValue);
-    collection.append(rights);
-
+    if (rightsValue) {
+        var rights = getSimpleElementWithText('rights', rightsValue);
+        collection.append(rights);
+    }
     //access rights
     addAccessRights(collection);
 
+    addLicense(collection);
+
+    //updated, format: '2010-10-08T05:58:02.781Z'
     var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
     collection.append(updated);
+
+    //add source
+    addSource(collection);
+
+    setPublished(collection, isPublished);
 
     $('#outerhtml').append(collection);
 //    return collection;
@@ -210,15 +250,26 @@ function getCollectionAtom() {
 
 function addAccessRights(record) {
     var accessRights = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
-    var attributes = [
-        {name: 'property', value: REL_ACCESS_RIGHTS },
-        {name: 'content', value:$('#access-rights-textarea').val() }
-    ];
-    for each (var attribute in attributes) {
-        accessRights.attr(attribute.name, attribute.value);
+    var val = $('#access-rights-textarea').val();
+    if (val) {
+        var attributes = [
+            {name: 'property', value: REL_ACCESS_RIGHTS },
+            {name: 'content', value:val }
+        ];
+        for each (var attribute in attributes) {
+            accessRights.attr(attribute.name, attribute.value);
+        }
+        record.append(accessRights);
     }
-    record.append(accessRights);
+}
 
+function addLicense(record) {
+    var license = $('#licence-type-combobox');
+    if ($(license).val() != 'none') {
+        var licenseLink = getLinkElement($(license).val(), REL_LICENSE, $(license).text());
+        licenseLink.attr('type', 'application/rdf+xml');
+        record.append(licenseLink);
+    }
 }
 
 function addAlternativeTitles(record) {
@@ -237,15 +288,144 @@ function addAlternativeTitles(record) {
 
 function addPages(record) {
     $('input[id|="page-text"]').each(function () {
-        var linkElement = getLinkElement($(this).val(), REL_PAGE);
-        record.append(linkElement);
+        var href = $(this).val();
+        if (href) {
+            var linkElement = getLinkElement(href, REL_PAGE);
+            record.append(linkElement);
+        }
     });
+}
+
+function addAuthors(record) {
+    //TODO authros needs to be retrieved from the UI
+    var author = getAuthorElement('Dr Hamish Campbell', 'hamish.campbell@uq.edu.au');
+    record.append(author);
+}
+
+function addPublishers(record) {
+    //TODO publishers needs to be retrieved from the UI
+    var publisher = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'agents/1', REL_PUBLISHER);
+    record.append(publisher);
+}
+
+function addOutputOf(record) {
+    //TODO publishers needs to be retrieved from the UI
+    var activity = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'activities/1', REL_IS_OUTPUT_OF);
+    record.append(activity);
+}
+
+function addAccessedVia(record) {
+    //TODO publishers needs to be retrieved from the UI
+    var service = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'services/1', REL_IS_ACCESSED_VIA);
+    record.append(service);
+}
+
+function addPublications(record) {
+    $('input[id|="publication-title"]').each(function () {
+        var title = $(this).val();
+        var href = $(this).parent().parent().find('input[id|="publication-url"]').eq(0).val();
+        if (href) {
+            var linkElement = getLinkElement(href, REL_IS_REFERENCED_BY, title);
+            record.append(linkElement);
+        }
+    });
+}
+
+function addTOA(record) {
+    $('div[id="type-of-activities"]').children('input:checked').each(function() {
+        var category = getCategoryElement(SCHEME_ANZSRC_TOA, SCHEME_ANZSRC_TOA + '/' + $(this).val(), $(this).val());
+        record.append(category);
+    });
+}
+
+function addKeywordToCollection(record) {
+    $('ul[id="keywords-list"]').children().each(function() {
+        var keyword = $(this).clone();
+        $(keyword).children().remove('a');
+        var category = getCategoryElement('', $(keyword).text(), '');
+        record.append(category);
+    });
+}
+function addTemporal(record) {
+    var termporal = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
+    var startDate = $('input[id|="start-date"]').val();
+    var endDate = $('input[id|="end-date"]').val();
+    var attributes = [];
+    var content = '';
+    if (startDate) {
+        content = content + 'start=' + startDate + ' ';
+    }
+    if (endDate) {
+        content = content + 'end=' + endDate;
+    }
+    if (content != '') {
+        attributes[0] = {name: 'property', value: REL_TEMPORAL };
+        attributes[1] = {name: 'content', value:content.trim() };
+        for each (var attribute in attributes) {
+            termporal.attr(attribute.name, attribute.value);
+        }
+        record.append(termporal);
+    }
+}
+
+function addSpatial(record) {
+    $('input[id|="location-name"]').each(function () {
+        var title = $(this).val();
+        var href = 'http://sws.geonames.org/';
+        if (title) {
+            var linkElement = getLinkElement(href + title, REL_SPATIAL, title);
+            record.append(linkElement);
+        }
+    });
+}
+
+
+function addSource(record) {
+    var source = getSimpleElement('source');
+    var id = getSimpleElementWithText('id', 'http://dataspace.uq.edu.au');
+    source.append(id);
+    var title = getSimpleElementWithText('title', 'The University of Queensland Data Collections Registry');
+    title.attr('type', 'text');
+    source.append(title);
+
+    var author = getAuthorElement('Abdul Alabri', 'a.alabri@uq.edu.au');
+    source.append(author);
+
+    record.append(source);
+}
+
+function setPublished(record, isPublished) {
+    var appElement = getSimpleElementWithNameSpace('app:control', NS_APP);
+    var draftElement = getSimpleElementWithNameSpace('app:draft', NS_APP);
+    if (isPublished) {
+        draftElement.text('no');
+    } else {
+        draftElement.text('yes');
+    }
+    appElement.append(draftElement);
+    record.append(appElement);
+}
+
+
+function getLinkElement(href, rel, title) {
+    var attributes = [];
+    if (href) {
+        attributes[0] = {name:'href',value: href};
+    }
+    if (rel) {
+        attributes[1] = {name:'rel',value: rel};
+    }
+    if (title) {
+        attributes[2] = {name:'title',value: title};
+    }
+    var link = getElementWithAttributes('link', attributes);
+    return link;
 }
 
 function getAtomEntryElement() {
     var attributes = [
-        {name: "xmlns", value:"http://www.w3.org/2005/Atom"},
-        {name: "xmlns:app", value:"http://www.w3.org/2007/app"},
+        {name: "xmlns", value:NS_ATOM},
+        {name: "xmlns:app", value:NS_APP},
         {name: "xmlns:georss", value:NS_GEORSS},
         {name: "xmlns:rdfa", value:NS_RDFA}
     ];
@@ -253,37 +433,38 @@ function getAtomEntryElement() {
     return entry;
 }
 
-function getLinkElement(href, rel, title) {
-    var attributes = [
-        {name:'href',value: href},
-        {name:'rel',value: rel},
-        {name:'title',value: title}
-    ];
-    var link = getElementWithAttributes('link', attributes);
-    return link;
-}
-
 function getCategoryElement(scheme, term, label) {
-    var attributes = [
-        {name:'scheme',value: scheme},
-        {name:'term',value: term},
-        {name:'label',value: label}
-    ];
+    var attributes = [];
+    if (scheme) {
+        attributes[0] = {name:'scheme',value: scheme};
+    }
+    if (term) {
+        attributes[1] = {name:'term',value: term};
+    }
+    if (label) {
+        attributes[2] = {name:'label',value: label};
+    }
     var category = getElementWithAttributes('category', attributes);
     return category;
 }
 
 function getAuthorElement(name, email, uri) {
     var author = getSimpleElement('author');
-    var nameElement = getSimpleElement('name');
-    nameElement.text(name);
-    author.append(nameElement);
-    var emailElement = getSimpleElement('email');
-    emailElement.text(email);
-    author.append(emailElement);
-    var uriElement = getSimpleElement('uri');
-    uriElement.text(uri);
-    author.append(uriElement);
+    if (name) {
+        var nameElement = getSimpleElement('name');
+        nameElement.text(name);
+        author.append(nameElement);
+    }
+    if (email) {
+        var emailElement = getSimpleElement('email');
+        emailElement.text(email);
+        author.append(emailElement);
+    }
+    if (uri) {
+        var uriElement = getSimpleElement('uri');
+        uriElement.text(uri);
+        author.append(uriElement);
+    }
     return author;
 }
 
