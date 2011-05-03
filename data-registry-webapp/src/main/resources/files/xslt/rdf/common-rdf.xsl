@@ -54,7 +54,7 @@
 
     <!-- subjects -->
     <xsl:template
-            match="atom:category[@scheme!=$NS_DCMITYPE and @scheme!=$NS_GROUP and @scheme!=$NS_FOAF]">
+            match="atom:category[@scheme!=$NS_DCMITYPE and @scheme!=$NS_FOAF]">
         <dcterms:subject rdf:resource="{@term}"/>
     </xsl:template>
 
@@ -101,12 +101,12 @@
     </xsl:template>
 
     <!-- description publisher -->
-    <xsl:template
-            match="atom:category[@scheme=$NS_GROUP]">
-        <dcterms:publisher>
-            <xsl:value-of select="@term"/>
-        </dcterms:publisher>
-    </xsl:template>
+    <!--<xsl:template-->
+    <!--match="atom:category[@scheme=$NS_GROUP]">-->
+    <!--<dcterms:publisher>-->
+    <!--<xsl:value-of select="@term"/>-->
+    <!--</dcterms:publisher>-->
+    <!--</xsl:template>-->
 
     <!-- description source -->
     <xsl:template match="atom:source">

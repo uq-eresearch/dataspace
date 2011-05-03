@@ -9,10 +9,12 @@
 
     -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:atom="http://www.w3.org/2005/Atom"
-    xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
-    xmlns="http://ands.org.au/standards/rif-cs/registryObjects">
+                xmlns:atom="http://www.w3.org/2005/Atom"
+                xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
+                xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+                xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:str="http://exslt.org/strings">
     <xsl:include href="../constants.xsl"/>
 
 
@@ -62,7 +64,7 @@
     <xsl:template match="rdfa:meta[@property=$RDFA_TEMPORAL]">
         <coverage>
             <temporal>
-                <xsl:for-each select="tokenize(@content,';')">
+                <xsl:for-each select="fn:tokenize(@content,';')">
                     <xsl:variable name="field">
                         <xsl:value-of select="substring-before(.,'=')"/>
                     </xsl:variable>
@@ -103,7 +105,9 @@
                     <xsl:value-of select="substring-after(@term, $PREFIX_TOA)"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:attribute name="type"><xsl:value-of select="@scheme"/></xsl:attribute>
+                    <xsl:attribute name="type">
+                        <xsl:value-of select="@scheme"/>
+                    </xsl:attribute>
                     <xsl:value-of select="@term"/>
                 </xsl:otherwise>
             </xsl:choose>

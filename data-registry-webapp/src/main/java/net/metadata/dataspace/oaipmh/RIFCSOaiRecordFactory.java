@@ -2,6 +2,7 @@ package net.metadata.dataspace.oaipmh;
 
 import ORG.oclc.oai.server.catalog.RecordFactory;
 import ORG.oclc.oai.server.verb.CannotDisseminateFormatException;
+import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.atom.util.AdapterOutputHelper;
 import net.metadata.dataspace.data.model.Version;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
@@ -39,7 +40,7 @@ public class RIFCSOaiRecordFactory extends RecordFactory {
     @Override
     public String getOAIIdentifier(Object o) {
         try {
-            return AdapterOutputHelper.getEntryFromEntity((Version) o, true).getId().toString();
+            return AdapterOutputHelper.getEntryFromEntity((Version) o, true).getLink(Constants.REL_SELF).getHref().toString();
         } catch (ResponseContextException e) {
             e.printStackTrace();
             return null;

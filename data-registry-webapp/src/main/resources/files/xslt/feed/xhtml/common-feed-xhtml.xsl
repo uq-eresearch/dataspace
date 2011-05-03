@@ -3,7 +3,7 @@
                 xmlns:app="http://www.w3.org/2007/app"
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="atom app">
-    <xsl:param name="currentUser"/>
+    <!--<xsl:param name="currentUser"/>-->
     <xsl:output method="html" media-type="application/xhtml+xml" indent="yes"/>
     <xsl:template match="atom:entry">
         <div class="record">

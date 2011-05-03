@@ -109,4 +109,26 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
         }
     }
 
+//    private void processWithSAXON() {
+//        com.icl.saxon.trax.Processor processor = com.icl.saxon.trax.Processor.newInstance("xslt");
+//
+//        // unlike Xalan, SAXON uses the SAX InputSource.  Xalan
+//        // uses its own class, XSLTInputSource
+//        org.xml.sax.InputSource xmlInputSource =
+//                new org.xml.sax.InputSource(xmlSystemId);
+//        org.xml.sax.InputSource xsltInputSource =
+//                new org.xml.sax.InputSource(xsltSystemId);
+//
+//        com.icl.saxon.trax.Result result =
+//                new com.icl.saxon.trax.Result(System.out);
+//
+//        // create a new compiled stylesheet
+//        com.icl.saxon.trax.Templates templates =
+//                processor.process(xsltInputSource);
+//
+//        // create a transformer that can be used for a single transformation
+//        com.icl.saxon.trax.Transformer trans = templates.newTransformer();
+//        trans.transform(xmlInputSource, result);
+//
+//    }
 }

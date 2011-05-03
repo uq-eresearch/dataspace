@@ -9,11 +9,14 @@
 
     -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:atom="http://www.w3.org/2005/Atom"
-    xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
-    xmlns:georss="http://www.georss.org/georss"
-    xmlns="http://ands.org.au/standards/rif-cs/registryObjects">
+                xmlns:atom="http://www.w3.org/2005/Atom"
+                xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
+                xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+                xmlns:georss="http://www.georss.org/georss"
+                xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:str="http://exslt.org/strings">
+
 
     <xsl:include href="common-rifcs.xsl"/>
     <xsl:output method="xml" media-type="application/rifcs+xml" indent="yes"/>
@@ -35,7 +38,7 @@
                 <xsl:value-of select="atom:source/atom:id"/>
             </originatingSource>
             <!-- collection -->
-            <xsl:if test="atom:category[@scheme=$NS_DCMITYPE]/@term=$ENTITY_COLLECTION">
+            <xsl:if test="atom:category[@scheme=$NS_DCMITYPE]">
                 <collection type="collection">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
@@ -58,7 +61,7 @@
                     <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
                     <!-- subjects -->
                     <xsl:apply-templates
-                        select="atom:category[@scheme != $NS_DCMITYPE]"/>
+                            select="atom:category[@scheme != $NS_DCMITYPE]"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->
@@ -84,9 +87,9 @@
         <coverage>
             <spatial type="iso19139dcmiBox">
                 northlimit=<xsl:value-of select="$lat"/>;
-                southlimit=<xsl:value-of select="$lat"/>; 
-                eastlimit=<xsl:value-of select="$long"/>; 
-                westlimit=<xsl:value-of select="$long"/>; 
+                southlimit=<xsl:value-of select="$lat"/>;
+                eastlimit=<xsl:value-of select="$long"/>;
+                westlimit=<xsl:value-of select="$long"/>;
                 projection=WGS84
             </spatial>
         </coverage>
@@ -94,7 +97,7 @@
     <!-- polygon down-coded to DCMI Box -->
     <xsl:template match="georss:polygon">
         <xsl:call-template name="poly2box">
-            <xsl:with-param name="list" select="tokenize(normalize-space(.), ' ')"/>
+            <xsl:with-param name="list" select="fn:tokenize(normalize-space(.), ' ')"/>
             <xsl:with-param name="latlist" select="()"/>
             <xsl:with-param name="longlist" select="()"/>
         </xsl:call-template>
@@ -116,10 +119,10 @@
             <xsl:otherwise>
                 <coverage>
                     <spatial type="iso19139dcmiBox">
-                        northlimit=<xsl:value-of select="max($latlist)"/>; 
-                        southlimit=<xsl:value-of select="min($latlist)"/>; 
-                        eastlimit=<xsl:value-of select="min($longlist)"/>; 
-                        westlimit=<xsl:value-of select="max($longlist)"/>; 
+                        northlimit=<xsl:value-of select="max($latlist)"/>;
+                        southlimit=<xsl:value-of select="min($latlist)"/>;
+                        eastlimit=<xsl:value-of select="min($longlist)"/>;
+                        westlimit=<xsl:value-of select="max($longlist)"/>;
                         projection=WGS84
                     </spatial>
                 </coverage>
@@ -143,7 +146,7 @@
             </key>
             <relation type="hasCollector"/>
         </relatedObject>
-    </xsl:template> 
+    </xsl:template>
 
     <!-- curator / manager (party) -->
     <xsl:template match="atom:link[@rel=$ATOM_PUBLISHER]">
@@ -164,7 +167,7 @@
             <relation type="isOutputOf"/>
         </relatedObject>
     </xsl:template>
-    
+
     <!-- is accessed via (service) -->
     <xsl:template match="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]">
         <relatedObject>
@@ -174,7 +177,7 @@
             <relation type="isSupportedBy"/>
         </relatedObject>
     </xsl:template>
-    
+
     <!-- has association with (collection) -->
     <xsl:template match="atom:link[@rel=$REL_RELATED]">
         <relatedObject>
@@ -184,5 +187,5 @@
             <relation type="hasAssociationWith"/>
         </relatedObject>
     </xsl:template>
-    
+
 </xsl:stylesheet>
