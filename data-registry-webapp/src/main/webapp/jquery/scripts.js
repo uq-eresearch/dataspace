@@ -87,6 +87,16 @@ function styleTables() {
     $(".lookup-table > tbody > tr:odd").css("background-color", "#d4d4d4");
 }
 
+
+/**
+ *
+ *
+ * Functional javascript
+ *
+ */
+
+
+
 var UQ_REGISTRY_URI_PREFIX = 'http://localhost:8080/';
 var PERSISTENT_URL = "http://purl.org/";
 /**
@@ -158,6 +168,43 @@ var SCHEME_ANZSRC_TOA = NS_ANZSRC + "toa";
 var PROPERTY_TITLE = NS_FOAF + "title";
 var PROPERTY_GIVEN_NAME = NS_FOAF + "givenName";
 var PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
+
+function postRecord(url, type, isNew, isPublished) {
+
+    if (confirm("Are you sure you want to create this record?")) {
+
+        var record = null;
+        if (type == 'activity') {
+
+        } else if (type == 'agent') {
+
+        } else if (type == 'collection') {
+            record = getCollectionAtom(isNew, isPublished);
+        } else if (type == 'service') {
+
+        }
+
+//alert(serializeToString(record.context));
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: serializeToString(record.context),
+            contentType: "application/atom+xml",
+            processData: false,
+            dataType: 'xml',
+            success: function(data, textStatus, XMLHttpRequest) {
+                var loc = XMLHttpRequest.getResponseHeader('Location');
+                alert(loc);
+                window.location.href = loc;
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $('#outerhtml').html('<span style="color:red;">' + textStatus + '</span>');
+            }
+        });
+    }
+    return false;
+}
+
 
 function getCollectionAtom(isNew, isPublished) {
     var collection = getAtomEntryElement();
@@ -238,8 +285,8 @@ function getCollectionAtom(isNew, isPublished) {
 
     setPublished(collection, isPublished);
 
-    $('#outerhtml').append(collection);
-//    return collection;
+//    $('#outerhtml').append(collection);
+    return collection;
 }
 
 /**
@@ -304,7 +351,7 @@ function addAuthors(record) {
 
 function addPublishers(record) {
     //TODO publishers needs to be retrieved from the UI
-    var publisher = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'agents/1', REL_PUBLISHER);
+    var publisher = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'agents/1', REL_PUBLISHER, 'Abdul Alabri');
     record.append(publisher);
 }
 
@@ -489,10 +536,52 @@ function getElementWithAttributes(name, attributes) {
 }
 
 function getSimpleElement(name) {
-    return $('<' + name + '>');
+    return $(document.createElementNS(NS_ATOM, name));
+//    return $('<' + name + '>');
 }
 
 function getSimpleElementWithNameSpace(name, namespace) {
     var element = $(document.createElementNS(namespace, name));
     return element;
+}
+
+function serializeToString(domNode) {
+    var stringXML = "";
+    var elemType = domNode.nodeType;
+    switch (elemType) {
+        case 1: //element
+            stringXML = "<" + domNode.tagName;
+
+            for (var i = 0; i < domNode.attributes.length; i++) {
+                stringXML += " " + domNode.attributes[i].name + "=\"" + domNode.attributes[i].value + "\"";
+            }
+
+            stringXML += ">";
+
+            for (var i = 0; i < domNode.childNodes.length; i++) {
+                stringXML += serializeToString(domNode.childNodes[i]);
+            }
+
+            stringXML += "</" + domNode.tagName + ">";
+            break;
+
+        case 3: //text node
+            stringXML = domNode.nodeValue;
+            break;
+        case 4: //cdata
+            stringXML = "<![CDATA[" + domNode.nodeValue + "";
+            break;
+        case 7: //processing instruction
+            stringXML = "<?" + domNode.nodevalue + "?>";
+            break;
+        case 8: //comment
+            stringXML = "<!--" + domNode.nodevalue + "-->";
+            break;
+        case 9: //document
+            for (var i = 0; i < domNode.childNodes.length; i++) {
+                stringXML += serializeToString(domNode.childNodes[i]);
+            }
+            break;
+    }
+    return stringXML;
 }

@@ -100,7 +100,7 @@ public class HttpMethodHelper {
                         if (transaction.isActive()) {
                             transaction.rollback();
                         }
-                        throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
+                        throw new ResponseContextException(th.getMessage(), 400);
                     }
                 }
             } else {
