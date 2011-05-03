@@ -338,11 +338,10 @@ public class AdapterOutputHelper {
 
         String accept = OperationHelper.getAcceptHeader(request);
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
-        responseContext.setLocation(entry.getId().toString());
+        String selfLinkHref = entry.getLink(Constants.REL_SELF).getHref().toString();
+        responseContext.setLocation(selfLinkHref);
         responseContext.setHeader("Vary", "Accept");
         if (accept.equals(Constants.MIME_TYPE_ATOM_ENTRY) || accept.equals(Constants.MIME_TYPE_ATOM)) {
-            String selfLinkHref = entry.getId().toString();
-//            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
@@ -350,8 +349,6 @@ public class AdapterOutputHelper {
             PrettyWriter writer = new PrettyWriter();
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_RDF)) {
-            String selfLinkHref = entry.getId().toString();
-//            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
@@ -361,8 +358,6 @@ public class AdapterOutputHelper {
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_XHTML)) {
             String viewRepresentation = OperationHelper.getViewRepresentation(request);
-            String selfLinkHref = entry.getId().toString();
-//            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
@@ -378,8 +373,6 @@ public class AdapterOutputHelper {
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
             responseContext.setWriter(writer);
         } else if (accept.equals(Constants.MIME_TYPE_RIFCS)) {
-            String selfLinkHref = entry.getId().toString();
-//            prepareSelfLink(entry, selfLinkHref);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
