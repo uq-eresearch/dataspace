@@ -12,7 +12,7 @@
                     <xsl:if test="app:control/app:draft='yes'">
                         <span class="draft">(draft)</span>
                     </xsl:if>
-                    <a href="{atom:id}">
+                    <a href="{atom:link[@rel=$REL_SELF]/@href}">
                         <xsl:value-of select="atom:title"/>
                     </a>
                     <span class="author">
@@ -38,7 +38,7 @@
                     </div>
                 </xsl:when>
                 <xsl:otherwise>
-                    <a href="{atom:id}">
+                    <a href="{atom:link[@rel=$REL_SELF]/@href}">
                         <xsl:value-of select="atom:title"/>
                     </a>
                     <span class="author">
