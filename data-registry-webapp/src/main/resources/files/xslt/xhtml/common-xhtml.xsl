@@ -19,7 +19,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
     <xsl:include href="../constants.xsl"/>
-    <xsl:param name="currentUser"/>
+    <!--<xsl:param name="currentUser"/>-->
     <xsl:output method="html" media-type="application/xhtml+xml" indent="yes"/>
     <!-- name -->
     <xsl:template match="atom:title">
@@ -294,8 +294,8 @@
     <xsl:template name="bread-crumbs-options">
         <li class="bread-crumbs-options">
             <a id="new-record-link" href="#" title="Add Record">new</a>
-            <a id="edit-record-link" href="{atom:link[@rel=$REL_SELF]@href}?v=edit" title="Edit Record">edit</a>
-            <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:link[@rel=$REL_SELF]@href}'); "
+            <a id="edit-record-link" href="{atom:link[@rel=$REL_SELF]/@href}?v=edit" title="Edit Record">edit</a>
+            <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:link[@rel=$REL_SELF]/@href}'); "
                title="Delete Record">
                 delete
             </a>

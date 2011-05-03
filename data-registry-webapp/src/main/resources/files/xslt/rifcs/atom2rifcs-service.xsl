@@ -36,7 +36,7 @@
 
             <!-- collection -->
             <xsl:if
-                    test="atom:category[@scheme=$NS_VIVO]/@term =$ENTITY_SERVICE">
+                    test="atom:category[@scheme=$NS_DCMITYPE]">
                 <service type="report">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel=$REL_SELF]"/>

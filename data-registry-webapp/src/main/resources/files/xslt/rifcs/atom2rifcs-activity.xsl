@@ -36,7 +36,7 @@
 
             <!-- collection -->
             <xsl:if
-                    test="atom:category[@scheme=$NS_FOAF]/@term = $ENTITY_ACTIVITY">
+                    test="atom:category[@scheme=$NS_DCMITYPE]">
                 <activity type="project">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel=$REL_SELF]"/>

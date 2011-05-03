@@ -38,7 +38,7 @@
 
             <!-- collection -->
             <xsl:if
-                    test="atom:category[@scheme=$NS_FOAF]/@term = $ENTITY_PARTY">
+                    test="atom:category[@scheme=$NS_DCMITYPE]">
                 <party type="person">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel=$REL_SELF]"/>
