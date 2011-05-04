@@ -160,11 +160,7 @@ body a {
     width: 90%;
 }
 
-#search {
-    width: 90%;
-}
-
-.edit-table .remove-link {
+div#search.edit-table .remove-link {
     font-size: 0.7em;
     color: #ff0000;
 }
@@ -500,7 +496,7 @@ h6 {
 #header-inner, #topnav-inner {
     margin: 0pt auto;
     padding: 0pt;
-    width: 1000px;
+    width: 100%;
 }
 
 #header-inner h1 {
@@ -644,8 +640,8 @@ h6 {
 div#search {
     background: transparent url('../images/form-left.png') no-repeat scroll 0pt 0pt;
     position: absolute;
+    right: 10px;
     top: 40px;
-    margin: 0 0 0 775px;
 }
 
 div#search form {
