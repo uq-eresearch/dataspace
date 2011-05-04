@@ -19,7 +19,6 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
     <xsl:include href="../../constants.xsl"/>
-    <xsl:param name="currentUser"/>
     <xsl:output method="html" media-type="application/xhtml+xml" indent="yes"/>
     <xsl:template name="edit-bread-crumbs">
         <xsl:param name="path"/>
