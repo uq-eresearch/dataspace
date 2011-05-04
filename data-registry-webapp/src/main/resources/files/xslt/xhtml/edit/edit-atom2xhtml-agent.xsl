@@ -175,8 +175,14 @@
                     </div>
                 </div>
                 <div class="save-links-div">
-                    <a href="#" class="save-link" id="save-link" title="Save Record">save</a>
-                    <a href="#" class="publish-link" id="publish-link" title="Publish Record">publish</a>
+                    <a href="#" class="save-link" id="save-link" title="Save Record"
+                       onclick="ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, false); return false;">
+                        save
+                    </a>
+                    <a href="#" class="publish-link" id="publish-link" title="Publish Record"
+                       onclick="ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, true); return false;">
+                        publish
+                    </a>
                 </div>
                 <xsl:call-template name="lookup-form"/>
             </div>

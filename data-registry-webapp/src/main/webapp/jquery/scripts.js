@@ -169,24 +169,26 @@ var PROPERTY_TITLE = NS_FOAF + "title";
 var PROPERTY_GIVEN_NAME = NS_FOAF + "givenName";
 var PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
 
-function postRecord(url, type, isNew, isPublished) {
+function ingestRecord(url, type, isNew, isPublished) {
 
     if (confirm("Are you sure you want to create this record?")) {
 
         var record = null;
         if (type == 'activity') {
-
+            record = getActivityAtom(isNew, isPublished);
         } else if (type == 'agent') {
-
+            record = getAgentAtom(isNew, isPublished);
         } else if (type == 'collection') {
             record = getCollectionAtom(isNew, isPublished);
         } else if (type == 'service') {
-
+            record = getServiceAtom(isNew, isPublished);
         }
-
-//alert(serializeToString(record.context));
+        var method = 'PUT';
+        if (isnew) {
+            method = 'POST';
+        }
         $.ajax({
-            type: 'POST',
+            type: method,
             url: url,
             data: serializeToString(record.context),
             contentType: "application/atom+xml",
@@ -205,88 +207,246 @@ function postRecord(url, type, isNew, isPublished) {
     return false;
 }
 
-
-function getCollectionAtom(isNew, isPublished) {
-    var collection = getAtomEntryElement();
+function getActivityAtom(isNew, isPublished) {
+    var record = getAtomEntryElement();
 
     //id
-    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'collections/abc');
+    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'activities/abc');
     if (!isNew) {
         //TODO id needs to be retrieved from UI
     }
-    collection.append(id);
+    record.append(id);
 
     //type
-    var collectionType = $('#collection-type-combobox').val();
-    if (collectionType) {
-        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_DCMITYPE + collectionType, collectionType);
-        collection.append(typeCategory);
+    var recordType = $('#type-combobox').val();
+    if (recordType) {
+        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_FOAF + recordType, recordType);
+        record.append(typeCategory);
     }
     //title
     var titleValue = $('#edit-title-text').val();
     if (titleValue) {
         var title = getSimpleElementWithText('title', titleValue);
         title.attr('type', 'text');
-        collection.append(title);
+        record.append(title);
     }
 
     //Alternative titles
-    addAlternativeTitles(collection);
+    addAlternativeTitles(record);
 
     var contentValue = $('#content-textarea').val();
     if (contentValue) {
         var content = getSimpleElementWithText('content', contentValue);
         content.attr('type', 'text');
-        collection.append(content);
+        record.append(content);
     }
+
     //pages
-    addPages(collection);
-
-    //add authors
-    addAuthors(collection);
-
-    //add publishers
-    addPublishers(collection);
-
-    addOutputOf(collection);
+    addPages(record);
 
     //add TOA
-    addTOA(collection);
+    addTOA(record);
 
     //keywords
-    addKeywordToCollection(collection);
+    addKeywordToCollection(record);
+
+    //updated, format: '2010-10-08T05:58:02.781Z'
+    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+    record.append(updated);
+
+    //add source
+    addSource(record);
+
+    setPublished(record, isPublished);
+
+    return record;
+}
+function getAgentAtom(isNew, isPublished) {
+    var record = getAtomEntryElement();
+
+    //id
+    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'agents/abc');
+    if (!isNew) {
+        //TODO id needs to be retrieved from UI
+    }
+    record.append(id);
+
+    //type
+    var recordType = $('#type-combobox').val();
+    if (recordType) {
+        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_FOAF + recordType, recordType);
+        record.append(typeCategory);
+    }
+    //title
+    var titleValue = $('#edit-title-text').val();
+    if (titleValue) {
+        var title = getSimpleElementWithText('title', titleValue);
+        title.attr('type', 'text');
+        record.append(title);
+    }
+
+    //Alternative titles
+    addAlternativeTitles(record);
+
+    var contentValue = $('#content-textarea').val();
+    if (contentValue) {
+        var content = getSimpleElementWithText('content', contentValue);
+        content.attr('type', 'text');
+        record.append(content);
+    }
+
+    //Emails
+    addEmails(record);
+
+    //pages
+    addPages(record);
+
+    //add TOA
+    addTOA(record);
+
+    //keywords
+    addKeywordToCollection(record);
+
+    //updated, format: '2010-10-08T05:58:02.781Z'
+    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+    record.append(updated);
+
+    //add source
+    addSource(record);
+
+    setPublished(record, isPublished);
+
+    return record;
+}
+function getCollectionAtom(isNew, isPublished) {
+    var record = getAtomEntryElement();
+
+    //id
+    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'collections/abc');
+    if (!isNew) {
+        //TODO id needs to be retrieved from UI
+    }
+    record.append(id);
+
+    //type
+    var recordType = $('#type-combobox').val();
+    if (recordType) {
+        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_DCMITYPE + recordType, recordType);
+        record.append(typeCategory);
+    }
+    //title
+    var titleValue = $('#edit-title-text').val();
+    if (titleValue) {
+        var title = getSimpleElementWithText('title', titleValue);
+        title.attr('type', 'text');
+        record.append(title);
+    }
+
+    //Alternative titles
+    addAlternativeTitles(record);
+
+    var contentValue = $('#content-textarea').val();
+    if (contentValue) {
+        var content = getSimpleElementWithText('content', contentValue);
+        content.attr('type', 'text');
+        record.append(content);
+    }
+    //pages
+    addPages(record);
+
+    //add authors
+    addAuthors(record);
+
+    //add publishers
+    addPublishers(record);
+
+    addOutputOf(record);
+
+    //add TOA
+    addTOA(record);
+
+    //keywords
+    addKeywordToCollection(record);
 
     //temporal
-    addTemporal(collection);
+    addTemporal(record);
 
     //spatial
-    addSpatial(collection);
+    addSpatial(record);
 
     //publications
-    addPublications(collection);
+    addPublications(record);
 
     //rights
     var rightsValue = $('#rights-textarea').val();
     if (rightsValue) {
         var rights = getSimpleElementWithText('rights', rightsValue);
-        collection.append(rights);
+        record.append(rights);
     }
     //access rights
-    addAccessRights(collection);
+    addAccessRights(record);
 
-    addLicense(collection);
+    addLicense(record);
 
     //updated, format: '2010-10-08T05:58:02.781Z'
     var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
-    collection.append(updated);
+    record.append(updated);
 
     //add source
-    addSource(collection);
+    addSource(record);
 
-    setPublished(collection, isPublished);
+    setPublished(record, isPublished);
 
-//    $('#outerhtml').append(collection);
-    return collection;
+    return record;
+}
+
+function getServiceAtom(isNew, isPublished) {
+    var record = getAtomEntryElement();
+
+    //id
+    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'services/abc');
+    if (!isNew) {
+        //TODO id needs to be retrieved from UI
+    }
+    record.append(id);
+
+    //type
+    var recordType = $('#type-combobox').val();
+    if (recordType) {
+        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_EFS + recordType, recordType);
+        record.append(typeCategory);
+    }
+    //title
+    var titleValue = $('#edit-title-text').val();
+    if (titleValue) {
+        var title = getSimpleElementWithText('title', titleValue);
+        title.attr('type', 'text');
+        record.append(title);
+    }
+
+    //Alternative titles
+    addAlternativeTitles(record);
+
+    var contentValue = $('#content-textarea').val();
+    if (contentValue) {
+        var content = getSimpleElementWithText('content', contentValue);
+        content.attr('type', 'text');
+        record.append(content);
+    }
+
+    //pages
+    addPages(record);
+
+    //updated, format: '2010-10-08T05:58:02.781Z'
+    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+    record.append(updated);
+
+    //add source
+    addSource(record);
+
+    setPublished(record, isPublished);
+
+    return record;
 }
 
 /**
@@ -338,6 +498,15 @@ function addPages(record) {
         var href = $(this).val();
         if (href) {
             var linkElement = getLinkElement(href, REL_PAGE);
+            record.append(linkElement);
+        }
+    });
+}
+function addEmails(record) {
+    $('input[id|="email-text"]').each(function () {
+        var href = $(this).val();
+        if (href) {
+            var linkElement = getLinkElement(href, REL_MBOX);
             record.append(linkElement);
         }
     });

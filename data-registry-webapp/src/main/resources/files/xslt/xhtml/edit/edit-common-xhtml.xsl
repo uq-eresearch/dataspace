@@ -92,25 +92,25 @@
         <xsl:choose>
             <!--atom:category[@scheme=$NS_DCMITYPE]-->
             <xsl:when test="$entity = 'collection'">
-                <select id="collection-type-combobox" name="type-combobox">
+                <select id="type-combobox" name="type-combobox">
                     <option value="Collection">Collection</option>
                     <option value="Dataset">Dataset</option>
                 </select>
             </xsl:when>
             <xsl:when test="$entity = 'agent'">
-                <select id="agent-type-combobox" name="type-combobox">
+                <select id="type-combobox" name="type-combobox">
                     <option value="Group">Group</option>
                     <option value="Person">Person</option>
                 </select>
             </xsl:when>
             <xsl:when test="$entity = 'activity'">
-                <select id="activity-type-combobox" name="type-combobox">
+                <select id="type-combobox" name="type-combobox">
                     <option value="Program">Program</option>
                     <option value="Project">Project</option>
                 </select>
             </xsl:when>
             <xsl:otherwise>
-                <select id="service-type-combobox" name="type-combobox">
+                <select id="type-combobox" name="type-combobox">
                     <option value="Annotate">Annotate</option>
                     <option value="Assemble">Assemble</option>
                     <option value="Create">Create</option>
