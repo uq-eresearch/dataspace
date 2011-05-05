@@ -184,7 +184,7 @@ function ingestRecord(url, type, isNew, isPublished) {
             record = getServiceAtom(isNew, isPublished);
         }
         var method = 'PUT';
-        if (isnew) {
+        if (isNew) {
             method = 'POST';
         }
         $.ajax({
@@ -196,11 +196,10 @@ function ingestRecord(url, type, isNew, isPublished) {
             dataType: 'xml',
             success: function(data, textStatus, XMLHttpRequest) {
                 var loc = XMLHttpRequest.getResponseHeader('Location');
-                alert(loc);
                 window.location.href = loc;
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                $('#outerhtml').html('<span style="color:red;">' + textStatus + '</span>');
+                $('#ingest-error-msg').html('<span style="color:red;">' + textStatus + '</span>');
             }
         });
     }

@@ -51,6 +51,9 @@
                 </xsl:call-template>
             </ul>
             <div class="wrapper">
+                <div id="ingest-error-msg">
+
+                </div>
                 <div id="edit-tabs">
                     <ul>
                         <li>
