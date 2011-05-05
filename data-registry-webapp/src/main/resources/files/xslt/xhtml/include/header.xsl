@@ -92,14 +92,14 @@
                     </p>
                     <p>
                         <label for="username">Username</label>
-                        <input id="username" name="username" value="" title="username" tabindex="4" type="text"/>
+                        <input id="username" name="username" value="" title="username" type="text"/>
                     </p>
                     <p>
                         <label for="password">Password</label>
-                        <input id="password" name="password" value="" title="password" tabindex="5" type="password"/>
+                        <input id="password" name="password" value="" title="password" type="password"/>
                     </p>
                     <p class="remember">
-                        <input id="signin_submit" value="Sign in" tabindex="6" type="submit"/>
+                        <input id="signin_submit" value="Sign in" type="submit"/>
                     </p>
                 </form>
             </fieldset>
@@ -109,10 +109,10 @@
     <xsl:template name="loginlink">
         <xsl:choose>
             <xsl:when test="$currentUser">
-                <a href="/logout" class="signout" id="signin-link">Sign out</a>
+                <a href="#" class="signout" id="signin-link">Sign out</a>
             </xsl:when>
             <xsl:otherwise>
-                <a href="logins" class="signin" id="signin-link">Sign in</a>
+                <a href="#" class="signin" id="signin-link">Sign in</a>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

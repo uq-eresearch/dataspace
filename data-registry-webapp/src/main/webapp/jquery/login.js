@@ -1,3 +1,6 @@
+$(document).ready(function() {
+    getLoginLink();
+});
 function getLoginLink() {
     $(".signin").click(function(e) {
         e.preventDefault();
@@ -5,14 +8,6 @@ function getLoginLink() {
         $("fieldset#signin_menu").toggle();
         $(".signin").toggleClass("menu-open");
     });
-    $(".browse").mouseover(function() {
-        $(".browse").addClass("menu-open");
-        $("fieldset#browse_menu").fadeIn(400);
-    });
-    $("#browse_menu").mouseout(function() {
-        $(".browse").removeClass("menu-open");
-    });
-
     $(".signout").click(function(e) {
         e.preventDefault();
         $.ajax({
@@ -36,10 +31,6 @@ function getLoginLink() {
             $(".signin").removeClass("menu-open");
             $("fieldset#signin_menu").fadeOut(400);
         }
-        if ($(e.target).parent("a.browse").length == 0) {
-            $(".browse").removeClass("menu-open");
-            $("fieldset#browse_menu").fadeOut(400);
-        }
     });
 }
 function login() {
@@ -50,7 +41,7 @@ function login() {
         url: '/login',
         data: 'username=' + username + '&password=' + password,
         success: function(data) {
-            $('#signin-link').html('Sign out');
+            $('#signin-link').text('Sign out');
             $('a#signin-link').attr('href', '/logout');
             $('a#signin-link').attr('class', 'signout');
             $(".signin").removeClass("menu-open");
@@ -61,7 +52,7 @@ function login() {
                     type: 'POST',
                     url: '/logout',
                     success: function(data) {
-                        $('#signin-link').html('Sign in');
+                        $('#signin-link').text('Sign in');
                         $('a#signin-link').attr('href', '#');
                         $('a#signin-link').attr('class', 'signin');
                         getLoginLink();

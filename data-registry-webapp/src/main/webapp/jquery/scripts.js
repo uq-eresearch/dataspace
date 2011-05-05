@@ -1,9 +1,106 @@
+/**
+ * Constants
+ */
+var UQ_REGISTRY_URI_PREFIX = 'http://localhost:8080/';
+var PERSISTENT_URL = "http://purl.org/";
+var NS_FOAF = "http://xmlns.com/foaf/0.1/";
+var NS_ANDS = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#";
+var NS_DC = PERSISTENT_URL + "dc/terms/";
+var NS_DCMITYPE = PERSISTENT_URL + "dc/dcmitype/";
+var NS_CLD = PERSISTENT_URL + "cld/terms/";
+var NS_ANZSRC = PERSISTENT_URL + "anzsrc/";
+var NS_VIVO = "http://vivoweb.org/ontology/core#";
+var NS_ORE = "http://www.openarchives.org/ore/terms/";
+var NS_GEORSS = "http://www.georss.org/georss/";
+var NS_RDFA = "http://www.w3.org/ns/rdfa#";
+var NS_EFS = "http://www.e-framework.org/Contributions/ServiceGenres/";
+var NS_ATOM = "http://www.w3.org/2005/Atom";
+var NS_APP = "http://www.w3.org/2007/app";
+var REL_ACCESS_RIGHTS = NS_DC + "accessRights";
+var REL_ALTERNATE = "alternate";
+var REL_CREATOR = NS_DC + "creator";
+var REL_DESCRIBES = NS_ORE + "describes";
+var REL_HAS_PARTICIPANT = NS_ANDS + "hasParticipant";
+var REL_HAS_OUTPUT = NS_ANDS + "hasOutput";
+var REL_IS_MANAGER_OF = NS_ANDS + "isManagerOf";
+var REL_IS_ACCESSED_VIA = NS_CLD + "isAccessedVia";
+var REL_MADE = NS_FOAF + "made";
+var REL_MBOX = NS_FOAF + "mbox";
+var REL_IS_DESCRIBED_BY = NS_ORE + "isDescribedBy";
+var REL_IS_LOCATED_AT = NS_CLD + "isLocatedAt";
+var REL_IS_OUTPUT_OF = NS_ANDS + "isOutputOf";
+var REL_IS_REFERENCED_BY = NS_DC + "isReferencedBy";
+var REL_CURRENT_PROJECT = NS_FOAF + "currentProject";
+var REL_IS_SUPPORTED_BY = NS_ANDS + "isSupportedBy";
+var REL_LATEST_VERSION = "latest-version";
+var REL_PAGE = NS_FOAF + "page";
+var REL_PREDECESSOR_VERSION = "predecessor-version";
+var REL_PUBLISHER = NS_DC + "publisher";
+var REL_RELATED = "related";
+var REL_SELF = "self";
+var REL_LICENSE = "license";
+var REL_SUCCESSOR_VERSION = "successor-version";
+var REL_TEMPORAL = NS_DC + "temporal";
+var REL_ALTERNATIVE = NS_DC + "alternative";
+var REL_SPATIAL = NS_DC + "spatial";
+var REL_VIA = "via";
+var TERM_ANDS_GROUP = "The University of Queensland";
+var TERM_ACTIVITY = NS_FOAF + "Project";
+var TERM_COLLECTION = NS_DCMITYPE + "Collection";
+var TERM_AGENT_AS_GROUP = NS_FOAF + "Group";
+var TERM_AGENT_AS_AGENT = NS_FOAF + "Agent";
+var TERM_SERVICE = NS_VIVO + "Service";
+var LABEL_KEYWORD = "keyword";
+var SCHEME_DCMITYPE = NS_DCMITYPE;
+var SCHEME_KEYWORD = UQ_REGISTRY_URI_PREFIX + "keyword";
+var SCHEME_ANZSRC_FOR = NS_ANZSRC + "for";
+var SCHEME_ANZSRC_SEO = NS_ANZSRC + "seo";
+var SCHEME_ANZSRC_TOA = NS_ANZSRC + "toa";
+var PROPERTY_TITLE = NS_FOAF + "title";
+var PROPERTY_GIVEN_NAME = NS_FOAF + "givenName";
+var PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
+
 $(document).ready(function() {
     $("#edit-tabs").tabs();
     $('.date-picker').datepicker();
-    getLoginLink();
     styleTables();
 });
+
+function ingestRecord(url, type, isNew, isPublished) {
+    if (confirm("Are you sure you want to create this record?")) {
+        var record = null;
+        if (type == 'activity') {
+            record = getActivityAtom(isNew, isPublished);
+        } else if (type == 'agent') {
+            record = getAgentAtom(isNew, isPublished);
+        } else if (type == 'collection') {
+            record = getCollectionAtom(isNew, isPublished);
+        } else if (type == 'service') {
+            record = getServiceAtom(isNew, isPublished);
+        }
+        var method = 'PUT';
+        if (isNew) {
+            method = 'POST';
+        }
+        $.ajax({
+            type: method,
+            url: url,
+            data: serializeToString(record.context),
+            contentType: "application/atom+xml",
+            processData: false,
+            dataType: 'xml',
+            success: function(data, textStatus, XMLHttpRequest) {
+                var loc = XMLHttpRequest.getResponseHeader('Location');
+                window.location.href = loc;
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $('#ingest-error-msg').html('<span style="color:red;">' + textStatus + '</span>');
+            }
+        });
+    }
+    return false;
+}
+
 function deleteRecord(url) {
     if (confirm("Are you sure you want to delete this record?")) {
         $.ajax({
@@ -14,7 +111,6 @@ function deleteRecord(url) {
             },
             error: function(xhr, textStatus, errorThrown) {
                 alert("Could not deleted record");
-
             }
         });
     }
@@ -94,117 +190,6 @@ function styleTables() {
  * Functional javascript
  *
  */
-
-
-
-var UQ_REGISTRY_URI_PREFIX = 'http://localhost:8080/';
-var PERSISTENT_URL = "http://purl.org/";
-/**
- * Namespaces
- */
-var NS_FOAF = "http://xmlns.com/foaf/0.1/";
-var NS_ANDS = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#";
-var NS_DC = PERSISTENT_URL + "dc/terms/";
-var NS_DCMITYPE = PERSISTENT_URL + "dc/dcmitype/";
-var NS_CLD = PERSISTENT_URL + "cld/terms/";
-var NS_ANZSRC = PERSISTENT_URL + "anzsrc/";
-var NS_VIVO = "http://vivoweb.org/ontology/core#";
-var NS_ORE = "http://www.openarchives.org/ore/terms/";
-var NS_GEORSS = "http://www.georss.org/georss/";
-var NS_RDFA = "http://www.w3.org/ns/rdfa#";
-var NS_EFS = "http://www.e-framework.org/Contributions/ServiceGenres/";
-var NS_ATOM = "http://www.w3.org/2005/Atom";
-var NS_APP = "http://www.w3.org/2007/app";
-/**
- * rel attribute types
- */
-var REL_ACCESS_RIGHTS = NS_DC + "accessRights";
-var REL_ALTERNATE = "alternate";
-var REL_CREATOR = NS_DC + "creator";
-var REL_DESCRIBES = NS_ORE + "describes";
-var REL_HAS_PARTICIPANT = NS_ANDS + "hasParticipant";
-var REL_HAS_OUTPUT = NS_ANDS + "hasOutput";
-var REL_IS_MANAGER_OF = NS_ANDS + "isManagerOf";
-var REL_IS_ACCESSED_VIA = NS_CLD + "isAccessedVia";
-var REL_MADE = NS_FOAF + "made";
-var REL_MBOX = NS_FOAF + "mbox";
-var REL_IS_DESCRIBED_BY = NS_ORE + "isDescribedBy";
-var REL_IS_LOCATED_AT = NS_CLD + "isLocatedAt";
-var REL_IS_OUTPUT_OF = NS_ANDS + "isOutputOf";
-var REL_IS_REFERENCED_BY = NS_DC + "isReferencedBy";
-var REL_CURRENT_PROJECT = NS_FOAF + "currentProject";
-var REL_IS_SUPPORTED_BY = NS_ANDS + "isSupportedBy";
-var REL_LATEST_VERSION = "latest-version";
-var REL_PAGE = NS_FOAF + "page";
-var REL_PREDECESSOR_VERSION = "predecessor-version";
-var REL_PUBLISHER = NS_DC + "publisher";
-var REL_RELATED = "related";
-var REL_SELF = "self";
-var REL_LICENSE = "license";
-var REL_SUCCESSOR_VERSION = "successor-version";
-var REL_TEMPORAL = NS_DC + "temporal";
-var REL_ALTERNATIVE = NS_DC + "alternative";
-var REL_SPATIAL = NS_DC + "spatial";
-var REL_VIA = "via";
-
-
-/**
- * term attributes
- */
-var TERM_ANDS_GROUP = "The University of Queensland";
-var TERM_ACTIVITY = NS_FOAF + "Project";
-var TERM_COLLECTION = NS_DCMITYPE + "Collection";
-var TERM_AGENT_AS_GROUP = NS_FOAF + "Group";
-var TERM_AGENT_AS_AGENT = NS_FOAF + "Agent";
-var TERM_SERVICE = NS_VIVO + "Service";
-var LABEL_KEYWORD = "keyword";
-
-var SCHEME_DCMITYPE = NS_DCMITYPE;
-var SCHEME_KEYWORD = UQ_REGISTRY_URI_PREFIX + "keyword";
-var SCHEME_ANZSRC_FOR = NS_ANZSRC + "for";
-var SCHEME_ANZSRC_SEO = NS_ANZSRC + "seo";
-var SCHEME_ANZSRC_TOA = NS_ANZSRC + "toa";
-
-var PROPERTY_TITLE = NS_FOAF + "title";
-var PROPERTY_GIVEN_NAME = NS_FOAF + "givenName";
-var PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
-
-function ingestRecord(url, type, isNew, isPublished) {
-
-    if (confirm("Are you sure you want to create this record?")) {
-
-        var record = null;
-        if (type == 'activity') {
-            record = getActivityAtom(isNew, isPublished);
-        } else if (type == 'agent') {
-            record = getAgentAtom(isNew, isPublished);
-        } else if (type == 'collection') {
-            record = getCollectionAtom(isNew, isPublished);
-        } else if (type == 'service') {
-            record = getServiceAtom(isNew, isPublished);
-        }
-        var method = 'PUT';
-        if (isNew) {
-            method = 'POST';
-        }
-        $.ajax({
-            type: method,
-            url: url,
-            data: serializeToString(record.context),
-            contentType: "application/atom+xml",
-            processData: false,
-            dataType: 'xml',
-            success: function(data, textStatus, XMLHttpRequest) {
-                var loc = XMLHttpRequest.getResponseHeader('Location');
-                window.location.href = loc;
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                $('#ingest-error-msg').html('<span style="color:red;">' + textStatus + '</span>');
-            }
-        });
-    }
-    return false;
-}
 
 function getActivityAtom(isNew, isPublished) {
     var record = getAtomEntryElement();
