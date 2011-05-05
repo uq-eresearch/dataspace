@@ -447,7 +447,8 @@ function addAccessRights(record) {
             {name: 'property', value: REL_ACCESS_RIGHTS },
             {name: 'content', value:val }
         ];
-        for each (var attribute in attributes) {
+        for (var i = 0; i < attributes.length; i++) {
+            var attribute = attributes[i];
             accessRights.attr(attribute.name, attribute.value);
         }
         record.append(accessRights);
@@ -470,7 +471,8 @@ function addAlternativeTitles(record) {
             {name: 'property', value: REL_ALTERNATIVE },
             {name: 'content', value:$(this).val() }
         ];
-        for each (var attribute in attributes) {
+        for (var i = 0; i < attributes.length; i++) {
+            var attribute = attributes[i];
             alternativeTitle.attr(attribute.name, attribute.value);
         }
         record.append(alternativeTitle);
@@ -561,7 +563,8 @@ function addTemporal(record) {
     if (content != '') {
         attributes[0] = {name: 'property', value: REL_TEMPORAL };
         attributes[1] = {name: 'content', value:content.trim() };
-        for each (var attribute in attributes) {
+        for (var i = 0; i < attributes.length; i++) {
+            var attribute = attributes[i];
             termporal.attr(attribute.name, attribute.value);
         }
         record.append(termporal);
@@ -682,7 +685,8 @@ function getSimpleElementWithText(name, text) {
 
 function getElementWithAttributes(name, attributes) {
     var element = getSimpleElement(name);
-    for each (var attribute in attributes) {
+    for (var i = 0; i < attributes.length; i++) {
+        var attribute = attributes[i];
         element.attr(attribute.name, attribute.value);
     }
     return element;
