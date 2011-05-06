@@ -123,6 +123,45 @@ The project is set to be packaged as war file (see pom.xml). When packaging the
 project, your should run the antrun:run goal to append the revision number to
 the project's version number
 
+Adding Solr search
+~~~~~~~~~~~~~~~~~~
+- Download solr from http://lucene.apache.org/solr/
+- Unzip the tar file and copy [UNZIPPED_DIR]/example/webapps/solr.war to [TOMCAT_HOME]/webapps
+- Copy [UNZIPPED_DIR]/example/solr to [TOMCAT_HOME]/bin
+- Create directory [TOMCAT_HOME]/bin/solr/data
+- Create data-config.xml file under [TOMCAT_HOME]/bin/solr/conf/ and add the datasource details and entities to index
+        <?xml version="1.0" encoding="UTF-8"?>
+        <dataConfig>
+        <dataSource type="JdbcDataSource"
+                    driver="org.postgresql.Driver"
+                    url="jdbc:postgresql://localhost/registry"
+                    user="registry"
+                    password="registry"
+                readOnly="true"
+                autoCommit="false"
+                transactionIsolation="TRANSACTION_READ_COMMITTED"
+                holdability="CLOSE_CURSORS_AT_COMMIT"/>
+
+        <document name="collection">
+            <entity name="collectionversion"
+                    query="select * from collectionversion">
+            </entity>
+        </document>
+        </dataConfig>
+
+- In the solrconfig.xml file add the following:
+
+          <requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler" default="true">
+            <lst name="defaults">
+              <str name="config">data-config.xml</str>
+            </lst>
+          </requestHandler>
+
+- You neeed to add indexing configuration for the schema in the schema.xml file inside the <fields> tag
+- Start tomcat and check the logs
+- Open the browser go to http://localhost:8080/solr/dataimport?command=full-import
+- Go to the admin section of solr application http://localhost:8080/solr/admin and search for something
+
 Deployment
 ~~~~~~~~~~
 TBA
