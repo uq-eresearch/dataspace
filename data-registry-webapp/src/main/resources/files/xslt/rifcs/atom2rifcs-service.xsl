@@ -12,7 +12,8 @@
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
-                xmlns="http://ands.org.au/standards/rif-cs/registryObjects">
+                xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
+                exclude-result-prefixes="atom ands dcterms rdfa">
 
     <xsl:include href="common-rifcs.xsl"/>
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
