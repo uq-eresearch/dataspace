@@ -44,6 +44,7 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </a>
+                    <xsl:text> </xsl:text>
                     <span>(edit)</span>
                 </xsl:when>
                 <xsl:otherwise>
@@ -64,6 +65,7 @@
                         <xsl:when test="$index = 0">
                             <input id="alternative-title-text" name="alternative-title-text" type="text"
                                    value="{@content}"/>
+                            <xsl:text> </xsl:text>
                             <a id="alternative-name-link" class="new-link" href="#"
                                onclick="replicateSimpleField('alternative-title-text'); return false;"
                                title="Add Title">new
@@ -81,6 +83,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <input id="alternative-title-text" name="alternative-title-text" type="text" value=""/>
+                <xsl:text> </xsl:text>
                 <a id="alternative-name-link" class="new-link" href="#"
                    onclick="replicateSimpleField('alternative-title-text'); return false;" title="Add Title">new
                 </a>
@@ -89,6 +92,7 @@
     </xsl:template>
     <xsl:template name="type">
         <xsl:param name="entity"/>
+        <input id="record-type" type="hidden" value="{atom:category[@scheme=$NS_DCMITYPE]/@label}"/>
         <xsl:choose>
             <!--atom:category[@scheme=$NS_DCMITYPE]-->
             <xsl:when test="$entity = 'collection'">
@@ -149,6 +153,7 @@
                     <xsl:choose>
                         <xsl:when test="$index = 0">
                             <input id="page-text" name="page-text" type="text" value="{@href}"/>
+                            <xsl:text> </xsl:text>
                             <a id="other-pages-link" class="new-link" href="#"
                                onclick="replicateSimpleField('page-text'); return false;" title="Add Web Page">new
                             </a>
@@ -164,6 +169,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <input id="page-text" name="page-text" type="text" value="{@href}"/>
+                <xsl:text> </xsl:text>
                 <a id="other-pages-link" class="new-link" href="#"
                    onclick="replicateSimpleField('page-text'); return false;" title="Add Web Page">new
                 </a>
@@ -179,6 +185,7 @@
                     <xsl:choose>
                         <xsl:when test="$index = 0">
                             <input id="email-text" name="email-text" type="text" value="{@title}"/>
+                            <xsl:text> </xsl:text>
                             <a id="add-email-link" class="new-link" href="#"
                                onclick="replicateSimpleField('email-text'); return false;" title="Add Email">new
                             </a>
@@ -194,6 +201,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <input id="email-text" name="email-text" type="text" value=""/>
+                <xsl:text> </xsl:text>
                 <a id="add-email-link" class="new-link" href="#"
                    onclick="replicateSimpleField('email-text'); return false;" title="Add Email">new
                 </a>
@@ -222,6 +230,7 @@
                                                onclick="doLookup(); return false;">
                                                 lookup
                                             </a>
+                                            <xsl:text> </xsl:text>
                                         </td>
                                         <td class="lookup-result">
                                             <xsl:value-of select="@title"/>
@@ -238,6 +247,7 @@
                                                onclick="doLookup(); return false;">
                                                 lookup
                                             </a>
+                                            <xsl:text> </xsl:text>
                                         </td>
                                         <td class="lookup-result">
                                             <a id="{$field}-{$index}-remove-link" class="remove-link" href="#"
@@ -260,6 +270,7 @@
                                    onclick="doLookup(); return false;">
                                     lookup
                                 </a>
+                                <xsl:text> </xsl:text>
                             </td>
                             <td class="lookup-result"></td>
                         </tr>
@@ -293,6 +304,7 @@
                                             <a id="lookup-{$type}-link" class="lookup-link" href="#" title="Lookup"
                                                onclick="doLookup(); return false;">lookup
                                             </a>
+                                            <xsl:text> </xsl:text>
                                         </td>
                                         <td class="lookup-result">
                                             <a href="{@term}">
@@ -311,6 +323,7 @@
                                                title="Lookup"
                                                onclick="doLookup(); return false;">lookup
                                             </a>
+                                            <xsl:text> </xsl:text>
                                         </td>
                                         <td class="lookup-result">
                                             <a href="{@term}">
@@ -331,6 +344,7 @@
                                 <a id="lookup-{$type}-link" class="lookup-link" href="#" title="Lookup"
                                    onclick="doLookup(); return false;">lookup
                                 </a>
+                                <xsl:text> </xsl:text>
                             </td>
                             <td class="lookup-result"></td>
                         </tr>
@@ -386,6 +400,7 @@
                 <tr>
                     <td>
                         <input id="keyword" value="" type="text"/>
+                        <xsl:text> </xsl:text>
                         <a class="new-link" id="add-link" href="#" title="Add"
                            onclick="addKeyword('keyword', 'keywords-list')">add
                         </a>

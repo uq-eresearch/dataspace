@@ -19,6 +19,7 @@ body a {
     background: #fff;
     padding: 1.1em;
     font-family: Helvetica, Arial, sans-serif;
+    font-size: 11pt;
     min-height: 600px;
 }
 
@@ -59,6 +60,7 @@ body a {
 #result .record {
     border-bottom: 1px dashed #BE87E9;
     padding: 0.3em;
+    font-size: 11pt;
 }
 
 #result .record .author {

@@ -64,6 +64,7 @@ $(document).ready(function() {
     $("#edit-tabs").tabs();
     $('.date-picker').datepicker();
     styleTables();
+    setRecordType();
 });
 
 function ingestRecord(url, type, isNew, isPublished) {
@@ -183,6 +184,13 @@ function styleTables() {
     $(".lookup-table > tbody > tr:odd").css("background-color", "#d4d4d4");
 }
 
+function setRecordType() {
+    var hiddenField = $("#record-type");
+    if (hiddenField) {
+        var recordType = hiddenField.val();
+        $('#type-combobox').val(recordType);
+    }
+}
 
 /**
  *
