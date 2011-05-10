@@ -48,11 +48,11 @@
                         <div class="member-logo">
 
                             <a href="http://www.universitas21.com/">
-                                <img src="../images/logo-universitas.gif" border="0"
+                                <img src="/images/logo-universitas.gif" border="0"
                                      width="25" height="25" alt="Universitas 21"/>
                             </a>
                             <a href="http://www.go8.edu.au/">
-                                <img src="../images/logo-go8.gif" border="0" width="123"
+                                <img src="/images/logo-go8.gif" border="0" width="123"
                                      height="18" alt="Group of 8"/>
                             </a>
                         </div>
@@ -129,14 +129,14 @@
                         <p>
                             <a href="http://www.uq.edu.au/uqanswers/" class="opacity-toggle">
                                 <img
-                                        src="../images/button-uqanswers.png" width="102" height="28" border="0"
+                                        src="/images/button-uqanswers.png" width="102" height="28" border="0"
                                         alt="UQ Answers"/>
                             </a>
                         </p>
                         <p class="centenary">
                             <a href="http://www.uq.edu.au/centenary/" class="opacity-toggle">
                                 <img
-                                        src="../images/logo-centenary.png" width="102" height="69" border="0"
+                                        src="/images/logo-centenary.png" width="102" height="69" border="0"
                                         alt="UQ Centenary"/>
                             </a>
                         </p>
