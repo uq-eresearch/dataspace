@@ -50,7 +50,9 @@
                     <xsl:with-param name="title">Activities</xsl:with-param>
                 </xsl:call-template>
                 <xsl:if test="$currentUser">
-                    <xsl:call-template name="bread-crumbs-options"/>
+                    <xsl:call-template name="bread-crumbs-options">
+                        <xsl:with-param name="path">activities</xsl:with-param>
+                    </xsl:call-template>
                 </xsl:if>
             </ul>
             <div class="wrapper">

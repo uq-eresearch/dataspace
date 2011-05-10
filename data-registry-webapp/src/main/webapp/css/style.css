@@ -107,7 +107,12 @@ body a {
     color: #cc33ff;
 }
 
-#view-record-link, #lookup-impact-link,
+#view-record-link {
+    font-size: 0.8em;
+    color: #3399ff;
+}
+
+#lookup-impact-link,
 #lookup-field-link, #lookup-location-link, #lookup-related-collection-link {
     font-size: 0.8em;
     padding: 0 0.5em;
@@ -164,7 +169,7 @@ body a {
     width: 90%;
 }
 
-div#search.edit-table .remove-link {
+.edit-table .remove-link {
     font-size: 0.7em;
     color: #ff0000;
 }

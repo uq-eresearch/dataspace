@@ -292,9 +292,12 @@
     </xsl:template>
 
     <xsl:template name="bread-crumbs-options">
+        <xsl:param name="path"/>
         <li class="bread-crumbs-options">
-            <a id="new-record-link" href="#" title="Add Record">new</a>
+            <a id="new-record-link" href="/{$path}?v=new" title="Add Record">new</a>
+            <xsl:text> </xsl:text>
             <a id="edit-record-link" href="{atom:link[@rel=$REL_SELF]/@href}?v=edit" title="Edit Record">edit</a>
+            <xsl:text> </xsl:text>
             <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:link[@rel=$REL_SELF]/@href}'); "
                title="Delete Record">
                 delete

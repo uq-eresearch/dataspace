@@ -15,7 +15,9 @@
                     <a href="{atom:id}">
                         <xsl:value-of select="atom:title"/>
                     </a>
-                    <span>by</span>
+                    <span>
+                        <xsl:text> by </xsl:text>
+                    </span>
                     <span class="author">
                         <xsl:value-of select="atom:author/atom:name"/>
                     </span>
@@ -45,7 +47,9 @@
                     <a href="{atom:id}">
                         <xsl:value-of select="atom:title"/>
                     </a>
-                    <span>by</span>
+                    <span>
+                        <xsl:text> by </xsl:text>
+                    </span>
                     <span class="author">
                         <xsl:value-of select="atom:author/atom:name"/>
                     </span>
