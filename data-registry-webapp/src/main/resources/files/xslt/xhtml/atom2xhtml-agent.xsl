@@ -39,10 +39,10 @@
             <xsl:call-template name="head"/>
         </head>
         <body>
-            <!-- the collection description itself -->
+            <!-- the agent description itself -->
             <xsl:text>
             </xsl:text>
-            <xsl:comment>Collection description</xsl:comment>
+            <xsl:comment>Agent description</xsl:comment>
             <xsl:call-template name="header"/>
             <ul class="bread-crumbs-nav">
                 <xsl:call-template name="bread-crumbs">
@@ -57,8 +57,9 @@
             </ul>
             <div class="wrapper">
                 <div class="description">
-                    <!-- name -->
+                    <!-- names -->
                     <xsl:apply-templates select="atom:title"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
                     <!-- description -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- latest-version -->

@@ -21,11 +21,19 @@
     <xsl:include href="../constants.xsl"/>
     <!--<xsl:param name="currentUser"/>-->
     <xsl:output method="html" media-type="application/xhtml+xml" indent="yes"/>
+    
     <!-- name -->
     <xsl:template match="atom:title">
         <h1>
             <xsl:value-of select="text()"/>
         </h1>
+    </xsl:template>
+    <!-- alternative names -->
+    <xsl:template match="rdfa:meta[@property=$RDFA_ALTERNATIVE]">
+        <p>
+            <xsl:text>Also known as:  </xsl:text>
+            <xsl:value-of select="@content"/>
+        </p>
     </xsl:template>
 
     <!-- description -->
