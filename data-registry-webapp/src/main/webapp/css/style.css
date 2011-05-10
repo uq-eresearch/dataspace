@@ -129,6 +129,10 @@ body a {
     font-size: 0.7em;
 }
 
+.ui-datepicker {
+    z-index: 9999 !important;
+}
+
 .edit-table {
     width: 100%;
 }
