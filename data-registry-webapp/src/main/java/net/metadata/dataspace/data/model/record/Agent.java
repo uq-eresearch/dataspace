@@ -45,6 +45,7 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source source;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FullName fullName;
 
     public Agent() {
