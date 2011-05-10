@@ -62,7 +62,9 @@
                     <!-- description -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- latest-version -->
-                    <xsl:call-template name="latest-version"/>
+                    <xsl:if test="$currentUser">
+                        <xsl:call-template name="latest-version"/>
+                    </xsl:if>
                     <!-- type -->
                     <xsl:call-template name="type"/>
                     <!-- accesses -->
