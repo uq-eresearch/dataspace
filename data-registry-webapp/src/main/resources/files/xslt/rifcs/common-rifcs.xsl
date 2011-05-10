@@ -117,7 +117,7 @@
 
     <!-- descriptions -->
     <xsl:template match="atom:content">
-        <description type="full">
+        <description type="brief">
             <xsl:value-of select="node()"/>
         </description>
     </xsl:template>

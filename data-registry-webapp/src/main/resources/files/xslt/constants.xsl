@@ -87,6 +87,12 @@
     <xsl:variable name="ENTITY_PARTY">
         <xsl:value-of select="concat($NS_FOAF, 'Agent')"/>
     </xsl:variable>
+    <xsl:variable name="ENTITY_PERSON">
+        <xsl:value-of select="concat($NS_FOAF, 'Person')"/>
+    </xsl:variable>
+    <xsl:variable name="ENTITY_GROUP">
+        <xsl:value-of select="concat($NS_FOAF, 'Group')"/>
+    </xsl:variable>
     <xsl:variable name="ENTITY_SERVICE">
         <xsl:value-of select="concat($NS_VIVO,'Service')"/>
     </xsl:variable>
