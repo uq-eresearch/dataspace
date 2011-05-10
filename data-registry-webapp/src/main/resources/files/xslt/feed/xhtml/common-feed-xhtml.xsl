@@ -15,11 +15,15 @@
                     <a href="{atom:id}">
                         <xsl:value-of select="atom:title"/>
                     </a>
+                    <span>by</span>
                     <span class="author">
                         <xsl:value-of select="atom:author/atom:name"/>
                     </span>
                     <br/>
-                    <xsl:value-of select="atom:content"/>
+                    <xsl:value-of select="substring(atom:content, 0, 255)"/>
+                    <a href="{atom:id}">
+                        more...
+                    </a>
                     <span class="record-date">
                         <xsl:value-of select="atom:updated"/>
                     </span>
@@ -41,11 +45,15 @@
                     <a href="{atom:id}">
                         <xsl:value-of select="atom:title"/>
                     </a>
+                    <span>by</span>
                     <span class="author">
                         <xsl:value-of select="atom:author/atom:name"/>
                     </span>
                     <br/>
-                    <xsl:value-of select="atom:content"/>
+                    <xsl:value-of select="substring(atom:content, 0, 255)"/>
+                    <a href="{atom:id}">
+                        more...
+                    </a>
                     <span class="record-date">
                         <xsl:value-of select="atom:updated"/>
                     </span>
