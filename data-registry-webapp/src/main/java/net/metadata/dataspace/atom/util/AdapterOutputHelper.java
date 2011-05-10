@@ -27,6 +27,7 @@ import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
+import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
 
 import java.util.Date;
@@ -68,7 +69,7 @@ public class AdapterOutputHelper {
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
-            String activityTypelabel = version.getType().toString();
+            String activityTypelabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
             entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_FOAF + activityTypelabel, activityTypelabel);
 
             Set<String> alternatives = version.getAlternatives();
@@ -113,7 +114,7 @@ public class AdapterOutputHelper {
 
         try {
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
-            String agentTypelabel = version.getType().toString();
+            String agentTypelabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
             entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_FOAF + agentTypelabel, agentTypelabel);
 
             Set<String> alternatives = version.getAlternatives();
@@ -193,7 +194,7 @@ public class AdapterOutputHelper {
                 entry.addAuthor(workingCopy.getTitle(), workingCopy.getMboxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
             }
 
-            String collectionTypeLabel = version.getType().toString();
+            String collectionTypeLabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
             entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_DCMITYPE + collectionTypeLabel, collectionTypeLabel);
 
             Set<String> alternatives = version.getAlternatives();
@@ -306,7 +307,7 @@ public class AdapterOutputHelper {
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
-            String serviceTypelabel = version.getType().toString();
+            String serviceTypelabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
             entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_EFS + serviceTypelabel, serviceTypelabel);
 
             Set<String> alternatives = version.getAlternatives();

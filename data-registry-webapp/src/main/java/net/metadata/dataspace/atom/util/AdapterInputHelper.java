@@ -596,17 +596,33 @@ public class AdapterInputHelper {
                         entryType = entryType.toUpperCase();
                         if (version instanceof ActivityVersion) {
                             ActivityType type = ActivityType.valueOf(entryType);
-                            ((ActivityVersion) version).setType(type);
+                            if (type == null) {
+                                throw new ResponseContextException("Entry type is invalid", 400);
+                            } else {
+                                ((ActivityVersion) version).setType(type);
+                            }
                         } else if (version instanceof AgentVersion) {
                             AgentType type = AgentType.valueOf(entryType);
-                            ((AgentVersion) version).setType(type);
+                            if (type == null) {
+                                throw new ResponseContextException("Entry type is invalid", 400);
+                            } else {
+                                ((AgentVersion) version).setType(type);
+                            }
                         } else if (version instanceof CollectionVersion) {
                             CollectionType type = CollectionType.valueOf(entryType);
-                            ((CollectionVersion) version).setType(type);
+                            if (type == null) {
+                                throw new ResponseContextException("Entry type is invalid", 400);
+                            } else {
+                                ((CollectionVersion) version).setType(type);
+                            }
                             ((CollectionVersion) version).setRights(entry.getRights());
                         } else if (version instanceof ServiceVersion) {
                             ServiceType type = ServiceType.valueOf(entryType);
-                            ((ServiceVersion) version).setType(type);
+                            if (type == null) {
+                                throw new ResponseContextException("Entry type is invalid", 400);
+                            } else {
+                                ((ServiceVersion) version).setType(type);
+                            }
                         }
                     }
                 }
