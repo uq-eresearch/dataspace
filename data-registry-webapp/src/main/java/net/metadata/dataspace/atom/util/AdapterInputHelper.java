@@ -249,7 +249,7 @@ public class AdapterInputHelper {
                     familyName = extension.getAttributeValue("content");
                 }
             }
-            if (fullNameTitle != null && givenName != null && familyName != null) {
+            if (givenName != null && familyName != null) {
                 FullName fullName = version.getParent().getFullName();
                 if (fullName == null) {
                     fullName = entityCreator.getFullName();
@@ -263,7 +263,7 @@ public class AdapterInputHelper {
                     fullName.setFamilyName(familyName);
                 }
             } else {
-                throw new ResponseContextException("Agent missing full name elements i.e. title, given name, family name", 400);
+                throw new ResponseContextException("Agent missing full name elements given name, family name", 400);
             }
         }
 
