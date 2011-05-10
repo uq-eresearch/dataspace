@@ -210,8 +210,10 @@
                     <xsl:apply-templates select="georss:polygon"/>
                 </xsl:if>
                 <xsl:if test="atom:link[@rel=$ATOM_SPATIAL]">
-                    <p>Feature Name:
-                        <xsl:value-of select="atom:link[@rel=$ATOM_SPATIAL]"/>
+                    <p>
+                        <a href="{atom:link[@rel=$ATOM_SPATIAL]/@href}">
+                            <xsl:value-of select="atom:link[@rel=$ATOM_SPATIAL]/@title"/>
+                        </a>
                     </p>
                 </xsl:if>
             </div>
