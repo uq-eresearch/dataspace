@@ -362,6 +362,16 @@
     <xsl:template name="type-of-activities">
         <xsl:choose>
             <xsl:when test="atom:category[@scheme=$SCHEME_TOA]">
+                <input type="checkbox" class="type-of-activity" name="applied-research" value="applied-research"/>
+                Applied research
+                <input type="checkbox" class="type-of-activity" name="pure-basic-research" value="pure basic research"/>
+                Pure basic research
+                <input type="checkbox" class="type-of-activity" name="experimental-development"
+                       value="experimental development"/>
+                Experimental development
+                <input type="checkbox" class="type-of-activity" name="strategic-basic-research"
+                       value="strategic basic research"/>
+                Strategic basic research
             </xsl:when>
             <xsl:otherwise>
                 <input type="checkbox" class="type-of-activity" name="applied-research" value="applied-research"/>
@@ -383,12 +393,12 @@
                 <tr>
                     <td>
                         <ul id="keywords-list">
-                            <xsl:if test="atom:category[@term='keyword']">
-                                <xsl:for-each select="atom:category[@term='keyword']">
+                            <xsl:if test="atom:category[@label='keyword']">
+                                <xsl:for-each select="atom:category[@label='keyword']">
                                     <li class="keyword">
-                                        <xsl:value-of select="@label"/>
-                                        <a id="{@label}" href="#" class="remove-keyword" title="Remove Keyword"
-                                           onclick="$('#{@label}').parent().remove();">x
+                                        <xsl:value-of select="@term"/>
+                                        <a id="{@term}" href="#" class="remove-keyword" title="Remove Keyword"
+                                           onclick="$('#{@term}').parent().remove();">x
                                         </a>
                                     </li>
                                 </xsl:for-each>
@@ -494,6 +504,7 @@
         </div>
     </xsl:template>
     <xsl:template name="licence-type">
+        <input type="hidden" id="licence-type" value="{atom:link[@rel=$REL_LICENSE]/@href}"/>
         <select id="licence-type-combobox" name="type-combobox">
             <option value="none">None</option>
             <option value="http://creativecommons.org/licenses/by/3.0/rdf">CC-BY</option>

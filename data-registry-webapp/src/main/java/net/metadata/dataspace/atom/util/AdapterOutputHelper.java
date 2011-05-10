@@ -18,10 +18,7 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
-import org.apache.abdera.model.Element;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Link;
-import org.apache.abdera.model.Source;
+import org.apache.abdera.model.*;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -513,7 +510,8 @@ public class AdapterOutputHelper {
     private static void addSubjectToEntry(Entry entry, Set<Subject> subjectSet) {
         for (Subject sub : subjectSet) {
             if (sub.getLabel().equals(Constants.LABEL_KEYWORD)) {
-                entry.addCategory(sub.getTerm());
+                Category category = entry.addCategory(sub.getTerm());
+                category.setLabel(Constants.LABEL_KEYWORD);
             } else {
                 entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
             }

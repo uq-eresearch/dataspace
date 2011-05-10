@@ -65,6 +65,7 @@ $(document).ready(function() {
     $('.date-picker').datepicker();
     styleTables();
     setRecordType();
+    setLicenseType();
 });
 
 function ingestRecord(url, type, isNew, isPublished) {
@@ -189,6 +190,14 @@ function setRecordType() {
     if (hiddenField) {
         var recordType = hiddenField.val();
         $('#type-combobox').val(recordType);
+    }
+}
+
+function setLicenseType() {
+    var hiddenField = $("#licence-type");
+    if (hiddenField) {
+        var licenceType = hiddenField.val();
+        $('#licence-type-combobox').val(licenceType);
     }
 }
 
