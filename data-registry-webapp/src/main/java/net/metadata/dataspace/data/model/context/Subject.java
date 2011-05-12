@@ -1,6 +1,8 @@
 package net.metadata.dataspace.data.model.context;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * User: alabri
@@ -9,6 +11,7 @@ import javax.persistence.Entity;
  */
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"term", "isDefinedBy", "label"})})
 public class Subject extends AbstractContextEntity {
 
     private static final long serialVersionUID = 1L;
