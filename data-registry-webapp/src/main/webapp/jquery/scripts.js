@@ -171,7 +171,7 @@ function doLookup() {
     $('#lookup-div').dialog({
         modal: true,
         open: function() {
-            $(this).style.display = '';
+            $(this).css('display', '');
         },
         height: 400,
         width: 600,
