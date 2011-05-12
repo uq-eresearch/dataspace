@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+        xmlns:dc="http://purl.org/dc/terms/"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+        >
+    <rdf:Description rdf:about="http://purl.org/anzsrc/toa/#strategic">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="en">Strategic basic research</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://purl.org/anzsrc/toa/#toa"/>
+        <skos:scopeNote xml:lang="en">Strategic basic research is experimental and theoretical work undertaken to
+            acquire new knowledge directed into specified broad areas in the expectation of practical discoveries. It
+            provides the broad base of knowledge necessary for the solution of recognised practical problems.
+        </skos:scopeNote>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/anzsrc/toa/#applied">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="en">Applied research</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://purl.org/anzsrc/toa/#toa"/>
+        <skos:scopeNote xml:lang="en">Strategic basic research is experimental and theoretical work undertaken to
+            acquire new knowledge directed into specified broad areas in the expectation of practical discoveries. It
+            provides the broad base of knowledge necessary for the solution of recognised practical problems.
+        </skos:scopeNote>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/anzsrc/toa/#experimental">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="en">Experimental development</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://purl.org/anzsrc/toa/#toa"/>
+        <skos:scopeNote xml:lang="en">Strategic basic research is experimental and theoretical work undertaken to
+            acquire new knowledge directed into specified broad areas in the expectation of practical discoveries. It
+            provides the broad base of knowledge necessary for the solution of recognised practical problems.
+        </skos:scopeNote>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/anzsrc/toa/#basic">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="en">Pure basic research</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://purl.org/anzsrc/toa/#toa"/>
+        <skos:scopeNote xml:lang="en">Pure basic research is experimental and theoretical work undertaken to acquire new
+            knowledge without looking for long term benefits other than the advancement of knowledge.
+        </skos:scopeNote>
+    </rdf:Description>
+</rdf:RDF>
