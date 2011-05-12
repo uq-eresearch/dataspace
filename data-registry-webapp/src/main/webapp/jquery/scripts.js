@@ -561,7 +561,7 @@ function addKeywordToCollection(record) {
     $('ul[id="keywords-list"]').children().each(function() {
         var keyword = $(this).clone();
         $(keyword).children().remove('a');
-        var category = getCategoryElement('', $(keyword).text(), '');
+        var category = getCategoryElement(null, $(keyword).text(), null);
         record.append(category);
     });
 }
@@ -655,15 +655,9 @@ function getAtomEntryElement() {
 
 function getCategoryElement(scheme, term, label) {
     var attributes = [];
-    if (scheme) {
-        attributes[0] = {name:'scheme',value: scheme};
-    }
-    if (term) {
-        attributes[1] = {name:'term',value: term};
-    }
-    if (label) {
-        attributes[2] = {name:'label',value: label};
-    }
+    attributes[0] = {name:'scheme',value: scheme};
+    attributes[1] = {name:'term',value: term};
+    attributes[2] = {name:'label',value: label};
     var category = getElementWithAttributes('category', attributes);
     return category;
 }
@@ -704,7 +698,9 @@ function getElementWithAttributes(name, attributes) {
     var element = getSimpleElement(name);
     for (var i = 0; i < attributes.length; i++) {
         var attribute = attributes[i];
-        element.attr(attribute.name, attribute.value);
+        if (attribute.name && attribute.value) {
+            element.attr(attribute.name, attribute.value);
+        }
     }
     return element;
 }

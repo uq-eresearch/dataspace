@@ -27,6 +27,7 @@ body a {
     width: 70%;
     height: 17px;
     padding: 0.8em 0 0.5em 0;
+    font-size: 11pt;
     margin: auto;
     text-align: right;
 }
@@ -34,7 +35,7 @@ body a {
 .bread-crumbs {
     float: left;
     display: inline;
-    font-size: 0.8em
+    font-size: 0.9em
 }
 
 .bread-crumbs-options {
@@ -84,33 +85,33 @@ body a {
 }
 
 #subscribe-link {
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 #edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link,
 #add-socio-economic-impact-link, #add-fields-of-research-link, #add-locations-link, #add-related-collection-link,
 #add-related-service-link, #add-related-publication-link, #add-collection-link {
     color: #339900;
-    font-size: 0.8em
+    font-size: 0.9em
 }
 
 #delete-record-link {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #ff0000;
 }
 
 #view-record-history-link {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #4a3201;
 }
 
 #view-record-working-copy-link {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #cc33ff;
 }
 
 #view-record-link {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #3399ff;
 }
 
@@ -226,17 +227,17 @@ fieldset .field label {
 }
 
 .save-links-div .save-link {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #339900;
 }
 
 .save-links-div .publish-link {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #3399ff;
 }
 
 #type-of-activities {
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 #keywords-list {
@@ -245,7 +246,7 @@ fieldset .field label {
 }
 
 #keywords-table #add-link {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #339900;
 }
 

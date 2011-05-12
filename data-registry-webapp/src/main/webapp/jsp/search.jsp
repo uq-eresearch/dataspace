@@ -4,6 +4,107 @@
 <html>
 <head>
     <jsp:include page="../include/head.jsp"/>
+    <style type="text/css">
+        #result a {
+            margin-right: 5px;
+        }
+
+        #navigation {
+            border-bottom: 1px solid #000;
+        }
+
+        #pager,
+        #pager-header {
+            display: inline;
+        }
+
+        #pager li,
+        .links li {
+            list-style-type: none;
+            display: inline;
+        }
+
+        #selection {
+            padding: 10px 15px 0;
+        }
+
+        #selection li {
+            list-style-type: none;
+        }
+
+        #docs {
+            padding-top: 1px;
+        }
+
+    </style>
+    <script type="text/javascript">
+        var Manager;
+        $(document).ready(function() {
+            Manager = new AjaxSolr.Manager({
+                //TODO change this
+//                solrUrl: 'http://evolvingweb.ca/solr/reuters/'
+                solrUrl: 'http://localhost:8080/solr/'
+            });
+            Manager.addWidget(new AjaxSolr.ResultWidget({
+                id: 'result',
+                target: '#docs'
+            }));
+            Manager.addWidget(new AjaxSolr.PagerWidget({
+                id: 'pager',
+                target: '#pager',
+                prevLabel: '&lt;',
+                nextLabel: '&gt;',
+                innerWindow: 1,
+                renderHeader: function (perPage, offset, total) {
+                    $('#pager-header').html($('<span/>').text('displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
+                }
+            }));
+
+//            Manager.addWidget(new AjaxSolr.AutocompleteWidget({
+//                id: 'text',
+//                target: '#searching',
+//                field: 'allText',
+//                fields: ['topics', 'organisations', 'exchanges' ]
+//            }));
+
+            Manager.init();
+
+            var params = {
+                facet: true,
+                'facet.field': [ 'title', 'description' ],
+                'indent':'on',
+                'version': '2.2',
+                'start':0,
+                'rows':10,
+                'fl':'*,score',
+                'qt':'standard',
+//                'wt':'standard',
+                'facet.limit': 20,
+                'facet.mincount': 1,
+                'f.topics.facet.limit': 50,
+                'f.countryCodes.facet.limit': -1,
+                'facet.date.start': '1987-02-26T00:00:00.000Z/DAY',
+                'facet.date.end': '1987-10-20T00:00:00.000Z/DAY+1DAY',
+                'facet.date.gap': '+1DAY',
+                'json.nl': 'map'
+            };
+            for (var name in params) {
+                Manager.store.addByValue(name, params[name]);
+            }
+        });
+        $.fn.showIf = function (condition) {
+            if (condition) {
+                return this.show();
+            }
+            else {
+                return this.hide();
+            }
+        }
+        function doSearch(term) {
+            Manager.store.addByValue('q', term);
+            Manager.doRequest();
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="../include/header.jsp"/>
@@ -14,18 +115,29 @@
 </ul>
 <div class="wrapper">
     <div class="content">
-        <form id="search-form" method="post" action="/search">
+        <div id="search-form">
             <table width="100%">
                 <tbody>
                 <tr>
-                    <td><input type="text" id="search" name="search" value=""/></td>
-                    <td><input type="submit" name="search-submit" id="search-submit" value="Search"/></td>
+                    <td id="searching">
+                        <input type="text" id="query" name="query"/>
+                    </td>
+                    <td><input type="button" name="search-submit" id="search-submit" value="Search"
+                               onclick="doSearch($('#query').val()); return false;"/></td>
                 </tr>
                 </tbody>
             </table>
-        </form>
-        <div>
-            <p><c:out value="${keyword}"/></p>
+        </div>
+        <div id="snippet">
+
+        </div>
+        <div id="result">
+            <div id="navigation">
+                <ul id="pager"></ul>
+
+                <div id="pager-header"></div>
+            </div>
+            <div id="docs"></div>
         </div>
     </div>
 </div>

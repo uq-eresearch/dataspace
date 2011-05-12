@@ -50,23 +50,31 @@
         </ul>
         <%--<div class="clear">&nbsp;</div>--%>
     </div>
+    <%--<%--%>
+    <%--AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();--%>
+    <%--User currentUser = authenticationManager.getCurrentUser();--%>
+
+
+    <%--%>--%>
     <a href="#" class="signin" id="signin-link">Sign in</a>
     <fieldset id="signin_menu">
-        <span id="login-error" style="color:#ff0000;"></span>
+        <form action="#" method="post" id="signin" onsubmit="login(); return false;">
+            <p id="login-error" style="color:#ff0000;">
 
-        <form id="signin" onsubmit="login(); return false;">
+            </p>
+
             <p>
                 <label for="username">Username</label>
-                <input id="username" name="username" value="" title="username" tabindex="4" type="text">
+                <input id="username" name="username" value="" title="username" type="text"/>
             </p>
 
             <p>
                 <label for="password">Password</label>
-                <input id="password" name="password" value="" title="password" tabindex="5" type="password">
+                <input id="password" name="password" value="" title="password" type="password"/>
             </p>
 
             <p class="remember">
-                <input id="signin_submit" value="Sign in" tabindex="6" type="submit">
+                <input id="signin_submit" value="Sign in" type="submit"/>
             </p>
         </form>
     </fieldset>
