@@ -161,7 +161,7 @@
                             <div class="field">
                                 <xsl:call-template name="edit-subject">
                                     <xsl:with-param name="scheme" select="$SCHEME_FOR"/>
-                                    <xsl:with-param name="type" select="field-of-research"/>
+                                    <xsl:with-param name="field" select="'field-of-research'"/>
                                 </xsl:call-template>
                             </div>
                         </fieldset>
@@ -170,7 +170,7 @@
                             <div class="field">
                                 <xsl:call-template name="edit-subject">
                                     <xsl:with-param name="scheme" select="$SCHEME_SEO"/>
-                                    <xsl:with-param name="type" select="socio-economic-impact"/>
+                                    <xsl:with-param name="field" select="'socio-economic-impact'"/>
                                 </xsl:call-template>
                             </div>
                         </fieldset>

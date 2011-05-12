@@ -286,9 +286,9 @@
     </xsl:template>
 
     <xsl:template name="edit-subject">
-        <xsl:param name="type"/>
+        <xsl:param name="field"/>
         <xsl:param name="scheme"/>
-        <table id="edit-{$type}-table" class="lookup-table">
+        <table id="edit-{$field}-table" class="lookup-table">
             <tbody>
                 <xsl:choose>
                     <xsl:when test="atom:category[@scheme=$scheme]">
@@ -298,10 +298,10 @@
                                 <xsl:when test="$index = 0">
                                     <tr>
                                         <td>
-                                            <input id="{$type}" value="{@label}" type="text"/>
+                                            <input id="{$field}" value="{@label}" type="text"/>
                                         </td>
                                         <td>
-                                            <a id="lookup-{$type}-link" class="lookup-link" href="#" title="Lookup"
+                                            <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
                                                onclick="doLookup(); return false;">lookup
                                             </a>
                                             <xsl:text> </xsl:text>
@@ -316,10 +316,10 @@
                                 <xsl:otherwise>
                                     <tr>
                                         <td>
-                                            <input id="{$type}-{$index}" value="{@label}" type="text"/>
+                                            <input id="{$field}-{$index}" value="{@label}" type="text"/>
                                         </td>
                                         <td>
-                                            <a id="lookup-{$type}-{$index}-link" class="lookup-link" href="#"
+                                            <a id="lookup-{$field}-{$index}-link" class="lookup-link" href="#"
                                                title="Lookup"
                                                onclick="doLookup(); return false;">lookup
                                             </a>
@@ -338,10 +338,10 @@
                     <xsl:otherwise>
                         <tr>
                             <td>
-                                <input id="{$type}" value="" type="text"/>
+                                <input id="{$field}" value="" type="text"/>
                             </td>
                             <td>
-                                <a id="lookup-{$type}-link" class="lookup-link" href="#" title="Lookup"
+                                <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
                                    onclick="doLookup(); return false;">lookup
                                 </a>
                                 <xsl:text> </xsl:text>
@@ -353,8 +353,8 @@
             </tbody>
         </table>
         <div>
-            <a class="new-link" id="add-{$type}-link" href="#" title="Add"
-               onclick="replicateLookupField('{$type}'); return false;">add
+            <a class="new-link" id="add-{$field}-link" href="#" title="Add"
+               onclick="replicateLookupField('{$field}'); return false;">add
             </a>
         </div>
     </xsl:template>

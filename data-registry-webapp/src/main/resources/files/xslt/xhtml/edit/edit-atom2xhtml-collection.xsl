@@ -166,7 +166,7 @@
                             <legend class="ui-widget-header ui-corner-all">Fields of Research</legend>
                             <div class="field">
                                 <xsl:call-template name="edit-subject">
-                                    <xsl:with-param name="type">field-of-research</xsl:with-param>
+                                    <xsl:with-param name="field">field-of-research</xsl:with-param>
                                     <xsl:with-param name="scheme">
                                         <xsl:value-of select="$SCHEME_FOR"/>
                                     </xsl:with-param>
@@ -177,7 +177,7 @@
                             <legend class="ui-widget-header ui-corner-all">Socio-economic Impact</legend>
                             <div class="field">
                                 <xsl:call-template name="edit-subject">
-                                    <xsl:with-param name="type">socio-economic-impact</xsl:with-param>
+                                    <xsl:with-param name="field">socio-economic-impact</xsl:with-param>
                                     <xsl:with-param name="scheme">
                                         <xsl:value-of select="$SCHEME_SEO"/>
                                     </xsl:with-param>
