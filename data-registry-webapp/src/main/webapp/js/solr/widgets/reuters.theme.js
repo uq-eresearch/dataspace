@@ -2,6 +2,9 @@
 
     AjaxSolr.theme.prototype.result = function (doc, snippet) {
         var output = '<div><h2>' + doc.title + '</h2>';
+//        if (doc.label && !doc.title) {
+//            output = '<div><h2>' + doc.label + '</h2>';
+//        }
         output += '<p id="links_' + doc.id + '" class="links"></p>';
         output += '<p>' + snippet + '</p></div>';
         return output;
@@ -18,6 +21,20 @@
             output += doc.description;
         }
         return output;
+    };
+//
+//    AjaxSolr.theme.prototype.subjectResult = function (doc, snippet) {
+//        var output = '<div><h2>' + doc.title + '</h2>';
+////        if (doc.label && !doc.title) {
+////            output = '<div><h2>' + doc.label + '</h2>';
+////        }
+//        output += '<p id="links_' + doc.id + '" class="links"></p>';
+//        output += '<p>' + snippet + '</p></div>';
+//        return output;
+//    };
+
+    AjaxSolr.theme.prototype.subjectSnippet = function (doc) {
+        return '<p><input type="checkbox" id="' + doc.term + '"/> <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
     };
 
     AjaxSolr.theme.prototype.tag = function (value, weight, handler) {

@@ -227,7 +227,7 @@
                                         </td>
                                         <td>
                                             <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
-                                               onclick="doLookup(); return false;">
+                                               onclick="showLookupDialog(); return false;">
                                                 lookup
                                             </a>
                                             <xsl:text> </xsl:text>
@@ -244,7 +244,7 @@
                                         </td>
                                         <td>
                                             <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
-                                               onclick="doLookup(); return false;">
+                                               onclick="showLookupDialog(); return false;">
                                                 lookup
                                             </a>
                                             <xsl:text> </xsl:text>
@@ -267,7 +267,7 @@
                             </td>
                             <td>
                                 <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
-                                   onclick="doLookup(); return false;">
+                                   onclick="showLookupDialog(); return false;">
                                     lookup
                                 </a>
                                 <xsl:text> </xsl:text>
@@ -302,7 +302,7 @@
                                         </td>
                                         <td>
                                             <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
-                                               onclick="doLookup(); return false;">lookup
+                                               onclick="showLookupDialog('subject'); return false;">lookup
                                             </a>
                                             <xsl:text> </xsl:text>
                                         </td>
@@ -321,7 +321,7 @@
                                         <td>
                                             <a id="lookup-{$field}-{$index}-link" class="lookup-link" href="#"
                                                title="Lookup"
-                                               onclick="doLookup(); return false;">lookup
+                                               onclick="showLookupDialog('subject'); return false;">lookup
                                             </a>
                                             <xsl:text> </xsl:text>
                                         </td>
@@ -342,7 +342,7 @@
                             </td>
                             <td>
                                 <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
-                                   onclick="doLookup(); return false;">lookup
+                                   onclick="showLookupDialog('subject'); return false;">lookup
                                 </a>
                                 <xsl:text> </xsl:text>
                             </td>
@@ -446,7 +446,8 @@
                         <input id="location-name" value="" type="text"/>
                     </td>
                     <td>
-                        <a id="lookup-location-link" href="#" title="Lookup" onclick="doLookup(); return false;">lookup
+                        <a id="lookup-location-link" href="#" title="Lookup"
+                           onclick="showLookupDialog(); return false;">lookup
                         </a>
                     </td>
                     <td class="lookup-result"></td>
@@ -517,23 +518,36 @@
     </xsl:template>
     <xsl:template name="lookup-form">
         <div id="lookup-div" style="display:none;">
-            <form id="lookup-form" method="post" action="lookup" onsubmit="doLookup();return false;">
+            <form id="lookup-form" method="post" action="">
+                <input type="hidden" id="lookup-type" value=""/>
                 <table width="100%">
                     <tbody>
                         <tr>
                             <td>
-                                <input type="text" id="lookup-keyword" name="lookup-keyword" value=""/>
+                                <input type="text" id="query" name="lookup-keyword" value=""/>
                             </td>
                             <td>
-                                <input type="submit" name="lookup-submit" id="lookup-submit" value="Search"/>
+                                <input type="button" name="lookup-submit" id="lookup-submit" value="Search"
+                                       onclick="lookup($('#lookup-type').val(),$('#query').val()); return false;"/>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </form>
-            <ul id="lookup-result">
+            <div id="result">
+                <div id="navigation">
+                    <ul id="pager">
 
-            </ul>
+                    </ul>
+
+                    <div id="pager-header">
+
+                    </div>
+                </div>
+                <div id="docs">
+
+                </div>
+            </div>
         </div>
     </xsl:template>
 </xsl:stylesheet>

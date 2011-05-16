@@ -4,39 +4,7 @@
 <html>
 <head>
     <jsp:include page="../include/head.jsp"/>
-    <style type="text/css">
-        #result a {
-            margin-right: 5px;
-        }
 
-        #navigation {
-            border-bottom: 1px solid #000;
-        }
-
-        #pager,
-        #pager-header {
-            display: inline;
-        }
-
-        #pager li,
-        .links li {
-            list-style-type: none;
-            display: inline;
-        }
-
-        #selection {
-            padding: 10px 15px 0;
-        }
-
-        #selection li {
-            list-style-type: none;
-        }
-
-        #docs {
-            padding-top: 1px;
-        }
-
-    </style>
     <script type="text/javascript">
         var Manager;
         $(document).ready(function() {
@@ -72,11 +40,6 @@
             var params = {
                 facet: true,
                 'facet.field': [ 'title', 'description' ],
-                'indent':'on',
-                'version': '2.2',
-                'start':0,
-                'rows':10,
-                'fl':'*,score',
                 'qt':'standard',
 //                'wt':'standard',
                 'facet.limit': 20,
@@ -127,9 +90,6 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
-        <div id="snippet">
-
         </div>
         <div id="result">
             <div id="navigation">

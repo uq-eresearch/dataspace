@@ -22,5 +22,24 @@
                 src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js">;</script>
         <script type="text/javascript" src="/jquery/login.js">;</script>
         <script type="text/javascript" src="/jquery/scripts.js">;</script>
+
+
+        <script type="text/javascript" src="/js/solr/search.js">;</script>
+        <script type="text/javascript" src="/js/solr/core/Core.js">;</script>
+        <script type="text/javascript" src="/js/solr/core/AbstractManager.js">;</script>
+        <script type="text/javascript" src="/js/solr/managers/Manager.jquery.js">;</script>
+        <script type="text/javascript" src="/js/solr/core/Parameter.js">;</script>
+        <script type="text/javascript" src="/js/solr/core/ParameterStore.js">;</script>
+        <script type="text/javascript" src="/js/solr/core/AbstractWidget.js">;</script>
+        <script type="text/javascript" src="/js/solr/widgets/ResultWidget.js">;</script>
+        <script type="text/javascript" src="/js/solr/helpers/jquery/ajaxsolr.theme.js">;</script>
+        <script type="text/javascript" src="/js/solr/widgets/reuters.theme.js">;</script>
+        <script type="text/javascript" src="/js/solr/helpers/jquery/jquery.livequery.js">;</script>
+        <script type="text/javascript" src="/js/solr/widgets/PagerWidget.js">;</script>
+        <script type="text/javascript" src="/js/solr/core/AbstractFacetWidget.js">;</script>
+        <script type="text/javascript" src="/js/solr/ext/jquery.autocomplete.js">;</script>
+        <script type="text/javascript" src="/js/solr/widgets/AutocompleteWidget.js">;</script>
+        <script type="text/javascript" src="/js/solr/helpers/ajaxsolr.support.js">;</script>
+        <script type="text/javascript" src="/js/solr/helpers/ajaxsolr.theme.js">;</script>
     </xsl:template>
 </xsl:stylesheet>

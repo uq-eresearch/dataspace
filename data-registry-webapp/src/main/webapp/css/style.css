@@ -1092,3 +1092,35 @@ p.centenary {
     background-position: 0 -5px;
     cursor: pointer;
 }
+
+/*=============Search style=========*/
+#result a {
+    margin-right: 5px;
+}
+
+#navigation {
+    border-bottom: 1px solid #000;
+}
+
+#pager,
+#pager-header {
+    display: inline;
+}
+
+#pager li,
+.links li {
+    list-style-type: none;
+    display: inline;
+}
+
+#selection {
+    padding: 10px 15px 0;
+}
+
+#selection li {
+    list-style-type: none;
+}
+
+#docs {
+    padding-top: 1px;
+}

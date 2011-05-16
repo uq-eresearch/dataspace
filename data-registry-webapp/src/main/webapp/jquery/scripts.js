@@ -167,7 +167,8 @@ function addKeyword(inputFieldId, listId) {
     return false;
 }
 
-function doLookup() {
+function showLookupDialog(type) {
+    $('#lookup-type').val(type);
     $('#lookup-div').dialog({
         modal: true,
         open: function() {
