@@ -227,7 +227,7 @@
                                         </td>
                                         <td>
                                             <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
-                                               onclick="showLookupDialog(); return false;">
+                                               onclick="showLookupDialog('{$field}'); return false;">
                                                 lookup
                                             </a>
                                             <xsl:text> </xsl:text>
@@ -244,7 +244,7 @@
                                         </td>
                                         <td>
                                             <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
-                                               onclick="showLookupDialog(); return false;">
+                                               onclick="showLookupDialog('{$field}'); return false;">
                                                 lookup
                                             </a>
                                             <xsl:text> </xsl:text>
@@ -267,7 +267,7 @@
                             </td>
                             <td>
                                 <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
-                                   onclick="showLookupDialog(); return false;">
+                                   onclick="showLookupDialog('{$field}'); return false;">
                                     lookup
                                 </a>
                                 <xsl:text> </xsl:text>
@@ -547,6 +547,7 @@
                 <div id="docs">
 
                 </div>
+                <input type="button" id="lookup-select" value="Select"/>
             </div>
         </div>
     </xsl:template>

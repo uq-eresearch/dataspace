@@ -78,8 +78,26 @@ function doSubjectLookup(term) {
     Manager.doRequest();
 }
 
+function doAgentLookup(term) {
+    Manager.addWidget(new AjaxSolr.ResultWidget({
+        id: 'result',
+        target: '#docs',
+        afterRequest: function () {
+            $(this.target).empty();
+            for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
+                var doc = this.manager.response.response.docs[i];
+                $(this.target).append(AjaxSolr.theme('agentSnippet', doc));
+            }
+        }
+    }));
+    Manager.store.addByValue('q', 'agent:' + term);
+    Manager.doRequest();
+}
+
 function lookup(type, term) {
     if (type == 'subject') {
         doSubjectLookup(term);
+    } else if (type == 'creator') {
+        doAgentLookup(term);
     }
 }

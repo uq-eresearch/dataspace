@@ -172,6 +172,10 @@ function showLookupDialog(type) {
     $('#lookup-div').dialog({
         modal: true,
         open: function() {
+            $('#query').val('');
+            $('#docs').html('');
+            $('#pager').html('');
+            $('#pager-header').html('');
             $(this).css('display', '');
         },
         height: 400,

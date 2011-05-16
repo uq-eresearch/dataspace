@@ -1096,6 +1096,11 @@ p.centenary {
 /*=============Search style=========*/
 #result a {
     margin-right: 5px;
+    color: #3399ff;
+}
+
+#result {
+    font-size: 11pt;
 }
 
 #navigation {

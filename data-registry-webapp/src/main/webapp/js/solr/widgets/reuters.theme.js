@@ -34,7 +34,17 @@
 //    };
 
     AjaxSolr.theme.prototype.subjectSnippet = function (doc) {
-        return '<p><input type="checkbox" id="' + doc.term + '"/> <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
+        if (doc.isdefinedby.contains('anzsrc/seo')) {
+            return '<p><input type="checkbox" id="' + doc.term + '"/> SEO: <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
+        } else if (doc.isdefinedby.contains('anzsrc/for')) {
+            return '<p><input type="checkbox" id="' + doc.term + '"/> FOR: <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
+        } else {
+            return '<p><input type="checkbox" id="' + doc.term + '"/> TOA: <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
+        }
+    };
+
+    AjaxSolr.theme.prototype.agentSnippet = function (doc) {
+        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.agenttitle + ': ' + doc.agentdescription + '</p>';
     };
 
     AjaxSolr.theme.prototype.tag = function (value, weight, handler) {
