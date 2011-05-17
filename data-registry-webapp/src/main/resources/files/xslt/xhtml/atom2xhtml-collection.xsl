@@ -20,7 +20,7 @@
     <xsl:include href="include/footer.xsl"/>
 
     <xsl:output method="html" media-type="application/xhtml+xml" omit-xml-declaration="yes"
-                doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+                doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
                 doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" indent="yes"/>
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
