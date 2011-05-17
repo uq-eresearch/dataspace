@@ -30,7 +30,7 @@
     <xsl:template match="atom:entry">
         <registryObject group="{atom:source/atom:link[@rel=$ATOM_PUBLISHER]/@title}">
             <key>
-                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
+                <xsl:value-of select="atom:link[@rel=$RDF_DESCRIBES]/@href"/>
             </key>
             <originatingSource>
                 <xsl:value-of select="atom:source/atom:id"/>
@@ -46,7 +46,8 @@
                     </xsl:choose>
                 </xsl:attribute>
                 <!-- identifiers -->
-                <xsl:apply-templates select="atom:link[@rel=$REL_SELF]"/>
+                <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
+                <xsl:apply-templates select="/atom:entry/atom:id"/>
                 <!-- names -->
                 <xsl:apply-templates select="atom:title"/>
                 <!-- locations -->
