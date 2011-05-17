@@ -91,7 +91,7 @@
                 </tbody>
             </table>
         </div>
-        <div id="result">
+        <div id="search-result">
             <div id="navigation">
                 <ul id="pager"></ul>
 

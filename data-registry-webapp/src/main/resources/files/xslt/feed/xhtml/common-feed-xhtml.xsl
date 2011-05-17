@@ -4,7 +4,9 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="atom app">
     <!--<xsl:param name="currentUser"/>-->
-    <xsl:output method="html" media-type="application/xhtml+xml" indent="yes"/>
+    <xsl:output method="html" media-type="application/xhtml+xml" omit-xml-declaration="yes"
+                doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+                doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" indent="yes"/>
     <xsl:template match="atom:entry">
         <div class="record">
             <xsl:choose>

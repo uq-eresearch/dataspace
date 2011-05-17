@@ -1094,12 +1094,12 @@ p.centenary {
 }
 
 /*=============Search style=========*/
-#result a {
+#search-result a {
     margin-right: 5px;
     color: #3399ff;
 }
 
-#result {
+#search-result {
     font-size: 11pt;
 }
 

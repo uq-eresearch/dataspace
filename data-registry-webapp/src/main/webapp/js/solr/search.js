@@ -51,7 +51,7 @@ $.fn.showIf = function (condition) {
     else {
         return this.hide();
     }
-}
+};
 
 function doSearch(term) {
     Manager.addWidget(new AjaxSolr.ResultWidget({
@@ -62,7 +62,7 @@ function doSearch(term) {
     Manager.doRequest();
 }
 
-function doSubjectLookup(term) {
+function doEntityLookup(type, term) {
     Manager.addWidget(new AjaxSolr.ResultWidget({
         id: 'result',
         target: '#docs',
@@ -70,34 +70,38 @@ function doSubjectLookup(term) {
             $(this.target).empty();
             for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
                 var doc = this.manager.response.response.docs[i];
-                $(this.target).append(AjaxSolr.theme('subjectSnippet', doc));
+                $(this.target).append(AjaxSolr.theme(type + 'Snippet', doc));
             }
         }
     }));
-    Manager.store.addByValue('q', 'label:' + term);
-    Manager.doRequest();
-}
-
-function doAgentLookup(term) {
-    Manager.addWidget(new AjaxSolr.ResultWidget({
-        id: 'result',
-        target: '#docs',
-        afterRequest: function () {
-            $(this.target).empty();
-            for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
-                var doc = this.manager.response.response.docs[i];
-                $(this.target).append(AjaxSolr.theme('agentSnippet', doc));
-            }
-        }
-    }));
-    Manager.store.addByValue('q', 'agent:' + term);
+    Manager.store.addByValue('q', type + ':' + term);
     Manager.doRequest();
 }
 
 function lookup(type, term) {
+    var entity = 'text';
     if (type == 'subject') {
-        doSubjectLookup(term);
+        entity = 'subject';
+    } else if (type == 'isparticipantin') {
+        entity = 'activity';
+    } else if (type == 'isoutputof') {
+        entity = 'activity';
     } else if (type == 'creator') {
-        doAgentLookup(term);
+        entity = 'agent';
+    } else if (type == 'publisher') {
+        entity = 'agent';
+    } else if (type == 'hasparticipant') {
+        entity = 'agent';
+    } else if (type == 'iscollectorof') {
+        entity = 'collection';
+    } else if (type == 'hasoutput') {
+        entity = 'collection';
+    } else if (type == 'relation') {
+        entity = 'collection';
+    } else if (type == 'issupportedby') {
+        entity = 'collection';
+    } else if (type == 'isaccessedvia') {
+        entity = 'service';
     }
+    doEntityLookup(entity, term);
 }

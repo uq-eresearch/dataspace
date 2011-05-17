@@ -536,7 +536,7 @@
                     </tbody>
                 </table>
             </form>
-            <div id="result">
+            <div id="search-result">
                 <div id="navigation">
                     <ul id="pager">
 

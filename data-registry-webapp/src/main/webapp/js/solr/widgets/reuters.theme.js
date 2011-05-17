@@ -34,17 +34,26 @@
 //    };
 
     AjaxSolr.theme.prototype.subjectSnippet = function (doc) {
-        if (doc.isdefinedby.contains('anzsrc/seo')) {
+        if (doc.isdefinedby.indexOf('anzsrc/seo') != -1) {
             return '<p><input type="checkbox" id="' + doc.term + '"/> SEO: <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
-        } else if (doc.isdefinedby.contains('anzsrc/for')) {
+        } else if (doc.isdefinedby.indexOf('anzsrc/for') != -1) {
             return '<p><input type="checkbox" id="' + doc.term + '"/> FOR: <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
         } else {
             return '<p><input type="checkbox" id="' + doc.term + '"/> TOA: <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
         }
     };
 
+    AjaxSolr.theme.prototype.activitySnippet = function (doc) {
+        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.activitytitle + '</p>';
+    };
     AjaxSolr.theme.prototype.agentSnippet = function (doc) {
-        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.agenttitle + ': ' + doc.agentdescription + '</p>';
+        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.agenttitle + '</p>';
+    };
+    AjaxSolr.theme.prototype.collectionSnippet = function (doc) {
+        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.collectiontitle + '</p>';
+    };
+    AjaxSolr.theme.prototype.serviceSnippet = function (doc) {
+        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.servicetitle + '</p>';
     };
 
     AjaxSolr.theme.prototype.tag = function (value, weight, handler) {
