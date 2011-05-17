@@ -60,8 +60,11 @@
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]"/>
                     <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
                     <!-- subjects -->
+                    <xsl:apply-templates select="atom:category[@scheme = $SCHEME_FOR]"/>
+                    <xsl:apply-templates select="atom:category[@scheme = $SCHEME_SEO]"/>
+                    <xsl:apply-templates select="atom:category[@scheme = $SCHEME_TOA]"/>
                     <xsl:apply-templates
-                            select="atom:category[@scheme != $NS_DCMITYPE]"/>
+                            select="atom:category[@scheme != $NS_DCMITYPE and @scheme != $SCHEME_FOR and @scheme != $SCHEME_SEO and @scheme != $SCHEME_TOA]"/>
                     <!-- descriptions -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- rights descriptions -->

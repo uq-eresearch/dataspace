@@ -9,13 +9,12 @@
 
     -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:atom="http://www.w3.org/2005/Atom"
-                xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-                xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
-                xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
-                xmlns:fn="http://www.w3.org/2005/xpath-functions"
-                xmlns:str="http://exslt.org/strings"
-                exclude-result-prefixes="atom ands dcterms rdfa fn str">
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
+    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
+    xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:str="http://exslt.org/strings"
+    exclude-result-prefixes="atom ands dcterms rdfa fn str">
     <xsl:include href="../constants.xsl"/>
 
 
@@ -90,28 +89,25 @@
     </xsl:template>
 
     <!-- subjects -->
-    <xsl:template match="atom:category[@scheme != $NS_DCMITYPE]">
-        <subject>
-            <xsl:choose>
-                <xsl:when test="@scheme = $SCHEME_FOR">
-                    <xsl:attribute name="type">anzsrc-for</xsl:attribute>
-                    <xsl:value-of select="substring-after(@term, $PREFIX_FOR)"/>
-                </xsl:when>
-                <xsl:when test="@scheme = $SCHEME_SEO">
-                    <xsl:attribute name="type">anzsrc-seo</xsl:attribute>
-                    <xsl:value-of select="substring-after(@term, $PREFIX_SEO)"/>
-                </xsl:when>
-                <xsl:when test="@scheme = $SCHEME_TOA">
-                    <xsl:attribute name="type">anzsrc-toa</xsl:attribute>
-                    <xsl:value-of select="substring-after(@term, $PREFIX_TOA)"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:attribute name="type">
-                        <xsl:value-of select="@scheme"/>
-                    </xsl:attribute>
-                    <xsl:value-of select="@term"/>
-                </xsl:otherwise>
-            </xsl:choose>
+    <xsl:template match="atom:category[@scheme = $SCHEME_FOR]">
+        <subject type="anzsrc-for">
+            <xsl:value-of select="substring-after(@term, $PREFIX_FOR)"/>
+        </subject>
+    </xsl:template>
+    <xsl:template match="atom:category[@scheme = $SCHEME_SEO]">
+        <subject type="anzsrc-seo">
+            <xsl:value-of select="substring-after(@term, $PREFIX_SEO)"/>
+        </subject>
+    </xsl:template>
+    <xsl:template match="atom:category[@scheme = $SCHEME_TOA]">
+        <subject type="anzsrc-toa">
+            <xsl:value-of select="substring-after(@term, $PREFIX_TOA)"/>
+        </subject>
+    </xsl:template>
+    <xsl:template
+        match="atom:category[@scheme != $NS_DCMITYPE and @scheme != $SCHEME_FOR and @scheme != $SCHEME_SEO and @scheme != $SCHEME_TOA]">
+        <subject type="{@scheme}">
+            <xsl:value-of select="@term"/>
         </subject>
     </xsl:template>
 
