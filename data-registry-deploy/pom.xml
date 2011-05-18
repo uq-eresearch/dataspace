@@ -79,17 +79,7 @@
                         </deployables>
                     </deployer>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>restart</id>
-                        <phase>post-clean</phase>
-                        <goals>
-                            <goal>stop</goal>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+             </plugin>
         </plugins>
     </build>
     <dependencies>
