@@ -9,24 +9,24 @@
         var Manager;
         $(document).ready(function() {
             Manager = new AjaxSolr.Manager({
-                //TODO change this
+                        //TODO change this
 //                solrUrl: 'http://evolvingweb.ca/solr/reuters/'
-                solrUrl: 'http://localhost:8080/solr/'
-            });
+                        solrUrl: '/solr/'
+                    });
             Manager.addWidget(new AjaxSolr.ResultWidget({
-                id: 'result',
-                target: '#docs'
-            }));
+                        id: 'result',
+                        target: '#docs'
+                    }));
             Manager.addWidget(new AjaxSolr.PagerWidget({
-                id: 'pager',
-                target: '#pager',
-                prevLabel: '&lt;',
-                nextLabel: '&gt;',
-                innerWindow: 1,
-                renderHeader: function (perPage, offset, total) {
-                    $('#pager-header').html($('<span/>').text('displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
-                }
-            }));
+                        id: 'pager',
+                        target: '#pager',
+                        prevLabel: '&lt;',
+                        nextLabel: '&gt;',
+                        innerWindow: 1,
+                        renderHeader: function (perPage, offset, total) {
+                            $('#pager-header').html($('<span/>').text('displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
+                        }
+                    }));
 
 //            Manager.addWidget(new AjaxSolr.AutocompleteWidget({
 //                id: 'text',
