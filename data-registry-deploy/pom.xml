@@ -57,12 +57,23 @@
                     </container>
                     <configuration>
                         <type>runtime</type>
+                        <wait>true</wait>
                         <properties>
                             <cargo.remote.username>deployer</cargo.remote.username>
                             <cargo.remote.password>deployer</cargo.remote.password>
                             <cargo.tomcat.manager.url>http://dataspace-uat.metadata.net/manager
                             </cargo.tomcat.manager.url>
                         </properties>
+                        <executions>
+                            <execution>
+                                <id>restart</id>
+                                <phase>post-clean</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </configuration>
                     <deployer>
                         <type>remote</type>
