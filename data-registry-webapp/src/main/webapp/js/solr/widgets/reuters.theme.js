@@ -35,11 +35,11 @@
 
     AjaxSolr.theme.prototype.subjectSnippet = function (doc) {
         if (doc.isdefinedby.indexOf('anzsrc/seo') != -1) {
-            return '<p><input type="checkbox" id="' + doc.term + '"/> SEO: <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
+            return '<p class="subject"><input type="checkbox" name="subject"/> SEO: <a target="_blank" class="' + doc.isdefinedby + '" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
         } else if (doc.isdefinedby.indexOf('anzsrc/for') != -1) {
-            return '<p><input type="checkbox" id="' + doc.term + '"/> FOR: <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
+            return '<p class="subject"><input type="checkbox"  name="subject"> FOR: <a target="_blank" class="' + doc.isdefinedby + '" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
         } else {
-            return '<p><input type="checkbox" id="' + doc.term + '"/> TOA: <a target="_blank" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
+            return '<p class="subject"><input type="checkbox"  name="subject"/> TOA: <a target="_blank" class="' + doc.isdefinedby + '"href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
         }
     };
 
