@@ -63,7 +63,7 @@ public class ANZSRCLoader {
                 for (int i = 0; i < nodeList.getLength(); i++) {
                     Element descriptionElement = (Element) nodeList.item(i);
                     String label = descriptionElement.getElementsByTagName(ELEMENT_LABEL).item(0).getTextContent();
-                    String term = descriptionElement.getAttribute(ATTRIBUTE_ABOUT);
+                    String term = descriptionElement.getAttribute(ATTRIBUTE_ABOUT).replace("/#", "#");
                     Subject subject = RegistryApplication.getApplicationContext().getEntityCreator().getNextSubject();
                     subject.setDefinedBy(scheme);
                     subject.setTerm(term);
