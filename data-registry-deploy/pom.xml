@@ -46,6 +46,7 @@
                 <artifactId>cargo-maven2-plugin</artifactId>
                 <version>1.0.3</version>
                 <configuration>
+                    <wait>true</wait>
                     <container>
                         <containerId>tomcat6x</containerId>
                         <type>remote</type>
@@ -57,7 +58,6 @@
                     </container>
                     <configuration>
                         <type>runtime</type>
-                        <wait>true</wait>
                         <properties>
                             <cargo.remote.username>deployer</cargo.remote.username>
                             <cargo.remote.password>deployer</cargo.remote.password>
