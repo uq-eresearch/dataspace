@@ -130,41 +130,42 @@ Adding Solr search
 - Copy [UNZIPPED_DIR]/example/solr to [TOMCAT_HOME]/bin
 - Create directory [TOMCAT_HOME]/bin/solr/data
 - Create data-config.xml file under [TOMCAT_HOME]/bin/solr/conf/ and add the datasource details and entities to index
-        <?xml version="1.0" encoding="UTF-8"?>
-        <dataConfig>
-        <dataSource type="JdbcDataSource"
-                    driver="org.postgresql.Driver"
-                    url="jdbc:postgresql://localhost/registry"
-                    user="registry"
-                    password="registry"
-                readOnly="true"
-                autoCommit="false"
-                transactionIsolation="TRANSACTION_READ_COMMITTED"
-                holdability="CLOSE_CURSORS_AT_COMMIT"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<dataConfig>
+    <dataSource type="JdbcDataSource"
+                driver="org.postgresql.Driver"
+                url="jdbc:postgresql://localhost/registry"
+                user="registry"
+                password="registry"
+            readOnly="true"
+            autoCommit="false"
+            transactionIsolation="TRANSACTION_READ_COMMITTED"
+            holdability="CLOSE_CURSORS_AT_COMMIT"/>
 
-        <document name="collection">
-            <entity name="collectionversion"
-                    query="select * from collectionversion">
-            </entity>
-        </document>
-        </dataConfig>
+    <document name="collection">
+        <entity name="collectionversion"
+                query="select * from collectionversion">
+        </entity>
+    </document>
+</dataConfig>
         
 - In the solrconfig.xml file add the following:
 
-          <requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler" default="true">
-            <lst name="defaults">
-              <str name="config">data-config.xml</str>
-            </lst>
-          </requestHandler>
+<requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler" default="true">
+    <lst name="defaults">
+        <str name="config">data-config.xml</str>
+    </lst>
+</requestHandler>
 
-- You neeed to add indexing configuration for the schema in the schema.xml file inside the <fields> tag. You need to use
-  the <copyField> tags to concatenate different fields for full time search.
-- Start tomcat and check the logs
+- Add indexing configuration for the schema in the schema.xml file inside the <fields> tag. You need to use
+  the <copyField> tags to concatenate different fields for full text search.
+- Restart tomcat and check the logs
 - Open the browser go to http://localhost:8080/solr/dataimport?command=full-import, This needs to be ran every now and
   then, maybe using some scheduling mechanism.
-- Go to the admin section of solr application http://localhost:8080/solr/admin and search for something
+- Go to http://localhost:8080/solr/select?qt=standard&q=subject:sheep to search for sheep
 - The query string should look like q=health&qt=standard. To do search on a particular field/column you can use
   something like q=label:health&qt=standard
+
 
 
 
