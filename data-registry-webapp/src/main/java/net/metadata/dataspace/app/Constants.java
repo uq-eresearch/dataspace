@@ -70,7 +70,7 @@ public interface Constants {
     String NS_ANZSRC = PERSISTENT_URL + "anzsrc/";
     String NS_VIVO = "http://vivoweb.org/ontology/core#";
     String NS_ORE = "http://www.openarchives.org/ore/terms/";
-    String NS_GEORSS = "http://www.georss.org/georss/";
+    String NS_GEORSS = "http://www.georss.org/georss";
     String NS_RDFA = "http://www.w3.org/ns/rdfa#";
     String NS_EFS = "http://www.e-framework.org/Contributions/ServiceGenres/";
 
