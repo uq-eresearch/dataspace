@@ -64,16 +64,6 @@
                             <cargo.tomcat.manager.url>http://dataspace-uat.metadata.net/manager
                             </cargo.tomcat.manager.url>
                         </properties>
-                        <executions>
-                            <execution>
-                                <id>restart</id>
-                                <phase>post-clean</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                    <goal>start</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </configuration>
                     <deployer>
                         <type>remote</type>
@@ -89,6 +79,16 @@
                         </deployables>
                     </deployer>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>restart</id>
+                        <phase>post-clean</phase>
+                        <goals>
+                            <goal>stop</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
