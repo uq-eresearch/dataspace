@@ -127,10 +127,11 @@ Adding Solr search
 ~~~~~~~~~~~~~~~~~~
 - Download solr from http://lucene.apache.org/solr/
 - Unzip the tar file and copy [UNZIPPED_DIR]/example/webapps/solr.war to [TOMCAT_HOME]/webapps
-- Copy [UNZIPPED_DIR]/example/solr to /opt and make sure it is readable
+- Copy [UNZIPPED_DIR]/example/solr to /opt and make sure it is readable by tomcat
 - Add the following to JVM options in the [TOMCAT_HOME]/bin/catalina.sh:
         JAVA_OPTS=-Dsolr.solr.home=/opt/solr
 - Create directory [TOMCAT_HOME]/bin/solr/data
+- Add the jdbc connector jars for postgresql and mysql in [SOLR_HOME]/lib.
 - Create data-config.xml file under [SOLR_HOME]/conf/ and add the datasource details and entities to index
 <?xml version="1.0" encoding="UTF-8"?>
 <dataConfig>
@@ -167,9 +168,6 @@ Adding Solr search
 - Go to http://localhost:8080/solr/select?qt=standard&q=subject:sheep to search for sheep
 - The query string should look like q=health&qt=standard. To do search on a particular field/column you can use
   something like q=label:health&qt=standard
-
-
-
 
 
 Deployment
