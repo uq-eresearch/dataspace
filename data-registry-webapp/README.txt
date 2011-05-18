@@ -127,9 +127,11 @@ Adding Solr search
 ~~~~~~~~~~~~~~~~~~
 - Download solr from http://lucene.apache.org/solr/
 - Unzip the tar file and copy [UNZIPPED_DIR]/example/webapps/solr.war to [TOMCAT_HOME]/webapps
-- Copy [UNZIPPED_DIR]/example/solr to [TOMCAT_HOME]/bin
+- Copy [UNZIPPED_DIR]/example/solr to /opt and make sure it is readable
+- Add the following to JVM options in the [TOMCAT_HOME]/bin/catalina.sh:
+        JAVA_OPTS=-Dsolr.solr.home=/opt/solr
 - Create directory [TOMCAT_HOME]/bin/solr/data
-- Create data-config.xml file under [TOMCAT_HOME]/bin/solr/conf/ and add the datasource details and entities to index
+- Create data-config.xml file under [SOLR_HOME]/conf/ and add the datasource details and entities to index
 <?xml version="1.0" encoding="UTF-8"?>
 <dataConfig>
     <dataSource type="JdbcDataSource"
