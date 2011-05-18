@@ -49,7 +49,11 @@
                 <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
                 <xsl:apply-templates select="/atom:entry/atom:id"/>
                 <!-- names -->
-                <xsl:apply-templates select="atom:title"/>
+                <name type="primary">
+                    <xsl:apply-templates select="rdfa:meta[@property=$ATOM_HONORIFIC]"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$ATOM_GIVEN_NAME]"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$ATOM_FAMILY_NAME]"/>
+                </name>
                 <!-- locations -->
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
                 <!-- coverage -->
@@ -91,6 +95,7 @@
             <relation type="isCollectorOf"/>
         </relatedObject>
     </xsl:template>
+    
     <!-- participate in (activities) -->
     <xsl:template match="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]">
         <relatedObject>
@@ -99,6 +104,17 @@
             </key>
             <relation type="isParticipantIn"/>
         </relatedObject>
+    </xsl:template>
+    
+    <!-- FOAF name attributes -->
+    <xsl:template match="rdfa:meta[@property=$ATOM_HONORIFIC]">
+        <namePart type="title"><xsl:value-of select="@content"/></namePart>
+    </xsl:template>
+    <xsl:template match="rdfa:meta[@property=$ATOM_GIVEN_NAME]">
+        <namePart type="given"><xsl:value-of select="@content"/></namePart>
+    </xsl:template>
+    <xsl:template match="rdfa:meta[@property=$ATOM_FAMILY_NAME]">
+        <namePart type="family"><xsl:value-of select="@content"/></namePart>
     </xsl:template>
 
 </xsl:stylesheet>

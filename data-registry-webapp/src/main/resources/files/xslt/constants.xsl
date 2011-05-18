@@ -54,6 +54,15 @@
     <xsl:variable name="ATOM_IS_PARTICIPANT_IN">
         <xsl:value-of select="concat($NS_FOAF ,'currentProject')"/>
     </xsl:variable>
+    <xsl:variable name="ATOM_HONORIFIC">
+        <xsl:value-of select="concat($NS_FOAF, 'title')"/>
+    </xsl:variable>
+    <xsl:variable name="ATOM_GIVEN_NAME">
+        <xsl:value-of select="concat($NS_FOAF, 'givenName')"/>
+    </xsl:variable>
+    <xsl:variable name="ATOM_FAMILY_NAME">
+        <xsl:value-of select="concat($NS_FOAF, 'familyName')"/>
+    </xsl:variable>
     <xsl:variable name="ATOM_RELATION">
         <xsl:value-of select="concat($NS_DC ,'relation')"/>
     </xsl:variable>
