@@ -27,8 +27,6 @@ public class ActivityVersion extends AbstractVersionEntity {
     @ManyToOne
     private Activity parent;
 
-    private String originalId;
-
     @NotNull
     @Enumerated(STRING)
     private ActivityType type;
@@ -63,14 +61,6 @@ public class ActivityVersion extends AbstractVersionEntity {
     @Override
     public void setParent(Record parent) {
         this.parent = (Activity) parent;
-    }
-
-    public String getOriginalId() {
-        return originalId;
-    }
-
-    public void setOriginalId(String originalId) {
-        this.originalId = originalId;
     }
 
     public Set<Collection> getHasOutput() {

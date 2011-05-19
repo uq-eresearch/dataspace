@@ -30,8 +30,6 @@ public class CollectionVersion extends AbstractVersionEntity {
     @ManyToOne
     private Collection parent;
 
-    private String originalId;
-
     @NotNull
     @Enumerated(STRING)
     private CollectionType type;
@@ -105,14 +103,6 @@ public class CollectionVersion extends AbstractVersionEntity {
     @Override
     public void setParent(Record parent) {
         this.parent = (Collection) parent;
-    }
-
-    public String getOriginalId() {
-        return originalId;
-    }
-
-    public void setOriginalId(String originalId) {
-        this.originalId = originalId;
     }
 
     public Set<Subject> getSubjects() {

@@ -36,4 +36,15 @@ public class CollectionDaoImpl extends AbstractRegistryDao<Collection> implement
         return (CollectionVersion) resultList.get(0);
     }
 
+    @Override
+    public Collection getByOriginalId(String originalId) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.originalId = :originalId AND o.isActive = true");
+        query.setParameter("originalId", originalId);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Collection) resultList.get(0);
+    }
 }

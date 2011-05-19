@@ -48,4 +48,16 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
         return (Agent) resultList.get(0);
     }
 
+    @Override
+    public Agent getByOriginalId(String originalId) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Agent o WHERE o.originalId = :originalId");
+        query.setParameter("originalId", originalId);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Agent) resultList.get(0);
+    }
+
 }

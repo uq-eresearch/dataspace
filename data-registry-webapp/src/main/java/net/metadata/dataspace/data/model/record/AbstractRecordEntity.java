@@ -28,6 +28,8 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
 
     private boolean isActive;
 
+    private String originalId;
+
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updated;
@@ -86,6 +88,14 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getOriginalId() {
+        return originalId;
+    }
+
+    public void setOriginalId(String originalId) {
+        this.originalId = originalId;
     }
 
     @Override

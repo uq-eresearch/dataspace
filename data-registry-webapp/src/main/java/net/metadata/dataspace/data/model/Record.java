@@ -53,6 +53,10 @@ public interface Record {
 
     String getUriKey();
 
+    String getOriginalId();
+
+    void setOriginalId(String originalId);
+
     Integer getAtomicNumber();
 
     void setAtomicNumber(Integer atomicNumber);

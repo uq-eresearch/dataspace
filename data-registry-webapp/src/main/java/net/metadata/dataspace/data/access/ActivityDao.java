@@ -12,4 +12,5 @@ public interface ActivityDao extends RegistryDao<Activity> {
 
     ActivityVersion getByVersion(String uriKey, String version);
 
+    Activity getByOriginalId(String originalId);
 }

@@ -35,4 +35,16 @@ public class ServiceDaoImpl extends AbstractRegistryDao<Service> implements Serv
         assert resultList.size() == 1 : "id should be unique";
         return (ServiceVersion) resultList.get(0);
     }
+
+    @Override
+    public Service getByOriginalId(String originalId) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Service o WHERE o.originalId = :originalId AND o.isActive = true");
+        query.setParameter("originalId", originalId);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Service) resultList.get(0);
+    }
 }

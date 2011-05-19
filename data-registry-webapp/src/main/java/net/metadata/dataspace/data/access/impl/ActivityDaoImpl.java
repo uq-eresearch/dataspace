@@ -36,4 +36,16 @@ public class ActivityDaoImpl extends AbstractRegistryDao<Activity> implements Ac
         return (ActivityVersion) resultList.get(0);
     }
 
+    @Override
+    public Activity getByOriginalId(String originalId) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Activity o WHERE o.originalId = :originalId");
+        query.setParameter("originalId", originalId);
+        List<?> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        assert resultList.size() == 1 : "id should be unique";
+        return (Activity) resultList.get(0);
+    }
+
 }

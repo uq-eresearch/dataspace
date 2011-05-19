@@ -13,4 +13,6 @@ public interface AgentDao extends RegistryDao<Agent> {
     AgentVersion getByVersion(String uriKey, String version);
 
     Agent getByEmail(String email);
+
+    Agent getByOriginalId(String originalId);
 }

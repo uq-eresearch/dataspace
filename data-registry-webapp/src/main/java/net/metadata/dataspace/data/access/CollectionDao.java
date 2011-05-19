@@ -12,4 +12,5 @@ public interface CollectionDao extends RegistryDao<Collection> {
 
     CollectionVersion getByVersion(String uriKey, String version);
 
+    Collection getByOriginalId(String originalId);
 }

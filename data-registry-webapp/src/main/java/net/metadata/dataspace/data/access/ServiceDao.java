@@ -12,4 +12,5 @@ public interface ServiceDao extends RegistryDao<Service> {
 
     ServiceVersion getByVersion(String uriKey, String version);
 
+    Service getByOriginalId(String originalId);
 }
