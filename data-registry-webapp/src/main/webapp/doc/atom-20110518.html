@@ -749,42 +749,45 @@
                                         <td><code>&lt;georss:point&gt;LAT
                                                   LONG&lt;/georss:point&gt;</code></td>
                                         <td>Primary name for the entity</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                </tr>
-                                <tr>
-                                        <td>description</td>
-                                        <td><code>&lt;content
-                                                  type="text"&gt;DESCRIPTION&lt;/content&gt;</code></td>
-                                        <td>A plain text description of the entity</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                </tr>
-                                <tr>
-                                        <td>web page</td>
-                                        <td><code>&lt;link rel="http://xmlns.com/foaf/0.1/page"
-                                                  href="URI"/&gt;</code></td>
-                                        <td> URI for a human-readable document describing the entity
-                                                or how to access it</td>
-                                        <td>1..*</td>
                                         <td>0..*</td>
-                                        <td>1..*</td>
-                                        <td>1..*</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>0..*</td>
                                 </tr>
                                 <tr>
-                                        <td>email</td>
-                                        <td><code>&lt;link rel="http://xmlns.com/foaf/0.1/mbox"
-                                                  href="MAILTO-URI"/&gt;</code>
+                                        <td>region</td>
+                                        <td><code>&lt;georss:polygon&gt;LIST OF LAT LONG&lt;/georss:polygon&gt;</code></td>
+                                        <td>A geographical region related to the entity</td>
+                                        <td>0..*</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>0..*</td>
+                                </tr>
+                                <tr>
+                                        <td>feature</td>
+                                        <td><code>&lt;link rel="http://purl.org/dc/terms/spatial"
+                                                  href="URI"/&gt;</code></td>
+                                        <td>URI for a geographical feature related to the entity</td>
+                                        <td>0..*</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>0..*</td>
+                                </tr>
+                                <tr>
+                                        <td>temporal</td>
+                                        <td><code>&lt;rdfa:meta
+                                                property="http://purl.org/dc/terms/temporal"
+                                                content="TEMPORAL ENCODING"
+                                                datatype="URI-ENCODING-SCHEME"/&gt;</code>
                                         </td>
-                                        <td>An internet mailbox for an Agent</td>
+                                        <td>An indicator of the temporal scope of the Data Collection.
+                                            This profile recommends using the DCMI Period format 
+                                            http://dublincore.org/documents/dcmi-period/ to encode the content attribute.
+                                        </td>
+                                        <td>0..*</td>
                                         <td></td>
-                                        <td>1..*</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>0..*</td>
+                                        <td>0..*</td>
                                 </tr>
                                 <tr>
 
@@ -826,14 +829,14 @@
                         </thead>
                         <tbody>
                                 <tr>
-                                        <td>point</td>
+                                        <td>creator</td>
                                         <td><pre>&lt;author&gt;
     &lt;name/&gt;NAME&lt;/name&gt;
     &lt;email/&gt;EMAIL&lt;/email&gt;
 &lt;/author&gt;</pre></td>
                                         <td>An Agent responsible for creating or collating a Data
                                                 Collection</td>
-                                        <td>1</td>
+                                        <td>1..*</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -845,10 +848,10 @@
                                                 NAME"/&gt;</code></td>
                                         <td>An Agent responsible for publishing or maintaining a
                                                 Data Collection or providing a Service</td>
-                                        <td>1..*</td>
+                                        <td>0..*</td>
                                         <td></td>
                                         <td></td>
-                                        <td>1..*</td>
+                                        <td>0..*</td>
                                 </tr>
                         </tbody>
                 </table>
