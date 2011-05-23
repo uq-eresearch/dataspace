@@ -22,38 +22,26 @@
         }
         return output;
     };
-//
-//    AjaxSolr.theme.prototype.subjectResult = function (doc, snippet) {
-//        var output = '<div><h2>' + doc.title + '</h2>';
-////        if (doc.label && !doc.title) {
-////            output = '<div><h2>' + doc.label + '</h2>';
-////        }
-//        output += '<p id="links_' + doc.id + '" class="links"></p>';
-//        output += '<p>' + snippet + '</p></div>';
-//        return output;
-//    };
 
-    AjaxSolr.theme.prototype.subjectSnippet = function (doc) {
+    AjaxSolr.theme.prototype.subjectLookup = function (doc) {
         if (doc.isdefinedby.indexOf('anzsrc/seo') != -1) {
             return '<p class="subject"><input type="checkbox" name="subject"/> SEO: <a target="_blank" class="' + doc.isdefinedby + '" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
         } else if (doc.isdefinedby.indexOf('anzsrc/for') != -1) {
             return '<p class="subject"><input type="checkbox"  name="subject"/> FOR: <a target="_blank" class="' + doc.isdefinedby + '" href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
         }
-//        else {
-//            return '<p class="subject"><input type="checkbox"  name="subject"/> TOA: <a target="_blank" class="' + doc.isdefinedby + '"href="' + doc.term + '" title="' + doc.label + '">' + doc.label + '</a></p>';
-//        }
     };
 
-    AjaxSolr.theme.prototype.activitySnippet = function (doc) {
+    AjaxSolr.theme.prototype.activityLookup = function (doc) {
         return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.activitytitle + '</p>';
     };
-    AjaxSolr.theme.prototype.agentSnippet = function (doc) {
+
+    AjaxSolr.theme.prototype.agentLookup = function (doc) {
         return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.agenttitle + '</p>';
     };
-    AjaxSolr.theme.prototype.collectionSnippet = function (doc) {
+    AjaxSolr.theme.prototype.collectionLookup = function (doc) {
         return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.collectiontitle + '</p>';
     };
-    AjaxSolr.theme.prototype.serviceSnippet = function (doc) {
+    AjaxSolr.theme.prototype.serviceLookup = function (doc) {
         return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.servicetitle + '</p>';
     };
 
@@ -67,6 +55,22 @@
 
     AjaxSolr.theme.prototype.no_items_found = function () {
         return 'no items found in current selection';
+    };
+
+    AjaxSolr.theme.prototype.activityFeed = function (doc) {
+        return '<p>- <a href="">' + doc.activitytitle + '</a></p>';
+    };
+
+    AjaxSolr.theme.prototype.agentFeed = function (doc) {
+        return '<p>- <a href="">' + doc.agenttitle + '</a></p>';
+    };
+
+    AjaxSolr.theme.prototype.collectionFeed = function (doc) {
+        return '<p>- <a href="">' + doc.collectiontitle + '</a></p>';
+    };
+
+    AjaxSolr.theme.prototype.serviceFeed = function (doc) {
+        return '<p>- <a href="">' + doc.servicetitle + '</a></p>';
     };
 
 })(jQuery);

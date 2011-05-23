@@ -431,8 +431,8 @@ public class AdapterOutputHelper {
                 //TODO this should accommodate external ids
                 parentUrl = parentUrl + "/" + version.getUriKey();
             }
-            if (version.getOriginalId() != null) {
-                entry.setId(version.getOriginalId());
+            if (version.getParent().getOriginalId() != null) {
+                entry.setId(version.getParent().getOriginalId());
             } else {
                 entry.setId(parentUrl);
             }

@@ -66,8 +66,9 @@ public class AdapterInputHelper {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
         //Add the original id
-        if (entry.getId() != null) {
-            version.setOriginalId(entry.getId().toString());
+        IRI entryId = entry.getId();
+        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)) {
+            version.getParent().setOriginalId(entryId.toString());
         }
 
         addAlternativeTitles(version, entry);
@@ -110,8 +111,9 @@ public class AdapterInputHelper {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
         //Add the original id
-        if (entry.getId() != null) {
-            version.setOriginalId(entry.getId().toString());
+        IRI entryId = entry.getId();
+        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)) {
+            version.getParent().setOriginalId(entryId.toString());
         }
 
         addAlternativeTitles(version, entry);
@@ -193,7 +195,7 @@ public class AdapterInputHelper {
 
         List<Link> links = entry.getLinks(Constants.REL_SPATIAL);
         for (Link link : links) {
-            //TODO we need to add the href to the geo names service
+            //nTODO we need to add the href to the geo names service
             version.getGeoRssFeatureNames().add(link.getTitle());
         }
         //add publications
@@ -210,8 +212,9 @@ public class AdapterInputHelper {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
         //Add the original id
-        if (entry.getId() != null) {
-            version.setOriginalId(entry.getId().toString());
+        IRI entryId = entry.getId();
+        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)) {
+            version.getParent().setOriginalId(entryId.toString());
         }
 
         List<Link> emails = entry.getLinks(Constants.REL_MBOX);
@@ -319,8 +322,9 @@ public class AdapterInputHelper {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
         //Add the original id
-        if (entry.getId() != null) {
-            version.setOriginalId(entry.getId().toString());
+        IRI entryId = entry.getId();
+        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)) {
+            version.getParent().setOriginalId(entryId.toString());
         }
 
         addPages(version, entry);
@@ -398,6 +402,10 @@ public class AdapterInputHelper {
                 String uriKey = OperationHelper.getEntityID(uri.toString());
                 Agent agent = daoManager.getAgentDao().getByKey(uriKey);
                 if (agent != null) {
+                    if (!agent.isActive()) {
+                        agent.setActive(true);
+                        agent.setUpdated(new Date());
+                    }
                     record.getAuthors().add(agent);
                 } else {
                     Agent newAgent = findOrCreateAgent(name, email);
@@ -433,6 +441,10 @@ public class AdapterInputHelper {
                 String uriKey = OperationHelper.getEntityID(uri.toString());
                 Agent agent = daoManager.getAgentDao().getByKey(uriKey);
                 if (agent != null) {
+                    if (!agent.isActive()) {
+                        agent.setActive(true);
+                        agent.setUpdated(new Date());
+                    }
                     version.getCreators().add(agent);
                 } else {
                     Agent newAgent = findOrCreateAgent(name, email);
@@ -455,7 +467,6 @@ public class AdapterInputHelper {
 
     public static void addCollectionPublishers(CollectionVersion version, List<Link> publishers) throws ResponseContextException {
         for (Link publisherLink : publishers) {
-            String rel = publisherLink.getRel();
             String title = publisherLink.getTitle();
             if (title == null) {
                 throw new ResponseContextException("Publisher link missing title", 400);
@@ -658,6 +669,11 @@ public class AdapterInputHelper {
                 if (agent == null) {
                     //Else create it from email and name
                     agent = createBasicAgent(name, email);
+                }
+            } else {
+                if (!agent.isActive()) {
+                    agent.setActive(true);
+                    agent.setUpdated(new Date());
                 }
             }
             return agent;
