@@ -1,67 +1,67 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html
+        xmlns="http://www.w3.org/1999/xhtml">
 
         <head>
                 <title>Atom representation of Research Data Context</title>
-                <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+                <meta
+                        http-equiv="content-type"
+                        content="text/html;charset=utf-8" />
 
-                <link rel="stylesheet" type="text/css" href="../css/spec.css" />
+                <link
+                        rel="stylesheet"
+                        type="text/css"
+                        href="../css/spec.css" />
         </head>
 
         <body>
-                <div class="head">
-                        <a href="http://uq.edu.au">
-                                <img alt="UQ" width="600px" src="UQ-banner.jpg" />
-                        </a>
-                        <h1>Atom representation of Research Data Context</h1>
-                        <h2>Draft specification</h2>
-                        <dl>
-                                <dt>This version:</dt>
+                <div
+                        class="head"> <a
+                        href="http://uq.edu.au"> <img
+                        alt="UQ"
+                        width="600px"
+                        src="UQ-banner.jpg" /> </a>
+                        <h1>Atom representation of Research Data
+                        Context</h1>
+                        <h2>Draft specification</h2> <dl>
+                        <dt>This version:</dt>
 
-                                <dd>
-                                        <a href="http://dataspace.uq.edu.au/doc/atom-201105518"
-                                                >http://dataspace.uq.edu.au/doc/atom-201105518</a>
-                                </dd>
+                        <dd> <a
+                                href="http://dataspace.uq.edu.au/doc/atom-201105518">http://dataspace.uq.edu.au/doc/atom-201105518</a> </dd>
 
-                                <dt>Latest version:</dt>
+                        <dt>Latest version:</dt>
 
-                                <dd>
-                                        <a href="http://dataspace.uq.edu.au/doc/atom"
-                                                >http://dataspace.uq.edu.au/doc/atom</a>
-                                </dd>
+                        <dd> <a
+                                href="http://dataspace.uq.edu.au/doc/atom">http://dataspace.uq.edu.au/doc/atom</a> </dd>
 
-                                <dt>Authors:</dt>
+                        <dt>Authors:</dt>
 
-                                <dd>Nigel Ward, <a href="http://itee.uq.edu.au/~eresearch/">UQ ITEE
-                                                eResearch Lab</a>
-                                        <a href="mailto:n.ward4@uq.edu.au">n.ward4@uq.edu.au</a>
-                                </dd>
+                        <dd>Nigel Ward, <a
+                                href="http://itee.uq.edu.au/~eresearch/">UQ ITEE eResearch Lab</a> <a
+                                href="mailto:n.ward4@uq.edu.au">n.ward4@uq.edu.au</a> </dd>
 
 
-                                <dd>Abdul Alabri, <a href="http://itee.uq.edu.au/~eresearch/">UQ
-                                                ITEE eResearch Lab</a>
-                                        <a href="mailto:uqaalabr@uq.edu.au">uqaalabr@uq.edu.au</a>
-                                </dd>
-                        </dl>
-                        <p class="copyright"> Copyright The University of Queensland. <br />
-                                <a rel="license"
-                                        href="http://creativecommons.org/licenses/by-sa/3.0/au/"
-                                                ><img alt="Creative Commons License"
-                                                style="border-width:0"
-                                                src="http://i.creativecommons.org/l/by-sa/3.0/au/88x31.png"
-                                         /></a><br />This work is licensed under a <a rel="license"
-                                        href="http://creativecommons.org/licenses/by-sa/3.0/au/"
-                                        >Creative Commons Attribution-ShareAlike 3.0 Australia
-                                        License</a>. </p>
-                        <p class="acknowledgements">This work supported by the <a
-                                        href="http://www.ands.org.au/">Australian National Data
-                                        Service</a> (ANDS). ANDS is supported by the Australian
-                                Government through the National Collaborative Research
-                                Infrastructure Strategy Program and the Education Investment Fund
-                                (EIF) Super Science Initiative.</p>
-                        <hr />
-                </div>
+                        <dd>Abdul Alabri, <a
+                                href="http://itee.uq.edu.au/~eresearch/">UQ ITEE eResearch Lab</a> <a
+                                href="mailto:uqaalabr@uq.edu.au">uqaalabr@uq.edu.au</a> </dd>
+                        </dl> <p
+                        class="copyright"> Copyright The University of Queensland. <br /> <a
+                        rel="license"
+                        href="http://creativecommons.org/licenses/by-sa/3.0/au/"><img
+                        alt="Creative Commons License"
+                        style="border-width:0"
+                        src="http://i.creativecommons.org/l/by-sa/3.0/au/88x31.png" /></a><br />This
+                        work is licensed under a <a
+                        rel="license"
+                        href="http://creativecommons.org/licenses/by-sa/3.0/au/">Creative Commons
+                        Attribution-ShareAlike 3.0 Australia License</a>. </p> <p
+                        class="acknowledgements">This work supported by the <a
+                        href="http://www.ands.org.au/">Australian National Data Service</a> (ANDS).
+                        ANDS is supported by the Australian Government through the National
+                        Collaborative Research Infrastructure Strategy Program and the Education
+                        Investment Fund (EIF) Super Science Initiative.</p>
+                        <hr /> </div>
 
                 <h2>Abstract</h2>
                 <p>This document defines a profile of the Atom Syndication Format for describing
@@ -73,89 +73,119 @@
 
                 <h2>Table of Contents</h2>
 
-                <div class="toc">
-                        <ul class="toc">
-                                <li class="tocline">1. <a href="#s_intro" class="tocxref"
-                                                >Introduction</a>
-                                        <ul class="toc">
-                                                <li class="tocline">1.1. <a href="#s_examples"
-                                                  class="tocxref">Examples</a></li>
-                                                <li class="tocline">1.2. <a href="#s_model"
-                                                  class="tocxref">Information model and related
-                                                  work</a></li>
-                                                <li class="tocline">1.3. <a href="#s_notation"
-                                                  class="tocxref">Notational conventions</a></li>
-                                                <li class="tocline">1.4. <a href="#s_conformance"
-                                                  class="tocxref">Conformance</a></li>
-                                        </ul>
-                                </li>
-                                <li class="tocline">2. <a href="#s_extensions">Atom extensions</a>
-                                        <ul class="toc">
-                                                <li class="tocline">2.1. <a href="#s_relations">Link
-                                                  Relations</a></li>
-                                                <li class="tocline">2.2. <a href="#s_geospatial"
-                                                  >GeoRSS elements</a></li>
-                                                <li class="tocline">2.3. <a href="#s_rdfa">RDFa meta
-                                                  element</a></li>
-                                        </ul>
-                                </li>
-                                <li class="tocline">3. <a href="#s_entitymetadata">Describing
-                                                research entities</a>
-                                        <ul class="toc">
-                                                <li class="tocline">3.1. <a href="#s_entityid"
-                                                  >Identifying research entities</a></li>
-                                                <li class="tocline">3.2. <a href="#s_entitytype"
-                                                  >Indicating research entity type</a></li>
-                                                <li class="tocline">3.3. <a
-                                                  href="#s_descriptivemetadata">Descriptive
-                                                  information</a></li>
-                                                <li class="tocline">3.4. <a
-                                                  href="#s_coveragemetadata">Spatial and temporal
-                                                  coverage</a></li>
-                                                <li class="tocline">3.5. <a
-                                                  href="#s_ownershipmetadata">Ownership and
-                                                  custodianship</a></li>
-                                                <li class="tocline">3.6. <a href="#s_rightsmetadata"
-                                                  >Rights</a></li>
-                                                <li class="tocline">3.7. <a
-                                                  href="#s_collectionrelations">Data collection
-                                                  relationships</a></li>
-                                                <li class="tocline">3.8. <a href="#s_agentrelations"
-                                                  >Agent relationships</a></li>
-                                                <li class="tocline">3.9. <a
-                                                  href="#s_Activityrelations">Activity
-                                                  relationships</a></li>
-                                                <li class="tocline">3.10. <a
-                                                  href="#s_servicerelations">Service
-                                                  relationships</a></li>
-                                        </ul>
-                                </li>
-                                <li class="tocline">4. <a href="#s_entrymetadata">Describing Atom
-                                                entries</a>
-                                        <ul>
-                                                <li class="tocline">4.1. <a href="#s_entryid">Entry
-                                                  identifier</a></li>
-                                                <li class="tocline">4.2. <a
-                                                  href="#s_entryprovenance">Entry provenance and
-                                                  rights</a></li>
-                                        </ul>
-                                </li>
-                                <li class="tocline">5. <a href="#s_oaiore">Comparison with OAI ORE
-                                                Atom representation</a></li>
-                                <li class="tocline">6. <a href="#s_grddl">GRDDL mapping</a></li>
-                                <li class="tocline">7. <a href="#s_enhancements">Possible
-                                                enhancements</a></li>
-                                <li class="tocline">8. <a href="#s_references">References</a></li>
-                        </ul>
-                </div>
+                <div
+                        class="toc"> <ul
+                        class="toc">
+                        <li
+                                class="tocline">1. <a
+                                href="#s_intro"
+                                class="tocxref">Introduction</a> <ul
+                                class="toc">
+                                <li
+                                        class="tocline">1.1. <a
+                                        href="#s_examples"
+                                        class="tocxref">Examples</a></li>
+                                <li
+                                        class="tocline">1.2. <a
+                                        href="#s_model"
+                                        class="tocxref">Information model and related work</a></li>
+                                <li
+                                        class="tocline">1.3. <a
+                                        href="#s_notation"
+                                        class="tocxref">Notational conventions</a></li>
+                                <li
+                                        class="tocline">1.4. <a
+                                        href="#s_conformance"
+                                        class="tocxref">Conformance</a></li>
+                                </ul> </li>
+                        <li
+                                class="tocline">2. <a
+                                href="#s_extensions">Atom extensions</a> <ul
+                                class="toc">
+                                <li
+                                        class="tocline">2.1. <a
+                                        href="#s_relations">Link Relations</a></li>
+                                <li
+                                        class="tocline">2.2. <a
+                                        href="#s_geospatial">GeoRSS elements</a></li>
+                                <li
+                                        class="tocline">2.3. <a
+                                        href="#s_rdfa">RDFa meta element</a></li>
+                                </ul> </li>
+                        <li
+                                class="tocline">3. <a
+                                href="#s_entitymetadata">Describing research entities</a> <ul
+                                class="toc">
+                                <li
+                                        class="tocline">3.1. <a
+                                        href="#s_entityid">Identifying research entities</a></li>
+                                <li
+                                        class="tocline">3.2. <a
+                                        href="#s_entitytype">Indicating research entity
+                                        type</a></li>
+                                <li
+                                        class="tocline">3.3. <a
+                                        href="#s_descriptivemetadata">Descriptive
+                                        information</a></li>
+                                <li
+                                        class="tocline">3.4. <a
+                                        href="#s_coveragemetadata">Spatial and temporal
+                                        coverage</a></li>
+                                <li
+                                        class="tocline">3.5. <a
+                                        href="#s_ownershipmetadata">Ownership and
+                                        custodianship</a></li>
+                                <li
+                                        class="tocline">3.6. <a
+                                        href="#s_rightsmetadata">Rights</a></li>
+                                <li
+                                        class="tocline">3.7. <a
+                                        href="#s_collectionrelations">Data collection
+                                        relationships</a></li>
+                                <li
+                                        class="tocline">3.8. <a
+                                        href="#s_agentrelations">Agent relationships</a></li>
+                                <li
+                                        class="tocline">3.9. <a
+                                        href="#s_Activityrelations">Activity relationships</a></li>
+                                <li
+                                        class="tocline">3.10. <a
+                                        href="#s_servicerelations">Service relationships</a></li>
+                                </ul> </li>
+                        <li
+                                class="tocline">4. <a
+                                href="#s_entrymetadata">Describing Atom entries</a> <ul>
+                                <li
+                                        class="tocline">4.1. <a
+                                        href="#s_entryid">Entry identifier</a></li>
+                                <li
+                                        class="tocline">4.2. <a
+                                        href="#s_entryprovenance">Entry provenance and
+                                        rights</a></li>
+                                </ul> </li>
+                        <li
+                                class="tocline">5. <a
+                                href="#s_oaiore">Comparison with OAI ORE Atom
+                                representation</a></li>
+                        <li
+                                class="tocline">6. <a
+                                href="#s_grddl">GRDDL mapping</a></li>
+                        <li
+                                class="tocline">7. <a
+                                href="#s_enhancements">Possible enhancements</a></li>
+                        <li
+                                class="tocline">8. <a
+                                href="#s_references">References</a></li>
+                        </ul> </div>
 
 
-                <h1><a id="s_intro">1. Introduction</a></h1>
-                <p>This profile of the Atom Syndication Format [<a href="#RFC4287">RFC4287</a>]
-                        supports syndication of contextual information about research data to
-                        software agents and user agents. It focuses on describing research entities
-                        and metadata that aid discovery and re-use of research data. It defines
-                                <em>Atom entry document</em> representations of: </p>
+                <h1><a
+                        id="s_intro">1. Introduction</a></h1>
+                <p>This profile of the Atom Syndication Format [<a
+                        href="#RFC4287">RFC4287</a>] supports syndication of contextual information
+                        about research data to software agents and user agents. It focuses on
+                        describing research entities and metadata that aid discovery and re-use of
+                        research data. It defines <em>Atom entry document</em> representations of: </p>
                 <ul>
                         <li><strong>data collections</strong>,</li>
                         <li>the <strong>agents</strong> that create and manage the data
@@ -166,21 +196,24 @@
                 </ul>
                 <p>This profile distinguishes between a research entity and the Atom entry
                         describing the entity. It defines metadata for describing both. </p>
-                <p>Like Atom, this profile uses IRIs [<a href="#RFC3987">RFC3987</a>] to identify
-                        and link resources. It uses IRIs to identify research entities, to identify
-                        the Atom entries that describe research entities, and to define
-                        relationships between research entities. </p>
+                <p>Like Atom, this profile uses IRIs [<a
+                        href="#RFC3987">RFC3987</a>] to identify and link resources. It uses IRIs to
+                        identify research entities, to identify the Atom entries that describe
+                        research entities, and to define relationships between research entities. </p>
                 <p>This profile does not define methods for syndicating or processing Atom entries.
                         The Atom entry documents described by this profile might be self-contained,
                         or contained in Atom feed documents. User agents might retrieve an Atom
                         entry document from a web server using HTTP, or embed an Atom entry document
-                        within an <a href="http://tools.ietf.org/html/rfc5023">Atom Publishing
-                                Protocol</a> message to create a web resource on a remote server. </p>
+                        within an <a
+                        href="http://tools.ietf.org/html/rfc5023">Atom Publishing Protocol</a>
+                        message to create a web resource on a remote server. </p>
 
-                <h2><a id="s_examples">1.1. Examples</a></h2>
+                <h2><a
+                        id="s_examples">1.1. Examples</a></h2>
 
                 <p>A simple description of a research data collection:</p>
-                <div class="example">
+                <div
+                        class="example">
                         <pre>&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
     
     &lt;!-- data collection description --&gt;
@@ -217,12 +250,12 @@
         &lt;/author&gt;
     &lt;/source&gt;
 
-&lt;/entry&gt;</pre>
-                </div>
+&lt;/entry&gt;</pre> </div>
 
                 <p>A more extensive description of the same research data collection that uses
                         non-Atom elements to specify temporal and geospatial coverage:</p>
-                <div class="example">
+                <div
+                        class="example">
                         <pre>&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
     
     &lt;!-- data collection description --&gt;
@@ -262,8 +295,7 @@
         &lt;/author&gt;
     &lt;/source&gt;
 
-&lt;/entry&gt;</pre>
-                </div>
+&lt;/entry&gt;</pre> </div>
 
                 <p>The following example has an Atom feed with two linked Atom entries describing a
                         research data collection and its creator. The research entities are linked
@@ -271,7 +303,8 @@
                         description and the <code>link[@rel="http://xmlns.com/foaf/0.1/made"]</code>
                         element in the creator description.</p>
 
-                <div class="example">
+                <div
+                        class="example">
                         <pre>&lt;feed xmlns="http://www.w3.org/2005/Atom"&gt;
     &lt;id&gt;http://www.gpem.uq.edu.au/qcpr/aus-voting2010/feed&lt;/id&gt;
     &lt;title&gt;Metadata: Mapping and Statistical Analysis of Voting Patterns at the 2010 Australia Federal Election On-line&lt;/title&gt;
@@ -333,10 +366,10 @@
             &lt;/author&gt;
         &lt;/source&gt;
     &lt;/entry&gt;
-                        </pre>
-                </div>
+                        </pre> </div>
 
-                <h2><a id="s_model">1.2. Information model and related work</a></h2>
+                <h2><a
+                        id="s_model">1.2. Information model and related work</a></h2>
                 <p>The ISO 2146 Registry Services for Libraries and Related Organisations standard
                         influenced the choice of entities modelled by this profile. ISO2146 models
                         collections, parties, activities and services. This profile models the same
@@ -377,19 +410,23 @@
                 <p>MENTION semantic web influence on the abstract model, use of vocabs shuch as FOAF
                         and ANDS and VITRO and link and RDF realisation of this and GRDDL </p>
 
-                <h2><a id="s_notation">1.3. Notational conventions</a></h2>
+                <h2><a
+                        id="s_notation">1.3. Notational conventions</a></h2>
                 <p>The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
                         "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to
-                        be interpreted as described in RFC 2119 [<a href="#RFC2119">RFC2119</a>].
-                        http://www.ietf.org/rfc/rfc2119.txt </p>
+                        be interpreted as described in RFC 2119 [<a
+                        href="#RFC2119">RFC2119</a>]. http://www.ietf.org/rfc/rfc2119.txt </p>
 
-                <h2><a id="s_conformance">1.4. Conformance</a></h2>
+                <h2><a
+                        id="s_conformance">1.4. Conformance</a></h2>
 
-                <h1><a id="s_extensions">2. Atom extensions</a></h1>
+                <h1><a
+                        id="s_extensions">2. Atom extensions</a></h1>
 
                 <p>This profile makes the following extensions to the Atom specification.</p>
 
-                <h2><a id="s_relations">2.1. Link Relations</a></h2>
+                <h2><a
+                        id="s_relations">2.1. Link Relations</a></h2>
 
                 <p>This profile uses the <code>atom:link</code> element for a variety of
                         purposes:</p>
@@ -405,15 +442,16 @@
                         attribute in the <code>atom:link</code> element:</p>
                 <dl>
                         <dt><a
-                                        href="http://www.iana.org/assignments/link-relations/link-relations.xml"
-                                        >IANA link relations</a></dt>
+                                href="http://www.iana.org/assignments/link-relations/link-relations.xml">IANA
+                                link relations</a></dt>
                         <dd>alternate</dd>
                         <dd>license</dd>
                         <dd>related</dd>
                         <dd>self</dd>
 
-                        <dt>Properties from <a href="http://dublincore.org/documents/dcmi-terms/"
-                                        >Dublin Core Metadata Terms</a> vocabulary</dt>
+                        <dt>Properties from <a
+                                href="http://dublincore.org/documents/dcmi-terms/">Dublin Core
+                                Metadata Terms</a> vocabulary</dt>
                         <dd>http://purl.org/dc/terms/alternative</dd>
                         <dd>http://purl.org/dc/terms/isReferencedBy</dd>
                         <dd>http://purl.org/dc/terms/publisher</dd>
@@ -421,13 +459,12 @@
                         <dd>http://purl.org/dc/terms/temporal</dd>
 
                         <dt>Properties from <a
-                                        href="http://dublincore.org/groups/collections/collection-application-profile/ "
-                                        >Dublin Core Collections Description Terms</a>
-                                vocabulary</dt>
+                                href="http://dublincore.org/groups/collections/collection-application-profile/ ">Dublin
+                                Core Collections Description Terms</a> vocabulary</dt>
                         <dd>http://purl.org/cld/terms/isAccessedVia</dd>
 
-                        <dt>Properties from the <a href="http://xmlns.com/foaf/spec/">FOAF
-                                        vocabulary</a></dt>
+                        <dt>Properties from the <a
+                                href="http://xmlns.com/foaf/spec/">FOAF vocabulary</a></dt>
                         <dd>http://xmlns.com/foaf/0.1/currentProject</dd>
                         <dd>http://xmlns.com/foaf/0.1/familyName</dd>
                         <dd>http://xmlns.com/foaf/0.1/givenName</dd>
@@ -447,17 +484,18 @@
                         <dd>http://vivoweb.org/ontology/core#fundedBy</dd>
 
                         <dt>Properties from the <a
-                                        href="http://www.openarchives.org/ore/1.0/vocabulary"
-                                        >OAI-ORE Vocabulary</a></dt>
+                                href="http://www.openarchives.org/ore/1.0/vocabulary">OAI-ORE
+                                Vocabulary</a></dt>
                         <dd>http://www.openarchives.org/ore/terms/describes</dd>
 
                         <dt>Properties from the RDF vocabulary</dt>
                         <dd>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</dd>
                 </dl>
 
-                <h2><a id="s_geospatial">2.2. GeoRSS elements</a></h2>
-                <p>This profile uses two elements from the <a href="http://www.georss.org/simple"
-                                >GeoRSS-Simple vocabulary</a>
+                <h2><a
+                        id="s_geospatial">2.2. GeoRSS elements</a></h2>
+                <p>This profile uses two elements from the <a
+                        href="http://www.georss.org/simple">GeoRSS-Simple vocabulary</a>
                         <code>http://www.georss.org/georss</code> namespace to express geospatial
                         metadata:</p>
                 <ul>
@@ -465,34 +503,36 @@
                         <li>georss:polygon</li>
                 </ul>
                 <p>For example,</p>
-                <div class="example">
+                <div
+                        class="example">
                         <pre>&lt;entry xmlns:rdfa="http://www.w3.org/ns/rdfa#"&gt;
     ...
     &lt;georss:polygon&gt;-10.5 140 -17 140 -17 145.5 -10 145.5 -10.5 140&lt;/georss:polygon&gt;
     ...
- &lt;entry&gt;</pre>
-                </div>
+ &lt;entry&gt;</pre> </div>
 
-                <h2><a id="s_rdfa">2.3. RDFa meta element</a></h2>
+                <h2><a
+                        id="s_rdfa">2.3. RDFa meta element</a></h2>
                 <p>This profile uses the RDFa meta element from the
-                                <code>http://www.w3.org/ns/rdfa#</code> namespace to make metadata
+                        <code>http://www.w3.org/ns/rdfa#</code> namespace to make metadata
                         statements about the research entity described by an Atom Entry. For
                         example,</p>
-                <div class="example">
+                <div
+                        class="example">
                         <pre>&lt;entry xmlns:rdfa="http://www.w3.org/ns/rdfa#"
     ...
     &lt;rdfa:meta property="http://purl.org/dc/terms/accessRights" 
                content="Contact the data curator regarding permission and procedures for accessing 
                         the original data."/&gt;
     ...
- &lt;entry&gt;</pre>
-                </div>
+ &lt;entry&gt;</pre> </div>
                 <p>Note: at the time of writing, this method for embedding RDFa within Atom is
                         stable, but still under development within the W3C.</p>
 
 
 
-                <h1><a id="s_entitymetadata">3. Describing research entities</a></h1>
+                <h1><a
+                        id="s_entitymetadata">3. Describing research entities</a></h1>
                 <p>This profile uses the following elements to describe research entities. The
                         tables below indicate how often an element MAY or MUST occur when describing
                         particular types of research entity.</p>
@@ -521,7 +561,8 @@
                         </tbody>
                 </table>
 
-                <h2><a id="s_entityid">3.1. Identifying research entities</a></h2>
+                <h2><a
+                        id="s_entityid">3.1. Identifying research entities</a></h2>
                 <p>The profile uses two elements to identify the entity described by the Atom
                         entry.</p>
 
@@ -530,37 +571,38 @@
                         document is syndicated between systems.</p>
 
                 <p>An <code>atom:link</code> element with a rel attribute of
-                                <code>http://www.openarchives.org/ore/terms/describes</code>
-                        contains an alternative, local identifier for the entity. This identifier
-                        MAY change when the Atom entry is syndicated, to convey a new local
-                        identifier for the entity. If this element does not exist, systems MUST
-                        infer that the local identifier is the universal identifier.</p>
+                        <code>http://www.openarchives.org/ore/terms/describes</code> contains an
+                        alternative, local identifier for the entity. This identifier MAY change
+                        when the Atom entry is syndicated, to convey a new local identifier for the
+                        entity. If this element does not exist, systems MUST infer that the local
+                        identifier is the universal identifier.</p>
 
                 <p>For example, the following elements contain a universal and a local identifier
                         for a data collection.</p>
-                <div class="example">
+                <div
+                        class="example">
                         <pre>&lt;id&gt;http://oztrak.uq.edu.au/collection/abc123&lt;/id&gt;
-&lt;link rel="http://www.openarchives.org/ore/terms/describes" href="http://dataspace.edu.au/collections/1#"/&gt;</pre>
-                </div>
+&lt;link rel="http://www.openarchives.org/ore/terms/describes" href="http://dataspace.edu.au/collections/1#"/&gt;</pre> </div>
 
-                <h2><a id="s_entitytype">3.2. Indicating research entity type</a></h2>
+                <h2><a
+                        id="s_entitytype">3.2. Indicating research entity type</a></h2>
                 <p>All Atom entries conforming to this profile MUST contain an
-                                <code>atom:link</code> element with a <code>rel</code> attribute of
-                                <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code>
-                        indicating the type of entity being described. For example,</p>
-                <div class="example">
-                        <pre>&lt;link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" href="http://purl.org/dc/dcmitype/Collection" title="Collection"/&gt;</pre>
-                </div>
+                        <code>atom:link</code> element with a <code>rel</code> attribute of
+                        <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code> indicating the
+                        type of entity being described. For example,</p>
+                <div
+                        class="example">
+                        <pre>&lt;link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" href="http://purl.org/dc/dcmitype/Collection" title="Collection"/&gt;</pre> </div>
                 <p>indicates that the Atom entry describes a Collection.</p>
 
                 <p>This profile supports the following <code>atom:link</code> attribute combinations
                         when <code>rel</code> is
-                                <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code></p>
+                        <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code></p>
 
                 <dl>
                         <dt>Data collections</dt>
                         <dd><code>href="http://purl.org/dc/dcmitype/Collection"
-                                        label="Collection"</code></dd>
+                                label="Collection"</code></dd>
                         <dd><code>href="http://purl.org/dc/dcmitype/Dataset"
                                 label="Dataset"</code></dd>
 
@@ -573,31 +615,32 @@
                         <dd><code>href="http://xmlns.com/foaf/0.1/Project"
                                 label="Project"</code></dd>
                         <dd><code>href="http://vivoweb.org/ontology/core#Program"
-                                        label="Program"</code></dd>
+                                label="Program"</code></dd>
 
 
                         <dt>Services</dt>
                         <dd><code>href="http://www.e-framework.org/Contributions/ServiceGenres/Create"
-                                        label="Create"</code></dd>
+                                label="Create"</code></dd>
                         <dd><code>href="http://www.e-framework.org/Contributions/ServiceGenres/Generate"
-                                        label="Generate"</code></dd>
+                                label="Generate"</code></dd>
                         <dd><code>href="http://www.e-framework.org/Contributions/ServiceGenres/Report"
-                                        label="Report"</code></dd>
+                                label="Report"</code></dd>
                         <dd><code>href="http://www.e-framework.org/Contributions/ServiceGenres/Annotate"
-                                        label="Annotate"</code></dd>
+                                label="Annotate"</code></dd>
                         <dd><code>href="http://www.e-framework.org/Contributions/ServiceGenres/Transform"
-                                        label="Transform"</code></dd>
+                                label="Transform"</code></dd>
                         <dd><code>href="http://www.e-framework.org/Contributions/ServiceGenres/Assemble"
-                                        label="Assemble"</code></dd>
+                                label="Assemble"</code></dd>
                         <dd><code>href="http://www.e-framework.org/Contributions/ServiceGenres/Harvest"
-                                        label="Harvest"</code></dd>
+                                label="Harvest"</code></dd>
                         <dd><code>href="http://www.e-framework.org/Contributions/ServiceGenres/Search"
-                                        label="Search"</code></dd>
+                                label="Search"</code></dd>
                         <dd><code>href="http://www.e-framework.org/Contributions/ServiceGenres/Syndicate"
-                                        label="Syndicate"</code></dd>
+                                label="Syndicate"</code></dd>
                 </dl>
 
-                <h2><a id="s_descriptivemetadata">3.3. Descriptive information</a></h2>
+                <h2><a
+                        id="s_descriptivemetadata">3.3. Descriptive information</a></h2>
                 <table>
                         <thead>
                                 <tr>
@@ -624,7 +667,7 @@
                                 <tr>
                                         <td>description</td>
                                         <td><code>&lt;content
-                                                  type=”text”&gt;DESCRIPTION&lt;/content&gt;</code></td>
+                                                type=”text”&gt;DESCRIPTION&lt;/content&gt;</code></td>
                                         <td>A plain text description of the entity</td>
                                         <td>1</td>
                                         <td>1</td>
@@ -634,22 +677,21 @@
                                 <tr>
                                         <td>web page</td>
                                         <td><code>&lt;link rel=”http://xmlns.com/foaf/0.1/page”
-                                                  href=”URI”/&gt;</code></td>
+                                                href=”URI”/&gt;</code></td>
                                         <td> URI for a human-readable document describing the entity
                                                 or how to access it</td>
-                                        <td>1..*</td>
                                         <td>0..*</td>
-                                        <td>1..*</td>
-                                        <td>1..*</td>
+                                        <td>0..*</td>
+                                        <td>0..*</td>
+                                        <td>0..*</td>
                                 </tr>
                                 <tr>
                                         <td>email</td>
                                         <td><code>&lt;link rel=”http://xmlns.com/foaf/0.1/mbox”
-                                                  href=”MAILTO-URI”/&gt;</code>
-                                        </td>
+                                                href=”MAILTO-URI”/&gt;</code> </td>
                                         <td>An internet mailbox for an Agent</td>
                                         <td></td>
-                                        <td>1..*</td>
+                                        <td>0..*</td>
                                         <td></td>
                                         <td></td>
                                 </tr>
@@ -667,7 +709,7 @@
                                 <tr>
                                         <td>subject</td>
                                         <td><code>&lt;category scheme=”URI-SCHEME” term=”URI-TERM”
-                                                  label=”LABEL”/&gt;</code></td>
+                                                label=”LABEL”/&gt;</code></td>
                                         <td>A subject or topic of the entity from a controlled
                                                 vocabulary</td>
                                         <td>0..*</td>
@@ -679,8 +721,8 @@
                 </table>
 
                 <p>Additionally, when the Atom entry describes a Person (an entity of type
-                                <code>http://xmlns.com/foaf/0.1/Person</code>), the profile supports
-                        the following element encodings of FOAF terms:</p>
+                        <code>http://xmlns.com/foaf/0.1/Person</code>), the profile supports the
+                        following element encodings of FOAF terms:</p>
                 <table>
                         <thead>
                                 <tr>
@@ -697,8 +739,8 @@
                                 <tr>
                                         <td>honorific</td>
                                         <td><code>&lt;rdfa:meta
-                                                  property="http://xmlns.com/foaf/0.1/title"
-                                                  content="TITLE"/&gt;</code></td>
+                                                property="http://xmlns.com/foaf/0.1/title"
+                                                content="TITLE"/&gt;</code></td>
                                         <td>An honorific prefix for a Person.</td>
                                         <td></td>
                                         <td>0..1</td>
@@ -708,8 +750,8 @@
                                 <tr>
                                         <td>given name</td>
                                         <td><code>&lt;rdfa:meta
-                                                  property="http://xmlns.com/foaf/0.1/givenName"
-                                                  content="GIVEN NAME"/&gt;</code></td>
+                                                property="http://xmlns.com/foaf/0.1/givenName"
+                                                content="GIVEN NAME"/&gt;</code></td>
                                         <td>A given name for a Person.</td>
                                         <td></td>
                                         <td>1..*</td>
@@ -719,8 +761,8 @@
                                 <tr>
                                         <td>family name</td>
                                         <td><code>&lt;link
-                                                  rel="http://xmlns.com/foaf/0.1/familyName"
-                                                  href="FAMILY NAME"/&gt;</code></td>
+                                                rel="http://xmlns.com/foaf/0.1/familyName"
+                                                href="FAMILY NAME"/&gt;</code></td>
                                         <td>A family name for a Person</td>
                                         <td></td>
                                         <td>1</td>
@@ -730,7 +772,8 @@
                         </tbody>
                 </table>
 
-                <h2><a id="s_coveragemetadata">3.4. Spatial and temporal coverage</a></h2>
+                <h2><a
+                        id="s_coveragemetadata">3.4. Spatial and temporal coverage</a></h2>
                 <table>
                         <thead>
                                 <tr>
@@ -747,7 +790,7 @@
                                 <tr>
                                         <td>point</td>
                                         <td><code>&lt;georss:point&gt;LAT
-                                                  LONG&lt;/georss:point&gt;</code></td>
+                                                LONG&lt;/georss:point&gt;</code></td>
                                         <td>Primary name for the entity</td>
                                         <td>0..*</td>
                                         <td></td>
@@ -756,7 +799,8 @@
                                 </tr>
                                 <tr>
                                         <td>region</td>
-                                        <td><code>&lt;georss:polygon&gt;LIST OF LAT LONG&lt;/georss:polygon&gt;</code></td>
+                                        <td><code>&lt;georss:polygon&gt;LIST OF LAT
+                                                LONG&lt;/georss:polygon&gt;</code></td>
                                         <td>A geographical region related to the entity</td>
                                         <td>0..*</td>
                                         <td></td>
@@ -766,8 +810,9 @@
                                 <tr>
                                         <td>feature</td>
                                         <td><code>&lt;link rel="http://purl.org/dc/terms/spatial"
-                                                  href="URI"/&gt;</code></td>
-                                        <td>URI for a geographical feature related to the entity</td>
+                                                href="URI"/&gt;</code></td>
+                                        <td>URI for a geographical feature related to the
+                                                entity</td>
                                         <td>0..*</td>
                                         <td></td>
                                         <td></td>
@@ -778,12 +823,12 @@
                                         <td><code>&lt;rdfa:meta
                                                 property="http://purl.org/dc/terms/temporal"
                                                 content="TEMPORAL ENCODING"
-                                                datatype="URI-ENCODING-SCHEME"/&gt;</code>
-                                        </td>
-                                        <td>An indicator of the temporal scope of the Data Collection.
-                                            This profile recommends using the DCMI Period format 
-                                            http://dublincore.org/documents/dcmi-period/ to encode the content attribute.
-                                        </td>
+                                                datatype="URI-ENCODING-SCHEME"/&gt;</code> </td>
+                                        <td>An indicator of the temporal scope of the Data
+                                                Collection. This profile recommends using the DCMI
+                                                Period format
+                                                http://dublincore.org/documents/dcmi-period/ to
+                                                encode the content attribute. </td>
                                         <td>0..*</td>
                                         <td></td>
                                         <td>0..*</td>
@@ -803,7 +848,7 @@
                                 <tr>
                                         <td>subject</td>
                                         <td><code>&lt;category scheme="URI-SCHEME" term="URI-TERM"
-                                                  label="LABEL"/&gt;</code></td>
+                                                label="LABEL"/&gt;</code></td>
                                         <td>A subject or topic of the entity from a controlled
                                                 vocabulary</td>
                                         <td>0..*</td>
@@ -814,7 +859,8 @@
                         </tbody>
                 </table>
 
-                <h2><a id="s_ownershipmetadata">3.5. Ownership and custodianship</a></h2>
+                <h2><a
+                        id="s_ownershipmetadata">3.5. Ownership and custodianship</a></h2>
                 <table>
                         <thead>
                                 <tr>
@@ -844,8 +890,7 @@
                                 <tr>
                                         <td>publisher / custodian</td>
                                         <td><code>&lt;link rel="http://purl.org/dc/terms/publisher"
-                                                  href="URI-AGENT" label="AGENT
-                                                NAME"/&gt;</code></td>
+                                                href="URI-AGENT" label="AGENT NAME"/&gt;</code></td>
                                         <td>An Agent responsible for publishing or maintaining a
                                                 Data Collection or providing a Service</td>
                                         <td>0..*</td>
@@ -856,7 +901,8 @@
                         </tbody>
                 </table>
 
-                <h2><a id="s_rightsmetadata">3.6. Rights</a></h2>
+                <h2><a
+                        id="s_rightsmetadata">3.6. Rights</a></h2>
                 <table>
                         <thead>
                                 <tr>
@@ -884,8 +930,8 @@
                                 <tr>
                                         <td>access rights</td>
                                         <td><code>&lt;rdfa:meta
-                                                  property="http://purl.org/dc/terms/accessRights"
-                                                  content="ACCESS RIGHTS TEXT"/&gt;</code></td>
+                                                property="http://purl.org/dc/terms/accessRights"
+                                                content="ACCESS RIGHTS TEXT"/&gt;</code></td>
                                         <td>Information about who can access the entity, including
                                                 access restrictions based on privacy, security, or
                                                 other policies.</td>
@@ -897,7 +943,7 @@
                                 <tr>
                                         <td>license</td>
                                         <td><code>&lt;link rel="license" type="Internet Media Type"
-                                                  href="LICENSE_URI"/&gt;</code></td>
+                                                href="LICENSE_URI"/&gt;</code></td>
                                         <td>Identifies a document containing a license for use of
                                                 the entity.</td>
                                         <td>1..*</td>
@@ -908,7 +954,8 @@
                         </tbody>
                 </table>
 
-                <h2><a id="s_collectionrelations">3.7. Data collection relationships</a></h2>
+                <h2><a
+                        id="s_collectionrelations">3.7. Data collection relationships</a></h2>
                 <table>
                         <thead>
                                 <tr>
@@ -925,7 +972,7 @@
                                 <tr>
                                         <td>related collection</td>
                                         <td><code>&lt;link rel="related" href="COLLECTION_URI"
-                                                  title="COLLECTION TITLE"/&gt;</code></td>
+                                                title="COLLECTION TITLE"/&gt;</code></td>
                                         <td>A Data Collection that is somehow related to the Data
                                                 Collection being described</td>
                                         <td>1..*</td>
@@ -936,8 +983,8 @@
                                 <tr>
                                         <td>related publication</td>
                                         <td><code>&lt;link
-                                                  rel="http://purl.org/dc/terms/isReferencedBy"
-                                                  href="URI" title="Publication
+                                                rel="http://purl.org/dc/terms/isReferencedBy"
+                                                href="URI" title="Publication
                                                 title"/&gt;</code></td>
                                         <td>A Publication that provides contextual information about
                                                 a Data Collection</td>
@@ -949,9 +996,9 @@
                                 <tr>
                                         <td>output of</td>
                                         <td><code>&lt;link
-                                                  rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"
-                                                  href="ACTIVITY_URI"/&gt; title="ACTIVITY
-                                                  NAME"</code></td>
+                                                rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"
+                                                href="ACTIVITY_URI"/&gt; title="ACTIVITY
+                                                NAME"</code></td>
                                         <td>Identifies a document containing a license for use of
                                                 the entity.</td>
                                         <td>1..*</td>
@@ -962,9 +1009,9 @@
                                 <tr>
                                         <td>access via</td>
                                         <td><code>&lt;link
-                                                  rel="http://purl.org/cld/terms/isAccessedVia"
-                                                  href="SERVICE_URI" title="SERVICE
-                                                  NAME"/&gt;</code></td>
+                                                rel="http://purl.org/cld/terms/isAccessedVia"
+                                                href="SERVICE_URI" title="SERVICE
+                                                NAME"/&gt;</code></td>
                                         <td>A Report, Harvest, Search, or Syndicate Service that
                                                 provides access to the Data Collection.</td>
                                         <td>1..*</td>
@@ -975,7 +1022,8 @@
                         </tbody>
                 </table>
 
-                <h2><a id="s_agentrelations">3.8. Agent relationships</a></h2>
+                <h2><a
+                        id="s_agentrelations">3.8. Agent relationships</a></h2>
                 <table>
                         <thead>
                                 <tr>
@@ -992,45 +1040,45 @@
                                 <tr>
                                         <td>related collection</td>
                                         <td><code>&lt;link rel="http://xmlns.com/foaf/0.1/made"
-                                                  href="COLLECTION_URI" title="COLLECTION
-                                                  TITLE"/&gt;</code></td>
+                                                href="COLLECTION_URI" title="COLLECTION
+                                                TITLE"/&gt;</code></td>
                                         <td>A Data Collection created by an Agent.</td>
                                         <td></td>
-                                        <td>1..*</td>
+                                        <td>0..*</td>
                                         <td></td>
                                         <td></td>
                                 </tr>
                                 <tr>
                                         <td>publishes</td>
                                         <td><code>&lt;link
-                                                  rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf"
-                                                  href="AGENT-URI" title="AGENT
-                                                NAME"/&gt;</code></td>
+                                                rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf"
+                                                href="AGENT-URI" title="AGENT NAME"/&gt;</code></td>
                                         <td>A Data Collection that this Agent makes available
                                                 (publishes) or maintains.</td>
                                         <td></td>
-                                        <td>1..*</td>
+                                        <td>0..*</td>
                                         <td></td>
                                         <td></td>
                                 </tr>
                                 <tr>
                                         <td>participates in</td>
                                         <td><code>&lt;link
-                                                  rel="http://xmlns.com/foaf/0.1/currentProject"
-                                                  href="ACTIVITY_URI"/&gt; title="ACTIVITY
-                                                  NAME"</code></td>
+                                                rel="http://xmlns.com/foaf/0.1/currentProject"
+                                                href="ACTIVITY_URI"/&gt; title="ACTIVITY
+                                                NAME"</code></td>
                                         <td>An Activity involving this Agent.</td>
                                         <td></td>
-                                        <td>1..*</td>
+                                        <td>0..*</td>
                                         <td></td>
                                         <td></td>
                                 </tr>
                         </tbody>
                 </table>
 
-                <p>Note: an agent must participate in at least one of these relationships.</p>
+                <p>Note: an agent MUST participate in at least one of these relationships.</p>
 
-                <h2><a id="s_activityrelations">3.9. Activity relationships</a></h2>
+                <h2><a
+                        id="s_activityrelations">3.9. Activity relationships</a></h2>
                 <table>
                         <thead>
                                 <tr>
@@ -1047,9 +1095,9 @@
                                 <tr>
                                         <td>has output</td>
                                         <td><code>&lt;link
-                                                  rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
-                                                  href="COLLECTION_URI" title="COLLECTION
-                                                  TITLE"/&gt;</code></td>
+                                                rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
+                                                href="COLLECTION_URI" title="COLLECTION
+                                                TITLE"/&gt;</code></td>
                                         <td>A Data Collection produced by this Acitivity.</td>
                                         <td></td>
                                         <td></td>
@@ -1059,9 +1107,8 @@
                                 <tr>
                                         <td>has participant</td>
                                         <td><code>&lt;link
-                                                  rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
-                                                  href="AGENT-URI" title="AGENT
-                                                NAME"/&gt;</code></td>
+                                                rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
+                                                href="AGENT-URI" title="AGENT NAME"/&gt;</code></td>
                                         <td>An Agent that participates in this Activity.</td>
                                         <td></td>
                                         <td></td>
@@ -1071,9 +1118,8 @@
                                 <tr>
                                         <td>funded by</td>
                                         <td><code>&lt;link
-                                                  rel="http://vivoweb.org/ontology/core#fundedBy"
-                                                  href="AGENT_URI"/&gt; title="AGENT
-                                                NAME"</code></td>
+                                                rel="http://vivoweb.org/ontology/core#fundedBy"
+                                                href="AGENT_URI"/&gt; title="AGENT NAME"</code></td>
                                         <td>An agent that funds the Activity</td>
                                         <td></td>
                                         <td></td>
@@ -1083,7 +1129,8 @@
                         </tbody>
                 </table>
 
-                <h2><a id="s_servicerelations">3.10. Service relationships</a></h2>
+                <h2><a
+                        id="s_servicerelations">3.10. Service relationships</a></h2>
                 <table>
                         <thead>
                                 <tr>
@@ -1100,9 +1147,9 @@
                                 <tr>
                                         <td>provides access to</td>
                                         <td><code>&lt;link
-                                                  rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy"
-                                                  href="COLLECTION_URI" title="COLLECTION
-                                                  TITLE"/&gt;</code></td>
+                                                rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy"
+                                                href="COLLECTION_URI" title="COLLECTION
+                                                TITLE"/&gt;</code></td>
                                         <td>A Data Collection that this service provides access
                                                 to.</td>
                                         <td></td>
@@ -1113,20 +1160,23 @@
                         </tbody>
                 </table>
 
-                <h1><a id="s_entrymetadata">6. Describing Atom entries</a></h1>
+                <h1><a
+                        id="s_entrymetadata">6. Describing Atom entries</a></h1>
                 <p>As well as describing a research entity, each Atom entry contains descriptive
                         information about itself. </p>
 
-                <h2><a id="s_entryid">6.1. Entry identifier</a></h2>
+                <h2><a
+                        id="s_entryid">6.1. Entry identifier</a></h2>
                 <p>Each Atom entry MUST include an <code>atom:link</code> element with a
-                                <code>rel</code> attribute of <code>self</code>, containing an
-                        identifier for the Atom entry itself. For example,</p>
-                <div class="example">
+                        <code>rel</code> attribute of <code>self</code>, containing an identifier
+                        for the Atom entry itself. For example,</p>
+                <div
+                        class="example">
                         <code>&lt;link rel="self"
-                                href="http://oztrack.uq.edu.au/collection/abc123.atom"/&gt;</code>
-                </div>
+                        href="http://oztrack.uq.edu.au/collection/abc123.atom"/&gt;</code> </div>
 
-                <h2><a id="s_entryprovenance">6.2. Entry provenance and rights</a></h2>
+                <h2><a
+                        id="s_entryprovenance">6.2. Entry provenance and rights</a></h2>
                 <p>The following Atom elements contain metadata about the provenance and rights of
                         the Atom entry itself.</p>
                 <table>
@@ -1173,34 +1223,32 @@
     /&lt;/author&gt;
 &lt;/source&gt;</pre>
                                                 The author element MUST include
-                                                  <code>atom:name</code> and one or both of either
-                                                  <code>atom:uri</code> or
+                                                <code>atom:name</code> and one or both of either
+                                                <code>atom:uri</code> or
                                                 <code>atom:email</code></td>
                                         <td>An Agent responsible for creating the Atom entry.</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
+                                        <td>0..*</td>
+                                        <td>1..*</td>
+                                        <td>1..*</td>
+                                        <td>0..*</td>
                                 </tr>
                                 <tr>
                                         <td>description publisher</td>
                                         <td><pre>&lt;source&gt;
     &lt;link rel="http://purl.org/dc/terms/publisher" href="AGENT_URI" title="AGENT NAME"/&gt;
-&lt;source&gt;</pre>
-                                        </td>
+&lt;source&gt;</pre> </td>
                                         <td>An Agent responsible for publishing the Atom entry.</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
+                                        <td>0..*</td>
+                                        <td>0..*</td>
+                                        <td>0..*</td>
+                                        <td>0..*</td>
                                 </tr>
                                 <tr>
                                         <td>description rights</td>
                                         <td><pre>
 &lt;source&gt;
     &lt;rights&gt;RIGHTS&lt;rights&gt;
-&lt;/source&gt;</pre>
-                                        </td>
+&lt;/source&gt;</pre> </td>
                                         <td>Information about rights held in and over the Atom
                                                 entry</td>
                                         <td>0..1</td>
@@ -1213,8 +1261,7 @@
                                         <td><pre>
 &lt;source&gt;
     &lt;link rel="license" type="Internet Media Type" href="LICENSE_URI"/&gt;
-&lt;source&gt;</pre>
-                                        </td>
+&lt;source&gt;</pre> </td>
                                         <td>URI for a document containing a license for the Atom
                                                 entry..</td>
                                         <td>0..1</td>
@@ -1225,7 +1272,8 @@
                         </tbody>
                 </table>
 
-                <h1><a id="s_oaiore">7. Comparison with OAI ORE Atom representation</a></h1>
+                <h1><a
+                        id="s_oaiore">7. Comparison with OAI ORE Atom representation</a></h1>
                 <p>Mostly aligned. Key differences relate to representing the rights and authorship
                         of the description itself:</p>
                 <ul>
@@ -1241,10 +1289,13 @@
                 <p>Infer describes identifier from atom:id</p>
                 <p>RDFa, but only about the research entity, not about generic resources.</p>
 
-                <h1><a id="s_grddl">8. GRRDL mapping</a></h1>
+                <h1><a
+                        id="s_grddl">8. GRRDL mapping</a></h1>
 
-                <h1><a id="s_enhancements">9. Possible enhancements</a></h1>
+                <h1><a
+                        id="s_enhancements">9. Possible enhancements</a></h1>
 
-                <h1><a id="s_references">10. References</a></h1>
+                <h1><a
+                        id="s_references">10. References</a></h1>
         </body>
 </html>
