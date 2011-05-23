@@ -58,19 +58,19 @@
     };
 
     AjaxSolr.theme.prototype.activityFeed = function (doc) {
-        return '<p>- <a href="">' + doc.activitytitle + '</a></p>';
+        return '<p><a href="">' + doc.activitytitle + '</a></p>';
     };
 
     AjaxSolr.theme.prototype.agentFeed = function (doc) {
-        return '<p>- <a href="">' + doc.agenttitle + '</a></p>';
+        return '<p><a href="">' + doc.agenttitle + '</a></p>';
     };
 
     AjaxSolr.theme.prototype.collectionFeed = function (doc) {
-        return '<p>- <a href="">' + doc.collectiontitle + '</a></p>';
+        return '<p><a href="">' + doc.collectiontitle + '</a></p>';
     };
 
     AjaxSolr.theme.prototype.serviceFeed = function (doc) {
-        return '<p>- <a href="">' + doc.servicetitle + '</a></p>';
+        return '<p><a href="">' + doc.servicetitle + '</a></p>';
     };
 
 })(jQuery);
