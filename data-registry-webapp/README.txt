@@ -100,7 +100,7 @@ To use the Data Registry application with a MySQL database you need to:
                 IDENTIFIED BY 'registry'
                 WITH GRANT OPTION;
 
-- create a file "local/registry.properties" in the project's root directory
+- change the persistence unit in "resources/registry.properties" in the project's root directory
   containing the line:
 
                 persistenceUnitName=registry-mysql
@@ -120,7 +120,7 @@ the matching JDBC driver in the "pom.xml" file.
 Packaging
 ~~~~~~~~~
 The project is set to be packaged as war file (see pom.xml). When packaging the
-project, your should run the antrun:run goal to append the revision number to
+project, your should run the antrun:run goal first to append the revision number to
 the project's version number
 
 Adding Solr search
