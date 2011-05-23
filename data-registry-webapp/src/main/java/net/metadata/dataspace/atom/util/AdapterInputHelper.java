@@ -595,12 +595,12 @@ public class AdapterInputHelper {
         if (version == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
         } else {
-            List<Category> categories = entry.getCategories(Constants.SCHEME_DCMITYPE);
-            if (categories.size() != 1) {
+            List<Link> links = entry.getLinks(Constants.REL_TYPE);
+            if (links.size() != 1) {
                 throw new ResponseContextException("Entry missing Type or assigned to more than one type", 400);
             } else {
-                for (Category category : categories) {
-                    String entryType = category.getLabel();
+                for (Link typeLink : links) {
+                    String entryType = typeLink.getTitle();
                     if (entryType == null) {
                         throw new ResponseContextException("Entry type is missing label", 400);
                     } else {

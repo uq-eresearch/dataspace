@@ -73,7 +73,7 @@ public interface Constants {
     String NS_GEORSS = "http://www.georss.org/georss";
     String NS_RDFA = "http://www.w3.org/ns/rdfa#";
     String NS_EFS = "http://www.e-framework.org/Contributions/ServiceGenres/";
-
+    String NS_RDF_99 = "http://www.w3.org/1999/02/22-rdf-syntax-ns";
     /**
      * rel attribute types
      */
@@ -105,6 +105,7 @@ public interface Constants {
     String REL_ALTERNATIVE = NS_DC + "alternative";
     String REL_SPATIAL = NS_DC + "spatial";
     String REL_VIA = "via";
+    String REL_TYPE = NS_RDF_99 + "#type";
 
 
     /**

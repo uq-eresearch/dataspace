@@ -67,7 +67,8 @@ public class AdapterOutputHelper {
         try {
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
             String activityTypelabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
-            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_FOAF + activityTypelabel, activityTypelabel);
+            Link typeLink = entry.addLink(Constants.NS_FOAF + activityTypelabel, Constants.REL_TYPE);
+            typeLink.setTitle(activityTypelabel);
 
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
@@ -112,7 +113,8 @@ public class AdapterOutputHelper {
         try {
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
             String agentTypelabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
-            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_FOAF + agentTypelabel, agentTypelabel);
+            Link typeLink = entry.addLink(Constants.NS_FOAF + agentTypelabel, Constants.REL_TYPE);
+            typeLink.setTitle(agentTypelabel);
 
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
@@ -192,7 +194,8 @@ public class AdapterOutputHelper {
             }
 
             String collectionTypeLabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
-            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_DCMITYPE + collectionTypeLabel, collectionTypeLabel);
+            Link typeLink = entry.addLink(Constants.NS_DCMITYPE + collectionTypeLabel, Constants.REL_TYPE);
+            typeLink.setTitle(collectionTypeLabel);
 
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
@@ -305,7 +308,8 @@ public class AdapterOutputHelper {
         try {
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
             String serviceTypelabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
-            entry.addCategory(Constants.NS_DCMITYPE, Constants.NS_EFS + serviceTypelabel, serviceTypelabel);
+            Link typeLink = entry.addLink(Constants.NS_EFS + serviceTypelabel, Constants.REL_TYPE);
+            typeLink.setTitle(serviceTypelabel);
 
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
