@@ -91,21 +91,6 @@
         </body>
     </xsl:template>
 
-    <!-- object type -->
-    <xsl:template name="type">
-        <xsl:if test="atom:category[@term=$ENTITY_SERVICE]">
-            <div class="statement">
-                <div class="property">
-                    <p>Type</p>
-                </div>
-                <div class="content">
-                    <p>
-                        <xsl:value-of select="atom:category[@term=$ENTITY_SERVICE]/@label"/>
-                    </p>
-                </div>
-            </div>
-        </xsl:if>
-    </xsl:template>
     <!-- collections -->
     <xsl:template name="supportedBy">
         <xsl:if test="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]">

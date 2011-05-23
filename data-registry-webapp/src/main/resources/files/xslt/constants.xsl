@@ -8,6 +8,7 @@
     <xsl:variable name="NS_ORE">http://www.openarchives.org/ore/terms/</xsl:variable>
     <xsl:variable name="NS_GEORSS">http://www.georss.org/georss/</xsl:variable>
     <xsl:variable name="NS_RDFA">http://www.w3.org/ns/rdfa#</xsl:variable>
+    <xsl:variable name="NS_RDF_99">http://www.w3.org/1999/02/22-rdf-syntax-ns</xsl:variable>
 
     <xsl:variable name="TYPE_ATOM_FEED">application/atom+xml; type=feed</xsl:variable>
 
@@ -18,6 +19,9 @@
     <xsl:variable name="REL_LATEST_VERSION">latest-version</xsl:variable>
     <xsl:variable name="REL_LICENSE">license</xsl:variable>
 
+    <xsl:variable name="REL_TYPE">
+        <xsl:value-of select="concat($NS_RDF_99 ,'#type')"/>
+    </xsl:variable>
     <xsl:variable name="ATOM_CREATOR">
         <xsl:value-of select="concat($NS_DC ,'creator')"/>
     </xsl:variable>

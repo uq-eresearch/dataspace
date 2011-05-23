@@ -36,9 +36,8 @@
             </originatingSource>
 
             <!-- collection -->
-            <xsl:if
-                    test="atom:category[@scheme=$NS_DCMITYPE]">
-                <service type="report">
+            <xsl:if test="atom:link[@rel=$REL_TYPE]">
+                <service type="{atom:link[@rel=$REL_TYPE]/@title}">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
                     <xsl:apply-templates select="/atom:entry/atom:id"/>

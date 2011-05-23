@@ -94,7 +94,7 @@
     </xsl:template>
     <xsl:template name="type">
         <xsl:param name="entity"/>
-        <input id="record-type" type="hidden" value="{atom:category[@scheme=$NS_DCMITYPE]/@label}"/>
+        <input id="record-type" type="hidden" value="{atom:link[@rel=$REL_TYPE]/@title}"/>
         <xsl:choose>
             <!--atom:category[@scheme=$NS_DCMITYPE]-->
             <xsl:when test="$entity = 'collection'">

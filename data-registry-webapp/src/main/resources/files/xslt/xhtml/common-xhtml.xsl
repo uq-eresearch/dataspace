@@ -44,6 +44,21 @@
             <xsl:value-of select="text()"/>
         </p>
     </xsl:template>
+    <!-- object type -->
+    <xsl:template name="type">
+        <xsl:if test="atom:link[@rel=$REL_TYPE]">
+            <div class="statement">
+                <div class="property">
+                    <p>Type</p>
+                </div>
+                <div class="content">
+                    <p>
+                        <xsl:value-of select="atom:link[@rel=$REL_TYPE]/@title"/>
+                    </p>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
 
     <!-- Latest version -->
     <xsl:template name="latest-version">

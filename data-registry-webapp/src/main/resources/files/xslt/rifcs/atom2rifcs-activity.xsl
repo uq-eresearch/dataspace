@@ -36,9 +36,8 @@
             </originatingSource>
 
             <!-- collection -->
-            <xsl:if
-                    test="atom:category[@scheme=$NS_DCMITYPE]">
-                <activity type="project">
+            <xsl:if test="atom:link[@rel=$REL_TYPE]">
+                <activity type="{atom:link[@rel=$REL_TYPE]/@title}">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
                     <xsl:apply-templates select="/atom:entry/atom:id"/>

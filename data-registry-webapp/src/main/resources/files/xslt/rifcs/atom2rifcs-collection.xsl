@@ -38,8 +38,8 @@
                 <xsl:value-of select="atom:source/atom:id"/>
             </originatingSource>
             <!-- collection -->
-            <xsl:if test="atom:category[@scheme=$NS_DCMITYPE]">
-                <collection type="collection">
+            <xsl:if test="atom:link[@rel=$REL_TYPE]">
+                <collection type="{atom:link[@rel=$REL_TYPE]/@title}">
                     <!-- identifiers -->
                     <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
                     <xsl:apply-templates select="/atom:entry/atom:id"/>
