@@ -1052,7 +1052,7 @@
                                         <td>publishes</td>
                                         <td><code>&lt;link
                                                 rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf"
-                                                href="AGENT-URI" title="AGENT NAME"/&gt;</code></td>
+                                                href="COLLECTION-URI" title="COLLECTION TITLE"/&gt;</code></td>
                                         <td>A Data Collection that this Agent makes available
                                                 (publishes) or maintains.</td>
                                         <td></td>
@@ -1208,10 +1208,10 @@
     &lt;title/&gt;SOURCE SYSTEM TITLE&lt;/title&gt;
 &lt;/source&gt;</pre></td>
                                         <td>The original source system for the Atom entry</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
+                                        <td>0..1</td>
+                                        <td>0..1</td>
+                                        <td>0..1</td>
+                                        <td>0..1</td>
                                 </tr>
                                 <tr>
                                         <td>description author</td>
@@ -1235,7 +1235,8 @@
                                 <tr>
                                         <td>description publisher</td>
                                         <td><pre>&lt;source&gt;
-    &lt;link rel="http://purl.org/dc/terms/publisher" href="AGENT_URI" title="AGENT NAME"/&gt;
+    &lt;link rel="http://purl.org/dc/terms/publisher" 
+    href="AGENT_URI" title="AGENT NAME"/&gt;
 &lt;source&gt;</pre> </td>
                                         <td>An Agent responsible for publishing the Atom entry.</td>
                                         <td>0..*</td>
@@ -1260,7 +1261,8 @@
                                         <td>description license</td>
                                         <td><pre>
 &lt;source&gt;
-    &lt;link rel="license" type="Internet Media Type" href="LICENSE_URI"/&gt;
+    &lt;link rel="license" type="Internet Media Type" 
+    href="LICENSE_URI"/&gt;
 &lt;source&gt;</pre> </td>
                                         <td>URI for a document containing a license for the Atom
                                                 entry..</td>
