@@ -38,7 +38,7 @@
         <rdf:Description
                 rdf:about="{atom:link[@rel=$RDF_DESCRIBES]/@href}">
             <!-- description type -->
-            <xsl:apply-templates select="atom:category[@scheme=$NS_VIVO]"/>
+            <xsl:apply-templates select="atom:link[@rel=$REL_TYPE]"/>
             <!-- title -->
             <xsl:apply-templates select="atom:title"/>
             <!-- description -->
@@ -92,8 +92,8 @@
     <!-- *** collection description elements *** -->
 
     <!-- description type -->
-    <xsl:template match="atom:category[@scheme=$NS_VIVO]">
-        <dcterms:type rdf:resource="{@term}"/>
+    <xsl:template match="atom:link[@rel=$REL_TYPE]">
+        <dcterms:type rdf:resource="{@title}"/>
     </xsl:template>
 
 
