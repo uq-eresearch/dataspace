@@ -19,9 +19,7 @@
     <xsl:include href="../include/head.xsl"/>
     <xsl:include href="../include/footer.xsl"/>
 
-    <xsl:output method="html" media-type="application/xhtml+xml" omit-xml-declaration="yes"
-                doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" indent="yes"/>
+    <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
             <xsl:apply-templates/>
@@ -32,6 +30,7 @@
 
     <xsl:template match="atom:entry">
         <head>
+            <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
             <title>
                 <xsl:value-of select="atom:title"/>
             </title>
@@ -39,6 +38,8 @@
             <xsl:call-template name="head"/>
             <script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js">;</script>
             <script type="text/javascript" src="/js/map/map.js">;</script>
+            <script type="text/javascript"
+                    src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ'>;</script>
         </head>
         <body onload="init();">
             <xsl:call-template name="header"/>

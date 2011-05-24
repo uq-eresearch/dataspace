@@ -35,11 +35,11 @@ public class FeedOutputHelper {
     }
 
     public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class clazz) {
-        if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
-            responseContext.setContentType(Constants.MIME_TYPE_HTML);
-        } else {
-            responseContext.setContentType(Constants.MIME_TYPE_XHTML);
-        }
+//        if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
+        responseContext.setContentType(Constants.MIME_TYPE_HTML);
+//        } else {
+//            responseContext.setContentType(Constants.MIME_TYPE_XHTML);
+//        }
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
         String viewRepresentation = OperationHelper.getViewRepresentation(request);
         if (viewRepresentation != null && viewRepresentation.equals("new")) {
@@ -75,11 +75,6 @@ public class FeedOutputHelper {
                 Link selfLink = entry.addLink(uri, Constants.REL_SELF);
                 selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
 
-
-//                Set<String> authors = version.getAuthors();
-//                for (String author : authors) {
-//                    entry.addAuthor(author);
-//                }
                 Set<Agent> authors = record.getAuthors();
                 List<Person> personList = new ArrayList<Person>();
                 for (Agent author : authors) {
@@ -106,11 +101,11 @@ public class FeedOutputHelper {
             responseContext.setHeader("Vary", "Accept");
             if (accept.equals(Constants.MIME_TYPE_XHTML)) {
                 ResponseContext htmlRepresentationOfFeed = getHtmlRepresentationOfFeed(request, responseContext, clazz);
-                if (request.getHeader("user-agent").indexOf("MSIE ") > -1) {
-                    responseContext.setContentType(Constants.MIME_TYPE_HTML);
-                } else {
-                    responseContext.setContentType(Constants.MIME_TYPE_XHTML);
-                }
+//                if (request.getHeader("user-agent").indexOf("MSIE ") > -1) {
+                responseContext.setContentType(Constants.MIME_TYPE_HTML);
+//                } else {
+//                    responseContext.setContentType(Constants.MIME_TYPE_XHTML);
+//                }
                 return htmlRepresentationOfFeed;
             } else {
                 return responseContext;

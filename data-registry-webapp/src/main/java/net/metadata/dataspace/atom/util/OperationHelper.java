@@ -1,10 +1,16 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
+import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.TargetType;
+import org.apache.abdera.protocol.server.context.AbstractResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
+import org.apache.abdera.protocol.server.context.StreamWriterResponseContext;
+import org.apache.abdera.writer.StreamWriter;
+
+import java.io.IOException;
 
 /**
  * Author: alabri
@@ -67,10 +73,12 @@ public class OperationHelper {
                 } else if (acceptHeader.contains(Constants.MIME_TYPE_RIFCS)) {
                     representationMimeType = Constants.MIME_TYPE_RIFCS;
                 } else {
-                    representationMimeType = Constants.MIME_TYPE_XHTML;
+//                    representationMimeType = Constants.MIME_TYPE_XHTML;
+                    representationMimeType = Constants.MIME_TYPE_HTML;
                 }
             } else {
-                representationMimeType = Constants.MIME_TYPE_XHTML;
+//                representationMimeType = Constants.MIME_TYPE_XHTML;
+                representationMimeType = Constants.MIME_TYPE_HTML;
             }
         }
         return representationMimeType;
@@ -91,6 +99,23 @@ public class OperationHelper {
     public static String getViewRepresentation(RequestContext request) {
         String parameter = request.getParameter("v");
         return parameter;
+    }
+
+    /**
+     * Returns an Error document based on the StreamWriter
+     */
+    public static AbstractResponseContext createErrorResponse(Abdera abdera,
+                                                              final int code,
+                                                              final String message,
+                                                              final Throwable t) {
+        AbstractResponseContext rc = new StreamWriterResponseContext(abdera) {
+            protected void writeTo(StreamWriter sw) throws IOException {
+                org.apache.abdera.protocol.error.Error.create(sw, code, message, t);
+            }
+        };
+        rc.setStatus(code);
+        rc.setStatusText(message);
+        return rc;
     }
 
 }

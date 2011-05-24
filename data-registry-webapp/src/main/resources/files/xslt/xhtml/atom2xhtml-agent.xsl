@@ -18,10 +18,7 @@
     <xsl:include href="include/head.xsl"/>
     <xsl:include href="include/footer.xsl"/>
 
-    <xsl:output method="html" media-type="application/xhtml+xml" omit-xml-declaration="yes"
-                doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" indent="yes"/>
-
+    <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template match="/">
         <html>
             <xsl:apply-templates/>

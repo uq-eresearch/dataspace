@@ -358,16 +358,16 @@ public class AdapterOutputHelper {
             String xslFilePath = "/files/xslt/rdf/atom2rdf-" + clazz.getSimpleName().toLowerCase() + ".xsl";
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
             responseContext.setWriter(writer);
-        } else if (accept.equals(Constants.MIME_TYPE_XHTML)) {
+        } else if (accept.equals(Constants.MIME_TYPE_HTML)) {
             String viewRepresentation = OperationHelper.getViewRepresentation(request);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_ATOM_ENTRY, Constants.MIM_TYPE_NAME_ATOM);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
-            if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
-                responseContext.setContentType(Constants.MIME_TYPE_HTML);
-            } else {
-                responseContext.setContentType(Constants.MIME_TYPE_XHTML);
-            }
+//            if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
+            responseContext.setContentType(Constants.MIME_TYPE_HTML);
+//            } else {
+//                responseContext.setContentType(Constants.MIME_TYPE_XHTML);
+//            }
             String xslFilePath = "/files/xslt/xhtml/atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
             if (viewRepresentation != null && viewRepresentation.equals("edit")) {
                 xslFilePath = "/files/xslt/xhtml/edit/edit-atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
