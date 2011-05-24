@@ -39,10 +39,8 @@
             <script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js">;</script>
             <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false">;</script>
             <script type="text/javascript" src="/js/map/map.js">;</script>
-            <!--<script type="text/javascript"-->
-            <!--src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ">;</script>-->
         </head>
-        <body>
+        <body onload="init();">
             <!-- the collection description itself -->
             <xsl:text>
             </xsl:text>
@@ -64,7 +62,15 @@
                     <!-- name -->
                     <xsl:apply-templates select="atom:title"/>
                     <!-- description -->
-                    <xsl:apply-templates select="atom:content"/>
+                    <div>
+                        <div style="width: 50%; float:left; display: inline;">
+                            <xsl:apply-templates select="atom:content"/>
+                        </div>
+                        <div id="map" class="smallmap" style="width: 50%; height: 400px; float:left; display: inline;">
+
+                        </div>
+                        <br style="clear: both;"/>
+                    </div>
                     <!-- latest-version -->
                     <xsl:if test="$currentUser">
                         <xsl:call-template name="latest-version"/>
