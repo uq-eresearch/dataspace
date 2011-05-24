@@ -11,7 +11,11 @@ function init() {
     var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
     var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 
-    var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
+    var gphy = new OpenLayers.Layer.Google(
+            "Google Physical",
+            {type: google.maps.MapTypeId.TERRAIN}
+            // used to be {type: G_PHYSICAL_MAP}
+    );
 
     map.addLayers([gphy, osm, pointLayer, polygonLayer]);
     drawControls = {
