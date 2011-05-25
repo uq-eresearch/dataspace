@@ -38,7 +38,7 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
 
     @Override
     public Agent getByEmail(String email) {
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Agent o WHERE o = (SELECT DISTINCT(v.parent) FROM AgentVersion v WHERE :email IN elements(v.mboxes))");
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT DISTINCT(v.parent) FROM AgentVersion v WHERE :email IN elements(v.mboxes)");
         query.setParameter("email", email);
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {

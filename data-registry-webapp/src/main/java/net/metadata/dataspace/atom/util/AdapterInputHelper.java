@@ -129,9 +129,10 @@ public class AdapterInputHelper {
 
         //Add creators of this collection
         addCollectionCreator(version, entry.getAuthors());
-
+        entityManager.merge(version);
         //Add publishers
         addCollectionPublishers(version, entry.getLinks(Constants.REL_PUBLISHER));
+        entityManager.merge(version);
 
         //Add outputof
         Set<String> outputOfUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_OUTPUT_OF);
