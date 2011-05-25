@@ -25,10 +25,6 @@ function init() {
     );
     map.addLayer(gphy);
 
-//    var layer = new OpenLayers.Layer.WMS("OpenLayers WMS",
-//            "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'});
-//    map.addLayer(layer);
-
     var style_blue = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
     style_blue.strokeColor = "blue";
     style_blue.fillColor = "blue";
@@ -50,12 +46,11 @@ function init() {
     var pointList = [];
     var newPoint = point;
     for (var p = 0; p < 5; ++p) {
-        newPoint = new OpenLayers.Geometry.Point(newPoint.x + Math.random(1),
-                newPoint.y + Math.random(1)).transform(WGS84, map.getProjectionObject());
+        newPoint = new OpenLayers.Geometry.Point(newPoint.x + Math.random(1), newPoint.y + Math.random(1)).transform(WGS84, map.getProjectionObject());
         pointList.push(newPoint);
     }
-    var lineFeature = new OpenLayers.Feature.Vector(
-            new OpenLayers.Geometry.LineString(pointList), null, style_green);
+//    var lineFeature = new OpenLayers.Feature.Vector(
+//            new OpenLayers.Geometry.LineString(pointList), null, style_green);
 
     // create a polygon feature from a linear ring of points
     var pointList = [];
@@ -71,7 +66,7 @@ function init() {
     var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
     polygonFeature = new OpenLayers.Feature.Vector(
             new OpenLayers.Geometry.Polygon([linearRing]));
-    vectorLayer.addFeatures([pointFeature, lineFeature, polygonFeature]);
+    vectorLayer.addFeatures([pointFeature, polygonFeature]);
 
     map.addLayer(vectorLayer);
     map.addControl(new OpenLayers.Control.LayerSwitcher());
