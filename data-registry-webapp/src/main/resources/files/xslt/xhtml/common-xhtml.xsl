@@ -219,9 +219,11 @@
             </div>
             <div class="content">
                 <xsl:if test="georss:point">
+                    <input type="hidden" id="point" value="{georss:point}"/>
                     <xsl:apply-templates select="georss:point"/>
                 </xsl:if>
                 <xsl:if test="georss:polygon">
+                    <input type="hidden" id="polygon" value="{georss:polygon}"/>
                     <xsl:apply-templates select="georss:polygon"/>
                 </xsl:if>
                 <xsl:if test="atom:link[@rel=$ATOM_SPATIAL]">

@@ -1,6 +1,7 @@
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
 function init() {
-    var map, vectorLayer,polygonFeature;
+    $('#map').text("");
+    var map, vectorLayer,polygonFeature, pointFeature;
     var WGS84_google_mercator = new OpenLayers.Projection("EPSG:900913");
     var WGS84 = new OpenLayers.Projection("EPSG:4326");
     var maxExtent = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508),
@@ -39,33 +40,26 @@ function init() {
     vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {projection: WGS84});
 
     // create a point feature
-    var point = new OpenLayers.Geometry.Point(-110, 45);
-    var pointFeature = new OpenLayers.Feature.Vector(point, null, style_blue);
-
-    // create a line feature from a list of points
-    var pointList = [];
-    var newPoint = point;
-    for (var p = 0; p < 5; ++p) {
-        newPoint = new OpenLayers.Geometry.Point(newPoint.x + Math.random(1), newPoint.y + Math.random(1)).transform(WGS84, map.getProjectionObject());
-        pointList.push(newPoint);
+    var pointStr = $("#point").val();
+    if (pointStr && pointStr != "") {
+        var pnt = pointStr.split(" ");
+        var point = new OpenLayers.Geometry.Point(pnt[0], pnt[1]).transform(WGS84, map.getProjectionObject());
+        pointFeature = new OpenLayers.Feature.Vector(point, null, style_blue);
     }
-//    var lineFeature = new OpenLayers.Feature.Vector(
-//            new OpenLayers.Geometry.LineString(pointList), null, style_green);
 
-    // create a polygon feature from a linear ring of points
+    var polygonStr = $("#polygon").val();
+    var latsLongs = polygonStr.split(" ");
     var pointList = [];
-    for (var p = 0; p < 6; ++p) {
-        var a = p * (2 * Math.PI) / 7;
-        var r = Math.random(1) + 1;
-        var newPoint = new OpenLayers.Geometry.Point(point.x + (r * Math.cos(a)),
-                point.y + (r * Math.sin(a))).transform(WGS84, map.getProjectionObject());
+    for (var index = 0; index < latsLongs.length - 1; index = index + 2) {
+        var x = parseFloat(latsLongs[index]);
+        var y = parseFloat(latsLongs[index + 1]);
+        var newPoint = new OpenLayers.Geometry.Point(x, y).transform(WGS84, map.getProjectionObject());
         pointList.push(newPoint);
     }
     pointList.push(pointList[0]);
 
     var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
-    polygonFeature = new OpenLayers.Feature.Vector(
-            new OpenLayers.Geometry.Polygon([linearRing]));
+    polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linearRing]));
     vectorLayer.addFeatures([pointFeature, polygonFeature]);
 
     map.addLayer(vectorLayer);
@@ -75,5 +69,4 @@ function init() {
     if (!map.getCenter()) {
         map.zoomToMaxExtent()
     }
-
 }

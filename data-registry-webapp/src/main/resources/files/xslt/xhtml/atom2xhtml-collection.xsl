@@ -63,15 +63,15 @@
                     <xsl:apply-templates select="atom:title"/>
                     <!-- description -->
                     <div>
-                        <div id="description">
+                        <div id="content-text">
                             <xsl:apply-templates select="atom:content"/>
                         </div>
                         <div id="map" class="smallmap" style="width: 50%; height: 400px; float:left; display: inline;">
-
+                            Map
                         </div>
-                        <div style="clear: both; margin-bottom: 1em;"/>
+                        <br style="clear: both;"/>
                     </div>
-
+                    <br style="clear: both; margin-bottom: 1em;"/>
                     <!-- latest-version -->
                     <xsl:if test="$currentUser">
                         <xsl:call-template name="latest-version"/>

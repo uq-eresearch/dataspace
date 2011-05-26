@@ -54,11 +54,9 @@ body a {
     font-weight: bold;
 }
 
-#description {
-    width: 48%;
-    padding-top:  1em;
-    margin-right: 2%;
-    float:left;
+#content-text {
+    width: 50%;
+    float: left;
     display: inline;
 }
 
