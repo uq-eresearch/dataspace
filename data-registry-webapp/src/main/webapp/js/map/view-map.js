@@ -21,14 +21,14 @@ function init() {
 
     var gphy = new OpenLayers.Layer.Google(
             "Google Physical",
-            {sphericalMercator: true}
+            {type: google.maps.MapTypeId.HYBRID, sphericalMercator: true, numZoomLevels: 20}
             // used to be {type: G_PHYSICAL_MAP}
     );
     map.addLayer(gphy);
 
-    var style_blue = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
-    style_blue.strokeColor = "blue";
-    style_blue.fillColor = "blue";
+    var point_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+    point_style.strokeColor = "#cc33ff";
+    point_style.fillColor = "#cc33ff";
     var style_green = {
         strokeColor: "#339933",
         strokeOpacity: 1,
@@ -36,17 +36,14 @@ function init() {
         pointRadius: 6,
         pointerEvents: "visiblePainted"
     };
-
     vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {projection: WGS84});
-
     // create a point feature
-
     $(".georss-point").each(function() {
         var pointStr = $(this).val();
         if (pointStr && pointStr != "") {
             var pnt = pointStr.split(" ");
             var point = new OpenLayers.Geometry.Point(pnt[0], pnt[1]).transform(WGS84, map.getProjectionObject());
-            var pointFeature = new OpenLayers.Feature.Vector(point, null, style_blue);
+            var pointFeature = new OpenLayers.Feature.Vector(point, null, point_style);
             vectorLayer.addFeatures([pointFeature]);
         }
     });
@@ -63,7 +60,6 @@ function init() {
                 pointList.push(newPoint);
             }
             pointList.push(pointList[0]);
-
             var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
             polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linearRing]));
             vectorLayer.addFeatures([polygonFeature]);
@@ -71,10 +67,8 @@ function init() {
     });
 
     map.addLayer(vectorLayer);
-    map.addControl(new OpenLayers.Control.LayerSwitcher());
     map.addControl(new OpenLayers.Control.MousePosition());
-
     if (!map.getCenter()) {
-        map.zoomToMaxExtent()
+        map.zoomToExtent(vectorLayer.getDataExtent())
     }
 }
