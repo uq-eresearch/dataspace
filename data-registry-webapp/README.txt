@@ -132,7 +132,8 @@ Adding Solr search
         JAVA_OPTS=-Dsolr.solr.home=/opt/solr
 - Create directory [TOMCAT_HOME]/bin/solr/data
 - Add the jdbc connector jars for postgresql and mysql in [SOLR_HOME]/lib.
-- Create data-config.xml file under [SOLR_HOME]/conf/ and add the datasource details and entities to index
+- Create data-config.xml file under [SOLR_HOME]/conf/ and add the datasource details and entities to index (see the
+  solr/conf under the project tree. You can copy and paste these files or check them out from svn.
 <?xml version="1.0" encoding="UTF-8"?>
 <dataConfig>
     <dataSource type="JdbcDataSource"
