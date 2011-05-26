@@ -1,7 +1,7 @@
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
 function init() {
     $('#map').text("");
-    var map, vectorLayer,polygonFeature, pointFeature;
+    var map, vectorLayer,polygonFeature;
     var WGS84_google_mercator = new OpenLayers.Projection("EPSG:900913");
     var WGS84 = new OpenLayers.Projection("EPSG:4326");
     var maxExtent = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508),
@@ -40,27 +40,35 @@ function init() {
     vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {projection: WGS84});
 
     // create a point feature
-    var pointStr = $("#point").val();
-    if (pointStr && pointStr != "") {
-        var pnt = pointStr.split(" ");
-        var point = new OpenLayers.Geometry.Point(pnt[0], pnt[1]).transform(WGS84, map.getProjectionObject());
-        pointFeature = new OpenLayers.Feature.Vector(point, null, style_blue);
-    }
 
-    var polygonStr = $("#polygon").val();
-    var latsLongs = polygonStr.split(" ");
-    var pointList = [];
-    for (var index = 0; index < latsLongs.length - 1; index = index + 2) {
-        var x = parseFloat(latsLongs[index]);
-        var y = parseFloat(latsLongs[index + 1]);
-        var newPoint = new OpenLayers.Geometry.Point(x, y).transform(WGS84, map.getProjectionObject());
-        pointList.push(newPoint);
-    }
-    pointList.push(pointList[0]);
+    $(".georss-point").each(function() {
+        var pointStr = $(this).val();
+        if (pointStr && pointStr != "") {
+            var pnt = pointStr.split(" ");
+            var point = new OpenLayers.Geometry.Point(pnt[0], pnt[1]).transform(WGS84, map.getProjectionObject());
+            var pointFeature = new OpenLayers.Feature.Vector(point, null, style_blue);
+            vectorLayer.addFeatures([pointFeature]);
+        }
+    });
 
-    var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
-    polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linearRing]));
-    vectorLayer.addFeatures([pointFeature, polygonFeature]);
+    $(".georss-polygon").each(function() {
+        var polygonStr = $(this).val();
+        if (polygonStr && polygonStr != "") {
+            var latsLongs = polygonStr.split(" ");
+            var pointList = [];
+            for (var index = 0; index < latsLongs.length - 1; index = index + 2) {
+                var x = parseFloat(latsLongs[index]);
+                var y = parseFloat(latsLongs[index + 1]);
+                var newPoint = new OpenLayers.Geometry.Point(x, y).transform(WGS84, map.getProjectionObject());
+                pointList.push(newPoint);
+            }
+            pointList.push(pointList[0]);
+
+            var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
+            polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linearRing]));
+            vectorLayer.addFeatures([polygonFeature]);
+        }
+    });
 
     map.addLayer(vectorLayer);
     map.addControl(new OpenLayers.Control.LayerSwitcher());

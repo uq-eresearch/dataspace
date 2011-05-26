@@ -12,6 +12,7 @@
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:georss="http://www.georss.org/georss"
                 exclude-result-prefixes="atom rdfa">
 
     <xsl:include href="common-xhtml.xsl"/>
@@ -62,15 +63,23 @@
                     <!-- name -->
                     <xsl:apply-templates select="atom:title"/>
                     <!-- description -->
-                    <div>
-                        <div id="content-text">
+                    <xsl:choose>
+                        <xsl:when test="georss:point or georss:polygon">
+                            <div>
+                                <div id="content-text">
+                                    <xsl:apply-templates select="atom:content"/>
+                                </div>
+                                <div id="map" class="smallmap"
+                                     style="width: 50%; height: 400px; float:left; display: inline;">
+                                    Map
+                                </div>
+                                <br style="clear: both;"/>
+                            </div>
+                        </xsl:when>
+                        <xsl:otherwise>
                             <xsl:apply-templates select="atom:content"/>
-                        </div>
-                        <div id="map" class="smallmap" style="width: 50%; height: 400px; float:left; display: inline;">
-                            Map
-                        </div>
-                        <br style="clear: both;"/>
-                    </div>
+                        </xsl:otherwise>
+                    </xsl:choose>
                     <br style="clear: both; margin-bottom: 1em;"/>
                     <!-- latest-version -->
                     <xsl:if test="$currentUser">

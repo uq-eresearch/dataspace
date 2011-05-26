@@ -219,11 +219,12 @@
             </div>
             <div class="content">
                 <xsl:if test="georss:point">
-                    <input type="hidden" id="point" value="{georss:point}"/>
+
+                    <!--<input type="hidden" id="point" value="{georss:point}"/>-->
                     <xsl:apply-templates select="georss:point"/>
                 </xsl:if>
                 <xsl:if test="georss:polygon">
-                    <input type="hidden" id="polygon" value="{georss:polygon}"/>
+                    <!--<input type="hidden" id="polygon" value="{georss:polygon}"/>-->
                     <xsl:apply-templates select="georss:polygon"/>
                 </xsl:if>
                 <xsl:if test="atom:link[@rel=$ATOM_SPATIAL]">
@@ -238,17 +239,19 @@
     </xsl:template>
 
     <xsl:template match="georss:point">
-        <p>
-            Point:
-            <xsl:value-of select="text()"/>
-        </p>
+        <input type="hidden" class="georss-point" value="{text()}"/>
+        <!--<p>-->
+        <!--Point:-->
+        <!--<xsl:value-of select="text()"/>-->
+        <!--</p>-->
     </xsl:template>
 
     <xsl:template match="georss:polygon">
-        <p>
-            Polygon:
-            <xsl:value-of select="text()"/>
-        </p>
+        <input type="hidden" class="georss-polygon" value="{text()}"/>
+        <!--<p>-->
+        <!--Polygon:-->
+        <!--<xsl:value-of select="text()"/>-->
+        <!--</p>-->
     </xsl:template>
 
     <!-- temporal -->
