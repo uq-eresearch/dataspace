@@ -10,11 +10,9 @@
     <!--     id for the collection -->
     <id>http://dataspace.uq.edu.au/collections/3#</id>
 
-    <!--     collection type -->
-    <link
-            rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-            href="http://purl.org/dc/dcmitype/Collection"
-            title="Collection"/>
+    <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          href="http://purl.org/dc/dcmitype/Collection"
+          title="Collection"/>
 
     <!--     collection title -->
     <title type="text">Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using

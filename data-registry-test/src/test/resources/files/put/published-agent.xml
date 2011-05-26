@@ -7,7 +7,7 @@
     <id>http://oztrak.uq.edu.au/people/abc</id>
 
     <!--     type of agent -->
-    <category scheme="http://purl.org/dc/dcmitype/" term="http://xmlns.com/foaf/0.1/Person" label="Person"/>
+    <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" href="http://xmlns.com/foaf/0.1/Person" title="Person"/>
 
     <!--     agent name-->
     <title type="text">Dr Hamish Campbell</title>

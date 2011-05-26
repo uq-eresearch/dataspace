@@ -8,8 +8,8 @@
     <link rel="http://www.openarchives.org/ore/terms/describes" href="http://dataspace.edu.au/activities/123#"/>
 
     <!--     type of agent -->
-    <category scheme="http://purl.org/dc/dcmitype/" term="http://xmlns.com/foaf/0.1/Project" label="Project"/>
-
+    <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" href="http://xmlns.com/foaf/0.1/Project"
+          title="Project"/>
     <!--     activity name-->
     <title type="text">Tracking crocodiles in 3-dimensions: A remote monitoring study of movement patterns and diving
         behaviour (Updated)

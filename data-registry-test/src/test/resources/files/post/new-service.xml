@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app">
     <id>http://localhost:9635/services/1</id>
+    <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          href="http://www.e-framework.org/Contributions/ServiceGenres/Create"
+          title="Create"/>
     <title type="text">Voting Patterns at the 2007 Australia Federal Election On-line</title>
     <content type="text">This web-based interactive tool supports spatial and statistical analysis, modelling and
         visualisation of data derived from the 2006 Australian Census of Population and Housing, voting results for the
