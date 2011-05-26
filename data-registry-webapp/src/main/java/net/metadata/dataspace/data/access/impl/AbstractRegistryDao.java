@@ -76,7 +76,15 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     @Override
     @SuppressWarnings("unchecked")
     public List<T> getAllPublished() {
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.updated");
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.updated DESC");
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getRecentPublished(int limit) {
+        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.publishDate DESC");
+        query.setMaxResults(limit);
         return query.getResultList();
     }
 

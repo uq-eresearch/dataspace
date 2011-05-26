@@ -66,7 +66,7 @@
     };
 
     AjaxSolr.theme.prototype.collectionFeed = function (doc) {
-        return '<p><a href="">' + doc.collectiontitle + '</a></p>';
+        return '<p><a href="">' + doc.newcollectiontitle + '</a> created on ' + doc.newcollectioncreated + '</p>';
     };
 
     AjaxSolr.theme.prototype.serviceFeed = function (doc) {

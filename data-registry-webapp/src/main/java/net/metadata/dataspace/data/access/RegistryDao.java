@@ -58,6 +58,13 @@ public interface RegistryDao<T> extends Dao<T> {
     List<T> getAllPublished();
 
     /**
+     * Returns recent published entities
+     *
+     * @return List of published entities
+     */
+    List<T> getRecentPublished(int limit);
+
+    /**
      * Returns all unpublished entities
      *
      * @return List of unpublished entities

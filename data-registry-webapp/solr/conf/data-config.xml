@@ -36,5 +36,11 @@
             <field column="title" name="activitytitle"/>
             <field column="description" name="activitydescription"/>
         </entity>
+        <entity name="newcollections" dataSource="registry-ds"
+                query="select v.title, v.description, c.created from collection as c, collectionversion as v where c.published_id = v.id and c.isactive = true ORDER by c.created DESC LIMIT 5">
+            <field column="v.title" name="newcollectiontitle"/>
+            <field column="v.description" name="newcollectiondescription"/>
+            <field column="c.created" name="newcollectioncreated"/>
+        </entity>
     </document>
 </dataConfig>

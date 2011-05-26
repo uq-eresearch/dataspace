@@ -222,9 +222,30 @@ fieldset .field label {
 .browse-portlet {
     float: left;
     margin: 0.5em;
-    min-height: 200px;
-    width: 45%;
+    min-height: 300px;
+    padding: 0.5em;
+    width: 46%;
     border: solid 1px #999999;
+}
+
+.browse-portlet .portlet-header a {
+    color: #000000;
+}
+
+.browse-portlet .portlet-header {
+    background-color: #E8E8E8;
+    border-bottom: 1px solid #BBBBBB;
+    font-size: 0.95em;
+    margin: 0;
+    padding: 0.3em 0.6em;
+}
+
+.portlet-list {
+    margin-top: 0.5em;
+}
+
+.portlet-list a {
+    margin-top: 0.5em;
 }
 
 .save-links-div {
