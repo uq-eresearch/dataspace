@@ -228,10 +228,6 @@ fieldset .field label {
     border: solid 1px #999999;
 }
 
-.browse-portlet .portlet-header a {
-    color: #000000;
-}
-
 .browse-portlet .portlet-header {
     background-color: #E8E8E8;
     border-bottom: 1px solid #BBBBBB;

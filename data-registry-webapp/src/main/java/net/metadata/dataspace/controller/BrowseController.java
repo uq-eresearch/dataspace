@@ -56,7 +56,7 @@ public class BrowseController implements Controller {
         modelAndView.addObject("services", serviceVersions);
 
         modelAndView.addObject("registryUri", RegistryApplication.getApplicationContext().getUriPrefix());
-        modelAndView.addObject("version", RegistryApplication.getApplicationContext().getVersion());
+//        modelAndView.addObject("version", RegistryApplication.getApplicationContext().getVersion());
         return modelAndView;
     }
 }
