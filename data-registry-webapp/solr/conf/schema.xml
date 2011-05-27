@@ -621,9 +621,6 @@ or to add multiple fields to the same field for easier/faster searching.  -->
     <copyField source="collectiontitle" dest="collection"/>
     <copyField source="collectiondescription" dest="collection"/>
 
-    <copyField source="newcollectiontitle" dest="newcollection"/>
-    <copyField source="newcollectiondescription" dest="newcollection"/>
-
     <copyField source="servicetitle" dest="service"/>
     <copyField source="servicedescription" dest="service"/>
 

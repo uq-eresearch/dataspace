@@ -22,25 +22,24 @@
             <field column="v.description" name="collectiondescription"/>
         </entity>
         <entity name="agentversion" dataSource="registry-ds"
-                query="SELECT * FROM agentversion WHERE isactive = true">
-            <field column="title" name="agenttitle"/>
-            <field column="description" name="agentdescription"/>
+                query="SELECT v.title, v.description, c.id FROM agentversion as v, agent as c WHERE c.isactive = true AND c.published_id = v.id">
+            <field column="c.id" name="id"/>
+            <field column="v.title" name="agenttitle"/>
+            <field column="v.description" name="agentdescription"/>
         </entity>
         <entity name="serviceversion" dataSource="registry-ds"
-                query="SELECT * FROM serviceversion WHERE isactive = true">
-            <field column="title" name="servicetitle"/>
-            <field column="description" name="servicedescription"/>
+                query="SELECT v.title, v.description, c.id FROM serviceversion as v, service as c WHERE c.isactive = true AND c.published_id = v.id">
+            >
+            <field column="c.id" name="id"/>
+            <field column="v.title" name="servicetitle"/>
+            <field column="v.description" name="servicedescription"/>
         </entity>
         <entity name="activityversion" dataSource="registry-ds"
-                query="SELECT * FROM activityversion WHERE isactive = true">
-            <field column="title" name="activitytitle"/>
-            <field column="description" name="activitydescription"/>
-        </entity>
-        <entity name="newcollections" dataSource="registry-ds"
-                query="select v.title, v.description, c.created from collection as c, collectionversion as v where c.published_id = v.id and c.isactive = true ORDER by c.created DESC LIMIT 5">
-            <field column="v.title" name="newcollectiontitle"/>
-            <field column="v.description" name="newcollectiondescription"/>
-            <field column="c.created" name="newcollectioncreated"/>
+                query="SELECT v.title, v.description, c.id FROM activityversion as v, activity as c WHERE c.isactive = true AND c.published_id = v.id">
+            >
+            <field column="c.id" name="id"/>
+            <field column="v.title" name="activitytitle"/>
+            <field column="v.description" name="activitydescription"/>
         </entity>
     </document>
 </dataConfig>
