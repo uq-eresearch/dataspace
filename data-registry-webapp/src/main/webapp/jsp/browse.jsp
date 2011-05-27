@@ -26,10 +26,9 @@
             </div>
             <ul class="portlet-list">
                 <c:forEach var="version" items="${collections}">
-                    <li>&gt; <a
+                    <li><a
                             href="<c:out value="${registryUri}"/>collections/<c:out value="${version.parent.uriKey}"/>">
-                        <c:out value="${version.title}"/></a> on <span class="author"><fmt:formatDate
-                            pattern="dd/MM/yyyy hh:mm a" value="${version.parent.publishDate}"/></span>
+                        <c:out value="${version.title}"/></a></span>
                     </li>
                 </c:forEach>
             </ul>
