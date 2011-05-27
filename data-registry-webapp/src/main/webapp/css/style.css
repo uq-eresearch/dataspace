@@ -1163,4 +1163,14 @@ p.centenary {
 
 #docs {
     padding-top: 1px;
+    margin-top: 0.5em;
+}
+
+.result-record {
+    padding: 0.3em;
+}
+
+.result-record:hover {
+    background-color: #ebf2fc;
+    border: 1px solid #cddcf9;
 }

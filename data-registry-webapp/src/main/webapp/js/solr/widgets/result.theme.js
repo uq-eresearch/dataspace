@@ -3,19 +3,19 @@
     AjaxSolr.theme.prototype.result = function (doc, snippet) {
         var output = "";
         if (doc.title) {
-            output = '<div><h2><a href="/collections/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.title + '</a></h2>';
+            output = '<div class="result-record"><a href="/collections/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.title + '</a>';
             output += '<p id="links_' + doc.id + '" class="links"></p>';
             output += '<p>' + snippet + '</p></div>';
         } else if (doc.agenttitle) {
-            output = '<div><h2><a href="/agents/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.agenttitle + '</a></h2>';
+            output = '<div class="result-record"><a href="/agents/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.agenttitle + '</a>';
             output += '<p id="links_' + doc.id + '" class="links"></p>';
             output += '<p>' + snippet + '</p></div>';
         } else if (doc.servicetitle) {
-            output = '<div><h2><a href="/services/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.servicetitle + '</a></h2>';
+            output = '<div class="result-record"><a href="/services/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.servicetitle + '</a>';
             output += '<p id="links_' + doc.id + '" class="links"></p>';
             output += '<p>' + snippet + '</p></div>';
         } else if (doc.activitytitle) {
-            output = '<div><h2><a href="/activities/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.activitytitle + '</a></h2>';
+            output = '<div class="result-record"><a href="/activities/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.activitytitle + '</a>';
             output += '<p id="links_' + doc.id + '" class="links"></p>';
             output += '<p>' + snippet + '</p></div>';
         }
@@ -122,7 +122,7 @@ function fromDecimalToOtherBase(base, decimalNumber) {
         tempVal = BASE_CHARACTERS.substring(mod, mod + 1) + tempVal;
         decimalNumber = decimalNumber / base;
     }
-    return tempVal;
+    return tempVal + '';
 }
 
 function fromOtherBaseToDecimal(base, number) {
