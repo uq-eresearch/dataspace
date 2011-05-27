@@ -22,7 +22,7 @@
 <script type="text/javascript" src="/js/solr/core/AbstractWidget.js">;</script>
 <script type="text/javascript" src="/js/solr/widgets/ResultWidget.js">;</script>
 <script type="text/javascript" src="/js/solr/helpers/jquery/ajaxsolr.theme.js">;</script>
-<script type="text/javascript" src="/js/solr/widgets/reuters.theme.js">;</script>
+<script type="text/javascript" src="/js/solr/widgets/result.theme.js">;</script>
 <script type="text/javascript" src="/js/solr/helpers/jquery/jquery.livequery.js">;</script>
 <script type="text/javascript" src="/js/solr/widgets/PagerWidget.js">;</script>
 <script type="text/javascript" src="/js/solr/core/AbstractFacetWidget.js">;</script>

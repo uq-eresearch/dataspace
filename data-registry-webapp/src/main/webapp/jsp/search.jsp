@@ -27,21 +27,12 @@
                             $('#pager-header').html($('<span/>').text('displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
                         }
                     }));
-
-//            Manager.addWidget(new AjaxSolr.AutocompleteWidget({
-//                id: 'text',
-//                target: '#searching',
-//                field: 'allText',
-//                fields: ['topics', 'organisations', 'exchanges' ]
-//            }));
-
             Manager.init();
 
             var params = {
                 facet: true,
                 'facet.field': [ 'title', 'description' ],
                 'qt':'standard',
-//                'wt':'standard',
                 'facet.limit': 20,
                 'facet.mincount': 1,
                 'f.topics.facet.limit': 50,

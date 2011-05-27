@@ -239,7 +239,7 @@ fieldset .field label {
 .portlet-list {
     margin-left: 1.5em;
     margin-top: 0.5em;
-    list-style-type: square;
+    list-style-type: disc;
 }
 
 .portlet-list li {
