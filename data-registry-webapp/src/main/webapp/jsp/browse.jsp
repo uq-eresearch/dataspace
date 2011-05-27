@@ -44,6 +44,9 @@
                 </c:forEach>
             </ul>
         </div>
+        <div style="clear:both;">
+
+        </div>
         <div class="browse-portlet">
             <div class="portlet-header">
                 <a href="/services">Services</a>

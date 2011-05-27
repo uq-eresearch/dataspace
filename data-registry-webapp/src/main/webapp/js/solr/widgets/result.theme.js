@@ -1,24 +1,61 @@
 (function ($) {
 
     AjaxSolr.theme.prototype.result = function (doc, snippet) {
-        var output = '<div><h2>' + doc.title + '</h2>';
-//        if (doc.label && !doc.title) {
-//            output = '<div><h2>' + doc.label + '</h2>';
-//        }
-        output += '<p id="links_' + doc.id + '" class="links"></p>';
-        output += '<p>' + snippet + '</p></div>';
+        var output = "";
+        if (doc.title) {
+            output = '<div><h2>' + doc.title + '</h2>';
+            output += '<p id="links_' + doc.id + '" class="links"></p>';
+            output += '<p>' + snippet + '</p></div>';
+        } else if (doc.agenttitle) {
+            output = '<div><h2>' + doc.agenttitle + '</h2>';
+            output += '<p id="links_' + doc.id + '" class="links"></p>';
+            output += '<p>' + snippet + '</p></div>';
+        } else if (doc.servicetitle) {
+            output = '<div><h2>' + doc.servicetitle + '</h2>';
+            output += '<p id="links_' + doc.id + '" class="links"></p>';
+            output += '<p>' + snippet + '</p></div>';
+        } else if (doc.activitytitle) {
+            output = '<div><h2>' + doc.activitytitle + '</h2>';
+            output += '<p id="links_' + doc.id + '" class="links"></p>';
+            output += '<p>' + snippet + '</p></div>';
+        }
         return output;
     };
 
     AjaxSolr.theme.prototype.snippet = function (doc) {
         var output = '';
-        if (doc.description.length > 300) {
-            output += doc.description.substring(0, 300);
-//    output += '<span style="display:none;">' + doc.text.substring(300);
-            output += '</span> <a href="#" class="more">more</a>';
-        }
-        else {
-            output += doc.description;
+        if (doc.description) {
+            if (doc.description.length > 300) {
+                output += doc.description.substring(0, 300);
+                output += '</span> <a href="#" class="more">more</a>';
+            }
+            else {
+                output += doc.description;
+            }
+        } else if (doc.agentdescription) {
+            if (doc.agentdescription.length > 300) {
+                output += doc.agentdescription.substring(0, 300);
+                output += '</span> <a href="#" class="more">more</a>';
+            }
+            else {
+                output += doc.agentdescription;
+            }
+        } else if (doc.servicedescription) {
+            if (doc.servicedescription.length > 300) {
+                output += doc.servicedescription.substring(0, 300);
+                output += '</span> <a href="#" class="more">more</a>';
+            }
+            else {
+                output += doc.servicedescription;
+            }
+        } else if (doc.activitydscription) {
+            if (doc.activitydescription.length > 300) {
+                output += doc.activitydescription.substring(0, 300);
+                output += '</span> <a href="#" class="more">more</a>';
+            }
+            else {
+                output += doc.activitydescription;
+            }
         }
         return output;
     };

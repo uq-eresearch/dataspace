@@ -219,10 +219,16 @@ fieldset .field label {
     margin-right: 0.4em;
 }
 
+.portlet-content {
+    width: 100%;
+}
+
 .browse-portlet {
     float: left;
     margin: 0.5em;
     min-height: 300px;
+    max-height: 300px;
+    overflow: auto;
     padding: 0.5em;
     width: 46%;
     border: solid 1px #999999;
