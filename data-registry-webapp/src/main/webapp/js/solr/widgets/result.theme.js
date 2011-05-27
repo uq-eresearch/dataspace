@@ -3,19 +3,19 @@
     AjaxSolr.theme.prototype.result = function (doc, snippet) {
         var output = "";
         if (doc.title) {
-            output = '<div><h2>' + doc.title + '</h2>';
+            output = '<div><h2><a href="/collections/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.title + '</a></h2>';
             output += '<p id="links_' + doc.id + '" class="links"></p>';
             output += '<p>' + snippet + '</p></div>';
         } else if (doc.agenttitle) {
-            output = '<div><h2>' + doc.agenttitle + '</h2>';
+            output = '<div><h2><a href="/agents/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.agenttitle + '</a></h2>';
             output += '<p id="links_' + doc.id + '" class="links"></p>';
             output += '<p>' + snippet + '</p></div>';
         } else if (doc.servicetitle) {
-            output = '<div><h2>' + doc.servicetitle + '</h2>';
+            output = '<div><h2><a href="/services/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.servicetitle + '</a></h2>';
             output += '<p id="links_' + doc.id + '" class="links"></p>';
             output += '<p>' + snippet + '</p></div>';
         } else if (doc.activitytitle) {
-            output = '<div><h2>' + doc.activitytitle + '</h2>';
+            output = '<div><h2><a href="/activities/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.activitytitle + '</a></h2>';
             output += '<p id="links_' + doc.id + '" class="links"></p>';
             output += '<p>' + snippet + '</p></div>';
         }
@@ -51,7 +51,7 @@
         } else if (doc.activitydscription) {
             if (doc.activitydescription.length > 300) {
                 output += doc.activitydescription.substring(0, 300);
-                output += '</span> <a href="#" class="more">more</a>';
+                output += '</span> <a href="/activities/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '" class="more">more</a>';
             }
             else {
                 output += doc.activitydescription;
@@ -111,3 +111,29 @@
     };
 
 })(jQuery);
+
+var BASE_CHARACTERS = "0123456789bcdfghjklmnpqrstvwxyz";
+function fromDecimalToOtherBase(base, decimalNumber) {
+    var tempVal = decimalNumber == 0 ? "0" : "";
+    var mod = 0;
+
+    while (decimalNumber != 0) {
+        mod = decimalNumber % base;
+        tempVal = BASE_CHARACTERS.substring(mod, mod + 1) + tempVal;
+        decimalNumber = decimalNumber / base;
+    }
+    return tempVal;
+}
+
+function fromOtherBaseToDecimal(base, number) {
+    var iterator = number.length();
+    var returnValue = 0;
+    var multiplier = 1;
+
+    while (iterator > 0) {
+        returnValue = returnValue + (BASE_CHARACTERS.indexOf(number.substring(iterator - 1, iterator)) * multiplier);
+        multiplier = multiplier * base;
+        --iterator;
+    }
+    return returnValue;
+}

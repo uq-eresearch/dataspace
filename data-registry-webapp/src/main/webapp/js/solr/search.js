@@ -109,29 +109,3 @@ function lookup(type, term) {
 function selectItemsFromLookup(type) {
     $('p:subject').each();
 }
-
-var BASE_CHARACTERS = "0123456789bcdfghjklmnpqrstvwxyz";
-function fromDecimalToOtherBase(base, decimalNumber) {
-    var tempVal = decimalNumber == 0 ? "0" : "";
-    var mod = 0;
-
-    while (decimalNumber != 0) {
-        mod = decimalNumber % base;
-        tempVal = BASE_CHARACTERS.substring(mod, mod + 1) + tempVal;
-        decimalNumber = decimalNumber / base;
-    }
-    return tempVal;
-}
-
-function fromOtherBaseToDecimal(base, number) {
-    var iterator = number.length();
-    var returnValue = 0;
-    var multiplier = 1;
-
-    while (iterator > 0) {
-        returnValue = returnValue + (BASE_CHARACTERS.indexOf(number.substring(iterator - 1, iterator)) * multiplier);
-        multiplier = multiplier * base;
-        --iterator;
-    }
-    return returnValue;
-}
