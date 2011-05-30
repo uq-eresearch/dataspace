@@ -440,19 +440,6 @@ any data added to them will be ignored outright.  -->
         -->
 
         <field name="id" type="string" indexed="true" stored="true" required="true"/>
-        <!--<field name="sku" type="textTight" indexed="true" stored="true" omitNorms="true"/>-->
-        <!--<field name="name" type="textgen" indexed="true" stored="true"/>-->
-        <!--<field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>-->
-        <!--<field name="manu" type="textgen" indexed="true" stored="true" omitNorms="true"/>-->
-        <!--<field name="cat" type="text_ws" indexed="true" stored="true" multiValued="true" omitNorms="true"/>-->
-        <!--<field name="features" type="text" indexed="true" stored="true" multiValued="true"/>-->
-        <!--<field name="includes" type="text" indexed="true" stored="true" termVectors="true" termPositions="true"-->
-        <!--termOffsets="true"/>-->
-
-        <!--<field name="weight" type="float" indexed="true" stored="true"/>-->
-        <!--<field name="price" type="float" indexed="true" stored="true"/>-->
-        <!--<field name="popularity" type="int" indexed="true" stored="true"/>-->
-        <!--<field name="inStock" type="boolean" indexed="true" stored="true"/>-->
 
 
         <!-- Common metadata fields, named specifically to match up with
@@ -460,15 +447,6 @@ any data added to them will be ignored outright.  -->
           Some fields are multiValued only because Tika currently may return
           multiple values for them.
         -->
-
-
-        <!--<field name="comments" type="text" indexed="true" stored="true"/>-->
-        <!--<field name="author" type="textgen" indexed="true" stored="true"/>-->
-        <!--<field name="keywords" type="textgen" indexed="true" stored="true"/>-->
-        <!--<field name="category" type="textgen" indexed="true" stored="true"/>-->
-        <!--<field name="content_type" type="string" indexed="true" stored="true" multiValued="true"/>-->
-        <!--<field name="last_modified" type="date" indexed="true" stored="true"/>-->
-        <!--<field name="links" type="string" indexed="true" stored="true" multiValued="true"/>-->
 
         <field name="title" type="text" indexed="true" stored="true"/>
         <field name="description" type="text" indexed="true" stored="true"/>
@@ -583,15 +561,6 @@ both match, the first appearing in the schema will be used.  -->
     <!-- copyField commands copy one field to another at the time a document
 is added to the index.  It's used either to index the same field differently,
 or to add multiple fields to the same field for easier/faster searching.  -->
-
-    <copyField source="label" dest="text"/>
-
-    <!--<copyField source="cat" dest="text"/>-->
-    <!--<copyField source="name" dest="text"/>-->
-    <!--<copyField source="manu" dest="text"/>-->
-    <!--<copyField source="features" dest="text"/>-->
-    <!--<copyField source="includes" dest="text"/>-->
-    <!--<copyField source="manu" dest="manu_exact"/>-->
 
     <copyField source="title" dest="text"/>
     <copyField source="description" dest="text"/>

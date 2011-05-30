@@ -9,9 +9,12 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Author: alabri
@@ -24,18 +27,23 @@ public class SolrIndexingListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         logger.info("Initialising solr indexing scheduler ...");
+        Properties solrProperties = loadSolrProperties();
         JobDetail job = new JobDetail();
         job.setName("solrIndexing");
         job.setJobClass(SolrDatabaseIndexer.class);
         Map dataMap = job.getJobDataMap();
-        SolrCommand command = getFullImportCommand();
+        SolrCommand command = getFullImportCommand(solrProperties);
         dataMap.put("fullImport", command);
+
+        String minutes = getProperty(solrProperties, "solr.indexing.interval.minutes", "45");
+        String hours = getProperty(solrProperties, "solr.indexing.interval.hours", "*");
 
         //configure the scheduler time
         CronTrigger trigger = new CronTrigger();
         trigger.setName("runMeJobTesting");
         try {
-            trigger.setCronExpression("5 * * * * ?");
+            String cronExpression = minutes + " " + hours + " * * * ?";
+            trigger.setCronExpression(cronExpression);
         } catch (ParseException e) {
             logger.warn("Could not parse cron expression");
         }
@@ -53,12 +61,6 @@ public class SolrIndexingListener implements ServletContextListener {
         }
     }
 
-    private SolrCommand getFullImportCommand() {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("command", "full-import");
-        return new SolrCommand("http://localhost", 8080, "solr", "dataimport", params);
-    }
-
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         Scheduler scheduler = (Scheduler) sce.getServletContext().getAttribute("scheduler");
@@ -68,5 +70,45 @@ public class SolrIndexingListener implements ServletContextListener {
         } catch (SchedulerException e) {
             logger.warn("Failed to shutdown solr indexing scheduler");
         }
+    }
+
+    private SolrCommand getFullImportCommand(Properties properties) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("command", "full-import");
+        String server = getProperty(properties, "solr.server", "http://localhost");
+        int port = Integer.parseInt(getProperty(properties, "solr.port", "8080"));
+        String webapp = getProperty(properties, "solr.webapp", "solr");
+        return new SolrCommand(server, port, webapp, "dataimport", params);
+    }
+
+    private Properties loadSolrProperties() {
+        Properties properties = new Properties();
+        InputStream resourceAsStream = null;
+        try {
+            resourceAsStream = SolrIndexingListener.class.getResourceAsStream("/conf/solr/solr.properties");
+            if (resourceAsStream == null) {
+                logger.fatal("Solr configuration file not found, please ensure there is a 'conf/solr/solr.properties' on the classpath");
+            }
+            properties.load(resourceAsStream);
+        } catch (IOException ex) {
+            logger.fatal("Failed to load solr configuration properties", ex);
+        } finally {
+            if (resourceAsStream != null) {
+                try {
+                    resourceAsStream.close();
+                } catch (IOException ex) {
+                    // so what?
+                }
+            }
+        }
+        return properties;
+    }
+
+    private static String getProperty(Properties properties, String propertyName, String defaultValue) {
+        String result = properties.getProperty(propertyName);
+        if (result == null) {
+            result = defaultValue;
+        }
+        return result;
     }
 }
