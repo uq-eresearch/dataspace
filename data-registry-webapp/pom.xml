@@ -328,6 +328,11 @@
             <artifactId>saxon</artifactId>
             <version>9.1.0.8</version>
         </dependency>
+        <dependency>
+            <groupId>quartz</groupId>
+            <artifactId>quartz</artifactId>
+            <version>1.5.2</version>
+        </dependency>
     </dependencies>
 
     <repositories>
