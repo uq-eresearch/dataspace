@@ -74,17 +74,17 @@
                     <xsl:call-template name="subjects"/>
                     <!-- rights -->
                     <xsl:apply-templates select="atom:rights"/>
-                    <!-- representations -->
-                    <xsl:call-template name="representations"/>
                     <!-- metadata about the description -->
                 <xsl:text>
                 </xsl:text>
                     <xsl:comment>Metadata about the description</xsl:comment>
                     <div class="about">
                         <!-- publisher -->
-                        <xsl:apply-templates select="atom:source/atom:link[@rel = $ATOM_PUBLISHER]"/>
+                        <xsl:call-template name="description-publisher"/>
                         <!-- updated and updater -->
                         <xsl:call-template name="updated"/>
+                        <!-- representations -->
+                        <xsl:call-template name="representations"/>
                     </div>
                 </div>
             </div>

@@ -83,14 +83,8 @@
     <!-- representations -->
     <xsl:template name="representations">
         <xsl:if test="atom:link[@rel=$REL_ALTERNATE]">
-            <div class="statement">
-                <div class="property">
-                    <p>Representations</p>
-                </div>
-                <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
-                </div>
-            </div>
+            <p class="alternate">Download as: <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
+            </p>
         </xsl:if>
     </xsl:template>
 
@@ -188,10 +182,8 @@
 
     <!-- description publisher -->
     <xsl:template
-            match="atom:source">
-        <p>Description published by
-            <xsl:value-of select="atom:link[@rel = $ATOM_PUBLISHER]"/>
-            <!--<xsl:apply-templates select="//atom:source"/>-->
+            name="description-publisher">
+        <p>Description published by <xsl:apply-templates select="atom:source/atom:link[@rel = $ATOM_PUBLISHER]"/>
         </p>
     </xsl:template>
 
@@ -293,7 +285,6 @@
     <!-- displayed links -->
     <xsl:template
             match="atom:link[@rel=$ATOM_CREATOR
-            or @rel=$ATOM_PUBLISHER
             or @rel=$ATOM_IS_ACCESSED_VIA
             or @rel=$ATOM_IS_OUTPUT_OF
             or @rel=$ATOM_IS_SUPPORTED_BY
@@ -305,7 +296,6 @@
             or @rel=$ATOM_IS_PARTICIPANT_IN
             or @rel=$ATOM_MBOX
             or @rel=$REL_RELATED
-            or @rel=$REL_ALTERNATE
             or @rel=$REL_LATEST_VERSION]">
         <p>
             <a href="{@href}">
@@ -319,6 +309,20 @@
                 </xsl:choose>
             </a>
         </p>
+    </xsl:template>
+    <xsl:template
+        match="atom:link[@rel=$REL_ALTERNATE
+        or @rel=$ATOM_PUBLISHER]">
+        <a href="{@href}">
+            <xsl:choose>
+                <xsl:when test="@title">
+                    <xsl:value-of select="@title"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="@href"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </a>
     </xsl:template>
 
     <xsl:template name="bread-crumbs-options">
