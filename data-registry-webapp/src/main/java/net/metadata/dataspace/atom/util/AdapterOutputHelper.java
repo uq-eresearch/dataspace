@@ -391,7 +391,26 @@ public class AdapterOutputHelper {
 
     public static ResponseContext getContextResponseForPost(Entry entry) throws ResponseContextException {
         try {
-            ResponseContext responseContext = ProviderHelper.returnBase(entry, 201, entry.getUpdated());
+            String selfLinkHref = entry.getLink(Constants.REL_SELF).getHref().toString();
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
+            ResponseContext responseContext = ProviderHelper.returnBase(entry, 201, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
+            responseContext.setEntityTag(ProviderHelper.calculateEntityTag(entry));
+            responseContext.setLocation(entry.getLink(Constants.REL_SELF).getHref().toString());
+            return responseContext;
+        } catch (Throwable th) {
+            throw new ResponseContextException(500, th);
+        }
+    }
+
+    public static ResponseContext getContextResponseForPut(Entry entry) throws ResponseContextException {
+        try {
+            String selfLinkHref = entry.getLink(Constants.REL_SELF).getHref().toString();
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RDF, Constants.MIM_TYPE_NAME_RDF);
+            prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_RIFCS, Constants.MIM_TYPE_NAME_RIFCS);
+            ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
             responseContext.setEntityTag(ProviderHelper.calculateEntityTag(entry));
             responseContext.setLocation(entry.getLink(Constants.REL_SELF).getHref().toString());
             return responseContext;

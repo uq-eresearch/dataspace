@@ -145,7 +145,7 @@ public class HttpMethodHelper {
                                     entityManager.merge(record);
                                     transaction.commit();
                                     Entry updatedEntry = AdapterOutputHelper.getEntryFromEntity(version, false);
-                                    return AdapterOutputHelper.getContextResponseForGetEntry(request, updatedEntry, clazz);
+                                    return AdapterOutputHelper.getContextResponseForPut(updatedEntry);
                                 } catch (Exception th) {
                                     logger.fatal("Invalid Entry, Rolling back database", th);
                                     if (transaction.isActive()) {
