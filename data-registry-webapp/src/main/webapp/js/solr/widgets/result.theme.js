@@ -105,8 +105,8 @@ function getPath(doc) {
     if (doc.type && (doc.type.toLowerCase() == "collection" || doc.type.toLowerCase() == "dataset")) {
         return "collections"
     } else if (doc.type && (doc.type.toLowerCase() == "person" || doc.type.toLowerCase() == "group")) {
-
-    } else if (doc.type && (doc.type.toLowerCase() == "program" || doc.type == "project")) {
+        return "agents"
+    } else if (doc.type && (doc.type.toLowerCase() == "program" || doc.type.toLowerCase() == "project")) {
         return "activities"
     } else {
         return "services"
