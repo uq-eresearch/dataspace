@@ -140,7 +140,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]">
             <div class="statement">
                 <div class="property">
-                    <p>Participate In</p>
+                    <p>Projects</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]"/>
