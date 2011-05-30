@@ -78,9 +78,6 @@
                     <li>
                         <a href="/search">Search</a>
                     </li>
-                    <li>
-                        <a href="http://www.uq.edu.au/about/">About</a>
-                    </li>
                 </ul>
             </div>
             <xsl:call-template name="loginlink"/>

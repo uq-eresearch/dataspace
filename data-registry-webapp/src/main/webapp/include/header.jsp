@@ -46,7 +46,6 @@
             <li><a href="/">Home</a></li>
             <li><a href="/browse">Browse</a></li>
             <li><a href="/search">Search</a></li>
-            <li><a href="http://www.uq.edu.au/about/">About</a></li>
         </ul>
         <%--<div class="clear">&nbsp;</div>--%>
     </div>
