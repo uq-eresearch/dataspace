@@ -1176,6 +1176,10 @@ p.centenary {
     border: 1px solid #cddcf9;
 }
 
+.result-entity-type {
+    color: #4F7F37
+}
+
 #search-submit {
     width: 100%;
 }

@@ -13,11 +13,10 @@
         var output = '';
         if (doc.description) {
             if (doc.description.length > 300) {
-                output += doc.description.substring(0, 300);
+                output += '<span class="result-entity-type">' + getEntityType(doc) + '</span>: ' + doc.description.substring(0, 300);
                 output += '</span>... <a href="/' + getPath(doc) + '/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">more</a>';
-            }
-            else {
-                output += doc.description;
+            } else {
+                output += '<span class="result-entity-type">' + getEntityType(doc) + '</span>: ' + doc.description;
             }
         }
         return output;
@@ -110,5 +109,17 @@ function getPath(doc) {
         return "activities"
     } else {
         return "services"
+    }
+}
+
+function getEntityType(doc) {
+    if (doc.type && (doc.type.toLowerCase() == "collection" || doc.type.toLowerCase() == "dataset")) {
+        return "Collection"
+    } else if (doc.type && (doc.type.toLowerCase() == "person" || doc.type.toLowerCase() == "group")) {
+        return "Agent"
+    } else if (doc.type && (doc.type.toLowerCase() == "program" || doc.type.toLowerCase() == "project")) {
+        return "Activity"
+    } else {
+        return "Service"
     }
 }
