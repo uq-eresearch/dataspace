@@ -55,7 +55,8 @@ body a {
 }
 
 #content-text {
-    width: 50%;
+    width: 48%;
+    padding-right: 2%;
     float: left;
     display: inline;
 }
