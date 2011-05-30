@@ -43,7 +43,7 @@ public class SolrIndexingListener implements ServletContextListener {
         CronTrigger trigger = new CronTrigger();
         trigger.setName("runMeJobTesting");
         try {
-            String cronExpression = seconds + minutes + " " + hours + " * * ?";
+            String cronExpression = seconds + " " + minutes + " " + hours + " * * ?";
             logger.info("Indexing cron expression ======> " + cronExpression);
             trigger.setCronExpression(cronExpression);
         } catch (ParseException e) {
