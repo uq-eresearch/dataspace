@@ -440,19 +440,19 @@ any data added to them will be ignored outright.  -->
         -->
 
         <field name="id" type="string" indexed="true" stored="true" required="true"/>
-        <field name="sku" type="textTight" indexed="true" stored="true" omitNorms="true"/>
-        <field name="name" type="textgen" indexed="true" stored="true"/>
-        <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
-        <field name="manu" type="textgen" indexed="true" stored="true" omitNorms="true"/>
-        <field name="cat" type="text_ws" indexed="true" stored="true" multiValued="true" omitNorms="true"/>
-        <field name="features" type="text" indexed="true" stored="true" multiValued="true"/>
-        <field name="includes" type="text" indexed="true" stored="true" termVectors="true" termPositions="true"
-               termOffsets="true"/>
+        <!--<field name="sku" type="textTight" indexed="true" stored="true" omitNorms="true"/>-->
+        <!--<field name="name" type="textgen" indexed="true" stored="true"/>-->
+        <!--<field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>-->
+        <!--<field name="manu" type="textgen" indexed="true" stored="true" omitNorms="true"/>-->
+        <!--<field name="cat" type="text_ws" indexed="true" stored="true" multiValued="true" omitNorms="true"/>-->
+        <!--<field name="features" type="text" indexed="true" stored="true" multiValued="true"/>-->
+        <!--<field name="includes" type="text" indexed="true" stored="true" termVectors="true" termPositions="true"-->
+        <!--termOffsets="true"/>-->
 
-        <field name="weight" type="float" indexed="true" stored="true"/>
-        <field name="price" type="float" indexed="true" stored="true"/>
-        <field name="popularity" type="int" indexed="true" stored="true"/>
-        <field name="inStock" type="boolean" indexed="true" stored="true"/>
+        <!--<field name="weight" type="float" indexed="true" stored="true"/>-->
+        <!--<field name="price" type="float" indexed="true" stored="true"/>-->
+        <!--<field name="popularity" type="int" indexed="true" stored="true"/>-->
+        <!--<field name="inStock" type="boolean" indexed="true" stored="true"/>-->
 
 
         <!-- Common metadata fields, named specifically to match up with
@@ -462,28 +462,33 @@ any data added to them will be ignored outright.  -->
         -->
 
 
-        <field name="comments" type="text" indexed="true" stored="true"/>
-        <field name="author" type="textgen" indexed="true" stored="true"/>
-        <field name="keywords" type="textgen" indexed="true" stored="true"/>
-        <field name="category" type="textgen" indexed="true" stored="true"/>
-        <field name="content_type" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="last_modified" type="date" indexed="true" stored="true"/>
-        <field name="links" type="string" indexed="true" stored="true" multiValued="true"/>
+        <!--<field name="comments" type="text" indexed="true" stored="true"/>-->
+        <!--<field name="author" type="textgen" indexed="true" stored="true"/>-->
+        <!--<field name="keywords" type="textgen" indexed="true" stored="true"/>-->
+        <!--<field name="category" type="textgen" indexed="true" stored="true"/>-->
+        <!--<field name="content_type" type="string" indexed="true" stored="true" multiValued="true"/>-->
+        <!--<field name="last_modified" type="date" indexed="true" stored="true"/>-->
+        <!--<field name="links" type="string" indexed="true" stored="true" multiValued="true"/>-->
 
         <field name="title" type="text" indexed="true" stored="true"/>
         <field name="description" type="text" indexed="true" stored="true"/>
+        <field name="type" type="text" indexed="true" stored="true"/>
 
         <field name="activitytitle" type="text" indexed="true" stored="true"/>
         <field name="activitydescription" type="text" indexed="true" stored="true"/>
+        <field name="activitytype" type="text" indexed="true" stored="true"/>
 
         <field name="agenttitle" type="text" indexed="true" stored="true"/>
         <field name="agentdescription" type="text" indexed="true" stored="true"/>
+        <field name="agenttype" type="text" indexed="true" stored="true"/>
 
         <field name="collectiontitle" type="text" indexed="true" stored="true"/>
         <field name="collectiondescription" type="text" indexed="true" stored="true"/>
+        <field name="collectiontype" type="text" indexed="true" stored="true"/>
 
         <field name="servicetitle" type="text" indexed="true" stored="true"/>
         <field name="servicedescription" type="text" indexed="true" stored="true"/>
+        <field name="servicetype" type="text" indexed="true" stored="true"/>
 
         <field name="atomicnumber" type="pint" indexed="true" stored="true"/>
         <field name="created" type="pdate" indexed="true" stored="true"/>
@@ -492,7 +497,6 @@ any data added to them will be ignored outright.  -->
         <field name="license" type="text" indexed="true" stored="true"/>
         <field name="originalid" type="text" indexed="true" stored="true"/>
         <field name="rights" type="text" indexed="true" stored="true"/>
-        <field name="type" type="text" indexed="true" stored="true"/>
         <field name="parent_id" type="pint" indexed="true" stored="true"/>
 
         <field name="term" type="text" indexed="true" stored="true"/>
@@ -582,15 +586,16 @@ or to add multiple fields to the same field for easier/faster searching.  -->
 
     <copyField source="label" dest="text"/>
 
-    <copyField source="cat" dest="text"/>
-    <copyField source="name" dest="text"/>
-    <copyField source="manu" dest="text"/>
-    <copyField source="features" dest="text"/>
-    <copyField source="includes" dest="text"/>
-    <copyField source="manu" dest="manu_exact"/>
+    <!--<copyField source="cat" dest="text"/>-->
+    <!--<copyField source="name" dest="text"/>-->
+    <!--<copyField source="manu" dest="text"/>-->
+    <!--<copyField source="features" dest="text"/>-->
+    <!--<copyField source="includes" dest="text"/>-->
+    <!--<copyField source="manu" dest="manu_exact"/>-->
 
     <copyField source="title" dest="text"/>
     <copyField source="description" dest="text"/>
+    <copyField source="type" dest="text"/>
 
     <copyField source="term" dest="text"/>
     <copyField source="isdefinedby" dest="text"/>
@@ -598,15 +603,19 @@ or to add multiple fields to the same field for easier/faster searching.  -->
 
     <copyField source="activitytitle" dest="text"/>
     <copyField source="activitydescription" dest="text"/>
+    <copyField source="activitytype" dest="text"/>
 
     <copyField source="agenttitle" dest="text"/>
     <copyField source="agentdescription" dest="text"/>
+    <copyField source="agenttype" dest="text"/>
 
     <copyField source="collectiontitle" dest="text"/>
     <copyField source="collectiondescription" dest="text"/>
+    <copyField source="collectiontype" dest="text"/>
 
     <copyField source="servicetitle" dest="text"/>
     <copyField source="servicedescription" dest="text"/>
+    <copyField source="servicetype" dest="text"/>
 
     <copyField source="term" dest="subject"/>
     <copyField source="isdefinedby" dest="subject"/>
@@ -614,15 +623,19 @@ or to add multiple fields to the same field for easier/faster searching.  -->
 
     <copyField source="activitytitle" dest="activity"/>
     <copyField source="activitydescription" dest="activity"/>
+    <copyField source="activitytype" dest="activity"/>
 
     <copyField source="agenttitle" dest="agent"/>
     <copyField source="agentdescription" dest="agent"/>
+    <copyField source="agenttype" dest="agent"/>
 
     <copyField source="collectiontitle" dest="collection"/>
     <copyField source="collectiondescription" dest="collection"/>
+    <copyField source="collectiontype" dest="collection"/>
 
     <copyField source="servicetitle" dest="service"/>
     <copyField source="servicedescription" dest="service"/>
+    <copyField source="servicetype" dest="service"/>
 
 
     <!-- Above, multiple source fields are copied to the [text] field.

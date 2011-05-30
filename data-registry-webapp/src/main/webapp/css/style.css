@@ -1175,3 +1175,15 @@ p.centenary {
     background-color: #ebf2fc;
     border: 1px solid #cddcf9;
 }
+
+#search-submit {
+    width: 100%;
+}
+
+#query {
+    width: 100%;
+}
+
+#searching {
+    padding-right: 5px;
+}

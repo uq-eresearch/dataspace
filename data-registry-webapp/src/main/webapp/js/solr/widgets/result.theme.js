@@ -3,20 +3,7 @@
     AjaxSolr.theme.prototype.result = function (doc, snippet) {
         var output = "";
         if (doc.title) {
-            output = '<div class="result-record"><a href="/collections/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.title + '</a>';
-            output += '<p id="links_' + doc.id + '" class="links"></p>';
-            output += '<p>' + snippet + '</p></div>';
-        } else if (doc.agenttitle) {
-            output = '<div class="result-record"><a href="/agents/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.agenttitle + '</a>';
-            output += '<p id="links_' + doc.id + '" class="links"></p>';
-            output += '<p>' + snippet + '</p></div>';
-        } else if (doc.servicetitle) {
-            output = '<div class="result-record"><a href="/services/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.servicetitle + '</a>';
-            output += '<p id="links_' + doc.id + '" class="links"></p>';
-            output += '<p>' + snippet + '</p></div>';
-        } else if (doc.activitytitle) {
-            output = '<div class="result-record"><a href="/activities/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.activitytitle + '</a>';
-            output += '<p id="links_' + doc.id + '" class="links"></p>';
+            output = '<div class="result-record"><a href="/' + getPath(doc) + '/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">' + doc.title + '</a>';
             output += '<p>' + snippet + '</p></div>';
         }
         return output;
@@ -27,34 +14,10 @@
         if (doc.description) {
             if (doc.description.length > 300) {
                 output += doc.description.substring(0, 300);
-                output += '</span> <a href="#" class="more">more</a>';
+                output += '</span>... <a href="/' + getPath(doc) + '/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '">more</a>';
             }
             else {
                 output += doc.description;
-            }
-        } else if (doc.agentdescription) {
-            if (doc.agentdescription.length > 300) {
-                output += doc.agentdescription.substring(0, 300);
-                output += '</span> <a href="#" class="more">more</a>';
-            }
-            else {
-                output += doc.agentdescription;
-            }
-        } else if (doc.servicedescription) {
-            if (doc.servicedescription.length > 300) {
-                output += doc.servicedescription.substring(0, 300);
-                output += '</span> <a href="#" class="more">more</a>';
-            }
-            else {
-                output += doc.servicedescription;
-            }
-        } else if (doc.activitydscription) {
-            if (doc.activitydescription.length > 300) {
-                output += doc.activitydescription.substring(0, 300);
-                output += '</span> <a href="/activities/' + fromDecimalToOtherBase(31, doc.atomicnumber) + '" class="more">more</a>';
-            }
-            else {
-                output += doc.activitydescription;
             }
         }
         return output;
@@ -116,11 +79,11 @@ var BASE_CHARACTERS = "0123456789bcdfghjklmnpqrstvwxyz";
 function fromDecimalToOtherBase(base, decimalNumber) {
     var tempVal = decimalNumber == 0 ? "0" : "";
     var mod = 0;
-
     while (decimalNumber != 0) {
         mod = decimalNumber % base;
         tempVal = BASE_CHARACTERS.substring(mod, mod + 1) + tempVal;
         decimalNumber = decimalNumber / base;
+        decimalNumber = parseInt(decimalNumber);
     }
     return tempVal + '';
 }
@@ -136,4 +99,16 @@ function fromOtherBaseToDecimal(base, number) {
         --iterator;
     }
     return returnValue;
+}
+
+function getPath(doc) {
+    if (doc.type && (doc.type.toLowerCase() == "collection" || doc.type.toLowerCase() == "dataset")) {
+        return "collections"
+    } else if (doc.type && (doc.type.toLowerCase() == "person" || doc.type.toLowerCase() == "group")) {
+
+    } else if (doc.type && (doc.type.toLowerCase() == "program" || doc.type == "project")) {
+        return "activities"
+    } else {
+        return "services"
+    }
 }

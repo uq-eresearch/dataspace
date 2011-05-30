@@ -77,7 +77,7 @@
                         <input type="text" id="query" name="query"/>
                     </td>
                     <td><input type="button" name="search-submit" id="search-submit" value="Search"
-                               onclick="doSearch($('#query').val()); return false;"/></td>
+                               onclick="doSearch($('#query').val()); return false;" style=""/></td>
                 </tr>
                 </tbody>
             </table>

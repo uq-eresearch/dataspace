@@ -16,34 +16,38 @@
                 query="SELECT * FROM subject WHERE isactive = true">
         </entity>
         <entity name="collectionversion" dataSource="registry-ds"
-                query="SELECT v.title, v.description, c.id, c.atomicnumber FROM collectionversion as v, collection as c WHERE c.isactive = true AND c.published_id = v.id">
+                query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM collectionversion as v, collection as c WHERE c.isactive = true AND c.published_id = v.id">
             <field column="c.id" name="id"/>
             <field column="c.atomicnumber" name="atomicnumber"/>
             <field column="v.title" name="collectiontitle"/>
             <field column="v.description" name="collectiondescription"/>
+            <field column="v.type" name="collectiontype"/>
         </entity>
         <entity name="agentversion" dataSource="registry-ds"
-                query="SELECT v.title, v.description, c.id, c.atomicnumber FROM agentversion as v, agent as c WHERE c.isactive = true AND c.published_id = v.id">
+                query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM agentversion as v, agent as c WHERE c.isactive = true AND c.published_id = v.id">
             <field column="c.id" name="id"/>
             <field column="c.atomicnumber" name="atomicnumber"/>
             <field column="v.title" name="agenttitle"/>
             <field column="v.description" name="agentdescription"/>
+            <field column="v.type" name="agenttype"/>
         </entity>
         <entity name="serviceversion" dataSource="registry-ds"
-                query="SELECT v.title, v.description, c.id, c.atomicnumber FROM serviceversion as v, service as c WHERE c.isactive = true AND c.published_id = v.id">
+                query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM serviceversion as v, service as c WHERE c.isactive = true AND c.published_id = v.id">
             >
             <field column="c.id" name="id"/>
             <field column="c.atomicnumber" name="atomicnumber"/>
             <field column="v.title" name="servicetitle"/>
             <field column="v.description" name="servicedescription"/>
+            <field column="v.type" name="servicetype"/>
         </entity>
         <entity name="activityversion" dataSource="registry-ds"
-                query="SELECT v.title, v.description, c.id, c.atomicnumber FROM activityversion as v, activity as c WHERE c.isactive = true AND c.published_id = v.id">
+                query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM activityversion as v, activity as c WHERE c.isactive = true AND c.published_id = v.id">
             >
             <field column="c.id" name="id"/>
             <field column="c.atomicnumber" name="atomicnumber"/>
             <field column="v.title" name="activitytitle"/>
             <field column="v.description" name="activitydescription"/>
+            <field column="v.type" name="activitytype"/>
         </entity>
     </document>
 </dataConfig>
