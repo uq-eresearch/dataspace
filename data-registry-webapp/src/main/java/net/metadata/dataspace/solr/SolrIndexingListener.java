@@ -35,6 +35,7 @@ public class SolrIndexingListener implements ServletContextListener {
         SolrCommand command = getFullImportCommand(solrProperties);
         dataMap.put("fullImport", command);
 
+        String seconds = getProperty(solrProperties, "solr.indexing.interval.seconds", "0");
         String minutes = getProperty(solrProperties, "solr.indexing.interval.minutes", "45");
         String hours = getProperty(solrProperties, "solr.indexing.interval.hours", "*");
 
@@ -42,7 +43,8 @@ public class SolrIndexingListener implements ServletContextListener {
         CronTrigger trigger = new CronTrigger();
         trigger.setName("runMeJobTesting");
         try {
-            String cronExpression = minutes + " " + hours + " * * * ?";
+            String cronExpression = seconds + minutes + " " + hours + " * * ?";
+            logger.info("Indexing cron expression ======> " + cronExpression);
             trigger.setCronExpression(cronExpression);
         } catch (ParseException e) {
             logger.warn("Could not parse cron expression");
