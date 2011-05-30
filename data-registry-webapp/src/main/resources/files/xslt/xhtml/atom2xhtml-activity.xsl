@@ -64,10 +64,14 @@
                     </xsl:if>
                     <!-- type -->
                     <xsl:call-template name="type"/>
-                    <!-- accesses -->
+                    <!-- homepage -->
+                    <xsl:call-template name="locations"/>
+                    <!-- participants -->
                     <xsl:call-template name="participants"/>
-                    <!-- accesses -->
+                    <!-- collections -->
                     <xsl:call-template name="output"/>
+                    <!-- subjects -->
+                    <xsl:call-template name="subjects"/>
                     <!-- rights -->
                     <xsl:apply-templates select="atom:rights"/>
                     <!-- representations -->
@@ -107,7 +111,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_HAS_OUTPUT]">
             <div class="statement">
                 <div class="property">
-                    <p>Output</p>
+                    <p>Collections created</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_HAS_OUTPUT]"/>
