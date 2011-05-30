@@ -8,15 +8,16 @@
     <script type="text/javascript">
         var Manager;
         $(document).ready(function() {
-            Manager = new AjaxSolr.Manager({
-                        //TODO change this
-//                solrUrl: 'http://evolvingweb.ca/solr/reuters/'
-                        solrUrl: '/solr/'
-                    });
-            Manager.addWidget(new AjaxSolr.ResultWidget({
-                        id: 'result',
-                        target: '#docs'
-                    }));
+
+            $('#query').keyup(function(event) {
+                if (event.keyCode == '13') {
+                    event.preventDefault();
+                    doSearch($('#query').val());
+                }
+            });
+
+            Manager = new AjaxSolr.Manager({solrUrl: '/solr/'});
+            Manager.addWidget(new AjaxSolr.ResultWidget({id: 'result',target: '#docs'}));
             Manager.addWidget(new AjaxSolr.PagerWidget({
                         id: 'pager',
                         target: '#pager',
