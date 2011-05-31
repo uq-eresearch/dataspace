@@ -72,10 +72,10 @@
             datatype="http://purl.org/dc/terms/Period"/>
 
     <!--     spatial coverage -->
-    <georss:point>152 -27</georss:point>
-    <georss:point>155 -27</georss:point>
-    <georss:polygon>140 -10.5 140 -17 145.5 -17 145.5 -10.5 140 -10.5</georss:polygon>
-    <georss:polygon>150 -10.5 150 -17 155.5 -17 155.5 -10.5 150 -10.5</georss:polygon>
+    <georss:point>-27 152</georss:point>
+    <georss:point>-27 155</georss:point>
+    <georss:polygon>-10.5 140 -17 140 -17 145.5 -10.5 145.5 -10.5 140</georss:polygon>
+    <georss:polygon>-10.5 150 -17 150 -17 155.5 -10.5 155.5 -10.5 150</georss:polygon>
     <link
             rel="http://purl.org/dc/terms/spatial"
             href="http://sws.geonames.org/2172406/"
