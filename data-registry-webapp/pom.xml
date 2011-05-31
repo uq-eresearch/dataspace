@@ -184,12 +184,12 @@
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
-            <version>6.1.24</version>
+            <version>6.1.26</version>
         </dependency>
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty-util</artifactId>
-            <version>6.1.24</version>
+            <version>6.1.26</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -292,19 +292,6 @@
             <artifactId>postgresql</artifactId>
             <version>8.4-701.jdbc4</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.mortbay.jetty</groupId>-->
-        <!--<artifactId>maven-jetty-plugin</artifactId>-->
-        <!--<version>6.1.25</version>-->
-        <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
-        <!--Testing Frameworks-->
-        <!--<dependency>-->
-        <!--<groupId>org.easymock</groupId>-->
-        <!--<artifactId>easymock</artifactId>-->
-        <!--<version>3.0</version>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
