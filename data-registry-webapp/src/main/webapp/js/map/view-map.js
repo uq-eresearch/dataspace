@@ -42,7 +42,9 @@ function init() {
         var pointStr = $(this).val();
         if (pointStr && pointStr != "") {
             var pnt = pointStr.split(" ");
-            var point = new OpenLayers.Geometry.Point(pnt[0], pnt[1]).transform(WGS84, map.getProjectionObject());
+            var lat = parseFloat(pnt[0]);
+            var long = parseFloat(pnt[1]);
+            var point = new OpenLayers.Geometry.Point(long, lat).transform(WGS84, map.getProjectionObject());
             var pointFeature = new OpenLayers.Feature.Vector(point, null, point_style);
             vectorLayer.addFeatures([pointFeature]);
         }
@@ -54,9 +56,9 @@ function init() {
             var latsLongs = polygonStr.split(" ");
             var pointList = [];
             for (var index = 0; index < latsLongs.length - 1; index = index + 2) {
-                var x = parseFloat(latsLongs[index]);
-                var y = parseFloat(latsLongs[index + 1]);
-                var newPoint = new OpenLayers.Geometry.Point(x, y).transform(WGS84, map.getProjectionObject());
+                var lat = parseFloat(latsLongs[index]);
+                var long = parseFloat(latsLongs[index + 1]);
+                var newPoint = new OpenLayers.Geometry.Point(long, lat).transform(WGS84, map.getProjectionObject());
                 pointList.push(newPoint);
             }
             pointList.push(pointList[0]);
