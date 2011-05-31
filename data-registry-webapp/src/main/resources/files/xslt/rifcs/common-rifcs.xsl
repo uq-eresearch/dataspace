@@ -52,7 +52,7 @@
             <address>
                 <electronic type="url">
                     <value>
-                        <xsl:value-of select="@href"/>
+                        <xsl:copy-of select="@href"/>
                     </value>
                 </electronic>
             </address>
