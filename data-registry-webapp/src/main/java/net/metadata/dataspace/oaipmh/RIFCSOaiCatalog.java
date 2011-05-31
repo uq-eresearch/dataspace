@@ -73,8 +73,17 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         } catch (ParseException pe) {
             throw new BadArgumentException();
         }
-        List<net.metadata.dataspace.data.model.record.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublishedBetween(fromDate, toDate);
 
+        /**
+         * Only include the following on the OAI-PMH feed:
+         * All published Collections
+         * data creators (Agents)
+         * data managers (Agents)
+         * participants in an activity (Agents)
+         * outPutOf (Activities) of Collections
+         * accessedVia (Services) of Collections
+         * */
+        List<net.metadata.dataspace.data.model.record.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublishedBetween(fromDate, toDate);
         Set<Activity> uniqueActivitySet = new HashSet<Activity>();
         Set<Agent> uniqueAgentSet = new HashSet<Agent>();
         Set<Service> uniqueServiceSet = new HashSet<Service>();
@@ -90,6 +99,10 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             Set<Activity> activities = collection.getPublished().getOutputOf();
             if (!activities.isEmpty()) {
                 uniqueActivitySet.addAll(activities);
+            }
+            for (Activity activity : activities) {
+                Set<Agent> hasParticipants = activity.getPublished().getHasParticipants();
+                uniqueAgentSet.addAll(hasParticipants);
             }
             Set<Service> services = collection.getPublished().getAccessedVia();
             if (!services.isEmpty()) {
