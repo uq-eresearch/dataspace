@@ -8,6 +8,7 @@ import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.util.DateUtil;
 import org.apache.log4j.Logger;
@@ -72,15 +73,35 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         } catch (ParseException pe) {
             throw new BadArgumentException();
         }
-        List<Activity> activityList = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getAllPublishedBetween(fromDate, toDate);
         List<net.metadata.dataspace.data.model.record.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublishedBetween(fromDate, toDate);
-        List<Agent> agentList = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao().getAllPublishedBetween(fromDate, toDate);
-        List<Service> serviceList = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getAllPublishedBetween(fromDate, toDate);
-        int size = activityList.size() + collectionList.size() + agentList.size() + serviceList.size();
+
+        Set<Activity> uniqueActivitySet = new HashSet<Activity>();
+        Set<Agent> uniqueAgentSet = new HashSet<Agent>();
+        Set<Service> uniqueServiceSet = new HashSet<Service>();
+        for (Collection collection : collectionList) {
+            Set<Agent> creators = collection.getPublished().getCreators();
+            if (!creators.isEmpty()) {
+                uniqueAgentSet.addAll(creators);
+            }
+            Set<Agent> publishers = collection.getPublished().getPublishers();
+            if (!publishers.isEmpty()) {
+                uniqueAgentSet.addAll(publishers);
+            }
+            Set<Activity> activities = collection.getPublished().getOutputOf();
+            if (!activities.isEmpty()) {
+                uniqueActivitySet.addAll(activities);
+            }
+            Set<Service> services = collection.getPublished().getAccessedVia();
+            if (!services.isEmpty()) {
+                uniqueServiceSet.addAll(services);
+            }
+        }
+
+        int size = uniqueActivitySet.size() + collectionList.size() + uniqueAgentSet.size() + uniqueServiceSet.size();
         List<String> headers = new ArrayList<String>(size);
         List<String> identifiers = new ArrayList<String>(size);
 
-        for (Activity activity : activityList) {
+        for (Activity activity : uniqueActivitySet) {
             identifiers.add(getRecordFactory().getOAIIdentifier(activity.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(activity.getPublished()), getRecordFactory().getDatestamp(activity.getPublished()), getRecordFactory().getSetSpecs(activity), !activity.isActive())[0]);
         }
@@ -88,11 +109,11 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             identifiers.add(getRecordFactory().getOAIIdentifier(collection.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(collection.getPublished()), getRecordFactory().getDatestamp(collection.getPublished()), getRecordFactory().getSetSpecs(collection), !collection.isActive())[0]);
         }
-        for (Agent agent : agentList) {
+        for (Agent agent : uniqueAgentSet) {
             identifiers.add(getRecordFactory().getOAIIdentifier(agent.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(agent.getPublished()), getRecordFactory().getDatestamp(agent.getPublished()), getRecordFactory().getSetSpecs(agent), !agent.isActive())[0]);
         }
-        for (Service service : serviceList) {
+        for (Service service : uniqueServiceSet) {
             identifiers.add(getRecordFactory().getOAIIdentifier(service.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(service.getPublished()), getRecordFactory().getDatestamp(service.getPublished()), getRecordFactory().getSetSpecs(service), !service.isActive())[0]);
         }
