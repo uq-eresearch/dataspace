@@ -12,133 +12,43 @@
 </ul>
 <div class="wrapper">
     <div class="content">
-        <h3>cURL Examples</h3>
-        <ul>
-            <li>GET:
-                <ul>
-                    <li>Get a <strong>feed of a Activity</strong> (atom): curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>activities?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        activities?repr=application/atom+xml</a>
-                    </li>
-                    <li>Get a <strong>feed of a Collection</strong> (atom): curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        collections?repr=application/atom+xml</a>
-                    </li>
-                    <li>Get a <strong>feed of an Agent</strong> (atom): curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>agents?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        agents?repr=application/atom+xml</a>
-                    </li>
-                    <li>Get a <strong>feed of a Service</strong> (atom): curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>services?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        services?repr=application/atom+xml</a>
-                    </li>
-                    <li>Get a published collection <strong>(atom)</strong>: curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        collections/1?repr=application/atom+xml</a>
-                    </li>
-                    <li>Get a published collection <strong>(rdf)</strong>: curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1?repr=application/rdf+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        collections/1?repr=application/rdf+xml</a>
-                    </li>
-                    <li>Get a published collection <strong>(rif-cs)</strong>: curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1?repr=application/rifcs+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        collections/1?repr=application/rifcs+xml</a>
-                    </li>
-                    <li>Get a <strong>version</strong> of a Collection (Login required): curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1/1?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        collections/1/1?repr=application/atom+xml</a>
-                    </li>
-                    <li>Get <strong>working copy</strong> of a Collection (Login required): curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1/working-copy?repr=application/atom+xml"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        collections/1/working-copy?repr=application/atom+xml</a>
-                    </li>
-                    <li>Get <strong>version history</strong> of a collection (Login required): curl -v -X GET <a
-                            href="<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/version-history"><%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        collections/version-history</a>
-                    </li>
+        <h1>Welcome to UQ Dataspace</h1>
+
+        <p>A catalog of the <strong>University of Queensland's</strong> Research Data Assets</p>
+
+        <div class="portlet-content">
+            <div class="browse-portlet">
+                <div class="portlet-header">
+                    <a href="/search">Search</a>
+                </div>
+                <table width="100%">
+                    <tbody>
+                        <tr>
+                            <td id="searching">
+                                <input type="text" id="query" name="query"/>
+                            </td>
+                            <td><input type="button" name="search-submit" id="search-submit" value="Search"
+                               onclick="doSearch($('#query').val()); return false;" style=""/></td>
+                        </tr>
+                        <tr>
+                            <td>TAG CLOUD HERE</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="browse-portlet">
+                <div class="portlet-header">
+                    <a href="/collections">Recently added collections</a>
+                </div>
+                <ul class="portlet-list">
+                    <li>List of recent collections here</li>
                 </ul>
-            </li>
-            <li>POST (Login required):
-                <ul>
-                    <li>Add a Activity (atom): curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X POST -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>activities" --data
-                        @/location/activity.atom
-                    </li>
-                    <li>Add a Collection (atom): curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X POST -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections" --data
-                        @/location/collection.atom
-                    </li>
-                    <li>Add an Agent (atom): curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X POST -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>agents" --data
-                        @/location/agent.atom
-                    </li>
-                    <li>Add a Service (atom): curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X POST -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>services" --data
-                        @/location/services.atom
-                    </li>
-                </ul>
-            </li>
-            <li>PUT (Login required):
-                <ul>
-                    <li>Edit a Activity (atom): curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X PUT -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>activities" --data
-                        @/location/activity.atom
-                    </li>
-                    <li>Edit a Collection (atom): curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X PUT -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections" --data
-                        @/location/collection.atom
-                    </li>
-                    <li>Edit an Agent (atom): curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X PUT -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>agents" --data
-                        @/location/agent.atom
-                    </li>
-                    <li>Edit a Service (atom): curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X PUT -H "Content-Type: application/atom+xml"
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>services" --data
-                        @/location/services.atom
-                    </li>
-                </ul>
-            </li>
-            <li>DELETE (Login required):
-                <ul>
-                    <li>Delete an Activity: curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X
-                        DELETE <%=RegistryApplication.getApplicationContext().getUriPrefix()%>activities/1
-                    </li>
-                    <li>Delete a Collection: curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X
-                        DELETE <%=RegistryApplication.getApplicationContext().getUriPrefix()%>collections/1
-                    </li>
-                    <li>Delete an Agent: curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X
-                        DELETE <%=RegistryApplication.getApplicationContext().getUriPrefix()%>agents/1
-                    </li>
-                    <li>Delete a Service: curl -v -b -X POST
-                        "<%=RegistryApplication.getApplicationContext().getUriPrefix()%>
-                        login?username=test&password=test" -X
-                        DELETE <%=RegistryApplication.getApplicationContext().getUriPrefix()%>services/1
-                    </li>
-                </ul>
-            </li>
-        </ul>
+            </div>
+        </div>
+
+        <p>This registry syndicates data to </br>
+        <a href="http://services.ands.org.au/home/orca/rda/">
+        <img src="https://services.ands.org.au/home/orca/rda/_images/ANDS_logo.gif"/></a></p>
     </div>
 </div>
 <jsp:include page="include/footer.jsp"/>
