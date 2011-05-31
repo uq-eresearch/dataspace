@@ -400,6 +400,7 @@ public class AdapterInputHelper {
                 throw new ResponseContextException("Description Author missing email address", 400);
             }
             if (uri != null) {
+                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
                 String uriKey = OperationHelper.getEntityID(uri.toString());
                 Agent agent = daoManager.getAgentDao().getByKey(uriKey);
                 if (agent != null) {
@@ -439,6 +440,7 @@ public class AdapterInputHelper {
                 throw new ResponseContextException("Author missing email address", 400);
             }
             if (uri != null) {
+                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
                 String uriKey = OperationHelper.getEntityID(uri.toString());
                 Agent agent = daoManager.getAgentDao().getByKey(uriKey);
                 if (agent != null) {
@@ -447,12 +449,15 @@ public class AdapterInputHelper {
                         agent.setUpdated(new Date());
                     }
                     version.getCreators().add(agent);
+                    agent.getMade().add(version.getParent());
+                    entityManager.merge(agent);
                 } else {
                     Agent newAgent = findOrCreateAgent(name, email);
                     if (newAgent == null) {
                         throw new ResponseContextException("Author cannot be found", 400);
                     } else {
                         version.getCreators().add(newAgent);
+                        newAgent.getMade().add(version.getParent());
                     }
                 }
             } else {
@@ -461,6 +466,7 @@ public class AdapterInputHelper {
                     throw new ResponseContextException("Author cannot be found", 400);
                 } else {
                     version.getCreators().add(newAgent);
+                    newAgent.getMade().add(version.getParent());
                 }
             }
         }
@@ -483,6 +489,7 @@ public class AdapterInputHelper {
                     Agent newAgent = findOrCreateAgent(title, email);
                     if (newAgent != null) {
                         version.getPublishers().add(newAgent);
+                        newAgent.getIsManagerOf().add(version.getParent());
                     } else {
                         //cannot do much here
                     }
@@ -492,6 +499,9 @@ public class AdapterInputHelper {
                     Agent agent = daoManager.getAgentDao().getByKey(uriKey);
                     if (agent != null) {
                         version.getPublishers().add(agent);
+                        agent.getIsManagerOf().add(version.getParent());
+                        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+                        entityManager.merge(agent);
                     } else {
                         //Cannot do much here
                     }
