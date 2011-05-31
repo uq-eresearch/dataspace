@@ -38,44 +38,54 @@
                 <xsl:value-of select="atom:source/atom:id"/>
             </originatingSource>
             <!-- collection -->
-            <xsl:if test="atom:link[@rel=$REL_TYPE]">
-                <collection type="{atom:link[@rel=$REL_TYPE]/@title}">
-                    <!-- identifiers -->
-                    <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
-                    <xsl:apply-templates select="/atom:entry/atom:id"/>
-                    <!-- names -->
-                    <xsl:apply-templates select="atom:title"/>
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
-                    <!-- location -->
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
-                    <!-- coverage -->
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
-                    <xsl:apply-templates select="georss:point"/>
-                    <xsl:apply-templates select="georss:polygon"/>
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_SPATIAL]"/>
-                    <!-- related objects -->
-                    <xsl:apply-templates select="atom:author"/>
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_OUTPUT_OF]"/>
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]"/>
-                    <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
-                    <!-- subjects -->
-                    <xsl:apply-templates select="atom:category[@scheme = $SCHEME_FOR]"/>
-                    <xsl:apply-templates select="atom:category[@scheme = $SCHEME_SEO]"/>
-                    <xsl:apply-templates select="atom:category[@scheme = $SCHEME_TOA]"/>
-                    <xsl:apply-templates
-                            select="atom:category[@scheme != $NS_DCMITYPE and @scheme != $SCHEME_FOR and @scheme != $SCHEME_SEO and @scheme != $SCHEME_TOA]"/>
-                    <!-- descriptions -->
-                    <xsl:apply-templates select="atom:content"/>
-                    <!-- rights descriptions -->
-                    <xsl:apply-templates select="atom:rights"/>
-                    <xsl:apply-templates select="atom:link[@rel=$REL_LICENSE]"/>
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
-                    <!-- related info -->
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_REFERENCED_BY]"/>
-                </collection>
-            </xsl:if>
+            <collection type="{atom:link[@rel=$REL_TYPE]/@title}">
+                <!-- entity type -->
+                <xsl:apply-templates select="atom:link[@rel=$REL_TYPE]"/>
+                <!-- identifiers -->
+                <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
+                <xsl:apply-templates select="/atom:entry/atom:id"/>
+                <!-- names -->
+                <xsl:apply-templates select="atom:title"/>
+                <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
+                <!-- location -->
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
+                <!-- coverage -->
+                <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
+                <xsl:apply-templates select="georss:point"/>
+                <xsl:apply-templates select="georss:polygon"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_SPATIAL]"/>
+                <!-- related objects -->
+                <xsl:apply-templates select="atom:author"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_OUTPUT_OF]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]"/>
+                <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
+                <!-- subjects -->
+                <xsl:apply-templates select="atom:category[@scheme = $SCHEME_FOR]"/>
+                <xsl:apply-templates select="atom:category[@scheme = $SCHEME_SEO]"/>
+                <xsl:apply-templates select="atom:category[@scheme = $SCHEME_TOA]"/>
+                <xsl:apply-templates
+                        select="atom:category[@scheme != $NS_DCMITYPE and @scheme != $SCHEME_FOR and @scheme != $SCHEME_SEO and @scheme != $SCHEME_TOA]"/>
+                <!-- descriptions -->
+                <xsl:apply-templates select="atom:content"/>
+                <!-- rights descriptions -->
+                <xsl:apply-templates select="atom:rights"/>
+                <xsl:apply-templates select="atom:link[@rel=$REL_LICENSE]"/>
+                <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
+                <!-- related info -->
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_REFERENCED_BY]"/>
+            </collection>
         </registryObject>
+    </xsl:template>
+
+    <!-- entity type -->
+    <xsl:template match="atom:link[@rel=$REL_TYPE]">
+        <xsl:attribute name="type">
+            <xsl:choose>
+                <xsl:when test="@href = $ENTITY_COLLECTION">collection</xsl:when>
+                <xsl:when test="@href = $ENTITY_DATASET">dataset</xsl:when>
+            </xsl:choose>
+        </xsl:attribute>
     </xsl:template>
 
     <!-- spatial coverage -->

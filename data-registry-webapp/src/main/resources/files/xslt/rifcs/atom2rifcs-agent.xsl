@@ -38,13 +38,8 @@
             <!-- party-->
 
             <party>
-                <xsl:attribute name="type">
-                    <xsl:choose>
-                        <xsl:when test="atom:link[@rel=$REL_TYPE]/@href = $ENTITY_PERSON">person</xsl:when>
-                        <xsl:when test="atom:link[@rel=$REL_TYPE]/@href = $ENTITY_GROUP">group</xsl:when>
-                        <xsl:otherwise>unknown</xsl:otherwise>
-                    </xsl:choose>
-                </xsl:attribute>
+                <!-- entity type -->
+                <xsl:apply-templates select="atom:link[@rel=$REL_TYPE]"/>
                 <!-- identifiers -->
                 <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
                 <xsl:apply-templates select="/atom:entry/atom:id"/>
@@ -74,6 +69,16 @@
                 <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
             </party>
         </registryObject>
+    </xsl:template>
+
+    <!-- entity type -->
+    <xsl:template match="atom:link[@rel=$REL_TYPE]">
+        <xsl:attribute name="type">
+            <xsl:choose>
+                <xsl:when test="@href = $ENTITY_PERSON">person</xsl:when>
+                <xsl:when test="@href = $ENTITY_GROUP">group</xsl:when>
+            </xsl:choose>
+        </xsl:attribute>
     </xsl:template>
 
     <!-- curator / manager (party) -->

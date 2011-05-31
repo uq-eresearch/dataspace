@@ -9,6 +9,7 @@
     <xsl:variable name="NS_GEORSS">http://www.georss.org/georss/</xsl:variable>
     <xsl:variable name="NS_RDFA">http://www.w3.org/ns/rdfa#</xsl:variable>
     <xsl:variable name="NS_RDF_99">http://www.w3.org/1999/02/22-rdf-syntax-ns</xsl:variable>
+    <xsl:variable name="NS_EF">http://www.e-framework.org/Contributions/ServiceGenres/</xsl:variable>
 
     <xsl:variable name="TYPE_ATOM_FEED">application/atom+xml; type=feed</xsl:variable>
 
@@ -91,14 +92,11 @@
         <xsl:value-of select="concat($NS_DC ,'alternative')"/>
     </xsl:variable>
 
-    <xsl:variable name="ENTITY_ACTIVITY">
-        <xsl:value-of select="concat($NS_FOAF , 'Project')"/>
-    </xsl:variable>
     <xsl:variable name="ENTITY_COLLECTION">
         <xsl:value-of select="concat($NS_DCMITYPE, 'Collection')"/>
     </xsl:variable>
-    <xsl:variable name="ENTITY_PARTY">
-        <xsl:value-of select="concat($NS_FOAF, 'Agent')"/>
+    <xsl:variable name="ENTITY_DATASET">
+        <xsl:value-of select="concat($NS_DCMITYPE, 'Dataset')"/>
     </xsl:variable>
     <xsl:variable name="ENTITY_PERSON">
         <xsl:value-of select="concat($NS_FOAF, 'Person')"/>
@@ -106,8 +104,39 @@
     <xsl:variable name="ENTITY_GROUP">
         <xsl:value-of select="concat($NS_FOAF, 'Group')"/>
     </xsl:variable>
-    <xsl:variable name="ENTITY_SERVICE">
-        <xsl:value-of select="concat($NS_VIVO,'Service')"/>
+    <xsl:variable name="ENTITY_PROJECT">
+        <xsl:value-of select="concat($NS_FOAF , 'Project')"/>
+    </xsl:variable>
+        <xsl:variable name="ENTITY_PROGRAM">
+        <xsl:value-of select="concat($NS_VIVO , 'Program')"/>
+    </xsl:variable>
+
+    <xsl:variable name="ENTITY_CREATE">
+        <xsl:value-of select="concat($NS_EF,'Service')"/>
+    </xsl:variable>
+    <xsl:variable name="ENTITY_GENERATE">
+        <xsl:value-of select="concat($NS_EF,'Generate')"/>
+    </xsl:variable>
+    <xsl:variable name="ENTITY_REPORT">
+        <xsl:value-of select="concat($NS_EF,'Report')"/>
+    </xsl:variable>
+    <xsl:variable name="ENTITY_ANNOTATE">
+        <xsl:value-of select="concat($NS_EF,'Annotate')"/>
+    </xsl:variable>
+    <xsl:variable name="ENTITY_TRANSFORM">
+        <xsl:value-of select="concat($NS_EF,'Transform')"/>
+    </xsl:variable>
+    <xsl:variable name="ENTITY_ASSEMBLE">
+        <xsl:value-of select="concat($NS_EF,'Assemble')"/>
+    </xsl:variable>
+    <xsl:variable name="ENTITY_HARVEST">
+        <xsl:value-of select="concat($NS_EF,'Harvest')"/>
+    </xsl:variable>
+    <xsl:variable name="ENTITY_SEARCH">
+        <xsl:value-of select="concat($NS_EF,'Search')"/>
+    </xsl:variable>
+        <xsl:variable name="ENTITY_SYNDICATE">
+        <xsl:value-of select="concat($NS_EF,'Syndicate')"/>
     </xsl:variable>
 
     <xsl:variable name="SCHEME_FOR">http://purl.org/anzsrc/for</xsl:variable>

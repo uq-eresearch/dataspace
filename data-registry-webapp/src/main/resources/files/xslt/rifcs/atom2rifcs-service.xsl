@@ -36,33 +36,50 @@
             </originatingSource>
 
             <!-- collection -->
-            <xsl:if test="atom:link[@rel=$REL_TYPE]">
-                <service type="{atom:link[@rel=$REL_TYPE]/@title}">
-                    <!-- identifiers -->
-                    <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
-                    <xsl:apply-templates select="/atom:entry/atom:id"/>
-                    <!-- names -->
-                    <xsl:apply-templates select="atom:title"/>
-                    <!-- locations -->
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
-                    <!-- coverage -->
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
-                    <!-- related objects -->
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_OUTPUT_OF]"/>
-                    <!-- subjects -->
-                    <xsl:apply-templates select="atom:category[@scheme != $NS_VIVO]"/>
-                    <!-- descriptions -->
-                    <xsl:apply-templates select="atom:content"/>
-                    <!-- rights descriptions -->
-                    <xsl:apply-templates select="atom:rights"/>
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
-                    <!-- related info -->
-                    <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
-                </service>
-            </xsl:if>
+            <service>
+                <!-- entity type -->
+                <xsl:apply-templates select="atom:link[@rel=$REL_TYPE]"/>
+                <!-- identifiers -->
+                <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
+                <xsl:apply-templates select="/atom:entry/atom:id"/>
+                <!-- names -->
+                <xsl:apply-templates select="atom:title"/>
+                <!-- locations -->
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
+                <!-- coverage -->
+                <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
+                <!-- related objects -->
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_OUTPUT_OF]"/>
+                <!-- subjects -->
+                <xsl:apply-templates select="atom:category[@scheme != $NS_VIVO]"/>
+                <!-- descriptions -->
+                <xsl:apply-templates select="atom:content"/>
+                <!-- rights descriptions -->
+                <xsl:apply-templates select="atom:rights"/>
+                <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
+                <!-- related info -->
+                <xsl:apply-templates select="atom:link[@rel=$REL_RELATED]"/>
+            </service>
         </registryObject>
+    </xsl:template>
+
+    <!-- entity type -->
+    <xsl:template match="atom:link[@rel=$REL_TYPE]">
+        <xsl:attribute name="type">
+            <xsl:choose>
+                <xsl:when test="@href = $ENTITY_CREATE">create</xsl:when>
+                <xsl:when test="@href = $ENTITY_GENERATE">generate</xsl:when>
+                <xsl:when test="@href = $ENTITY_REPORT">report</xsl:when>
+                <xsl:when test="@href = $ENTITY_ANNOTATE">annotate</xsl:when>
+                <xsl:when test="@href = $ENTITY_TRANSFORM">transform</xsl:when>
+                <xsl:when test="@href = $ENTITY_ASSEMBLE">assemble</xsl:when>
+                <xsl:when test="@href = $ENTITY_HARVEST">harvest<xsl:when>
+                <xsl:when test="@href = $ENTITY_SEARCH">search</xsl:when>
+                <xsl:when test="@href = $ENTITY_SYNDICATE">syndicate</xsl:when>
+            </xsl:choose>
+        </xsl:attribute>
     </xsl:template>
 
     <!-- collector (party) -->
