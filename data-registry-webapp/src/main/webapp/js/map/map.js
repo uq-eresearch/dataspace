@@ -33,7 +33,6 @@ function init() {
     map.setCenter(new OpenLayers.LonLat(130.32129, -24.25231), 3);
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     map.addControl(new OpenLayers.Control.MousePosition());
-//    document.getElementById('noneToggle').checked = true;
 
 }
 

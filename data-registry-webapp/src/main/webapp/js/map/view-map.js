@@ -69,6 +69,7 @@ function init() {
     map.addLayer(vectorLayer);
     map.addControl(new OpenLayers.Control.MousePosition());
     if (!map.getCenter()) {
-        map.zoomToExtent(vectorLayer.getDataExtent())
+        map.zoomToExtent(vectorLayer.getDataExtent());
+        map.zoomOut(1);
     }
 }
