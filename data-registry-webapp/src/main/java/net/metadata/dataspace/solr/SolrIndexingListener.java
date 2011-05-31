@@ -30,6 +30,7 @@ public class SolrIndexingListener implements ServletContextListener {
         Properties solrProperties = loadSolrProperties();
         JobDetail job = new JobDetail();
         job.setName("solrIndexing");
+        job.setGroup("indexing");
         job.setJobClass(SolrDatabaseIndexer.class);
         Map dataMap = job.getJobDataMap();
         SolrCommand command = getFullImportCommand(solrProperties);
@@ -57,10 +58,12 @@ public class SolrIndexingListener implements ServletContextListener {
             scheduler.start();
             scheduler.scheduleJob(job, trigger);
             sce.getServletContext().setAttribute("scheduler", scheduler);
+            scheduler.triggerJob("solrIndexing", "indexing");
             logger.info("Successfully initialised solr indexing scheduler");
         } catch (SchedulerException e) {
             logger.warn("Could not start solr indexing cron job");
         }
+
     }
 
     @Override
