@@ -172,6 +172,19 @@
             </div>
         </xsl:if>
     </xsl:template>
+    <!-- locations -->
+    <xsl:template name="publications">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
+            <div class="statement">
+                <div class="property">
+                    <p>Publication(s)</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_REFERENCED_BY]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
 
     <!-- source -->
     <!-- TO DO: check if id starts with HTTP before making it a link -->
@@ -315,6 +328,7 @@
             or @rel=$ATOM_IS_PARTICIPANT_IN
             or @rel=$ATOM_MBOX
             or @rel=$REL_RELATED
+            or @rel=$ATOM_IS_REFERENCED_BY
             or @rel=$REL_LATEST_VERSION]">
         <p>
             <a href="{@href}">

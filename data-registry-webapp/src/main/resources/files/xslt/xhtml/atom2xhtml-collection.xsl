@@ -94,6 +94,8 @@
                     <xsl:call-template name="projects"/>
                     <!-- services -->
                     <xsl:call-template name="services"/>
+                    <!-- services -->
+                    <xsl:call-template name="publications"/>
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
                     <!-- temporal -->
