@@ -46,8 +46,12 @@
             for (var name in params) {
                 Manager.store.addByValue(name, params[name]);
             }
-
-            doSearch('<%=request.getParameter("q")%>');
+            <%
+            String query = request.getParameter("q");
+            if(query != null) {
+            %>
+            doSearch('<%=query%>');
+            <%}%>
         });
         $.fn.showIf = function (condition) {
             if (condition) {
