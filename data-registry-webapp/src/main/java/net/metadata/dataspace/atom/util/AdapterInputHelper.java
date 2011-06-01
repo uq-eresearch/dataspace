@@ -532,7 +532,6 @@ public class AdapterInputHelper {
                     }
                 } else {
                     //It is a keyword
-                    String label = category.getLabel();
                     Subject subject = daoManager.getSubjectDao().getSubject(Constants.SCHEME_KEYWORD, term, Constants.LABEL_KEYWORD);
                     if (subject == null) {
                         subject = entityCreator.getNextSubject();
@@ -674,6 +673,7 @@ public class AdapterInputHelper {
             Agent agent = daoManager.getAgentDao().getByEmail(email);
             if (agent == null) {
                 //Try finding the agent from the UQ LDAP
+//                RegistryApplication.getApplicationContext().getAuthenticationManager().getCurrentUser()
                 NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email);
                 Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
                 agent = LDAPUtil.createAgent(attributesAsMap);

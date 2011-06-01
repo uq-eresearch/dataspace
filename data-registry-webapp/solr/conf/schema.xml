@@ -451,6 +451,7 @@ any data added to them will be ignored outright.  -->
         <field name="title" type="text" indexed="true" stored="true"/>
         <field name="description" type="text" indexed="true" stored="true"/>
         <field name="type" type="text" indexed="true" stored="true"/>
+        <field name="subjectlabel" type="text" indexed="true" stored="false"/>
 
         <field name="activitytitle" type="text" indexed="true" stored="true"/>
         <field name="activitydescription" type="text" indexed="true" stored="true"/>
@@ -480,6 +481,7 @@ any data added to them will be ignored outright.  -->
         <field name="term" type="text" indexed="true" stored="true"/>
         <field name="isdefinedby" type="text" indexed="true" stored="true"/>
         <field name="label" type="text" indexed="true" stored="true"/>
+
 
         <!-- catchall field, containing all other searchable text fields (implemented
 via copyField further on in this schema  -->
@@ -565,6 +567,7 @@ or to add multiple fields to the same field for easier/faster searching.  -->
     <copyField source="title" dest="text"/>
     <copyField source="description" dest="text"/>
     <copyField source="type" dest="text"/>
+    <copyField source="subjectlabel" dest="text"/>
 
     <copyField source="term" dest="text"/>
     <copyField source="isdefinedby" dest="text"/>
@@ -601,6 +604,7 @@ or to add multiple fields to the same field for easier/faster searching.  -->
     <copyField source="collectiontitle" dest="collection"/>
     <copyField source="collectiondescription" dest="collection"/>
     <copyField source="collectiontype" dest="collection"/>
+    <copyField source="subjectlabel" dest="collection"/>
 
     <copyField source="servicetitle" dest="service"/>
     <copyField source="servicedescription" dest="service"/>

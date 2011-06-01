@@ -22,6 +22,10 @@
             <field column="v.title" name="collectiontitle"/>
             <field column="v.description" name="collectiondescription"/>
             <field column="v.type" name="collectiontype"/>
+            <entity name="collectionsubjects" dataSource="registry-ds"
+                    query="SELECT s.label FROM subject AS s, collections_subjects AS cs WHERE cs.collectionversion_id='${collectionversion.id}' AND s.id=cs.subjects_id">
+                <field name="subjectlabel" column="label"/>
+            </entity>
         </entity>
         <entity name="agentversion" dataSource="registry-ds"
                 query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM agentversion as v, agent as c WHERE c.isactive = true AND c.published_id = v.id">
@@ -33,7 +37,6 @@
         </entity>
         <entity name="serviceversion" dataSource="registry-ds"
                 query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM serviceversion as v, service as c WHERE c.isactive = true AND c.published_id = v.id">
-            >
             <field column="c.id" name="id"/>
             <field column="c.atomicnumber" name="atomicnumber"/>
             <field column="v.title" name="servicetitle"/>
@@ -42,7 +45,6 @@
         </entity>
         <entity name="activityversion" dataSource="registry-ds"
                 query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM activityversion as v, activity as c WHERE c.isactive = true AND c.published_id = v.id">
-            >
             <field column="c.id" name="id"/>
             <field column="c.atomicnumber" name="atomicnumber"/>
             <field column="v.title" name="activitytitle"/>
