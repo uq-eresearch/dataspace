@@ -57,8 +57,9 @@
                 <xsl:apply-templates select="atom:category[@scheme = $SCHEME_FOR]"/>
                 <xsl:apply-templates select="atom:category[@scheme = $SCHEME_SEO]"/>
                 <xsl:apply-templates select="atom:category[@scheme = $SCHEME_TOA]"/>
+                <!-- keywords -->
                 <xsl:apply-templates
-                        select="atom:category[@scheme != $NS_DCMITYPE and @scheme != $SCHEME_FOR and @scheme != $SCHEME_SEO and @scheme != $SCHEME_TOA]"/>
+                        select="atom:category[not(@scheme)]"/>
                 <!-- descriptions -->
                 <xsl:apply-templates select="atom:content"/>
                 <!-- rights descriptions -->

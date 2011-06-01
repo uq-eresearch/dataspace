@@ -104,9 +104,8 @@
             <xsl:value-of select="substring-after(@term, $PREFIX_TOA)"/>
         </subject>
     </xsl:template>
-    <xsl:template
-        match="atom:category[not(@scheme)]">
-        <subject type="{@scheme}">
+    <xsl:template match="atom:category[not(@scheme)]">
+        <subject type="local">
             <xsl:value-of select="@term"/>
         </subject>
     </xsl:template>
