@@ -105,9 +105,7 @@
                     <!-- location -->
                     <xsl:call-template name="locations"/>
                     <!-- subjects -->
-
                     <xsl:call-template name="subjects"/>
-
                     <xsl:call-template name="keywords"/>
                     <!-- related info -->
                     <xsl:call-template name="related"/>
@@ -162,18 +160,6 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template
-            match="atom:category[@scheme != $NS_DCMITYPE]">
-        <p>
-            <xsl:choose>
-                <xsl:when test="@label">
-                    <xsl:value-of select="@label"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="@term"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </p>
-    </xsl:template>
+
 
 </xsl:stylesheet>

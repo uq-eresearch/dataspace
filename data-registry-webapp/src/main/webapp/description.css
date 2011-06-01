@@ -22,9 +22,13 @@ div.content {
     margin-left: 12.25em;
 }
 
-div.content p, div.property p {
+div.content p,  div.property p {
     margin: 0 0;
     padding: 0.25em;
+}
+
+div.content span {
+    padding-right: 0.5em;
 }
 
 div.clear {

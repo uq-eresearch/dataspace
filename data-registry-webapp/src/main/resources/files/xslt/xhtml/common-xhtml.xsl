@@ -217,35 +217,48 @@
 
     <!-- subjects -->
     <xsl:template name="subjects">
-        <xsl:if test="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
-                and @scheme!=$NS_FOAF]">
+        <xsl:if test="atom:category[@scheme]">
             <div class="statement">
                 <div class="property">
                     <p>Subject(s)</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
-                and @scheme!=$NS_FOAF]"/>
+                    <xsl:apply-templates select="atom:category[@scheme]"/>
                 </div>
             </div>
         </xsl:if>
     </xsl:template>
-    <!-- subjects -->
+    <xsl:template
+            match="atom:category[@scheme]">
+        <p>
+            <xsl:choose>
+                <xsl:when test="@label">
+                    <xsl:value-of select="@label"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="@term"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </p>
+    </xsl:template>
+
+    <!-- keywords -->
     <xsl:template name="keywords">
-        <xsl:if test="atom:category[@label = 'keyword']">
+        <xsl:if test="atom:category[not(@scheme)]">
             <div class="statement">
                 <div class="property">
                     <p>Keyword(s)</p>
                 </div>
                 <div class="content">
-                    <xsl:for-each select="atom:category[@label = 'keyword']">
-                        <p>
-                            <xsl:value-of select="@term"/>
-                        </p>
-                    </xsl:for-each>
+                    <p>
+                        <xsl:apply-templates select="atom:category[not(@scheme)]"/>
+                    </p>
                 </div>
             </div>
         </xsl:if>
+    </xsl:template>
+    <xsl:template match="atom:category[not(@scheme)]">
+        <span><xsl:value-of select="@term"/></span>
     </xsl:template>
 
     <!-- spatial -->
