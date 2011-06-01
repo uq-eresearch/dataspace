@@ -569,9 +569,9 @@ or to add multiple fields to the same field for easier/faster searching.  -->
     <copyField source="type" dest="text"/>
     <copyField source="subjectlabel" dest="text"/>
 
-    <copyField source="term" dest="text"/>
-    <copyField source="isdefinedby" dest="text"/>
-    <copyField source="label" dest="text"/>
+    <!--<copyField source="term" dest="text"/>-->
+    <!--<copyField source="isdefinedby" dest="text"/>-->
+    <!--<copyField source="label" dest="text"/>-->
 
     <copyField source="activitytitle" dest="text"/>
     <copyField source="activitydescription" dest="text"/>
