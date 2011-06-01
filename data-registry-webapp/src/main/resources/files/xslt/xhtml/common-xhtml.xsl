@@ -84,7 +84,7 @@
     <xsl:template name="representations">
         <xsl:if test="atom:link[@rel=$REL_ALTERNATE]">
             <p class="alternate">Download as:
-                <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
+                <span><xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/></span>
             </p>
         </xsl:if>
     </xsl:template>

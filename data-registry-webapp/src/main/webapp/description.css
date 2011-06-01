@@ -27,8 +27,8 @@ div.content p,  div.property p {
     padding: 0.25em;
 }
 
-div.content p span {
-    padding-right: 0.75em;
+div.about p span {
+    padding-right: 1em;
 }
 
 div.clear {
