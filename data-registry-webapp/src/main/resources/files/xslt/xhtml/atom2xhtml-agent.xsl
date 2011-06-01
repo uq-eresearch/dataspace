@@ -73,8 +73,11 @@
                     <xsl:call-template name="isManagerOf"/>
                     <!-- activities -->
                     <xsl:call-template name="activities"/>
+                    <!--pages-->
+                    <xsl:call-template name="locations"/>
                     <!-- subjects -->
                     <xsl:call-template name="subjects"/>
+                    <xsl:call-template name="keywords"/>
                     <!-- metadata about the description -->
                 <xsl:text>
                 </xsl:text>

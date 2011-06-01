@@ -72,6 +72,7 @@
                     <xsl:call-template name="output"/>
                     <!-- subjects -->
                     <xsl:call-template name="subjects"/>
+                    <xsl:call-template name="keywords"/>
                     <!-- rights -->
                     <xsl:apply-templates select="atom:rights"/>
                     <!-- metadata about the description -->

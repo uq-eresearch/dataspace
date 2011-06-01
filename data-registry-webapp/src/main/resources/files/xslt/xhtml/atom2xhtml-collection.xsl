@@ -94,14 +94,17 @@
                     <xsl:call-template name="projects"/>
                     <!-- services -->
                     <xsl:call-template name="services"/>
-                    <!-- location -->
-                    <xsl:call-template name="locations"/>
                     <!-- spatial -->
                     <xsl:call-template name="spatial"/>
                     <!-- temporal -->
                     <xsl:call-template name="temporal"/>
+                    <!-- location -->
+                    <xsl:call-template name="locations"/>
                     <!-- subjects -->
+
                     <xsl:call-template name="subjects"/>
+
+                    <xsl:call-template name="keywords"/>
                     <!-- related info -->
                     <xsl:call-template name="related"/>
                     <!-- rights -->

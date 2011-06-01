@@ -83,7 +83,8 @@
     <!-- representations -->
     <xsl:template name="representations">
         <xsl:if test="atom:link[@rel=$REL_ALTERNATE]">
-            <p class="alternate">Download as: <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
+            <p class="alternate">Download as:
+                <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
             </p>
         </xsl:if>
     </xsl:template>
@@ -163,7 +164,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
             <div class="statement">
                 <div class="property">
-                    <p>Location(s)</p>
+                    <p>Pages(s)</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
@@ -183,7 +184,8 @@
     <!-- description publisher -->
     <xsl:template
             name="description-publisher">
-        <p>Description published by <xsl:apply-templates select="atom:source/atom:link[@rel = $ATOM_PUBLISHER]"/>
+        <p>Description published by
+            <xsl:apply-templates select="atom:source/atom:link[@rel = $ATOM_PUBLISHER]"/>
         </p>
     </xsl:template>
 
@@ -193,11 +195,28 @@
                 and @scheme!=$NS_FOAF]">
             <div class="statement">
                 <div class="property">
-                    <p>Subjects</p>
+                    <p>Subject(s)</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:category[@scheme != $NS_DCMITYPE and @scheme!=$NS_VIVO
                 and @scheme!=$NS_FOAF]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- subjects -->
+    <xsl:template name="keywords">
+        <xsl:if test="atom:category[@label = 'keyword']">
+            <div class="statement">
+                <div class="property">
+                    <p>Keyword(s)</p>
+                </div>
+                <div class="content">
+                    <xsl:for-each select="atom:category[@label = 'keyword']">
+                        <p>
+                            <xsl:value-of select="@term"/>
+                        </p>
+                    </xsl:for-each>
                 </div>
             </div>
         </xsl:if>
@@ -311,7 +330,7 @@
         </p>
     </xsl:template>
     <xsl:template
-        match="atom:link[@rel=$REL_ALTERNATE
+            match="atom:link[@rel=$REL_ALTERNATE
         or @rel=$ATOM_PUBLISHER]">
         <a href="{@href}">
             <xsl:choose>
