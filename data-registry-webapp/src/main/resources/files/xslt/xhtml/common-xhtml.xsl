@@ -102,6 +102,19 @@
             </div>
         </div>
     </xsl:template>
+    <!-- published -->
+    <xsl:template match="atom:published">
+        <div class="statement">
+            <div class="property">
+                <p>Published</p>
+            </div>
+            <div class="content">
+                <p>
+                    <xsl:value-of select="text()"/>
+                </p>
+            </div>
+        </div>
+    </xsl:template>
     <xsl:template match="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]">
         <div class="statement">
             <div class="property">
