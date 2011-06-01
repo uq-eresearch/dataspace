@@ -56,22 +56,6 @@
         return 'no items found in current selection';
     };
 
-    AjaxSolr.theme.prototype.activityFeed = function (doc) {
-        return '<p><a href="">' + doc.activitytitle + '</a></p>';
-    };
-
-    AjaxSolr.theme.prototype.agentFeed = function (doc) {
-        return '<p><a href="">' + doc.agenttitle + '</a></p>';
-    };
-
-    AjaxSolr.theme.prototype.collectionFeed = function (doc) {
-        return '<p><a href="">' + doc.newcollectiontitle + '</a> created on ' + doc.newcollectioncreated + '</p>';
-    };
-
-    AjaxSolr.theme.prototype.serviceFeed = function (doc) {
-        return '<p><a href="">' + doc.servicetitle + '</a></p>';
-    };
-
 })(jQuery);
 
 var BASE_CHARACTERS = "0123456789bcdfghjklmnpqrstvwxyz";

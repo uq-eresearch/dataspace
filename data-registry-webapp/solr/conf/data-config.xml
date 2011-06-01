@@ -15,41 +15,81 @@
         <entity name="subject" dataSource="registry-ds"
                 query="SELECT * FROM subject WHERE isactive = true">
         </entity>
-        <entity name="collectionversion" dataSource="registry-ds"
-                query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM collectionversion as v, collection as c WHERE c.isactive = true AND c.published_id = v.id">
-            <field column="c.id" name="id"/>
-            <field column="c.atomicnumber" name="atomicnumber"/>
-            <field column="v.title" name="collectiontitle"/>
-            <field column="v.description" name="collectiondescription"/>
-            <field column="v.type" name="collectiontype"/>
-            <entity name="collectionsubjects" dataSource="registry-ds"
-                    query="SELECT s.label FROM subject AS s, collections_subjects AS cs WHERE cs.collectionversion_id='${collectionversion.id}' AND s.id=cs.subjects_id">
-                <field name="subjectlabel" column="label"/>
+        <entity name="collection" dataSource="registry-ds"
+                query="SELECT id, atomicnumber, published_id FROM collection WHERE isactive = true AND published_id is not null">
+            <field column="id" name="id"/>
+            <field column="atomicnumber" name="atomicnumber"/>
+            <entity name="collectionversion" dataSource="registry-ds"
+                    query="SELECT title, description, type, id FROM collectionversion WHERE id=${collection.published_id}">
+                <field column="title" name="title"/>
+                <field column="description" name="description"/>
+                <field column="type" name="type"/>
+                <entity name="collections_subjects" dataSource="registry-ds"
+                        query="SELECT * FROM collections_subjects WHERE collectionversion_id=${collectionversion.id}">
+                    <entity name="collectionsubjects" dataSource="registry-ds"
+                            query="SELECT label, term FROM subject WHERE id=${collections_subjects.subjects_id}">
+                        <field column="label" name="subjectlabel" multiValued="true"/>
+                        <field column="term" name="subjectterm" multiValued="true"/>
+                    </entity>
+                </entity>
             </entity>
         </entity>
-        <entity name="agentversion" dataSource="registry-ds"
-                query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM agentversion as v, agent as c WHERE c.isactive = true AND c.published_id = v.id">
-            <field column="c.id" name="id"/>
-            <field column="c.atomicnumber" name="atomicnumber"/>
-            <field column="v.title" name="agenttitle"/>
-            <field column="v.description" name="agentdescription"/>
-            <field column="v.type" name="agenttype"/>
+        <entity name="agent" dataSource="registry-ds"
+                query="SELECT id, atomicnumber, published_id FROM agent WHERE isactive = true AND published_id is not null">
+            <field column="id" name="id"/>
+            <field column="atomicnumber" name="atomicnumber"/>
+            <entity name="agentversion" dataSource="registry-ds"
+                    query="SELECT title, description, type, id FROM agentversion WHERE id=${agent.published_id}">
+                <field column="title" name="title"/>
+                <field column="description" name="description"/>
+                <field column="type" name="type"/>
+                <entity name="agents_subjects" dataSource="registry-ds"
+                        query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.id}">
+                    <entity name="agentsubjects" dataSource="registry-ds"
+                            query="SELECT label, term FROM subject WHERE id=${agents_subjects.subjects_id}">
+                        <field column="label" name="subjectlabel" multiValued="true"/>
+                        <field column="term" name="subjectterm" multiValued="true"/>
+                    </entity>
+                </entity>
+            </entity>
         </entity>
-        <entity name="serviceversion" dataSource="registry-ds"
-                query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM serviceversion as v, service as c WHERE c.isactive = true AND c.published_id = v.id">
-            <field column="c.id" name="id"/>
-            <field column="c.atomicnumber" name="atomicnumber"/>
-            <field column="v.title" name="servicetitle"/>
-            <field column="v.description" name="servicedescription"/>
-            <field column="v.type" name="servicetype"/>
+        <entity name="service" dataSource="registry-ds"
+                query="SELECT id, atomicnumber, published_id FROM service WHERE isactive = true AND published_id is not null">
+            <field column="id" name="id"/>
+            <field column="atomicnumber" name="atomicnumber"/>
+            <entity name="serviceversion" dataSource="registry-ds"
+                    query="SELECT title, description, type, id FROM serviceversion WHERE id=${service.published_id}">
+                <field column="title" name="title"/>
+                <field column="description" name="description"/>
+                <field column="type" name="type"/>
+                <entity name="services_subjects" dataSource="registry-ds"
+                        query="SELECT * FROM services_subjects WHERE serviceversion_id=${serviceversion.id}">
+                    <entity name="servicesubjects" dataSource="registry-ds"
+                            query="SELECT label, term FROM subject WHERE id=${services_subjects.subjects_id}">
+                        <field column="label" name="subjectlabel" multiValued="true"/>
+                        <field column="term" name="subjectterm" multiValued="true"/>
+                    </entity>
+                </entity>
+            </entity>
         </entity>
-        <entity name="activityversion" dataSource="registry-ds"
-                query="SELECT v.title, v.description, v.type, c.id, c.atomicnumber FROM activityversion as v, activity as c WHERE c.isactive = true AND c.published_id = v.id">
-            <field column="c.id" name="id"/>
-            <field column="c.atomicnumber" name="atomicnumber"/>
-            <field column="v.title" name="activitytitle"/>
-            <field column="v.description" name="activitydescription"/>
-            <field column="v.type" name="activitytype"/>
+        <entity name="activity" dataSource="registry-ds"
+                query="SELECT id, atomicnumber, published_id FROM activity WHERE isactive = true AND published_id is not null">
+            <field column="id" name="id"/>
+            <field column="atomicnumber" name="atomicnumber"/>
+            <entity name="activityversion" dataSource="registry-ds"
+                    query="SELECT title, description, type, id FROM activityversion WHERE id=${activity.published_id}">
+                <field column="title" name="title"/>
+                <field column="description" name="description"/>
+                <field column="type" name="type"/>
+                <entity name="activitys_subjects" dataSource="registry-ds"
+                        query="SELECT * FROM activitys_subjects WHERE activityversion_id=${activityversion.id}">
+                    <entity name="activitysubjects" dataSource="registry-ds"
+                            query="SELECT label, term FROM subject WHERE id=${activitys_subjects.subjects_id}">
+                        <field column="label" name="subjectlabel" multiValued="true"/>
+                        <field column="term" name="subjectterm" multiValued="true"/>
+                    </entity>
+                </entity>
+            </entity>
         </entity>
     </document>
 </dataConfig>

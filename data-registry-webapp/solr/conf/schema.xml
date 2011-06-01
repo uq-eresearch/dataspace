@@ -451,7 +451,9 @@ any data added to them will be ignored outright.  -->
         <field name="title" type="text" indexed="true" stored="true"/>
         <field name="description" type="text" indexed="true" stored="true"/>
         <field name="type" type="text" indexed="true" stored="true"/>
-        <field name="subjectlabel" type="text" indexed="true" stored="false"/>
+
+        <field name="subjectlabel" type="text" indexed="true" stored="true"/>
+        <field name="subjectterm" type="text" indexed="true" stored="true"/>
 
         <field name="activitytitle" type="text" indexed="true" stored="true"/>
         <field name="activitydescription" type="text" indexed="true" stored="true"/>
@@ -490,7 +492,6 @@ via copyField further on in this schema  -->
         <field name="activity" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="agent" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="collection" type="text" indexed="true" stored="false" multiValued="true"/>
-        <field name="newcollection" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="service" type="text" indexed="true" stored="false" multiValued="true"/>
         <!-- catchall text field that indexes tokens both normally and in reverse for efficient
      leading wildcard queries. -->
@@ -568,10 +569,7 @@ or to add multiple fields to the same field for easier/faster searching.  -->
     <copyField source="description" dest="text"/>
     <copyField source="type" dest="text"/>
     <copyField source="subjectlabel" dest="text"/>
-
-    <!--<copyField source="term" dest="text"/>-->
-    <!--<copyField source="isdefinedby" dest="text"/>-->
-    <!--<copyField source="label" dest="text"/>-->
+    <copyField source="subjectterm" dest="text"/>
 
     <copyField source="activitytitle" dest="text"/>
     <copyField source="activitydescription" dest="text"/>
@@ -605,6 +603,7 @@ or to add multiple fields to the same field for easier/faster searching.  -->
     <copyField source="collectiondescription" dest="collection"/>
     <copyField source="collectiontype" dest="collection"/>
     <copyField source="subjectlabel" dest="collection"/>
+    <copyField source="subjectterm" dest="collection"/>
 
     <copyField source="servicetitle" dest="service"/>
     <copyField source="servicedescription" dest="service"/>
