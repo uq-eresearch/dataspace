@@ -105,7 +105,7 @@
         </subject>
     </xsl:template>
     <xsl:template
-        match="atom:category[@scheme != $NS_DCMITYPE and @scheme != $SCHEME_FOR and @scheme != $SCHEME_SEO and @scheme != $SCHEME_TOA]">
+        match="atom:category[not(@scheme)]">
         <subject type="{@scheme}">
             <xsl:value-of select="@term"/>
         </subject>
