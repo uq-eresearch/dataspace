@@ -1,6 +1,7 @@
 package net.metadata.dataspace.util;
 
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.data.access.SubjectDao;
 import net.metadata.dataspace.data.model.context.Subject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -56,6 +57,7 @@ public class ANZSRCLoader {
                 Document dom = getDOM(codeFile);
                 dom.getDocumentElement().normalize();
 
+                SubjectDao subjectDao = RegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
                 NodeList nodeList = dom.getElementsByTagName(ELEMENT_DESCRIPTION);
                 EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
                 EntityTransaction transaction = entityManager.getTransaction();
@@ -64,11 +66,13 @@ public class ANZSRCLoader {
                     Element descriptionElement = (Element) nodeList.item(i);
                     String label = descriptionElement.getElementsByTagName(ELEMENT_LABEL).item(0).getTextContent();
                     String term = descriptionElement.getAttribute(ATTRIBUTE_ABOUT).replace("/#", "#");
-                    Subject subject = RegistryApplication.getApplicationContext().getEntityCreator().getNextSubject();
-                    subject.setDefinedBy(scheme);
-                    subject.setTerm(term);
-                    subject.setLabel(label);
-                    entityManager.persist(subject);
+                    if (subjectDao.getSubject(scheme, term, label) == null) {
+                        Subject subject = RegistryApplication.getApplicationContext().getEntityCreator().getNextSubject();
+                        subject.setDefinedBy(scheme);
+                        subject.setTerm(term);
+                        subject.setLabel(label);
+                        entityManager.persist(subject);
+                    }
                 }
                 transaction.commit();
             }

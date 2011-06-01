@@ -1,5 +1,8 @@
-package net.metadata.dataspace.solr;
+package net.metadata.dataspace.app;
 
+import net.metadata.dataspace.solr.SolrCommand;
+import net.metadata.dataspace.solr.SolrDatabaseIndexer;
+import net.metadata.dataspace.util.ANZSRCLoader;
 import org.apache.log4j.Logger;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
@@ -18,14 +21,41 @@ import java.util.Properties;
 
 /**
  * Author: alabri
- * Date: 30/05/11
- * Time: 11:27 AM
+ * Date: 1/06/11
+ * Time: 12:57 PM
+ * A listener for custom initializations
  */
-public class SolrIndexingListener implements ServletContextListener {
+public class InitializationListener implements ServletContextListener {
     private Logger logger = Logger.getLogger(getClass());
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        injectANZSRCCodes();
+        initializeSolrIndexing(sce);
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        Scheduler scheduler = (Scheduler) sce.getServletContext().getAttribute("scheduler");
+        try {
+            scheduler.shutdown(false);
+            logger.info("Successfully shutdown solr indexing scheduler");
+        } catch (SchedulerException e) {
+            logger.warn("Failed to shutdown solr indexing scheduler");
+        }
+    }
+
+    private void injectANZSRCCodes() {
+        logger.info("Injecting ANZSRC codes...");
+        boolean result = ANZSRCLoader.loadANZSRCCodes();
+        if (result) {
+            logger.info("Injected ANZSRC codes.............OK");
+        } else {
+            logger.info("Injection of ANZSRC codes was not successful");
+        }
+    }
+
+    private void initializeSolrIndexing(ServletContextEvent sce) {
         logger.info("Initialising solr indexing scheduler ...");
         Properties solrProperties = loadSolrProperties();
         JobDetail job = new JobDetail();
@@ -63,18 +93,6 @@ public class SolrIndexingListener implements ServletContextListener {
         } catch (SchedulerException e) {
             logger.warn("Could not start solr indexing cron job");
         }
-
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        Scheduler scheduler = (Scheduler) sce.getServletContext().getAttribute("scheduler");
-        try {
-            scheduler.shutdown(false);
-            logger.info("Successfully shutdown solr indexing scheduler");
-        } catch (SchedulerException e) {
-            logger.warn("Failed to shutdown solr indexing scheduler");
-        }
     }
 
     private SolrCommand getFullImportCommand(Properties properties) {
@@ -90,7 +108,7 @@ public class SolrIndexingListener implements ServletContextListener {
         Properties properties = new Properties();
         InputStream resourceAsStream = null;
         try {
-            resourceAsStream = SolrIndexingListener.class.getResourceAsStream("/conf/solr/solr.properties");
+            resourceAsStream = InitializationListener.class.getResourceAsStream("/conf/solr/solr.properties");
             if (resourceAsStream == null) {
                 logger.fatal("Solr configuration file not found, please ensure there is a 'conf/solr/solr.properties' on the classpath");
             }

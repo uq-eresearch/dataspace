@@ -32,7 +32,7 @@
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>
     <listener>
-        <listener-class>net.metadata.dataspace.solr.SolrIndexingListener</listener-class>
+        <listener-class>net.metadata.dataspace.app.InitializationListener</listener-class>
     </listener>
 
     <!--Servlets-->
