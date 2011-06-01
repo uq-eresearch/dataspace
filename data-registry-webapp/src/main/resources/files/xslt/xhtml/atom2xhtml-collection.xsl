@@ -86,8 +86,6 @@
                     </xsl:if>
                     <!-- type -->
                     <xsl:call-template name="type"/>
-                    <!-- published Date -->
-                    <xsl:apply-templates select="atom:published"/>
                     <!-- creators -->
                     <xsl:call-template name="creators"/>
                     <!-- curators -->
