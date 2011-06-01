@@ -534,7 +534,7 @@ public class AdapterOutputHelper {
         for (Subject sub : subjectSet) {
             if (sub.getLabel().equals(Constants.LABEL_KEYWORD)) {
                 Category category = entry.addCategory(sub.getTerm());
-                category.setLabel(Constants.LABEL_KEYWORD);
+//                category.setLabel(Constants.LABEL_KEYWORD);
             } else {
                 entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
             }
