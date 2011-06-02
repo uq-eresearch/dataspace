@@ -56,13 +56,14 @@
                 <div class="description">
                     <!-- names -->
                     <xsl:apply-templates select="atom:title"/>
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
                     <!-- description -->
                     <xsl:apply-templates select="atom:content"/>
                     <!-- latest-version -->
                     <xsl:if test="$currentUser">
                         <xsl:call-template name="latest-version"/>
                     </xsl:if>
+                    <!-- alternative names -->
+                    <xsl:call-template name="alternate-names"/>
                     <!-- type -->
                     <xsl:call-template name="type"/>
                     <!-- email -->
@@ -94,6 +95,21 @@
             </div>
             <xsl:call-template name="footer"/>
         </body>
+    </xsl:template>
+
+    <!-- alternate names -->
+    <xsl:template name="alternate-names">
+        <xsl:if test="rdfa:meta[@property=$RDFA_ALTERNATIVE]">
+            <div class="statement">
+                <div class="property">
+                    <p>Also known as</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
+                </div>
+            </div>
+        </xsl:if>
+
     </xsl:template>
 
     <!-- collections -->

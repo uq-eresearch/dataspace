@@ -31,7 +31,6 @@
     <!-- alternative names -->
     <xsl:template match="rdfa:meta[@property=$RDFA_ALTERNATIVE]">
         <p>
-            <xsl:text>Also known as:  </xsl:text>
             <xsl:value-of select="@content"/>
         </p>
     </xsl:template>
