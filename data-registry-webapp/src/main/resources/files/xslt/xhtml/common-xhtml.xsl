@@ -148,13 +148,16 @@
                 <p>Creator(s)</p>
             </div>
             <div class="content">
-                <p>
-                    <a href="{atom:author/atom:uri}">
-                        <xsl:value-of select="atom:author/atom:name"/>
-                    </a>
-                </p>
+                <xsl:apply-templates select="atom:author"/>
             </div>
         </div>
+    </xsl:template>
+    <xsl:template match="atom:author">
+        <p>
+            <a href="{atom:uri}">
+                <xsl:value-of select="atom:name"/>
+            </a>
+        </p>
     </xsl:template>
 
     <!-- curators -->
