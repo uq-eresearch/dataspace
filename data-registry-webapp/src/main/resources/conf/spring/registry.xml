@@ -116,5 +116,6 @@
 
     <bean id="authenticationManager" class="net.metadata.dataspace.auth.impl.AuthenticationManagerImpl"/>
     <bean id="authorizationManager" class="net.metadata.dataspace.auth.impl.AuthorizationManagerImpl"/>
+    <bean id="initializer" class="net.metadata.dataspace.app.RegistryInitializer"/>
 
 </beans>

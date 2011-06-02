@@ -10,8 +10,6 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -25,24 +23,12 @@ import java.util.Properties;
  * Time: 12:57 PM
  * A listener for custom initializations
  */
-public class InitializationListener implements ServletContextListener {
+public class RegistryInitializer {
     private Logger logger = Logger.getLogger(getClass());
 
-    @Override
-    public void contextInitialized(ServletContextEvent sce) {
+    public RegistryInitializer() {
         injectANZSRCCodes();
-        initializeSolrIndexing(sce);
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        Scheduler scheduler = (Scheduler) sce.getServletContext().getAttribute("scheduler");
-        try {
-            scheduler.shutdown(false);
-            logger.info("Successfully shutdown solr indexing scheduler");
-        } catch (SchedulerException e) {
-            logger.warn("Failed to shutdown solr indexing scheduler");
-        }
+        initializeSolrIndexing();
     }
 
     private void injectANZSRCCodes() {
@@ -55,7 +41,7 @@ public class InitializationListener implements ServletContextListener {
         }
     }
 
-    private void initializeSolrIndexing(ServletContextEvent sce) {
+    private void initializeSolrIndexing() {
         logger.info("Initialising solr indexing scheduler ...");
         Properties solrProperties = loadSolrProperties();
         JobDetail job = new JobDetail();
@@ -87,7 +73,6 @@ public class InitializationListener implements ServletContextListener {
             scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
             scheduler.scheduleJob(job, trigger);
-            sce.getServletContext().setAttribute("scheduler", scheduler);
             scheduler.triggerJob("solrIndexing", "indexing");
             logger.info("Successfully initialised solr indexing scheduler");
         } catch (SchedulerException e) {
@@ -108,7 +93,7 @@ public class InitializationListener implements ServletContextListener {
         Properties properties = new Properties();
         InputStream resourceAsStream = null;
         try {
-            resourceAsStream = InitializationListener.class.getResourceAsStream("/conf/solr/solr.properties");
+            resourceAsStream = RegistryInitializer.class.getResourceAsStream("/conf/solr/solr.properties");
             if (resourceAsStream == null) {
                 logger.fatal("Solr configuration file not found, please ensure there is a 'conf/solr/solr.properties' on the classpath");
             }
