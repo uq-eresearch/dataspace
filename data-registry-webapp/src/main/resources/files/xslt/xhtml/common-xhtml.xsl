@@ -257,7 +257,7 @@
         </xsl:if>
     </xsl:template>
     <xsl:template match="atom:category[not(@scheme)]">
-        <span><xsl:value-of select="@term"/></span>
+        <span><a href="/search?q={@term}"><xsl:value-of select="@term"/></a></span>
     </xsl:template>
 
     <!-- spatial -->
