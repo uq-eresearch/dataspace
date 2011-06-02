@@ -1,6 +1,5 @@
 package net.metadata.dataspace.controller;
 
-import net.metadata.dataspace.controller.command.SearchCommand;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,12 +14,6 @@ import javax.servlet.http.HttpServletResponse;
  * Time: 8:22 AM
  */
 public class SearchController extends SimpleFormController {
-
-    public SearchController() {
-        super();
-        setCommandClass(SearchCommand.class);
-        setFormView("search");
-    }
 
     @Override
     protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
