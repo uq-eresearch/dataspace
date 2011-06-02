@@ -689,7 +689,7 @@ public class AdapterInputHelper {
             }
             return agent;
         } catch (Throwable th) {
-            throw new ResponseContextException("Could not find agent", 500);
+            throw new ResponseContextException("Could not find agent: " + email, 500);
         }
     }
 
