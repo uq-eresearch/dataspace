@@ -54,6 +54,7 @@
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_MANAGER_OF]"/>
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]"/>
                 <!-- subjects -->
                 <xsl:apply-templates select="atom:category[@scheme = $SCHEME_FOR]"/>
@@ -139,6 +140,16 @@
                 <xsl:value-of select="@href"/>
             </key>
             <relation type="isCollectorOf"/>
+        </relatedObject>
+    </xsl:template>
+
+    <!-- manager of (collection) -->
+    <xsl:template match="atom:link[@rel=$ATOM_IS_MANAGER_OF]">
+        <relatedObject>
+            <key>
+                <xsl:value-of select="@href"/>
+            </key>
+            <relation type="isManagerOf"/>
         </relatedObject>
     </xsl:template>
 
