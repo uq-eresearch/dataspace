@@ -101,6 +101,7 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
                     transformer.setParameter("currentUser", currentUser.getUsername());
                 }
             }
+            transformer.setParameter("applicationName", RegistryApplication.getApplicationContext().getRegistryTitle());
             transformer.transform(xml, result);
         } catch (TransformerConfigurationException tce) {
             throw new TransformerException(tce.getMessageAndLocation());

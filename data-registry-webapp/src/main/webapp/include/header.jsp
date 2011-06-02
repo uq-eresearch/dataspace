@@ -5,7 +5,8 @@
         <h1><a href="http://www.uq.edu.au/" title="Home" accesskey="1">The University of Queensland</a></h1>
 
         <h2 style="z-index: 500;">
-            <a href="/" title="UQ Data Space"><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> (beta)
+            <a href="/"
+               title="<%=RegistryApplication.getApplicationContext().getRegistryTitle()%>"><%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
             </a>
         </h2>
 

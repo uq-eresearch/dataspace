@@ -1,3 +1,16 @@
+<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
+<%@ page import="net.metadata.dataspace.data.model.record.Collection" %>
+<%@ page import="net.metadata.dataspace.data.model.version.CollectionVersion" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
+<%
+
+    List<Collection> recentPublishedCollections = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getRecentPublished(5);
+    List<CollectionVersion> collectionVersions = new ArrayList<CollectionVersion>();
+    for (Collection collection : recentPublishedCollections) {
+        collectionVersions.add(collection.getPublished());
+    }
+%>
 <html>
 <head>
     <jsp:include page="include/head.jsp"/>
@@ -86,7 +99,16 @@
                     <a href="/collections">Recently added collections</a>
                 </div>
                 <ul class="portlet-list">
-                    <li>List of recent collections here</li>
+                    <%
+                        for (CollectionVersion version : collectionVersions) {
+                    %>
+                    <li><a href="/collections/<%=version.getParent().getUriKey()%>"><%=version.getTitle()%>
+                    </a>
+                    </li>
+                    <%
+                        }
+                    %>
+
                 </ul>
             </div>
         </div>

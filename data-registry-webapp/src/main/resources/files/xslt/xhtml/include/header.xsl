@@ -9,9 +9,11 @@
 
     -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns="http://www.w3.org/1999/xhtml">
+                xmlns="http://www.w3.org/1999/xhtml"
+                exclude-result-prefixes="atom">
 
     <xsl:param name="currentUser"/>
+    <xsl:param name="applicationName"/>
     <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template name="header">
         <div id="header">
@@ -20,7 +22,9 @@
                     <a href="http://www.uq.edu.au/" title="Home" accesskey="1">The University of Queensland</a>
                 </h1>
                 <h2 style="z-index: 500;">
-                    <a href="/" title="UQ Data Space">UQ Data Collections Registry (beta)</a>
+                    <a href="/" title="{$applicationName}">
+                        <xsl:value-of select="$applicationName"/>
+                    </a>
                 </h2>
                 <div id="mininav">
                     <ul>

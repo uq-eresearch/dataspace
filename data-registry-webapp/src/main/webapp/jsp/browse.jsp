@@ -28,7 +28,7 @@
                 <c:forEach var="version" items="${collections}">
                     <li><a
                             href="<c:out value="${registryUri}"/>collections/<c:out value="${version.parent.uriKey}"/>">
-                        <c:out value="${version.title}"/></a></span>
+                        <c:out value="${version.title}"/></a>
                     </li>
                 </c:forEach>
             </ul>
