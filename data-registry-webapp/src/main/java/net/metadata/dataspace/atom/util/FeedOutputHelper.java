@@ -5,6 +5,8 @@ import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.factory.Factory;
 import org.apache.abdera.model.*;
@@ -17,6 +19,8 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import java.util.*;
 
 import static org.apache.abdera.protocol.server.ProviderHelper.calculateEntityTag;
+
+import net.metadata.dataspace.data.model.record.Collection;
 
 /**
  * User: alabri
@@ -35,11 +39,7 @@ public class FeedOutputHelper {
     }
 
     public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class clazz) {
-//        if (request.getHeader("user-agent").toString().indexOf("MSIE ") > -1) {
         responseContext.setContentType(Constants.MIME_TYPE_HTML);
-//        } else {
-//            responseContext.setContentType(Constants.MIME_TYPE_XHTML);
-//        }
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
         String viewRepresentation = OperationHelper.getViewRepresentation(request);
         if (viewRepresentation != null && viewRepresentation.equals("new")) {
@@ -74,17 +74,17 @@ public class FeedOutputHelper {
                 entry.setContent(version.getDescription());
                 Link selfLink = entry.addLink(uri, Constants.REL_SELF);
                 selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
-
-                Set<Agent> authors = record.getAuthors();
-                List<Person> personList = new ArrayList<Person>();
-                for (Agent author : authors) {
-                    Person person = new Abdera().getFactory().newAuthor();
-                    person.setName(author.getTitle());
-                    person.setEmail(author.getMBoxes().iterator().next());
-                    person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
-                    personList.add(person);
+                if (record instanceof Collection) {
+                    Set<Agent> authors = ((CollectionVersion) record.getPublished()).getCreators();
+                    List<Person> personList = new ArrayList<Person>();
+                    for (Agent author : authors) {
+                        Person person = new Abdera().getFactory().newAuthor();
+                        person.setName(author.getTitle());
+                        person.setEmail(author.getMBoxes().iterator().next());
+                        person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
+                        personList.add(person);
+                    }
                 }
-
 
                 entry.setUpdated(version.getUpdated());
                 setPublished(version, entry);

@@ -13,6 +13,7 @@ import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.*;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
@@ -373,14 +374,16 @@ public class HttpMethodHelper {
     }
 
     public static List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
-        Set<Agent> authors = record.getAuthors();
         List<Person> personList = new ArrayList<Person>();
-        for (Agent author : authors) {
-            Person person = request.getAbdera().getFactory().newAuthor();
-            person.setName(author.getTitle());
-            person.setEmail(author.getMBoxes().iterator().next());
-            person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
-            personList.add(person);
+        if (record instanceof Collection) {
+            Set<Agent> authors = ((CollectionVersion) record.getPublished()).getCreators();
+            for (Agent author : authors) {
+                Person person = request.getAbdera().getFactory().newAuthor();
+                person.setName(author.getTitle());
+                person.setEmail(author.getMBoxes().iterator().next());
+                person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
+                personList.add(person);
+            }
         }
         return personList;
     }

@@ -15,12 +15,14 @@
                     <a href="{atom:id}">
                         <xsl:value-of select="atom:title"/>
                     </a>
-                    <span>
-                        <xsl:text> by </xsl:text>
-                    </span>
-                    <span class="author">
-                        <xsl:value-of select="atom:author/atom:name"/>
-                    </span>
+                    <xsl:if test="atom:author/atom:name">
+                        <span>
+                            <xsl:text> by </xsl:text>
+                        </span>
+                        <span class="author">
+                            <xsl:value-of select="atom:author/atom:name"/>
+                        </span>
+                    </xsl:if>
                     <br/>
                     <xsl:value-of select="substring(atom:content, 0, 255)"/>
                     <a href="{atom:id}">
@@ -47,12 +49,14 @@
                     <a href="{atom:id}">
                         <xsl:value-of select="atom:title"/>
                     </a>
-                    <span>
-                        <xsl:text> by </xsl:text>
-                    </span>
-                    <span class="author">
-                        <xsl:value-of select="atom:author/atom:name"/>
-                    </span>
+                    <xsl:if test="atom:author/atom:name">
+                        <span>
+                            <xsl:text> by </xsl:text>
+                        </span>
+                        <span class="author">
+                            <xsl:value-of select="atom:author/atom:name"/>
+                        </span>
+                    </xsl:if>
                     <br/>
                     <xsl:value-of select="substring(atom:content, 0, 255)"/>
                     <a href="{atom:id}">
