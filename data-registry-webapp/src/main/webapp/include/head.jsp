@@ -27,6 +27,7 @@
 <script type="text/javascript" src="/js/solr/widgets/PagerWidget.js">;</script>
 <script type="text/javascript" src="/js/solr/core/AbstractFacetWidget.js">;</script>
 <script type="text/javascript" src="/js/solr/ext/jquery.autocomplete.js">;</script>
+<script type="text/javascript" src="/js/solr/widgets/TagcloudWidget.js">;</script>
 <script type="text/javascript" src="/js/solr/widgets/AutocompleteWidget.js">;</script>
 <script type="text/javascript" src="/js/solr/helpers/ajaxsolr.support.js">;</script>
 <script type="text/javascript" src="/js/solr/helpers/ajaxsolr.theme.js">;</script>

@@ -45,7 +45,7 @@
     };
 
     AjaxSolr.theme.prototype.tag = function (value, weight, handler) {
-        return $('<a href="#" class="tagcloud_item"/>').text(value).addClass('tagcloud_size_' + weight).click(handler);
+        return $('<a href="/search?q=' + value + '" class="tagcloud_item"/>').text(value).addClass('tagcloud_size_' + weight);
     };
 
     AjaxSolr.theme.prototype.facet_link = function (value, handler) {

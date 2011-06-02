@@ -48,8 +48,8 @@
                         query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.id}">
                     <entity name="agentsubjects" dataSource="registry-ds"
                             query="SELECT label, term FROM subject WHERE id=${agents_subjects.subjects_id}">
-                        <field column="label" name="subjectlabel" multiValued="true"/>
-                        <field column="term" name="subjectterm" multiValued="true"/>
+                        <field column="label" name="subjectlabel"/>
+                        <field column="term" name="subjectterm"/>
                     </entity>
                 </entity>
             </entity>
@@ -67,8 +67,8 @@
                         query="SELECT * FROM services_subjects WHERE serviceversion_id=${serviceversion.id}">
                     <entity name="servicesubjects" dataSource="registry-ds"
                             query="SELECT label, term FROM subject WHERE id=${services_subjects.subjects_id}">
-                        <field column="label" name="subjectlabel" multiValued="true"/>
-                        <field column="term" name="subjectterm" multiValued="true"/>
+                        <field column="label" name="subjectlabel"/>
+                        <field column="term" name="subjectterm"/>
                     </entity>
                 </entity>
             </entity>
@@ -86,8 +86,8 @@
                         query="SELECT * FROM activities_subjects WHERE activityversion_id=${activityversion.id}">
                     <entity name="activitiesubjects" dataSource="registry-ds"
                             query="SELECT label, term FROM subject WHERE id=${activities_subjects.subjects_id}">
-                        <field column="label" name="subjectlabel" multiValued="true"/>
-                        <field column="term" name="subjectterm" multiValued="true"/>
+                        <field column="label" name="subjectlabel"/>
+                        <field column="term" name="subjectterm"/>
                     </entity>
                 </entity>
             </entity>

@@ -488,6 +488,7 @@ any data added to them will be ignored outright.  -->
         <!-- catchall field, containing all other searchable text fields (implemented
 via copyField further on in this schema  -->
         <field name="text" type="text" indexed="true" stored="false" multiValued="true"/>
+        <field name="topics" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="subject" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="activity" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="agent" type="text" indexed="true" stored="false" multiValued="true"/>
@@ -570,6 +571,9 @@ or to add multiple fields to the same field for easier/faster searching.  -->
     <copyField source="type" dest="text"/>
     <copyField source="subjectlabel" dest="text"/>
     <copyField source="subjectterm" dest="text"/>
+
+    <copyField source="title" dest="topics"/>
+    <copyField source="description" dest="topics"/>
 
     <copyField source="activitytitle" dest="text"/>
     <copyField source="activitydescription" dest="text"/>

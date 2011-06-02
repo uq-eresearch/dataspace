@@ -10,7 +10,35 @@
                     goToSearchPage();
                 }
             });
+
+
+//            Manager = new AjaxSolr.Manager({solrUrl: 'http://evolvingweb.ca/solr/reuters/'});
+            Manager = new AjaxSolr.Manager({solrUrl: '/solr/'});
+            var fields = ['topics'];
+            for (var i = 0, l = fields.length; i < l; i++) {
+                Manager.addWidget(new AjaxSolr.TagcloudWidget({
+                            id: fields[i],
+                            target: '#' + fields[i],
+                            field: fields[i]
+                        }));
+            }
+            Manager.init();
+            Manager.store.addByValue('q', '*:*');
+            var params = {
+                facet: true,
+                'facet.field': [ 'topics' ],
+                'qt':'standard',
+                'facet.limit': 20,
+                'facet.mincount': 1,
+                'f.topics.facet.limit': 50,
+                'json.nl': 'map'
+            };
+            for (var name in params) {
+                Manager.store.addByValue(name, params[name]);
+            }
+            Manager.doRequest();
         });
+
         function goToSearchPage() {
             window.location = '/search?q=' + $('#query').val();
         }
@@ -44,7 +72,11 @@
                                    onclick="goToSearchPage(); return false;" style=""/></td>
                     </tr>
                     <tr>
-                        <td>TAG CLOUD HERE</td>
+                        <td id="topics" class="tagcloud" colspan="2">
+                            <%--<div id="topics" class="tagcloud">--%>
+
+                            <%--</div>--%>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
