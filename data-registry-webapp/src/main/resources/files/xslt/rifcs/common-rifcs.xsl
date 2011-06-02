@@ -62,14 +62,16 @@
         <location>
             <address>
                 <electronic type="email">
-                    <xsl:choose>
-                        <xsl:when test="fn:contains(@href, 'mailto:')">
-                            <xsl:value-of select="fn:substring-after(@href,':')"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="@href"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <value>
+                        <xsl:choose>
+                            <xsl:when test="fn:contains(@href, 'mailto:')">
+                                <xsl:value-of select="fn:substring-after(@href,':')"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="@href"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </value>
                 </electronic>
             </address>
         </location>
