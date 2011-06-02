@@ -452,8 +452,8 @@ any data added to them will be ignored outright.  -->
         <field name="description" type="text" indexed="true" stored="true"/>
         <field name="type" type="text" indexed="true" stored="true"/>
 
-        <field name="subjectlabel" type="text" indexed="true" stored="true"/>
-        <field name="subjectterm" type="text" indexed="true" stored="true"/>
+        <field name="subjectlabel" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="subjectterm" type="text" indexed="true" stored="true" multiValued="true"/>
 
         <field name="activitytitle" type="text" indexed="true" stored="true"/>
         <field name="activitydescription" type="text" indexed="true" stored="true"/>
