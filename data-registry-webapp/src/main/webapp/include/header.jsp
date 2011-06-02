@@ -23,16 +23,13 @@
             <div class="clear">&nbsp;</div>
         </div>
         <div id="search">
-            <form id="searchbox" method="get" action="http://www.uq.edu.au/search">
+            <form id="searchbox" method="get" action="/search">
                 <fieldset>
                     <label for="search-entry">Search Entry</label>
                     <input id="search-entry" size="15" type="text" value="Search..." name="q" class="s"
                            onfocus="if (this.value == 'Search...') {this.value = '';}"
                            onblur="if (this.value == '') {this.value = 'Search...';}" tabindex="1"/>
                     <input name="submit" value="" class="submit" title="Search UQ" type="submit"/>
-                    <input type="hidden" name="output" value="xml_no_dtd"/>
-                    <input type="hidden" name="client" value="ws"/>
-                    <input type="hidden" name="proxystylesheet" value="ws"/>
                 </fieldset>
             </form>
         </div>
@@ -47,14 +44,7 @@
             <li><a href="/browse">Browse</a></li>
             <li><a href="/search">Search</a></li>
         </ul>
-        <%--<div class="clear">&nbsp;</div>--%>
     </div>
-    <%--<%--%>
-    <%--AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();--%>
-    <%--User currentUser = authenticationManager.getCurrentUser();--%>
-
-
-    <%--%>--%>
     <a href="#" class="signin" id="signin-link">Sign in</a>
     <fieldset id="signin_menu">
         <form action="#" method="post" id="signin" onsubmit="login(); return false;">

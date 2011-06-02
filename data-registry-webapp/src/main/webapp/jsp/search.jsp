@@ -51,9 +51,9 @@
             if(query != null) {
             %>
             $('#query').val('<%=query%>')
-            $("#query").focus();
             doSearch('<%=query%>');
             <%}%>
+            $("#query").focus();
         });
         $.fn.showIf = function (condition) {
             if (condition) {

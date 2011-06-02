@@ -1,9 +1,7 @@
 package net.metadata.dataspace.controller;
 
-import org.springframework.util.Assert;
-import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.web.servlet.mvc.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,20 +11,11 @@ import javax.servlet.http.HttpServletResponse;
  * Date: 29/03/11
  * Time: 8:22 AM
  */
-public class SearchController extends SimpleFormController {
+public class SearchController implements Controller {
 
     @Override
-    protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
-                                    BindException error) throws Exception {
-        Assert.notNull(command);
-        if (command != null) {
-            String keyword = request.getParameter("search-field");
-            Assert.notNull(keyword, "search-field has not been set.");
-            ModelAndView searchModelView = new ModelAndView("search");
-            searchModelView.addObject("keyword", keyword);
-            return searchModelView;
-        }
-        return null;
+    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ModelAndView modelAndView = new ModelAndView("search");
+        return modelAndView;
     }
-
 }
