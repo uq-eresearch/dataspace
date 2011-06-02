@@ -4,7 +4,6 @@
 
     <bean name="/browse" class="net.metadata.dataspace.controller.BrowseController"/>
     <bean name="/search" class="net.metadata.dataspace.controller.SearchController"/>
-    <bean name="/lookup" class="net.metadata.dataspace.controller.LookupController"/>
     <bean name="/anzsrc" class="net.metadata.dataspace.controller.ANZSRCCodesController"/>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
