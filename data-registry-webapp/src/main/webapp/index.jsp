@@ -1,7 +1,20 @@
-<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
 <html>
 <head>
     <jsp:include page="include/head.jsp"/>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#query").focus();
+            $('#query').keyup(function(event) {
+                if (event.keyCode == '13') {
+                    event.preventDefault();
+                    goToSearchPage();
+                }
+            });
+        });
+        function goToSearchPage() {
+            window.location = '/search?q=' + $('#query').val();
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="include/header.jsp"/>
@@ -23,16 +36,16 @@
                 </div>
                 <table width="100%">
                     <tbody>
-                        <tr>
-                            <td id="searching">
-                                <input type="text" id="query" name="query"/>
-                            </td>
-                            <td><input type="button" name="search-submit" id="search-submit" value="Search"
-                               onclick="doSearch($('#query').val()); return false;" style=""/></td>
-                        </tr>
-                        <tr>
-                            <td>TAG CLOUD HERE</td>
-                        </tr>
+                    <tr>
+                        <td id="searching">
+                            <input type="text" id="query" name="query"/>
+                        </td>
+                        <td><input type="button" name="search-submit" id="search-submit" value="Search"
+                                   onclick="goToSearchPage(); return false;" style=""/></td>
+                    </tr>
+                    <tr>
+                        <td>TAG CLOUD HERE</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -47,8 +60,8 @@
         </div>
 
         <p>This registry syndicates data to </br>
-        <a href="http://services.ands.org.au/home/orca/rda/">
-        <img src="https://services.ands.org.au/home/orca/rda/_images/ANDS_logo.gif"/></a></p>
+            <a href="http://services.ands.org.au/home/orca/rda/">
+                <img src="https://services.ands.org.au/home/orca/rda/_images/ANDS_logo.gif"/></a></p>
     </div>
 </div>
 <jsp:include page="include/footer.jsp"/>

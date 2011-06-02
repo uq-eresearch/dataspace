@@ -50,6 +50,8 @@
             String query = request.getParameter("q");
             if(query != null) {
             %>
+            $('#query').val('<%=query%>')
+            $("#query").focus();
             doSearch('<%=query%>');
             <%}%>
         });
@@ -60,7 +62,7 @@
             else {
                 return this.hide();
             }
-        }
+        };
         function doSearch(term) {
             Manager.store.addByValue('q', term);
             Manager.doRequest();
