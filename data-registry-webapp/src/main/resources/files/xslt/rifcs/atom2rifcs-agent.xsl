@@ -47,6 +47,7 @@
                 <xsl:call-template name="names"/>
                 <!-- locations -->
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_MBOX]"/>
                 <!-- coverage -->
                 <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
                 <!-- related objects -->
@@ -102,6 +103,7 @@
                 </name>
             </xsl:otherwise>
         </xsl:choose>
+        <xsl:apply-templates select="rdfa:meta[@property = $RDFA_ALTERNATIVE]"/>
     </xsl:template>
     <!-- FOAF name attributes -->
     <xsl:template match="rdfa:meta[@property=$ATOM_HONORIFIC]">

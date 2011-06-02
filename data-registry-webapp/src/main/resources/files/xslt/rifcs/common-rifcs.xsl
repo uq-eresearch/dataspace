@@ -46,7 +46,7 @@
         </name>
     </xsl:template>
 
-    <!-- location -->
+    <!-- locations -->
     <xsl:template match="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
         <location>
             <address>
@@ -54,6 +54,22 @@
                     <value>
                         <xsl:value-of select="@href" disable-output-escaping="no"/>
                     </value>
+                </electronic>
+            </address>
+        </location>
+    </xsl:template>
+    <xsl:template match="atom:link[@rel=$ATOM_MBOX]">
+        <location>
+            <address>
+                <electronic type="email">
+                    <xsl:choose>
+                        <xsl:when test="fn:contains(@href, 'mailto:')">
+                            <xsl:value-of select="fn:substring-after(@href,':')"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="@href"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </electronic>
             </address>
         </location>
