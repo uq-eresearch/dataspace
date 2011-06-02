@@ -10,6 +10,7 @@
     -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:atom="http://www.w3.org/2005/Atom"
                 exclude-result-prefixes="atom">
 
     <xsl:param name="currentUser"/>
