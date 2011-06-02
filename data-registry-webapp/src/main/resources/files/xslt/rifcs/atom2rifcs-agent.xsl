@@ -44,11 +44,7 @@
                 <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
                 <xsl:apply-templates select="/atom:entry/atom:id"/>
                 <!-- names -->
-                <name type="primary">
-                    <xsl:apply-templates select="rdfa:meta[@property=$ATOM_HONORIFIC]"/>
-                    <xsl:apply-templates select="rdfa:meta[@property=$ATOM_GIVEN_NAME]"/>
-                    <xsl:apply-templates select="rdfa:meta[@property=$ATOM_FAMILY_NAME]"/>
-                </name>
+                <xsl:call-template name="names"/>
                 <!-- locations -->
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
                 <!-- coverage -->
@@ -85,6 +81,45 @@
         </xsl:attribute>
     </xsl:template>
 
+    <!-- names -->
+    <xsl:template name="names">
+        <xsl:choose>
+            <xsl:when test="atom:link[@rel=$REL_TYPE]/@href = $ENTITY_PERSON">
+                <xsl:if test="rdfa:meta[@property=$ATOM_GIVEN_NAME] or rdfa:meta[@property=$ATOM_FAMILY_NAME]">
+                    <name type="primary">
+                        <xsl:apply-templates select="rdfa:meta[@property=$ATOM_HONORIFIC]"/>
+                        <xsl:apply-templates select="rdfa:meta[@property=$ATOM_GIVEN_NAME]"/>
+                        <xsl:apply-templates select="rdfa:meta[@property=$ATOM_FAMILY_NAME]"/>
+                    </name>
+                </xsl:if>
+                <name type="alternative">
+                    <namePart><xsl:value-of select="atom:title"/></namePart>
+                </name>
+            </xsl:when>
+            <xsl:otherwise>
+                <name type="primary">
+                        <namePart><xsl:value-of select="atom:title"/></namePart>
+                </name>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- FOAF name attributes -->
+    <xsl:template match="rdfa:meta[@property=$ATOM_HONORIFIC]">
+        <namePart type="title">
+            <xsl:value-of select="@content"/>
+        </namePart>
+    </xsl:template>
+    <xsl:template match="rdfa:meta[@property=$ATOM_GIVEN_NAME]">
+        <namePart type="given">
+            <xsl:value-of select="@content"/>
+        </namePart>
+    </xsl:template>
+    <xsl:template match="rdfa:meta[@property=$ATOM_FAMILY_NAME]">
+        <namePart type="family">
+            <xsl:value-of select="@content"/>
+        </namePart>
+    </xsl:template>
+
     <!-- curator / manager (party) -->
     <xsl:template match="atom:link[@rel=$ATOM_PUBLISHER]">
         <relatedObject>
@@ -115,21 +150,6 @@
         </relatedObject>
     </xsl:template>
 
-    <!-- FOAF name attributes -->
-    <xsl:template match="rdfa:meta[@property=$ATOM_HONORIFIC]">
-        <namePart type="title">
-            <xsl:value-of select="@content"/>
-        </namePart>
-    </xsl:template>
-    <xsl:template match="rdfa:meta[@property=$ATOM_GIVEN_NAME]">
-        <namePart type="given">
-            <xsl:value-of select="@content"/>
-        </namePart>
-    </xsl:template>
-    <xsl:template match="rdfa:meta[@property=$ATOM_FAMILY_NAME]">
-        <namePart type="family">
-            <xsl:value-of select="@content"/>
-        </namePart>
-    </xsl:template>
+
 
 </xsl:stylesheet>
