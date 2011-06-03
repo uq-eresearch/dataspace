@@ -10,12 +10,15 @@
     <!--     id for the collection -->
     <id>http://dataspace.uq.edu.au/collections/3#</id>
 
-    <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-          href="http://purl.org/dc/dcmitype/Collection"
-          title="Collection"/>
+    <!--     collection type -->
+    <link
+            rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            href="http://purl.org/dc/dcmitype/Collection"
+            title="Collection"/>
 
     <!--     collection title -->
-    <title type="text">Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using
+    <title
+            type="text">Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using
         acoustic telemetry
     </title>
 
@@ -44,25 +47,30 @@
     <!--     collection subjects -->
     <category
             scheme="http://purl.org/anzsrc/for"
-            term="http://purl.org/anzsrc/for/#field_060801"
+            term="http://purl.org/anzsrc/for#field_060801"
             label="060801 - Animal Behaviour"/>
     <category
             scheme="http://purl.org/anzsrc/for"
-            term="http://purl.org/anzsrc/for/#field_060205"
+            term="http://purl.org/anzsrc/for#field_060205"
             label="060205 - Marine and Estuarine Ecology (incl. Marine Ichthyology)"/>
     <category
             scheme="http://purl.org/anzsrc/seo"
-            term="http://purl.org/anzsrc/seo/#field_970106"
+            term="http://purl.org/anzsrc/seo#field_970106"
             label="970106 - Expanding Knowledge in the Biological Sciences"/>
     <category
-            term="Ecology"/>
+            term="ecology"/>
     <category
-            term="Zoology"/>
+            term="zoology"/>
 
     <!--     collection creator -->
     <author>
         <name>Dr Hamish Campbell</name>
         <email>hamish.campbell@uq.edu.au</email>
+    </author>
+
+    <author>
+        <name>Paul Shyy</name>
+        <email>t.shyy@uq.edu.au</email>
     </author>
 
     <!--     temporal coverage -->
@@ -72,10 +80,7 @@
             datatype="http://purl.org/dc/terms/Period"/>
 
     <!--     spatial coverage -->
-    <georss:point>-27 152</georss:point>
-    <georss:point>-27 155</georss:point>
     <georss:polygon>-10.5 140 -17 140 -17 145.5 -10.5 145.5 -10.5 140</georss:polygon>
-    <georss:polygon>-10.5 150 -17 150 -17 155.5 -10.5 155.5 -10.5 150</georss:polygon>
     <link
             rel="http://purl.org/dc/terms/spatial"
             href="http://sws.geonames.org/2172406/"
@@ -98,15 +103,13 @@
     <rdfa:meta
             property="http://purl.org/dc/terms/accessRights"
             content="Some of the data is available in abbreviated format in scientific journals. Contact
-	        the data curator regarding permission and procedures for accessing the original data."/>
+	 the data curator regarding permission and procedures for accessing the original data."/>
 
 
     <!-- *** metadata about the description *** -->
     <!--     description last updated -->
     <updated>2010-10-08T05:58:02Z</updated>
-    <app:control>
-        <app:draft>no</app:draft>
-    </app:control>
+
     <source>
         <title>UQ Data Collections Registry</title>
         <id>http://dataspace.uq.edu.au</id>
@@ -117,4 +120,7 @@
             <email>n.ward4@uq.edu.au</email>
         </author>
     </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
 </entry>

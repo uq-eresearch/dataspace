@@ -26,7 +26,7 @@
     <!--     agent email and webpage -->
     <link rel="http://xmlns.com/foaf/0.1/mbox" href="mailto:Dr.Hamish.Campbell@gmail.com"/>
     <link rel="http://xmlns.com/foaf/0.1/page" href="http://www.uq.edu.au/eco-lab/dr-hamish-campbell"/>
-
+    <link rel="http://xmlns.com/foaf/0.1/publications" href="http://espace.library.uq.edu.au/view/UQ:229292"/>
     <!--     created collections -->
     <link rel="http://xmlns.com/foaf/0.1/made" href="http://dataspace.uq.edu.au/collections/1"
           title="Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using acoustic telemetry"/>
