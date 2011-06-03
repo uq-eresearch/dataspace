@@ -37,9 +37,9 @@
           href="http://dataspace.uq.edu.au/collections/1"/>
 
     <!--     subjects -->
-    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_060205"
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for#field_060205"
               label="060205 Marine and Estuarine Ecology (incl. Marine Ichthyology)"/>
-    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_060801"
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for#field_060801"
               label="060801 Animal Behaviour"/>
     <category term="modelling animal movement"/>
 
