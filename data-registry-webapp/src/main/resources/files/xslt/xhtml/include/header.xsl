@@ -82,37 +82,37 @@
                     </li>
                 </ul>
             </div>
-            <xsl:call-template name="loginlink"/>
-            <fieldset id="signin_menu">
+            <!--<xsl:call-template name="loginlink"/>-->
+            <!--<fieldset id="signin_menu">-->
 
-                <form action="#" method="post" id="signin" onsubmit="login(); return false;">
-                    <p id="login-error" style="color:#ff0000;">
+            <!--<form action="#" method="post" id="signin" onsubmit="login(); return false;">-->
+            <!--<p id="login-error" style="color:#ff0000;">-->
 
-                    </p>
-                    <p>
-                        <label for="username">Username</label>
-                        <input id="username" name="username" value="" title="username" type="text"/>
-                    </p>
-                    <p>
-                        <label for="password">Password</label>
-                        <input id="password" name="password" value="" title="password" type="password"/>
-                    </p>
-                    <p class="remember">
-                        <input id="signin_submit" value="Sign in" type="submit"/>
-                    </p>
-                </form>
-            </fieldset>
+            <!--</p>-->
+            <!--<p>-->
+            <!--<label for="username">Username</label>-->
+            <!--<input id="username" name="username" value="" title="username" type="text"/>-->
+            <!--</p>-->
+            <!--<p>-->
+            <!--<label for="password">Password</label>-->
+            <!--<input id="password" name="password" value="" title="password" type="password"/>-->
+            <!--</p>-->
+            <!--<p class="remember">-->
+            <!--<input id="signin_submit" value="Sign in" type="submit"/>-->
+            <!--</p>-->
+            <!--</form>-->
+            <!--</fieldset>-->
         </div>
     </xsl:template>
 
-    <xsl:template name="loginlink">
-        <xsl:choose>
-            <xsl:when test="$currentUser">
-                <a href="#" class="signout" id="signin-link">Sign out</a>
-            </xsl:when>
-            <xsl:otherwise>
-                <a href="#" class="signin" id="signin-link">Sign in</a>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
+    <!--<xsl:template name="loginlink">-->
+    <!--<xsl:choose>-->
+    <!--<xsl:when test="$currentUser">-->
+    <!--<a href="#" class="signout" id="signin-link">Sign out</a>-->
+    <!--</xsl:when>-->
+    <!--<xsl:otherwise>-->
+    <!--<a href="#" class="signin" id="signin-link">Sign in</a>-->
+    <!--</xsl:otherwise>-->
+    <!--</xsl:choose>-->
+    <!--</xsl:template>-->
 </xsl:stylesheet>

@@ -629,6 +629,7 @@ h6 {
 #topnav {
     margin: 0pt;
     padding: 8px 0pt;
+    height: 18px;
     background: rgb(0, 0, 0) none repeat scroll 0% 0%;
     color: rgb(255, 255, 255);
     font-size: 11px;
