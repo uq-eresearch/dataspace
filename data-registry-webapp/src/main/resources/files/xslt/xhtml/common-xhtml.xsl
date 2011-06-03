@@ -376,6 +376,7 @@
             or @rel=$ATOM_IS_PARTICIPANT_IN
             or @rel=$ATOM_MBOX
             or @rel=$REL_RELATED
+            or @rel=$ATOM_PUBLISHER
             or @rel=$ATOM_IS_REFERENCED_BY
             or @rel=$REL_LATEST_VERSION]">
         <p>
@@ -392,8 +393,8 @@
         </p>
     </xsl:template>
     <xsl:template
-            match="atom:link[@rel=$REL_ALTERNATE
-        or @rel=$ATOM_PUBLISHER]">
+            match="atom:link[@rel=$REL_ALTERNATE]">
+
         <a href="{@href}">
             <xsl:choose>
                 <xsl:when test="@title">
@@ -404,6 +405,7 @@
                 </xsl:otherwise>
             </xsl:choose>
         </a>
+        <xsl:text> </xsl:text>
     </xsl:template>
 
     <xsl:template name="bread-crumbs-options">
