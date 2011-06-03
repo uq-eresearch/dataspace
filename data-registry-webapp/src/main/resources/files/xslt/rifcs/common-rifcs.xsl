@@ -9,12 +9,12 @@
 
     -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:atom="http://www.w3.org/2005/Atom"
-    xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
-    xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
-    xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:str="http://exslt.org/strings"
-    exclude-result-prefixes="atom ands dcterms rdfa fn str">
+                xmlns:atom="http://www.w3.org/2005/Atom"
+                xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
+                xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+                xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:str="http://exslt.org/strings"
+                exclude-result-prefixes="atom ands dcterms rdfa fn str">
     <xsl:include href="../constants.xsl"/>
 
 
@@ -57,6 +57,17 @@
                 </electronic>
             </address>
         </location>
+    </xsl:template>
+    <!-- publications -->
+    <xsl:template match="atom:link[@rel=$ATOM_PUBLICATIONS]">
+        <relatedInfo>
+            <identifier type="uri">
+                <xsl:value-of select="@href" disable-output-escaping="no"/>
+            </identifier>
+            <title>
+                <xsl:value-of select="@href" disable-output-escaping="no"/>
+            </title>
+        </relatedInfo>
     </xsl:template>
     <xsl:template match="atom:link[@rel=$ATOM_MBOX]">
         <location>

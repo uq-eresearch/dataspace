@@ -38,6 +38,9 @@
     <xsl:variable name="ATOM_IS_LOCATED_AT">
         <xsl:value-of select="concat($NS_FOAF ,'page')"/>
     </xsl:variable>
+    <xsl:variable name="ATOM_PUBLICATIONS">
+        <xsl:value-of select="concat($NS_FOAF ,'publications')"/>
+    </xsl:variable>
     <xsl:variable name="ATOM_IS_OUTPUT_OF">
         <xsl:value-of select="concat($NS_ANDS ,'isOutputOf')"/>
     </xsl:variable>
@@ -107,7 +110,7 @@
     <xsl:variable name="ENTITY_PROJECT">
         <xsl:value-of select="concat($NS_FOAF , 'Project')"/>
     </xsl:variable>
-        <xsl:variable name="ENTITY_PROGRAM">
+    <xsl:variable name="ENTITY_PROGRAM">
         <xsl:value-of select="concat($NS_VIVO , 'Program')"/>
     </xsl:variable>
 
@@ -135,7 +138,7 @@
     <xsl:variable name="ENTITY_SEARCH">
         <xsl:value-of select="concat($NS_EF,'Search')"/>
     </xsl:variable>
-        <xsl:variable name="ENTITY_SYNDICATE">
+    <xsl:variable name="ENTITY_SYNDICATE">
         <xsl:value-of select="concat($NS_EF,'Syndicate')"/>
     </xsl:variable>
 

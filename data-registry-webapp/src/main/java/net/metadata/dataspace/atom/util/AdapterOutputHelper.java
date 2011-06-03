@@ -151,6 +151,12 @@ public class AdapterOutputHelper {
                 entry.addLink(page, Constants.REL_PAGE);
             }
 
+            //Add agent publications
+            Set<String> publications = version.getPublications();
+            for (String publication : publications) {
+                entry.addLink(publication, Constants.REL_PUBLICATIONS);
+            }
+
             Set<Collection> collectionSet = version.getMade();
             for (Collection collection : collectionSet) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";

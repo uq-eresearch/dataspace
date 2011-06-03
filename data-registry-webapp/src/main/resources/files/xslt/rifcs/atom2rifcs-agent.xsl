@@ -47,6 +47,7 @@
                 <xsl:call-template name="names"/>
                 <!-- locations -->
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLICATIONS]"/>
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_MBOX]"/>
                 <!-- coverage -->
                 <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
@@ -95,12 +96,16 @@
                     </name>
                 </xsl:if>
                 <name type="alternative">
-                    <namePart><xsl:value-of select="atom:title"/></namePart>
+                    <namePart>
+                        <xsl:value-of select="atom:title"/>
+                    </namePart>
                 </name>
             </xsl:when>
             <xsl:otherwise>
                 <name type="primary">
-                        <namePart><xsl:value-of select="atom:title"/></namePart>
+                    <namePart>
+                        <xsl:value-of select="atom:title"/>
+                    </namePart>
                 </name>
             </xsl:otherwise>
         </xsl:choose>
@@ -162,7 +167,6 @@
             <relation type="isParticipantIn"/>
         </relatedObject>
     </xsl:template>
-
 
 
 </xsl:stylesheet>

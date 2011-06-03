@@ -57,6 +57,9 @@ public class AgentVersion extends AbstractVersionEntity {
     @CollectionOfElements(fetch = FetchType.LAZY)
     private Set<String> pages = new HashSet<String>();
 
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> publications = new HashSet<String>();
+
     public AgentVersion() {
     }
 
@@ -132,5 +135,13 @@ public class AgentVersion extends AbstractVersionEntity {
 
     public void setPages(Set<String> pages) {
         this.pages = pages;
+    }
+
+    public Set<String> getPublications() {
+        return publications;
+    }
+
+    public void setPublications(Set<String> publications) {
+        this.publications = publications;
     }
 }

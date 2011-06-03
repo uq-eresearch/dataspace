@@ -83,7 +83,9 @@
     <xsl:template name="representations">
         <xsl:if test="atom:link[@rel=$REL_ALTERNATE]">
             <p class="alternate">Download as:
-                <span><xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/></span>
+                <span>
+                    <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
+                </span>
             </p>
         </xsl:if>
     </xsl:template>
@@ -188,6 +190,19 @@
         </xsl:if>
     </xsl:template>
     <!-- locations -->
+    <xsl:template name="agent-publications">
+        <xsl:if test="atom:link[@rel=$ATOM_PUBLICATIONS]">
+            <div class="statement">
+                <div class="property">
+                    <p>Publication(s)</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLICATIONS]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- locations -->
     <xsl:template name="publications">
         <xsl:if test="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
             <div class="statement">
@@ -260,7 +275,11 @@
         </xsl:if>
     </xsl:template>
     <xsl:template match="atom:category[not(@scheme)]">
-        <span><a href="/search?q={@term}"><xsl:value-of select="@term"/></a></span>
+        <span>
+            <a href="/search?q={@term}">
+                <xsl:value-of select="@term"/>
+            </a>
+        </span>
     </xsl:template>
 
     <!-- spatial -->
@@ -351,6 +370,7 @@
             or @rel=$ATOM_HAS_PARTICIPANT
             or @rel=$ATOM_HAS_OUTPUT
             or @rel=$ATOM_IS_LOCATED_AT
+            or @rel=$ATOM_PUBLICATIONS
             or @rel=$ATOM_IS_COLLECTOR_OF
             or @rel=$ATOM_IS_MANAGER_OF
             or @rel=$ATOM_IS_PARTICIPANT_IN

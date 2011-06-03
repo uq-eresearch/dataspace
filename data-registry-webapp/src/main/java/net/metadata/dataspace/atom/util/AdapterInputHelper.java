@@ -276,6 +276,9 @@ public class AdapterInputHelper {
         //Add web pages
         addPages(version, entry);
 
+        //Add publications
+        addPublications(version, entry);
+
         //Add subjects
         Set<Subject> subjects = getSubjects(entry);
         for (Subject subject : subjects) {
@@ -598,6 +601,21 @@ public class AdapterInputHelper {
         for (Link link : links) {
             String page = link.getHref().toString();
             version.getPages().add(page);
+        }
+    }
+
+    private static void addPublications(Version version, Entry entry) throws ResponseContextException {
+        List<Link> links = entry.getLinks(Constants.REL_PUBLICATIONS);
+        if (!links.isEmpty()) {
+            try {
+                for (Link link : links) {
+                    String publication = link.getHref().toString();
+                    //This only applies to agents
+                    ((AgentVersion) version).getPublications().add(publication);
+                }
+            } catch (ClassCastException ex) {
+                throw new ResponseContextException("Publications can only be added to agents", 400);
+            }
         }
     }
 

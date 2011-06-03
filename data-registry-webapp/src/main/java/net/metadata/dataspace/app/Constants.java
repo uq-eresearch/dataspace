@@ -95,6 +95,7 @@ public interface Constants {
     String REL_IS_SUPPORTED_BY = NS_ANDS + "isSupportedBy";
     String REL_LATEST_VERSION = "latest-version";
     String REL_PAGE = NS_FOAF + "page";
+    String REL_PUBLICATIONS = NS_FOAF + "publications";
     String REL_PREDECESSOR_VERSION = "predecessor-version";
     String REL_PUBLISHER = NS_DC + "publisher";
     String REL_RELATED = "related";

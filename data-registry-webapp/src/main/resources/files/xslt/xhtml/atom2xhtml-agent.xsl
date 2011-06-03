@@ -76,6 +76,8 @@
                     <xsl:call-template name="activities"/>
                     <!--pages-->
                     <xsl:call-template name="locations"/>
+                    <!--publications-->
+                    <xsl:call-template name="agent-publications"/>
                     <!-- subjects -->
                     <xsl:call-template name="subjects"/>
                     <xsl:call-template name="keywords"/>
