@@ -13,11 +13,11 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="atom">
 
-    <xsl:include href="common-feed-xhtml.xsl"/>
-    <xsl:include href="../../constants.xsl"/>
     <xsl:include href="../../xhtml/include/header.xsl"/>
     <xsl:include href="../../xhtml/include/head.xsl"/>
     <xsl:include href="../../xhtml/include/footer.xsl"/>
+    <xsl:include href="../../constants.xsl"/>
+    <xsl:include href="common-feed-xhtml.xsl"/>
 
     <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template match="/">

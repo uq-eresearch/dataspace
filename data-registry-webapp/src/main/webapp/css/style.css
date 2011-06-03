@@ -42,15 +42,11 @@ body a {
     display: inline;
 }
 
-.content ul {
-    margin: 0em 0 1em 0;
-}
-
-.content ul li {
+.home-content ul li {
     margin-top: 10px;
 }
 
-.content ul li b {
+.home-content ul li b {
     font-weight: bold;
 }
 

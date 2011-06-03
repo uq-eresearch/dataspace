@@ -65,7 +65,7 @@
     </li>
 </ul>
 <div class="wrapper">
-    <div class="content">
+    <div class="home-content">
         <h1>Welcome to UQ Dataspace</h1>
 
         <p>A catalog of the <strong>University of Queensland's</strong> Research Data Assets</p>
