@@ -675,10 +675,14 @@ public class AdapterInputHelper {
                 //Try finding the agent from the UQ LDAP
 //                RegistryApplication.getApplicationContext().getAuthenticationManager().getCurrentUser()
                 NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email);
-                Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
-                agent = LDAPUtil.createAgent(attributesAsMap);
-                if (agent == null) {
-                    //Else create it from email and name
+                if (namingEnumeration != null) {
+                    Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
+                    agent = LDAPUtil.createAgent(attributesAsMap);
+                    if (agent == null) {
+                        //Else create it from email and name
+                        agent = createBasicAgent(name, email);
+                    }
+                } else {
                     agent = createBasicAgent(name, email);
                 }
             } else {
