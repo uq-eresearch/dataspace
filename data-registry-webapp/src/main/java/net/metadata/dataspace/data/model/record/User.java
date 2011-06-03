@@ -24,6 +24,10 @@ public class User implements Serializable {
     @Column(unique = true)
     private String username;
 
+    @NotNull
+    @Column(unique = true)
+    private String email;
+
     @Enumerated(STRING)
     private Role role;
 
@@ -62,6 +66,14 @@ public class User implements Serializable {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

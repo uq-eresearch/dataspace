@@ -49,6 +49,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                 User user = userDao.getByUsername(userName);
                 if (user == null) {
                     user = new User(userName);
+                    user.setEmail("test@uq.edu.au");
                     userDao.save(user);
                 }
                 request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
@@ -74,14 +75,19 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                         ctx = new InitialDirContext(env);
 
                         NamingEnumeration namingEnum = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
+                        Map<String, String> attributesMap = LDAPUtil.getAttributesAsMap(namingEnum);
 
                         UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
                         User user = userDao.getByUsername(userName);
                         if (user == null) {
                             user = new User(userName);
+                            String email = attributesMap.get("mail");
+                            if (email == null) {
+                                email = userName + "@uq.edu.au";
+                            }
+                            user.setEmail(email);
                             userDao.save(user);
                         }
-                        Map<String, String> attributesMap = LDAPUtil.getAttributesAsMap(namingEnum);
                         LDAPUtil.createLoggedInAgent(attributesMap);
                         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
                         logger.info("Authenticated user: " + userName);

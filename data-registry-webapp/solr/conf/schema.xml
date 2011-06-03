@@ -488,7 +488,7 @@ any data added to them will be ignored outright.  -->
         <!-- catchall field, containing all other searchable text fields (implemented
 via copyField further on in this schema  -->
         <field name="text" type="text" indexed="true" stored="false" multiValued="true"/>
-        <field name="topics" type="text" indexed="true" stored="false" multiValued="true"/>
+        <field name="topics" type="textgen" indexed="true" stored="false" multiValued="true"/>
         <field name="subject" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="activity" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="agent" type="text" indexed="true" stored="false" multiValued="true"/>
