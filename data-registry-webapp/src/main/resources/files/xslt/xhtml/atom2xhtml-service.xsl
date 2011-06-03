@@ -19,7 +19,10 @@
     <xsl:include href="include/head.xsl"/>
     <xsl:include href="include/footer.xsl"/>
 
-    <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
+    <xsl:output method="html" version="4.0"
+                doctype-public="-//W3C//DTD HTML 4.01//EN"
+                doctype-system="http://www.w3.org/TR/html4/strict.dtd"
+                media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template match="/">
         <html>
             <xsl:apply-templates/>

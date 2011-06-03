@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
           Transforms UQ collection profile of Atom Syndication Format to
           XHTML with embedded RDFa
@@ -20,7 +20,10 @@
     <xsl:include href="include/head.xsl"/>
     <xsl:include href="include/footer.xsl"/>
 
-    <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
+    <xsl:output method="html" version="4.0"
+                doctype-public="-//W3C//DTD HTML 4.01//EN"
+                doctype-system="http://www.w3.org/TR/html4/strict.dtd"
+                media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
             <xsl:apply-templates/>
@@ -157,7 +160,6 @@
             </div>
         </xsl:if>
     </xsl:template>
-
 
 
 </xsl:stylesheet>

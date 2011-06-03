@@ -12,9 +12,10 @@ body a {
 }
 
 .wrapper {
-    width: 70%;
+    width: 900px;
     border: 1px solid #888;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 2em;
     background: #fff;
     padding: 1.1em;
@@ -1189,7 +1190,6 @@ p.centenary {
 }
 
 .tagcloud_item {
-    color: #6998F0;
     display: block;
     float: left;
     margin-right: 4px;

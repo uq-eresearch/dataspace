@@ -31,6 +31,8 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
     private static final String[] FORMATS = {Constants.MIME_TYPE_RDF, Constants.MIME_TYPE_RIFCS};
     private String XSL = "";
     private RequestContext contextRequest;
+    private String version = RegistryApplication.getApplicationContext().getVersion();
+    private String title = RegistryApplication.getApplicationContext().getRegistryTitle();
 
     public XSLTTransformerWriter(String xslFilePath) {
         super("XSLTTransformer", FORMATS);
@@ -101,7 +103,8 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
                     transformer.setParameter("currentUser", currentUser.getUsername());
                 }
             }
-            transformer.setParameter("applicationName", RegistryApplication.getApplicationContext().getRegistryTitle());
+            transformer.setParameter("applicationName", title);
+            transformer.setParameter("applicationVersion", version);
             transformer.transform(xml, result);
         } catch (TransformerConfigurationException tce) {
             throw new TransformerException(tce.getMessageAndLocation());

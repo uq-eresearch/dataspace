@@ -11,6 +11,7 @@
         collectionVersions.add(collection.getPublished());
     }
 %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
     <jsp:include page="include/head.jsp"/>
@@ -64,58 +65,60 @@
         <a href="/">Home</a>
     </li>
 </ul>
-<div class="wrapper">
-    <div class="home-content">
-        <h1>Welcome to UQ Dataspace</h1>
+<div id="content-holder">
+    <div class="wrapper">
+        <div class="home-content">
+            <h1>Welcome to UQ Dataspace</h1>
 
-        <p>A catalog of the <strong>University of Queensland's</strong> Research Data Assets</p>
+            <p>A catalog of the <strong>University of Queensland's</strong> Research Data Assets</p>
 
-        <div class="portlet-content">
-            <div class="browse-portlet">
-                <div class="portlet-header">
-                    <a href="/search">Search</a>
+            <div class="portlet-content">
+                <div class="browse-portlet">
+                    <div class="portlet-header">
+                        <a href="/search">Search</a>
+                    </div>
+                    <table width="100%">
+                        <tbody>
+                        <tr>
+                            <td id="searching">
+                                <input type="text" id="query" name="query">
+                            </td>
+                            <td><input type="button" name="search-submit" id="search-submit" value="Search"
+                                       onclick="goToSearchPage(); return false;" style=""/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div id="topics" class="tagcloud">
+
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <table width="100%">
-                    <tbody>
-                    <tr>
-                        <td id="searching">
-                            <input type="text" id="query" name="query"/>
-                        </td>
-                        <td><input type="button" name="search-submit" id="search-submit" value="Search"
-                                   onclick="goToSearchPage(); return false;" style=""/></td>
-                    </tr>
-                    <tr>
-                        <td id="topics" class="tagcloud" colspan="2">
-                            <%--<div id="topics" class="tagcloud">--%>
+                <div class="browse-portlet">
+                    <div class="portlet-header">
+                        <a href="/collections">Recently added collections</a>
+                    </div>
+                    <ul class="portlet-list">
+                        <%
+                            for (CollectionVersion version : collectionVersions) {
+                        %>
+                        <li><a href="/collections/<%=version.getParent().getUriKey()%>"><%=version.getTitle()%>
+                        </a>
+                        </li>
+                        <%
+                            }
+                        %>
 
-                            <%--</div>--%>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="browse-portlet">
-                <div class="portlet-header">
-                    <a href="/collections">Recently added collections</a>
+                    </ul>
                 </div>
-                <ul class="portlet-list">
-                    <%
-                        for (CollectionVersion version : collectionVersions) {
-                    %>
-                    <li><a href="/collections/<%=version.getParent().getUriKey()%>"><%=version.getTitle()%>
-                    </a>
-                    </li>
-                    <%
-                        }
-                    %>
-
-                </ul>
             </div>
+
+            <p>This registry syndicates data to <br/>
+                <a href="http://services.ands.org.au/home/orca/rda/">
+                    <img src="https://services.ands.org.au/home/orca/rda/_images/ANDS_logo.gif"></a></p>
         </div>
-
-        <p>This registry syndicates data to </br>
-            <a href="http://services.ands.org.au/home/orca/rda/">
-                <img src="https://services.ands.org.au/home/orca/rda/_images/ANDS_logo.gif"/></a></p>
     </div>
 </div>
 <jsp:include page="include/footer.jsp"/>

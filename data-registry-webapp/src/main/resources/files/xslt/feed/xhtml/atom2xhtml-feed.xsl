@@ -19,7 +19,10 @@
     <xsl:include href="../../constants.xsl"/>
     <xsl:include href="common-feed-xhtml.xsl"/>
 
-    <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
+    <xsl:output method="html" version="4.0"
+                doctype-public="-//W3C//DTD HTML 4.01//EN"
+                doctype-system="http://www.w3.org/TR/html4/strict.dtd"
+                media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
             <xsl:apply-templates/>

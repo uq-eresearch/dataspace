@@ -1,4 +1,5 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?><!-- DWXMLSource="test.xml" -->
+<!DOCTYPE xsl:stylesheet  [<!ENTITY copy   "&#169;">]>
 <!--
           Transforms UQ collection profile of Atom Syndication Format to
           XHTML with embedded RDFa
@@ -8,11 +9,19 @@
           Abdul Alabri, 2010-12
 
     -->
+
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns="http://www.w3.org/1999/xhtml">
+    <xsl:param name="applicationVersion"/>
     <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
 
     <xsl:template name="footer">
+        <div class="version-footer" align="center">
+            <xsl:value-of select="$applicationName"/> &copy;
+            2010
+            ver.
+            (<xsl:value-of select="$applicationVersion"/>)
+        </div>
         <div id="footer">
             <div class="footer-wrapper">
                 <div id="siteinfo" class="vcard">
@@ -39,7 +48,7 @@
                     <div class="directions">
                         <a href="http://www.uq.edu.au/maps/">Maps and Directions</a>
                     </div>
-                    <div id="copyright">Copyright 2010 The University of Queensland</div>
+                    <div id="copyright">&copy; 2010 The University of Queensland</div>
                 </div>
                 <div id="footer-resources">
                     <h2>Supplemental Resources</h2>

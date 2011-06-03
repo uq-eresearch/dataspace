@@ -14,12 +14,15 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="atom rdfa">
 
-    <xsl:include href="../edit/edit-common-xhtml.xsl"/>
     <xsl:include href="../include/header.xsl"/>
     <xsl:include href="../include/head.xsl"/>
     <xsl:include href="../include/footer.xsl"/>
+    <xsl:include href="../edit/edit-common-xhtml.xsl"/>
 
-    <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
+    <xsl:output method="html" version="4.0"
+                doctype-public="-//W3C//DTD HTML 4.01//EN"
+                doctype-system="http://www.w3.org/TR/html4/strict.dtd"
+                media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
             <xsl:call-template name="new-activity"/>
