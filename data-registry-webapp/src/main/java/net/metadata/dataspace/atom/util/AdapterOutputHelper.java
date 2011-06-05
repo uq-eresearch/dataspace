@@ -152,10 +152,13 @@ public class AdapterOutputHelper {
             }
 
             //Add agent publications
-            Set<String> publications = version.getPublications();
-            for (String publication : publications) {
-                entry.addLink(publication, Constants.REL_PUBLICATIONS);
+            Set<Publication> publications = version.getPublications();
+            for (Publication publication : publications) {
+                String href = publication.getPublicationURI();
+                Link link = entry.addLink(href, Constants.REL_PUBLICATIONS);
+                link.setTitle(publication.getTitle());
             }
+
 
             Set<Collection> collectionSet = version.getMade();
             for (Collection collection : collectionSet) {

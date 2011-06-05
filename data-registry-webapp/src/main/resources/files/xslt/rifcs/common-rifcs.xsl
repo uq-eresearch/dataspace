@@ -65,7 +65,7 @@
                 <xsl:value-of select="@href" disable-output-escaping="no"/>
             </identifier>
             <title>
-                <xsl:value-of select="@href" disable-output-escaping="no"/>
+                <xsl:value-of select="@title" disable-output-escaping="no"/>
             </title>
         </relatedInfo>
     </xsl:template>

@@ -276,8 +276,11 @@ public class AdapterInputHelper {
         //Add web pages
         addPages(version, entry);
 
-        //Add publications
-        addPublications(version, entry);
+        //add publications
+        Set<Publication> publications = getAgentPublications(entry);
+        for (Publication publication : publications) {
+            version.getPublications().add(publication);
+        }
 
         //Add subjects
         Set<Subject> subjects = getSubjects(entry);
@@ -604,19 +607,26 @@ public class AdapterInputHelper {
         }
     }
 
-    private static void addPublications(Version version, Entry entry) throws ResponseContextException {
-        List<Link> links = entry.getLinks(Constants.REL_PUBLICATIONS);
-        if (!links.isEmpty()) {
-            try {
-                for (Link link : links) {
-                    String publication = link.getHref().toString();
-                    //This only applies to agents
-                    ((AgentVersion) version).getPublications().add(publication);
+    private static Set<Publication> getAgentPublications(Entry entry) throws ResponseContextException {
+        Set<Publication> publications = new HashSet<Publication>();
+        try {
+            List<Link> links = entry.getLinks(Constants.REL_PUBLICATIONS);
+            for (Link link : links) {
+                String publicationUri = link.getHref().toString();
+                String publicationTitle = link.getTitle();
+                if (publicationUri != null && publicationTitle != null) {
+                    Publication publication = entityCreator.getNextPublication();
+                    publication.setPublicationURI(publicationUri);
+                    publication.setTitle(publicationTitle);
+                    publications.add(publication);
+                } else {
+                    throw new ResponseContextException("Publication contains no href or title attributes", 400);
                 }
-            } catch (ClassCastException ex) {
-                throw new ResponseContextException("Publications can only be added to agents", 400);
             }
+        } catch (Throwable th) {
+            throw new ResponseContextException("Cannot extract publications from entry", 400);
         }
+        return publications;
     }
 
     private static void addType(Version version, Entry entry) throws ResponseContextException {

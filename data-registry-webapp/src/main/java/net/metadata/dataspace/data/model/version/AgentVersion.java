@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
@@ -57,8 +58,9 @@ public class AgentVersion extends AbstractVersionEntity {
     @CollectionOfElements(fetch = FetchType.LAZY)
     private Set<String> pages = new HashSet<String>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
-    private Set<String> publications = new HashSet<String>();
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "agents_publications")
+    private Set<Publication> publications = new HashSet<Publication>();
 
     public AgentVersion() {
     }
@@ -137,11 +139,11 @@ public class AgentVersion extends AbstractVersionEntity {
         this.pages = pages;
     }
 
-    public Set<String> getPublications() {
+    public Set<Publication> getPublications() {
         return publications;
     }
 
-    public void setPublications(Set<String> publications) {
+    public void setPublications(Set<Publication> publications) {
         this.publications = publications;
     }
 }
