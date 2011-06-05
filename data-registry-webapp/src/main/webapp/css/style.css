@@ -1193,6 +1193,8 @@ p.centenary {
 .tagcloud_item {
     display: block;
     float: left;
+    height: 23px;
+    line-height: 0px;
     margin-right: 4px;
 }
 
