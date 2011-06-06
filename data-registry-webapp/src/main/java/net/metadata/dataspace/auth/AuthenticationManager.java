@@ -4,6 +4,8 @@ import net.metadata.dataspace.data.model.record.User;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 
+import javax.naming.directory.DirContext;
+
 /**
  * Author: alabri
  * Date: 10/11/2010
@@ -35,4 +37,9 @@ public interface AuthenticationManager {
      * @param request The request of the HTTP conversation. Not null.
      */
     ResponseContext logout(RequestContext request);
+
+
+    DirContext getDirContext(User currentUser);
+
+    void setDirContext(DirContext ctx, User currentUser);
 }

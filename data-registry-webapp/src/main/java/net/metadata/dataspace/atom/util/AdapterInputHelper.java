@@ -669,7 +669,7 @@ public class AdapterInputHelper {
             Agent agent = daoManager.getAgentDao().getByEmail(email);
             if (agent == null) {
                 //Try finding the agent from the UQ LDAP
-                NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email);
+                NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email, currentUser);
                 if (namingEnumeration != null) {
                     Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
                     agent = LDAPUtil.createAgent(attributesAsMap, currentUser);

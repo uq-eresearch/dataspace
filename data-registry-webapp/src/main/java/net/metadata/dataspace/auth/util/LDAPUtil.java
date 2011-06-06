@@ -2,6 +2,7 @@ package net.metadata.dataspace.auth.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.SourceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
@@ -13,13 +14,14 @@ import net.metadata.dataspace.data.model.types.AgentType;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import org.apache.log4j.Logger;
 
-import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.*;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -31,22 +33,21 @@ public class LDAPUtil {
 
     private final static Logger logger = Logger.getLogger(LDAPUtil.class);
 
-    public static NamingEnumeration searchLDAPByEmail(String email) {
+    public static NamingEnumeration searchLDAPByEmail(String email, User currentUser) {
+        AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
+        DirContext dirContext = authenticationManager.getDirContext(currentUser);
+        NamingEnumeration namingEnum;
         try {
-            Hashtable env = new Hashtable();
-            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-            env.put(Context.PROVIDER_URL, "ldaps://ldap.uq.edu.au");
             SearchControls ctls = new SearchControls();
             ctls.setReturningObjFlag(true);
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            DirContext ctx = new InitialDirContext(env);
-            NamingEnumeration answer = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(mail=" + email + ")", ctls);
-            return answer;
+            namingEnum = dirContext.search("ou=staff,ou=people,o=the university of queensland,c=au", "(mail=" + email + ")", ctls);
         } catch (NamingException e) {
-            String message = "Agent not found in LDAP";
-            logger.warn(message);
+            String message = "User not found in LDAP";
+            System.err.println(message);
             return null;
         }
+        return namingEnum;
     }
 
     public static Map<String, String> getAttributesAsMap(NamingEnumeration namingEnum) throws NamingException {

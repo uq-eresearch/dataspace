@@ -19,6 +19,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import java.util.Map;
  */
 public class AuthenticationManagerImpl implements AuthenticationManager {
     private Logger logger = Logger.getLogger(getClass());
+    private Map<String, DirContext> userDirContexts = new HashMap<String, DirContext>();
 
     @Override
     public User getCurrentUser(RequestContext request) {
@@ -52,7 +54,18 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                     userDao.save(user);
                 }
                 request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
-
+                Hashtable env = new Hashtable();
+                env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+                env.put(Context.PROVIDER_URL, "ldaps://ldap.uq.edu.au");
+                SearchControls ctls = new SearchControls();
+                ctls.setReturningObjFlag(true);
+                ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+                try {
+                    DirContext ctx = new InitialDirContext(env);
+                    setDirContext(ctx, user);
+                } catch (NamingException e) {
+                    logger.warn("Could not set LDAP context for user " + userName);
+                }
                 logger.info("Authenticated user: " + userName);
                 return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
             } else {
@@ -90,6 +103,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                             userDao.save(user);
                         }
                         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
+                        setDirContext(ctx, user);
                         logger.info("Authenticated user: " + userName);
                         return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
                     } else {
@@ -109,8 +123,23 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 
     @Override
     public ResponseContext logout(RequestContext request) {
+        User user = (User) request.getAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER);
+        userDirContexts.remove(user.getEmail());
         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, null);
         return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
     }
 
+    @Override
+    public DirContext getDirContext(User currentUser) {
+        if (currentUser == null) {
+            return null;
+        } else {
+            return userDirContexts.get(currentUser.getEmail());
+        }
+    }
+
+    @Override
+    public void setDirContext(DirContext ctx, User currentUser) {
+        userDirContexts.put(currentUser.getEmail(), ctx);
+    }
 }

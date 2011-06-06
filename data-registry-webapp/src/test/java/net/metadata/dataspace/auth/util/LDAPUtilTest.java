@@ -15,6 +15,8 @@ import javax.naming.directory.SearchControls;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Author: alabri
  * Date: 25/02/2011
@@ -25,13 +27,13 @@ import java.util.Map;
 public class LDAPUtilTest {
     @Test
     public void testSearchLDAPByEmail() throws Exception {
-        String testEmail = "uqaalabr@uq.edu.au";
+        String testEmail = "a.alabri@uq.edu.au";
         NamingEnumeration namingEnumeration = searchLDAPByEmail(testEmail);
         Map<String, String> map = LDAPUtil.getAttributesAsMap(namingEnumeration);
         for (String s : map.keySet()) {
             System.out.println(s + ": " + map.get(s));
         }
-//        assertEquals("Email is not the same: ", testEmail, map.get("uqmail"));
+        assertEquals("Email is not the same: ", testEmail, map.get("mail"));
     }
 
     private static NamingEnumeration searchLDAPByEmail(String email) {
@@ -44,7 +46,7 @@ public class LDAPUtilTest {
             ctls.setCountLimit(1);
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
             DirContext ctx = new InitialDirContext(env);
-            NamingEnumeration answer = ctx.search("ou=staff,ou=people,o=the university of queensland", "(uqmail=" + email + ")", ctls);
+            NamingEnumeration answer = ctx.search("ou=staff,ou=people,o=the university of queensland", "(mail=" + email + ")", ctls);
             return answer;
         } catch (NamingException e) {
             String message = "User not found in LDAP";
