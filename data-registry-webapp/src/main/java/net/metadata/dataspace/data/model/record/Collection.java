@@ -36,9 +36,8 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     @JoinTable(name = "collection_same_as")
     private Set<Collection> sameAs = new HashSet<Collection>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "collection_description_authors")
-    private Set<Agent> authors = new HashSet<Agent>();
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User descriptionAuthor;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source source;
@@ -107,13 +106,13 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     }
 
     @Override
-    public Set<Agent> getAuthors() {
-        return this.authors;
+    public User getDescriptionAuthor() {
+        return this.descriptionAuthor;
     }
 
     @Override
-    public void setAuthors(Set<Agent> authors) {
-        this.authors = authors;
+    public void setDescriptionAuthor(User descriptionAuthor) {
+        this.descriptionAuthor = descriptionAuthor;
     }
 
     public Source getSource() {

@@ -7,6 +7,7 @@ import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.User;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import org.junit.After;
 import org.junit.Before;
@@ -68,7 +69,7 @@ public class AgentDaoImplTest {
         agentVersion.getSubjects().add(subject2);
         agent.getVersions().add(agentVersion);
         Source source = PopulatorUtil.getSource();
-        agent.getAuthors().add(agent);
+        agent.setDescriptionAuthor(new User("test", "Test User", "test@uq.edu.au"));
         agent.setSource(source);
 
         entityManager.persist(source);

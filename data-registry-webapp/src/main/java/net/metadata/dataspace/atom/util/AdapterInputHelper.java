@@ -2,6 +2,7 @@ package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.util.LDAPUtil;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
@@ -12,8 +13,7 @@ import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
-import net.metadata.dataspace.data.model.record.Activity;
-import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.*;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.ActivityType;
@@ -27,14 +27,13 @@ import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.ProviderHelper;
+import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 
 import javax.naming.NamingEnumeration;
 import javax.persistence.EntityManager;
 import javax.xml.namespace.QName;
 import java.util.*;
-
-import net.metadata.dataspace.data.model.record.Collection;
 
 /**
  * Author: alabri
@@ -50,11 +49,11 @@ public class AdapterInputHelper {
     private static final EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
     private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
 
-    public static void addRelations(Entry entry, Version version) throws ResponseContextException {
+    public static void addRelations(Entry entry, Version version, User currentUser) throws ResponseContextException {
         if (version instanceof ActivityVersion) {
             addRelationsToActivity(entry, (ActivityVersion) version);
         } else if (version instanceof CollectionVersion) {
-            addRelationsCollection(entry, (CollectionVersion) version);
+            addRelationsCollection(entry, (CollectionVersion) version, currentUser);
         } else if (version instanceof AgentVersion) {
             addRelationsAgent(entry, (AgentVersion) version);
         } else if (version instanceof ServiceVersion) {
@@ -107,7 +106,7 @@ public class AdapterInputHelper {
         version.setUpdated(now);
     }
 
-    private static void addRelationsCollection(Entry entry, CollectionVersion version) throws ResponseContextException {
+    private static void addRelationsCollection(Entry entry, CollectionVersion version, User currentUser) throws ResponseContextException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
 
         //Add the original id
@@ -128,10 +127,10 @@ public class AdapterInputHelper {
         }
 
         //Add creators of this collection
-        addCollectionCreator(version, entry.getAuthors());
+        addCollectionCreator(version, entry.getAuthors(), currentUser);
         entityManager.merge(version);
         //Add publishers
-        addCollectionPublishers(version, entry.getLinks(Constants.REL_PUBLISHER));
+        addCollectionPublishers(version, entry.getLinks(Constants.REL_PUBLISHER), currentUser);
         entityManager.merge(version);
 
         //Add outputof
@@ -393,48 +392,17 @@ public class AdapterInputHelper {
         }
     }
 
-    public static void addDescriptionAuthors(Record record, List<Person> persons) throws ResponseContextException {
-
-        for (Person person : persons) {
-            String name = person.getName();
-            String email = person.getEmail();
-            IRI uri = person.getUri();
-            if (name == null) {
-                throw new ResponseContextException("Description Author missing name", 400);
-            }
-            if (email == null) {
-                throw new ResponseContextException("Description Author missing email address", 400);
-            }
-            if (uri != null) {
-                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-                String uriKey = OperationHelper.getEntityID(uri.toString());
-                Agent agent = daoManager.getAgentDao().getByKey(uriKey);
-                if (agent != null) {
-                    if (!agent.isActive()) {
-                        agent.setActive(true);
-                        agent.setUpdated(new Date());
-                    }
-                    record.getAuthors().add(agent);
-                } else {
-                    Agent newAgent = findOrCreateAgent(name, email);
-                    if (newAgent == null) {
-                        throw new ResponseContextException("Description Author cannot be found", 400);
-                    } else {
-                        record.getAuthors().add(newAgent);
-                    }
-                }
-            } else {
-                Agent newAgent = findOrCreateAgent(name, email);
-                if (newAgent == null) {
-                    throw new ResponseContextException("Description Author cannot be found", 400);
-                } else {
-                    record.getAuthors().add(newAgent);
-                }
-            }
+    public static void addDescriptionAuthors(Record record, RequestContext request) throws ResponseContextException {
+        try {
+            AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
+            User currentUser = authenticationManager.getCurrentUser(request);
+            record.setDescriptionAuthor(currentUser);
+        } catch (Throwable th) {
+            throw new ResponseContextException("Could not add description author", 500);
         }
     }
 
-    public static void addCollectionCreator(CollectionVersion version, List<Person> persons) throws ResponseContextException {
+    public static void addCollectionCreator(CollectionVersion version, List<Person> persons, User currentUser) throws ResponseContextException {
         for (Person person : persons) {
             String name = person.getName();
             String email = person.getEmail();
@@ -458,7 +426,7 @@ public class AdapterInputHelper {
                     agent.getMade().add(version.getParent());
                     entityManager.merge(agent);
                 } else {
-                    Agent newAgent = findOrCreateAgent(name, email);
+                    Agent newAgent = findOrCreateAgent(name, email, currentUser);
                     if (newAgent == null) {
                         throw new ResponseContextException("Author cannot be found", 400);
                     } else {
@@ -467,7 +435,7 @@ public class AdapterInputHelper {
                     }
                 }
             } else {
-                Agent newAgent = findOrCreateAgent(name, email);
+                Agent newAgent = findOrCreateAgent(name, email, currentUser);
                 if (newAgent == null) {
                     throw new ResponseContextException("Author cannot be found", 400);
                 } else {
@@ -478,7 +446,7 @@ public class AdapterInputHelper {
         }
     }
 
-    public static void addCollectionPublishers(CollectionVersion version, List<Link> publishers) throws ResponseContextException {
+    public static void addCollectionPublishers(CollectionVersion version, List<Link> publishers, User currentUser) throws ResponseContextException {
         for (Link publisherLink : publishers) {
             String title = publisherLink.getTitle();
             if (title == null) {
@@ -492,7 +460,7 @@ public class AdapterInputHelper {
                 String token = "mailto:";
                 if (hrefValue.startsWith(token)) {
                     String email = hrefValue.substring(hrefValue.indexOf(":") + 1);
-                    Agent newAgent = findOrCreateAgent(title, email);
+                    Agent newAgent = findOrCreateAgent(title, email, currentUser);
                     if (newAgent != null) {
                         version.getPublishers().add(newAgent);
                         newAgent.getIsManagerOf().add(version.getParent());
@@ -695,17 +663,16 @@ public class AdapterInputHelper {
         return uriKeys;
     }
 
-    private static Agent findOrCreateAgent(String name, String email) throws ResponseContextException {
+    private static Agent findOrCreateAgent(String name, String email, User currentUser) throws ResponseContextException {
         try {
             //Find the agent in our system first
             Agent agent = daoManager.getAgentDao().getByEmail(email);
             if (agent == null) {
                 //Try finding the agent from the UQ LDAP
-//                RegistryApplication.getApplicationContext().getAuthenticationManager().getCurrentUser()
                 NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email);
                 if (namingEnumeration != null) {
                     Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
-                    agent = LDAPUtil.createAgent(attributesAsMap);
+                    agent = LDAPUtil.createAgent(attributesAsMap, currentUser);
                     if (agent == null) {
                         //Else create it from email and name
                         agent = createBasicAgent(name, email);
@@ -713,6 +680,7 @@ public class AdapterInputHelper {
                 } else {
                     agent = createBasicAgent(name, email);
                 }
+                agent.setDescriptionAuthor(currentUser);
             } else {
                 if (!agent.isActive()) {
                     agent.setActive(true);
@@ -730,8 +698,6 @@ public class AdapterInputHelper {
         AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
         SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
         Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
-//        transaction.begin();
-//        String name = attributesMap.get("cn");
         version.setTitle(name);
         version.setDescription(name);
         Date now = new Date();
@@ -746,7 +712,6 @@ public class AdapterInputHelper {
 
         agent.setUpdated(now);
         agent.setSource(systemSource);
-        agent.getAuthors().add(agent);
         return agent;
     }
 }

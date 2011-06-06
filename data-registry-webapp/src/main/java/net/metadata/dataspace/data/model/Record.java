@@ -1,10 +1,9 @@
 package net.metadata.dataspace.data.model;
 
 import net.metadata.dataspace.data.model.context.Source;
-import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.User;
 
 import java.util.Date;
-import java.util.Set;
 import java.util.SortedSet;
 
 /**
@@ -71,9 +70,9 @@ public interface Record {
 
     Date getPublishDate();
 
-    Set<Agent> getAuthors();
+    User getDescriptionAuthor();
 
-    void setAuthors(Set<Agent> authors);
+    void setDescriptionAuthor(User descriptionAuthor);
 
     String getRights();
 

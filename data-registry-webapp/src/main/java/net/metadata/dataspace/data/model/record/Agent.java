@@ -38,9 +38,8 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     @JoinTable(name = "agent_same_as")
     private Set<Agent> sameAs = new HashSet<Agent>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "agent_description_authors")
-    private Set<Agent> authors = new HashSet<Agent>();
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User descriptionAuthor;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source source;
@@ -112,13 +111,13 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     }
 
     @Override
-    public void setAuthors(Set<Agent> authors) {
-        this.authors = authors;
+    public void setDescriptionAuthor(User descriptionAuthor) {
+        this.descriptionAuthor = descriptionAuthor;
     }
 
     @Override
-    public Set<Agent> getAuthors() {
-        return this.authors;
+    public User getDescriptionAuthor() {
+        return this.descriptionAuthor;
     }
 
     public Source getSource() {

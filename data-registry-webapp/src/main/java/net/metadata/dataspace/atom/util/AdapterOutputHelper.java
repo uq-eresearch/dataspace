@@ -9,8 +9,7 @@ import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Subject;
-import net.metadata.dataspace.data.model.record.Activity;
-import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.*;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
@@ -18,10 +17,7 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.Abdera;
-import org.apache.abdera.model.Element;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Link;
-import org.apache.abdera.model.Source;
+import org.apache.abdera.model.*;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -528,10 +524,10 @@ public class AdapterOutputHelper {
                 source.setId(Constants.UQ_REGISTRY_URI_PREFIX);
                 source.setTitle(Constants.UQ_REGISTRY_TITLE);
             }
-            Set<Agent> authors = version.getParent().getAuthors();
-            for (Agent author : authors) {
-                source.addAuthor(author.getTitle(), author.getMBoxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey());
-            }
+
+            User descriptionAuthor = version.getParent().getDescriptionAuthor();
+            Person person = source.addAuthor(descriptionAuthor.getDisplayName());
+            person.setEmail(descriptionAuthor.getEmail());
             Link publisher = source.addLink(Constants.UQ_URL, Constants.REL_PUBLISHER);
             publisher.setTitle(Constants.TERM_ANDS_GROUP);
             source.setRights(Constants.UQ_REGISTRY_RIGHTS);
@@ -546,7 +542,6 @@ public class AdapterOutputHelper {
         for (Subject sub : subjectSet) {
             if (sub.getLabel().equals(Constants.LABEL_KEYWORD)) {
                 entry.addCategory(sub.getTerm());
-//                category.setLabel(Constants.LABEL_KEYWORD);
             } else {
                 entry.addCategory(sub.getDefinedBy(), sub.getTerm(), sub.getLabel());
             }

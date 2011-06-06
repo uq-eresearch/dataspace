@@ -48,8 +48,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                 UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
                 User user = userDao.getByUsername(userName);
                 if (user == null) {
-                    user = new User(userName);
-                    user.setEmail("test@uq.edu.au");
+                    user = new User(userName, "Test", "test@uq.edu.au");
                     userDao.save(user);
                 }
                 request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
@@ -82,13 +81,14 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                         if (user == null) {
                             user = new User(userName);
                             String email = attributesMap.get("mail");
+                            String name = attributesMap.get("cn");
                             if (email == null) {
                                 email = userName + "@uq.edu.au";
                             }
                             user.setEmail(email);
+                            user.setDisplayName(name);
                             userDao.save(user);
                         }
-                        LDAPUtil.createLoggedInAgent(attributesMap);
                         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
                         logger.info("Authenticated user: " + userName);
                         return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);

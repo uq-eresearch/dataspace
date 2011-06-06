@@ -34,9 +34,8 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     @JoinTable(name = "service_same_as")
     private Set<Service> sameAs = new HashSet<Service>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "service_description_authors")
-    private Set<Agent> authors = new HashSet<Agent>();
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User descriptionAuthor;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source source;
@@ -88,13 +87,13 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     }
 
     @Override
-    public Set<Agent> getAuthors() {
-        return this.authors;
+    public User getDescriptionAuthor() {
+        return this.descriptionAuthor;
     }
 
     @Override
-    public void setAuthors(Set<Agent> authors) {
-        this.authors = authors;
+    public void setDescriptionAuthor(User descriptionAuthor) {
+        this.descriptionAuthor = descriptionAuthor;
     }
 
     public Source getSource() {

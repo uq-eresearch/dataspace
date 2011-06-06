@@ -25,6 +25,9 @@ public class User implements Serializable {
     private String username;
 
     @NotNull
+    private String displayName;
+
+    @NotNull
     @Column(unique = true)
     private String email;
 
@@ -36,6 +39,13 @@ public class User implements Serializable {
 
     public User(String username) {
         this.username = username;
+        this.role = Role.USER;
+    }
+
+    public User(String username, String displayName, String email) {
+        this.username = username;
+        this.displayName = displayName;
+        this.email = email;
         this.role = Role.USER;
     }
 
@@ -74,6 +84,14 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     @Override

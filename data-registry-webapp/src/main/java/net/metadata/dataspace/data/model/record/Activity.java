@@ -35,9 +35,8 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     @JoinTable(name = "activity_same_as")
     private Set<Activity> sameAs = new HashSet<Activity>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "activities_description_authors")
-    private Set<Agent> authors = new HashSet<Agent>();
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User descriptionAuthor;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Source source;
@@ -92,13 +91,13 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     }
 
     @Override
-    public Set<Agent> getAuthors() {
-        return this.authors;
+    public User getDescriptionAuthor() {
+        return this.descriptionAuthor;
     }
 
     @Override
-    public void setAuthors(Set<Agent> authors) {
-        this.authors = authors;
+    public void setDescriptionAuthor(User descriptionAuthor) {
+        this.descriptionAuthor = descriptionAuthor;
     }
 
 

@@ -88,9 +88,9 @@ public class HttpMethodHelper {
                         record.setUpdated(now);
                         entityManager.persist(version);
                         entityManager.persist(record);
-                        AdapterInputHelper.addRelations(entry, version);
+                        AdapterInputHelper.addRelations(entry, version, user);
                         List<Person> authors = entry.getSource().getAuthors();
-                        AdapterInputHelper.addDescriptionAuthors(record, authors);
+                        AdapterInputHelper.addDescriptionAuthors(record, request);
                         entityManager.merge(version);
                         entityManager.merge(record);
                         transaction.commit();
@@ -140,7 +140,7 @@ public class HttpMethodHelper {
                                     transaction.begin();
                                     record.getVersions().add(version);
                                     version.setParent(record);
-                                    AdapterInputHelper.addRelations(entry, version);
+                                    AdapterInputHelper.addRelations(entry, version, user);
                                     record.setUpdated(new Date());
                                     entityManager.persist(version);
                                     entityManager.merge(record);
