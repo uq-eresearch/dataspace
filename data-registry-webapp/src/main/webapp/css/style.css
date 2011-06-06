@@ -308,12 +308,12 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 }
 
 html {
-    background: rgb(255, 255, 255) url('../images/bg-body.png') repeat-x scroll 0pt 400px;
+    background: rgb(255, 255, 255) url('../images/bg-body.png') repeat-x scroll 0pt 133px;
 }
 
-body {
-    background: transparent url('../images/bg-header.jpg') no-repeat scroll 100% 0pt;
-}
+/*body {*/
+/*background: transparent url('../images/bg-header.jpg') no-repeat scroll 100% 0pt;*/
+/*}*/
 
 * {
     margin: 0;
