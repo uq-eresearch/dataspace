@@ -68,60 +68,65 @@ public class LDAPUtil {
     }
 
     public static Agent createAgent(Map<String, String> attributesMap, User currentUser) {
-        AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
-        String mail = attributesMap.get("mail");
-        Agent agent = agentDao.getByEmail(mail);
-        if (agent == null) {
-            EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
-            agent = ((Agent) entityCreator.getNextRecord(Agent.class));
-            AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
-            SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
-            Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
-            //always available attributes
-            String name = attributesMap.get("cn");
-            String organisation = attributesMap.get("ou");
+        if (attributesMap == null || attributesMap.isEmpty()) {
+            return null;
+        } else {
+            AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
+            String mail = attributesMap.get("mail");
+            Agent agent = agentDao.getByEmail(mail);
+            if (agent == null) {
+                EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
+                agent = ((Agent) entityCreator.getNextRecord(Agent.class));
+                AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
+                SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
+                Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
+                //always available attributes
+                String name = attributesMap.get("cn");
+                String organisation = attributesMap.get("ou");
 
-            //attributes available when logged in
-            String title = attributesMap.get("personalTitle");
-            String givenName = attributesMap.get("givenName");
-            String familyName = attributesMap.get("sn");
-            if (title != null && givenName != null & familyName != null) {
-                FullName fullName = entityCreator.getFullName();
-                fullName.setTitle(title);
-                fullName.setGivenName(givenName);
-                fullName.setFamilyName(familyName);
-                agent.setFullName(fullName);
-            }
-            String jobTitle = attributesMap.get("title");
-            if (jobTitle == null) {
-                jobTitle = "Staff Member";
-            }
-            String page = attributesMap.get("labeledURI");
-            if (page != null) {
-                version.getPages().add(page);
-            }
-            String nickName = attributesMap.get("pub-displayname");
-            if (nickName != null) {
-                version.getAlternatives().add(nickName);
-            }
-            version.setTitle(name);
-            version.setDescription(name + " is a " + jobTitle + " in " + organisation + " at The University of Queensland");
-            Date now = new Date();
-            version.setUpdated(now);
-            version.setType(AgentType.PERSON);
-            version.getMboxes().add(mail);
+                //attributes available when logged in
+                String title = attributesMap.get("personalTitle");
+                String givenName = attributesMap.get("givenName");
+                String familyName = attributesMap.get("sn");
+                if (title != null && givenName != null & familyName != null) {
+                    FullName fullName = entityCreator.getFullName();
+                    fullName.setTitle(title);
+                    fullName.setGivenName(givenName);
+                    fullName.setFamilyName(familyName);
+                    agent.setFullName(fullName);
+                }
+                String jobTitle = attributesMap.get("title");
+                if (jobTitle == null) {
+                    jobTitle = "Staff Member";
+                }
+                String page = attributesMap.get("labeledURI");
+                if (page != null) {
+                    version.getPages().add(page);
+                }
+                String nickName = attributesMap.get("pub-displayname");
+                if (nickName != null) {
+                    version.getAlternatives().add(nickName);
+                }
+                version.setTitle(name);
+                version.setDescription(name + " is a " + jobTitle + " in " + organisation + " at The University of Queensland");
+                Date now = new Date();
+                version.setUpdated(now);
+                version.setType(AgentType.PERSON);
+                version.getMboxes().add(mail);
 
-            version.setParent(agent);
-            agent.getVersions().add(version);
-            version.getParent().setPublished(version);
-            agent.setUpdated(now);
+                version.setParent(agent);
+                agent.getVersions().add(version);
+                version.getParent().setPublished(version);
+                agent.setUpdated(now);
 
-            agent.setUpdated(now);
-            agent.setSource(systemSource);
-            agent.setDescriptionAuthor(currentUser);
+                agent.setUpdated(now);
+                agent.setSource(systemSource);
+                agent.setDescriptionAuthor(currentUser);
 
-            return agent;
+                return agent;
+            } else {
+                return agent;
+            }
         }
-        return null;
     }
 }
