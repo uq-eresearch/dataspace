@@ -24,8 +24,7 @@
 
     <!--     collection description -->
     <content
-            type="text">Updated: Estuarine crocodile location and temperature observations recorded using acoustic
-        telemetry
+            type="text">Estuarine crocodile location and temperature observations recorded using acoustic telemetry
         since 2007 on Cape York Peninsula, Queensland, Australia.
 
         The data comes from sensors attached to more than sixty estuarine crocodiles. The sensors continuously transmit
@@ -48,15 +47,15 @@
     <!--     collection subjects -->
     <category
             scheme="http://purl.org/anzsrc/for"
-            term="http://purl.org/anzsrc/for#field_060801"
+            term="http://purl.org/anzsrc/for/#field_060801"
             label="060801 - Animal Behaviour"/>
     <category
             scheme="http://purl.org/anzsrc/for"
-            term="http://purl.org/anzsrc/for#field_060205"
+            term="http://purl.org/anzsrc/for/#field_060205"
             label="060205 - Marine and Estuarine Ecology (incl. Marine Ichthyology)"/>
     <category
             scheme="http://purl.org/anzsrc/seo"
-            term="http://purl.org/anzsrc/seo#field_970106"
+            term="http://purl.org/anzsrc/seo/#field_970106"
             label="970106 - Expanding Knowledge in the Biological Sciences"/>
     <category
             term="ecology"/>
