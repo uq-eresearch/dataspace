@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the activity *** -->
+    <!--     id for the activity in the original source system-->
+    <id>http://dataspace.uq.edu.au/activities/5#</id>
+
+    <!--     type of activity -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://xmlns.com/foaf/0.1/Project"
+        title="Project"/>
+
+    <!--     activity name-->
+    <title
+        type="text">Movement patterns and behavioural strategies of Estuarine Crocodiles: A long-term remote monitoring study using an underwater acoustic array.</title>
+
+    <!--     activity description -->
+    <content
+        type="text">ARC Linkage Project between the University of Queensland and Australia Zoo. The on-going recovery of the estuarine crocodile population is creating a paradox for Australians. Although a salient species, an iconic animal, and a firm tourist attraction, estuarine crocodiles pose a significant risk to the public. Knowledge of where crocodiles go, what they do when they get there, and why they select particular habitats at certain times is critical for sustaining the Australian crocodile population, whilst ensuring public safety. This long term study will utilise the latest advancement in underwater acoustic technology to monitor the behavioural and physiological strategies used by estuarine crocodiles in occupying critical habitats, providing vital information for resource managers and policy makers.</content>
+
+    <!--    participants -->
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
+        href="http://dataspace.uq.edu.au/agents/1"/>
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
+        href="http://dataspace.uq.edu.au/agents/3"/>
+
+    <!--    created collections -->
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
+        href="http://dataspace.uq.edu.au/collections/1"
+        title="Location and temperature data for estuarine crocodiles on Cape York Peninsula
+        measured using acoustic telemetry"/>
+
+    <!--    webpage about the activity -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://www.uq.edu.au/uqresearchers/researcher/franklince.html?uv_category=prj&amp;prj=814378"/>
+
+    <!--     subjects -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_060205"
+        label="060205 - Marine and Estuarine Ecology (incl. Marine Ichthyology)"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/seo/#field_970106"
+        label="970106 - Expanding Knowledge in the Biological Sciences"/>
+    <category term="ecology"/>
+    <category term="telemetry"/>
+    <category term="remote monitoring"/>
+    <category term="acoustic array"/>
+    <category term="behaviour"/>
+    <category term="physiology"/>
+    <category term="temperature"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+        
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

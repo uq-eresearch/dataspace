@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:georss="http://www.georss.org/georss"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the collection *** -->
+    <!--     id for the collection -->
+    <id>http://dataspace.uq.edu.au/collections/3#</id>
+
+    <!--     collection type -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://purl.org/dc/dcmitype/Collection"
+        title="Collection"/>
+
+    <!--     collection title -->
+    <title
+        type="text">Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using acoustic telemetry</title>
+
+    <!--     collection description -->
+    <content
+        type="text">Estuarine crocodile location and temperature observations recorded using acoustic telemetry since 2007 on Cape York Peninsula, Queensland, Australia. 
+
+The data comes from sensors attached to more than sixty estuarine crocodiles. The sensors continuously transmit observations via acoustic signal. Receivers deployed along river systems and the coast of the peninsula record data whenever a crocodile is within range. The project team periodically retrieves data from storage on the receiver. 
+
+Variables measured include location, depth, environmental temperature and body temperature. Location data is available for all crocodiles. Temperature and depth data is only available for some crocodiles. Data is available from 2007 onwards, and the transmitters will last for around 10 years. 
+
+The University of Queensland, Australia Zoo and the Queensland Parks and Wildlife Service collected the data.</content>
+
+    <!--     web page describing the collection -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://www.uq.edu.au/eco-lab/index.html?page=39442"/>
+
+    <!--     collection subjects -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_060801"
+        label="060801 - Animal Behaviour"/>
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_060205"
+        label="060205 - Marine and Estuarine Ecology (incl. Marine Ichthyology)"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/seo/#field_970106"
+        label="970106 - Expanding Knowledge in the Biological Sciences"/>
+    <category
+        term="ecology"/>
+    <category
+        term="zoology"/>
+
+    <!--     collection creator -->
+    <author>
+        <name>Dr Hamish Campbell</name>
+        <email>hamish.campbell@uq.edu.au</email>
+    </author>
+
+    <!--     temporal coverage -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/temporal"
+        content="start=2007-08"
+        datatype="http://purl.org/dc/terms/Period"/>
+
+    <!--     spatial coverage -->
+    <georss:polygon>-10.5 140 -17 140 -17 145.5 -10.5 145.5 -10.5 140</georss:polygon>
+    <link
+        rel="http://purl.org/dc/terms/spatial"
+        href="http://sws.geonames.org/2172406/"
+        title="Cape York Peninsula"/>
+
+    <!--     related publications -->
+    <link
+        rel="http://purl.org/dc/terms/isReferencedBy"
+        title="Diving through the thermal window: Implications for a warming world"
+        href="http://rspb.royalsocietypublishing.org/content/277/1701/3837.full.pdf?ijkey=PU6AhDOGVtlZzAO&amp;keytype=finite"/>
+    <link
+        rel="http://purl.org/dc/terms/isReferencedBy"
+        title="Estuarine crocodiles ride surface currents to facilitate long-distance travel"
+        href="http://www.journalofanimalecology.org/details/journalArticle/808347/Estuarine_crocodiles_ride_surface_currents_to_facilitate_longdistance_travel_.html"/>
+
+    <!--     rights -->
+    <rights>The data is the property of The University of Queensland. Permission is required to use this material.</rights>
+    <!--     access rights -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/accessRights"
+        content="Some of the data is available in abbreviated format in scientific journals. Contact
+ the data curator regarding permission and procedures for accessing the original data."/>
+
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+        
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

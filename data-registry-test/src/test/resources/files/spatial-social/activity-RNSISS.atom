@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the activity *** -->
+    <!--     id for the activity being described -->
+    <id>http://dataspace.uq.edu.au/activities/2#</id>
+
+    <!--     activity type -->
+    <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://vivoweb.org/ontology/core#Program" title="Program"/>
+
+    <!--     activity title -->
+    <title type="text">ARC Research Network in Spatially Integrated Social Science</title>
+    <!--     alternate title -->
+    <rdfa:meta property="http://purl.org/dc/terms/alternative" content="RNSISS"
+        datatype="xsd:string"/>
+
+    <!--     activity description -->
+    <content type="text">The mission of Research Network in Spatially Integrated Social Sciences (RNSISS) is to enhance Australia’s capacity and capability to conduct innovative, cross-disciplinary policy-relevant, research in spatially integrated social science and to provide the evidence base for understanding the issues and challenges facing people and places in coping with changes in contemporary society.</content>
+
+    <!--     web page describing the activity -->
+    <link rel="http://xmlns.com/foaf/0.1/page" href="http://www.siss.edu.au/"/>
+
+    <!--     activity subjects -->
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160300"
+        label="160300 - Demography"/>
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160400"
+        label="160400 - Human Geography"/>
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160800"
+        label="160499 - Sociology"/>
+    <category scheme="http://purl.org/anzsrc/seo/#field_" term="910102" label="910102 - Demography"/>
+
+    <!--     outputs -->
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
+        href="http://dataspace.uq.edu.au/collections/3"
+        title="Variables derived from 2006 Census of Population &amp; Housing and voting results at polling booth catchment level for 2007 Australian Federal Election"/>
+
+    <!--     participants -->
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
+        href="http://dataspace.uq.edu.au/agents/7" title="Bob Stimson"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

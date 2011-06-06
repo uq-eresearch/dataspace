@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:app="http://www.w3.org/2007/app">
+    <!-- *** metadata about the party *** -->
+    <!--     id for the party -->
+    <id>mailto:hamish.campbell@uq.edu.au</id>
+
+    <!--     collection type -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://xmlns.com/foaf/0.1/Person"
+        title="Person"/>
+
+    <!--     names -->
+    <title
+        type="text">Dr Hamish Campbell</title>
+    <rdfa:meta
+        property="http://xmlns.com/foaf/0.1/title"
+        content="Dr"/>
+    <rdfa:meta
+        property="http://xmlns.com/foaf/0.1/givenName"
+        content="Hamish"/>
+    <rdfa:meta
+        property="http://xmlns.com/foaf/0.1/familyName"
+        content="Campbell"/>
+
+    <!--     agent description -->
+    <content
+        type="text">Dr Hamish Campbell is a Senior Research Officer in the School of Biological Sciences at The University of Queensland</content>
+
+    <!--     email address -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/mbox"
+        href="mailto:hamish.campbell@uq.edu.au"/>
+
+    <!--     web page describing the agent -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://www.uq.edu.au/eco-lab/dr-hamish-campbell"/>
+
+    <!--    created data collections  -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/made"
+        title="Location and temperature data for estuarine crocodiles on Cape York Peninsula
+        measured using acoustic telemetry"
+        href="http://localhost:8080/collections/1"/>
+
+    <!--     topics of interest -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_060801"
+        label="060801 - Animal Behaviour"/>
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_060205"
+        label="060205 - Marine and Estuarine Ecology (incl. Marine Ichthyology)"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/seo/#field_970106"
+        label="970106 - Expanding Knowledge in the Biological Sciences"/>
+    <category
+        term="ecology"/>
+    <category
+        term="zoology"/>
+    <category
+        term="modelling animal movement"/>
+
+    <!-- publications -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/publications"
+        href="http://espace.library.uq.edu.au/list/author_id/73153/"
+        title="Dr Hamish Cambell publication records in UQ eSpace"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

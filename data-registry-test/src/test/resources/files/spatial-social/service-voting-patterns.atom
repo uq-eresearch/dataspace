@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the service *** -->
+    <!--     id for the service being described -->
+    <id>http://dataspace.uq.edu.au/services/1#</id>
+
+    <!--     service type -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://www.e-framework.org/Contributions/ServiceGenres/Report"
+        title="Report"/>
+
+    <!--     service title -->
+    <title type="text">Voting Patterns at the 2007 Australia Federal Election On-line</title>
+
+    <!--     service description -->
+    <content
+        type="text">This web-based interactive tool supports spatial and statistical analysis, modelling and visualisation of data derived from the 2006 Australian Census of Population and Housing, voting results for the 2007 Australian Federal election, and location of polling booths from the Australian Electoral Commission. It can be used to analyse phenomena such as the relationship between voting patterns and local demographic and socio-economic data. The tool supports regression analysis, MANOVA cluster analysis and discriminant analysis of the data</content>
+
+    <!--     service location -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://e-research.sbs.uq.edu.au/aus_voting2007.html"/>
+
+    <!--     provides access to collection -->
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy"
+        href="http://dataspace.uq.edu.au/collections/3"
+        title="Variables derived from 2006 Census of Population &amp; Housing and voting results at
+        polling booth catchment level for 2007 Australian Federal Election"/>
+
+    <!-- managed by -->
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagedBy"
+        href="http://dataspace.uq.edu.au/agents/4"
+        title="Paul Shyy"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>0
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

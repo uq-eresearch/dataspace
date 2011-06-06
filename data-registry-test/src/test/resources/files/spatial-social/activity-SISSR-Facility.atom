@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the activity *** -->
+    <!--     id for the activity being described -->
+    <id>http://dataspace.uq.edu.au/activities/3#</id>
+
+    <!--     activity type -->
+    <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://xmlns.com/foaf/0.1/Project" title="Project"/>
+
+    <!--     activity title -->
+    <title type="text">Infrastructure for a Spatially Integrated Social Science e-Research Facility</title>
+
+    <!--     activity description -->
+    <content type="text">The project is producing a facility to support secondary data analysis and modeling of socio-spatial information with visualisation, substantially reducing the cost of innovative research conducted at various levels of spatial scale to investigate both local and nationally significant demographic, social, economic and behavioural issues. It will deliver national/community benefits through enabling hundreds of researchers and graduate students across the university system to investigate demographic, economic and social issues at various levels of spatial scale.</content>
+
+    <!--     web page describing the activity -->
+    <link rel="http://xmlns.com/foaf/0.1/page" href="http://www.uq.edu.au/uqresearchers/researcher/stimsonrj.html?uv_category=prj&amp;prj=815685"/>
+
+    <!--     activity subjects -->
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160300"
+        label="160300 - Demography"/>
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160400"
+        label="160400 - Human Geography"/>
+    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160800"
+        label="160499 - Sociology"/>
+    <category scheme="http://purl.org/anzsrc/seo/#field_" term="910102" label="910102 - Demography"/>
+
+    <!--     outputs -->
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
+        href="http://dataspace.uq.edu.au/collections/3"
+        title="Variables derived from 2006 Census of Population &amp; Housing and voting results at polling booth catchment level for 2007 Australian Federal Election"/>
+
+    <!--     participants -->
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
+        href="http://dataspace.uq.edu.au/agents/7" title="Bob Stimson"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

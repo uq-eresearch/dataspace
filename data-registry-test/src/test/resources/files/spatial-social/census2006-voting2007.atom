@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:georss="http://www.georss.org/georss"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the collection *** -->
+    <!--     id for the collection -->
+    <id>http://dataspace.uq.edu.au/collections/4#</id>
+
+    <!--     collection type -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://purl.org/dc/dcmitype/Collection"
+        title="Collection"/>
+
+    <!--     collection title -->
+    <title
+        type="text">Variables derived from 2006 Census of Population &amp; Housing and voting
+ results at polling booth catchment level for 2007 Australian Federal Election</title>
+
+    <!--     collection description -->
+    <content
+        type="text">Dataset derived from the 2006 Australian Census of Population and Housing, voting results for the 2007 Australian Federal election, and location of polling booths from the Australian Electoral Commission. Voting results data includes total and proportion of votes cast for each political party for all electoral divisions and polling booths in Australia. Coalition two party preferred and Labor two party preferred are also included in voting data. Polling booths and Census collection districts have been geocoded and spatially allocated to form polling both catchments. Demographic and socio-economic characteristics of the populations living within the polling booth catchments are measured using variables derived from the 2006 Census that cover age &amp; sex, family &amp; household structure, housing tenure, ethnicity/race, religious affiliation, residential stability/mobility, digital divide,engagement in work, occupation, industry of work, human capital, and income.</content>
+
+    <!--     web page describing the collection -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://e-research.sbs.uq.edu.au/client/Stats.html#metadata"/>
+
+    <!--     collection subjects -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_160300"
+        label="160300 - Demography"/>
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_160400"
+        label="160400 - Human Geography"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/seo/#field_910102"
+        label="910102 - Demography"/>
+
+    <!--     collection creator -->
+    <author>
+        <name>Dr Tung-Kai (Paul) Shyy</name>
+        <email>t.shyy@uq.edu.au</email>
+    </author>
+
+    <!--     temporal coverage -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/temporal"
+        content="start:2006; end: 2007"
+        datatype="http://purl.org/dc/terms/Period"/>
+
+    <!--     spatial coverage -->
+    <georss:polygon>-9.3985 143.4947 -24.4123 154.9387 -30.5956 155.3876 -45.5735 149.4398
+ -45.5232 145.3856 -34.4765 130.4967 -37.3957 117.4523 -34.4645 113.5287 -21.3876 112.4745
+ -10.3825 129.4475 -9.3985 143.4947</georss:polygon>
+    <link
+        rel="http://purl.org/dc/terms/spatial"
+        href="http://www.geonames.org/2077456/"
+        title="Australia"/>
+
+    <!--     related publications -->
+    <link
+        rel="http://purl.org/dc/terms/isReferencedBy"
+        title="Developing a Web-Based e-Research Facility for Socio-Spatial Analysis to Investigate Relationships between Voting Patterns and Local Population Characteristics"
+        href="http://espace.library.uq.edu.au/view/UQ:198635"/>
+
+    <!--     rights -->
+    <rights>Digital boundaries and variables: copyright University of Queensland. Census information: based on Australian Bureau of Statistics data. Electoral division, booth and voting information: incorporates data that is copyright Commonwealth of Australia (Australian Electoral Commission)</rights>
+
+    <!--     access rights -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/accessRights"
+        content="Conditions apply to the use of the data. Contact Paul Shyy or Bob Stimson for access to the data."/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>
