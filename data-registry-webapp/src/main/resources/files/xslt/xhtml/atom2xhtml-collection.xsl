@@ -74,7 +74,7 @@
                                 </div>
                                 <div id="map" class="smallmap"
                                      style="width: 50%; height: 400px; float:left; display: inline;">
-                                    Do not remove this text
+                                    <xsl:text> </xsl:text>
                                 </div>
                                 <br style="clear: both;"/>
                             </div>
