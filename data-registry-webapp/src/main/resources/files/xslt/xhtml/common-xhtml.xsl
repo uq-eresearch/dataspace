@@ -284,45 +284,34 @@
 
     <!-- spatial -->
     <xsl:template name="spatial">
-        <div class="statement">
-            <div class="property">
-                <p>Spatial Coverage</p>
+        <xsl:apply-templates select="georss:point"/>
+        <xsl:apply-templates select="georss:polygon"/>
+        <xsl:if test="atom:link[@rel=$ATOM_SPATIAL]">
+            <div class="statement">
+                <div class="property">
+                    <p>Spatial Coverage</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_SPATIAL]"/>
+                </div>
             </div>
-            <div class="content">
-                <xsl:if test="georss:point">
-
-                    <!--<input type="hidden" id="point" value="{georss:point}"/>-->
-                    <xsl:apply-templates select="georss:point"/>
-                </xsl:if>
-                <xsl:if test="georss:polygon">
-                    <!--<input type="hidden" id="polygon" value="{georss:polygon}"/>-->
-                    <xsl:apply-templates select="georss:polygon"/>
-                </xsl:if>
-                <xsl:if test="atom:link[@rel=$ATOM_SPATIAL]">
-                    <p>
-                        <a href="{atom:link[@rel=$ATOM_SPATIAL]/@href}">
-                            <xsl:value-of select="atom:link[@rel=$ATOM_SPATIAL]/@title"/>
-                        </a>
-                    </p>
-                </xsl:if>
-            </div>
-        </div>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="georss:point">
         <input type="hidden" class="georss-point" value="{text()}"/>
-        <!--<p>-->
-        <!--Point:-->
-        <!--<xsl:value-of select="text()"/>-->
-        <!--</p>-->
     </xsl:template>
 
     <xsl:template match="georss:polygon">
         <input type="hidden" class="georss-polygon" value="{text()}"/>
-        <!--<p>-->
-        <!--Polygon:-->
-        <!--<xsl:value-of select="text()"/>-->
-        <!--</p>-->
+    </xsl:template>
+
+    <xsl:template match="atom:link[@rel=$ATOM_SPATIAL]">
+        <p>
+            <a href="{@href}">
+                <xsl:value-of select="@title"/>
+            </a>
+        </p>
     </xsl:template>
 
     <!-- temporal -->
