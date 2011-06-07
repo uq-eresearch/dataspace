@@ -396,7 +396,9 @@ public class AdapterInputHelper {
         try {
             AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
             User currentUser = authenticationManager.getCurrentUser(request);
-            record.setDescriptionAuthor(currentUser);
+            User user = RegistryApplication.getApplicationContext().getDaoManager().getUserDao().getByUsername(currentUser.getUsername());
+            record.setDescriptionAuthor(user);
+
         } catch (Throwable th) {
             throw new ResponseContextException("Could not add description author", 500);
         }
