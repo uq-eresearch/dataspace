@@ -14,7 +14,7 @@
                     href="http://www.uq.edu.au/gatton/">UQ Gatton</a>, <a
                     href="http://www.uq.edu.au/about/herston-campus">UQ Herston</a></div>
             <div class="directions"><a href="http://www.uq.edu.au/maps/">Maps and Directions</a></div>
-            <div id="copyright">&copy; <%=(new Date()).getYear()%> The University of Queensland</div>
+            <div id="copyright">&copy; <%=((new Date()).getYear() + 1900)%> The University of Queensland</div>
         </div>
         <div id="footer-resources">
             <h2>Supplemental Resources</h2>
