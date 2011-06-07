@@ -26,8 +26,10 @@ import java.util.Properties;
 public class RegistryInitializer {
     private Logger logger = Logger.getLogger(getClass());
 
-    public RegistryInitializer() {
-        injectANZSRCCodes();
+    public RegistryInitializer(String loadAnzsrcCodes) {
+        if (Boolean.valueOf(loadAnzsrcCodes)) {
+            injectANZSRCCodes();
+        }
         initializeSolrIndexing();
     }
 

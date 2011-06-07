@@ -16,5 +16,7 @@
         </property>
     </bean>
     <import resource="registry.xml"/>
-    <bean id="initializer" class="net.metadata.dataspace.app.RegistryInitializer"/>
+    <bean id="initializer" class="net.metadata.dataspace.app.RegistryInitializer">
+        <constructor-arg value="${data.registry.load.anzsrc.codes}"/>
+    </bean>
 </beans>
