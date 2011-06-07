@@ -19,9 +19,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author: alabri
@@ -31,6 +29,8 @@ import java.util.Map;
 public class AuthenticationManagerImpl implements AuthenticationManager {
     private Logger logger = Logger.getLogger(getClass());
     private Map<String, DirContext> userDirContexts = new HashMap<String, DirContext>();
+    private Properties defaultUsersProperties;
+    private Map<String, String[]> defaultUsers = new HashMap<String, String[]>();
 
     @Override
     public User getCurrentUser(RequestContext request) {
@@ -45,12 +45,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if (userName == null || password == null) {
             return ProviderHelper.badrequest(request, "Username and password missing");
         } else {
-            //TODO move this to spring configurations so it is turned off for production
-            if (userName.equals("test") && password.equals("test")) {
+            if (defaultUsers.containsKey(userName) && defaultUsers.get(userName)[1].equals(password)) {
                 UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
                 User user = userDao.getByUsername(userName);
                 if (user == null) {
-                    user = new User(userName, "Test", "test@uq.edu.au");
+                    user = new User(userName, defaultUsers.get(userName)[3], defaultUsers.get(userName)[2]);
                     userDao.save(user);
                 }
                 request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
@@ -141,5 +140,18 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     @Override
     public void setDirContext(DirContext ctx, User currentUser) {
         userDirContexts.put(currentUser.getEmail(), ctx);
+    }
+
+    public void setDefaultUsersProperties(Properties defaultUsersProperties) {
+        this.defaultUsersProperties = defaultUsersProperties;
+        Collection<Object> defaultUsersString = defaultUsersProperties.values();
+        for (Object userString : defaultUsersString) {
+            String[] split = userString.toString().split(",");
+            defaultUsers.put(split[0], split);
+        }
+    }
+
+    public Properties getDefaultUsersProperties() {
+        return defaultUsersProperties;
     }
 }

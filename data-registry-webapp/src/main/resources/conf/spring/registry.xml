@@ -113,8 +113,12 @@
         <property name="sourceSequencer" ref="sourceSequencer"/>
         <property name="fullNameSequencer" ref="fullNameSequencer"/>
     </bean>
-
-    <bean id="authenticationManager" class="net.metadata.dataspace.auth.impl.AuthenticationManagerImpl"/>
+    <bean id="defaultUsers" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:default-users.properties"/>
+    </bean>
+    <bean id="authenticationManager" class="net.metadata.dataspace.auth.impl.AuthenticationManagerImpl">
+        <property name="defaultUsersProperties" ref="defaultUsers"/>
+    </bean>
     <bean id="authorizationManager" class="net.metadata.dataspace.auth.impl.AuthorizationManagerImpl"/>
 
 </beans>
