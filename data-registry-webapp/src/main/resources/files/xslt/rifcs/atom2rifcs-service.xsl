@@ -75,7 +75,7 @@
                 <xsl:when test="@href = $ENTITY_ANNOTATE">annotate</xsl:when>
                 <xsl:when test="@href = $ENTITY_TRANSFORM">transform</xsl:when>
                 <xsl:when test="@href = $ENTITY_ASSEMBLE">assemble</xsl:when>
-                <xsl:when test="@href = $ENTITY_HARVEST">harvest<xsl:when>
+                <xsl:when test="@href = $ENTITY_HARVEST">harvest</xsl:when>
                 <xsl:when test="@href = $ENTITY_SEARCH">search</xsl:when>
                 <xsl:when test="@href = $ENTITY_SYNDICATE">syndicate</xsl:when>
             </xsl:choose>
