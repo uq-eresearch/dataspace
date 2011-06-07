@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:georss="http://www.georss.org/georss"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the collection *** -->
+    <!--     id for the collection -->
+    <id>http://dataspace.uq.edu.au/collections/ignore</id>
+
+    <!--     collection type -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://purl.org/dc/dcmitype/Collection"
+        title="Collection"/>
+
+    <!--     collection title -->
+    <title
+        type="text">Australian Pulp Fiction Collection</title>
+
+    <!--     collection description -->
+    <content
+        type="text">The Australian Pulp Fiction Collection contains biographical and bibliographic information, digitised cover art, and artist information for more than 5,000 Australian pulp fiction items published between 1939 and 1959 by more than 100 authors. The collection has a specific focus on the internationally successful authors Alan Yates (who wrote as 'Carter Brown'), 'Larry Kent' (a pseudonym used by various Cleveland authors) and 'Marshall Grover'. It also contains a variety of material from radio serials and comics. Biographic and bibliographic information includes author names, pseudonyms, work titles, publication dates, publishers, and series. Additional information on selected works includes commentaries, digitised cover images and a categorisation into romance, crime, western, science, horror, or sports fiction genres. The collection was created as part of AustLit's Australian Pulp Fiction Industry project. The collection is managed in large Microsoft Word files. A subset of the biographic and bibliographic data is available via the AustLit bibliographic service. Some of the digitised cover art is available through the University of Queensland eSpace repository.</content>
+
+    <!--     contact for the collection -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/mbox"
+        href="mailto:t.johnsonwoods@uq.edu.au"/>
+
+    <!--     collection subjects -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_200502"
+        label="200502 - Australian Literature (excl. Aboriginal and Torres Strait Islander
+        Literature)"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/seo/#field_950203"
+        label="950203 - Languages and Literature"/>
+    <category
+        term="Literary studies"/>
+    <category
+        term="Communication"/>
+
+    <!--     collection creator -->
+    <author>
+        <name>Dr Toni Johnson-Woods</name>
+        <email>t.johnsonwoods@uq.edu.au</email>
+    </author>
+
+    <!--     temporal coverage -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/temporal"
+        content="start:1939; end: 1959"
+        datatype="http://purl.org/dc/terms/Period"/>
+
+    <!--     related publications -->
+    <link
+        rel="http://purl.org/dc/terms/isReferencedBy"
+        title="AustLit Australian Popular Fictions Research Community"
+        href="http://www.austlit.edu.au/specialistDatasets/PopFiction"/>
+
+    <!--     rights -->
+    <rights>This work is published under a Creative Commons Attribution-NonCommercial Australia License http://creativecommons.org/licenses/by-nc/2.5/au/</rights>
+
+    <!--     access rights -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/accessRights"
+        content="Contact Dr Toni Johnson-Woods for access to the full collection. Bibliographic information for selected works is available to AustLit subscribers through the Austlit service. See http://www.austlit.edu.au/subscribe for information on accessing AustLit. Some of the digitised cover art is available through the University of Queensland eSpace repository http://espace.library.uq.edu.au/"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

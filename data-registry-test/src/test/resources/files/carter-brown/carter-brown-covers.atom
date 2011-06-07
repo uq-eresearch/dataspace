@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:georss="http://www.georss.org/georss"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the collection *** -->
+    <!--     id for the collection -->
+    <id>http://dataspace.uq.edu.au/collections/ignore</id>
+
+    <!--     collection type -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://purl.org/dc/dcmitype/Collection"
+        title="Collection"/>
+
+    <!--     collection title -->
+    <title
+        type="text">Digitised images of Carter Brown Book Covers</title>
+
+    <!--     collection description -->
+    <content
+        type="text">A collection of digitised images of covers of Carter Brown books published in the 1950s. Carter Brown (a pseudonym for Alan Yates) was a British-born, Australian author of crime fiction. The Carter Brown books are estimated to have sold more than eighty million copies worldwide in dozens of languages. The collection was created as part of AustLit's Australian Pulp Fiction Industry project based on original materials held in Australian and international libraries. The digitised images are predominantly medium resolution JPEGs, but some images are high resolution TIFFs.</content>
+
+    <!--     web page describing the collection -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://espace.library.uq.edu.au/collection/UQ:3521"/>
+
+    <!--     collection subjects -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_200502"
+        label="200502 - Australian Literature (excl. Aboriginal and Torres Strait Islander
+        Literature)"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/seo/#field_950203"
+        label="950203 - Languages and Literature"/>
+    <category
+        term="Literary studies"/>
+    <category
+        term="Communication"/>
+
+    <!--     collection creator -->
+    <author>
+        <name>Dr Toni Johnson-Woods</name>
+        <email>t.johnsonwoods@uq.edu.au</email>
+    </author>
+
+    <!--     temporal coverage -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/temporal"
+        content="start:1951; end: 2008"
+        datatype="http://purl.org/dc/terms/Period"/>
+
+    <!--     related publications -->
+    <link
+        rel="http://purl.org/dc/terms/isReferencedBy"
+        title="The Promiscuous Carter Brown"
+        href="http://www.nla.gov.au/openpublish/index.php/jasal/article/view/741/983"/>
+    <link
+        rel="http://purl.org/dc/terms/isReferencedBy"
+        title="Pulp : a collector's book of Australian pulp fiction covers"
+        href="http://trove.nla.gov.au/work/17567958"/>
+
+    <!--     rights -->
+    <rights>The original materials that form the basis of this collection have copyright in a number of jurisdictions. Contact Dr Toni Johnson-Woods for more detailed rights information.</rights>
+
+    <!--     access rights -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/accessRights"
+        content="The collection is freely available on the web."/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

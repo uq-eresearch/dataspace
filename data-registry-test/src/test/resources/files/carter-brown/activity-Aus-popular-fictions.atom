@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the activity *** -->
+    <!--     id for the activity being described -->
+    <id>http://dataspace.uq.edu.au/activities/ignore</id>
+
+    <!--     activity type -->
+    <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://xmlns.com/foaf/0.1/Project" title="Project"/>
+
+    <!--     activity title -->
+    <title type="text">Australia's Forgotten Culture: the Pulp Fiction Industry 1939-1959</title>
+
+    <!--     activity description -->
+    <content type="text">Australia's Forgotten Culture examines a neglected aspect of 1940s and 50s popular culture. The project is divided into three broad, overlapping and interdependent parts: the compilation of an annotated bibliography of all pulp items produced between 1939 and 1959, a print cultures study of the international outreach of the books, and a cultural examination of pulp s contribution to Australian post-war entertainment. The findings will be published in _Australia's Forgotten Culture_, the third volume of the CI's trilogy on pulp fiction (_Pulp Covers_ and _Dirty Deeds_).</content>
+
+    <!--     web page describing the activity -->
+    <link rel="http://xmlns.com/foaf/0.1/page" href="http://www.uq.edu.au/uqresearchers/researcher/johnsonwoodstm.html?uv_category=prj&amp;prj=812510"/>
+
+    <!--     activity subjects -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_200502"
+        label="200502 - Australian Literature (excl. Aboriginal and Torres Strait Islander
+        Literature)"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/seo/#field_950203"
+        label="950203 - Languages and Literature"/>
+    <category
+        term="Literary studies"/>
+    <category
+        term="Communication"/>
+    <category term="Print Cultures"/>
+    <category term="Australian Studies"/>
+    <category term="Publishing History"/>
+    <category term="Australian Literature"/>
+    <category term="Australian Media"/>
+    <category term="Radio History"/>
+
+    <!--     outputs -->
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
+        title="Digitised images of Carter Brown Book Covers"
+        href="http://dataspace.uq.edu.au/collections/1"/>
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
+        title="Australian Pulp Fiction Collection"
+        href="http://dataspace.uq.edu.au/collections/2"/>
+
+    <!--     participants -->
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
+        href="http://dataspace.uq.edu.au/agents/1" title="Dr Toni Johnson-Woods"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>
