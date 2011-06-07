@@ -64,8 +64,8 @@ public interface Constants {
     /**
      * Credentials
      */
-    String USERNAME = "test";
-    String PASSWORD = "test";
+    String USERNAME = "abdul";
+    String PASSWORD = "abdul";
 
     String TEST_CONTEXT = "/conf/spring/testContext.xml";
 
