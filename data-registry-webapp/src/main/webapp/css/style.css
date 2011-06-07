@@ -12,7 +12,7 @@ body a {
 }
 
 .wrapper {
-    width: 900px;
+    width: 920px;
     border: 1px solid #888;
     margin-left: auto;
     margin-right: auto;
@@ -25,7 +25,7 @@ body a {
 }
 
 .bread-crumbs-nav {
-    width: 70%;
+    width: 920px;
     height: 17px;
     padding: 0.8em 0 0.5em 0;
     font-size: 11pt;
@@ -542,12 +542,13 @@ h6 {
     background: rgb(96, 34, 124) url('../images/bodybg.gif') repeat-x scroll 0pt 0pt;
     color: rgb(239, 239, 239);
     height: 100px;
+    min-width: 1000px;
 }
 
 #header-inner, #topnav-inner {
     margin: 0pt auto;
     padding: 0pt;
-    width: 100%;
+    width: 1000px;
 }
 
 #header-inner h1 {
@@ -642,6 +643,7 @@ h6 {
     font-family: Helvetica, "Trebuchet MS", sans-serif;
     font-weight: lighter;
     text-align: right;
+    min-width: 1000px;
 }
 
 #topnav ul {
@@ -692,7 +694,7 @@ h6 {
 div#search {
     background: transparent url('../images/form-left.png') no-repeat scroll 0pt 0pt;
     position: absolute;
-    right: 10px;
+    margin: 0 0 0 775px;
     top: 40px;
 }
 
@@ -746,13 +748,11 @@ div#search input.submit {
 #footer {
     background: rgb(8, 68, 125) url('../images/bg-footer.gif') repeat-x scroll 100% 0pt;
     border-top: solid 2px #78b800;
-}
-
-#footer {
     clear: both;
     min-height: 140px;
     height: 220px ! important;
     margin-top: 20px;
+    min-width: 1000px;
 }
 
 #footer .footer-wrapper {

@@ -62,7 +62,7 @@
 <jsp:include page="include/header.jsp"/>
 <ul class="bread-crumbs-nav">
     <li class="bread-crumbs">
-        <a href="/">Home</a>
+
     </li>
 </ul>
 <div id="content-holder">
