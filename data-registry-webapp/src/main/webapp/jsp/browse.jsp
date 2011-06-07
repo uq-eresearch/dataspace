@@ -63,7 +63,7 @@
                 <a href="/activities">Activities</a>
             </div>
             <ul class="portlet-list">
-                <c:forEach var="version" items="${activityies}">
+                <c:forEach var="version" items="${activities}">
                     <li><a href="<c:out value="${registryUri}"/>activities/<c:out value="${version.parent.uriKey}"/>">
                         <c:out value="${version.title}"/></a></li>
                 </c:forEach>

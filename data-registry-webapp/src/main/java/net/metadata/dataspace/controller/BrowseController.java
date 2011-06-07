@@ -32,7 +32,7 @@ public class BrowseController implements Controller {
         for (Activity activity : recentPublishedActivities) {
             activityVersions.add(activity.getPublished());
         }
-        modelAndView.addObject("activityies", activityVersions);
+        modelAndView.addObject("activities", activityVersions);
 
         List<Collection> recentPublishedCollections = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getRecentPublished(5);
         List<CollectionVersion> collectionVersions = new ArrayList<CollectionVersion>();

@@ -36,7 +36,7 @@
             <title>
                 <xsl:value-of select="atom:title"/>
             </title>
-            <link href="/description.css" rel="stylesheet" type="text/css"/>
+            <link href="/css/description.css" rel="stylesheet" type="text/css"/>
             <link rel="alternate" type="application/atom+xml" title="{atom:title}"
                   href="{atom:link[@rel = $REL_SELF]/@href}"/>
             <xsl:call-template name="head"/>
