@@ -11,18 +11,15 @@
     -->
 
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:date="http://exslt.org/dates-and-times"
+                extension-element-prefixes="date"
                 xmlns="http://www.w3.org/1999/xhtml">
     <xsl:param name="applicationVersion"/>
     <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
 
     <xsl:template name="footer">
-        <div class="version-footer" align="center">
-            <xsl:value-of select="$applicationName"/> &copy;
-            2010
-            ver.
-            (<xsl:value-of select="$applicationVersion"/>)
-        </div>
         <div id="footer">
+            <input type="hidden" value="version {$applicationVersion}"/>
             <div class="footer-wrapper">
                 <div id="siteinfo" class="vcard">
                     <div class="org fn">
@@ -48,7 +45,9 @@
                     <div class="directions">
                         <a href="http://www.uq.edu.au/maps/">Maps and Directions</a>
                     </div>
-                    <div id="copyright">&copy; 2010 The University of Queensland</div>
+                    <div id="copyright">&copy;
+                        <xsl:value-of select="date:year()"/> The University of Queensland
+                    </div>
                 </div>
                 <div id="footer-resources">
                     <h2>Supplemental Resources</h2>

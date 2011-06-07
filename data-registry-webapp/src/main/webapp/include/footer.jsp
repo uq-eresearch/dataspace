@@ -1,10 +1,8 @@
 <%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
-<div class="version-footer" align="center"><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> &copy;
-    2010
-    ver.
-    (<%=RegistryApplication.getApplicationContext().getVersion()%>)
-</div>
+<%@ page import="java.util.Date" %>
 <div id="footer">
+    <input type="hidden" value="version <%=RegistryApplication.getApplicationContext().getVersion()%>"/>
+
     <div class="footer-wrapper">
         <div id="siteinfo" class="vcard">
             <div class="org fn"><a href="http://www.uq.edu.au/">The University of Queensland</a></div>
@@ -16,7 +14,7 @@
                     href="http://www.uq.edu.au/gatton/">UQ Gatton</a>, <a
                     href="http://www.uq.edu.au/about/herston-campus">UQ Herston</a></div>
             <div class="directions"><a href="http://www.uq.edu.au/maps/">Maps and Directions</a></div>
-            <div id="copyright">&copy; 2010 The University of Queensland</div>
+            <div id="copyright">&copy; <%=(new Date()).getYear()%> The University of Queensland</div>
         </div>
         <div id="footer-resources">
             <h2>Supplemental Resources</h2>

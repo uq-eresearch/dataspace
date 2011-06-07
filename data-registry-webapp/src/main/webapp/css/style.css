@@ -743,14 +743,6 @@ div#search input.submit {
 
 /* Footer
 -----------------------------------------------------------------------------*/
-.version-footer {
-    bottom: 0;
-    font-size: 0.7em;
-    margin: 1em auto;
-    position: relative;
-    width: 960px;
-}
-
 #footer {
     background: rgb(8, 68, 125) url('../images/bg-footer.gif') repeat-x scroll 100% 0pt;
     border-top: solid 2px #78b800;
