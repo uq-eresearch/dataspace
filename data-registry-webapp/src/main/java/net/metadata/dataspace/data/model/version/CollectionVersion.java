@@ -39,8 +39,10 @@ public class CollectionVersion extends AbstractVersionEntity {
     private String rights;
 
     @CollectionOfElements(fetch = FetchType.LAZY)
+    @Column(name = "element", length = 4096)
     private Set<String> accessRights = new HashSet<String>();
 
+    @Column(length = 4096)
     private String license;
 
     @CollectionOfElements(fetch = FetchType.LAZY)
@@ -50,6 +52,7 @@ public class CollectionVersion extends AbstractVersionEntity {
     private Set<String> geoRssPoints = new HashSet<String>();
 
     @CollectionOfElements(fetch = FetchType.LAZY)
+    @Column(name = "element", length = 4096)
     private Set<String> geoRssPolygons = new HashSet<String>();
 
     @CollectionOfElements(fetch = FetchType.LAZY)
