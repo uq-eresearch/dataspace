@@ -866,10 +866,10 @@
                                         <td></td>
                                 </tr>
                                 <tr>
-                                        <td>publisher / custodian</td>
+                                        <td>manager</td>
                                         <td><code>&lt;link rel="http://purl.org/dc/terms/publisher"
                                                 href="URI-AGENT" label="AGENT NAME"/&gt;</code></td>
-                                        <td>An Agent responsible for publishing or maintaining a
+                                        <td>An Agent responsible for managing
                                                 Data Collection or providing a Service</td>
                                         <td>0..*</td>
                                         <td></td>
@@ -977,8 +977,7 @@
                                                 rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isOutputOf"
                                                 href="ACTIVITY_URI"/&gt; title="ACTIVITY
                                                 NAME"</code></td>
-                                        <td>Identifies a document containing a license for use of
-                                                the entity.</td>
+                                        <td>An Activity that helped produce the Data Collection</td>
                                         <td>1..*</td>
                                         <td></td>
                                         <td></td>
@@ -1016,7 +1015,7 @@
                         </thead>
                         <tbody>
                                 <tr>
-                                        <td>related collection</td>
+                                        <td>created</td>
                                         <td><code>&lt;link rel="http://xmlns.com/foaf/0.1/made"
                                                 href="COLLECTION_URI" title="COLLECTION
                                                 TITLE"/&gt;</code></td>
@@ -1027,12 +1026,11 @@
                                         <td></td>
                                 </tr>
                                 <tr>
-                                        <td>publishes</td>
+                                        <td>manages</td>
                                         <td><code>&lt;link
                                                 rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf"
                                                 href="COLLECTION-URI" title="COLLECTION TITLE"/&gt;</code></td>
-                                        <td>A Data Collection that this Agent makes available
-                                                (publishes) or maintains.</td>
+                                        <td>A Data Collection that this Agent manages.</td>
                                         <td></td>
                                         <td>0..*</td>
                                         <td></td>
