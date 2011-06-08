@@ -56,7 +56,9 @@
                         <a id="new-record-link" href="{atom:id}?v=new" title="Add Record">new</a>
                         <xsl:text> </xsl:text>
                     </xsl:if>
-                    <a id="subscribe-link" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">subscribe</a>
+                    <a id="subscribe-link" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">
+                        <img src="/images/icons/rss16px.png" alt="Subscribe to this feed"/>
+                    </a>
                 </li>
             </ul>
             <div class="wrapper">
