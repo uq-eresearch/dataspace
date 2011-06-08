@@ -43,13 +43,13 @@
         </head>
         <body onload="init();">
             <xsl:call-template name="header"/>
-            <ul class="bread-crumbs-nav">
-                <xsl:call-template name="edit-bread-crumbs">
-                    <xsl:with-param name="path">collections</xsl:with-param>
-                    <xsl:with-param name="title">Collections</xsl:with-param>
-                </xsl:call-template>
-            </ul>
             <div class="wrapper">
+                <ul class="bread-crumbs-nav">
+                    <xsl:call-template name="edit-bread-crumbs">
+                        <xsl:with-param name="path">collections</xsl:with-param>
+                        <xsl:with-param name="title">Collections</xsl:with-param>
+                    </xsl:call-template>
+                </ul>
                 <div id="ingest-error-msg">
 
                 </div>

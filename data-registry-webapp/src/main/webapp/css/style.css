@@ -18,12 +18,13 @@ body a {
 
 .wrapper {
     width: 920px;
-    border: 1px solid #888;
+    border: 0;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 2em;
+    margin-top: 15px;
     background: #fff;
-    padding: 1.1em;
+    padding: 0.2em 1.1em 1.1em 1.1em;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 11pt;
     min-height: 600px;
@@ -32,16 +33,44 @@ body a {
 .bread-crumbs-nav {
     width: 920px;
     height: 17px;
-    padding: 0.8em 0 0.5em 0;
+    padding: 0.8em 0.5em;
     font-size: 11pt;
     margin: auto;
     text-align: right;
+    color: #777777;
 }
 
 .bread-crumbs {
     float: left;
-    display: inline;
-    font-size: 0.9em
+    background: url("/images/arrow-right.gif") no-repeat scroll 100% 0 transparent;
+    display: block;
+    float: left;
+    font-size: 0.9167em;
+    height: 21px;
+    line-height: 21px;
+    margin: 0 6px 0 0;
+    overflow: hidden;
+    padding: 0 10px 0 0;
+    position: relative;
+}
+
+.bread-crumbs a {
+    color: #777777;
+}
+
+.bread-crumbs-last {
+    float: left;
+    background: none repeat scroll 0 0 transparent;
+    margin-right: 0;
+    padding-right: 0;
+
+    display: block;
+    float: left;
+    font-size: 0.9167em;
+    height: 21px;
+    line-height: 21px;
+    overflow: hidden;
+    position: relative;
 }
 
 .bread-crumbs-options {

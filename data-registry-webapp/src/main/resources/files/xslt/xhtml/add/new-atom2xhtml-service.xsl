@@ -37,13 +37,13 @@
         </head>
         <body>
             <xsl:call-template name="header"/>
-            <ul class="bread-crumbs-nav">
-                <xsl:call-template name="edit-bread-crumbs">
-                    <xsl:with-param name="path">services</xsl:with-param>
-                    <xsl:with-param name="title">Services</xsl:with-param>
-                </xsl:call-template>
-            </ul>
             <div class="wrapper">
+                <ul class="bread-crumbs-nav">
+                    <xsl:call-template name="edit-bread-crumbs">
+                        <xsl:with-param name="path">services</xsl:with-param>
+                        <xsl:with-param name="title">Services</xsl:with-param>
+                    </xsl:call-template>
+                </ul>
                 <div id="ingest-error-msg">
 
                 </div>

@@ -71,12 +71,16 @@
 </head>
 <body>
 <jsp:include page="../include/header.jsp"/>
-<ul class="bread-crumbs-nav">
-    <li class="bread-crumbs">
-        <a href="/">Home</a> >> Search
-    </li>
-</ul>
+
 <div class="wrapper">
+    <ul class="bread-crumbs-nav">
+        <li class="bread-crumbs">
+            <a href="/">Home</a>
+        </li>
+        <li class="bread-crumbs-last">
+            Search
+        </li>
+    </ul>
     <div class="content">
         <div id="search-form">
             <table width="100%">

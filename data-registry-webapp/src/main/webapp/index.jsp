@@ -60,11 +60,6 @@
 </head>
 <body>
 <jsp:include page="include/header.jsp"/>
-<ul class="bread-crumbs-nav">
-    <li class="bread-crumbs">
-
-    </li>
-</ul>
 <div id="content-holder">
     <div class="wrapper">
         <div class="home-content">

@@ -13,12 +13,16 @@
 </head>
 <body>
 <jsp:include page="../include/header.jsp"/>
-<ul class="bread-crumbs-nav">
-    <li class="bread-crumbs">
-        <a href="/">Home</a> >> Browse
-    </li>
-</ul>
 <div class="wrapper">
+
+    <ul class="bread-crumbs-nav">
+        <li class="bread-crumbs">
+            <a href="/">Home</a>
+        </li>
+        <li class="bread-crumbs-last">
+            Browse
+        </li>
+    </ul>
     <div class="portlet-content">
         <div class="browse-portlet">
             <div class="portlet-header">

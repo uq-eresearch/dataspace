@@ -43,25 +43,27 @@
         </head>
         <body>
             <xsl:call-template name="header"/>
-            <ul class="bread-crumbs-nav">
-                <li class="bread-crumbs">
-                    <a href="/">Home</a>
-                    >>
-                    <a href="/browse">Browse</a>
-                    >>
-                    <xsl:value-of select="atom:title"/>
-                </li>
-                <li class="bread-crumbs-options">
-                    <xsl:if test="$currentUser">
-                        <a id="new-record-link" href="{atom:id}?v=new" title="Add Record">new</a>
-                        <xsl:text> </xsl:text>
-                    </xsl:if>
-                    <a id="subscribe-link" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">
-                        <img src="/images/icons/rss16px.png" alt="Subscribe to this feed"/>
-                    </a>
-                </li>
-            </ul>
             <div class="wrapper">
+                <ul class="bread-crumbs-nav">
+                    <li class="bread-crumbs">
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="bread-crumbs">
+                        <a href="/browse">Browse</a>
+                    </li>
+                    <li class="bread-crumbs-last">
+                        <xsl:value-of select="atom:title"/>
+                    </li>
+                    <li class="bread-crumbs-options">
+                        <xsl:if test="$currentUser">
+                            <a id="new-record-link" href="{atom:id}?v=new" title="Add Record">new</a>
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                        <a id="subscribe-link" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">
+                            <img src="/images/icons/rss16px.png" alt="Subscribe to this feed"/>
+                        </a>
+                    </li>
+                </ul>
                 <div class="description">
                     <div id="result">
                         <h2>

@@ -416,14 +416,17 @@
         <xsl:param name="title"/>
         <li class="bread-crumbs">
             <a href="/">Home</a>
-            >>
+        </li>
+        <li class="bread-crumbs">
             <a href="/browse">Browse</a>
-            >>
+        </li>
+        <li class="bread-crumbs">
             <a href="/{$path}">
                 <xsl:value-of select="$title"/>
             </a>
+        </li>
+        <li class="bread-crumbs-last">
             <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
-                >>
                 <a href="{atom:link[@rel = $REL_SELF]/@href}">
                     <xsl:choose>
                         <xsl:when test="atom:link[@rel=$REL_SELF]/@title">

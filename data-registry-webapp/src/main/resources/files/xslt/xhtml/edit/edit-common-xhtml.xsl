@@ -25,15 +25,18 @@
         <xsl:param name="title"/>
         <li class="bread-crumbs">
             <a href="/">Home</a>
-            >>
+        </li>
+        <li class="bread-crumbs">
             <a href="/browse">Browse</a>
-            >>
+        </li>
+        <li class="bread-crumbs">
             <a href="/{$path}">
                 <xsl:value-of select="$title"/>
             </a>
+        </li>
+        <li class="bread-crumbs-last">
             <xsl:choose>
                 <xsl:when test="atom:link[@rel = $REL_SELF]/@href">
-                    >>
                     <a href="{atom:link[@rel = $REL_SELF]/@href}">
                         <xsl:choose>
                             <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
@@ -48,7 +51,8 @@
                     <span>(edit)</span>
                 </xsl:when>
                 <xsl:otherwise>
-                    <span>>> (new)</span>
+                    <xsl:text> </xsl:text>
+                    <span>(new)</span>
                 </xsl:otherwise>
             </xsl:choose>
         </li>
@@ -65,7 +69,7 @@
                         <xsl:when test="$index = 0">
                             <input id="alternative-title-text" name="alternative-title-text" type="text"
                                    value="{@content}"/>
-                            <xsl:text> </xsl:text>
+                            <xsl:text></xsl:text>
                             <a id="alternative-name-link" class="new-link" href="#"
                                onclick="replicateSimpleField('alternative-title-text'); return false;"
                                title="Add Title">new
@@ -83,7 +87,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <input id="alternative-title-text" name="alternative-title-text" type="text" value=""/>
-                <xsl:text> </xsl:text>
+                <xsl:text></xsl:text>
                 <a id="alternative-name-link" class="new-link" href="#"
                    onclick="replicateSimpleField('alternative-title-text'); return false;" title="Add Title">new
                 </a>
@@ -153,7 +157,7 @@
                     <xsl:choose>
                         <xsl:when test="$index = 0">
                             <input id="page-text" name="page-text" type="text" value="{@href}"/>
-                            <xsl:text> </xsl:text>
+                            <xsl:text></xsl:text>
                             <a id="other-pages-link" class="new-link" href="#"
                                onclick="replicateSimpleField('page-text'); return false;" title="Add Web Page">new
                             </a>
@@ -169,7 +173,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <input id="page-text" name="page-text" type="text" value="{@href}"/>
-                <xsl:text> </xsl:text>
+                <xsl:text></xsl:text>
                 <a id="other-pages-link" class="new-link" href="#"
                    onclick="replicateSimpleField('page-text'); return false;" title="Add Web Page">new
                 </a>
@@ -185,7 +189,7 @@
                     <xsl:choose>
                         <xsl:when test="$index = 0">
                             <input id="email-text" name="email-text" type="text" value="{@title}"/>
-                            <xsl:text> </xsl:text>
+                            <xsl:text></xsl:text>
                             <a id="add-email-link" class="new-link" href="#"
                                onclick="replicateSimpleField('email-text'); return false;" title="Add Email">new
                             </a>
@@ -201,7 +205,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <input id="email-text" name="email-text" type="text" value=""/>
-                <xsl:text> </xsl:text>
+                <xsl:text></xsl:text>
                 <a id="add-email-link" class="new-link" href="#"
                    onclick="replicateSimpleField('email-text'); return false;" title="Add Email">new
                 </a>
@@ -230,7 +234,7 @@
                                                onclick="showLookupDialog('{$field}'); return false;">
                                                 lookup
                                             </a>
-                                            <xsl:text> </xsl:text>
+                                            <xsl:text></xsl:text>
                                         </td>
                                         <td class="lookup-result">
                                             <xsl:value-of select="@title"/>
@@ -247,7 +251,7 @@
                                                onclick="showLookupDialog('{$field}'); return false;">
                                                 lookup
                                             </a>
-                                            <xsl:text> </xsl:text>
+                                            <xsl:text></xsl:text>
                                         </td>
                                         <td class="lookup-result">
                                             <a id="{$field}-{$index}-remove-link" class="remove-link" href="#"
@@ -270,7 +274,7 @@
                                    onclick="showLookupDialog('{$field}'); return false;">
                                     lookup
                                 </a>
-                                <xsl:text> </xsl:text>
+                                <xsl:text></xsl:text>
                             </td>
                             <td class="lookup-result"></td>
                         </tr>
@@ -304,7 +308,7 @@
                                             <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
                                                onclick="showLookupDialog('subject'); return false;">lookup
                                             </a>
-                                            <xsl:text> </xsl:text>
+                                            <xsl:text></xsl:text>
                                         </td>
                                         <td class="lookup-result">
                                             <a href="{@term}">
@@ -323,7 +327,7 @@
                                                title="Lookup"
                                                onclick="showLookupDialog('subject'); return false;">lookup
                                             </a>
-                                            <xsl:text> </xsl:text>
+                                            <xsl:text></xsl:text>
                                         </td>
                                         <td class="lookup-result">
                                             <a href="{@term}">
@@ -344,7 +348,7 @@
                                 <a id="lookup-{$field}-link" class="lookup-link" href="#" title="Lookup"
                                    onclick="showLookupDialog('subject'); return false;">lookup
                                 </a>
-                                <xsl:text> </xsl:text>
+                                <xsl:text></xsl:text>
                             </td>
                             <td class="lookup-result"></td>
                         </tr>
@@ -410,7 +414,7 @@
                 <tr>
                     <td>
                         <input id="keyword" value="" type="text"/>
-                        <xsl:text> </xsl:text>
+                        <xsl:text></xsl:text>
                         <a class="new-link" id="add-link" href="#" title="Add"
                            onclick="addKeyword('keyword', 'keywords-list')">add
                         </a>
