@@ -24,7 +24,7 @@ body a {
     margin-bottom: 2em;
     margin-top: 15px;
     background: #fff;
-    padding: 0.2em 1.1em 1.1em 1.1em;
+    padding: 0.5em 1.5em 1.1em 1.5em;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 11pt;
     min-height: 600px;
@@ -75,6 +75,10 @@ body a {
 
 .bread-crumbs-options {
     display: inline;
+}
+
+.home-content {
+    padding: 20px;
 }
 
 .home-content ul li {

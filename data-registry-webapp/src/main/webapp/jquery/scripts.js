@@ -63,6 +63,7 @@ var PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
 $(document).ready(function() {
     $("#edit-tabs").tabs();
     $('.date-picker').datepicker();
+    $('.wrapper').corner('cc:#');
     styleTables();
     setRecordType();
     setLicenseType();
@@ -85,20 +86,20 @@ function ingestRecord(url, type, isNew, isPublished) {
             method = 'POST';
         }
         $.ajax({
-            type: method,
-            url: url,
-            data: serializeToString(record.context),
-            contentType: "application/atom+xml",
-            processData: false,
-            dataType: 'xml',
-            success: function(data, textStatus, XMLHttpRequest) {
-                var loc = XMLHttpRequest.getResponseHeader('Location');
-                window.location.href = loc;
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                $('#ingest-error-msg').html('<span style="color:red;">' + textStatus + '</span>');
-            }
-        });
+                    type: method,
+                    url: url,
+                    data: serializeToString(record.context),
+                    contentType: "application/atom+xml",
+                    processData: false,
+                    dataType: 'xml',
+                    success: function(data, textStatus, XMLHttpRequest) {
+                        var loc = XMLHttpRequest.getResponseHeader('Location');
+                        window.location.href = loc;
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        $('#ingest-error-msg').html('<span style="color:red;">' + textStatus + '</span>');
+                    }
+                });
     }
     return false;
 }
@@ -106,15 +107,15 @@ function ingestRecord(url, type, isNew, isPublished) {
 function deleteRecord(url) {
     if (confirm("Are you sure you want to delete this record?")) {
         $.ajax({
-            type: 'DELETE',
-            url: url,
-            success: function(data) {
-                location.reload();
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                alert("Could not deleted record");
-            }
-        });
+                    type: 'DELETE',
+                    url: url,
+                    success: function(data) {
+                        location.reload();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        alert("Could not deleted record");
+                    }
+                });
     }
     return false;
 }
@@ -170,18 +171,18 @@ function addKeyword(inputFieldId, listId) {
 function showLookupDialog(type) {
     $('#lookup-type').val(type);
     $('#lookup-div').dialog({
-        modal: true,
-        open: function() {
-            $('#query').val('');
-            $('#docs').html('');
-            $('#pager').html('');
-            $('#pager-header').html('');
-            $(this).css('display', '');
-        },
-        height: 400,
-        width: 600,
-        title: 'Lookup'
-    });
+                modal: true,
+                open: function() {
+                    $('#query').val('');
+                    $('#docs').html('');
+                    $('#pager').html('');
+                    $('#pager-header').html('');
+                    $(this).css('display', '');
+                },
+                height: 400,
+                width: 600,
+                title: 'Lookup'
+            });
 }
 function styleTables() {
     $(".edit-table > tr:even").css("background-color", "#F4F4F8");

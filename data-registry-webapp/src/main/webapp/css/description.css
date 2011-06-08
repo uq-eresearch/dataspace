@@ -1,7 +1,5 @@
 div.description {
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
 }
 
 div.statement {

@@ -22,7 +22,7 @@
                 src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js">;</script>
         <script type="text/javascript" src="/jquery/login.js">;</script>
         <script type="text/javascript" src="/jquery/scripts.js">;</script>
-
+        <script type="text/javascript" src="/jquery/jquery.corner.js">;</script>
 
         <script type="text/javascript" src="/js/solr/search.js">;</script>
         <script type="text/javascript" src="/js/solr/core/Core.js">;</script>
