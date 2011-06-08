@@ -129,7 +129,13 @@ Adding Solr search
 - Unzip the tar file and copy [UNZIPPED_DIR]/example/webapps/solr.war to [TOMCAT_HOME]/webapps
 - Copy [UNZIPPED_DIR]/example/solr to /opt and make sure it is readable by tomcat
 - Add the following to JVM options in the [TOMCAT_HOME]/bin/catalina.sh:
-        JAVA_OPTS=-Dsolr.solr.home=/opt/solr
+        JAVA_OPTS="$JAVA_OPTS -Dsolr.solr.home=/opt/solr"
+  You can also add the following to [CATALINA_HOME]/conf/Catalina/localhost/solr.xml
+  
+    <Context docBase="/opt/apache-tomcat/webapps/solr.war" debug="0" crossContext="true" >
+        <Environment name="solr/home" type="java.lang.String" value="/opt/solr" override="true" />
+    </Context>
+
 - Create directory [solr.solr.home]/data
 - Add the jdbc connector jars for postgresql and mysql in [SOLR_HOME]/lib.
 - Create data-config.xml file under [SOLR_HOME]/conf/ and add the datasource details and entities to index (see the
