@@ -38,7 +38,7 @@
 
         The University of Queensland, Australia Zoo and the Queensland Parks and Wildlife Service collected the data.
     </content>
-
+    <link rel="http://xmlns.com/foaf/0.1/mbox" href="mailto:Dr.Hamish.Campbell@gmail.com"/>
     <!--     web page describing the collection -->
     <link
             rel="http://xmlns.com/foaf/0.1/page"

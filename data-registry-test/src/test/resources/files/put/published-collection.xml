@@ -38,7 +38,7 @@
 
         The University of Queensland, Australia Zoo and the Queensland Parks and Wildlife Service collected the data.
     </content>
-
+    <link rel="http://xmlns.com/foaf/0.1/mbox" href="mailto:Dr.Hamish.Campbell@gmail.com"/>
     <!--     web page describing the collection -->
     <link
             rel="http://xmlns.com/foaf/0.1/page"
@@ -103,6 +103,11 @@
     <rdfa:meta
             property="http://purl.org/dc/terms/accessRights"
             content="Some of the data is available in abbreviated format in scientific journals. Contact
+	 the data curator regarding permission and procedures for accessing the original data.Some of the data is available in abbreviated format in scientific journals. Contact
+	 the data curator regarding permission and procedures for accessing the original data.Some of the data is available in abbreviated format in scientific journals. Contact
+	 the data curator regarding permission and procedures for accessing the original data.Some of the data is available in abbreviated format in scientific journals. Contact
+	 the data curator regarding permission and procedures for accessing the original data.Some of the data is available in abbreviated format in scientific journals. Contact
+	 the data curator regarding permission and procedures for accessing the original data.Some of the data is available in abbreviated format in scientific journals. Contact
 	 the data curator regarding permission and procedures for accessing the original data."/>
 
 
