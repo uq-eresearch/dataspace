@@ -34,6 +34,9 @@ public class CollectionVersion extends AbstractVersionEntity {
     @Enumerated(STRING)
     private CollectionType type;
 
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> mboxes = new HashSet<String>();
+
     @NotNull
     @Column(length = 4096)
     private String rights;
@@ -146,6 +149,14 @@ public class CollectionVersion extends AbstractVersionEntity {
 
     public void setType(CollectionType type) {
         this.type = type;
+    }
+
+    public Set<String> getMboxes() {
+        return mboxes;
+    }
+
+    public void setMboxes(Set<String> mboxes) {
+        this.mboxes = mboxes;
     }
 
     public Set<Agent> getPublishers() {

@@ -131,20 +131,6 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- mbox -->
-    <xsl:template name="mbox">
-        <xsl:if test="atom:link[@rel=$ATOM_MBOX]">
-            <div class="statement">
-                <div class="property">
-                    <p>Email(s)</p>
-                </div>
-                <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_MBOX]"/>
-                </div>
-            </div>
-        </xsl:if>
-    </xsl:template>
-
     <!-- collections -->
     <xsl:template name="isManagerOf">
         <xsl:if test="atom:link[@rel=$ATOM_IS_MANAGER_OF]">

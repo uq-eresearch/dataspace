@@ -115,6 +115,20 @@ public class AdapterInputHelper {
             version.getParent().setOriginalId(entryId.toString());
         }
 
+        List<Link> emails = entry.getLinks(Constants.REL_MBOX);
+        for (Link emailLink : emails) {
+            IRI href = emailLink.getHref();
+            if (href != null) {
+                String token = "mailto:";
+                String mailTo = href.toString();
+                if (mailTo.startsWith(token)) {
+                    version.getMboxes().add(mailTo.substring(mailTo.indexOf(":") + 1));
+                } else {
+                    version.getMboxes().add(mailTo);
+                }
+            }
+        }
+
         addAlternativeTitles(version, entry);
 
         //Add web pages
@@ -568,9 +582,6 @@ public class AdapterInputHelper {
 
     private static void addPages(Version version, Entry entry) throws ResponseContextException {
         List<Link> links = entry.getLinks(Constants.REL_PAGE);
-        if (version instanceof CollectionVersion && links.isEmpty()) {
-            throw new ResponseContextException(Constants.REL_PAGE + " link element is missing", 400);
-        }
         for (Link link : links) {
             String page = link.getHref().toString();
             version.getPages().add(page);

@@ -47,6 +47,7 @@
                 <!-- names -->
                 <xsl:apply-templates select="atom:title"/>
                 <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_MBOX]"/>
                 <!-- location -->
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
                 <!-- coverage -->

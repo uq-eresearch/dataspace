@@ -211,6 +211,14 @@ public class AdapterOutputHelper {
                 alternativeElement.setAttributeValue("property", Constants.REL_ALTERNATIVE);
                 alternativeElement.setAttributeValue("content", alternativeName);
             }
+
+            Set<String> mboxes = version.getMboxes();
+            for (String mbox : mboxes) {
+                String href = "mailto:" + mbox;
+                Link link = entry.addLink(href, Constants.REL_MBOX);
+                link.setTitle(mbox);
+            }
+
             //Pages
             Set<String> pages = version.getPages();
             for (String page : pages) {

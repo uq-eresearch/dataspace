@@ -90,6 +90,8 @@
                     </xsl:if>
                     <!-- type -->
                     <xsl:call-template name="type"/>
+                    <!-- email -->
+                    <xsl:call-template name="mbox"/>
                     <!-- creators -->
                     <xsl:call-template name="creators"/>
                     <!-- curators -->
