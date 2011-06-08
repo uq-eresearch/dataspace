@@ -110,8 +110,8 @@
                             <date type="to" dateFormat="W3CDTF">
                                 <xsl:value-of select="$value"/>
                             </date>
-                        </xsl:whe
-                    </xsl:call-template>
+                        </xsl:when>
+                    </xsl:choose>
                 </xsl:for-each>
             </temporal>
         </coverage>
