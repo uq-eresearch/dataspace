@@ -94,33 +94,27 @@
         <coverage>
             <temporal>
                 <xsl:for-each select="fn:tokenize(@content,';')">
-                    <xsl:call-template name="period">
-                        <xsl:with-param name="field-value" select="."/>
+                    <xsl:variable name="field">
+                        <xsl:value-of select="normalize-space(substring-before(.,'='))"/>
+                    </xsl:variable>
+                    <xsl:variable name="value">
+                        <xsl:value-of select="normalize-space(substring-after(.,'='))"/>
+                    </xsl:variable>
+                    <xsl:choose>
+                        <xsl:when test="$field = 'start'">
+                            <date type="from" dateFormat="W3CDTF">
+                                <xsl:value-of select="$value"/>
+                            </date>
+                        </xsl:when>
+                        <xsl:when test="$field = 'end'">
+                            <date type="to" dateFormat="W3CDTF">
+                                <xsl:value-of select="$value"/>
+                            </date>
+                        </xsl:whe
                     </xsl:call-template>
                 </xsl:for-each>
             </temporal>
         </coverage>
-    </xsl:template>
-    <xsl:template name="period">
-        <xsl:param name="field-value"/>
-        <xsl:variable name="field">
-            <xsl:value-of select="substring-before($field-value,'=')"/>
-        </xsl:variable>
-        <xsl:variable name="value">
-            <xsl:value-of select="substring-after($field-value,'=')"/>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="$field = 'start'">
-                <date type="from" dateFormat="W3CDTF">
-                    <xsl:value-of select="$value"/>
-                </date>
-            </xsl:when>
-            <xsl:when test="$field = 'end'">
-                <date type="to" dateFormat="W3CDTF">
-                    <xsl:value-of select="$value"/>
-                </date>
-            </xsl:when>
-        </xsl:choose>
     </xsl:template>
 
     <!-- subjects -->
