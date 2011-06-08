@@ -63,7 +63,8 @@ var PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
 $(document).ready(function() {
     $("#edit-tabs").tabs();
     $('.date-picker').datepicker();
-    $('.wrapper').corner('cc:#');
+    $('.wrapper').corner();
+    $('.browse-portlet').corner();
     styleTables();
     setRecordType();
     setLicenseType();
