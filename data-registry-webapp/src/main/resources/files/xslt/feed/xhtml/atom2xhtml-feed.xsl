@@ -34,7 +34,7 @@
     <xsl:template match="atom:feed">
         <head>
             <title>
-                <xsl:value-of select="atom:title"/>
+                <xsl:value-of select="$applicationName"/>
             </title>
             <link href="/css/description.css" rel="stylesheet" type="text/css"/>
             <link rel="alternate" type="application/atom+xml" title="{atom:title}"

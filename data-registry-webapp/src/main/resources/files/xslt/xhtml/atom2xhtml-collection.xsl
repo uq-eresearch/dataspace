@@ -36,7 +36,7 @@
         <head>
             <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
             <title>
-                <xsl:value-of select="atom:title"/>
+                <xsl:value-of select="$applicationName"/>
             </title>
             <link href="/css/description.css" rel="stylesheet" type="text/css"/>
             <xsl:call-template name="head"/>
