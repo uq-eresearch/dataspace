@@ -61,14 +61,31 @@ var PROPERTY_GIVEN_NAME = NS_FOAF + "givenName";
 var PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
 
 $(document).ready(function() {
-    $("#edit-tabs").tabs();
-    $('.date-picker').datepicker();
-    $('.wrapper').corner();
-    $('.browse-portlet').corner();
+    prepareFields();
     styleTables();
     setRecordType();
     setLicenseType();
 });
+
+function prepareFields() {
+    $("#edit-tabs").tabs();
+    $('.date-picker').datepicker();
+    $('.wrapper').corner();
+    $('.browse-portlet').corner();
+    $('#search-entry').focus(function() {
+        if (this.value == this.defaultValue) {
+            this.value = '';
+        }
+        if (this.value != this.defaultValue) {
+            this.select();
+        }
+    });
+    $('#search-entry').blur(function() {
+        if ($.trim(this.value) == '') {
+            this.value = (this.defaultValue ? this.defaultValue : '');
+        }
+    });
+}
 
 function ingestRecord(url, type, isNew, isPublished) {
     if (confirm("Are you sure you want to create this record?")) {

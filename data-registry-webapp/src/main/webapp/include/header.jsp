@@ -27,9 +27,7 @@
             <form id="searchbox" method="get" action="/search">
                 <fieldset>
                     <label for="search-entry">Search Entry</label>
-                    <input id="search-entry" size="15" type="text" value="Search..." name="q" class="s"
-                           onfocus="if (this.value == 'Search...') {this.value = '';}"
-                           onblur="if (this.value == '') {this.value = 'Search...';}" tabindex="1"/>
+                    <input id="search-entry" size="15" type="text" value="Search..." name="q" class="s"/>
                     <input name="submit" value="" class="submit" title="Search UQ" type="submit"/>
                 </fieldset>
             </form>
