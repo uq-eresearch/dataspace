@@ -6,6 +6,7 @@ import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.AgentType;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
@@ -46,6 +47,10 @@ public class AgentVersion extends AbstractVersionEntity {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "agents_is_manager_of")
     private Set<Collection> isManagerOf = new HashSet<Collection>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "agents_managed_services")
+    private Set<Service> managedServices = new HashSet<Service>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "agents_current_projects")
@@ -89,6 +94,14 @@ public class AgentVersion extends AbstractVersionEntity {
 
     public void setIsManagerOf(Set<Collection> isManagerOf) {
         this.isManagerOf = isManagerOf;
+    }
+
+    public Set<Service> getManagedServices() {
+        return managedServices;
+    }
+
+    public void setManagedServices(Set<Service> managedServices) {
+        this.managedServices = managedServices;
     }
 
     public Set<Activity> getCurrentProjects() {

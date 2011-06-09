@@ -69,6 +69,8 @@
                     <xsl:call-template name="type"/>
 
                     <xsl:call-template name="supportedBy"/>
+
+                    <xsl:call-template name="managedBy"/>
                     <!-- location -->
                     <xsl:call-template name="locations"/>
                     <!-- rights -->
@@ -100,6 +102,19 @@
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- Agents -->
+    <xsl:template name="managedBy">
+        <xsl:if test="atom:link[@rel=$ATOM_IS_MANAGED_BY]">
+            <div class="statement">
+                <div class="property">
+                    <p>Managed By</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_MANAGED_BY]"/>
                 </div>
             </div>
         </xsl:if>

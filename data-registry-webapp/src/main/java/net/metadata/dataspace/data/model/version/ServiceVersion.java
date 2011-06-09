@@ -36,8 +36,8 @@ public class ServiceVersion extends AbstractVersionEntity {
     private Set<Collection> isSupportedBy = new HashSet<Collection>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "services_publishers")
-    private Set<Agent> publishers = new HashSet<Agent>();
+    @JoinTable(name = "services_managers")
+    private Set<Agent> managedBy = new HashSet<Agent>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "services_subjects")
@@ -78,12 +78,12 @@ public class ServiceVersion extends AbstractVersionEntity {
         this.type = type;
     }
 
-    public Set<Agent> getPublishers() {
-        return publishers;
+    public Set<Agent> getManagedBy() {
+        return managedBy;
     }
 
-    public void setPublishers(Set<Agent> publishers) {
-        this.publishers = publishers;
+    public void setManagedBy(Set<Agent> managedBy) {
+        this.managedBy = managedBy;
     }
 
     public Set<Subject> getSubjects() {

@@ -348,6 +348,17 @@ public class AdapterInputHelper {
                 entityManager.merge(activity);
             }
         }
+
+        Set<String> managedServiceInUriKeys = getUriKeysFromLink(entry, Constants.REL_MANAGES_SERVICE);
+        for (String uriKey : managedServiceInUriKeys) {
+            Service service = serviceDao.getByKey(uriKey);
+            if (service != null) {
+                Agent parent = version.getParent();
+                service.getManagedBy().add(parent);
+                version.getManagedServices().add(service);
+                entityManager.merge(service);
+            }
+        }
         setPublished(entry, version);
         Date now = new Date();
         version.setUpdated(now);
@@ -373,6 +384,18 @@ public class AdapterInputHelper {
                 entityManager.merge(collection);
             }
         }
+
+        Set<String> agentsUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_MANAGED_BY);
+        for (String agentUriKey : agentsUriKeys) {
+            Agent agent = agentDao.getByKey(agentUriKey);
+            if (agent != null) {
+                Service parent = version.getParent();
+                version.getManagedBy().add(agent);
+                agent.getManagedServices().add(parent);
+                entityManager.merge(agent);
+            }
+        }
+
         setPublished(entry, version);
         Date now = new Date();
         version.setUpdated(now);

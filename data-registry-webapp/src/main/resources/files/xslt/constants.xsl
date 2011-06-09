@@ -10,6 +10,7 @@
     <xsl:variable name="NS_RDFA">http://www.w3.org/ns/rdfa#</xsl:variable>
     <xsl:variable name="NS_RDF_99">http://www.w3.org/1999/02/22-rdf-syntax-ns</xsl:variable>
     <xsl:variable name="NS_EF">http://www.e-framework.org/Contributions/ServiceGenres/</xsl:variable>
+    <xsl:variable name="NS_DATASPACE">http://dataspace.uq.edu.au/vocab/</xsl:variable>
 
     <xsl:variable name="TYPE_ATOM_FEED">application/atom+xml; type=feed</xsl:variable>
 
@@ -28,6 +29,12 @@
     </xsl:variable>
     <xsl:variable name="ATOM_IS_MANAGER_OF">
         <xsl:value-of select="concat($NS_ANDS ,'isManagerOf')"/>
+    </xsl:variable>
+    <xsl:variable name="ATOM_IS_MANAGED_BY">
+        <xsl:value-of select="concat($NS_ANDS ,'isManagedBy')"/>
+    </xsl:variable>
+    <xsl:variable name="ATOM_MANAGES_SERVICE">
+        <xsl:value-of select="concat($NS_DATASPACE ,'managesService')"/>
     </xsl:variable>
     <xsl:variable name="ATOM_PUBLISHER">
         <xsl:value-of select="concat($NS_DC ,'publisher')"/>

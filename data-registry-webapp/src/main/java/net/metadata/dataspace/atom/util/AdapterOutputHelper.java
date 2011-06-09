@@ -178,6 +178,13 @@ public class AdapterOutputHelper {
                 link.setTitle(collection.getTitle());
             }
 
+            Set<Service> services = version.getManagedServices();
+            for (Service service : services) {
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
+                Link link = entry.addLink(href, Constants.REL_MANAGES_SERVICE);
+                link.setTitle(service.getTitle());
+            }
+
             Set<Activity> activities = version.getCurrentProjects();
             for (Activity activity : activities) {
                 String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
@@ -351,6 +358,14 @@ public class AdapterOutputHelper {
                 Link link = entry.addLink(href, Constants.REL_IS_SUPPORTED_BY);
                 link.setTitle(collection.getTitle());
             }
+
+            Set<Agent> agents = version.getManagedBy();
+            for (Agent agent : agents) {
+                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
+                Link link = entry.addLink(href, Constants.REL_IS_MANAGED_BY);
+                link.setTitle(agent.getTitle());
+            }
+
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }

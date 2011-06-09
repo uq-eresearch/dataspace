@@ -74,6 +74,7 @@ public interface Constants {
     String NS_RDFA = "http://www.w3.org/ns/rdfa#";
     String NS_EFS = "http://www.e-framework.org/Contributions/ServiceGenres/";
     String NS_RDF_99 = "http://www.w3.org/1999/02/22-rdf-syntax-ns";
+    String NS_DATASPACE = "http://dataspace.uq.edu.au/vocab/";
     /**
      * rel attribute types
      */
@@ -89,10 +90,12 @@ public interface Constants {
     String REL_MBOX = NS_FOAF + "mbox";
     String REL_IS_DESCRIBED_BY = NS_ORE + "isDescribedBy";
     String REL_IS_LOCATED_AT = NS_CLD + "isLocatedAt";
+    String REL_IS_MANAGED_BY = NS_ANDS + "isManagedBy";
     String REL_IS_OUTPUT_OF = NS_ANDS + "isOutputOf";
     String REL_IS_REFERENCED_BY = NS_DC + "isReferencedBy";
     String REL_CURRENT_PROJECT = NS_FOAF + "currentProject";
     String REL_IS_SUPPORTED_BY = NS_ANDS + "isSupportedBy";
+    String REL_MANAGES_SERVICE = NS_DATASPACE + "managesService";
     String REL_LATEST_VERSION = "latest-version";
     String REL_PAGE = NS_FOAF + "page";
     String REL_PUBLICATIONS = NS_FOAF + "publications";

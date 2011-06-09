@@ -66,6 +66,10 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
         return this.versions.first().getIsManagerOf();
     }
 
+    public Set<Service> getManagedServices() {
+        return this.versions.first().getManagedServices();
+    }
+
     public Set<Collection> getMade() {
         return this.versions.first().getMade();
     }

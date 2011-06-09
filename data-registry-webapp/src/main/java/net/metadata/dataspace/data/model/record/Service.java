@@ -63,6 +63,10 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
         return this.versions.first().getSupportedBy();
     }
 
+    public Set<Agent> getManagedBy() {
+        return versions.first().getManagedBy();
+    }
+
     @Override
     public ServiceVersion getPublished() {
         return published;

@@ -77,6 +77,8 @@
                     <xsl:call-template name="isManagerOf"/>
                     <!-- activities -->
                     <xsl:call-template name="activities"/>
+                    <!--services-->
+                    <xsl:call-template name="manages-services"/>
                     <!--pages-->
                     <xsl:call-template name="locations"/>
                     <!--publications-->
@@ -154,6 +156,19 @@
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- Services -->
+    <xsl:template name="manages-services">
+        <xsl:if test="atom:link[@rel=$ATOM_MANAGES_SERVICE]">
+            <div class="statement">
+                <div class="property">
+                    <p>Manage</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_MANAGES_SERVICE]"/>
                 </div>
             </div>
         </xsl:if>

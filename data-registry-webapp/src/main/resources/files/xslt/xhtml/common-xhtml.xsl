@@ -375,6 +375,8 @@
             or @rel=$ATOM_PUBLICATIONS
             or @rel=$ATOM_IS_COLLECTOR_OF
             or @rel=$ATOM_IS_MANAGER_OF
+            or @rel=$ATOM_IS_MANAGED_BY
+            or @rel=$ATOM_MANAGES_SERVICE
             or @rel=$ATOM_IS_PARTICIPANT_IN
             or @rel=$ATOM_MBOX
             or @rel=$REL_RELATED
