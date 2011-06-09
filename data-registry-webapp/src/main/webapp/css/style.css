@@ -81,10 +81,6 @@ body a {
     padding: 20px;
 }
 
-.home-content ul li {
-    margin-top: 10px;
-}
-
 .home-content ul li b {
     font-weight: bold;
 }
@@ -340,9 +336,6 @@ fieldset .field label {
     color: #ff0000;
     margin-left: 0.2em;
 }
-
-
-
 
 /*
 
