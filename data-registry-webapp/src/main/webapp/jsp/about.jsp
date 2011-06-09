@@ -20,34 +20,49 @@
         <h1>About <%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
         </h1>
 
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vel lorem placerat odio auctor ornare vel et
-            nunc. Nam ac condimentum dolor. Vivamus urna eros, sodales id tempus at, congue faucibus nisi. Etiam quis
-            augue a tortor interdum semper. Nam fringilla, nulla et porttitor faucibus, odio mi aliquet urna, ac aliquam
-            augue nisl commodo velit. Pellentesque non mi eget velit ornare accumsan vehicula id sem. Vestibulum
-            tincidunt, nibh id ornare interdum, libero dolor ornare lectus, ut auctor sem diam eu mi. Nunc adipiscing
-            nulla non eros scelerisque feugiat. Cras purus neque, fermentum non pellentesque quis, aliquam nec lectus.
-            Donec bibendum nisi a enim rhoncus egestas.</p>
+        <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data outputs
+        of staff and students at the University of Queensland. It aims to improve the visibility and accessibility of
+        UQ data to the wider world.</p>
 
-        <p>Quisque vel nunc quis erat tincidunt porttitor. Sed eget erat non diam volutpat bibendum. Etiam gravida, ante
-            vitae consectetur convallis, lectus dolor porttitor nulla, at porta leo elit at felis. Quisque ac arcu
-            tellus, non blandit tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus malesuada
-            tempus. Cras porttitor fermentum nibh sit amet pretium. Pellentesque feugiat arcu eget risus semper sit amet
-            placerat magna imperdiet. Duis posuere odio vitae justo luctus sit amet aliquet tortor bibendum. Cras sed
-            malesuada enim. Nulla sit amet eros erat, eget faucibus erat. Nulla quis ante nec ipsum ultrices
-            condimentum. Mauris est metus, luctus at euismod non, ultricies ut felis. Donec commodo bibendum mauris sed
-            varius. Fusce at odio massa, a facilisis justo. Morbi a auctor erat. Curabitur ligula nunc, euismod id
-            aliquam sit amet, tincidunt et sapien. Integer eget sapien eget diam egestas egestas. Pellentesque gravida
-            malesuada pellentesque. Nulla in lorem eu purus convallis scelerisque ut eu diam.</p>
+        <p>The catalog contains descriptions of:</p>
+        <ul>
+            <li><a href="/collections">data collections</a>,</li>
+            <li>the <a href="/agents">agents</a> (people and groups) that create and manage the data collections, </li>
+            <li>the <a href="/activities">activities</a> (projects) that funded the data creation, and</li>
+            <li>the <a href="/services">services</a> for accessing and manipulating the data</li>
+        </ul>
 
-        <div class="clear">
-            <br/>
-        </div>
+        <p>UQ DataSpace aims to make UQ's research data visible and accessible at a national level by
+        syndicating information to Research Data Australia.</p>
+
+
+        <h1>Describing your data</h1>
+
+        <p>Have you got UQ research data you would like to share, or make better known?</p>
+
+        <p>Your dataset may be large or small, digital or paper-based &mdash; it doesn't matter. We would like to
+        identify and describe your data, and upload the description to this catalog and
+        <a href="http://services.ands.org.au/home/orca/rda/index.php">Research Data Australia</a>. We are not
+         offering to store your data &mdash; we only wish to describe it so that others can discover its existence (and
+          re-use it if you give permission). If you are willing to be interviewed about your data, please contact
+          <a href="mailto:info@dataspace.uq.edu.au">info@dataspace.uq.edu.au</a>.
+        </p>
+
+
+
+        <h1>Acknowledgements</h1>
+
+        <p>The eResearch Lab within the UQ School of ITEE developed this system based on the Apache Abdera open
+         source software. Feel free to contact us regarding the system and the technology used to produce it.</p>
+
+         <p>This work supported by the <a href="http://www.ands.org.au/">Australian National Data Service</a> (ANDS).
+          ANDS is supported by the Australian
+          Government through the National Collaborative Research Infrastructure Strategy Program and the Education
+          Investment Fund (EIF) Super Science Initiative.</p>
+
+
+
         <h1>Contact Information</h1>
-
-        <h2>Website Development</h2>
-
-        <p>This website is developed by the eResearch lab at the University of Queensland in Brisbane, Australia.
-            Feel free to contact us regarding the website and the technology used in producing it.</p>
 
         <h2>Postal Address</h2>
 
@@ -58,6 +73,7 @@
             Australia<br>
 
         </p>
+
 
         <h2>Location</h2>
 
@@ -81,16 +97,16 @@
         <div class="clear">
             <br/>
         </div>
-        <h1>Content</h1>
+        <h1>Rights</h1>
 
-        <p>The content of this site is managed by .....</p>
+        <p>Unless otherwise noted, all content &copy; The University of Queensland.</p>
 
-        <div class="clear">
-            <br/>
-        </div>
-        <h1>License</h1>
-
-        <p>License text ..</p>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/au/">
+        <img alt="Creative Commons License" style="border-width:0"
+        src="http://i.creativecommons.org/l/by-nc/3.0/au/88x31.png" /></a><br/>Descriptions of data collections,
+        agents, activities and services are available under a <a rel="license"
+        href="http://creativecommons.org/licenses/by-nc/3.0/au/">Creative Commons Attribution-NonCommercial
+         3.0 Australia License</a>.
 
     </div>
 </div>

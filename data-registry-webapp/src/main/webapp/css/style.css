@@ -89,6 +89,15 @@ body a {
     font-weight: bold;
 }
 
+.home-content ul {
+    list-style: disc;
+    margin-left: 40px
+}
+
+.home-content p {
+    margin: 1.12em 0
+}
+
 #content-text {
     width: 48%;
     padding-right: 2%;
@@ -331,6 +340,9 @@ fieldset .field label {
     color: #ff0000;
     margin-left: 0.2em;
 }
+
+
+
 
 /*
 
