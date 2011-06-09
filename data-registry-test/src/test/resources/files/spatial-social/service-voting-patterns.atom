@@ -36,7 +36,7 @@
 
     <!-- managed by -->
     <link
-        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagedBy"
+        rel="http://purl.org/dc/terms/publisher"
         href="http://dataspace.uq.edu.au/agents/3"
         title="Paul Shyy"/>
 
