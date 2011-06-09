@@ -3,7 +3,7 @@
      xmlns:app="http://www.w3.org/2007/app">
     <!-- *** metadata about the party *** -->
     <!--     id for the party -->
-    <id>mailto:c.franklin@uq.edu.au</id>
+    <id>http://dataspace.uq.edu.au/agents/ignore</id>
     
     <!--     collection type -->  
     <link
@@ -29,7 +29,7 @@
         href="http://www.uq.edu.au/eco-lab/craig-franklin"/>
     
     <!--    curated data collections  -->
-    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf" href="http://dataspace.uq.edu.au/collections/1" title="Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using acoustic telemetry"/>
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf" href="http://dataspace.uq.edu.au/collections/3" title="Location and temperature data for estuarine crocodiles on Cape York Peninsula measured using acoustic telemetry"/>
     
     <!--     topics of interest -->
     <category

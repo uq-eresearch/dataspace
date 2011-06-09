@@ -25,15 +25,12 @@
     <!--    participants -->
     <link
         rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
-        href="http://dataspace.uq.edu.au/agents/1"/>
-    <link
-        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
-        href="http://dataspace.uq.edu.au/agents/3"/>
+        href="http://dataspace.uq.edu.au/agents/5"/>
 
     <!--    created collections -->
     <link
         rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
-        href="http://dataspace.uq.edu.au/collections/1"
+        href="http://dataspace.uq.edu.au/collections/3"
         title="Location and temperature data for estuarine crocodiles on Cape York Peninsula
         measured using acoustic telemetry"/>
 

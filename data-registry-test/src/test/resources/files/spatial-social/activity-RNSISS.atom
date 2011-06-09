@@ -5,7 +5,7 @@
 
     <!-- *** metadata about the activity *** -->
     <!--     id for the activity being described -->
-    <id>http://dataspace.uq.edu.au/activities/2#</id>
+    <id>http://dataspace.uq.edu.au/activities/ignore</id>
 
     <!--     activity type -->
     <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
@@ -34,12 +34,12 @@
 
     <!--     outputs -->
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
-        href="http://dataspace.uq.edu.au/collections/3"
+        href="http://dataspace.uq.edu.au/collections/4"
         title="Variables derived from 2006 Census of Population &amp; Housing and voting results at polling booth catchment level for 2007 Australian Federal Election"/>
 
     <!--     participants -->
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
-        href="http://dataspace.uq.edu.au/agents/7" title="Bob Stimson"/>
+        href="http://dataspace.uq.edu.au/agents/4" title="Bob Stimson"/>
 
     <!-- *** metadata about the description *** -->
     <!--     description last updated -->

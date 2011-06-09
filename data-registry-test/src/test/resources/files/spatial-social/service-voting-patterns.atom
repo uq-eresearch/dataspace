@@ -7,7 +7,7 @@
 
     <!-- *** metadata about the service *** -->
     <!--     id for the service being described -->
-    <id>http://dataspace.uq.edu.au/services/1#</id>
+    <id>http://dataspace.uq.edu.au/services/ignore</id>
 
     <!--     service type -->
     <link
@@ -30,14 +30,14 @@
     <!--     provides access to collection -->
     <link
         rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isSupportedBy"
-        href="http://dataspace.uq.edu.au/collections/3"
+        href="http://dataspace.uq.edu.au/collections/4"
         title="Variables derived from 2006 Census of Population &amp; Housing and voting results at
         polling booth catchment level for 2007 Australian Federal Election"/>
 
     <!-- managed by -->
     <link
         rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagedBy"
-        href="http://dataspace.uq.edu.au/agents/4"
+        href="http://dataspace.uq.edu.au/agents/3"
         title="Paul Shyy"/>
 
     <!-- *** metadata about the description *** -->

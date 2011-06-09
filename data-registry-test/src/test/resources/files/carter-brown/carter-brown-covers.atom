@@ -52,8 +52,11 @@
     <!--     temporal coverage -->
     <rdfa:meta
         property="http://purl.org/dc/terms/temporal"
-        content="start:1951; end: 2008"
+        content="start=1951; end=2008"
         datatype="http://purl.org/dc/terms/Period"/>
+    
+    <!-- related collections -->
+    <link rel="related" href="http://dataspace.uq.edu.au/collections/2" title="Australian Pulp Fiction Collection"/>
 
     <!--     related publications -->
     <link

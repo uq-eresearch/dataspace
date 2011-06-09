@@ -5,7 +5,7 @@
     xmlns:app="http://www.w3.org/2007/app">
     <!-- *** metadata about the party *** -->
     <!--     id for the party -->
-    <id>mailto:r.stimson@uq.edu.au</id>
+    <id>http://dataspace.uq.edu.au/agents/ignore</id>
 
     <!--     collection type -->
     <link
@@ -45,7 +45,7 @@
         rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf"
         title="Variables derived from 2006 Census of Population &amp; Housing and voting
         results at polling booth catchment level for 2007 Australian Federal Election"
-        href="http://dataspace.uq.edu.au/collections/3"/>
+        href="http://dataspace.uq.edu.au/collections/4"/>
 
     <!--     topics of interest -->
     <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160300"

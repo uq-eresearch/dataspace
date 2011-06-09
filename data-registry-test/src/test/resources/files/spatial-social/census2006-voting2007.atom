@@ -52,7 +52,7 @@
     <!--     temporal coverage -->
     <rdfa:meta
         property="http://purl.org/dc/terms/temporal"
-        content="start:2006; end: 2007"
+        content="start=2006; end=2007"
         datatype="http://purl.org/dc/terms/Period"/>
 
     <!--     spatial coverage -->
