@@ -54,6 +54,12 @@
     <!--     participants -->
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
         href="http://dataspace.uq.edu.au/agents/1" title="Dr Toni Johnson-Woods"/>
+    
+    <!--     temporal coverage -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/temporal"
+        content="start=1939; end=1959"
+        datatype="http://purl.org/dc/terms/Period"/>
 
     <!-- *** metadata about the description *** -->
     <!--     description last updated -->
