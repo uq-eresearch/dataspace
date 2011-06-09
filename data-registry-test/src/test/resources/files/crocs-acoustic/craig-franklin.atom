@@ -48,6 +48,13 @@
         term="ecology"/>
     <category
         term="zoology"/>
+
+    <!-- related publications -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/publications"
+        href="http://espace.library.uq.edu.au/list/author_id/302/"
+        title="Professor Craig Franklin publication records in UQ eSpace"/>
+
   
     <!-- *** metadata about the description *** -->
     <!--     description last updated -->
