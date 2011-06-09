@@ -170,11 +170,17 @@ public class AdapterInputHelper {
             }
         }
 
+        //related collections
         Set<String> relatedCollectionsUriKeys = getUriKeysFromLink(entry, Constants.REL_RELATED);
         for (String uriKey : relatedCollectionsUriKeys) {
             Collection collection = collectionDao.getByKey(uriKey);
             if (collection != null) {
                 version.getRelations().add(collection);
+                Collection parent = version.getParent();
+                CollectionVersion published = collection.getPublished();
+                published.getRelations().add(parent);
+                entityManager.merge(parent);
+                entityManager.merge(published);
                 entityManager.merge(collection);
             }
         }

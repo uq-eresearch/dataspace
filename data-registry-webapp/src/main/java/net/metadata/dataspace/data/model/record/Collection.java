@@ -82,6 +82,10 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
         return this.versions.first().getAccessedVia();
     }
 
+    public Set<Collection> getRelations() {
+        return this.versions.first().getRelations();
+    }
+
     @Override
     public CollectionVersion getPublished() {
         return published;
