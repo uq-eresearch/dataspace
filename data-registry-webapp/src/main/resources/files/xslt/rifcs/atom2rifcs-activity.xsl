@@ -46,6 +46,7 @@
                 <xsl:apply-templates select="atom:title"/>
                 <!-- locations -->
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
+                <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
                 <!-- coverage -->
                 <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
                 <!-- related objects -->

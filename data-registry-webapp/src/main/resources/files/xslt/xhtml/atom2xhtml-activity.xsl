@@ -67,6 +67,8 @@
                     </xsl:if>
                     <!-- type -->
                     <xsl:call-template name="type"/>
+                    <!-- temporal -->
+                    <xsl:call-template name="temporal"/>
                     <!-- homepage -->
                     <xsl:call-template name="locations"/>
                     <!-- participants -->

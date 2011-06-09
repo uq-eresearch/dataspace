@@ -49,6 +49,9 @@ public class ActivityVersion extends AbstractVersionEntity {
     @CollectionOfElements(fetch = FetchType.LAZY)
     private Set<String> pages = new HashSet<String>();
 
+    @CollectionOfElements(fetch = FetchType.LAZY)
+    private Set<String> temporals = new HashSet<String>();
+
     public ActivityVersion() {
     }
 
@@ -109,5 +112,13 @@ public class ActivityVersion extends AbstractVersionEntity {
 
     public void setPages(Set<String> pages) {
         this.pages = pages;
+    }
+
+    public Set<String> getTemporals() {
+        return temporals;
+    }
+
+    public void setTemporals(Set<String> temporals) {
+        this.temporals = temporals;
     }
 }

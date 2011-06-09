@@ -101,6 +101,15 @@ public class AdapterInputHelper {
                 entityManager.merge(agent);
             }
         }
+
+        List<Element> extensions = entry.getExtensions(Constants.QNAME_RDFA_META);
+        for (Element extension : extensions) {
+            String property = extension.getAttributeValue("property");
+            if (property.equals(Constants.REL_TEMPORAL)) {
+                String content = extension.getAttributeValue("content");
+                version.getTemporals().add(content);
+            }
+        }
         setPublished(entry, version);
         Date now = new Date();
         version.setUpdated(now);

@@ -94,6 +94,14 @@ public class AdapterOutputHelper {
                 link.setTitle(collection.getTitle());
             }
 
+            //Temporal
+            Set<String> temporals = version.getTemporals();
+            for (String temporal : temporals) {
+                Element temporalElement = entry.addExtension(Constants.QNAME_RDFA_META);
+                temporalElement.setAttributeValue("property", Constants.REL_TEMPORAL);
+                temporalElement.setAttributeValue("content", temporal);
+            }
+
             Set<Subject> subjectSet = version.getSubjects();
             addSubjectToEntry(entry, subjectSet);
         } catch (Throwable th) {
