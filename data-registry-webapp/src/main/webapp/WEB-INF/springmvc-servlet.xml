@@ -5,6 +5,7 @@
     <bean name="/browse" class="net.metadata.dataspace.controller.BrowseController"/>
     <bean name="/search" class="net.metadata.dataspace.controller.SearchController"/>
     <bean name="/anzsrc" class="net.metadata.dataspace.controller.ANZSRCCodesController"/>
+    <bean name="/about" class="net.metadata.dataspace.controller.AboutController"/>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>

@@ -1,6 +1,3 @@
-<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
-<title><%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
-</title>
 <link rel="stylesheet" type="text/css" href="/css/style.css"/>
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"
       type="text/css"/>
