@@ -109,10 +109,13 @@
                     </ul>
                 </div>
             </div>
+            <div class="clear">
 
+            </div>
             <p>This registry syndicates data to <br/>
                 <a href="http://services.ands.org.au/home/orca/rda/">
-                    <img src="/images/ands_logo.gif"></a></p>
+                    <img src="/images/ands_logo.gif"></a>
+            </p>
         </div>
     </div>
 </div>

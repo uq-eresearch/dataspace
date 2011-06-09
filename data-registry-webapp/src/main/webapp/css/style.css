@@ -257,6 +257,7 @@ fieldset .field label {
 
 .portlet-content {
     width: 100%;
+    margin-top: 15px;
 }
 
 .browse-portlet {
@@ -265,8 +266,8 @@ fieldset .field label {
     min-height: 300px;
     max-height: 300px;
     overflow: auto;
-    padding: 0.5em;
-    width: 46%;
+    padding: 0;
+    width: 48%;
     border: solid 1px #999999;
 }
 
@@ -1241,7 +1242,7 @@ p.centenary {
 
 /* tagcloud */
 .tagcloud {
-    padding: 10px 15px 0;
+    padding: 25px 15px;
 }
 
 /*.tag-cloud_item:hover {*/
