@@ -114,13 +114,33 @@
         </relatedObject>
     </xsl:template>
 
+    <!-- links to supporting collections -->
+    <xsl:template name="supportedBy">
+
+
+    </xsl:template>
     <!-- supported by (collection) -->
     <xsl:template match="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]">
         <relatedObject>
             <key>
                 <xsl:value-of select="@href"/>
             </key>
-            <relation type="isSupportedBy"/>
+            <relation>
+                <xsl:attribute name="type">
+                    <xsl:choose>
+                        <xsl:when test="/atom:entry/atom:link[@rel=$REL_TYPE]/@href = $ENTITY_CREATE">produces</xsl:when>
+                        <xsl:when test="/atom:entry/atom:link[@rel=$REL_TYPE]/@href = $ENTITY_GENERATE">produces</xsl:when>
+                        <xsl:when test="/atom:entry/atom:link[@rel=$REL_TYPE]/@href = $ENTITY_REPORT">presents</xsl:when>
+                        <xsl:when test="/atom:entry/atom:link[@rel=$REL_TYPE]/@href = $ENTITY_ANNOTATE">addsValueTo</xsl:when>
+                        <xsl:when test="/atom:entry/atom:link[@rel=$REL_TYPE]/@href = $ENTITY_TRANSFORM">produces</xsl:when>
+                        <xsl:when test="/atom:entry/atom:link[@rel=$REL_TYPE]/@href = $ENTITY_ASSEMBLE">produces</xsl:when>
+                        <xsl:when test="/atom:entry/atom:link[@rel=$REL_TYPE]/@href = $ENTITY_HARVEST">makesAvailable</xsl:when>
+                        <xsl:when test="/atom:entry/atom:link[@rel=$REL_TYPE]/@href = $ENTITY_SEARCH">makesAvailable</xsl:when>
+                        <xsl:when test="/atom:entry/atom:link[@rel=$REL_TYPE]/@href = $ENTITY_SYNDICATE">makesAvailable</xsl:when>
+                        <xsl:otherwise>isSupportedBy</xsl:otherwise>
+                    </xsl:choose>
+                </xsl:attribute>
+            </relation>
         </relatedObject>
     </xsl:template>
 
