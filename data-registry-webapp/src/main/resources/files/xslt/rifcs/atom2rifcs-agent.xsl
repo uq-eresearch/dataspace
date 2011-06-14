@@ -95,11 +95,6 @@
                         <xsl:apply-templates select="rdfa:meta[@property=$ATOM_FAMILY_NAME]"/>
                     </name>
                 </xsl:if>
-                <name type="alternative">
-                    <namePart>
-                        <xsl:value-of select="atom:title"/>
-                    </namePart>
-                </name>
             </xsl:when>
             <xsl:otherwise>
                 <name type="primary">
