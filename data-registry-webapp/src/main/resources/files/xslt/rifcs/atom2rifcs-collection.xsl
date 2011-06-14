@@ -188,7 +188,7 @@
             <key>
                 <xsl:value-of select="@href"/>
             </key>
-            <relation type="isSupportedBy"/>
+            <relation type="supports"/>
         </relatedObject>
     </xsl:template>
 
