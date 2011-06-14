@@ -50,8 +50,9 @@
                 <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
                 <!-- related objects -->
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
-                <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_MANAGED_BY]"/>
                 <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_OUTPUT_OF]"/>
+                <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]"/>
                 <!-- subjects -->
                 <xsl:apply-templates select="atom:category[@scheme != $NS_VIVO]"/>
                 <!-- descriptions -->
@@ -93,7 +94,7 @@
     </xsl:template>
 
     <!-- curator / manager (party) -->
-    <xsl:template match="atom:link[@rel=$ATOM_PUBLISHER]">
+    <xsl:template match="atom:link[@rel=$ATOM_IS_MANAGED_BY]">
         <relatedObject>
             <key>
                 <xsl:value-of select="@href"/>
@@ -110,6 +111,16 @@
                 <xsl:value-of select="@href"/>
             </key>
             <relation type="isOutputOf"/>
+        </relatedObject>
+    </xsl:template>
+
+    <!-- supported by (collection) -->
+    <xsl:template match="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]">
+        <relatedObject>
+            <key>
+                <xsl:value-of select="@href"/>
+            </key>
+            <relation type="isSupportedBy"/>
         </relatedObject>
     </xsl:template>
 
