@@ -29,7 +29,7 @@
     <xsl:template match="atom:entry">
         <registryObject group="{atom:source/atom:link[@rel=$ATOM_PUBLISHER]/@title}">
             <key>
-                <xsl:value-of select="atom:link[@rel=$RDF_DESCRIBES]/@href"/>
+                <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
             </key>
             <originatingSource>
                 <xsl:value-of select="atom:source/atom:id"/>
