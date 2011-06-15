@@ -137,7 +137,9 @@
     <xsl:template match="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:call-template name="object-to-record-id">
+                    <xsl:with-param name="object-id" select="@href"/>
+                </xsl:call-template>
             </key>
             <relation type="isCollectorOf"/>
         </relatedObject>
@@ -147,7 +149,9 @@
     <xsl:template match="atom:link[@rel=$ATOM_IS_MANAGER_OF]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:call-template name="object-to-record-id">
+                    <xsl:with-param name="object-id" select="@href"/>
+                </xsl:call-template>
             </key>
             <relation type="isManagerOf"/>
         </relatedObject>

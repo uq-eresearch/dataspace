@@ -17,6 +17,15 @@
                 exclude-result-prefixes="atom ands dcterms rdfa fn str">
     <xsl:include href="../constants.xsl"/>
 
+    <!-- object to record ID translation -->
+    <!--
+     RIF-CS links using the record ID; our Atom representation links using the object ID
+     Hence need to change object id to record id in the RIF-CS representation of links
+     -->
+    <xsl:template name="object-to-record-id">
+        <xsl:param name="object-id"/>
+        <xsl:value-of select="tokenize(object-id, '#')[1]"/>
+    </xsl:template>
 
     <!-- identifiers -->
     <xsl:template match="atom:link[@rel=$RDF_DESCRIBES]">
