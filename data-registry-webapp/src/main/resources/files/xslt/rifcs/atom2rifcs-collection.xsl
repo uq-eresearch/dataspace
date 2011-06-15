@@ -152,11 +152,15 @@
         </coverage>
     </xsl:template>
 
+    <!--
+     RIF-CS links using the record ID; our Atom representation links using the object ID
+     Hence need to change key from object id to record id in the RIF-CS representation of links
+     -->
     <!-- collector (party) -->
     <xsl:template match="atom:entry/atom:author">
         <relatedObject>
             <key>
-                <xsl:value-of select="atom:uri"/>
+                <xsl:value-of select="fn:tokenize(atom:uri, '#')[1]"/>
             </key>
             <relation type="hasCollector"/>
         </relatedObject>
@@ -166,7 +170,7 @@
     <xsl:template match="atom:link[@rel=$ATOM_PUBLISHER]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="isManagedBy"/>
         </relatedObject>
@@ -176,7 +180,7 @@
     <xsl:template match="atom:link[@rel=$ATOM_IS_OUTPUT_OF]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="isOutputOf"/>
         </relatedObject>
@@ -186,7 +190,7 @@
     <xsl:template match="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="supports"/>
         </relatedObject>
@@ -196,7 +200,7 @@
     <xsl:template match="atom:link[@rel=$REL_RELATED]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="hasAssociationWith"/>
         </relatedObject>

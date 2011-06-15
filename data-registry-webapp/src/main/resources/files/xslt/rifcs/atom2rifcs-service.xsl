@@ -12,8 +12,9 @@
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
-                exclude-result-prefixes="atom ands dcterms rdfa">
+                exclude-result-prefixes="atom ands dcterms rdfa fn">
 
     <xsl:include href="common-rifcs.xsl"/>
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
@@ -83,11 +84,15 @@
         </xsl:attribute>
     </xsl:template>
 
+    <!--
+     RIF-CS links using the record ID; our Atom representation links using the object ID
+     Hence need to change key from object id to record id in the RIF-CS representation of links
+     -->
     <!-- collector (party) -->
     <xsl:template match="atom:link[@rel=$ATOM_CREATOR]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="hasCollector"/>
         </relatedObject>
@@ -97,7 +102,7 @@
     <xsl:template match="atom:link[@rel=$ATOM_IS_MANAGED_BY]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="isManagedBy"/>
         </relatedObject>
@@ -108,7 +113,7 @@
             match="atom:link[@rel=$ATOM_IS_OUTPUT_OF]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="isOutputOf"/>
         </relatedObject>
@@ -123,7 +128,7 @@
     <xsl:template match="atom:link[@rel=$ATOM_IS_SUPPORTED_BY]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation>
                 <xsl:attribute name="type">

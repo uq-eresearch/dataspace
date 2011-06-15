@@ -13,8 +13,9 @@
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
-                exclude-result-prefixes="atom ands dcterms rdfa">
+                exclude-result-prefixes="atom ands dcterms rdfa fn">
 
     <xsl:include href="common-rifcs.xsl"/>
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
@@ -123,11 +124,15 @@
         </namePart>
     </xsl:template>
 
+    <!--
+     RIF-CS links using the record ID; our Atom representation links using the object ID
+     Hence need to change key from object id to record id in the RIF-CS representation of links
+     -->
     <!-- curator / manager (party) -->
     <xsl:template match="atom:link[@rel=$ATOM_PUBLISHER]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="isManagedBy"/>
         </relatedObject>
@@ -137,9 +142,7 @@
     <xsl:template match="atom:link[@rel=$ATOM_IS_COLLECTOR_OF]">
         <relatedObject>
             <key>
-                <xsl:call-template name="object-to-record-id">
-                    <xsl:with-param name="object-id" select="@href"/>
-                </xsl:call-template>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="isCollectorOf"/>
         </relatedObject>
@@ -149,9 +152,7 @@
     <xsl:template match="atom:link[@rel=$ATOM_IS_MANAGER_OF]">
         <relatedObject>
             <key>
-                <xsl:call-template name="object-to-record-id">
-                    <xsl:with-param name="object-id" select="@href"/>
-                </xsl:call-template>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="isManagerOf"/>
         </relatedObject>
@@ -161,7 +162,7 @@
     <xsl:template match="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]">
         <relatedObject>
             <key>
-                <xsl:value-of select="@href"/>
+                <xsl:value-of select="fn:tokenize(@href, '#')[1]"/>
             </key>
             <relation type="isParticipantIn"/>
         </relatedObject>
