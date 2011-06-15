@@ -24,7 +24,7 @@
      -->
     <xsl:template name="object-to-record-id">
         <xsl:param name="object-id"/>
-        <xsl:value-of select="tokenize(object-id, '#')[1]"/>
+        <xsl:value-of select="fn:tokenize(object-id, '#')[1]"/>
     </xsl:template>
 
     <!-- identifiers -->
