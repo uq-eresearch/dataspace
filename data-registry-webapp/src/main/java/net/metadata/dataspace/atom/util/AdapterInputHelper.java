@@ -66,7 +66,7 @@ public class AdapterInputHelper {
 
         //Add the original id
         IRI entryId = entry.getId();
-        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)) {
+        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX) && !entryId.toString().trim().endsWith(Constants.PATH_FOR_ACTIVITIES + "/ignore")) {
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -120,7 +120,7 @@ public class AdapterInputHelper {
 
         //Add the original id
         IRI entryId = entry.getId();
-        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)) {
+        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX) && !entryId.toString().trim().endsWith(Constants.PATH_FOR_COLLECTIONS + "/ignore")) {
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -242,7 +242,7 @@ public class AdapterInputHelper {
 
         //Add the original id
         IRI entryId = entry.getId();
-        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)) {
+        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX) && !entryId.toString().trim().endsWith(Constants.PATH_FOR_AGENTS + "/ignore")) {
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -369,7 +369,7 @@ public class AdapterInputHelper {
 
         //Add the original id
         IRI entryId = entry.getId();
-        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)) {
+        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX) && !entryId.toString().trim().endsWith(Constants.PATH_FOR_SERVICES + "/ignore")) {
             version.getParent().setOriginalId(entryId.toString());
         }
 
