@@ -5,7 +5,7 @@
 
     <!-- *** metadata about the activity *** -->
     <!--     id for the activity being described -->
-    <id>http://dataspace.uq.edu.au/activities/3#</id>
+    <id>http://dataspace.uq.edu.au/activities/ignore</id>
 
     <!--     activity type -->
     <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
@@ -36,7 +36,7 @@
 
     <!--     participants -->
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
-        href="http://dataspace.uq.edu.au/agents/4" title="Bob Stimson"/>
+        href="http://dataspace.uq.edu.au/agents/5" title="Bob Stimson"/>
 
     <!-- *** metadata about the description *** -->
     <!--     description last updated -->

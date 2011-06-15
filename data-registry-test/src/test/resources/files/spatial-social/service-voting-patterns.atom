@@ -25,7 +25,7 @@
     <!--     service location -->
     <link
         rel="http://xmlns.com/foaf/0.1/page"
-        href="http://e-research.sbs.uq.edu.au/aus_voting2007.html"/>
+        href="http://e-research.geosp.uq.edu.au/aus_voting2007.html"/>
 
     <!--     provides access to collection -->
     <link
@@ -36,9 +36,15 @@
 
     <!-- managed by -->
     <link
-        rel="http://purl.org/dc/terms/publisher"
-        href="http://dataspace.uq.edu.au/agents/3"
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagedBy"
+        href="http://dataspace.uq.edu.au/agents/4"
         title="Paul Shyy"/>
+    
+    <!--     related publications -->
+    <link
+        rel="http://purl.org/dc/terms/isReferencedBy"
+        title="Developing a Web-Based e-Research Facility for Socio-Spatial Analysis to Investigate Relationships between Voting Patterns and Local Population Characteristics"
+        href="http://espace.library.uq.edu.au/view/UQ:198635"/>
 
     <!-- *** metadata about the description *** -->
     <!--     description last updated -->

@@ -8,7 +8,7 @@
 
     <!-- *** metadata about the collection *** -->
     <!--     id for the collection -->
-    <id>http://dataspace.uq.edu.au/collections/3#</id>
+    <id>http://dataspace.uq.edu.au/collections/ignore</id>
 
     <!--     collection type -->
     <link

@@ -5,7 +5,7 @@
     xmlns:app="http://www.w3.org/2007/app">
     <!-- *** metadata about the party *** -->
     <!--     id for the party -->
-    <id>mailto:hamish.campbell@uq.edu.au</id>
+    <id>http://dataspace.uq.edu.au/agents/ignore</id>
 
     <!--     collection type -->
     <link

@@ -39,7 +39,7 @@
 
     <!--     participants -->
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
-        href="http://dataspace.uq.edu.au/agents/4" title="Bob Stimson"/>
+        href="http://dataspace.uq.edu.au/agents/5" title="Bob Stimson"/>
 
     <!-- *** metadata about the description *** -->
     <!--     description last updated -->
