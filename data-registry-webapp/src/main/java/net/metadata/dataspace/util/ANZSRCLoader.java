@@ -65,6 +65,10 @@ public class ANZSRCLoader {
                 for (int i = 0; i < nodeList.getLength(); i++) {
                     Element descriptionElement = (Element) nodeList.item(i);
                     String label = descriptionElement.getElementsByTagName(ELEMENT_LABEL).item(0).getTextContent();
+                    if (label.contains(" - ")) {
+                        int pos = label.indexOf(" - ");
+                        label = label.substring(pos + 3).trim();
+                    }
                     String term = descriptionElement.getAttribute(ATTRIBUTE_ABOUT).replace("/#", "#");
                     if (subjectDao.getSubject(scheme, term, label) == null) {
                         Subject subject = RegistryApplication.getApplicationContext().getEntityCreator().getNextSubject();

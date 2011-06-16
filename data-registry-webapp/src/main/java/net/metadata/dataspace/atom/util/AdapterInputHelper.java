@@ -187,9 +187,11 @@ public class AdapterInputHelper {
                 version.getRelations().add(collection);
                 Collection parent = version.getParent();
                 CollectionVersion published = collection.getPublished();
-                published.getRelations().add(parent);
+                if (published != null) {
+                    published.getRelations().add(parent);
+                    entityManager.merge(published);
+                }
                 entityManager.merge(parent);
-                entityManager.merge(published);
                 entityManager.merge(collection);
             }
         }
