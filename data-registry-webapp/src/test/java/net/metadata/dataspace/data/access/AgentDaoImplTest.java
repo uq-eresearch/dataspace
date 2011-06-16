@@ -9,7 +9,6 @@ import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.User;
 import net.metadata.dataspace.data.model.version.AgentVersion;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,15 +45,15 @@ public class AgentDaoImplTest {
 
     @Before
     public void setUp() throws Exception {
-        PopulatorUtil.cleanup();
+//        PopulatorUtil.cleanup();
         entityManager = jpaConnector.getEntityManager();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        //Remove all
-        PopulatorUtil.cleanup();
-    }
+//    @After
+//    public void tearDown() throws Exception {
+//        //Remove all
+//        PopulatorUtil.cleanup();
+//    }
 
     @Test
     public void testAddingAgent() throws Exception {
@@ -90,7 +89,7 @@ public class AgentDaoImplTest {
 
     @Test
     public void testEditingAgent() throws Exception {
-        testAddingAgent();
+//        testAddingAgent();
         assertTrue("Table is empty", agentDao.getAll().size() != 0);
         List<Agent> agentList = agentDao.getAll();
         Agent agent = agentList.get(0);
@@ -110,7 +109,7 @@ public class AgentDaoImplTest {
 
     @Test
     public void testRemovingAgent() throws Exception {
-        testAddingAgent();
+//        testAddingAgent();
         assertTrue("Table is empty", agentDao.getAll().size() != 0);
         List<Agent> agentList = agentDao.getAll();
         for (Agent agent : agentList) {

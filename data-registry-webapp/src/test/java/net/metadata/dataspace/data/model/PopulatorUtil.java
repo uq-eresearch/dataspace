@@ -72,6 +72,8 @@ public class PopulatorUtil {
         AgentVersion agentVersion = (AgentVersion) entityCreator.getNextVersion(agent);
         agentVersion.setParent(agent);
         agentVersion.setTitle("Test Agent Title");
+        agentVersion.getAlternatives().add("Test");
+        agentVersion.getPages().add("http://uq.edu.au/test-page.html");
         agentVersion.getMboxes().add("email@company.com");
         agentVersion.setDescription("Test Agent Content");
         agentVersion.setType(AgentType.PERSON);

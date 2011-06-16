@@ -15,7 +15,6 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.model.Entry;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
-@Transactional()
+@Transactional
 public class AdapterOutputHelperTest {
 
     @Autowired
@@ -50,8 +49,8 @@ public class AdapterOutputHelperTest {
     @Autowired
     private DaoManager daoManager;
 
-    @Before
-    public void setUp() throws Exception {
+
+    public void setUpDatabase() throws Exception {
         JpaConnector jpaConnnector = daoManager.getJpaConnnector();
         EntityManager entityManager = jpaConnnector.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -92,6 +91,7 @@ public class AdapterOutputHelperTest {
         collectionVersion.getAccessedVia().add(service);
         serviceVersion.getSupportedBy().add(collection);
         service.setSource(source);
+        service.setDescriptionAuthor(currentUser);
 
         activity.setUpdated(new Date());
         Subject subject5 = PopulatorUtil.getSubject();
@@ -131,6 +131,7 @@ public class AdapterOutputHelperTest {
 
     @Test
     public void testGetEntryFromAgent() throws Exception {
+        setUpDatabase();
         List<Agent> agents = daoManager.getAgentDao().getAll();
         Agent agent = agents.get(agents.size() - 1);
         AgentVersion agentVersion = agent.getVersions().first();
@@ -139,7 +140,7 @@ public class AdapterOutputHelperTest {
         assertEquals("Entry title", entry.getTitle(), agent.getTitle());
         assertEquals("Entry content", entry.getContent(), agent.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
-        assertTrue("Entry should have at least 3 categories", entry.getCategories().size() > 2);
+        assertTrue("Entry should have at least 2 subjects", entry.getCategories(Constants.SCHEME_ANZSRC_FOR).size() >= 2);
         assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_MADE).size() >= 1);
     }
 
@@ -153,7 +154,7 @@ public class AdapterOutputHelperTest {
         assertEquals("Entry title", entry.getTitle(), collection.getTitle());
         assertEquals("Entry content", entry.getContent(), collection.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
-        assertTrue("Entry should have at least 3 categories", entry.getCategories().size() > 2);
+        assertTrue("Entry should have at least 2 subjects", entry.getCategories(Constants.SCHEME_ANZSRC_FOR).size() >= 2);
         assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_PAGE).size() >= 1);
         assertTrue("Entry should have at least one author", entry.getAuthors().size() >= 1);
         assertTrue("Entry should have at least one service", entry.getLinks(Constants.REL_IS_ACCESSED_VIA).size() >= 1);
@@ -184,7 +185,6 @@ public class AdapterOutputHelperTest {
         assertEquals("Entry title", entry.getTitle(), service.getTitle());
         assertEquals("Entry content", entry.getContent(), service.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
-        assertTrue("Entry should have at least 1 category", entry.getCategories().size() >= 1);
         assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_PAGE).size() >= 1);
         assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_SUPPORTED_BY).size() >= 1);
     }

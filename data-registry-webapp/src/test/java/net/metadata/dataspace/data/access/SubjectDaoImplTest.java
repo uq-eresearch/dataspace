@@ -4,8 +4,6 @@ import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.app.RegistryConfiguration;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Subject;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,27 +28,27 @@ public class SubjectDaoImplTest {
     @Autowired
     private SubjectDao subjectDao;
 
-    @Before
-    public void setUp() throws Exception {
-        PopulatorUtil.cleanup();
-    }
+//    @Before
+//    public void setUp() throws Exception {
+//        PopulatorUtil.cleanup();
+//    }
 
-    @After
-    public void tearDown() throws Exception {
-        PopulatorUtil.cleanup();
-    }
+//    @After
+//    public void tearDown() throws Exception {
+//        PopulatorUtil.cleanup();
+//    }
 
     @Test
     public void testAddingSubject() throws Exception {
         int originalSubjectTableSize = subjectDao.getAll().size();
         Subject subject = PopulatorUtil.getSubject();
         subjectDao.save(subject);
-        assertTrue("Subjects number should increase Current: " + subjectDao.getAll().size() + " Original: " + originalSubjectTableSize, subjectDao.getAll().size() == (originalSubjectTableSize + 1));
+        assertTrue("Subjects number should increase, Current: " + subjectDao.getAll().size() + " Original: " + originalSubjectTableSize, subjectDao.getAll().size() == (originalSubjectTableSize + 1));
     }
 
     @Test
     public void testEditingSubject() throws Exception {
-        testAddingSubject();
+//        testAddingSubject();
         Subject subject = subjectDao.getAll().get(0);
         Long id = subject.getId();
         String originalVocabUri = subject.getTerm();

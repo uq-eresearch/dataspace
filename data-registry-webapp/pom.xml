@@ -260,11 +260,11 @@
             <version>2.2</version>
         </dependency>
         <!--Local libraries-->
-        <dependency>
-            <groupId>au.edu.uq.itee.maenad</groupId>
-            <artifactId>util</artifactId>
-            <version>0.2.0</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>au.edu.uq.itee.maenad</groupId>-->
+        <!--<artifactId>util</artifactId>-->
+        <!--<version>0.2.0</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>au.edu.uq.itee.maenad</groupId>
             <artifactId>dataaccess</artifactId>
