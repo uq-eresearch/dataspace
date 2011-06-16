@@ -456,6 +456,7 @@ any data added to them will be ignored outright.  -->
 
         <field name="subjectlabel" type="text" indexed="true" stored="true" multiValued="true"/>
         <field name="subjectterm" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="subjectkeyword" type="text" indexed="true" stored="true" multiValued="true"/>
 
         <field name="activitytitle" type="text" indexed="true" stored="true"/>
         <field name="activitydescription" type="text" indexed="true" stored="true"/>
@@ -485,7 +486,6 @@ any data added to them will be ignored outright.  -->
         <field name="term" type="text" indexed="true" stored="true"/>
         <field name="isdefinedby" type="text" indexed="true" stored="true"/>
         <field name="label" type="text" indexed="true" stored="true"/>
-        <field name="subjectkeyword" type="text" indexed="true" stored="true"/>
 
 
         <!-- catchall field, containing all other searchable text fields (implemented
