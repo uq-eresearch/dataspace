@@ -1,7 +1,7 @@
 package net.metadata.dataspace.auth.util;
 
 import net.metadata.dataspace.app.NonProductionConstants;
-import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class LDAPUtilTest {
-    @Test
+    @Ignore
     public void testSearchLDAPByEmail() throws Exception {
         String testEmail = "a.alabri@uq.edu.au";
         NamingEnumeration namingEnumeration = searchLDAPByEmail(testEmail);
