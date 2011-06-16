@@ -45,26 +45,26 @@
             <li><a href="/about">About</a></li>
         </ul>
     </div>
-    <a href="#" class="signin" id="signin-link">Sign in</a>
-    <fieldset id="signin_menu">
-        <form action="#" method="post" id="signin" onsubmit="login(); return false;">
-            <p id="login-error" style="color:#ff0000;">
+    <%--<a href="#" class="signin" id="signin-link">Sign in</a>--%>
+    <%--<fieldset id="signin_menu">--%>
+    <%--<form action="#" method="post" id="signin" onsubmit="login(); return false;">--%>
+    <%--<p id="login-error" style="color:#ff0000;">--%>
 
-            </p>
+    <%--</p>--%>
 
-            <p>
-                <label for="username">Username</label>
-                <input id="username" name="username" value="" title="username" type="text"/>
-            </p>
+    <%--<p>--%>
+    <%--<label for="username">Username</label>--%>
+    <%--<input id="username" name="username" value="" title="username" type="text"/>--%>
+    <%--</p>--%>
 
-            <p>
-                <label for="password">Password</label>
-                <input id="password" name="password" value="" title="password" type="password"/>
-            </p>
+    <%--<p>--%>
+    <%--<label for="password">Password</label>--%>
+    <%--<input id="password" name="password" value="" title="password" type="password"/>--%>
+    <%--</p>--%>
 
-            <p class="remember">
-                <input id="signin_submit" value="Sign in" type="submit"/>
-            </p>
-        </form>
-    </fieldset>
+    <%--<p class="remember">--%>
+    <%--<input id="signin_submit" value="Sign in" type="submit"/>--%>
+    <%--</p>--%>
+    <%--</form>--%>
+    <%--</fieldset>--%>
 </div>
