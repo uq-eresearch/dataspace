@@ -6,6 +6,7 @@ import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.oaipmh.OAIProperties;
 import net.metadata.dataspace.oaipmh.RIFCSOaiCatalog;
+import org.apache.log4j.Logger;
 
 /**
  * User: alabri
@@ -13,7 +14,7 @@ import net.metadata.dataspace.oaipmh.RIFCSOaiCatalog;
  * Time: 3:37:39 PM
  */
 public class RegistryConfigurationImpl implements RegistryConfiguration {
-
+    private Logger logger = Logger.getLogger(getClass());
     private String registryTitle;
     private String version;
     private String uriPrefix;
@@ -132,5 +133,10 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
 
     public String getRegistryRights() {
         return registryRights;
+    }
+
+    public void cleanUp() {
+        getDaoManager().getJpaConnnector().getEntityManager().close();
+        logger.info("Successfully closed the database connection.... OK!");
     }
 }
