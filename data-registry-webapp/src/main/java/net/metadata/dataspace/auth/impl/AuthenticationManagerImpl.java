@@ -7,7 +7,6 @@ import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.util.LDAPUtil;
 import net.metadata.dataspace.data.access.UserDao;
 import net.metadata.dataspace.data.model.record.User;
-import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.log4j.Logger;
@@ -43,7 +42,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         if (userName == null || password == null) {
-            return ProviderHelper.badrequest(request, "Username and password missing");
+            return OperationHelper.createResponse(400, "Username and password missing");
         } else {
             if (defaultUsers.containsKey(userName) && defaultUsers.get(userName)[1].equals(password)) {
                 UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
@@ -108,12 +107,12 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                     } else {
                         String message = "Authentication Failed, User not found";
                         logger.warn(message);
-                        return ProviderHelper.badrequest(request, message);
+                        return OperationHelper.createResponse(400, message);
                     }
                 } catch (NamingException e) {
                     String message = "Authentication Failed: " + e.getMessage();
                     logger.warn(message);
-                    return ProviderHelper.badrequest(request, message);
+                    return OperationHelper.createResponse(400, message);
                 }
             }
         }

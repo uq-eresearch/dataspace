@@ -6,6 +6,7 @@ import net.metadata.dataspace.atom.adapter.ActivityAdapter;
 import net.metadata.dataspace.atom.adapter.AgentAdapter;
 import net.metadata.dataspace.atom.adapter.CollectionAdapter;
 import net.metadata.dataspace.atom.adapter.ServiceAdapter;
+import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.servlets.processor.VersionRequestProcessor;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.templates.Route;
@@ -74,7 +75,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                         TargetType type = TargetType.get(TargetType.SERVICE);
                         RequestProcessor processor = this.requestProcessors.get(type);
                         if (processor == null) {
-                            return ProviderHelper.notfound(request);
+                            return OperationHelper.createResponse(400, Constants.HTTP_STATUS_404);
                         }
 
                         WorkspaceManager wm = getWorkspaceManager(request);
@@ -103,7 +104,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                         } finally {
                             transactionEnd(transaction, request, response);
                         }
-                        return response != null ? response : ProviderHelper.badrequest(request);
+                        return response != null ? response : OperationHelper.createResponse(400, Constants.HTTP_STATUS_400);
                     } else if (isLoginRequest) {
                         return login(request);
                     } else if (isLogoutRequest) {
@@ -111,10 +112,6 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                     } else {
                         return super.process(request);
                     }
-//                }else if (targetType.equals(TargetType.get(Constants.TARGET_LOGIN))) {
-//                    return login(request);
-//                }else if (targetType.equals(TargetType.get(Constants.TARGET_LOGOUT))) {
-//                    return logout(request);
                 } else {
                     return super.process(request);
                 }
