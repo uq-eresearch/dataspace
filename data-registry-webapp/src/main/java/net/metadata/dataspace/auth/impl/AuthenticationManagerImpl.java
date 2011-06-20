@@ -2,11 +2,11 @@ package net.metadata.dataspace.auth.impl;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.util.LDAPUtil;
 import net.metadata.dataspace.data.access.UserDao;
 import net.metadata.dataspace.data.model.record.User;
-import org.apache.abdera.Abdera;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
@@ -66,7 +66,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                     logger.warn("Could not set LDAP context for user " + userName);
                 }
                 logger.info("Authenticated user: " + userName);
-                return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
+                return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
             } else {
                 try {
                     Hashtable env = new Hashtable();
@@ -104,7 +104,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
                         setDirContext(ctx, user);
                         logger.info("Authenticated user: " + userName);
-                        return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
+                        return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
                     } else {
                         String message = "Authentication Failed, User not found";
                         logger.warn(message);
@@ -125,7 +125,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         User user = (User) request.getAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER);
         userDirContexts.remove(user.getEmail());
         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, null);
-        return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
+        return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
     }
 
     @Override

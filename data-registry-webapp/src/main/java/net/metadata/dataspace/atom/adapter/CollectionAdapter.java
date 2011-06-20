@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.FeedOutputHelper;
 import net.metadata.dataspace.atom.util.HttpMethodHelper;
+import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.model.record.Collection;
 import org.apache.abdera.i18n.iri.IRI;
@@ -11,7 +12,6 @@ import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Feed;
 import org.apache.abdera.model.Person;
-import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
@@ -36,7 +36,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
         try {
             return HttpMethodHelper.postEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -45,7 +45,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
         try {
             return HttpMethodHelper.postMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -54,7 +54,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
         try {
             return HttpMethodHelper.putEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
         try {
             return HttpMethodHelper.putMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
         try {
             return HttpMethodHelper.deleteEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
         try {
             return HttpMethodHelper.getEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -106,7 +106,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
                 return HttpMethodHelper.getFeed(request, responseContext, Collection.class);
             }
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 

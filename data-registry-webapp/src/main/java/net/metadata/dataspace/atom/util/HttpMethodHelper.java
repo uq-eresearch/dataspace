@@ -21,7 +21,6 @@ import org.apache.abdera.model.Feed;
 import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.ParseException;
 import org.apache.abdera.parser.Parser;
-import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
@@ -216,7 +215,7 @@ public class HttpMethodHelper {
                 if (record.isActive()) {
                     if (authorizationManager.getAccessLevelForInstance(user, record).canDelete()) {
                         deleteRecord(uriKey, clazz);
-                        return ProviderHelper.createErrorResponse(new Abdera(), 200, Constants.HTTP_STATUS_200);
+                        return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
                     } else {
                         throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
                     }

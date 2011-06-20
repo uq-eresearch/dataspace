@@ -1,16 +1,15 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
-import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.context.AbstractResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
-import org.apache.abdera.protocol.server.context.StreamWriterResponseContext;
-import org.apache.abdera.writer.StreamWriter;
+import org.apache.abdera.protocol.server.context.SimpleResponseContext;
 
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Author: alabri
@@ -104,13 +103,22 @@ public class OperationHelper {
     /**
      * Returns an Error document based on the StreamWriter
      */
-    public static AbstractResponseContext createErrorResponse(Abdera abdera,
-                                                              final int code,
-                                                              final String message,
-                                                              final Throwable t) {
-        AbstractResponseContext rc = new StreamWriterResponseContext(abdera) {
-            protected void writeTo(StreamWriter sw) throws IOException {
-                org.apache.abdera.protocol.error.Error.create(sw, code, message, t);
+    public static AbstractResponseContext createResponse(final int code,
+                                                         final String message) {
+        AbstractResponseContext rc = new SimpleResponseContext() {
+            @Override
+            protected void writeEntity(Writer writer) throws IOException {
+                writeTo(writer);
+            }
+
+            @Override
+            public boolean hasEntity() {
+                return true;
+            }
+
+            @Override
+            public void writeTo(Writer writer) throws IOException {
+                writer.write(message);
             }
         };
         rc.setStatus(code);

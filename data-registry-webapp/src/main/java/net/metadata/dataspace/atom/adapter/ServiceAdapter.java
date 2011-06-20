@@ -4,6 +4,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.FeedOutputHelper;
 import net.metadata.dataspace.atom.util.HttpMethodHelper;
+import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.record.Service;
 import org.apache.abdera.i18n.iri.IRI;
@@ -11,7 +12,6 @@ import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Feed;
 import org.apache.abdera.model.Person;
-import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
@@ -36,7 +36,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         try {
             return HttpMethodHelper.postEntry(request, Service.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -45,7 +45,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         try {
             return HttpMethodHelper.postMedia(request, Service.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -54,7 +54,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         try {
             return HttpMethodHelper.putEntry(request, Service.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         try {
             return HttpMethodHelper.putMedia(request, Service.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         try {
             return HttpMethodHelper.deleteEntry(request, Service.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
         try {
             return HttpMethodHelper.getEntry(request, Service.class);
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -104,7 +104,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 return HttpMethodHelper.getFeed(request, responseContext, Service.class);
             }
         } catch (ResponseContextException e) {
-            return ProviderHelper.createErrorResponse(request.getAbdera(), e.getStatusCode(), e.getMessage());
+            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 

@@ -422,7 +422,7 @@ public class AdapterOutputHelper {
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
             responseContext.setWriter(writer);
         } else {
-            return ProviderHelper.createErrorResponse(new Abdera(), 415, Constants.HTTP_STATUS_415);
+            return OperationHelper.createResponse(415, Constants.HTTP_STATUS_415);
         }
 
         return responseContext;
