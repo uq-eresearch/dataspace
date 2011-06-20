@@ -131,6 +131,7 @@ public class RegistryInitializer {
             try {
                 scheduler.unscheduleJob("solrIndexing", "indexing");
                 scheduler.shutdown();
+                logger.info("Successfully stopped solr indexing scheduler .... OK!");
             } catch (SchedulerException e) {
                 logger.warn("Could not stop solr indexing scheduler");
             }
