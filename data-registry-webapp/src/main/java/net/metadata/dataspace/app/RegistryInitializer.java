@@ -25,10 +25,16 @@ import java.util.Properties;
  */
 public class RegistryInitializer {
     private Logger logger = Logger.getLogger(getClass());
+    private Scheduler scheduler;
 
     public RegistryInitializer(String loadAnzsrcCodes) {
         if (Boolean.valueOf(loadAnzsrcCodes)) {
             injectANZSRCCodes();
+        }
+        try {
+            scheduler = new StdSchedulerFactory().getScheduler();
+        } catch (SchedulerException e) {
+            logger.warn("Could not create solr indexing scheduler");
         }
         initializeSolrIndexing();
     }
@@ -70,9 +76,7 @@ public class RegistryInitializer {
         }
 
         //schedule it
-        Scheduler scheduler = null;
         try {
-            scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
             scheduler.scheduleJob(job, trigger);
             scheduler.triggerJob("solrIndexing", "indexing");
@@ -120,5 +124,16 @@ public class RegistryInitializer {
             result = defaultValue;
         }
         return result;
+    }
+
+    public void cleanUp() {
+        if (scheduler != null) {
+            try {
+                scheduler.unscheduleJob("solrIndexing", "indexing");
+                scheduler.shutdown();
+            } catch (SchedulerException e) {
+                logger.warn("Could not stop solr indexing scheduler");
+            }
+        }
     }
 }
