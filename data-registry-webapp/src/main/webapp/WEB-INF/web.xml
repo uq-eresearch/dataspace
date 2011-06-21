@@ -42,6 +42,10 @@
         <servlet-class>net.metadata.dataspace.servlets.OAIPMHServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>atomDocServlet</servlet-name>
+        <servlet-class>net.metadata.dataspace.servlets.ATOMDocServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>springmvc</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
@@ -98,6 +102,10 @@
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
         <url-pattern>/about</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>atomDocServlet</servlet-name>
+        <url-pattern>/doc/atom</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file id="welcome-page">index.jsp</welcome-file>
