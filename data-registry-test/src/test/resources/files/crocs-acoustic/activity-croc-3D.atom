@@ -6,7 +6,7 @@
 
     <!-- *** metadata about the activity *** -->
     <!--     id for the activity in the original source system-->
-    <id>http://dataspace.uq.edu.au/activities/ignore</id>
+    <id>http://purl.org/au-research/grants/arc/LP0667704</id>
 
     <!--     type of activity -->
     <link
@@ -48,6 +48,9 @@ promote effective conservation through education and research.</content>
     <link
         rel="http://xmlns.com/foaf/0.1/page"
         href="http://www.uq.edu.au/uqresearchers/researcher/franklince.html?uv_category=prj&amp;prj=810449"/>
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://purl.org/au-research/grants/arc/LP0667704"/>
 
     <!--     subjects -->
     <category

@@ -27,7 +27,7 @@
     <!--     web page describing the collection -->
     <link
         rel="http://xmlns.com/foaf/0.1/page"
-        href="http://e-research.sbs.uq.edu.au/client/Stats.html#metadata"/>
+        href="http://e-research.geosp.uq.edu.au/client/Stats.html#metadata"/>
 
     <!--     collection subjects -->
     <category

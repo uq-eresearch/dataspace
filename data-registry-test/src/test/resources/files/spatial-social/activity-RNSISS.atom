@@ -5,7 +5,7 @@
 
     <!-- *** metadata about the activity *** -->
     <!--     id for the activity being described -->
-    <id>http://dataspace.uq.edu.au/activities/ignore</id>
+    <id>http://purl.org/au-research/grants/arc/RN0457537</id>
 
     <!--     activity type -->
     <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
@@ -22,6 +22,7 @@
 
     <!--     web page describing the activity -->
     <link rel="http://xmlns.com/foaf/0.1/page" href="http://www.siss.edu.au/"/>
+    <link rel="http://xmlns.com/foaf/0.1/page" href="http://purl.org/au-research/grants/arc/RN0457537"/>
 
     <!--     activity subjects -->
     <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160300"

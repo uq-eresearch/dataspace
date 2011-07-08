@@ -5,7 +5,7 @@
 
     <!-- *** metadata about the activity *** -->
     <!--     id for the activity being described -->
-    <id>http://dataspace.uq.edu.au/activities/ignore</id>
+    <id>http://purl.org/au-research/grants/arc/DP0878598</id>
 
     <!--     activity type -->
     <link rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
@@ -19,6 +19,7 @@
 
     <!--     web page describing the activity -->
     <link rel="http://xmlns.com/foaf/0.1/page" href="http://www.uq.edu.au/uqresearchers/researcher/johnsonwoodstm.html?uv_category=prj&amp;prj=812510"/>
+    <link rel="http://xmlns.com/foaf/0.1/page" href="http://purl.org/au-research/grants/arc/DP0878598"/>
 
     <!--     activity subjects -->
     <category
