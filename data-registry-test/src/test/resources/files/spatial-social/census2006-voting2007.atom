@@ -32,11 +32,11 @@
     <!--     collection subjects -->
     <category
         scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#field_160300"
+        term="http://purl.org/anzsrc/for/#group_1603"
         label="160300 - Demography"/>
     <category
         scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#field_160400"
+        term="http://purl.org/anzsrc/for/#group_1604"
         label="160400 - Human Geography"/>
     <category
         scheme="http://purl.org/anzsrc/seo"
