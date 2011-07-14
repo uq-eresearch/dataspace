@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the activity *** -->
+    <!--     id for the activity in the original source system-->
+    <id>http://dataspace.uq.edu.au/activities/ignore</id>
+
+    <!--     type of activity -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://xmlns.com/foaf/0.1/Project"
+        title="Project"/>
+
+    <!--     activity name-->
+    <title
+        type="text">Geochemistry, mineral geochemistry and geochronology of rock masses in Queensland based on outputs from University of Queensland Department of Earth Sciences Queensland</title>
+
+    <!--     activity description -->
+    <content
+        type="text">Project to survey geochemical and geochronological data from student theses submitted to The University of Queensland’s School of Earth Sciences (formerly the Department of Earth Sciences) from the 1940s to the present. Funded by Queensland Department of Mines &amp; Energy</content>
+
+    <!--    participants -->
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
+        href="http://dataspace.uq.edu.au/agents/9"/>
+
+    <!--    created collections -->
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
+        href="http://dataspace.uq.edu.au/collections/9"
+        title="Geological Survey of Queensland and University of Queensland, School of Earth Sciences Theses Geochemistry and Geochronology Databases"/>
+
+    <!--    webpage about the activity -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://www.uq.edu.au/uqresearchers/researcher/vasconcelospmdp.html?uv_category=prj&amp;prj=805047"/>
+
+    <!--     subjects -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#group_0402"
+        label="040200 - Geochemistry"/>
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_040203"
+        label="040203 - Isotope Geochemistry"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/for/#group_0403"
+        label="040300 - Geology"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/for/#field_040303"
+        label="040303 - Geochronology"/>
+    <category
+        term="analytical results"/>
+    <category term="dating techniques"/>
+    <category term="geochemistry analysis"/>
+    <category term="major oxides"/>
+    <category term="stable isotypes"/>
+    <category term="whole rock analysis"/>
+    <category term="trace element analysis"/>
+    <category term="specimen information"/>
+    <category term="geographic locality"/>
+    <category term="digital mapping"/>
+    <category term="digital map coordinates"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+        
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

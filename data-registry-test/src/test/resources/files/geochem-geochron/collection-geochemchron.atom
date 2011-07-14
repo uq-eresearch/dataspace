@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:georss="http://www.georss.org/georss"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the collection *** -->
+    <!--     id for the collection -->
+    <id>http://espace.library.uq.edu.au/view/UQ:185174</id>
+
+    <!--     collection type -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://purl.org/dc/dcmitype/Collection"
+        title="Collection"/>
+
+    <!--     collection title -->
+    <title
+        type="text">Geological Survey of Queensland and University of Queensland, School of Earth Sciences Theses Geochemistry and Geochronology Databases</title>
+
+    <!--     collection description -->
+    <content
+        type="text">A database containing geochemical and geochronological data from student theses submitted to The University of Queensland’s School of Earth Sciences (formerly the Department of Earth Sciences) from the 1940s to the present. 
+
+The collection curator sourced student theses from the Dorothy Hill Engineering and Sciences Library, the Fryer Library and the school’s own collection. She used OmniPage software to digitise geochemical and geochronological analyses contained in the theses; recorded the context of each analysis (sample location and methods used); and collated bibliographic information about each thesis. 
+
+The resulting database has information on more than 8000 Queensland rock specimens sourced from more than 200 student theses. It contains information on rock specimen geochemistry (elemental or oxide abundances); analytical limits (precision and detection limits for analytical method used); instrumentation used; isotope geochemistry (with analytical limits indicated); geochronology (age, methodology, with analytical limits indicated); geolocation; rock type, unit, description, depth (if from borehole data); and a thesis reference (title, author, date submitted, supervisor, and area studied). Not all data is available for all rock specimens. 
+
+The UQ eSpace repository provides open access to representations of the data in the following formats - Microsoft Access, Microsoft Excel, ArcGIS and MapInfo. 
+
+The Geological Survey of Queensland funded the extraction and collection of this data. 
+
+Disclaimer: The datasets are not yet complete, and the accuracy of the information contained in the database is still being validated. Contributors and users are encouraged to report any errors to the School of Earth Sciences. The University of Queensland and the School of Earth Sciences hold no responsibility for the use of the information made available in the database.</content>
+
+    <!--     web page describing the collection -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://espace.library.uq.edu.au/view/UQ:185174"/>
+
+    <!--     collection subjects -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#group_0402"
+        label="040200 - Geochemistry"/>
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_040203"
+        label="040203 - Isotope Geochemistry"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/for/#group_0403"
+        label="040300 - Geology"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/for/#field_040303"
+        label="040303 - Geochronology"/>
+    <category
+        term="analytical results"/>
+    <category term="dating techniques"/>
+    <category term="geochemistry analysis"/>
+    <category term="major oxides"/>
+    <category term="stable isotypes"/>
+    <category term="whole rock analysis"/>
+    <category term="trace element analysis"/>
+    <category term="specimen information"/>
+    <category term="geographic locality"/>
+    <category term="digital mapping"/>
+    <category term="digital map coordinates"/>
+
+    <!--     collection creator -->
+    <author>
+        <name>Maria Mostert</name>
+        <email>m.mostert@uq.edu.au</email>
+    </author>
+
+    <!--     temporal coverage -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/temporal"
+        content="start=1948"
+        datatype="http://purl.org/dc/terms/Period"/>
+
+    <!--     spatial coverage -->
+    <georss:polygon>-9.13 138 -9.13 153.6 -29.2 153.6 -29.2 138 -9.13 138</georss:polygon>
+    <link
+        rel="http://purl.org/dc/terms/spatial"
+        href="http://www.geonames.org/2152274/"
+        title="Queensland"/>
+
+    <!--     related publications -->
+    <link
+        rel="http://purl.org/dc/terms/isReferencedBy"
+        title="GSQ–UQ project bringing research data to light"
+        href="http://www.dme.qld.gov.au/zone_files/QGMJ/3_ei_gsq-uq_project_bringing_research_data_to_light.pdf"/>
+
+    <!--     rights -->
+    <rights>The original theses are the property of former students of the school. The collection itself is the property of the University of Queensland.</rights>
+    <!--     access rights -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/accessRights"
+        content='The data is freely available on the web. Users of the data are required to attribute the thesis containing the original data and the University as publisher of the data as follows: "This work uses data originally published in AUTHOR NAME DATE, THESIS TITLE, THESIS TYPE, University of Queensland, Brisbane. The data was obtained via the University of Queensland, School of Earth Sciences Theses Geochemistry and Geochronology Databases https://espace.library.uq.edu.au/view/UQ:185174"/  Where appropriate, due recognition should also be given to the Geological Survey as representative of the Queensland Government involvement in this project. '/>
+    <!-- license -->
+    <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by/3.0/au/deed.en"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+        
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>
