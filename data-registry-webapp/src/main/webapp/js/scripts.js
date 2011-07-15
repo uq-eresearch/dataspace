@@ -70,9 +70,6 @@ $(document).ready(function() {
 function prepareFields() {
     $("#edit-tabs").tabs();
     $('.date-picker').datepicker();
-    $('.wrapper').corner();
-    $('.browse-portlet').corner();
-    $('.portlet-header').corner("top");
     $('#search-entry').focus(function() {
         if (this.value == this.defaultValue) {
             this.value = '';

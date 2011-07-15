@@ -7,7 +7,7 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js">;</script>
 <script type="text/javascript"
         src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js">;</script>
-<script type="text/javascript" src="/jquery/jquery.corner.js">;</script>
+
 <script type="text/javascript" src="/js/login.js">;</script>
 <script type="text/javascript" src="/js/scripts.js">;</script>
 

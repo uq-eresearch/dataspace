@@ -66,7 +66,9 @@
         <div class="home-content">
             <h1>Welcome to <%=RegistryApplication.getApplicationContext().getRegistryTitle()%></h1>
 
-            <p>A catalog of the <strong>University of Queensland's</strong> Research Data Assets</p>
+            <h2>A catalog of the University of Queensland's Research Data Assets</h2>
+
+            <hr>
 
             <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data outputs of staff and students at the
              University of Queensland. It aims to improve the visibility and accessibility of
