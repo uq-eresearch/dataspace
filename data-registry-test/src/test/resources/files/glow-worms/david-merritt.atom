@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:app="http://www.w3.org/2007/app">
+    <!-- *** metadata about the party *** -->
+    <!--     id for the party -->
+    <id>http://dataspace.uq.edu.au/agents/ignore</id>
+
+    <!--     collection type -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://xmlns.com/foaf/0.1/Person"
+        title="Person"/>
+
+    <!--     names -->
+    <title
+        type="text">A/Prof David Merritt</title>
+    <rdfa:meta
+        property="http://xmlns.com/foaf/0.1/title"
+        content="A/Prof"/>
+    <rdfa:meta
+        property="http://xmlns.com/foaf/0.1/givenName"
+        content="David"/>
+    <rdfa:meta
+        property="http://xmlns.com/foaf/0.1/familyName"
+        content="Merritt"/>
+
+    <!--     agent description -->
+    <content
+        type="text">David Merritt is an Associate Professor in the School of Biological Sciences at The University of Queensland</content>
+
+    <!--     email address -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/mbox"
+        href="mailto:d.merritt@uq.edu.au"/>
+
+    <!--    created data collections  -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/made"
+        href="http://dataspace.uq.edu.au/collections/d"/>
+
+    <!--     topics of interest -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_060203"
+        label="060203 - Ecological Physiology"/>
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_060208"
+        label="060208 - Terrestrial Ecology"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/for/#field_060603"
+        label="060603 - Animal Physiology - Systems"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/for/#field_060808"
+        label="060808 - Invertebrate Biology"/>
+    <category term="Evolutionary Developmental Biology"/>
+    <category term="Insect Physiology and Bioluminescence"/>
+
+    <!-- publications -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/publications"
+        href="http://espace.library.uq.edu.au/list/author_id/47/"
+        title="David Merritt publication records in UQ eSpace"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

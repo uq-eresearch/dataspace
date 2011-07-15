@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:georss="http://www.georss.org/georss"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the collection *** -->
+    <!--     id for the collection -->
+    <id>http://dataspace.uq.edu.au/collections/ignore</id>
+
+    <!--     collection type -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://purl.org/dc/dcmitype/Collection"
+        title="Collection"/>
+
+    <!--     collection title -->
+    <title
+        type="text">Glow-worm bioluminescence and associated weather data for a rainforest gully near Springbrook since April 2010</title>
+
+    <!--     collection description -->
+    <content
+        type="text">Glow-worm bioluminescence and associated weather observations for a rainforest gully near Springbrook, Queensland, Australia since April 2010. 
+
+The data comes from a camera and a weather station located in the gully. The digital SLR camera takes digital images at 10-minute intervals. The project team derives bioluminescence information from the images using National Institutes for Health ImageJ analysis software. The weather station makes daily observations of rainfall, leaf area wetness, relative humidity and temperature. 
+
+The data collection contains more than 10,000 raw images in JPEG format, derived luminescence data, and weather data in an Excel spreadsheet. 
+
+Continuous observations began in April 2010, but the data has gaps due to occasional equipment faults. 
+
+The Queensland Department of Environment and Resource Management granted permission for data collection in the gully.</content>
+
+    <!--     web page describing the collection -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://web.mac.com/davemerritt1/Merritt_Home/Glow-worms.html"/>
+
+    <!--     collection subjects -->
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_060203"
+        label="060203 - Ecological Physiology"/>
+    <category
+        scheme="http://purl.org/anzsrc/for"
+        term="http://purl.org/anzsrc/for/#field_060208"
+        label="060208 - Terrestrial Ecology"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/for/#field_060603"
+        label="060603 - Animal Physiology - Systems"/>
+    <category
+        scheme="http://purl.org/anzsrc/seo"
+        term="http://purl.org/anzsrc/for/#field_060808"
+        label="060808 - Invertebrate Biology"/>
+    <category term="arachnocampa"/>
+    <category term="weather effect"/>
+    <category term="light output"/>
+    <category term="eco-tourism"/>
+
+    <!--     collection creator -->
+    <author>
+        <name>David Merritt</name>
+        <email>d.merritt@uq.edu.au</email>
+    </author>
+    <!--<author>
+        <name>Lisa Rigby</name>
+        <email>l.rigby1@uq.edu.au</email>
+    </author>-->
+
+    <!--     temporal coverage -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/temporal"
+        content="start=2010-04"
+        datatype="http://purl.org/dc/terms/Period"/>
+
+    <!--     spatial coverage -->
+    <georss:point>-28.19 153.27</georss:point>
+    <link
+        rel="http://purl.org/dc/terms/spatial"
+        href="http://www.geonames.org/2148764/"
+        title="Springbrook"/>
+
+    <!--     related publications -->
+    <link
+        rel="http://purl.org/dc/terms/isReferencedBy"
+        title="GSQ–UQ project bringing research data to light"
+        href="http://www.dme.qld.gov.au/zone_files/QGMJ/3_ei_gsq-uq_project_bringing_research_data_to_light.pdf"/>
+
+    <!--     rights -->
+    <rights>The data is the property of The University of Queensland. Permission is required to use this material.</rights>
+    <!--     access rights -->
+    <rdfa:meta
+        property="http://purl.org/dc/terms/accessRights"
+        content='Contact David Merritt regarding permission and procedures for accessing the original data.'/>
+    <!-- license -->
+    <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by/3.0/au/deed.en"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+        
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>

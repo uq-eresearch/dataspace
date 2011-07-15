@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry
+    xmlns="http://www.w3.org/2005/Atom"
+    xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+    xmlns:app="http://www.w3.org/2007/app">
+
+    <!-- *** metadata about the activity *** -->
+    <!--     id for the activity in the original source system-->
+    <id>http://dataspace.uq.edu.au/activities/ignore</id>
+
+    <!--     type of activity -->
+    <link
+        rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        href="http://xmlns.com/foaf/0.1/Project"
+        title="Project"/>
+
+    <!--     activity name-->
+    <title
+        type="text">Solutions to the challenge of providing a research experience for distance education students</title>
+
+    <!--     activity description -->
+    <content
+        type="text">Funded by The University of Queensland Teaching and Learning Strategic Grants</content>
+
+    <!--    participants -->
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
+        href="http://dataspace.uq.edu.au/agents/c"/>
+
+    <!--    created collections -->
+    <link
+        rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
+        href="http://dataspace.uq.edu.au/collections/d"
+        title="Glow-worm bioluminescence and associated weather data for a rainforest gully near Springbrook since April 2010"/>
+
+    <!--    webpage about the activity -->
+    <link
+        rel="http://xmlns.com/foaf/0.1/page"
+        href="http://www.uq.edu.au/teaching-learning/index.html?page=64739#2010"/>
+
+    <!-- *** metadata about the description *** -->
+    <!--     description last updated -->
+    <updated>2010-10-08T05:58:02Z</updated>
+    <source>
+        <title>UQ Data Collections Registry</title>
+        <id>http://dataspace.uq.edu.au</id>
+        
+        <!-- description creator -->
+        <author>
+            <name>Nigel Ward</name>
+            <email>n.ward4@uq.edu.au</email>
+        </author>
+    </source>
+    <app:control>
+        <app:draft>no</app:draft>
+    </app:control>
+</entry>
