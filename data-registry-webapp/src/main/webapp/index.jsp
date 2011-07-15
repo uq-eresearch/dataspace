@@ -63,13 +63,19 @@
 <jsp:include page="include/header.jsp"/>
 <div id="content-holder">
     <div class="wrapper">
-        <div class="home-content">
+        <div class="bread-crumbs-nav">
+            <ul>
+                <li class="bread-crumbs-last">
+                    Home
+                </li>
+            </ul>
+        </div>
+        <div class="home-headline">
             <h1>Welcome to <%=RegistryApplication.getApplicationContext().getRegistryTitle()%></h1>
 
-            <h2>A catalog of the University of Queensland's Research Data Assets</h2>
-
-            <hr>
-
+            <h2>A catalog of the University of Queensland's research data assets</h2>
+        </div>
+        <div class="home-content">
             <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data outputs of staff and students at the
              University of Queensland. It aims to improve the visibility and accessibility of
              UQ data to the wider world.</p>
