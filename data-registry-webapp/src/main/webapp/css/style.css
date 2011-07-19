@@ -30,13 +30,37 @@ body a {
     -moz-border-radius: 10px;
 }
 
-.wrapper div {
-    padding: 0.5em 1.5em 1.1em 1.5em;
+.wrapper {
+    line-height: 150%
+}
+
+.wrapper p {
+    margin-top: 1.12em;
+}
+
+.wrapper ul {
+    list-style-type: square;
+    list-style-image: url('/images/bullet_orange.gif');
+    margin-left: 1.12em;
+}
+
+.wrapper li {
+    margin: 0;
+}
+
+.wrapper ul li b {
+    font-weight: bold;
+}
+
+.figure p {
+    font-weight: bold;
+}
+
+.bread-crumbs-nav, .home-headline, .home-content {
+    padding: 0.5em 1em;
 }
 
 .bread-crumbs-nav {
-    margin-left: 1.5em;
-    padding: 0 0 1em 0;
     font-size: 0.9167em;
     color: #777777;
 }
@@ -67,21 +91,32 @@ body a {
 .home-headline {
     border-bottom: 1px solid #eeeeee;
 }
-.home-content {
-    /*padding: 20px;*/
+
+#home-content-left {
+    float:left;
+    padding: 0.5em 1em;
+    width: 480px;
 }
 
-.home-content ul li b {
-    font-weight: bold;
+#home-content-right {
+    margin-left: 480px;
+    padding:  0.5em 1em;
 }
 
-.home-content ul {
-    list-style: disc;
-    margin-left: 40px
+.home-search {
+    background-color: #e4ebf6;
+    padding: 0.5em;
 }
 
-.home-content p {
-    margin: 1.12em 0
+.search-field {
+    width: 80%;
+}
+
+.search-button {
+    border: 1px #3c3883;
+    background-color: #5b52b9;
+    color: #fff;
+    margin-left: 1em;
 }
 
 #content-text {
@@ -348,7 +383,7 @@ div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a
 }
 
 html {
-    background: rgb(255, 255, 255) url('../images/main-bg.jpg') no-repeat scroll 0pt 133px;
+    background: rgb(255, 255, 255) url('/images/main-bg.jpg') no-repeat scroll 0pt 133px;
     max-width: 1600px;
     margin: auto;
     border: 0 none;
@@ -582,7 +617,7 @@ h6 {
 #header {
     margin: 0pt;
     padding: 0pt;
-    background: rgb(96, 34, 124) url('../images/bodybg.gif') repeat-x scroll 0pt 0pt;
+    background: rgb(96, 34, 124) url('/images/bodybg.gif') repeat-x scroll 0pt 0pt;
     color: rgb(239, 239, 239);
     height: 100px;
     min-width: 1000px;
@@ -602,7 +637,7 @@ h6 {
 }
 
 #header-inner h1 a {
-    background: transparent url('../images/masthead-logo.gif') no-repeat scroll 0pt 0pt;
+    background: transparent url('/images/masthead-logo.gif') no-repeat scroll 0pt 0pt;
     display: block;
     height: 50px;
     text-decoration: none;
@@ -724,7 +759,7 @@ h6 {
 #topnav li a:hover {
     color: rgb(245, 225, 255);
     text-decoration: none;
-    background: transparent url('../images/top_nav_bg_active.gif') repeat-x scroll right bottom;
+    background: transparent url('/images/top_nav_bg_active.gif') repeat-x scroll right bottom;
     border-bottom: 1px solid rgb(229, 229, 229);
 }
 
@@ -735,7 +770,7 @@ h6 {
 }
 
 div#search {
-    background: transparent url('../images/form-left.png') no-repeat scroll 0pt 0pt;
+    background: transparent url('/images/form-left.png') no-repeat scroll 0pt 0pt;
     position: absolute;
     margin: 0 0 0 775px;
     top: 40px;
@@ -774,7 +809,7 @@ div#search input {
 div#search input.submit {
     margin: 0pt 0pt 0pt 3px;
     padding: 0pt;
-    background: transparent url('../images/form-right.png') no-repeat scroll 0pt 0pt;
+    background: transparent url('/images/form-right.png') no-repeat scroll 0pt 0pt;
     float: left;
     cursor: pointer;
     width: 20px;
@@ -789,7 +824,7 @@ div#search input.submit {
 /* Footer
 -----------------------------------------------------------------------------*/
 #footer {
-    background: rgb(8, 68, 125) url('../images/bg-footer.gif') repeat-x scroll 100% 0pt;
+    background: rgb(8, 68, 125) url('/images/bg-footer.gif') repeat-x scroll 100% 0pt;
     border-top: solid 2px #78b800;
     clear: both;
     min-height: 140px;
@@ -850,7 +885,7 @@ div#search input.submit {
 
 #siteinfo .org a {
     overflow: hidden;
-    background-image: url('../images/uq-logo.gif') ! important;
+    background-image: url('/images/uq-logo.gif') ! important;
     background-repeat: no-repeat ! important;
     background-color: transparent ! important;
     display: block;
@@ -917,7 +952,7 @@ div#search input.submit {
 #footer-resources li {
     margin: 0pt 0pt 6px;
     padding: 0 0 0 12px;
-    background: transparent url('../images/arrow.png') no-repeat scroll 0px 2px;
+    background: transparent url('/images/arrow.png') no-repeat scroll 0px 2px;
 }
 
 #footer-resources a {
@@ -972,7 +1007,7 @@ div#search input.submit {
     float: left;
     width: 310px;
     height: 146px;
-    background: transparent url('../images/footer-device.png') no-repeat scroll 10px -1px ! important;
+    background: transparent url('/images/footer-device.png') no-repeat scroll 10px -1px ! important;
     border-left: 1px dotted rgb(217, 184, 250);
 }
 
@@ -1004,7 +1039,7 @@ div#search input.submit {
 #footer-right li {
     margin: 0pt 0pt 6px;
     padding: 0 0 0 12px;
-    background: transparent url('../images/arrow.png') no-repeat scroll 0px 2px;
+    background: transparent url('/images/arrow.png') no-repeat scroll 0px 2px;
 }
 
 p.centenary {
@@ -1057,7 +1092,7 @@ p.centenary {
 #topnav a:hover {
     color: rgb(245, 225, 255);
     text-decoration: none;
-    background: transparent url('../images/top_nav_bg_active.gif') repeat-x scroll right bottom;
+    background: transparent url('/images/top_nav_bg_active.gif') repeat-x scroll right bottom;
     border-bottom: 1px solid rgb(229, 229, 229);
 }
 
@@ -1148,7 +1183,7 @@ p.centenary {
 #signin_submit {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    background: #39d url('../images/bg-btn-blue.png') repeat-x scroll 0 0;
+    background: #39d url('/images/bg-btn-blue.png') repeat-x scroll 0 0;
     border: 1px solid #39D;
     color: #fff;
     text-shadow: 0 -1px 0 #39d;

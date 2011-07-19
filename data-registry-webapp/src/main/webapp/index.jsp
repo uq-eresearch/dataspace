@@ -26,8 +26,6 @@
                 }
             });
 
-
-//            Manager = new AjaxSolr.Manager({solrUrl: 'http://evolvingweb.ca/solr/reuters/'});
             Manager = new AjaxSolr.Manager({solrUrl: '/solr/'});
             var fields = ['topics'];
             for (var i = 0, l = fields.length; i < l; i++) {
@@ -61,85 +59,99 @@
 </head>
 <body>
 <jsp:include page="include/header.jsp"/>
-<div id="content-holder">
-    <div class="wrapper">
-        <div class="bread-crumbs-nav">
-            <ul>
-                <li class="bread-crumbs-last">
-                    Home
-                </li>
-            </ul>
-        </div>
-        <div class="home-headline">
-            <h1>Welcome to <%=RegistryApplication.getApplicationContext().getRegistryTitle()%></h1>
 
-            <h2>A catalog of the University of Queensland's research data assets</h2>
-        </div>
-        <div class="home-content">
-            <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data outputs of staff and students at the
-             University of Queensland. It aims to improve the visibility and accessibility of
-             UQ data to the wider world.</p>
+<div class="wrapper">
+    <div class="bread-crumbs-nav">
+        <ul>
+            <li class="bread-crumbs-last">
+                Home
+            </li>
+        </ul>
+    </div>
+    <div class="home-headline">
+        <h1>Welcome to <%=RegistryApplication.getApplicationContext().getRegistryTitle()%></h1>
 
-            <p>The catalog contains descriptions of:</p>
-            <ul>
-                <li><a href="/collections">data collections</a>,</li>
-                <li>the <a href="/agents">agents</a> (people and groups) that create and manage the data collections, </li>
-                <li>the <a href="/activities">activities</a> (projects) that funded the data creation, and</li>
-                <li>the <a href="/services">services</a> for accessing and manipulating the data</li>
-            </ul>
+        <h2>A catalog of the University of Queensland's research data assets</h2>
+    </div>
+    <div id="home-content-left">
+        <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data outputs of staff and students at the
+            University of Queensland. It aims to improve the visibility and accessibility of
+            UQ data to the wider world.</p>
 
-            <div class="portlet-content">
-                <div class="browse-portlet">
-                    <div class="portlet-header">
-                        <a href="/search">Search</a>
-                    </div>
-                    <table width="100%">
-                        <tbody>
-                        <tr>
-                            <td id="searching">
-                                <input type="text" id="query" name="query">
-                            </td>
-                            <td><input type="button" name="search-submit" id="search-submit" value="Search"
-                                       onclick="goToSearchPage(); return false;" style=""/></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <div id="topics" class="tagcloud">
+        <p>The catalog contains descriptions of:</p>
+        <ul>
+            <li><a href="/collections">data collections</a>;</li>
+            <li>the <a href="/agents">agents</a> (people and groups) that create and manage the data collections; </li>
+            <li>the <a href="/activities">activities</a> (projects) that funded the data creation; and</li>
+            <li>the <a href="/services">services</a> for accessing and manipulating the data.</li>
+        </ul>
 
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="browse-portlet">
-                    <div class="portlet-header">
-                        <a href="/collections">Recently added collections</a>
-                    </div>
-                    <ul class="portlet-list">
-                        <%
-                            for (CollectionVersion version : collectionVersions) {
-                        %>
-                        <li><a href="/collections/<%=version.getParent().getUriKey()%>"><%=version.getTitle()%>
-                        </a>
-                        </li>
-                        <%
-                            }
-                        %>
-
-                    </ul>
-                </div>
-            </div>
-            <div class="clear">
-
-            </div>
-            <p>This registry syndicates data to <br/>
-                <a href="http://services.ands.org.au/home/orca/rda/">
-                    <img src="/images/ands_logo.gif"></a>
-            </p>
+        <div class="figure">
+            <p>The concept</p>
+            <img src="/images/concept.png" alt="Collections are created by Agents, are accessed via services, and are
+            the output of projects"/>
         </div>
     </div>
+    <div id="home-content-right">
+        <div class="home-search">
+                <form action="/search" method="get">
+                    <input class="search-field" onfocus="this.value=''; this.onfocus=null;" type="text" name="q" value="Quick search - enter keywords"/>
+                    <input class="search-button" type="submit" value="Search"/>
+                </form>
+        </div>
+
+        <div class="portlet-content">
+            <div class="browse-portlet">
+                <div class="portlet-header">
+                    <a href="/search">Search</a>
+                </div>
+                <table width="100%">
+                    <tbody>
+                    <tr>
+                        <td id="searching">
+                            <input type="text" id="query" name="query">
+                        </td>
+                        <td><input type="button" name="search-submit" id="search-submit" value="Search"
+                                   onclick="goToSearchPage(); return false;" style=""/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div id="topics" class="tagcloud">
+
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="browse-portlet">
+                <div class="portlet-header">
+                    <a href="/collections">Recently added collections</a>
+                </div>
+                <ul class="portlet-list">
+                    <%
+                        for (CollectionVersion version : collectionVersions) {
+                    %>
+                    <li><a href="/collections/<%=version.getParent().getUriKey()%>"><%=version.getTitle()%>
+                    </a>
+                    </li>
+                    <%
+                        }
+                    %>
+
+                </ul>
+            </div>
+        </div>
+        <div class="clear">
+
+        </div>
+        <p>This registry syndicates data to <br/>
+            <a href="http://services.ands.org.au/home/orca/rda/">
+                <img src="/images/ands_logo.gif"></a>
+        </p>
+    </div>
 </div>
+
 <jsp:include page="include/footer.jsp"/>
 </body>
 </html>
