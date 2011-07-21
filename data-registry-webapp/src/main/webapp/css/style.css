@@ -30,33 +30,8 @@ body a {
     -moz-border-radius: 10px;
 }
 
-.wrapper {
-    line-height: 150%
-}
-
-.wrapper p {
-    margin-top: 1.12em;
-}
-
-.wrapper ul {
-    list-style-type: square;
-    list-style-image: url('/images/bullet_orange.gif');
-    margin-left: 1.12em;
-}
-
-.wrapper li {
-    margin: 0;
-}
-
-.wrapper ul li b {
-    font-weight: bold;
-}
-
-.figure p {
-    font-weight: bold;
-}
-
-.bread-crumbs-nav, .home-headline, .home-content {
+/* bread crumbs */
+.bread-crumbs-nav {
     padding: 0.5em 1em;
 }
 
@@ -88,24 +63,99 @@ body a {
     display: inline;
 }
 
-.home-headline {
+/* homepage - two columns
+    adapted from http://matthewjamestaylor.com/blog/perfect-2-column-double-page.htm */
+.content-top {
     border-bottom: 1px solid #eeeeee;
-}
-
-#home-content-left {
+    clear:both;
     float:left;
-    padding: 0.5em 1em;
-    width: 480px;
+    width:100%;
 }
 
-#home-content-right {
-    margin-left: 480px;
-    padding:  0.5em 1em;
+.content-bottom {
+    border-top: 1px solid #eeeeee;
+    clear:both;
+    float:left;
+    width:100%;
+}
+
+
+
+
+/* column container */
+.colmask {
+    clear:both;
+    float:left;
+    width:100%;			/* width of whole page */
+    overflow:hidden;		/* This chops off any overhanging divs */
+}
+/* common column settings */
+.colright,
+.colmid,
+.colleft {
+    float:left;
+    width:100%;
+    position:relative;
+}
+.col1,
+.col2,
+.col3 {
+    float:left;
+    position:relative;
+    padding:0 0 1em 0;
+    overflow:hidden;
+}
+/* 2 Column (double page) settings */
+.doublepage {
+    /*background:#eee;*/		/* right column background colour */
+}
+.doublepage .colleft {
+    right:50%;			/* right column width */
+    background:#fff;		/* left column background colour */
+}
+.doublepage .col1 {
+    width:46%;			/* left column content width (column width minus left and right padding) */
+    left:52%;			/* right column width plus left column left padding */
+}
+.doublepage .col2 {
+    width:46%;			/* right column content width (column width minus left and right padding) */
+    left:56%;			/* (right column width) plus (left column left and right padding) plus (right column left padding) */
+}
+
+/* homepage styles */
+
+.wrapper {
+    line-height: 125%
+}
+
+.wrapper p {
+    margin: 1.12em 0;
+}
+
+.headline {
+    padding: 0 1em;
+}
+
+.doublepage p + ul {
+    margin-top: -0.62em;
+}
+
+.doublepage ul li {
+    background-image: url('/images/bullet_orange.gif');
+    background-repeat: no-repeat;
+    background-position: left 0.4em;
+    padding-left: 12px;
+    margin: 0.5em 0;
+}
+
+.figure p {
+    font-weight: bold;
 }
 
 .home-search {
     background-color: #e4ebf6;
     padding: 0.5em;
+    margin: 1.12em 0;
 }
 
 .search-field {
@@ -116,14 +166,17 @@ body a {
     border: 1px #3c3883;
     background-color: #5b52b9;
     color: #fff;
-    margin-left: 1em;
+    margin-left: 2%;
+    width: 15%;
 }
 
-#content-text {
-    width: 48%;
-    padding-right: 2%;
-    float: left;
-    display: inline;
+#tabs-pane {
+    border: 0;
+    padding: 0;
+}
+
+#tabs-pane .ui-tabs-nav, #tabs-pane .ui-tabs {
+    padding: 0;
 }
 
 #result h2 {
@@ -193,7 +246,7 @@ body a {
     padding: 0 0.5em;
     color: #3399ff;
 }
-
+/*
 .ui-widget-content .lookup-link {
     font-size: 0.8em;
     padding: 0 0.5em;
@@ -205,13 +258,9 @@ body a {
     color: #339900;
 }
 
-.ui-tabs .ui-tabs-nav li a {
-    font-size: 0.7em;
-}
-
 .ui-datepicker {
     z-index: 9999 !important;
-}
+}*/
 
 .edit-table {
     width: 100%;
@@ -283,44 +332,6 @@ fieldset .field {
 
 fieldset .field label {
     margin-right: 0.4em;
-}
-
-.portlet-content {
-    width: 100%;
-    margin-top: 15px;
-}
-
-.browse-portlet {
-    float: left;
-    margin: 0.5em;
-    min-height: 300px;
-    max-height: 300px;
-    overflow: auto;
-    padding: 0;
-    width: 48%;
-    border: solid 1px #999999;
-}
-
-.browse-portlet .portlet-header {
-    background-color: #E8E8E8;
-    border-bottom: 1px solid #BBBBBB;
-    font-size: 0.95em;
-    margin: 0;
-    padding: 0.3em 0.6em;
-}
-
-.portlet-list {
-    margin-left: 1.5em;
-    margin-top: 0.5em;
-    list-style-type: disc;
-}
-
-.portlet-list li {
-    margin-bottom: 0.5em;
-}
-
-.portlet-list a {
-    margin-top: 0.5em;
 }
 
 .save-links-div {
@@ -422,7 +433,7 @@ address {
 
 table {
     border-collapse: collapse;
-    border-spacing: 0pt;
+    border-spacing: 0;
 }
 
 :link, :visited {
@@ -510,7 +521,7 @@ table {
     display: none;
 }
 
-.clearfix:after {
+/*.clearfix:after {
     content: ".";
     clear: both;
     height: 0;
@@ -528,7 +539,7 @@ table {
 
 .clearfix {
     display: block;
-}
+}*/
 
 /* For Print
 -----------------------------------------------------------------------------*/
@@ -540,30 +551,18 @@ div#wordmark {
 /* Typography
 -----------------------------------------------------------------------------*/
 h1 {
-    margin: 0 0 15px 0;
     padding: 0;
-    font: normal 32px Arial, Helvetica, Verdana, sans-serif;
     color: black;
+    font-size: 1.5em;
+    font-weight: normal;
+    margin: .75em 0
 }
-
-/*
-h1 a, h3 a {
-    text-decoration: none;
-    color: rgb(34, 34, 34);
-    border-bottom: none;
-}
-
-h1 a:hover, h3 a:hover {
-    text-decoration: none;
-}
-*/
 
 h2 {
-    margin: 0;
-    padding: 5px 0 0 0;
-    line-height: 150%;
     color: #be7f25;
-    font: normal 22px Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-size: 1.17em;
+    margin: .83em 0
 }
 
 /*
@@ -1267,16 +1266,17 @@ p.centenary {
 }
 
 .tagcloud_item {
-    display: block;
-    float: left;
-    height: 23px;
-    line-height: 0px;
-    margin-right: 4px;
+    display: inline-block;
+    margin-right: 0.5em;
+}
+
+a.tagcloud_item {
+    color: blue;
 }
 
 /* tagcloud */
 .tagcloud {
-    padding: 25px 15px;
+    /*padding: 25px 15px;*/
 }
 
 /*.tag-cloud_item:hover {*/
@@ -1295,7 +1295,6 @@ a.tagcloud_size_2 {
     font-size: 100%;
 }
 
-Rst
 a.tagcloud_size_3 {
     font-size: 110%;
 }

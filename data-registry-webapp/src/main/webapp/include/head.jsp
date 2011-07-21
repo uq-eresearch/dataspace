@@ -1,12 +1,10 @@
-<link rel="stylesheet" type="text/css" href="/css/style.css"/>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"
-      type="text/css"/>
-
+<link rel="stylesheet" href="/css/jquery-ui-1.8.14.custom.css" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="/js/solr/css/jquery.autocomplete.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="/css/style.css"/>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js">;</script>
 <script type="text/javascript"
-        src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js">;</script>
+        src="/js/jquery-ui-1.8.14.custom.min.js">;</script>
 
 <script type="text/javascript" src="/js/login.js">;</script>
 <script type="text/javascript" src="/js/scripts.js">;</script>
