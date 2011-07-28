@@ -13,7 +13,8 @@
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:georss="http://www.georss.org/georss"
-                exclude-result-prefixes="atom rdfa">
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                exclude-result-prefixes="atom rdfa georss fn">
 
     <xsl:include href="common-xhtml.xsl"/>
     <xsl:include href="include/header.xsl"/>
@@ -36,99 +37,122 @@
         <head>
             <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
             <title>
-                <xsl:value-of select="$applicationName"/>
+                <xsl:value-of select="fn:concat($applicationName, ': ', atom:title)"/>
+
             </title>
             <link href="/css/description.css" rel="stylesheet" type="text/css"/>
             <xsl:call-template name="head"/>
-            <script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js">;</script>
-            <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false">;</script>
-            <script type="text/javascript" src="/js/map/view-map.js">;</script>
+
+            <xsl:if test="georss:point or georss:polygon">
+                <script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js">;</script>
+                <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false">;</script>
+                <script type="text/javascript" src="/js/map/view-map.js">;</script>
+            </xsl:if>
         </head>
-        <body onload="init();">
+        <body>
+            <xsl:if test="georss:point or georss:polygon">
+                <xsl:attribute name="onload">init();</xsl:attribute>
+            </xsl:if>
             <!-- the collection description itself -->
             <xsl:text>
             </xsl:text>
             <xsl:comment>Collection description</xsl:comment>
             <xsl:call-template name="header"/>
             <div class="wrapper">
-                <ul class="bread-crumbs-nav">
-                    <xsl:call-template name="bread-crumbs">
-                        <xsl:with-param name="path">collections</xsl:with-param>
-                        <xsl:with-param name="title">Collections</xsl:with-param>
-                    </xsl:call-template>
-                    <xsl:if test="$currentUser">
-                        <xsl:call-template name="bread-crumbs-options">
+                <div class="content-top">
+                    <!-- bread crumbs -->
+                    <ul class="bread-crumbs-nav">
+                        <xsl:call-template name="bread-crumbs">
                             <xsl:with-param name="path">collections</xsl:with-param>
+                            <xsl:with-param name="title">collections</xsl:with-param>
                         </xsl:call-template>
-                    </xsl:if>
-                </ul>
-                <div class="description">
-                    <!-- name -->
+                        <xsl:if test="$currentUser">
+                            <xsl:call-template name="bread-crumbs-options">
+                                <xsl:with-param name="path">collections</xsl:with-param>
+                            </xsl:call-template>
+                        </xsl:if>
+                    </ul>
+                    <!-- buttons -->
+                    <div class="button-bar">
+                        <xsl:call-template name="button-bar"/>
+                    </div>
+                    <!-- TODO versions
+              <xsl:if test="$currentUser">
+                  <xsl:call-template name="latest-version"/>
+              </xsl:if>      -->
+                    <!-- identifier -->
+                    <xsl:apply-templates select="atom:id"/>
+                    <!-- names -->
                     <xsl:apply-templates select="atom:title"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
+                </div>
+                <div class="metadata">
                     <!-- description -->
                     <xsl:choose>
                         <xsl:when test="georss:point or georss:polygon">
-                            <div>
-                                <div id="content-text">
-                                    <xsl:apply-templates select="atom:content"/>
-                                </div>
-                                <div id="map" class="smallmap"
-                                     style="width: 50%; height: 400px; float:left; display: inline;">
+                            <div class="desc-and-map">
+                                <xsl:apply-templates select="atom:content"/>
+                                <div id="map" class="smallmap">
                                     <xsl:text> </xsl:text>
                                 </div>
-                                <br style="clear: both;"/>
                             </div>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:apply-templates select="atom:content"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <br style="clear: both; margin-bottom: 1em;"/>
-                    <!-- latest-version -->
-                    <xsl:if test="$currentUser">
-                        <xsl:call-template name="latest-version"/>
-                    </xsl:if>
-                    <!-- type -->
-                    <xsl:call-template name="type"/>
-                    <!-- email -->
+
+                    <h2>Data availability</h2>
+                    <xsl:call-template name="websites"/>
                     <xsl:call-template name="mbox"/>
-                    <!-- creators -->
-                    <xsl:call-template name="creators"/>
-                    <!-- curators -->
-                    <xsl:call-template name="curators"/>
-                    <!-- projects -->
-                    <xsl:call-template name="projects"/>
-                    <!-- services -->
                     <xsl:call-template name="services"/>
-                    <!-- services -->
-                    <xsl:call-template name="publications"/>
-                    <!-- spatial -->
-                    <xsl:call-template name="spatial"/>
-                    <!-- temporal -->
-                    <xsl:call-template name="temporal"/>
-                    <!-- location -->
-                    <xsl:call-template name="locations"/>
-                    <!-- subjects -->
-                    <xsl:call-template name="subjects"/>
-                    <xsl:call-template name="keywords"/>
-                    <!-- related info -->
-                    <xsl:call-template name="related"/>
-                    <!-- rights -->
                     <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]"/>
                     <xsl:apply-templates select="atom:rights"/>
 
-                    <!-- metadata about the description -->
-                <xsl:text>
-                </xsl:text>
-                    <xsl:comment>Metadata about the description</xsl:comment>
-                    <div class="about">
-                        <!-- publisher -->
-                        <xsl:call-template name="description-publisher"/>
-                        <!-- updated and updater -->
-                        <xsl:call-template name="updated"/>
-                        <!-- representations -->
-                        <xsl:call-template name="representations"/>
+                    <h2>People and projects</h2>
+                    <xsl:call-template name="creators"/>
+                    <xsl:call-template name="managers"/>
+                    <xsl:call-template name="projects"/>
+
+                    <xsl:if test="georss:point or georss:polygon or atom:link[@rel=$ATOM_SPATIAL]">
+                        <h2>Coverage</h2>
+                        <!-- spatial -->
+                        <xsl:call-template name="spatial"/>
+                        <!-- temporal -->
+                        <xsl:call-template name="temporal"/>
+                    </xsl:if>
+
+                    <xsl:if test="atom:category">
+                        <h2>Topics</h2>
+                        <xsl:call-template name="subjects"/>
+                        <xsl:call-template name="keywords"/>
+                    </xsl:if>
+
+                    <xsl:if test="atom:link[@rel=$ATOM_IS_REFERENCED_BY] or atom:link[@rel=$ATOM_IS_ACCESSED_VIA]">
+                        <h2>Related work</h2>
+                        <xsl:call-template name="publications"/>
+                        <xsl:call-template name="related-collections"/>
+                    </xsl:if>
+
+                    <div class="provenance">
+                        <h2>About the description</h2>
+                        <xsl:apply-templates select="atom:source"/>
+                        <xsl:call-template name="last-update"/>
                     </div>
+                </div>
+                <div class="content-bottom">
+                    <!-- bread crumbs -->
+                    <ul class="bread-crumbs-nav">
+                        <xsl:call-template name="bread-crumbs">
+                            <xsl:with-param name="path">collections</xsl:with-param>
+                            <xsl:with-param name="title">collections</xsl:with-param>
+                        </xsl:call-template>
+                        <xsl:if test="$currentUser">
+                            <xsl:call-template name="bread-crumbs-options">
+                                <xsl:with-param name="path">collections</xsl:with-param>
+                            </xsl:call-template>
+                        </xsl:if>
+                    </ul>
                 </div>
             </div>
             <xsl:call-template name="footer"/>
@@ -149,12 +173,27 @@
         </xsl:if>
     </xsl:template>
 
+    <!-- related collections -->
+    <xsl:template name="related-collections">
+          <xsl:if test="atom:link[@rel=$ATOM_RELATION]">
+            <div class="statement">
+                <div class="property">
+                    <p>Related collection/s</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates
+                            select="atom:link[@rel=$ATOM_RELATION]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+
     <!-- services -->
     <xsl:template name="services">
         <xsl:if test="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]">
             <div class="statement">
                 <div class="property">
-                    <p>Accessed Via</p>
+                    <p>Access service/s</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates

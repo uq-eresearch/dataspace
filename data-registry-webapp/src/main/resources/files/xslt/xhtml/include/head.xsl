@@ -14,12 +14,12 @@
     <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template name="head">
 
+        <link rel="stylesheet" href="/css/jquery-ui-1.8.14.custom.css" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"
-              type="text/css"/>
+
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js">;</script>
-        <script type="text/javascript"
-                src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js">;</script>
+        <script type="text/javascript" src="/js/jquery-ui-1.8.14.custom.min.js">;</script>
+
         <script type="text/javascript" src="/js/login.js">;</script>
         <script type="text/javascript" src="/js/scripts.js">;</script>
 
@@ -32,7 +32,7 @@
         <script type="text/javascript" src="/js/solr/core/AbstractWidget.js">;</script>
         <script type="text/javascript" src="/js/solr/widgets/ResultWidget.js">;</script>
         <script type="text/javascript" src="/js/solr/helpers/jquery/ajaxsolr.theme.js">;</script>
-        <script type="text/javascript" src="/js/solr/widgets/reuters.theme.js">;</script>
+        <!--<script type="text/javascript" src="/js/solr/widgets/reuters.theme.js">;</script>-->
         <script type="text/javascript" src="/js/solr/helpers/jquery/jquery.livequery.js">;</script>
         <script type="text/javascript" src="/js/solr/widgets/PagerWidget.js">;</script>
         <script type="text/javascript" src="/js/solr/core/AbstractFacetWidget.js">;</script>

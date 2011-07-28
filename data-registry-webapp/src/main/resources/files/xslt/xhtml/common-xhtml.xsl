@@ -16,11 +16,20 @@
                 xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:georss="http://www.georss.org/georss"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns="http://www.w3.org/1999/xhtml"
-                exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss">
+                exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss fn">
     <xsl:include href="../constants.xsl"/>
     <!--<xsl:param name="currentUser"/>-->
     <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
+
+    <!-- identifier -->
+    <xsl:template match="atom:id">
+        <p class="identifier">
+            <span class="id-property">Identifier: </span>
+            <xsl:value-of select="text()"/>
+        </p>
+    </xsl:template>
 
     <!-- name -->
     <xsl:template match="atom:title">
@@ -30,14 +39,14 @@
     </xsl:template>
     <!-- alternative names -->
     <xsl:template match="rdfa:meta[@property=$RDFA_ALTERNATIVE]">
-        <p>
+        <p class="alternate-title">
             <xsl:value-of select="@content"/>
         </p>
     </xsl:template>
 
     <!-- description -->
     <xsl:template match="atom:content">
-        <p>
+        <p class="description">
             <xsl:value-of select="text()"/>
         </p>
     </xsl:template>
@@ -61,7 +70,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_MBOX]">
             <div class="statement">
                 <div class="property">
-                    <p>Email(s)</p>
+                    <p>Contact/s</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_MBOX]"/>
@@ -84,24 +93,9 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- updated -->
-    <xsl:template name="updated">
-        <p>Last updated
-            <xsl:value-of select="atom:updated"/> by
-            <xsl:value-of select="atom:source/atom:author/atom:name"/>
-        </p>
-    </xsl:template>
 
-    <!-- representations -->
-    <xsl:template name="representations">
-        <xsl:if test="atom:link[@rel=$REL_ALTERNATE]">
-            <p class="alternate">Download as:
-                <span>
-                    <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
-                </span>
-            </p>
-        </xsl:if>
-    </xsl:template>
+
+
 
     <!-- Rights -->
     <xsl:template match="atom:rights">
@@ -116,19 +110,7 @@
             </div>
         </div>
     </xsl:template>
-    <!-- published -->
-    <xsl:template match="atom:published">
-        <div class="statement">
-            <div class="property">
-                <p>Published</p>
-            </div>
-            <div class="content">
-                <p>
-                    <xsl:value-of select="text()"/>
-                </p>
-            </div>
-        </div>
-    </xsl:template>
+
     <xsl:template match="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]">
         <div class="statement">
             <div class="property">
@@ -160,7 +142,7 @@
     <xsl:template name="creators">
         <div class="statement">
             <div class="property">
-                <p>Creator(s)</p>
+                <p>Creator/s</p>
             </div>
             <div class="content">
                 <xsl:apply-templates select="atom:author"/>
@@ -176,11 +158,11 @@
     </xsl:template>
 
     <!-- curators -->
-    <xsl:template name="curators">
+    <xsl:template name="managers">
         <xsl:if test="atom:link[@rel=$ATOM_PUBLISHER]">
             <div class="statement">
                 <div class="property">
-                    <p>Custodian(s)</p>
+                    <p>Manager/s</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
@@ -190,11 +172,11 @@
     </xsl:template>
 
     <!-- locations -->
-    <xsl:template name="locations">
+    <xsl:template name="websites">
         <xsl:if test="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
             <div class="statement">
                 <div class="property">
-                    <p>Pages(s)</p>
+                    <p>Website/s</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
@@ -202,7 +184,7 @@
             </div>
         </xsl:if>
     </xsl:template>
-    <!-- locations -->
+
     <xsl:template name="agent-publications">
         <xsl:if test="atom:link[@rel=$ATOM_PUBLICATIONS]">
             <div class="statement">
@@ -215,12 +197,12 @@
             </div>
         </xsl:if>
     </xsl:template>
-    <!-- locations -->
+
     <xsl:template name="publications">
         <xsl:if test="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
             <div class="statement">
                 <div class="property">
-                    <p>Publication(s)</p>
+                    Publication/s
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_REFERENCED_BY]"/>
@@ -229,31 +211,35 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- source -->
-    <!-- TO DO: check if id starts with HTTP before making it a link -->
-    <xsl:template match="atom:source">via
-        <a href="{atom:id}">
-            <xsl:value-of select="atom:title"/>
-        </a>
-    </xsl:template>
-
-    <!-- description publisher -->
-    <xsl:template
-            name="description-publisher">
-        <p>Description published by
-            <xsl:apply-templates select="atom:source/atom:link[@rel = $ATOM_PUBLISHER]"/>
-        </p>
-    </xsl:template>
-
     <!-- subjects -->
     <xsl:template name="subjects">
-        <xsl:if test="atom:category[@scheme]">
+        <xsl:if test="atom:category[@scheme = $SCHEME_FOR]">
             <div class="statement">
                 <div class="property">
-                    <p>Subject(s)</p>
+                    <p>Field/s of research</p>
                 </div>
                 <div class="content">
-                    <xsl:apply-templates select="atom:category[@scheme]"/>
+                    <xsl:apply-templates select="atom:category[@scheme = $SCHEME_FOR]"/>
+                </div>
+            </div>
+        </xsl:if>
+        <xsl:if test="atom:category[@scheme = $SCHEME_SEO]">
+            <div class="statement">
+                <div class="property">
+                    <p>Socio-economic impact/s</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:category[@scheme = $SCHEME_SEO]"/>
+                </div>
+            </div>
+        </xsl:if>
+        <xsl:if test="atom:category[@scheme = $SCHEME_TOA]">
+            <div class="statement">
+                <div class="property">
+                    <p>Type of activity</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:category[@scheme = $SCHEME_TOA]"/>
                 </div>
             </div>
         </xsl:if>
@@ -348,19 +334,41 @@
         </p>
     </xsl:template>
 
-    <xsl:template name="record-id">
-        <xsl:if test="atom:link[@rel=$REL_LATEST_VERSION]">
-            <a href="{@href}">
-                <xsl:choose>
-                    <xsl:when test="@title">
-                        <xsl:value-of select="@title"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="@href"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </a>
-        </xsl:if>
+    <!-- source -->
+    <xsl:template match="atom:source">
+        <div class="statement">
+            <div class="property">
+                <p>Description publisher</p>
+            </div>
+            <div class="content">
+                <xsl:apply-templates select="atom:link[@rel = $ATOM_PUBLISHER]"/>
+            </div>
+        </div>
+        <div class="statement">
+            <div class="property">
+                <p>Sourced from</p>
+            </div>
+            <div class="content">
+                <!-- TODO check if id starts with HTTP before making it a link -->
+                <a href="{atom:id}">
+                    <xsl:value-of select="atom:title"/>
+                </a>
+            </div>
+        </div>
+    </xsl:template>
+    <xsl:template name="last-update">
+        <div class="statement">
+            <div class="property">
+                <p>Last update</p>
+            </div>
+            <div class="content">
+                Version
+                <xsl:value-of select="atom:link[@rel=$REL_LATEST_VERSION]/@title"/>
+                on <xsl:value-of select="fn:format-dateTime(fn:adjust-dateTime-to-timezone(atom:updated),
+                '[F,3-3], [D] [MNn] [Y], [H]:[m]:[s] [z]')"/>
+                by <xsl:value-of select="atom:source/atom:author/atom:name"/>
+            </div>
+        </div>
     </xsl:template>
 
     <!-- displayed links -->
@@ -396,22 +404,20 @@
             </a>
         </p>
     </xsl:template>
-    <xsl:template
-            match="atom:link[@rel=$REL_ALTERNATE]">
-
-        <a href="{@href}">
-            <xsl:choose>
-                <xsl:when test="@title">
-                    <xsl:value-of select="@title"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="@href"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </a>
-        <xsl:text> </xsl:text>
+    <xsl:template match="atom:link[@rel=$REL_ALTERNATE]">
+            <a class="button-bar-button" href="{@href}">
+                <xsl:choose>
+                    <xsl:when test="@title">
+                        <xsl:value-of select="@title"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="@href"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </a>
     </xsl:template>
 
+    <!-- bread crumbs -->
     <xsl:template name="bread-crumbs-options">
         <xsl:param name="path"/>
         <li class="bread-crumbs-options">
@@ -433,11 +439,8 @@
             <a href="/">Home</a>
         </li>
         <li class="bread-crumbs">
-            <a href="/browse">Browse</a>
-        </li>
-        <li class="bread-crumbs">
             <a href="/{$path}">
-                <xsl:value-of select="$title"/>
+                Browse <xsl:value-of select="$title"/>
             </a>
         </li>
         <li class="bread-crumbs-last">
@@ -456,5 +459,33 @@
         </li>
     </xsl:template>
 
+    <!-- button bar -->
+    <xsl:template name="button-bar">
+        <div class="entity-type">
+            <xsl:call-template name="entity-icon"/>
+            <span><xsl:value-of select="atom:link[@rel=$REL_TYPE]/@title"/></span>
+        </div>
+        <div class="arrow-right"></div>
+        <xsl:call-template name="representations"/>
+    </xsl:template>
+
+    <!-- representations -->
+    <xsl:template name="representations">
+        <xsl:if test="atom:link[@rel=$REL_ALTERNATE]">
+            <div>
+                Download description as:
+                <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
+            </div>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="entity-icon">
+        <xsl:choose>
+            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_COLLECTION or
+             atom:link[$REL_TYPE]/@href = $ENTITY_COLLECTION">
+                <img src="/images/icons/ic_white_collections.png" alt="Collection"/>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
 
 </xsl:stylesheet>

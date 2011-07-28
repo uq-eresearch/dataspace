@@ -1,48 +1,86 @@
-div.description {
-    margin: auto;
+.id-property {
+    font-weight: bold;
+}
+
+.alternate-title {
+    font-weight: bold;
+}
+
+.metadata {
+    float: left;
+    margin: 1em 0;
+}
+
+.metadata h2 {
+    clear:both;
+    margin: 0;
+    padding-top: 0.83em;
+    padding-bottom: 0.33em;
+}
+
+.desc-and-map {
+    float: left;
+}
+
+.description {
+    margin: 0;
+}
+
+.desc-and-map .description {
+    float: left;
+    width: 48%;
+    margin-right: 2%;
+}
+
+#map {
+    float: left;
+    width: 50%;
+    height: 400px;
+}
+
+.statement {
+    clear: both;
+    float: left;
+    width: 100%;
+
+    /* liquid faux columns using a background image.
+    If the left column is x% wide, them the left column in the background MUST be x% of the width of the image
+      */
+    background: #fff9e0 url('/images/desc-table-bg.png') repeat-y 20% 0%;
+
+    border-top: 1px solid #d0dbef;
+    border-bottom: 1px solid #d0dbef;
+    margin-bottom: -1px;
+}
+
+.property {
+    float: left;
+    font-weight: bold;
+    width: 18%;
+    margin: 2px 1% 2px 1%;
+}
+
+.content {
+    float: left;
+    width: 77%;
+    margin: 2px 1% 2px 2%;
+}
+
+.content p, .property p {
+    margin: 0;
     padding: 0;
 }
 
-div.statement {
-    clear: both;
-    border: 1px dotted #ffffff;
-    background-color: #dbdbdb;
-}
-
-div.property {
-    float: left;
-    font-weight: bold;
-    text-align: right;
-    width: 12em;
-}
-
-div.content {
-    background-color: #FFFFFF;
-    margin-left: 12.25em;
-}
-
-div.content p, div.property p {
-    margin: 0 0;
-    padding: 0.25em;
-}
-
-div.content p span {
+.content p span {
     padding-right: 1em;
 }
 
-div.about p span {
-    padding-right: 1em;
-}
-
-div.clear {
-    clear: both;
-}
-
-div.about {
-    clear: both;
-    padding-top: .5em;
-    margin-left: auto;
-    margin-right: auto;
+.provenance {
     font-size: smaller;
+    float: left;
+    clear: both;
+    width: 100%;
 }
+
+
 

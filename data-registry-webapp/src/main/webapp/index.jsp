@@ -63,59 +63,54 @@
 
 <div class="wrapper">
     <div class="content-top">
-        <div class="bread-crumbs-nav">
-            <ul>
-                <li class="bread-crumbs-last">
-                    Home
-                </li>
-            </ul>
-        </div>
-        <div class="headline">
-            <h1>Welcome to <%=RegistryApplication.getApplicationContext().getRegistryTitle()%></h1>
+        <ul class="bread-crumbs-nav">
+            <li class="bread-crumbs-last">
+                Home
+            </li>
+        </ul>
+        <h1>Welcome to <%=RegistryApplication.getApplicationContext().getRegistryTitle()%></h1>
 
-            <h2>A catalog of the University of Queensland's research data assets</h2>
-        </div>
+        <h2>A catalog of the University of Queensland's research data assets</h2>
     </div>
-    <div class="colmask doublepage">
-        <div class="colleft">
-            <div class="col1">
-                <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data outputs of staff and students at the
-                    University of Queensland. It aims to improve the visibility and accessibility of
-                    UQ data to the wider world.</p>
+    <div class="col-container">
+        <div class="col1">
+            <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data
+                outputs of staff and students at the University of Queensland. It aims to promote
+                the University of Queensland's research data to the wider world.</p>
 
-                <p>The catalog contains descriptions of:</p>
-                <ul>
-                    <li><a href="/collections">data collections</a>;</li>
-                    <li>the <a href="/agents">agents</a> (people and groups) that create and manage the data collections; </li>
-                    <li>the <a href="/activities">activities</a> (projects) that funded the data creation; and</li>
-                    <li>the <a href="/services">services</a> for accessing and manipulating the data.</li>
-                </ul>
+            <p>The catalog contains descriptions of University of Queensland:</p>
+            <ul>
+                <li><a href="/collections">data collections</a>;</li>
+                <li><a href="/agents">agents</a> (people and groups) that create and manage the data collections; </li>
+                <li><a href="/activities">activities</a> (projects) that funded the data creation; and</li>
+                <li><a href="/services">services</a> for accessing and manipulating the data.</li>
+            </ul>
 
-                <div class="figure">
-                    <p>The concept</p>
-                    <img src="/images/concept.png" alt="Collections are created by Agents, are accessed via services, and are
+            <div class="figure">
+                <p>The concept</p>
+                <img src="/images/concept.png" alt="Collections are created by Agents, are accessed via services, and are
             the output of projects"/>
-                </div>
+            </div>
+        </div>
+
+        <div class="col2">
+
+            <div class="home-search">
+                <form action="/search" method="get">
+                    <input class="search-field" onfocus="this.value=''; this.onfocus=null;" type="text"
+                           name="q" value="Quick search - enter keywords"/>
+                    <input class="search-button" type="submit" value="Search"/>
+                </form>
             </div>
 
-            <div class="col2">
+            <div id="tabs-pane">
+                <ul>
+                    <li><a href="#recent">Recently added collections</a></li>
+                    <li><a href="#tags">Tags</a></li>
+                </ul>
 
-                <div class="home-search">
-                    <form action="/search" method="get">
-                        <input class="search-field" onfocus="this.value=''; this.onfocus=null;" type="text"
-                               name="q" value="Quick search - enter keywords"/>
-                        <input class="search-button" type="submit" value="Search"/>
-                    </form>
-                </div>
-
-                <div id="tabs-pane">
+                <div id="recent">
                     <ul>
-                        <li><a href="#recent">Recently added collections</a></li>
-                        <li><a href="#tags">Tags</a></li>
-                    </ul>
-
-                    <div id="recent">
-                        <ul>
                         <%
                             for (CollectionVersion version : collectionVersions) {
                         %>
@@ -126,26 +121,24 @@
                         <%
                             }
                         %>
-                            </ul>
-                    </div>
-
-                     <div id="tags">
-                        <div id="topics" class="tagcloud">
-
-                        </div>
-                    </div>
-
+                    </ul>
                 </div>
 
+                <div id="tags">
+                    <div id="topics" class="tagcloud">
 
+                    </div>
+                </div>
 
-                <p class="clear-bg">This registry syndicates data to</p>
-                <p><a href="http://services.ands.org.au/home/orca/rda/">
-                    <img src="/images/ands_logo.gif"></a>
-                </p>
             </div>
+
+            <p class="clear-bg">This registry syndicates data to</p>
+            <p><a href="http://services.ands.org.au/home/orca/rda/">
+                <img src="/images/ands_logo.gif"></a>
+            </p>
         </div>
     </div>
+
     <div class="content-bottom">
         <div class="bread-crumbs-nav">
             <ul>
