@@ -66,7 +66,14 @@ public class AdapterInputHelper {
 
         //Add the original id
         IRI entryId = entry.getId();
-        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX) && !entryId.toString().trim().endsWith(Constants.PATH_FOR_ACTIVITIES + "/ignore")) {
+                if (entryId == null) {
+            throw new ResponseContextException("Activity has empty id", 400);
+        }
+        if (entryId.toString().trim().endsWith(Constants.PATH_FOR_ACTIVITIES + "/ignore")) {
+            String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
+            version.getParent().setOriginalId(parentUrl + "#");
+
+        } else if (!entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)){
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -120,7 +127,14 @@ public class AdapterInputHelper {
 
         //Add the original id
         IRI entryId = entry.getId();
-        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX) && !entryId.toString().trim().endsWith(Constants.PATH_FOR_COLLECTIONS + "/ignore")) {
+        if (entryId == null) {
+            throw new ResponseContextException("Collection has empty id", 400);
+        }
+        if (entryId.toString().trim().endsWith(Constants.PATH_FOR_COLLECTIONS + "/ignore")) {
+            String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
+            version.getParent().setOriginalId(parentUrl + "#");
+
+        } else if (!entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)){
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -244,7 +258,14 @@ public class AdapterInputHelper {
 
         //Add the original id
         IRI entryId = entry.getId();
-        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX) && !entryId.toString().trim().endsWith(Constants.PATH_FOR_AGENTS + "/ignore")) {
+        if (entryId == null) {
+            throw new ResponseContextException("Agent has empty id", 400);
+        }
+        if (entryId.toString().trim().endsWith(Constants.PATH_FOR_AGENTS + "/ignore")) {
+            String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
+            version.getParent().setOriginalId(parentUrl + "#");
+
+        } else if (!entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)){
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -371,7 +392,14 @@ public class AdapterInputHelper {
 
         //Add the original id
         IRI entryId = entry.getId();
-        if (entryId != null && !entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX) && !entryId.toString().trim().endsWith(Constants.PATH_FOR_SERVICES + "/ignore")) {
+        if (entryId == null) {
+            throw new ResponseContextException("Service has empty id", 400);
+        }
+        if (entryId.toString().trim().endsWith(Constants.PATH_FOR_SERVICES + "/ignore")) {
+            String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
+            version.getParent().setOriginalId(parentUrl + "#");
+
+        } else if (!entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)){
             version.getParent().setOriginalId(entryId.toString());
         }
 
