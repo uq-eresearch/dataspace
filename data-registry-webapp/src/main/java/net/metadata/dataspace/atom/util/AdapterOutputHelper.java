@@ -66,8 +66,13 @@ public class AdapterOutputHelper {
         try {
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
             String activityTypelabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
-            Link typeLink = entry.addLink(Constants.NS_FOAF + activityTypelabel, Constants.REL_TYPE);
-            typeLink.setTitle(activityTypelabel);
+            if (activityTypelabel.equals("Project")) {
+                Link typeLink = entry.addLink(Constants.NS_FOAF + activityTypelabel, Constants.REL_TYPE);
+                typeLink.setTitle(activityTypelabel);
+            } else {
+                Link typeLink = entry.addLink(Constants.NS_VIVO + activityTypelabel, Constants.REL_TYPE);
+                typeLink.setTitle(activityTypelabel);
+            }
 
             Set<String> alternatives = version.getAlternatives();
             for (String alternativeName : alternatives) {
