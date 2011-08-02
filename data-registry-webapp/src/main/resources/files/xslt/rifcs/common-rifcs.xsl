@@ -13,7 +13,7 @@
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
-                xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:str="http://exslt.org/strings"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 exclude-result-prefixes="atom ands dcterms rdfa fn str">
     <xsl:include href="../constants.xsl"/>
 
