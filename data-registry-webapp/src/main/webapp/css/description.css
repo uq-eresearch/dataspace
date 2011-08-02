@@ -1,9 +1,14 @@
+.identifier {
+    margin: 0;
+}
+
 .id-property {
     font-weight: bold;
 }
 
 .alternate-title {
     font-weight: bold;
+    margin: 0.33em 0;
 }
 
 .metadata {
@@ -66,9 +71,12 @@
     margin: 2px 1% 2px 2%;
 }
 
-.content p, .property p {
+.statement p {
+    margin: 0.33em 0 0 0;
+}
+
+.statement p:first-child {
     margin: 0;
-    padding: 0;
 }
 
 .content p span {
@@ -76,10 +84,11 @@
 }
 
 .provenance {
-    font-size: smaller;
+    margin-top: 2em;
     float: left;
     clear: both;
     width: 100%;
+    font-size: smaller;
 }
 
 

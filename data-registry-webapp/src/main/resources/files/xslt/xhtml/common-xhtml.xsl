@@ -23,7 +23,19 @@
     <!--<xsl:param name="currentUser"/>-->
     <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
 
-    <!-- identifier -->
+    <!-- identifiers -->
+    <xsl:template name="identifiers">
+        <p class="identifier">
+            <span class="id-property">Identifier: </span>
+            <xsl:value-of select="atom:id"/>
+        </p>
+        <xsl:if test="atom:id != atom:link[@rel = $RDF_DESCRIBES]/@href">
+            <p class="identifier">
+                <span class="id-property">Local identifier: </span>
+                <xsl:value-of select="atom:link[@rel = $RDF_DESCRIBES]/@href"/>
+            </p>
+        </xsl:if>
+    </xsl:template>
     <xsl:template match="atom:id">
         <p class="identifier">
             <span class="id-property">Identifier: </span>
@@ -70,7 +82,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_MBOX]">
             <div class="statement">
                 <div class="property">
-                    <p>Contact/s</p>
+                    <p>Contact email/s</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_MBOX]"/>
@@ -92,10 +104,6 @@
             </div>
         </xsl:if>
     </xsl:template>
-
-
-
-
 
     <!-- Rights -->
     <xsl:template match="atom:rights">
@@ -122,20 +130,6 @@
                 </p>
             </div>
         </div>
-    </xsl:template>
-
-    <!-- related info -->
-    <xsl:template name="related">
-        <xsl:if test="atom:link[@rel = $REL_RELATED]">
-            <div class="statement">
-                <div class="property">
-                    <p>Related information</p>
-                </div>
-                <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel = $REL_RELATED]"/>
-                </div>
-            </div>
-        </xsl:if>
     </xsl:template>
 
     <!-- creators -->
@@ -189,7 +183,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_PUBLICATIONS]">
             <div class="statement">
                 <div class="property">
-                    <p>Publication(s)</p>
+                    <p>Publication/s</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLICATIONS]"/>
@@ -202,7 +196,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
             <div class="statement">
                 <div class="property">
-                    Publication/s
+                    <p>Publication/s</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_REFERENCED_BY]"/>
@@ -335,6 +329,16 @@
     </xsl:template>
 
     <!-- source -->
+    <xsl:template name="description-id">
+        <div class="statement">
+            <div class="property">
+                Description identifier
+            </div>
+            <div class="content">
+                <xsl:value-of select="atom:link[@rel = $REL_SELF]/@href"/>
+            </div>
+        </div>
+    </xsl:template>
     <xsl:template match="atom:source">
         <div class="statement">
             <div class="property">
@@ -350,9 +354,11 @@
             </div>
             <div class="content">
                 <!-- TODO check if id starts with HTTP before making it a link -->
-                <a href="{atom:id}">
-                    <xsl:value-of select="atom:title"/>
-                </a>
+                <p>
+                    <a href="{atom:id}">
+                        <xsl:value-of select="atom:title"/>
+                    </a>
+                </p>
             </div>
         </div>
     </xsl:template>
@@ -362,11 +368,13 @@
                 <p>Last update</p>
             </div>
             <div class="content">
-                Version
-                <xsl:value-of select="atom:link[@rel=$REL_LATEST_VERSION]/@title"/>
-                on <xsl:value-of select="fn:format-dateTime(fn:adjust-dateTime-to-timezone(atom:updated),
+                <p>
+                    Version
+                    <xsl:value-of select="atom:link[@rel=$REL_LATEST_VERSION]/@title"/>
+                    on <xsl:value-of select="fn:format-dateTime(fn:adjust-dateTime-to-timezone(atom:updated),
                 '[F,3-3], [D] [MNn] [Y], [H]:[m]:[s] [z]')"/>
-                by <xsl:value-of select="atom:source/atom:author/atom:name"/>
+                    by <xsl:value-of select="atom:source/atom:author/atom:name"/>
+                </p>
             </div>
         </div>
     </xsl:template>
@@ -484,6 +492,25 @@
             <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_COLLECTION or
              atom:link[$REL_TYPE]/@href = $ENTITY_COLLECTION">
                 <img src="/images/icons/ic_white_collections.png" alt="Collection"/>
+            </xsl:when>
+            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_PERSON or
+            atom:link[$REL_TYPE]/@href = $ENTITY_GROUP">
+                <img src="/images/icons/ic_white_agents.png" alt="Agent"/>
+            </xsl:when>
+            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_PROJECT or
+            atom:link[$REL_TYPE]/@href = $ENTITY_PROGRAM">
+                <img src="/images/icons/ic_white_activities.png" alt="Agent"/>
+            </xsl:when>
+            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_ANNOTATE or
+            atom:link[$REL_TYPE]/@href = $ENTITY_ASSEMBLE or
+            atom:link[$REL_TYPE]/@href = $ENTITY_CREATE or
+            atom:link[$REL_TYPE]/@href = $ENTITY_GENERATE or
+            atom:link[$REL_TYPE]/@href = $ENTITY_HARVEST or
+            atom:link[$REL_TYPE]/@href = $ENTITY_REPORT or
+            atom:link[$REL_TYPE]/@href = $ENTITY_SEARCH or
+            atom:link[$REL_TYPE]/@href = $ENTITY_SYNDICATE or
+            atom:link[$REL_TYPE]/@href = $ENTITY_TRANSFORM">
+                <img src="/images/icons/ic_white_services.png" alt="Agent"/>
             </xsl:when>
         </xsl:choose>
     </xsl:template>

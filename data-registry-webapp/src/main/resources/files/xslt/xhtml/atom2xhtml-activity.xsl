@@ -11,8 +11,9 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns="http://www.w3.org/1999/xhtml"
-                exclude-result-prefixes="atom rdfa">
+                exclude-result-prefixes="atom rdfa fn">
     <xsl:include href="common-xhtml.xsl"/>
     <xsl:include href="include/header.xsl"/>
     <xsl:include href="include/head.xsl"/>
@@ -33,64 +34,87 @@
     <xsl:template match="atom:entry">
         <head>
             <title>
-                <xsl:value-of select="$applicationName"/>
+                <xsl:value-of select="fn:concat($applicationName, ': ', atom:title)"/>
             </title>
             <link href="/css/description.css" rel="stylesheet" type="text/css"/>
             <xsl:call-template name="head"/>
         </head>
         <body>
-            <!-- the collection description itself -->
+            <!-- the activity description itself -->
             <xsl:text>
             </xsl:text>
             <xsl:comment>Collection description</xsl:comment>
             <xsl:call-template name="header"/>
             <div class="wrapper">
-                <ul class="bread-crumbs-nav">
-                    <xsl:call-template name="bread-crumbs">
-                        <xsl:with-param name="path">activities</xsl:with-param>
-                        <xsl:with-param name="title">Activities</xsl:with-param>
-                    </xsl:call-template>
-                    <xsl:if test="$currentUser">
-                        <xsl:call-template name="bread-crumbs-options">
-                            <xsl:with-param name="path">activities</xsl:with-param>
-                        </xsl:call-template>
-                    </xsl:if>
-                </ul>
-                <div class="description">
-                    <!-- name -->
-                    <xsl:apply-templates select="atom:title"/>
-                    <!-- description -->
-                    <xsl:apply-templates select="atom:content"/>
-                    <!-- latest-version -->
-                    <xsl:if test="$currentUser">
-                        <xsl:call-template name="latest-version"/>
-                    </xsl:if>
-                    <!-- type -->
-                    <xsl:call-template name="type"/>
-                    <!-- temporal -->
-                    <xsl:call-template name="temporal"/>
-                    <!-- homepage -->
-                    <xsl:call-template name="locations"/>
-                    <!-- participants -->
-                    <xsl:call-template name="participants"/>
-                    <!-- collections -->
-                    <xsl:call-template name="output"/>
-                    <!-- subjects -->
-                    <xsl:call-template name="subjects"/>
-                    <xsl:call-template name="keywords"/>
-                    <!-- rights -->
-                    <xsl:apply-templates select="atom:rights"/>
-                    <!-- metadata about the description -->
-                <xsl:text>
-                </xsl:text>
-                    <xsl:comment>Metadata about the description</xsl:comment>
-                    <div class="about">
-                        <!-- publisher -->
-                        <xsl:call-template name="description-publisher"/>
-                        <!-- updated and updater -->
-                        <xsl:call-template name="updated"/>
-                        <!-- representations -->
-                        <xsl:call-template name="representations"/>
+                <div class="content-top">
+                    <div class="pad-top pad-sides">
+                        <!-- bread crumbs -->
+                        <ul class="bread-crumbs-nav">
+                            <xsl:call-template name="bread-crumbs">
+                                <xsl:with-param name="path">collections</xsl:with-param>
+                                <xsl:with-param name="title">collections</xsl:with-param>
+                            </xsl:call-template>
+                            <xsl:if test="$currentUser">
+                                <xsl:call-template name="bread-crumbs-options">
+                                    <xsl:with-param name="path">collections</xsl:with-param>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </ul>
+                        <!-- buttons -->
+                        <div class="button-bar">
+                            <xsl:call-template name="button-bar"/>
+                        </div>
+                        <!-- TODO versions
+                  <xsl:if test="$currentUser">
+                      <xsl:call-template name="latest-version"/>
+                  </xsl:if>      -->
+                        <!-- identifier -->
+                        <xsl:apply-templates select="atom:id"/>
+                        <!-- names -->
+                        <xsl:apply-templates select="atom:title"/>
+                        <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
+                    </div>
+                </div>
+                <div class="metadata">
+                    <div class="pad-sides">
+                        <!-- description -->
+                        <xsl:apply-templates select="atom:content"/>
+
+                        <h2>General information</h2>
+                        <xsl:call-template name="websites"/>
+                        <xsl:call-template name="mbox"/>
+                        <xsl:call-template name="participants"/>
+
+                        <h2>Data</h2>
+                        <xsl:call-template name="output"/>
+
+                        <xsl:if test="atom:category">
+                            <h2>Topics</h2>
+                            <xsl:call-template name="subjects"/>
+                            <xsl:call-template name="keywords"/>
+                        </xsl:if>
+
+                        <div class="provenance">
+                            <h2>About the description</h2>
+                            <xsl:apply-templates select="atom:source"/>
+                            <xsl:call-template name="last-update"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-bottom">
+                    <div class="pad-sides pad-top pad-bottom">
+                        <!-- bread crumbs -->
+                        <ul class="bread-crumbs-nav">
+                            <xsl:call-template name="bread-crumbs">
+                                <xsl:with-param name="path">collections</xsl:with-param>
+                                <xsl:with-param name="title">collections</xsl:with-param>
+                            </xsl:call-template>
+                            <xsl:if test="$currentUser">
+                                <xsl:call-template name="bread-crumbs-options">
+                                    <xsl:with-param name="path">collections</xsl:with-param>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -98,7 +122,7 @@
         </body>
     </xsl:template>
 
-    <!-- collections -->
+    <!-- participants -->
     <xsl:template name="participants">
         <xsl:if test="atom:link[@rel=$ATOM_HAS_PARTICIPANT]">
             <div class="statement">

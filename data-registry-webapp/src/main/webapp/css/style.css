@@ -167,7 +167,18 @@ body {
     min-height: 600px;
     border-radius: 10px;
     -moz-border-radius: 10px;
-    padding: 1em;
+}
+
+.pad-sides {
+    padding: 0 1em;
+}
+
+.pad-top {
+    padding-top: 1em;
+}
+
+.pad-bottom {
+    padding-bottom: 1em;
 }
 
 /* homepage - two columns
@@ -182,7 +193,6 @@ body {
     clear: both;
     float: left;
     width: 100%;
-    margin: 1em 0;
 }
 
 /* common column settings */
@@ -267,7 +277,7 @@ a:visited {
 }
 
 .entity-type img {
-    padding-right: 0.5em;
+    padding: 0 0.5em;
 }
 
 /* pure css arrow adapted from http://css-tricks.com/snippets/css/css-triangle/ */

@@ -11,8 +11,9 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns="http://www.w3.org/1999/xhtml"
-                exclude-result-prefixes="atom rdfa">
+                exclude-result-prefixes="atom rdfa fn">
     <xsl:include href="common-xhtml.xsl"/>
     <xsl:include href="include/header.xsl"/>
     <xsl:include href="include/head.xsl"/>
@@ -33,7 +34,7 @@
     <xsl:template match="atom:entry">
         <head>
             <title>
-                <xsl:value-of select="$applicationName"/>
+                <xsl:value-of select="fn:concat($applicationName, ': ', atom:title)"/>
             </title>
             <link href="/css/description.css" rel="stylesheet" type="text/css"/>
             <xsl:call-template name="head"/>
@@ -45,78 +46,83 @@
             <xsl:comment>Agent description</xsl:comment>
             <xsl:call-template name="header"/>
             <div class="wrapper">
-                <ul class="bread-crumbs-nav">
-                    <xsl:call-template name="bread-crumbs">
-                        <xsl:with-param name="path">agents</xsl:with-param>
-                        <xsl:with-param name="title">Agents</xsl:with-param>
-                    </xsl:call-template>
-                    <xsl:if test="$currentUser">
-                        <xsl:call-template name="bread-crumbs-options">
-                            <xsl:with-param name="path">agents</xsl:with-param>
-                        </xsl:call-template>
-                    </xsl:if>
-                </ul>
-                <div class="description">
-                    <!-- names -->
-                    <xsl:apply-templates select="atom:title"/>
-                    <!-- description -->
-                    <xsl:apply-templates select="atom:content"/>
-                    <!-- latest-version -->
-                    <xsl:if test="$currentUser">
-                        <xsl:call-template name="latest-version"/>
-                    </xsl:if>
-                    <!-- alternative names -->
-                    <xsl:call-template name="alternate-names"/>
-                    <!-- type -->
-                    <xsl:call-template name="type"/>
-                    <!-- email -->
-                    <xsl:call-template name="mbox"/>
-                    <!-- collections -->
-                    <xsl:call-template name="collections"/>
+                <div class="content-top">
+                    <div class="pad-top pad-sides">
+                        <!-- bread crumbs -->
+                        <ul class="bread-crumbs-nav">
+                            <xsl:call-template name="bread-crumbs">
+                                <xsl:with-param name="path">agents</xsl:with-param>
+                                <xsl:with-param name="title">agents</xsl:with-param>
+                            </xsl:call-template>
+                            <xsl:if test="$currentUser">
+                                <xsl:call-template name="bread-crumbs-options">
+                                    <xsl:with-param name="path">agents</xsl:with-param>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </ul>
+                        <!-- buttons -->
+                        <div class="button-bar">
+                            <xsl:call-template name="button-bar"/>
+                        </div>
+                        <!-- TODO versions
+                  <xsl:if test="$currentUser">
+                      <xsl:call-template name="latest-version"/>
+                  </xsl:if>      -->
+                        <!-- identifier -->
+                        <xsl:apply-templates select="atom:id"/>
+                        <!-- names -->
+                        <xsl:apply-templates select="atom:title"/>
+                        <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
+                    </div>
+                </div>
+                <div class="metadata">
+                    <div class="pad-sides">
+                        <!-- description -->
+                        <xsl:apply-templates select="atom:content"/>
 
-                    <xsl:call-template name="isManagerOf"/>
-                    <!-- activities -->
-                    <xsl:call-template name="activities"/>
-                    <!--services-->
-                    <xsl:call-template name="manages-services"/>
-                    <!--pages-->
-                    <xsl:call-template name="locations"/>
-                    <!--publications-->
-                    <xsl:call-template name="agent-publications"/>
-                    <!-- subjects -->
-                    <xsl:call-template name="subjects"/>
-                    <xsl:call-template name="keywords"/>
-                    <!-- metadata about the description -->
-                <xsl:text>
-                </xsl:text>
-                    <xsl:comment>Metadata about the description</xsl:comment>
-                    <div class="about">
-                        <!-- publisher -->
-                        <xsl:call-template name="description-publisher"/>
-                        <!-- updated and updater -->
-                        <xsl:call-template name="updated"/>
-                        <!-- representations -->
-                        <xsl:call-template name="representations"/>
+                        <h2>General information</h2>
+                        <xsl:call-template name="websites"/>
+                        <xsl:call-template name="mbox"/>
+                        <xsl:call-template name="publications"/>
+                        <xsl:call-template name="activities"/>
+
+                        <h2>Data</h2>
+                        <xsl:call-template name="collections"/>
+                        <xsl:call-template name="isManagerOf"/>
+
+                        <xsl:if test="atom:category">
+                            <h2>Topics</h2>
+                            <xsl:call-template name="subjects"/>
+                            <xsl:call-template name="keywords"/>
+                        </xsl:if>
+
+
+                        <div class="provenance">
+                            <h2>About the description</h2>
+                            <xsl:apply-templates select="atom:source"/>
+                            <xsl:call-template name="last-update"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-bottom">
+                    <div class="pad-sides pad-top pad-bottom">
+                        <!-- bread crumbs -->
+                        <ul class="bread-crumbs-nav">
+                            <xsl:call-template name="bread-crumbs">
+                                <xsl:with-param name="path">agents</xsl:with-param>
+                                <xsl:with-param name="title">agents</xsl:with-param>
+                            </xsl:call-template>
+                            <xsl:if test="$currentUser">
+                                <xsl:call-template name="bread-crumbs-options">
+                                    <xsl:with-param name="path">agents</xsl:with-param>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </ul>
                     </div>
                 </div>
             </div>
             <xsl:call-template name="footer"/>
         </body>
-    </xsl:template>
-
-    <!-- alternate names -->
-    <xsl:template name="alternate-names">
-        <xsl:if test="rdfa:meta[@property=$RDFA_ALTERNATIVE]">
-            <div class="statement">
-                <div class="property">
-                    <p>Also known as</p>
-                </div>
-                <div class="content">
-                    <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
-                </div>
-            </div>
-        </xsl:if>
-
     </xsl:template>
 
     <!-- collections -->
@@ -152,7 +158,7 @@
         <xsl:if test="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]">
             <div class="statement">
                 <div class="property">
-                    <p>Projects</p>
+                    <p>Project/s</p>
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_PARTICIPANT_IN]"/>
