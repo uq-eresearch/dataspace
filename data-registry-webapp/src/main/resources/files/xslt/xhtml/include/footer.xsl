@@ -46,7 +46,7 @@
                         <a href="http://www.uq.edu.au/maps/">Maps and Directions</a>
                     </div>
                     <div id="copyright">&copy;
-                        <xsl:value-of select="date:year()"/> The University of Queensland
+                        <xsl:value-of select="year-from-dateTime(current-dateTime())"/> The University of Queensland
                     </div>
                 </div>
                 <div id="footer-resources">

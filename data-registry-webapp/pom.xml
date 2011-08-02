@@ -227,6 +227,10 @@
                     <artifactId>spring-context</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
+                <exclusion>
+                	<artifactId>xalan</artifactId>
+                	<groupId>xalan</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -358,9 +362,9 @@
             <version>1.5.57</version>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.saxon</groupId>
-            <artifactId>saxon</artifactId>
-            <version>9.1.0.8</version>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>saxon-he</artifactId>
+            <version>9.3.0.5</version>
         </dependency>
         <dependency>
             <groupId>quartz</groupId>
@@ -371,9 +375,9 @@
 
     <repositories>
         <repository>
-            <id>dandiep.apache</id>
-            <name>Temporary repo for couchdb4j until it ends up on central.</name>
-            <url>http://people.apache.org/~dandiep/repo/</url>
+            <id>irrational</id>
+            <name>3rd-party repo for Saxon-HE 9.3.x.x</name>
+            <url>http://irrational.googlecode.com/svn/trunk/maven-repo</url>
         </repository>
         <repository>
             <id>maven2-repository.dev.java.net</id>
