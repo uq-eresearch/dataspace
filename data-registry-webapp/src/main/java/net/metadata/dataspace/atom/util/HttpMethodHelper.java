@@ -375,6 +375,10 @@ public class HttpMethodHelper {
     public static List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
         List<Person> personList = new ArrayList<Person>();
         if (record instanceof Collection) {
+        	CollectionVersion version = (CollectionVersion) record.getPublished();
+        	// If no published collection, then return empty
+        	if (version == null)
+        		return personList;
             Set<Agent> authors = ((CollectionVersion) record.getPublished()).getCreators();
             for (Agent author : authors) {
                 Person person = request.getAbdera().getFactory().newAuthor();

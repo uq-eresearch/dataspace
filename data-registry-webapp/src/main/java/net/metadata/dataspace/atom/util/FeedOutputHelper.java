@@ -62,54 +62,40 @@ public class FeedOutputHelper {
     }
 
     public static ResponseContext getVersionHistoryFeed(RequestContext request, Feed feed, Record record, Class<?> clazz) throws ResponseContextException {
-        try {
-            SortedSet<Version> versions = record.getVersions();
-            for (Version version : versions) {
-                Entry entry = feed.addEntry();
-                String uri = feed.getId() + "/" + version.getUriKey();
-                entry.setId(uri);
-                entry.setTitle(version.getTitle());
-                entry.setContent(version.getDescription());
-                Link selfLink = entry.addLink(uri, Constants.REL_SELF);
-                selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
-                if (record instanceof Collection) {
-                    Set<Agent> authors = ((CollectionVersion) record.getPublished()).getCreators();
-                    List<Person> personList = new ArrayList<Person>();
-                    for (Agent author : authors) {
-                        Person person = new Abdera().getFactory().newAuthor();
-                        person.setName(author.getTitle());
-                        person.setEmail(author.getMBoxes().iterator().next());
-                        person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
-                        personList.add(person);
-                    }
-                }
+        SortedSet<Version> versions = record.getVersions();
+        for (Version version : versions) {
+            Entry entry = feed.addEntry();
+            String uri = feed.getId() + "/" + version.getUriKey();
+            entry.setId(uri);
+            entry.setTitle(version.getTitle());
+            entry.setContent(version.getDescription());
+            Link selfLink = entry.addLink(uri, Constants.REL_SELF);
+            selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
+            List<Person> personList = HttpMethodHelper.getAuthors(record, request);
+            
+            entry.setUpdated(version.getUpdated());
+            setPublished(version, entry);
+        }
+        feed.setUpdated(new Date());
+        Link link = feed.addLink(feed.getId() + "/" + Constants.TARGET_TYPE_VERSION_HISTORY, Constants.TARGET_TYPE_VERSION_HISTORY);
+        link.setMimeType(Constants.MIME_TYPE_ATOM_FEED);
+        Document<Feed> document = feed.getDocument();
+        AbstractResponseContext responseContext = new BaseResponseContext<Document<Feed>>(document);
+        responseContext.setEntityTag(calculateEntityTag(document.getRoot()));
 
-                entry.setUpdated(version.getUpdated());
-                setPublished(version, entry);
-            }
-            feed.setUpdated(new Date());
-            Link link = feed.addLink(feed.getId() + "/" + Constants.TARGET_TYPE_VERSION_HISTORY, Constants.TARGET_TYPE_VERSION_HISTORY);
-            link.setMimeType(Constants.MIME_TYPE_ATOM_FEED);
-            Document<Feed> document = feed.getDocument();
-            AbstractResponseContext responseContext = new BaseResponseContext<Document<Feed>>(document);
-            responseContext.setEntityTag(calculateEntityTag(document.getRoot()));
-
-            String accept = OperationHelper.getAcceptHeader(request);
-            responseContext.setLocation(feed.getId().toString());
-            responseContext.setHeader("Vary", "Accept");
-            if (accept.equals(Constants.MIME_TYPE_XHTML)) {
-                ResponseContext htmlRepresentationOfFeed = getHtmlRepresentationOfFeed(request, responseContext, clazz);
+        String accept = OperationHelper.getAcceptHeader(request);
+        responseContext.setLocation(feed.getId().toString());
+        responseContext.setHeader("Vary", "Accept");
+        if (accept.equals(Constants.MIME_TYPE_XHTML)) {
+            ResponseContext htmlRepresentationOfFeed = getHtmlRepresentationOfFeed(request, responseContext, clazz);
 //                if (request.getHeader("user-agent").indexOf("MSIE ") > -1) {
-                responseContext.setContentType(Constants.MIME_TYPE_HTML);
+            responseContext.setContentType(Constants.MIME_TYPE_HTML);
 //                } else {
 //                    responseContext.setContentType(Constants.MIME_TYPE_XHTML);
 //                }
-                return htmlRepresentationOfFeed;
-            } else {
-                return responseContext;
-            }
-        } catch (Throwable th) {
-            throw new ResponseContextException(500, th);
+            return htmlRepresentationOfFeed;
+        } else {
+            return responseContext;
         }
     }
 
