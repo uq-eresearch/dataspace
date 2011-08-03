@@ -11,7 +11,6 @@
     -->
 
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                extension-element-prefixes="date"
                 xmlns="http://www.w3.org/1999/xhtml">
     <xsl:param name="applicationVersion"/>
     <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
