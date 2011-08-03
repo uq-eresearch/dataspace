@@ -1,5 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
-
 <entry
         xmlns="http://www.w3.org/2005/Atom"
         xmlns:rdfa="http://www.w3.org/ns/rdfa#"
@@ -75,9 +74,9 @@
 
     <!--     temporal coverage -->
     <rdfa:meta
-            property="http://purl.org/dc/terms/temporal"
-            content="start=2007-08"
-            datatype="http://purl.org/dc/terms/Period"/>
+			property="http://purl.org/dc/terms/temporal"
+			content="start=2006; end=2007"
+			datatype="http://purl.org/dc/terms/Period"/>
 
     <!--     spatial coverage -->
     <georss:polygon>-10.5 140 -17 140 -17 145.5 -10.5 145.5 -10.5 140</georss:polygon>
