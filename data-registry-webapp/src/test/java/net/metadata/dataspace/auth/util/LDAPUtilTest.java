@@ -1,7 +1,10 @@
 package net.metadata.dataspace.auth.util;
 
 import net.metadata.dataspace.app.NonProductionConstants;
-import org.junit.Ignore;
+import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.auth.AuthenticationManager;
+import net.metadata.dataspace.data.model.record.User;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,6 +22,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Author: alabri
@@ -28,34 +33,43 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class LDAPUtilTest {
-    @Test
-    @Ignore
+    
+	@Test
     public void testSearchLDAPByEmail() throws Exception {
-        String testEmail = "a.alabri@uq.edu.au";
-        NamingEnumeration<SearchResult> namingEnumeration = searchLDAPByEmail(testEmail);
+        String testEmail = "t.shyy@uq.edu.au";
+        NamingEnumeration<SearchResult> namingEnumeration = 
+        		LDAPUtil.searchLDAPByEmail(testEmail, getTestUser(testEmail));
+        assertNotNull(namingEnumeration);
         Map<String, String> map = LDAPUtil.getAttributesAsMap(namingEnumeration);
         for (String s : map.keySet()) {
             System.out.println(s + ": " + map.get(s));
         }
         assertEquals("Email is not the same: ", testEmail, map.get("mail"));
     }
+	
+	private User getTestUser(String email) {
+		AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
+        User testUser = new User();
+        testUser.setEmail(email);
+        authenticationManager.setDirContext(getTestDirContext(), testUser);
+        return testUser;
+	}
 
-    private static NamingEnumeration<SearchResult> searchLDAPByEmail(String email) {
+    private DirContext getTestDirContext() {
+        Hashtable<String, String> env = new Hashtable<String, String>();
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, "ldap://ldap.uq.edu.au");
+        SearchControls ctls = new SearchControls();
+        ctls.setReturningObjFlag(true);
+        ctls.setCountLimit(1);
+        ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         try {
-            Hashtable<String, String> env = new Hashtable<String, String>();
-            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-            env.put(Context.PROVIDER_URL, "ldaps://ldap.uq.edu.au");
-            SearchControls ctls = new SearchControls();
-            ctls.setReturningObjFlag(true);
-            ctls.setCountLimit(1);
-            ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            DirContext ctx = new InitialDirContext(env);
-            NamingEnumeration<SearchResult> answer = ctx.search("ou=staff,ou=people,o=the university of queensland", "(mail=" + email + ")", ctls);
-            return answer;
-        } catch (NamingException e) {
-            String message = "User not found in LDAP";
-            System.err.println(message);
-            return null;
-        }
+			return new InitialDirContext(env);
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("Unable to initialize DirContext");
+			return null;
+		}    
     }
 }
