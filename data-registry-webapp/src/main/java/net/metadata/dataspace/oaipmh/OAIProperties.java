@@ -12,7 +12,11 @@ import java.util.Properties;
  * Time: 3:30:36 PM
  */
 public class OAIProperties extends Properties {
-    private Logger logger = Logger.getLogger(getClass());
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3903613774748461982L;
+	private Logger logger = Logger.getLogger(getClass());
 
     public OAIProperties(String propertiesFile) {
         InputStream resourceAsStream = null;

@@ -40,7 +40,7 @@ public class EntityCreatorImpl implements EntityCreator {
     }
 
     @Override
-    public Record getNextRecord(Class clazz) {
+    public Record getNextRecord(Class<?> clazz) {
         if (clazz.equals(Activity.class)) {
             return getNextActivity();
         } else if (clazz.equals(Collection.class)) {
@@ -54,7 +54,7 @@ public class EntityCreatorImpl implements EntityCreator {
     }
 
     @Override
-    public Context getNextResource(Class clazz) {
+    public Context getNextResource(Class<?> clazz) {
         if (clazz.equals(Source.class)) {
             return getNextSource();
         } else if (clazz.equals(Publication.class)) {

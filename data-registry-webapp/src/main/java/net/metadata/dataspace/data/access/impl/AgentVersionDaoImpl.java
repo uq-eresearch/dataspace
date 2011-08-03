@@ -15,7 +15,12 @@ import java.io.Serializable;
 
 public class AgentVersionDaoImpl extends JpaDao<AgentVersion> implements AgentVersionDao, Serializable {
 
-    public AgentVersionDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7401872378377624847L;
+
+	public AgentVersionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 }

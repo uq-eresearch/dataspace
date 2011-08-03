@@ -4,6 +4,7 @@ import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.record.User;
 import net.metadata.dataspace.oaipmh.OAIProperties;
 import net.metadata.dataspace.oaipmh.RIFCSOaiCatalog;
 
@@ -90,7 +91,7 @@ public interface RegistryConfiguration {
      *
      * @return AuthorizationManager
      */
-    AuthorizationManager getAuthorizationManager();
+    AuthorizationManager<User> getAuthorizationManager();
 
     /**
      * Return OAI-PMH catalog

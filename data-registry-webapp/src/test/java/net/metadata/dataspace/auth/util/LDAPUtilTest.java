@@ -13,6 +13,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ public class LDAPUtilTest {
     @Ignore
     public void testSearchLDAPByEmail() throws Exception {
         String testEmail = "a.alabri@uq.edu.au";
-        NamingEnumeration namingEnumeration = searchLDAPByEmail(testEmail);
+        NamingEnumeration<SearchResult> namingEnumeration = searchLDAPByEmail(testEmail);
         Map<String, String> map = LDAPUtil.getAttributesAsMap(namingEnumeration);
         for (String s : map.keySet()) {
             System.out.println(s + ": " + map.get(s));
@@ -38,9 +40,9 @@ public class LDAPUtilTest {
         assertEquals("Email is not the same: ", testEmail, map.get("mail"));
     }
 
-    private static NamingEnumeration searchLDAPByEmail(String email) {
+    private static NamingEnumeration<SearchResult> searchLDAPByEmail(String email) {
         try {
-            Hashtable env = new Hashtable();
+            Hashtable<String, String> env = new Hashtable<String, String>();
             env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
             env.put(Context.PROVIDER_URL, "ldaps://ldap.uq.edu.au");
             SearchControls ctls = new SearchControls();
@@ -48,7 +50,7 @@ public class LDAPUtilTest {
             ctls.setCountLimit(1);
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
             DirContext ctx = new InitialDirContext(env);
-            NamingEnumeration answer = ctx.search("ou=staff,ou=people,o=the university of queensland", "(mail=" + email + ")", ctls);
+            NamingEnumeration<SearchResult> answer = ctx.search("ou=staff,ou=people,o=the university of queensland", "(mail=" + email + ")", ctls);
             return answer;
         } catch (NamingException e) {
             String message = "User not found in LDAP";

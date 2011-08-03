@@ -20,8 +20,6 @@ import java.util.*;
 
 import static org.apache.abdera.protocol.server.ProviderHelper.calculateEntityTag;
 
-import net.metadata.dataspace.data.model.record.Collection;
-
 /**
  * User: alabri
  * Date: 20/10/2010
@@ -38,7 +36,7 @@ public class FeedOutputHelper {
         return representation;
     }
 
-    public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class clazz) {
+    public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) {
         responseContext.setContentType(Constants.MIME_TYPE_HTML);
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
         String viewRepresentation = OperationHelper.getViewRepresentation(request);
@@ -63,7 +61,7 @@ public class FeedOutputHelper {
         feed.getAlternateLink().setMimeType(mimeType);
     }
 
-    public static ResponseContext getVersionHistoryFeed(RequestContext request, Feed feed, Record record, Class clazz) throws ResponseContextException {
+    public static ResponseContext getVersionHistoryFeed(RequestContext request, Feed feed, Record record, Class<?> clazz) throws ResponseContextException {
         try {
             SortedSet<Version> versions = record.getVersions();
             for (Version version : versions) {

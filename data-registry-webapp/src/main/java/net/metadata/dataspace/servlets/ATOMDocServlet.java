@@ -19,7 +19,11 @@ import java.util.Date;
  */
 public class ATOMDocServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger(getClass());
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8604784673090487459L;
+	private Logger logger = Logger.getLogger(getClass());
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);

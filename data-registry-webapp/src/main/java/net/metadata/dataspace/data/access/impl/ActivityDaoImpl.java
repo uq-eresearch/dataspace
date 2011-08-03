@@ -17,7 +17,12 @@ import java.util.List;
  */
 public class ActivityDaoImpl extends AbstractRegistryDao<Activity> implements ActivityDao, Serializable {
 
-    public ActivityDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3048244994760480452L;
+
+	public ActivityDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 

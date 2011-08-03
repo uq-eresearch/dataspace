@@ -4,6 +4,7 @@ import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.record.User;
 import net.metadata.dataspace.oaipmh.OAIProperties;
 import net.metadata.dataspace.oaipmh.RIFCSOaiCatalog;
 import org.apache.log4j.Logger;
@@ -21,7 +22,7 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     private DaoManager daoManager;
     private EntityCreator entityCreator;
     private AuthenticationManager authenticationManager;
-    private AuthorizationManager authorizationManager;
+    private AuthorizationManager<User> authorizationManager;
     private RIFCSOaiCatalog oaiCatalog;
     private OAIProperties oaiProperties;
     private String registryEmail;
@@ -95,11 +96,11 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
         return authenticationManager;
     }
 
-    public void setAuthorizationManager(AuthorizationManager authorizationManager) {
+    public void setAuthorizationManager(AuthorizationManager<User> authorizationManager) {
         this.authorizationManager = authorizationManager;
     }
 
-    public AuthorizationManager getAuthorizationManager() {
+    public AuthorizationManager<User> getAuthorizationManager() {
         return authorizationManager;
     }
 

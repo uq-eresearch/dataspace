@@ -17,7 +17,12 @@ import java.util.List;
  */
 public class CollectionDaoImpl extends AbstractRegistryDao<Collection> implements CollectionDao, Serializable {
 
-    public CollectionDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6149363550719068910L;
+
+	public CollectionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 

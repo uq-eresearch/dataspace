@@ -17,7 +17,12 @@ import java.util.SortedSet;
 @MappedSuperclass
 public abstract class AbstractRecordEntity<V> implements Serializable, Record {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3739725990930325307L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -141,7 +146,7 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
         if (!(obj instanceof AbstractRecordEntity)) {
             return false;
         }
-        AbstractRecordEntity other = (AbstractRecordEntity) obj;
+        AbstractRecordEntity<?> other = (AbstractRecordEntity<?>) obj;
         return getId().equals(other.getId());
     }
 

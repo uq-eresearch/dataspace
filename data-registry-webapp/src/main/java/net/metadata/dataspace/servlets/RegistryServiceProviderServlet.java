@@ -27,7 +27,11 @@ import java.util.Map;
  */
 public class RegistryServiceProviderServlet extends AbderaServlet {
 
-    private Logger logger = Logger.getLogger(getClass());
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6861319035092045064L;
+	private Logger logger = Logger.getLogger(getClass());
 
     protected Provider createProvider() {
 

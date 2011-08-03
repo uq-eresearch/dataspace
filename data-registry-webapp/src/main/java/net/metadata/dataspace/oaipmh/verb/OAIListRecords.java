@@ -24,7 +24,7 @@ import java.util.*;
 public class OAIListRecords extends ServerVerb {
 
     private static Logger logger = Logger.getLogger(OAIListRecords.class);
-    private static ArrayList validParamNames1 = new ArrayList();
+    private static ArrayList<String> validParamNames1 = new ArrayList<String>();
 
     static {
         validParamNames1.add("verb");
@@ -34,21 +34,21 @@ public class OAIListRecords extends ServerVerb {
         validParamNames1.add("metadataPrefix");
     }
 
-    private static ArrayList validParamNames2 = new ArrayList();
+    private static ArrayList<String> validParamNames2 = new ArrayList<String>();
 
     static {
         validParamNames2.add("verb");
         validParamNames2.add("resumptionToken");
     }
 
-    private static ArrayList requiredParamNames1 = new ArrayList();
+    private static ArrayList<String> requiredParamNames1 = new ArrayList<String>();
 
     static {
         requiredParamNames1.add("verb");
         requiredParamNames1.add("metadataPrefix");
     }
 
-    private static ArrayList requiredParamNames2 = new ArrayList();
+    private static ArrayList<String> requiredParamNames2 = new ArrayList<String>();
 
     static {
         requiredParamNames2.add("verb");
@@ -58,7 +58,7 @@ public class OAIListRecords extends ServerVerb {
     /**
      * Server-side method to construct an xml response to a ListRecords verb.
      */
-    public static String construct(HashMap context,
+    public static String construct(HashMap<?, ?> context,
                                    HttpServletRequest request, HttpServletResponse response,
                                    Transformer serverTransformer)
             throws OAIInternalServerError, TransformerException {
@@ -108,9 +108,9 @@ public class OAIListRecords extends ServerVerb {
             sb.append("</request>");
             sb.append("<error code=\"badArgument\">Database is unavailable for harvesting</error>");
         } else {
-            Map listRecordsMap = null;
-            ArrayList validParamNames = null;
-            ArrayList requiredParamNames = null;
+            Map<?, ?> listRecordsMap = null;
+            ArrayList<String> validParamNames = null;
+            ArrayList<String> requiredParamNames = null;
             if (oldResumptionToken == null) {
                 validParamNames = validParamNames1;
                 requiredParamNames = requiredParamNames1;
@@ -188,12 +188,12 @@ public class OAIListRecords extends ServerVerb {
                     sb.append(new BadArgumentException().getMessage());
                 } else {
                     sb.append("<ListRecords>\n");
-                    Iterator records = (Iterator) listRecordsMap.get("records");
+                    Iterator<?> records = (Iterator<?>) listRecordsMap.get("records");
                     while (records.hasNext()) {
                         sb.append((String) records.next());
                         sb.append("\n");
                     }
-                    Map newResumptionMap = (Map) listRecordsMap.get("resumptionMap");
+                    Map<?, ?> newResumptionMap = (Map<?, ?>) listRecordsMap.get("resumptionMap");
                     if (newResumptionMap != null) {
                         String newResumptionToken = (String) newResumptionMap.get("resumptionToken");
                         String expirationDate = (String) newResumptionMap.get("expirationDate");

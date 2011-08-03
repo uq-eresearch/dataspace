@@ -15,9 +15,9 @@ import net.metadata.dataspace.data.model.context.Subject;
  */
 public interface EntityCreator {
 
-    Record getNextRecord(Class clazz);
+    Record getNextRecord(Class<?> clazz);
 
-    Context getNextResource(Class clazz);
+    Context getNextResource(Class<?> clazz);
 
     Version getNextVersion(Record record);
 

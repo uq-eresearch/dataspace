@@ -17,7 +17,12 @@ import java.util.List;
  */
 public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao, Serializable {
 
-    public AgentDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6085537803929252268L;
+
+	public AgentDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 

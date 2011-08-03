@@ -26,7 +26,6 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
 
     private Logger logger = Logger.getLogger(getClass());
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public RIFCSOaiCatalog() {
     }
 
@@ -35,19 +34,19 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
     }
 
     @Override
-    public Map listSets() throws NoSetHierarchyException, OAIInternalServerError {
+    public Map<?, ?> listSets() throws NoSetHierarchyException, OAIInternalServerError {
         logger.debug("listSets() is not implemented but being called");
         return null;
     }
 
     @Override
-    public Map listSets(String s) throws BadResumptionTokenException, OAIInternalServerError {
+    public Map<?, ?> listSets(String s) throws BadResumptionTokenException, OAIInternalServerError {
         logger.debug("listSets() is not implemented but being called");
         return null;
     }
 
     @Override
-    public Vector getSchemaLocations(String s) throws IdDoesNotExistException, NoMetadataFormatsException, OAIInternalServerError {
+    public Vector<?> getSchemaLocations(String s) throws IdDoesNotExistException, NoMetadataFormatsException, OAIInternalServerError {
         logger.debug("getSchemaLocations() is not implemented but being called");
         return null;
     }
@@ -138,7 +137,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
     }
 
     @Override
-    public Map listIdentifiers(String s) throws BadResumptionTokenException, OAIInternalServerError {
+    public Map<?, ?> listIdentifiers(String s) throws BadResumptionTokenException, OAIInternalServerError {
         logger.debug("listIdentifiers() is not implemented but being called");
         return null;
     }

@@ -52,7 +52,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                     userDao.save(user);
                 }
                 request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
-                Hashtable env = new Hashtable();
+                Hashtable<String, String> env = new Hashtable<String, String>();
                 env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
                 env.put(Context.PROVIDER_URL, "ldaps://ldap.uq.edu.au");
                 SearchControls ctls = new SearchControls();
@@ -68,14 +68,14 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                 return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
             } else {
                 try {
-                    Hashtable env = new Hashtable();
+                    Hashtable<String, String> env = new Hashtable<String, String>();
                     env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
                     env.put(Context.PROVIDER_URL, "ldaps://ldap.uq.edu.au");
                     SearchControls ctls = new SearchControls();
                     ctls.setReturningObjFlag(true);
                     ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
                     DirContext ctx = new InitialDirContext(env);
-                    NamingEnumeration answer = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
+                    NamingEnumeration<SearchResult> answer = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
                     if (answer.hasMore()) {
                         SearchResult sr = (SearchResult) answer.next();
                         String dn = sr.getNameInNamespace();
@@ -84,7 +84,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                         env.put(Context.SECURITY_CREDENTIALS, password);
                         ctx = new InitialDirContext(env);
 
-                        NamingEnumeration namingEnum = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
+                        NamingEnumeration<SearchResult> namingEnum = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
                         Map<String, String> attributesMap = LDAPUtil.getAttributesAsMap(namingEnum);
 
                         UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();

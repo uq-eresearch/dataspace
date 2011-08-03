@@ -15,7 +15,12 @@ import java.util.List;
  */
 public class PublicationDaoImpl extends AbstractRegistryDao<Publication> implements PublicationDao, Serializable {
 
-    public PublicationDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7084719215423284426L;
+
+	public PublicationDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 

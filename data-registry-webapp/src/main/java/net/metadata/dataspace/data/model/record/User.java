@@ -16,7 +16,12 @@ import static javax.persistence.EnumType.STRING;
 @Entity(name = "AppUser")
 public class User implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7038969101379646565L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 

@@ -16,7 +16,12 @@ import java.util.List;
  */
 public class SubjectDaoImpl extends AbstractRegistryDao<Subject> implements SubjectDao, Serializable {
 
-    public SubjectDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8981471485212513003L;
+
+	public SubjectDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 
@@ -32,7 +37,6 @@ public class SubjectDaoImpl extends AbstractRegistryDao<Subject> implements Subj
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Subject> getAllPublishedBetween(Date fromDate, Date untilDate) {
         return null;
     }

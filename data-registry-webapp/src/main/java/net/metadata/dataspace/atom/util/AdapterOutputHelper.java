@@ -1,10 +1,7 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
-import net.metadata.dataspace.data.access.manager.DaoManager;
-import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
@@ -24,8 +21,6 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.commons.lang.WordUtils;
-import org.apache.log4j.Logger;
-
 import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
@@ -36,11 +31,6 @@ import java.util.SortedSet;
  * Time: 11:30:29 AM
  */
 public class AdapterOutputHelper {
-
-    private static Logger logger = Logger.getLogger(AdapterOutputHelper.class);
-    private static final EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
-    private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
-
 
     public static Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
         if (version == null) {
@@ -380,7 +370,7 @@ public class AdapterOutputHelper {
         return entry;
     }
 
-    public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry, Class clazz) throws ResponseContextException {
+    public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry, Class<?> clazz) throws ResponseContextException {
 
         String accept = OperationHelper.getAcceptHeader(request);
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));

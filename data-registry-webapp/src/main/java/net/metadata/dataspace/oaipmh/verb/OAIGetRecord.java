@@ -22,7 +22,7 @@ import java.util.Properties;
  */
 public class OAIGetRecord extends ServerVerb {
     private static Logger logger = Logger.getLogger(OAIGetRecord.class);
-    private static ArrayList validParamNames = new ArrayList();
+    private static ArrayList<String> validParamNames = new ArrayList<String>();
 
     static {
         validParamNames.add("verb");
@@ -39,7 +39,7 @@ public class OAIGetRecord extends ServerVerb {
      * @throws ORG.oclc.oai.server.verb.OAIInternalServerError
      *          an http 500 status error occurred
      */
-    public static String construct(HashMap context,
+    public static String construct(HashMap<?, ?> context,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Transformer serverTransformer)

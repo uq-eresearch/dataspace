@@ -14,9 +14,14 @@ import java.util.Date;
  * Time: 11:40:11 AM
  */
 @MappedSuperclass
-public abstract class AbstractVersionEntity implements Serializable, Comparable, net.metadata.dataspace.data.model.Version {
+public abstract class AbstractVersionEntity implements Serializable, Comparable<Object>, net.metadata.dataspace.data.model.Version {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7632183952742865428L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 

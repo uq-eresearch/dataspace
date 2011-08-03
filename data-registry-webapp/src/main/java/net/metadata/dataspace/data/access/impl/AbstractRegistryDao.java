@@ -26,7 +26,7 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     public T getById(Long id) {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.id = :id");
         query.setParameter("id", id);
-        List<?> resultList = query.getResultList();
+        List<T> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;
         }
@@ -39,7 +39,7 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
         int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.atomicNumber = :atomicNumber");
         query.setParameter("atomicNumber", atomicNumber);
-        List<?> resultList = query.getResultList();
+        List<T> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;
         }
@@ -107,7 +107,7 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     @Override
     public T getMostRecentUpdated() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.updated = (SELECT MAX(o.updated) FROM " + getEntityName() + " o)");
-        List<?> resultList = query.getResultList();
+        List<T> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;
         }
@@ -118,7 +118,7 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     @Override
     public T getMostRecentInserted() {
         Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.atomicNumber = (SELECT MAX(o.atomicNumber) FROM " + getEntityName() + " o)");
-        List<?> resultList = query.getResultList();
+        List<T> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;
         }

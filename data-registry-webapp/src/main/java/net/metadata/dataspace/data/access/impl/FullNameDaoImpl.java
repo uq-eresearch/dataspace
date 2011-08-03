@@ -15,7 +15,12 @@ import java.util.List;
  */
 public class FullNameDaoImpl extends AbstractRegistryDao<FullName> implements FullNameDao, Serializable {
 
-    public FullNameDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1492739567785597745L;
+
+	public FullNameDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 

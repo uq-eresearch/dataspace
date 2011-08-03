@@ -16,7 +16,12 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class AbstractContextEntity implements Serializable, Context {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6591572630647457797L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 

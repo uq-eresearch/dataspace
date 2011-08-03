@@ -15,7 +15,12 @@ import java.io.Serializable;
  * Time: 4:28:44 PM
  */
 public class UserDaoImpl extends JpaDao<User> implements UserDao, Serializable {
-    public UserDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7737558958450055233L;
+
+	public UserDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 

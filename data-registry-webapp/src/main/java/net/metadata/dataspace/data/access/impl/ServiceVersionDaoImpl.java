@@ -13,7 +13,12 @@ import java.io.Serializable;
  * Time: 3:26:45 PM
  */
 public class ServiceVersionDaoImpl extends JpaDao<ServiceVersion> implements ServiceVersionDao, Serializable {
-    public ServiceVersionDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -580421637426218277L;
+
+	public ServiceVersionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 }

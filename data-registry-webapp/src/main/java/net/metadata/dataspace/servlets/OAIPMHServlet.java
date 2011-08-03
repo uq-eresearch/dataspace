@@ -34,19 +34,18 @@ public class OAIPMHServlet extends OAIHandler {
     private static final String VERSION = "1.5.57";
     private Logger logger = Logger.getLogger(getClass());
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public HashMap getAttributes(Properties properties) {
+    public HashMap<String, Object> getAttributes(Properties properties) {
         try {
             properties = RegistryApplication.getApplicationContext().getOaiProperties();
-            HashMap attributes = new HashMap();
-            Enumeration attrNames = getServletContext().getAttributeNames();
+            HashMap<String, Object> attributes = new HashMap<String, Object>();
+            Enumeration<?> attrNames = getServletContext().getAttributeNames();
             while (attrNames.hasMoreElements()) {
                 String attrName = (String) attrNames.nextElement();
                 attributes.put(attrName, getServletContext().getAttribute(attrName));
             }
             attributes.put("OAIHandler.properties", properties);
             String missingVerbClassName = properties.getProperty("OAIHandler.missingVerbClassName", "ORG.oclc.oai.server.verb.BadVerb");
-            Class missingVerbClass = Class.forName(missingVerbClassName);
+            Class<?> missingVerbClass = Class.forName(missingVerbClassName);
             attributes.put("OAIHandler.missingVerbClass", missingVerbClass);
             if (!"true".equals(properties.getProperty("OAIHandler.serviceUnavailable"))) {
                 attributes.put("OAIHandler.version", VERSION);
@@ -67,7 +66,7 @@ public class OAIPMHServlet extends OAIHandler {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         logger.info("Get Request is " + request.getRequestURL() + "?" + request.getQueryString());
-        HashMap attributes = getAttributes(request.getPathInfo());
+        HashMap<?, ?> attributes = getAttributes(request.getPathInfo());
         if (!filterRequest(request, response)) {
             return;
         }
@@ -81,10 +80,11 @@ public class OAIPMHServlet extends OAIHandler {
         boolean serviceUnavailable = isServiceUnavailable(properties);
         String extensionPath = properties.getProperty("OAIHandler.extensionPath", "/extension");
 
-        HashMap serverVerbs = ServerVerb.getVerbs(properties);
+        @SuppressWarnings("unchecked")
+		HashMap<String, Class<?>> serverVerbs = ServerVerb.getVerbs(properties);
         serverVerbs.put("ListRecords", OAIListRecords.class);
         serverVerbs.put("GetRecord", OAIGetRecord.class);
-        HashMap extensionVerbs = ServerVerb.getExtensionVerbs(properties);
+        HashMap<?, ?> extensionVerbs = ServerVerb.getExtensionVerbs(properties);
 
         Transformer transformer =
                 (Transformer) attributes.get("OAIHandler.transformer");
@@ -158,12 +158,12 @@ public class OAIPMHServlet extends OAIHandler {
         logger.debug("End Get Request");
     }
 
-    public static String getResult(HashMap attributes,
+    public static String getResult(HashMap<?, ?> attributes,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Transformer serverTransformer,
-                                   HashMap serverVerbs,
-                                   HashMap extensionVerbs,
+                                   HashMap<String, Class<?>> serverVerbs,
+                                   HashMap<?, ?> extensionVerbs,
                                    String extensionPath)
             throws Throwable {
         try {
@@ -171,14 +171,14 @@ public class OAIPMHServlet extends OAIHandler {
             String verb = request.getParameter("verb");
 
             String result;
-            Class verbClass = null;
+            Class<?> verbClass = null;
             if (isExtensionVerb) {
-                verbClass = (Class) extensionVerbs.get(verb);
+                verbClass = (Class<?>) extensionVerbs.get(verb);
             } else {
-                verbClass = (Class) serverVerbs.get(verb);
+                verbClass = serverVerbs.get(verb);
             }
             if (verbClass == null) {
-                verbClass = (Class) attributes.get("OAIHandler.missingVerbClass");
+                verbClass = (Class<?>) attributes.get("OAIHandler.missingVerbClass");
             }
             Method construct = verbClass.getMethod("construct",
                     new Class[]{HashMap.class,
@@ -203,7 +203,7 @@ public class OAIPMHServlet extends OAIHandler {
     }
 
     @Override
-    public HashMap getAttributes(String pathInfo) {
+    public HashMap<?, ?> getAttributes(String pathInfo) {
         logger.debug("Path info: " + pathInfo);
         return super.getAttributes(pathInfo);
     }

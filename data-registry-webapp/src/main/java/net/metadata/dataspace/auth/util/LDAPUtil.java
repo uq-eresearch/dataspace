@@ -12,8 +12,6 @@ import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.User;
 import net.metadata.dataspace.data.model.types.AgentType;
 import net.metadata.dataspace.data.model.version.AgentVersion;
-import org.apache.log4j.Logger;
-
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -31,12 +29,10 @@ import java.util.Map;
  */
 public class LDAPUtil {
 
-    private final static Logger logger = Logger.getLogger(LDAPUtil.class);
-
-    public static NamingEnumeration searchLDAPByEmail(String email, User currentUser) {
+    public static NamingEnumeration<SearchResult> searchLDAPByEmail(String email, User currentUser) {
         AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
         DirContext dirContext = authenticationManager.getDirContext(currentUser);
-        NamingEnumeration namingEnum;
+        NamingEnumeration<SearchResult> namingEnum;
         try {
             SearchControls ctls = new SearchControls();
             ctls.setReturningObjFlag(true);
@@ -50,13 +46,13 @@ public class LDAPUtil {
         return namingEnum;
     }
 
-    public static Map<String, String> getAttributesAsMap(NamingEnumeration namingEnum) throws NamingException {
+    public static Map<String, String> getAttributesAsMap(NamingEnumeration<SearchResult> namingEnum) throws NamingException {
         Map<String, String> attributes = new HashMap<String, String>();
         if (namingEnum.hasMore()) {
-            for (NamingEnumeration attrs = ((SearchResult) namingEnum.next()).getAttributes().getAll(); attrs.hasMore(); ) {
+            for (NamingEnumeration<? extends Attribute> attrs = namingEnum.next().getAttributes().getAll(); attrs.hasMore(); ) {
                 Attribute attr = (Attribute) attrs.next();
                 String id = attr.getID();
-                NamingEnumeration values = attr.getAll();
+                NamingEnumeration<?> values = attr.getAll();
                 String result = "";
                 while (values.hasMore()) {
                     result = result + values.next() + " ";

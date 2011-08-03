@@ -31,6 +31,7 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 
 import javax.naming.NamingEnumeration;
+import javax.naming.directory.SearchResult;
 import javax.persistence.EntityManager;
 import javax.xml.namespace.QName;
 import java.util.*;
@@ -750,7 +751,7 @@ public class AdapterInputHelper {
             Agent agent = daoManager.getAgentDao().getByEmail(email);
             if (agent == null) {
                 //Try finding the agent from the UQ LDAP
-                NamingEnumeration namingEnumeration = LDAPUtil.searchLDAPByEmail(email, currentUser);
+                NamingEnumeration<SearchResult> namingEnumeration = LDAPUtil.searchLDAPByEmail(email, currentUser);
                 if (namingEnumeration != null) {
                     Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
                     agent = LDAPUtil.createAgent(attributesAsMap, currentUser);

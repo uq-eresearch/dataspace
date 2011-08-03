@@ -17,7 +17,12 @@ import java.util.List;
  */
 public class ServiceDaoImpl extends AbstractRegistryDao<Service> implements ServiceDao, Serializable {
 
-    public ServiceDaoImpl(EntityManagerSource entityManagerSource) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6692375047398811759L;
+
+	public ServiceDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
 
