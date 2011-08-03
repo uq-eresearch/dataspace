@@ -31,6 +31,7 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 
 import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.naming.directory.SearchResult;
 import javax.persistence.EntityManager;
 import javax.xml.namespace.QName;
@@ -746,33 +747,36 @@ public class AdapterInputHelper {
     }
 
     private static Agent findOrCreateAgent(String name, String email, User currentUser) throws ResponseContextException {
-        try {
-            //Find the agent in our system first
-            Agent agent = daoManager.getAgentDao().getByEmail(email);
-            if (agent == null) {
-                //Try finding the agent from the UQ LDAP
-                NamingEnumeration<SearchResult> namingEnumeration = LDAPUtil.searchLDAPByEmail(email, currentUser);
-                if (namingEnumeration != null) {
-                    Map<String, String> attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
-                    agent = LDAPUtil.createAgent(attributesAsMap, currentUser);
-                    if (agent == null) {
-                        //Else create it from email and name
-                        agent = createBasicAgent(name, email);
-                    }
-                } else {
+    	EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+
+    	//Find the agent in our system first
+        Agent agent = daoManager.getAgentDao().getByEmail(email);
+        if (agent == null) {
+            NamingEnumeration<SearchResult> namingEnumeration = LDAPUtil.searchLDAPByEmail(email, currentUser);
+            if (namingEnumeration != null) {
+                Map<String, String> attributesAsMap;
+				try {
+					attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
+				} catch (NamingException e) {
+					throw new ResponseContextException("Could not find agent: " + email, 500);
+				}
+                agent = LDAPUtil.createAgent(attributesAsMap, currentUser);
+                if (agent == null) {
+                    //Else create it from email and name
                     agent = createBasicAgent(name, email);
                 }
-                agent.setDescriptionAuthor(currentUser);
             } else {
-                if (!agent.isActive()) {
-                    agent.setActive(true);
-                    agent.setUpdated(new Date());
-                }
+                agent = createBasicAgent(name, email);
             }
-            return agent;
-        } catch (Throwable th) {
-            throw new ResponseContextException("Could not find agent: " + email, 500);
+            agent.setDescriptionAuthor(currentUser);
+            entityManager.persist(agent);
+        } else {
+            if (!agent.isActive()) {
+                agent.setActive(true);
+                agent.setUpdated(new Date());
+            }
         }
+        return agent;
     }
 
     private static Agent createBasicAgent(String name, String email) {
