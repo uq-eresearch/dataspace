@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Author: alabri
@@ -19,6 +20,20 @@ import static junit.framework.Assert.assertEquals;
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
 public class AppTest {
 
+	@Test
+    public void testPublicFrontPage() throws Exception {
+        //create a client
+		HttpClient client = new HttpClient();
+        GetMethod result;
+        String[] locations = { "", "browse", "agents", "collections" };
+        for (int i = 0; i < locations.length; i++) {
+        	result = ClientHelper.getEntry(client, Constants.URL_PREFIX+locations[i], "text/html");
+        	assertEquals(result.getURI()+" should return 200 OK", 200, result.getStatusCode());
+        	assertTrue(result.getURI()+" should return not be zero length", 
+        			0 < result.getResponseBody().length);
+        }
+    }
+	
     @Test
     public void testCorrectLoginLogout() throws Exception {
         //create a client
