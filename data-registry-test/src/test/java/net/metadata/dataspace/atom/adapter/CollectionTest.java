@@ -177,88 +177,89 @@ public class CollectionTest {
 
     }
 
-//    @Test
-//    public void testCollectionRecordContent() throws Exception {
-//
-//        //create a client
-//        HttpClient client = new HttpClient();
-//        //authenticate
-//        int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
-//        assertEquals("Could not authenticate", 200, status);
-//        //Post Entry
-//        String fileName = "/files/post/new-collection.xml";
-//        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_COLLECTIONS);
-//        assertEquals("Could not post entry", 201, postMethod.getStatusCode());
-//        String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
-//
-//        XPath xpath = XPathHelper.getXPath();
-//        InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
-//        Document docFromStream = XPathHelper.getDocFromStream(responseBodyAsStream);
-//        Document docFromFile = XPathHelper.getDocFromFile(fileName);
-//
-//        String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
-//        assertNotNull("Entry missing id", id);
-//        assertTrue("Entry's id does not contain path to entry", id.contains(Constants.PATH_FOR_COLLECTIONS));
-//
-//        String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromStream);
-//        assertNotNull("Entry missing title", title);
-//        String originalTitle = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromFile);
-//        assertNotNull("Original Entry missing title", originalTitle);
-//        assertEquals("Entry's title is incorrect", originalTitle, title);
-//
-//        String content = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromStream);
-//        assertNotNull("Entry missing content", content);
-//        String originalContent = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromFile);
-//        assertNotNull("Original Entry missing content", originalContent);
-//        assertEquals("Entry's content is incorrect", originalContent, content);
-//
-//        String updated = xpath.evaluate(Constants.RECORD_UPDATED_PATH, docFromStream);
-//        assertNotNull("Entry missing updated", updated);
-//
-//        String authorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromStream);
-//        assertNotNull("Entry missing author name", authorName);
-//        String originalAuthorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromFile);
-//        assertNotNull("Original Entry missing author name", originalAuthorName);
-//        assertEquals("Entry's author name is incorrect", originalAuthorName, authorName);
-//
-//        String draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
-//        assertNotNull("Entry missing draft element", draft);
-//        assertEquals("Entry's should be draft", "yes", draft);
-//
-//
-//        //publish entry
-//        fileName = "/files/put/published-collection.xml";
-//        PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
-//        assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
-//        docFromStream = XPathHelper.getDocFromStream(putMethod.getResponseBodyAsStream());
-//
-//        draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
-//        assertNotNull("Entry missing draft element", draft);
-//        assertEquals("Entry's should be published", "no", draft);
-//
-//        Element selfLink = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@rel='self']", docFromStream, XPathConstants.NODE);
-//        assertNotNull("Entry missing self link", selfLink);
-//        String entryLocation = selfLink.getAttribute("href");
-//
-//        Element xhtmlLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
-//        assertNotNull("Entry missing xhtml link", xhtmlLinkElement);
-//        String xhtmlLink = xhtmlLinkElement.getAttribute("href");
-//        String expectedXhtmlLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
-//        assertEquals(expectedXhtmlLink, xhtmlLink);
-//
-//        Element rdfLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_RDF + "']", docFromStream, XPathConstants.NODE);
-//        assertNotNull("Entry missing rdf link", rdfLinkElement);
-//        String rdfLink = rdfLinkElement.getAttribute("href");
-//        String expectedRdfLink = entryLocation + "?repr=" + Constants.MIME_TYPE_RDF;
-//        assertEquals(expectedRdfLink, rdfLink);
-//
-//        Element rifcsLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
-//        assertNotNull("Entry missing rifcs link", rifcsLinkElement);
-//        String rifcsLink = rifcsLinkElement.getAttribute("href");
-//        String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
-//        assertEquals(expectedRifcsLink, rifcsLink);
-//
-//    }
+    @Test
+    public void testCollectionRecordContent() throws Exception {
+
+        //create a client
+        HttpClient client = new HttpClient();
+        //authenticate
+        int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        assertEquals("Could not authenticate", 200, status);
+        //Post Entry
+        String fileName = "/files/post/new-collection.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_COLLECTIONS);
+        assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+        String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
+
+        XPath xpath = XPathHelper.getXPath();
+        InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
+        Document docFromStream = XPathHelper.getDocFromStream(responseBodyAsStream);
+        Document docFromFile = XPathHelper.getDocFromFile(fileName);
+
+        String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
+        assertNotNull("Entry missing id", id);
+        assertTrue("Entry's id does not contain path to entry", id.contains(Constants.PATH_FOR_COLLECTIONS));
+
+        String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromStream);
+        assertNotNull("Entry missing title", title);
+        String originalTitle = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromFile);
+        assertNotNull("Original Entry missing title", originalTitle);
+        assertEquals("Entry's title is incorrect", originalTitle, title);
+
+        String content = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromStream);
+        assertNotNull("Entry missing content", content);
+        String originalContent = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromFile);
+        assertNotNull("Original Entry missing content", originalContent);
+        assertEquals("Entry's content is incorrect", originalContent, content);
+
+        String updated = xpath.evaluate(Constants.RECORD_UPDATED_PATH, docFromStream);
+        assertNotNull("Entry missing updated", updated);
+
+        // TODO: Handle multiple authors
+        //String authorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromStream);
+        //assertNotNull("Entry missing author name", authorName);
+        //String originalAuthorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromFile);
+        //assertNotNull("Original Entry missing author name", originalAuthorName);
+        //assertEquals("Entry's author name is incorrect", originalAuthorName, authorName);
+
+        String draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
+        assertNotNull("Entry missing draft element", draft);
+        assertEquals("Entry's should be draft", "yes", draft);
+
+
+        //publish entry
+        fileName = "/files/put/published-collection.xml";
+        PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
+        docFromStream = XPathHelper.getDocFromStream(putMethod.getResponseBodyAsStream());
+
+        draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
+        assertNotNull("Entry missing draft element", draft);
+        assertEquals("Entry's should be published", "no", draft);
+
+        Element selfLink = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@rel='self']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing self link", selfLink);
+        String entryLocation = selfLink.getAttribute("href");
+
+        Element xhtmlLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing xhtml link", xhtmlLinkElement);
+        String xhtmlLink = xhtmlLinkElement.getAttribute("href");
+        String expectedXhtmlLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
+        assertEquals(expectedXhtmlLink, xhtmlLink);
+
+        Element rdfLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_RDF + "']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing rdf link", rdfLinkElement);
+        String rdfLink = rdfLinkElement.getAttribute("href");
+        String expectedRdfLink = entryLocation + "?repr=" + Constants.MIME_TYPE_RDF;
+        assertEquals(expectedRdfLink, rdfLink);
+
+        Element rifcsLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing rifcs link", rifcsLinkElement);
+        String rifcsLink = rifcsLinkElement.getAttribute("href");
+        String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
+        assertEquals(expectedRifcsLink, rifcsLink);
+
+    }
 
     @Test
     public void testCollectionFeedContent() throws Exception {

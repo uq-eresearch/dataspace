@@ -176,7 +176,7 @@ public class ActivityTest {
 
     }
 
-    /*   @Test
+    	@Test
         public void testActivityRecordContent() throws Exception {
 
             //create a client
@@ -197,7 +197,13 @@ public class ActivityTest {
 
             String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
             assertNotNull("Entry missing id", id);
-            assertTrue("Entry's id does not contain path to entry", id.contains(Constants.PATH_FOR_ACTIVITIES));
+            String originalId = xpath.evaluate(Constants.RECORD_ID_PATH, docFromFile);
+            assertNotNull("Original Entry missing title", originalId);
+            assertEquals("Entry's title is incorrect", originalId, id);
+            
+            String relDescribes = xpath.evaluate(Constants.RECORD_REL_DESCRIBES_PATH, docFromStream);
+            assertNotNull("Entry missing \"describes\" relation", relDescribes);
+            assertTrue("Entry's \"describes\" relation does not contain path to entry: "+relDescribes, relDescribes.contains(Constants.PATH_FOR_ACTIVITIES));
 
             String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromStream);
             assertNotNull("Entry missing title", title);
@@ -257,7 +263,6 @@ public class ActivityTest {
             assertEquals(expectedRifcsLink, rifcsLink);
 
         }
-    */
 
     @Test
     public void testActivityFeedContent() throws Exception {

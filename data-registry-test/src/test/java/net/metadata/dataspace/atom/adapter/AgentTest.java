@@ -175,7 +175,7 @@ public class AgentTest {
         assertEquals("Could not get feed", 200, getMethod.getStatusCode());
     }
 
-/*
+
     @Test
     public void testAgentRecordContent() throws Exception {
 
@@ -197,7 +197,13 @@ public class AgentTest {
 
         String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
         assertNotNull("Entry missing id", id);
-        assertTrue("Entry's id does not contain path to entry", id.contains(Constants.PATH_FOR_AGENTS));
+        String originalId = xpath.evaluate(Constants.RECORD_ID_PATH, docFromFile);
+        assertNotNull("Original Entry missing title", originalId);
+        assertEquals("Entry's title is incorrect", originalId, id);
+        
+        String relDescribes = xpath.evaluate(Constants.RECORD_REL_DESCRIBES_PATH, docFromStream);
+        assertNotNull("Entry missing \"describes\" relation", relDescribes);
+        assertTrue("Entry's \"describes\" relation does not contain path to entry: "+relDescribes, relDescribes.contains(Constants.PATH_FOR_AGENTS));
 
         String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromStream);
         assertNotNull("Entry missing title", title);
@@ -257,7 +263,7 @@ public class AgentTest {
         String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
         assertEquals(expectedRifcsLink, rifcsLink);
     }
-*/
+
 
     @Test
     public void testAgentFeedContent() throws Exception {
@@ -317,7 +323,7 @@ public class AgentTest {
 
         String entryId = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_ID_PATH, entry);
         assertNotNull("Feed entry missing id", entryId);
-        assertTrue("Feed entry's id does not contain path to entry", entryId.contains(Constants.PATH_FOR_AGENTS));
+        assertTrue("Feed entry's id does not contain path to entry: "+entryId, entryId.contains(Constants.PATH_FOR_AGENTS));
 
         String entryTitle = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_TITLE_PATH, entry);
         assertNotNull("Feed entry missing title", entryTitle);
