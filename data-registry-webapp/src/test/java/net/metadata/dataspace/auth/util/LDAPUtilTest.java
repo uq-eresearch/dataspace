@@ -66,7 +66,6 @@ public class LDAPUtilTest {
         try {
 			return new InitialDirContext(env);
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("Unable to initialize DirContext");
 			return null;

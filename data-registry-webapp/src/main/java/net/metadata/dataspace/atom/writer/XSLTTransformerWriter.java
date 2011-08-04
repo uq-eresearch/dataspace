@@ -94,7 +94,8 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
 
     private void process(Source xml, Source xsl, Result result) throws TransformerException {
         try {
-            Templates template = TransformerFactory.newInstance().newTemplates(xsl);
+            Templates template = TransformerFactory.newInstance(
+            		"net.sf.saxon.TransformerFactoryImpl",null).newTemplates(xsl);
             Transformer transformer = template.newTransformer();
             if (this.contextRequest != null) {
                 AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
