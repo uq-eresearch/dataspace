@@ -4,6 +4,8 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.model.record.User;
+import net.sf.saxon.TransformerFactoryImpl;
+
 import org.apache.abdera.model.Base;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -94,8 +96,12 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
 
     private void process(Source xml, Source xsl, Result result) throws TransformerException {
         try {
+        	// Compile-time dependency on Saxon
+        	Class<TransformerFactoryImpl> implementation = 
+        			net.sf.saxon.TransformerFactoryImpl.class;
+        	// Explicitly use Saxon (so that we get XSLT 2.0)
             Templates template = TransformerFactory.newInstance(
-            		"net.sf.saxon.TransformerFactoryImpl",null).newTemplates(xsl);
+            		implementation.getCanonicalName(), null).newTemplates(xsl);
             Transformer transformer = template.newTransformer();
             if (this.contextRequest != null) {
                 AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
@@ -114,26 +120,4 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
         }
     }
 
-//    private void processWithSAXON() {
-//        com.icl.saxon.trax.Processor processor = com.icl.saxon.trax.Processor.newInstance("xslt");
-//
-//        // unlike Xalan, SAXON uses the SAX InputSource.  Xalan
-//        // uses its own class, XSLTInputSource
-//        org.xml.sax.InputSource xmlInputSource =
-//                new org.xml.sax.InputSource(xmlSystemId);
-//        org.xml.sax.InputSource xsltInputSource =
-//                new org.xml.sax.InputSource(xsltSystemId);
-//
-//        com.icl.saxon.trax.Result result =
-//                new com.icl.saxon.trax.Result(System.out);
-//
-//        // create a new compiled stylesheet
-//        com.icl.saxon.trax.Templates templates =
-//                processor.process(xsltInputSource);
-//
-//        // create a transformer that can be used for a single transformation
-//        com.icl.saxon.trax.Transformer trans = templates.newTransformer();
-//        trans.transform(xmlInputSource, result);
-//
-//    }
 }
