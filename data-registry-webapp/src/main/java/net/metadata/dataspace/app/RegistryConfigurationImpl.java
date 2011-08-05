@@ -137,7 +137,7 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     }
 
     public void cleanUp() {
-        getDaoManager().getJpaConnnector().getEntityManager().close();
+        getDaoManager().getEntityManagerSource().getEntityManager().close();
         logger.info("Successfully closed the database connection.... OK!");
     }
 }

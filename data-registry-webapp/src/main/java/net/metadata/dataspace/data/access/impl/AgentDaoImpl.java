@@ -30,7 +30,7 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
     public AgentVersion getByVersion(String uriKey, String version) {
         int parentAtomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, version);
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM AgentVersion o WHERE o.atomicNumber = :atomicNumber AND o.parent.atomicNumber = :parentAtomicNumber");
+        Query query = getEntityManager().createQuery("SELECT o FROM AgentVersion o WHERE o.atomicNumber = :atomicNumber AND o.parent.atomicNumber = :parentAtomicNumber");
         query.setParameter("atomicNumber", atomicNumber);
         query.setParameter("parentAtomicNumber", parentAtomicNumber);
         List<?> resultList = query.getResultList();
@@ -43,7 +43,7 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
 
     @Override
     public Agent getByEmail(String email) {
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT DISTINCT(v.parent) FROM AgentVersion v WHERE :email IN elements(v.mboxes)");
+        Query query = getEntityManager().createQuery("SELECT DISTINCT(v.parent) FROM AgentVersion v WHERE :email IN elements(v.mboxes)");
         query.setParameter("email", email);
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {
@@ -55,7 +55,7 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
 
     @Override
     public Agent getByOriginalId(String originalId) {
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Agent o WHERE o.originalId = :originalId");
+        Query query = getEntityManager().createQuery("SELECT o FROM Agent o WHERE o.originalId = :originalId");
         query.setParameter("originalId", originalId);
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {

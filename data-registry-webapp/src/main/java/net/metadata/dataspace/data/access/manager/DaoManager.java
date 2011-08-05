@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.access.manager;
 
+import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import net.metadata.dataspace.data.access.*;
-import net.metadata.dataspace.data.connector.JpaConnector;
 
 /**
  * User: alabri
@@ -36,5 +36,5 @@ public interface DaoManager {
 
     ActivityVersionDao getActivityVersionDao();
 
-    JpaConnector getJpaConnnector();
+    EntityManagerSource getEntityManagerSource();
 }

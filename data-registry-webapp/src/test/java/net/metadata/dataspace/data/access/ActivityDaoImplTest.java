@@ -1,8 +1,8 @@
 package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.NonProductionConstants;
+import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Activity;
@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.Date;
@@ -38,14 +39,14 @@ public class ActivityDaoImplTest {
     private EntityCreator entityCreator;
 
     @Autowired
-    private JpaConnector jpaConnector;
+    private DaoManager daoManager;
 
     private EntityManager entityManager;
 
     @Before
     public void setUp() throws Exception {
         PopulatorUtil.cleanup();
-        entityManager = jpaConnector.getEntityManager();
+        entityManager = daoManager.getEntityManagerSource().getEntityManager();
     }
 
     @After
@@ -54,10 +55,10 @@ public class ActivityDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testAddingActivity() throws Exception {
         Activity activity = (Activity) entityCreator.getNextRecord(Activity.class);
         activity.setUpdated(new Date());
-        entityManager.getTransaction().begin();
         int originalTableSize = activityDao.getAll().size();
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
         activity.getVersions().add(activityVersion);
@@ -66,8 +67,7 @@ public class ActivityDaoImplTest {
         entityManager.persist(source);
         entityManager.persist(activityVersion);
         entityManager.persist(activity);
-        entityManager.getTransaction().commit();
-
+        
         Long id = activity.getId();
         Activity activityById = activityDao.getById(id);
         assertTrue("Table has " + activityDao.getAll().size() + " records", activityDao.getAll().size() == (originalTableSize + 1));
@@ -77,19 +77,18 @@ public class ActivityDaoImplTest {
 
 
     @Test
+    @Transactional
     public void testEditingActivity() throws Exception {
         testAddingActivity();
         assertTrue("Table is empty", activityDao.getAll().size() != 0);
         List<Activity> activities = activityDao.getAll();
         Activity activity = activities.get(0);
-        entityManager.getTransaction().begin();
         Long id = activity.getId();
         Date now = new Date();
         String content = "Updated content";
         activity.getVersions().first().setDescription(content);
         activity.setUpdated(now);
         entityManager.merge(activity);
-        entityManager.getTransaction().commit();
         Activity activityById = activityDao.getById(id);
         Assert.assertEquals("Modified and Retrieved records are not the same", activity, activityById);
         Assert.assertEquals("Update Date was not updated", now, activityById.getUpdated());
@@ -97,6 +96,7 @@ public class ActivityDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testRemovingActivity() throws Exception {
         testAddingActivity();
         assertTrue("Table is empty", activityDao.getAll().size() != 0);
@@ -108,6 +108,7 @@ public class ActivityDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testSoftDeleteActivity() throws Exception {
         testAddingActivity();
         assertTrue("Table is empty", activityDao.getAll().size() != 0);

@@ -29,6 +29,7 @@ import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -64,7 +65,7 @@ public class AdapterInputHelper {
     }
 
     private static void addRelationsToActivity(Entry entry, ActivityVersion version) throws ResponseContextException {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
 
         //Add the original id
         IRI entryId = entry.getId();
@@ -125,7 +126,7 @@ public class AdapterInputHelper {
     }
 
     private static void addRelationsCollection(Entry entry, CollectionVersion version, User currentUser) throws ResponseContextException {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
 
         //Add the original id
         IRI entryId = entry.getId();
@@ -256,7 +257,7 @@ public class AdapterInputHelper {
     }
 
     private static void addRelationsAgent(Entry entry, AgentVersion version) throws ResponseContextException {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
 
         //Add the original id
         IRI entryId = entry.getId();
@@ -390,7 +391,7 @@ public class AdapterInputHelper {
     }
 
     private static void addRelationsService(Entry entry, ServiceVersion version) throws ResponseContextException {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
 
         //Add the original id
         IRI entryId = entry.getId();
@@ -500,7 +501,7 @@ public class AdapterInputHelper {
                 throw new ResponseContextException("Author missing email address", 400);
             }
             if (uri != null) {
-                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                 String uriKey = OperationHelper.getEntityID(uri.toString());
                 Agent agent = daoManager.getAgentDao().getByKey(uriKey);
                 if (agent != null) {
@@ -560,7 +561,7 @@ public class AdapterInputHelper {
                     if (agent != null) {
                         version.getPublishers().add(agent);
                         agent.getIsManagerOf().add(version.getParent());
-                        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+                        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                         entityManager.merge(agent);
                     } else {
                         //Cannot do much here
@@ -746,8 +747,9 @@ public class AdapterInputHelper {
         return uriKeys;
     }
 
+    @Transactional
     private static Agent findOrCreateAgent(String name, String email, User currentUser) throws ResponseContextException {
-    	EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+    	EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
 
     	//Find the agent in our system first
         Agent agent = daoManager.getAgentDao().getByEmail(email);

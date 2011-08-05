@@ -19,6 +19,9 @@ import net.metadata.dataspace.data.model.version.ServiceVersion;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -103,13 +106,11 @@ public class PopulatorUtil {
         return activityVersion;
     }
 
+    @Transactional
     public static void cleanup() {
-        JpaConnector jpaConnnector = daoManager.getJpaConnnector();
-        EntityManager entityManager = jpaConnnector.getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
+        EntityManager entityManager = 
+        		daoManager.getEntityManagerSource().getEntityManager();
         Query dropQuery = entityManager.createNativeQuery("DROP SCHEMA registry if exists; CREATE SCHEMA registry;");
-        transaction.commit();
     }
 
     public void setEntityCreator(EntityCreator entityCreator) {

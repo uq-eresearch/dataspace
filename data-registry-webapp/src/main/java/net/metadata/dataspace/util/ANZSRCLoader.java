@@ -59,7 +59,7 @@ public class ANZSRCLoader {
 
                 SubjectDao subjectDao = RegistryApplication.getApplicationContext().getDaoManager().getSubjectDao();
                 NodeList nodeList = dom.getElementsByTagName(ELEMENT_DESCRIPTION);
-                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
+                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                 EntityTransaction transaction = entityManager.getTransaction();
                 transaction.begin();
                 for (int i = 0; i < nodeList.getLength(); i++) {

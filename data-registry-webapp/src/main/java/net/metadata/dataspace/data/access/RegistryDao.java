@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.access;
 
 import au.edu.uq.itee.maenad.dataaccess.Dao;
+import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public interface RegistryDao<T> extends Dao<T> {
 
-    /**
+	/**
      * Retrieve an entity T from the database by the provided id
      *
      * @param id of an entity

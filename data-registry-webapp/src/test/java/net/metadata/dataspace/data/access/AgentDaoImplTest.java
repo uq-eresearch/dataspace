@@ -1,8 +1,8 @@
 package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.NonProductionConstants;
+import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.Date;
@@ -39,14 +40,14 @@ public class AgentDaoImplTest {
     private EntityCreator entityCreator;
 
     @Autowired
-    private JpaConnector jpaConnector;
+    private DaoManager daoManager;
 
     private EntityManager entityManager;
 
     @Before
     public void setUp() throws Exception {
 //        PopulatorUtil.cleanup();
-        entityManager = jpaConnector.getEntityManager();
+        entityManager = daoManager.getEntityManagerSource().getEntityManager();
     }
 
 //    @After
@@ -56,10 +57,10 @@ public class AgentDaoImplTest {
 //    }
 
     @Test
+    @Transactional
     public void testAddingAgent() throws Exception {
         Agent agent = (Agent) entityCreator.getNextRecord(Agent.class);
         agent.setUpdated(new Date());
-        entityManager.getTransaction().begin();
         int originalTableSize = agentDao.getAll().size();
         AgentVersion agentVersion = PopulatorUtil.getAgentVersion(agent);
         Subject subject1 = PopulatorUtil.getSubject();
@@ -76,8 +77,7 @@ public class AgentDaoImplTest {
         entityManager.persist(subject2);
         entityManager.persist(agentVersion);
         entityManager.persist(agent);
-        entityManager.getTransaction().commit();
-
+        
         Long id = agent.getId();
         Agent agentById = agentDao.getById(id);
         assertTrue("Table has " + agentDao.getAll().size() + " records", agentDao.getAll().size() == (originalTableSize + 1));
@@ -88,19 +88,18 @@ public class AgentDaoImplTest {
 
 
     @Test
+    @Transactional
     public void testEditingAgent() throws Exception {
-//        testAddingAgent();
+        testAddingAgent();
         assertTrue("Table is empty", agentDao.getAll().size() != 0);
         List<Agent> agentList = agentDao.getAll();
         Agent agent = agentList.get(0);
-        entityManager.getTransaction().begin();
         Long id = agent.getId();
         Date now = new Date();
         String content = "Updated Content";
         agent.getVersions().first().setDescription(content);
         agent.setUpdated(now);
         entityManager.merge(agent);
-        entityManager.getTransaction().commit();
         Agent agentById = agentDao.getById(id);
         assertEquals("Modified and Retrieved records are not the same", agent, agentById);
         assertEquals("Update Date was not updated", now, agentById.getUpdated());
@@ -108,8 +107,9 @@ public class AgentDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testRemovingAgent() throws Exception {
-//        testAddingAgent();
+        testAddingAgent();
         assertTrue("Table is empty", agentDao.getAll().size() != 0);
         List<Agent> agentList = agentDao.getAll();
         for (Agent agent : agentList) {
@@ -119,6 +119,7 @@ public class AgentDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testSoftDeleteAgent() throws Exception {
         testAddingAgent();
         assertTrue("Table is empty", agentDao.getAll().size() != 0);

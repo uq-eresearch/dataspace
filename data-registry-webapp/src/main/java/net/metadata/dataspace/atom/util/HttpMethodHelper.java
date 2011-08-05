@@ -25,6 +25,7 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
@@ -51,6 +52,7 @@ public class HttpMethodHelper {
     private static AuthorizationManager<User> authorizationManager = RegistryApplication.getApplicationContext().getAuthorizationManager();
     private static AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
 
+    @Transactional
     public static ResponseContext postEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
         User user = authenticationManager.getCurrentUser(request);
         if (user == null) {
@@ -65,14 +67,9 @@ public class HttpMethodHelper {
                 if (version == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                 } else {
-                    EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-                    EntityTransaction transaction = entityManager.getTransaction();
+                    EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                     try {
-                        if (transaction.isActive()) {
-                            transaction.commit();
-                        }
                         Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
-                        transaction.begin();
                         if (source.getId() == null) {
                             entityManager.persist(source);
                         }
@@ -92,14 +89,10 @@ public class HttpMethodHelper {
                         AdapterInputHelper.addDescriptionAuthors(record, request);
                         entityManager.merge(version);
                         entityManager.merge(record);
-                        transaction.commit();
                         Entry createdEntry = AdapterOutputHelper.getEntryFromEntity(version, true);
                         return AdapterOutputHelper.getContextResponseForPost(createdEntry);
                     } catch (Exception th) {
                         logger.warn("Invalid Entry, Rolling back database", th);
-                        if (transaction.isActive()) {
-                            transaction.rollback();
-                        }
                         throw new ResponseContextException(th.getMessage(), 400);
                     }
                 }
@@ -109,6 +102,7 @@ public class HttpMethodHelper {
         }
     }
 
+    @Transactional
     public static ResponseContext putEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
         User user = authenticationManager.getCurrentUser(request);
         if (user == null) {
@@ -130,27 +124,19 @@ public class HttpMethodHelper {
                             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                         } else {
                             if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
-                                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getJpaConnnector().getEntityManager();
-                                EntityTransaction transaction = entityManager.getTransaction();
+                                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                                 try {
-                                    if (transaction.isActive()) {
-                                        transaction.commit();
-                                    }
-                                    transaction.begin();
                                     record.getVersions().add(version);
                                     version.setParent(record);
                                     AdapterInputHelper.addRelations(entry, version, user);
                                     record.setUpdated(new Date());
                                     entityManager.persist(version);
                                     entityManager.merge(record);
-                                    transaction.commit();
                                     Entry updatedEntry = AdapterOutputHelper.getEntryFromEntity(version, false);
                                     return AdapterOutputHelper.getContextResponseForPut(updatedEntry);
                                 } catch (Exception th) {
                                     logger.fatal("Invalid Entry, Rolling back database", th);
-                                    if (transaction.isActive()) {
-                                        transaction.rollback();
-                                    }
+                                    
                                     throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
                                 }
                             } else {

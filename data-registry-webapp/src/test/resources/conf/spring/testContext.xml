@@ -18,4 +18,5 @@
         <property name="entityCreator" ref="entityCreator"/>
         <property name="daoManager" ref="daoManager"/>
     </bean>
+    
 </beans>

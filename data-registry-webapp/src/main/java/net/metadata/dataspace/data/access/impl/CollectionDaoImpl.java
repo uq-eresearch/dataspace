@@ -30,7 +30,7 @@ public class CollectionDaoImpl extends AbstractRegistryDao<Collection> implement
     public CollectionVersion getByVersion(String uriKey, String version) {
         int parentAtomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, version);
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM CollectionVersion o WHERE o.atomicNumber = :atomicNumber AND o.parent.atomicNumber = :parentAtomicNumber");
+        Query query = getEntityManager().createQuery("SELECT o FROM CollectionVersion o WHERE o.atomicNumber = :atomicNumber AND o.parent.atomicNumber = :parentAtomicNumber");
         query.setParameter("atomicNumber", atomicNumber);
         query.setParameter("parentAtomicNumber", parentAtomicNumber);
         List<?> resultList = query.getResultList();
@@ -43,7 +43,7 @@ public class CollectionDaoImpl extends AbstractRegistryDao<Collection> implement
 
     @Override
     public Collection getByOriginalId(String originalId) {
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.originalId = :originalId AND o.isActive = true");
+        Query query = getEntityManager().createQuery("SELECT o FROM Collection o WHERE o.originalId = :originalId AND o.isActive = true");
         query.setParameter("originalId", originalId);
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {

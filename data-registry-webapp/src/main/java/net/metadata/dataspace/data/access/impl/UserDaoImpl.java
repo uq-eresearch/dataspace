@@ -1,12 +1,14 @@
 package net.metadata.dataspace.data.access.impl;
 
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
-import au.edu.uq.itee.maenad.dataaccess.jpa.JpaDao;
 import net.metadata.dataspace.data.access.UserDao;
 import net.metadata.dataspace.data.model.record.User;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.Serializable;
 
 /**
@@ -25,8 +27,9 @@ public class UserDaoImpl extends JpaDao<User> implements UserDao, Serializable {
     }
 
     @Override
+    @Transactional
     public User getByUsername(String username) {
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM AppUser o WHERE o.username = :username");
+        Query query = getEntityManager().createQuery("SELECT o FROM AppUser o WHERE o.username = :username");
         query.setParameter("username", username);
         try {
             return (User) query.getSingleResult();

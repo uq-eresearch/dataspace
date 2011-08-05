@@ -1,8 +1,8 @@
 package net.metadata.dataspace.data.access.manager.impl;
 
+import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
-import net.metadata.dataspace.data.connector.JpaConnector;
 
 /**
  * User: alabri
@@ -16,7 +16,7 @@ public class DaoManagerImpl implements DaoManager {
     private ServiceDao serviceDao;
     private ActivityDao activityDao;
     private SubjectDao subjectDao;
-    private JpaConnector jpaConnnector;
+    private EntityManagerSource entityManagerSource;
     private AgentVersionDao agentVersionDao;
     private CollectionVersionDao collectionVersionDao;
     private ServiceVersionDao serviceVersionDao;
@@ -66,12 +66,12 @@ public class DaoManagerImpl implements DaoManager {
         return subjectDao;
     }
 
-    public void setJpaConnnector(JpaConnector jpaConnnector) {
-        this.jpaConnnector = jpaConnnector;
+    public void setJpaConnnector(EntityManagerSource entityManagerSource) {
+        this.entityManagerSource = entityManagerSource;
     }
 
-    public JpaConnector getJpaConnnector() {
-        return jpaConnnector;
+    public EntityManagerSource getEntityManagerSource() {
+        return entityManagerSource;
     }
 
     public void setAgentVersionDao(AgentVersionDao agentVersionDao) {

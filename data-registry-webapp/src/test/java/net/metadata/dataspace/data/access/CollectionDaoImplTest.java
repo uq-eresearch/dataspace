@@ -1,8 +1,8 @@
 package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.NonProductionConstants;
+import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.Date;
@@ -39,12 +40,12 @@ public class CollectionDaoImplTest {
     private EntityCreator entityCreator;
 
     @Autowired
-    private JpaConnector jpaConnector;
+    private DaoManager daoManager;
     private EntityManager entityManager;
 
     @Before
     public void setUp() throws Exception {
-        entityManager = jpaConnector.getEntityManager();
+        entityManager = daoManager.getEntityManagerSource().getEntityManager();
         PopulatorUtil.cleanup();
     }
 
@@ -54,11 +55,11 @@ public class CollectionDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testAddingCollection() throws Exception {
 
         Collection collection = (Collection) entityCreator.getNextRecord(Collection.class);
         collection.setUpdated(new Date());
-        entityManager.getTransaction().begin();
         int originalTableSize = collectionDao.getAll().size();
         CollectionVersion collectionVersion = PopulatorUtil.getCollectionVersion(collection);
         Subject subject1 = PopulatorUtil.getSubject();
@@ -73,8 +74,7 @@ public class CollectionDaoImplTest {
         entityManager.persist(subject2);
         entityManager.persist(collectionVersion);
         entityManager.persist(collection);
-        entityManager.getTransaction().commit();
-
+        
         Long id = collection.getId();
         Collection collectionById = collectionDao.getById(id);
         assertTrue("Table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() == (originalTableSize + 1));
@@ -85,12 +85,12 @@ public class CollectionDaoImplTest {
 
 
     @Test
+    @Transactional
     public void testEditingCollection() throws Exception {
         testAddingCollection();
         assertTrue("Table is empty", collectionDao.getAll().size() != 0);
         List<Collection> collectionList = collectionDao.getAll();
         Collection collection = collectionList.get(0);
-        entityManager.getTransaction().begin();
         Long id = collection.getId();
         Date now = new Date();
         collection.setUpdated(now);
@@ -98,7 +98,6 @@ public class CollectionDaoImplTest {
         collection.getVersions().first().setDescription(content);
         collection.setUpdated(now);
         entityManager.merge(collection);
-        entityManager.getTransaction().commit();
         Collection collectionById = collectionDao.getById(id);
         assertEquals("Modified and Retrieved records are not the same", collection, collectionById);
         assertEquals("Update Date was not updated", now, collectionById.getUpdated());
@@ -107,6 +106,7 @@ public class CollectionDaoImplTest {
 
 
     @Test
+    @Transactional
     public void testRemovingAgent() throws Exception {
         testAddingCollection();
         assertTrue("Table is empty", collectionDao.getAll().size() != 0);
@@ -118,6 +118,7 @@ public class CollectionDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testSoftDeleteCollection() throws Exception {
         testAddingCollection();
         assertTrue("Table is empty", collectionDao.getAll().size() != 0);

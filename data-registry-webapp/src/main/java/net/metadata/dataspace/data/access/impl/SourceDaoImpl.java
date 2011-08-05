@@ -42,7 +42,7 @@ public class SourceDaoImpl extends AbstractRegistryDao<Source> implements Source
 
     @Override
     public Source getBySourceURI(String sourceUri) {
-        Query query = entityManagerSource.getEntityManager().createQuery("SELECT o FROM Source o WHERE o.sourceURI = :sourceUri");
+        Query query = getEntityManager().createQuery("SELECT o FROM Source o WHERE o.sourceURI = :sourceUri");
         query.setParameter("sourceUri", sourceUri);
         List<?> resultList = query.getResultList();
         if (resultList.isEmpty()) {

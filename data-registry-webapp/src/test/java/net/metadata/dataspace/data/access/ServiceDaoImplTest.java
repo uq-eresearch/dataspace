@@ -1,8 +1,8 @@
 package net.metadata.dataspace.data.access;
 
 import net.metadata.dataspace.app.NonProductionConstants;
+import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
-import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Service;
@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.Date;
@@ -39,14 +40,14 @@ public class ServiceDaoImplTest {
     private EntityCreator entityCreator;
 
     @Autowired
-    private JpaConnector jpaConnector;
+    private DaoManager daoManager;
 
     private EntityManager entityManager;
 
     @Before
     public void setUp() throws Exception {
         PopulatorUtil.cleanup();
-        entityManager = jpaConnector.getEntityManager();
+        entityManager = daoManager.getEntityManagerSource().getEntityManager();
     }
 
     @After
@@ -55,10 +56,10 @@ public class ServiceDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testAddingService() throws Exception {
         Service service = (Service) entityCreator.getNextRecord(Service.class);
         service.setUpdated(new Date());
-        entityManager.getTransaction().begin();
         int originalTableSize = serviceDao.getAll().size();
         ServiceVersion serviceVersion = PopulatorUtil.getServiceVersion(service);
         service.getVersions().add(serviceVersion);
@@ -67,8 +68,7 @@ public class ServiceDaoImplTest {
         entityManager.persist(source);
         entityManager.persist(serviceVersion);
         entityManager.persist(service);
-        entityManager.getTransaction().commit();
-
+        
         Long id = service.getId();
         Service serviceById = serviceDao.getById(id);
         assertTrue("Table has " + serviceDao.getAll().size() + " records", serviceDao.getAll().size() == (originalTableSize + 1));
@@ -78,19 +78,18 @@ public class ServiceDaoImplTest {
 
 
     @Test
+    @Transactional
     public void testEditingService() throws Exception {
         testAddingService();
         assertTrue("Table is empty", serviceDao.getAll().size() != 0);
         List<Service> services = serviceDao.getAll();
         Service service = services.get(0);
-        entityManager.getTransaction().begin();
         Long id = service.getId();
         Date now = new Date();
         String content = "Updated content";
         service.getVersions().first().setDescription(content);
         service.setUpdated(now);
         entityManager.merge(service);
-        entityManager.getTransaction().commit();
         Service serviceById = serviceDao.getById(id);
         Assert.assertEquals("Modified and Retrieved records are not the same", service, serviceById);
         Assert.assertEquals("Update Date was not updated", now, serviceById.getUpdated());
@@ -98,6 +97,7 @@ public class ServiceDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testRemovingService() throws Exception {
         testAddingService();
         assertTrue("Table is empty", serviceDao.getAll().size() != 0);
@@ -109,6 +109,7 @@ public class ServiceDaoImplTest {
     }
 
     @Test
+    @Transactional
     public void testSoftDeleteService() throws Exception {
         testAddingService();
         assertTrue("Table is empty", serviceDao.getAll().size() != 0);

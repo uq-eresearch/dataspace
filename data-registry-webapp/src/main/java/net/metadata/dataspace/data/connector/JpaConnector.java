@@ -4,6 +4,8 @@ import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+
 import java.io.Serializable;
 
 /**
@@ -17,20 +19,18 @@ public class JpaConnector implements EntityManagerSource, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -7163137476231779722L;
-	private EntityManagerFactory emf;
-    private final ThreadLocal<EntityManager> entityManagerTL = new ThreadLocal<EntityManager>();
-
-    public JpaConnector(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
+	private EntityManager em;
+	
+    public JpaConnector() {}
 
     @Override
     public EntityManager getEntityManager() {
-        EntityManager entityManager = entityManagerTL.get();
-        if (entityManager == null) {
-            entityManager = emf.createEntityManager();
-            entityManagerTL.set(entityManager);
-        }
-        return entityManager;
+        return em;
     }
+    
+    @PersistenceContext
+    public void setEntityManager(EntityManager em) {
+    	this.em = em;
+    }
+    
 }

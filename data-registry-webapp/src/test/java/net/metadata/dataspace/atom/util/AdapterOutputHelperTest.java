@@ -15,6 +15,7 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.apache.abdera.model.Entry;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +51,11 @@ public class AdapterOutputHelperTest {
     private DaoManager daoManager;
 
 
+    @Before
+    @Transactional
     public void setUpDatabase() throws Exception {
-        JpaConnector jpaConnnector = daoManager.getJpaConnnector();
-        EntityManager entityManager = jpaConnnector.getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
+        EntityManager entityManager = 
+        		daoManager.getEntityManagerSource().getEntityManager();
         User currentUser = new User("test", "Test User", "test@uq.edu.au");
         Agent agent = (Agent) entityCreator.getNextRecord(Agent.class);
         AgentVersion agentVersion = PopulatorUtil.getAgentVersion(agent);
@@ -121,7 +122,6 @@ public class AdapterOutputHelperTest {
         entityManager.persist(serviceVersion);
         entityManager.persist(activity);
         entityManager.persist(activityVersion);
-        transaction.commit();
     }
 
 //    @After
@@ -130,8 +130,8 @@ public class AdapterOutputHelperTest {
 //    }
 
     @Test
+    @Transactional
     public void testGetEntryFromAgent() throws Exception {
-        setUpDatabase();
         List<Agent> agents = daoManager.getAgentDao().getAll();
         Agent agent = agents.get(agents.size() - 1);
         AgentVersion agentVersion = agent.getVersions().first();
@@ -145,7 +145,8 @@ public class AdapterOutputHelperTest {
     }
 
     @Test
-    public void testGetEnteryFromCollection() throws Exception {
+    @Transactional
+    public void testGetEntryFromCollection() throws Exception {
         List<Collection> collections = daoManager.getCollectionDao().getAll();
         Collection collection = collections.get(collections.size() - 1);
         CollectionVersion version = collection.getVersions().first();
@@ -162,7 +163,8 @@ public class AdapterOutputHelperTest {
     }
 
     @Test
-    public void testGetEnteryFromActivity() throws Exception {
+    @Transactional
+    public void testGetEntryFromActivity() throws Exception {
         List<Activity> activities = daoManager.getActivityDao().getAll();
         Activity activity = activities.get(activities.size() - 1);
         ActivityVersion version = activity.getVersions().first();
@@ -177,7 +179,8 @@ public class AdapterOutputHelperTest {
     }
 
     @Test
-    public void testGetEnteryFromService() throws Exception {
+    @Transactional
+    public void testGetEntryFromService() throws Exception {
         List<Service> services = daoManager.getServiceDao().getAll();
         Service service = services.get(services.size() - 1);
         Entry entry = AdapterOutputHelper.getEntryFromEntity(service.getVersions().first(), true);
@@ -190,6 +193,7 @@ public class AdapterOutputHelperTest {
     }
 
     @Test
+    @Transactional
     public void testUpdateAgentFromEntry() throws Exception {
         List<Agent> agents = daoManager.getAgentDao().getAll();
         Agent agent = agents.get(agents.size() - 1);
@@ -214,6 +218,7 @@ public class AdapterOutputHelperTest {
 //    }
 
     @Test
+    @Transactional
     public void testUpdateServiceFromEntry() throws Exception {
         List<Service> services = daoManager.getServiceDao().getAll();
         Service service = services.get(services.size() - 1);
@@ -225,6 +230,7 @@ public class AdapterOutputHelperTest {
     }
 
     @Test
+    @Transactional
     public void testUpdateActivityFromEntry() throws Exception {
         List<Activity> activities = daoManager.getActivityDao().getAll();
         Activity activity = activities.get(activities.size() - 1);
