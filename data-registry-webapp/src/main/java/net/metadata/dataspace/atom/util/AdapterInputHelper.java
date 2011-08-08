@@ -43,6 +43,7 @@ import java.util.*;
  * Date: 17/11/2010
  * Time: 9:54:40 AM
  */
+@Transactional
 public class AdapterInputHelper {
 
     private static CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
@@ -747,10 +748,11 @@ public class AdapterInputHelper {
         return uriKeys;
     }
 
-    @Transactional
     private static Agent findOrCreateAgent(String name, String email, User currentUser) throws ResponseContextException {
     	EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
 
+    	User user = daoManager.getUserDao().getByUsername(currentUser.getUsername());
+    	
     	//Find the agent in our system first
         Agent agent = daoManager.getAgentDao().getByEmail(email);
         if (agent == null) {
@@ -762,7 +764,7 @@ public class AdapterInputHelper {
 				} catch (NamingException e) {
 					throw new ResponseContextException("Could not find agent: " + email, 500);
 				}
-                agent = LDAPUtil.createAgent(attributesAsMap, currentUser);
+                agent = LDAPUtil.createAgent(attributesAsMap);
                 if (agent == null) {
                     //Else create it from email and name
                     agent = createBasicAgent(name, email);
@@ -770,7 +772,7 @@ public class AdapterInputHelper {
             } else {
                 agent = createBasicAgent(name, email);
             }
-            agent.setDescriptionAuthor(currentUser);
+            //agent.setDescriptionAuthor(user);
             entityManager.persist(agent);
         } else {
             if (!agent.isActive()) {

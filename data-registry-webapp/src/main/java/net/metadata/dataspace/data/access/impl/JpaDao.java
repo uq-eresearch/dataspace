@@ -17,10 +17,23 @@ public class JpaDao<T> implements Dao<T> {
 
 	protected EntityManagerSource entityManagerSource;
 
+	public JpaDao() {
+		
+	}
+	
 	public JpaDao(EntityManagerSource entityManagerSource) {
-    	this.entityManagerSource = entityManagerSource;
+    	this.setEntityManagerSource(entityManagerSource);
 	}
 
+	
+	public EntityManagerSource getEntityManagerSource() {
+		return entityManagerSource;
+	}
+
+	public void setEntityManagerSource(EntityManagerSource entityManagerSource) {
+		this.entityManagerSource = entityManagerSource;
+	}
+	
 	@Override
 	@Transactional
 	public T load(Object id) {

@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +43,7 @@ import java.util.Set;
  * Date: 15/11/2010
  * Time: 1:44:04 PM
  */
+@Transactional
 public class HttpMethodHelper {
 
     private static Logger logger = Logger.getLogger(HttpMethodHelper.class.getName());
@@ -52,9 +55,17 @@ public class HttpMethodHelper {
     private static AuthorizationManager<User> authorizationManager = RegistryApplication.getApplicationContext().getAuthorizationManager();
     private static AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
 
-    @Transactional
-    public static ResponseContext postEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
-        User user = authenticationManager.getCurrentUser(request);
+    private static HttpMethodHelper instance = new HttpMethodHelper();
+    
+    public static HttpMethodHelper getInstance() {
+		return instance;
+	}
+
+	@Transactional
+    public ResponseContext postEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
+		EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+                
+		User user = authenticationManager.getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
@@ -67,9 +78,8 @@ public class HttpMethodHelper {
                 if (version == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
                 } else {
-                    EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                     try {
-                        Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
+                    	Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
                         if (source.getId() == null) {
                             entityManager.persist(source);
                         }
@@ -87,8 +97,8 @@ public class HttpMethodHelper {
                         AdapterInputHelper.addRelations(entry, version, user);
                         List<Person> authors = entry.getSource().getAuthors();
                         AdapterInputHelper.addDescriptionAuthors(record, request);
-                        entityManager.merge(version);
-                        entityManager.merge(record);
+                        //entityManager.merge(version);
+                        //entityManager.merge(record);
                         Entry createdEntry = AdapterOutputHelper.getEntryFromEntity(version, true);
                         return AdapterOutputHelper.getContextResponseForPost(createdEntry);
                     } catch (Exception th) {
@@ -103,7 +113,7 @@ public class HttpMethodHelper {
     }
 
     @Transactional
-    public static ResponseContext putEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
+    public ResponseContext putEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
         User user = authenticationManager.getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
@@ -161,7 +171,7 @@ public class HttpMethodHelper {
      * @return
      * @throws ResponseContextException
      */
-    public static ResponseContext postMedia(RequestContext request, Class<?> clazz) throws ResponseContextException {
+    public ResponseContext postMedia(RequestContext request, Class<?> clazz) throws ResponseContextException {
         User user = authenticationManager.getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
@@ -187,7 +197,7 @@ public class HttpMethodHelper {
         }
     }
 
-    public static ResponseContext deleteEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
+    public ResponseContext deleteEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
         User user = authenticationManager.getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
@@ -212,7 +222,7 @@ public class HttpMethodHelper {
         }
     }
 
-    public static ResponseContext getEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
+    public ResponseContext getEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
         String uriKey = OperationHelper.getEntryID(request);
         Record record = getExistingRecord(uriKey, clazz);
         if (record == null) {
@@ -271,7 +281,7 @@ public class HttpMethodHelper {
         }
     }
 
-    public static void addFeedDetails(Feed feed, RequestContext request, Class<?> clazz) throws ResponseContextException {
+    public void addFeedDetails(Feed feed, RequestContext request, Class<?> clazz) throws ResponseContextException {
         Record latestService = getLatestRecord(clazz);
         if (latestService != null) {
             refreshRecord(latestService, clazz);
@@ -306,7 +316,7 @@ public class HttpMethodHelper {
      * Retrieves the FOM Entry object from the request payload.
      */
     @SuppressWarnings("unchecked")
-    private static Entry getEntryFromRequest(RequestContext request) throws ResponseContextException {
+    private Entry getEntryFromRequest(RequestContext request) throws ResponseContextException {
         Abdera abdera = request.getAbdera();
         Parser parser = abdera.getParser();
         Document<Entry> entry_doc;
@@ -323,7 +333,7 @@ public class HttpMethodHelper {
         }
     }
 
-    public static Iterable getRecords(RequestContext request, Class<?> clazz) {
+    public Iterable getRecords(RequestContext request, Class<?> clazz) {
         User user = authenticationManager.getCurrentUser(request);
         List list;
         if (authorizationManager.canAccessWorkingCopy(user, Collection.class)) {
@@ -358,7 +368,7 @@ public class HttpMethodHelper {
         return list;
     }
 
-    public static List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
+    public List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
         List<Person> personList = new ArrayList<Person>();
         if (record instanceof Collection) {
         	CollectionVersion version = (CollectionVersion) record.getPublished();
@@ -377,7 +387,7 @@ public class HttpMethodHelper {
         return personList;
     }
 
-    private static Record getExistingRecord(String uriKey, Class<?> clazz) {
+    private Record getExistingRecord(String uriKey, Class<?> clazz) {
         if (clazz.equals(Activity.class)) {
             return activityDao.getByKey(uriKey);
         } else if (clazz.equals(Collection.class)) {
@@ -390,7 +400,7 @@ public class HttpMethodHelper {
         return null;
     }
 
-    private static void refreshRecord(Record record, Class<?> clazz) throws ResponseContextException {
+    private void refreshRecord(Record record, Class<?> clazz) throws ResponseContextException {
         try {
             if (clazz.equals(Activity.class)) {
                 activityDao.refresh((Activity) record);
@@ -406,7 +416,7 @@ public class HttpMethodHelper {
         }
     }
 
-    private static void deleteRecord(String uriKey, Class<?> clazz) throws ResponseContextException {
+    private void deleteRecord(String uriKey, Class<?> clazz) throws ResponseContextException {
         try {
             if (clazz.equals(Activity.class)) {
                 activityDao.softDelete(uriKey);
@@ -422,7 +432,7 @@ public class HttpMethodHelper {
         }
     }
 
-    private static Version getVersion(String uriKey, String versionKey, Class<?> clazz) throws ResponseContextException {
+    private Version getVersion(String uriKey, String versionKey, Class<?> clazz) throws ResponseContextException {
         try {
             if (clazz.equals(Activity.class)) {
                 return activityDao.getByVersion(uriKey, versionKey);
@@ -439,7 +449,7 @@ public class HttpMethodHelper {
         }
     }
 
-    private static String getPath(Class<?> clazz) throws ResponseContextException {
+    private String getPath(Class<?> clazz) throws ResponseContextException {
         try {
             if (clazz.equals(Activity.class)) {
                 return Constants.PATH_FOR_ACTIVITIES;
@@ -473,7 +483,7 @@ public class HttpMethodHelper {
         }
     }
 
-    private static Record getLatestRecord(Class<?> clazz) {
+    private Record getLatestRecord(Class<?> clazz) {
         if (clazz.equals(Activity.class)) {
             return activityDao.getMostRecentUpdated();
         } else if (clazz.equals(Collection.class)) {

@@ -21,6 +21,8 @@ public class SourceDaoImpl extends AbstractRegistryDao<Source> implements Source
 	 */
 	private static final long serialVersionUID = 1536020048285540373L;
 
+	public SourceDaoImpl() {}
+	
 	public SourceDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

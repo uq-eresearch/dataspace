@@ -22,7 +22,9 @@ import java.util.List;
 @Transactional
 public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements RegistryDao<T> {
 	
-    public AbstractRegistryDao(EntityManagerSource entityManagerSource) {
+	public AbstractRegistryDao() {}
+	
+	public AbstractRegistryDao(EntityManagerSource entityManagerSource) {
     	super(entityManagerSource);
     }
 

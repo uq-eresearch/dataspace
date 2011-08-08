@@ -17,9 +17,14 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 
 /**
  * User: alabri
@@ -29,63 +34,84 @@ import java.util.List;
 public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metadata.dataspace.data.model.record.Collection> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
+    private CollectionDao collectionDao;
 
-    @Override
+    public CollectionDao getCollectionDao() {
+		return collectionDao;
+	}
+
+	public void setCollectionDao(CollectionDao collectionDao) {
+		this.collectionDao = collectionDao;
+	}
+
+	@Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext postEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.postEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
+        	EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+	        try {
+	        	entityManager.flush();
+	        } catch (PersistenceException e) {
+	        	throw e;
+	        }
+        	return HttpMethodHelper.getInstance().postEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
     @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext postMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.postMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return HttpMethodHelper.getInstance().postMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
     @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext putEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.putEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return HttpMethodHelper.getInstance().putEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
     @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext putMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.putMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return HttpMethodHelper.getInstance().putMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
     @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext deleteEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.deleteEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return HttpMethodHelper.getInstance().deleteEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
     @Override
+    @Transactional(readOnly=true)
     public ResponseContext getEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return HttpMethodHelper.getInstance().getEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
     }
 
     @Override
+    @Transactional(readOnly=true)
     public ResponseContext getFeed(RequestContext request) {
         try {
             String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
@@ -98,12 +124,12 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
                             representationMimeType.equals(Constants.MIME_TYPE_ATOM))) {
                 return super.getFeed(request);
             } else {
-//                return HttpMethodHelper.getFeed(request, Collection.class);
+//                return HttpMethodHelper.getInstance().getFeed(request, Collection.class);
                 Feed feed = createFeedBase(request);
                 addFeedDetails(feed, request);
                 ResponseContext responseContext = buildGetFeedResponse(feed);
 
-                return HttpMethodHelper.getFeed(request, responseContext, Collection.class);
+                return HttpMethodHelper.getInstance().getFeed(request, responseContext, Collection.class);
             }
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
@@ -111,8 +137,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     }
 
     @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        HttpMethodHelper.addFeedDetails(feed, request, Collection.class);
+        HttpMethodHelper.getInstance().addFeedDetails(feed, request, Collection.class);
         Iterable<Collection> entries = getEntries(request);
         if (entries != null) {
             for (Collection entryObj : entries) {
@@ -129,11 +156,13 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
         }
     }
 
+    @Transactional(readOnly=true)
     public List<Person> getAuthors(net.metadata.dataspace.data.model.record.Collection collection, RequestContext request) throws ResponseContextException {
-        return HttpMethodHelper.getAuthors(collection, request);
+        return HttpMethodHelper.getInstance().getAuthors(collection, request);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public String[] getAccepts(RequestContext request) {
         return new String[]{Constants.MIME_TYPE_ATOM_ENTRY};
     }
@@ -145,11 +174,13 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     }
 
     @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
         collectionDao.softDelete(key);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Object getContent(net.metadata.dataspace.data.model.record.Collection collection, RequestContext requestContext) throws ResponseContextException {
         Content content = requestContext.getAbdera().getFactory().newContent(Content.Type.TEXT);
         content.setText(collection.getContent());
@@ -157,11 +188,13 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Iterable<net.metadata.dataspace.data.model.record.Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return HttpMethodHelper.getRecords(requestContext, Collection.class);
+        return HttpMethodHelper.getInstance().getRecords(requestContext, Collection.class);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public net.metadata.dataspace.data.model.record.Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
         net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(key);
         if (collection != null) {
@@ -171,21 +204,25 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     }
 
     @Override
+    @Transactional(readOnly=true)
     public String getId(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
         return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public String getName(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
         return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public String getTitle(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
         return collection.getTitle();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Date getUpdated(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
         return collection.getUpdated();
     }

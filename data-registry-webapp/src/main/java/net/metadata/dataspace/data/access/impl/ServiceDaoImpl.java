@@ -22,6 +22,8 @@ public class ServiceDaoImpl extends AbstractRegistryDao<Service> implements Serv
 	 */
 	private static final long serialVersionUID = -6692375047398811759L;
 
+	public ServiceDaoImpl() {}
+	
 	public ServiceDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

@@ -21,6 +21,8 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.commons.lang.WordUtils;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
@@ -30,6 +32,7 @@ import java.util.SortedSet;
  * Date: 06/10/2010
  * Time: 11:30:29 AM
  */
+@Transactional
 public class AdapterOutputHelper {
 
     public static Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {

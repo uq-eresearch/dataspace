@@ -22,6 +22,8 @@ public class UserDaoImpl extends JpaDao<User> implements UserDao, Serializable {
 	 */
 	private static final long serialVersionUID = 7737558958450055233L;
 
+	public UserDaoImpl() {}
+	
 	public UserDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

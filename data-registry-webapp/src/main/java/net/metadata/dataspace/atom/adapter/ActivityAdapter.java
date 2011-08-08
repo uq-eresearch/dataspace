@@ -17,6 +17,7 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -26,15 +27,24 @@ import java.util.List;
  * Date: 27/10/2010
  * Time: 3:24:08 PM
  */
+@Transactional
 public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
+    private ActivityDao activityDao;
+        
+    public ActivityDao getActivityDao() {
+		return activityDao;
+	}
+
+	public void setActivityDao(ActivityDao activityDao) {
+		this.activityDao = activityDao;
+	}
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.postEntry(request, Activity.class);
+            return HttpMethodHelper.getInstance().postEntry(request, Activity.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -43,7 +53,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     @Override
     public ResponseContext postMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.postMedia(request, Activity.class);
+            return HttpMethodHelper.getInstance().postMedia(request, Activity.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -52,7 +62,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     @Override
     public ResponseContext putEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.putEntry(request, Activity.class);
+            return HttpMethodHelper.getInstance().putEntry(request, Activity.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -61,7 +71,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     @Override
     public ResponseContext putMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.putMedia(request, Activity.class);
+            return HttpMethodHelper.getInstance().putMedia(request, Activity.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -70,7 +80,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.deleteEntry(request, Activity.class);
+            return HttpMethodHelper.getInstance().deleteEntry(request, Activity.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -79,7 +89,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     @Override
     public ResponseContext getEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getEntry(request, Activity.class);
+            return HttpMethodHelper.getInstance().getEntry(request, Activity.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -102,7 +112,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 addFeedDetails(feed, request);
                 ResponseContext responseContext = buildGetFeedResponse(feed);
 
-                return HttpMethodHelper.getFeed(request, responseContext, Activity.class);
+                return HttpMethodHelper.getInstance().getFeed(request, responseContext, Activity.class);
             }
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
@@ -111,7 +121,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        HttpMethodHelper.addFeedDetails(feed, request, Activity.class);
+        HttpMethodHelper.getInstance().addFeedDetails(feed, request, Activity.class);
         Iterable<Activity> entries = getEntries(request);
         if (entries != null) {
             for (Activity entryObj : entries) {
@@ -129,7 +139,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     }
 
     public List<Person> getAuthors(Activity activity, RequestContext request) throws ResponseContextException {
-        return HttpMethodHelper.getAuthors(activity, request);
+        return HttpMethodHelper.getInstance().getAuthors(activity, request);
     }
 
     @Override
@@ -157,7 +167,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
 
     @Override
     public Iterable<Activity> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return HttpMethodHelper.getRecords(requestContext, Activity.class);
+        return HttpMethodHelper.getInstance().getRecords(requestContext, Activity.class);
     }
 
     @Override

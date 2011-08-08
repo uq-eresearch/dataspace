@@ -19,6 +19,8 @@ public class AgentVersionDaoImpl extends JpaDao<AgentVersion> implements AgentVe
 	 */
 	private static final long serialVersionUID = 7401872378377624847L;
 
+	public AgentVersionDaoImpl() {}
+	
 	public AgentVersionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

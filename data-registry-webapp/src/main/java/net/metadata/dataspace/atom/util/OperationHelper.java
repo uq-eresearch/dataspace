@@ -7,6 +7,7 @@ import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.context.AbstractResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.context.SimpleResponseContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -16,6 +17,7 @@ import java.io.Writer;
  * Date: 8/04/11
  * Time: 4:09 PM
  */
+@Transactional
 public class OperationHelper {
 
     public static String getEntityID(String fullUrl) {

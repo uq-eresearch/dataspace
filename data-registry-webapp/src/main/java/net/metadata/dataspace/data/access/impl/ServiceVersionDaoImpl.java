@@ -17,6 +17,8 @@ public class ServiceVersionDaoImpl extends JpaDao<ServiceVersion> implements Ser
 	 */
 	private static final long serialVersionUID = -580421637426218277L;
 
+	public ServiceVersionDaoImpl() {}
+	
 	public ServiceVersionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

@@ -8,6 +8,23 @@
        	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
+	<bean id="activityAdapter" class="net.metadata.dataspace.atom.adapter.ActivityAdapter">
+		<property name="activityDao" ref="activityDao"/>
+	</bean>
+	
+	<bean id="agentAdapter" class="net.metadata.dataspace.atom.adapter.AgentAdapter">
+		<property name="agentDao" ref="agentDao"/>
+	</bean>
+	
+	<bean id="collectionAdapter" class="net.metadata.dataspace.atom.adapter.CollectionAdapter">
+		<property name="collectionDao" ref="collectionDao"/>
+	</bean>
+	
+	<bean id="serviceAdapter" class="net.metadata.dataspace.atom.adapter.ServiceAdapter">
+		<property name="serviceDao" ref="serviceDao"/>
+	</bean>
+
+
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="${data.registry.persistenceUnitName}"/>
     </bean>
@@ -16,7 +33,8 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
     <context:annotation-config/>
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <tx:annotation-driven transaction-manager="transactionManager"
+    	proxy-target-class="true"/>
     <context:component-scan base-package="net.metadata.dataspace.data.model"/>
 
     <bean id="jpaConnector" class="net.metadata.dataspace.data.connector.JpaConnector">

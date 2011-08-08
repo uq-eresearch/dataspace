@@ -22,6 +22,8 @@ public class ActivityDaoImpl extends AbstractRegistryDao<Activity> implements Ac
 	 */
 	private static final long serialVersionUID = 3048244994760480452L;
 
+	public ActivityDaoImpl() {}
+	
 	public ActivityDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

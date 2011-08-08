@@ -16,6 +16,8 @@ public class ActivityVersionDaoImpl extends JpaDao<ActivityVersion> implements A
 	 * 
 	 */
 	private static final long serialVersionUID = 7725946239516023437L;
+	
+	public ActivityVersionDaoImpl() {}
 
 	public ActivityVersionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);

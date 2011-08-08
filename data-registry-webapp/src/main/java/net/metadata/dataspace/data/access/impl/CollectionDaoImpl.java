@@ -22,6 +22,8 @@ public class CollectionDaoImpl extends AbstractRegistryDao<Collection> implement
 	 */
 	private static final long serialVersionUID = -6149363550719068910L;
 
+	public CollectionDaoImpl() {}
+	
 	public CollectionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

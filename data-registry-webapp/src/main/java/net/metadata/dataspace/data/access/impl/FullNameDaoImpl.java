@@ -20,6 +20,8 @@ public class FullNameDaoImpl extends AbstractRegistryDao<FullName> implements Fu
 	 */
 	private static final long serialVersionUID = -1492739567785597745L;
 
+	public FullNameDaoImpl() {}
+	
 	public FullNameDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

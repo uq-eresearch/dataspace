@@ -10,6 +10,7 @@ import net.metadata.dataspace.data.model.record.User;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -25,6 +26,7 @@ import java.util.*;
  * Date: 10/11/2010
  * Time: 3:00:50 PM
  */
+@Transactional
 public class AuthenticationManagerImpl implements AuthenticationManager {
     private Logger logger = Logger.getLogger(getClass());
     private Map<String, DirContext> userDirContexts = new HashMap<String, DirContext>();

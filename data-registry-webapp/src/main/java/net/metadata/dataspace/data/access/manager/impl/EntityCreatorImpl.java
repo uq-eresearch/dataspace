@@ -20,11 +20,14 @@ import net.metadata.dataspace.data.sequencer.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * User: alabri
  * Date: 27/10/2010
  * Time: 2:36:01 PM
  */
+@Transactional
 public class EntityCreatorImpl implements EntityCreator {
 
     private AgentSequencer agentSequencer;

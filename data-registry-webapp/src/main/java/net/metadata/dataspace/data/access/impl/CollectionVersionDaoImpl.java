@@ -17,6 +17,8 @@ public class CollectionVersionDaoImpl extends JpaDao<CollectionVersion> implemen
 	 */
 	private static final long serialVersionUID = 1484102046162460661L;
 
+	public CollectionVersionDaoImpl() {}
+	
 	public CollectionVersionDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

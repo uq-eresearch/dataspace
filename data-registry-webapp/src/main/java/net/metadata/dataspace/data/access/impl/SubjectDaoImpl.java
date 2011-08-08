@@ -21,6 +21,8 @@ public class SubjectDaoImpl extends AbstractRegistryDao<Subject> implements Subj
 	 */
 	private static final long serialVersionUID = 8981471485212513003L;
 
+	public SubjectDaoImpl() {}
+	
 	public SubjectDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

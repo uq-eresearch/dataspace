@@ -15,6 +15,7 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.AbstractResponseContext;
 import org.apache.abdera.protocol.server.context.BaseResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -25,6 +26,7 @@ import static org.apache.abdera.protocol.server.ProviderHelper.calculateEntityTa
  * Date: 20/10/2010
  * Time: 2:13:08 PM
  */
+@Transactional
 public class FeedOutputHelper {
 
     public static String getRepresentationMimeType(RequestContext request) {
@@ -71,7 +73,7 @@ public class FeedOutputHelper {
             entry.setContent(version.getDescription());
             Link selfLink = entry.addLink(uri, Constants.REL_SELF);
             selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
-            List<Person> personList = HttpMethodHelper.getAuthors(record, request);
+            List<Person> personList = HttpMethodHelper.getInstance().getAuthors(record, request);
             
             entry.setUpdated(version.getUpdated());
             setPublished(version, entry);

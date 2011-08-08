@@ -17,6 +17,7 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
 import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -26,15 +27,24 @@ import java.util.List;
  * Date: 21/09/2010
  * Time: 4:59:19 PM
  */
+@Transactional
 public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
 
     private Logger logger = Logger.getLogger(getClass());
-    private AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
+    private AgentDao agentDao;
+    
+    public AgentDao getAgentDao() {
+		return agentDao;
+	}
+
+	public void setAgentDao(AgentDao agentDao) {
+		this.agentDao = agentDao;
+	}
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.postEntry(request, Agent.class);
+            return HttpMethodHelper.getInstance().postEntry(request, Agent.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -43,7 +53,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
     @Override
     public ResponseContext postMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.postMedia(request, Agent.class);
+            return HttpMethodHelper.getInstance().postMedia(request, Agent.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -52,7 +62,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
     @Override
     public ResponseContext putEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.putEntry(request, Agent.class);
+            return HttpMethodHelper.getInstance().putEntry(request, Agent.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -61,7 +71,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
     @Override
     public ResponseContext putMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.putMedia(request, Agent.class);
+            return HttpMethodHelper.getInstance().putMedia(request, Agent.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -70,7 +80,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.deleteEntry(request, Agent.class);
+            return HttpMethodHelper.getInstance().deleteEntry(request, Agent.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -79,7 +89,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
     @Override
     public ResponseContext getEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getEntry(request, Agent.class);
+            return HttpMethodHelper.getInstance().getEntry(request, Agent.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -101,7 +111,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
                 Feed feed = createFeedBase(request);
                 addFeedDetails(feed, request);
                 ResponseContext responseContext = buildGetFeedResponse(feed);
-                return HttpMethodHelper.getFeed(request, responseContext, Agent.class);
+                return HttpMethodHelper.getInstance().getFeed(request, responseContext, Agent.class);
             }
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
@@ -110,7 +120,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        HttpMethodHelper.addFeedDetails(feed, request, Agent.class);
+        HttpMethodHelper.getInstance().addFeedDetails(feed, request, Agent.class);
         Iterable<Agent> entries = getEntries(request);
         if (entries != null) {
             for (Agent entryObj : entries) {
@@ -128,7 +138,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
     }
 
     public List<Person> getAuthors(Agent agent, RequestContext request) throws ResponseContextException {
-        return HttpMethodHelper.getAuthors(agent, request);
+        return HttpMethodHelper.getInstance().getAuthors(agent, request);
     }
 
     @Override
@@ -156,7 +166,7 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
 
     @Override
     public Iterable<Agent> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return HttpMethodHelper.getRecords(requestContext, Agent.class);
+        return HttpMethodHelper.getInstance().getRecords(requestContext, Agent.class);
     }
 
     @Override

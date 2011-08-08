@@ -17,6 +17,8 @@ import org.apache.abdera.protocol.server.impl.RouteManager;
 import org.apache.abdera.protocol.server.impl.SimpleWorkspaceInfo;
 import org.apache.abdera.protocol.server.servlet.AbderaServlet;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.util.Map;
 
@@ -32,25 +34,26 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 	 */
 	private static final long serialVersionUID = -6861319035092045064L;
 	private Logger logger = Logger.getLogger(getClass());
-
-    protected Provider createProvider() {
+	
+	protected Provider createProvider() {
+		ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 
         SimpleWorkspaceInfo registryWorkSpace = new SimpleWorkspaceInfo();
         registryWorkSpace.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle());
 
-        AgentAdapter agentAdapter = new AgentAdapter();
+        AgentAdapter agentAdapter = (AgentAdapter) context.getBean("agentAdapter");
         agentAdapter.setHref(Constants.PATH_FOR_AGENTS);
         registryWorkSpace.addCollection(agentAdapter);
 
-        CollectionAdapter collectionAdapter = new CollectionAdapter();
+        CollectionAdapter collectionAdapter = (CollectionAdapter) context.getBean("collectionAdapter");
         collectionAdapter.setHref(Constants.PATH_FOR_COLLECTIONS);
         registryWorkSpace.addCollection(collectionAdapter);
 
-        ServiceAdapter serviceAdapter = new ServiceAdapter();
+        ServiceAdapter serviceAdapter = (ServiceAdapter) context.getBean("serviceAdapter");
         serviceAdapter.setHref(Constants.PATH_FOR_SERVICES);
         registryWorkSpace.addCollection(serviceAdapter);
 
-        ActivityAdapter activityAdapter = new ActivityAdapter();
+        ActivityAdapter activityAdapter = (ActivityAdapter) context.getBean("activityAdapter");
         activityAdapter.setHref(Constants.PATH_FOR_ACTIVITIES);
         registryWorkSpace.addCollection(activityAdapter);
 

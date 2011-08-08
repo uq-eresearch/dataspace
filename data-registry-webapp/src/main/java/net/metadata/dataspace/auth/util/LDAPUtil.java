@@ -63,7 +63,7 @@ public class LDAPUtil {
         return attributes;
     }
 
-    public static Agent createAgent(Map<String, String> attributesMap, User currentUser) {
+    public static Agent createAgent(Map<String, String> attributesMap) {
         if (attributesMap == null || attributesMap.isEmpty()) {
             return null;
         } else {
@@ -117,7 +117,6 @@ public class LDAPUtil {
 
                 agent.setUpdated(now);
                 agent.setSource(systemSource);
-                agent.setDescriptionAuthor(currentUser);
 
                 return agent;
             } else {

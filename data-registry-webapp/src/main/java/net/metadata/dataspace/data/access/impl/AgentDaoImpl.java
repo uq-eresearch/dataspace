@@ -7,6 +7,9 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
 import javax.persistence.Query;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +18,7 @@ import java.util.List;
  * Date: 21/09/2010
  * Time: 1:22:12 PM
  */
+@Transactional
 public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao, Serializable {
 
     /**
@@ -22,6 +26,8 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
 	 */
 	private static final long serialVersionUID = 6085537803929252268L;
 
+	public AgentDaoImpl() {}
+	
 	public AgentDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
