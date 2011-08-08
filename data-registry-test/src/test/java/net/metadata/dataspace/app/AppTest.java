@@ -25,7 +25,11 @@ public class AppTest {
         //create a client
 		HttpClient client = new HttpClient();
         GetMethod result;
-        String[] locations = { "", "browse", "agents", "collections" };
+        String[] locations = { "", "browse", 
+        		Constants.PATH_FOR_ACTIVITIES,  
+        		Constants.PATH_FOR_AGENTS,
+        		Constants.PATH_FOR_COLLECTIONS,
+        		Constants.PATH_FOR_SERVICES };
         for (int i = 0; i < locations.length; i++) {
         	result = ClientHelper.getEntry(client, Constants.URL_PREFIX+locations[i], "text/html");
         	assertEquals(result.getURI()+" should return 200 OK", 200, result.getStatusCode());

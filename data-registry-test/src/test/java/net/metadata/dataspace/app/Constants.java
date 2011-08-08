@@ -37,7 +37,7 @@ public interface Constants {
     String TITLE_FOR_SERVICES = "Services";
 
     String URL_PREFIX = "http://localhost:9635/";
-    //  String URL_PREFIX = "http://localhost:8080/";
+    //String URL_PREFIX = "http://localhost:8080/";
 
     /**
      * Target Type names
