@@ -16,12 +16,12 @@ public class ActivitySequencer extends AbstractAtomicSquencer {
     public ActivitySequencer(ActivityDao activityDao) {
         Activity activity = activityDao.getMostRecentInserted();
         if (activity == null) {
-            atomicInterger = new AtomicInteger(0);
+            atomicInteger = new AtomicInteger(0);
         } else {
             activityDao.refresh(activity);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = activity.getUriKey();
-            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
+            atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }
 

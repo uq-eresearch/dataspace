@@ -16,12 +16,12 @@ public class AgentSequencer extends AbstractAtomicSquencer {
     public AgentSequencer(AgentDao agentDao) {
         Agent agent = agentDao.getMostRecentInserted();
         if (agent == null) {
-            atomicInterger = new AtomicInteger(0);
+            atomicInteger = new AtomicInteger(0);
         } else {
             agentDao.refresh(agent);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = agent.getUriKey();
-            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
+            atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }
 }

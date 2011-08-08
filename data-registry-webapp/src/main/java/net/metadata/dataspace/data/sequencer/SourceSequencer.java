@@ -16,12 +16,12 @@ public class SourceSequencer extends AbstractAtomicSquencer {
     public SourceSequencer(SourceDao sourceDao) {
         Source source = sourceDao.getMostRecentInserted();
         if (source == null) {
-            atomicInterger = new AtomicInteger(0);
+            atomicInteger = new AtomicInteger(0);
         } else {
             sourceDao.refresh(source);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = source.getUriKey();
-            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
+            atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }
 

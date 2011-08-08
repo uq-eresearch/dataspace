@@ -16,12 +16,12 @@ public class CollectionSequencer extends AbstractAtomicSquencer {
     public CollectionSequencer(CollectionDao collectionDao) {
         Collection collection = collectionDao.getMostRecentInserted();
         if (collection == null) {
-            atomicInterger = new AtomicInteger(0);
+            atomicInteger = new AtomicInteger(0);
         } else {
             collectionDao.refresh(collection);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = collection.getUriKey();
-            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
+            atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }
 

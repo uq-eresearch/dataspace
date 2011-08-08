@@ -16,12 +16,12 @@ public class PublicationSequencer extends AbstractAtomicSquencer {
     public PublicationSequencer(PublicationDao publicationDao) {
         Publication publication = publicationDao.getMostRecentInserted();
         if (publication == null) {
-            atomicInterger = new AtomicInteger(0);
+            atomicInteger = new AtomicInteger(0);
         } else {
             publicationDao.refresh(publication);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = publication.getUriKey();
-            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
+            atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }
 

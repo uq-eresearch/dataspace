@@ -31,6 +31,19 @@
     <listener>
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>
+    
+    <filter>
+	    <filter-name>OpenEntityManagerInViewFilter</filter-name>
+	    <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+	    <init-param>
+	        <param-name>entityManagerFactoryBeanName</param-name>
+	        <param-value>entityManagerFactory</param-value>
+	    </init-param>
+	</filter>
+	<filter-mapping>
+	    <filter-name>OpenEntityManagerInViewFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
 
     <!--Servlets-->
     <servlet>

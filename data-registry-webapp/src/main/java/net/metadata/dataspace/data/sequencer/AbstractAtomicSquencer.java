@@ -8,17 +8,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Time: 1:17:50 PM
  */
 public abstract class AbstractAtomicSquencer {
-    protected AtomicInteger atomicInterger;
+    protected AtomicInteger atomicInteger;
 
     protected AbstractAtomicSquencer() {
-        atomicInterger = new AtomicInteger(0);
+        atomicInteger = new AtomicInteger(0);
     }
 
     public int next() {
-        return atomicInterger.incrementAndGet();
+        return atomicInteger.incrementAndGet();
     }
 
     public int current() {
-        return atomicInterger.get();
+        return atomicInteger.get();
     }
 }

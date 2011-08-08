@@ -16,12 +16,12 @@ public class FullNameSequencer extends AbstractAtomicSquencer {
     public FullNameSequencer(FullNameDao fullNameDao) {
         FullName fullName = fullNameDao.getMostRecentInserted();
         if (fullName == null) {
-            atomicInterger = new AtomicInteger(0);
+            atomicInteger = new AtomicInteger(0);
         } else {
             fullNameDao.refresh(fullName);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = fullName.getUriKey();
-            atomicInterger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
+            atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
         }
     }
 
