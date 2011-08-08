@@ -96,12 +96,8 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
 
     private void process(Source xml, Source xsl, Result result) throws TransformerException {
         try {
-        	// Compile-time dependency on Saxon
-        	Class<TransformerFactoryImpl> implementation = 
-        			net.sf.saxon.TransformerFactoryImpl.class;
         	// Explicitly use Saxon (so that we get XSLT 2.0)
-            Templates template = TransformerFactory.newInstance(
-            		implementation.getCanonicalName(), null).newTemplates(xsl);
+            Templates template = net.sf.saxon.TransformerFactoryImpl.newInstance().newTemplates(xsl);
             Transformer transformer = template.newTransformer();
             if (this.contextRequest != null) {
                 AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
