@@ -3,6 +3,7 @@ package net.metadata.dataspace.atom.adapter;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.atom.util.ClientHelper;
 import net.metadata.dataspace.atom.util.XPathHelper;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -20,6 +21,8 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import static junit.framework.Assert.*;
 
@@ -215,13 +218,18 @@ public class CollectionTest {
         String updated = xpath.evaluate(Constants.RECORD_UPDATED_PATH, docFromStream);
         assertNotNull("Entry missing updated", updated);
 
-        // TODO: Handle multiple authors
-        //String authorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromStream);
-        //assertNotNull("Entry missing author name", authorName);
-        //String originalAuthorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromFile);
-        //assertNotNull("Original Entry missing author name", originalAuthorName);
-        //assertEquals("Entry's author name is incorrect", originalAuthorName, authorName);
-
+        // Note: we check the emails, because we've no guarantee that the names are the same.
+        NodeList authorNames = (NodeList) xpath.evaluate(Constants.RECORD_AUTHOR_EMAIL_PATH+"/text()", docFromStream, XPathConstants.NODESET);
+        NodeList originalAuthorNames = (NodeList) xpath.evaluate(Constants.RECORD_AUTHOR_EMAIL_PATH+"/text()", docFromFile, XPathConstants.NODESET);
+        assertEquals("Number of authors is incorrect", originalAuthorNames.getLength(), authorNames.getLength());
+        Set<String> authorNamesSet = new HashSet<String>();
+        Set<String> originalAuthorNamesSet = new HashSet<String>();
+        for (int i = 0; i < authorNames.getLength(); i++) {
+        	authorNamesSet.add(authorNames.item(i).getTextContent());
+        	originalAuthorNamesSet.add(originalAuthorNames.item(i).getTextContent());
+        }
+        assertEquals("Authors don't match!", originalAuthorNamesSet, authorNamesSet );
+        
         String draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
         assertNotNull("Entry missing draft element", draft);
         assertEquals("Entry's should be draft", "yes", draft);
