@@ -18,7 +18,7 @@ public class PublicationSequencer extends AbstractAtomicSquencer {
         if (publication == null) {
             atomicInteger = new AtomicInteger(0);
         } else {
-            publicationDao.refresh(publication);
+            //publicationDao.refresh(publication);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = publication.getUriKey();
             atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));

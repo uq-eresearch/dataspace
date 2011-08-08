@@ -18,7 +18,7 @@ public class FullNameSequencer extends AbstractAtomicSquencer {
         if (fullName == null) {
             atomicInteger = new AtomicInteger(0);
         } else {
-            fullNameDao.refresh(fullName);
+            //fullNameDao.refresh(fullName);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = fullName.getUriKey();
             atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));

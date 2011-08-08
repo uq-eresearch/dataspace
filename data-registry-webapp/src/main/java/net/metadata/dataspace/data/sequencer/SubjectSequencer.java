@@ -18,7 +18,7 @@ public class SubjectSequencer extends AbstractAtomicSquencer {
         if (subject == null) {
             atomicInteger = new AtomicInteger(0);
         } else {
-            subjectDao.refresh(subject);
+            //subjectDao.refresh(subject);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = subject.getUriKey();
             atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));

@@ -18,7 +18,7 @@ public class AgentSequencer extends AbstractAtomicSquencer {
         if (agent == null) {
             atomicInteger = new AtomicInteger(0);
         } else {
-            agentDao.refresh(agent);
+            //agentDao.refresh(agent);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = agent.getUriKey();
             atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));

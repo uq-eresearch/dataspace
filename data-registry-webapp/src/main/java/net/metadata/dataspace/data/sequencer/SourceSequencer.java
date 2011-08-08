@@ -18,7 +18,7 @@ public class SourceSequencer extends AbstractAtomicSquencer {
         if (source == null) {
             atomicInteger = new AtomicInteger(0);
         } else {
-            sourceDao.refresh(source);
+            //sourceDao.refresh(source);
             final int BASE_THIRTY_ONE = 31;
             String uriKey = source.getUriKey();
             atomicInteger = new AtomicInteger(DaoHelper.fromOtherBaseToDecimal(BASE_THIRTY_ONE, uriKey));
