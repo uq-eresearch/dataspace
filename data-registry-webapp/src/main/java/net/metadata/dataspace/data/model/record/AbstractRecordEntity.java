@@ -1,13 +1,20 @@
 package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.util.DaoHelper;
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.SortedSet;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
 
 /**
  * User: alabri
@@ -15,7 +22,7 @@ import java.util.SortedSet;
  * Time: 12:12:47 PM
  */
 @MappedSuperclass
-public abstract class AbstractRecordEntity<V> implements Serializable, Record {
+public abstract class AbstractRecordEntity<V extends Version<?>> implements Serializable, Record<V> {
 
     /**
 	 * 
@@ -57,9 +64,6 @@ public abstract class AbstractRecordEntity<V> implements Serializable, Record {
 
     @Override
     abstract public SortedSet<V> getVersions();
-
-    @Override
-    abstract public User getDescriptionAuthor();
 
     @Override
     public Long getId() {

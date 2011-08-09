@@ -5,6 +5,7 @@ import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
+import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.context.Spatial;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.*;
@@ -22,11 +23,13 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.commons.lang.WordUtils;
+import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.logging.Level;
 
 /**
  * User: alabri
@@ -35,6 +38,8 @@ import java.util.SortedSet;
  */
 @Transactional
 public class AdapterOutputHelper {
+	
+	private static final Logger logger = Logger.getLogger(AdapterOutputHelper.class);
 
     public static Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
         if (version == null) {
@@ -104,6 +109,7 @@ public class AdapterOutputHelper {
             Set<Subject> subjectSet = version.getSubjects();
             addSubjectToEntry(entry, subjectSet);
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
         FeedOutputHelper.setPublished(version, entry);
@@ -195,6 +201,7 @@ public class AdapterOutputHelper {
             addSubjectToEntry(entry, subjectSet);
 
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
         FeedOutputHelper.setPublished(version, entry);
@@ -320,6 +327,7 @@ public class AdapterOutputHelper {
                 link.setTitle(spatial.getName());
             }
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
         FeedOutputHelper.setPublished(version, entry);
@@ -362,6 +370,7 @@ public class AdapterOutputHelper {
             }
 
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
         FeedOutputHelper.setPublished(version, entry);
@@ -434,6 +443,7 @@ public class AdapterOutputHelper {
             responseContext.setLocation(entry.getLink(Constants.REL_SELF).getHref().toString());
             return responseContext;
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
     }
@@ -449,6 +459,7 @@ public class AdapterOutputHelper {
             responseContext.setLocation(entry.getLink(Constants.REL_SELF).getHref().toString());
             return responseContext;
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
     }
@@ -463,6 +474,7 @@ public class AdapterOutputHelper {
             selfLink.setRel(Constants.REL_SELF);
             selfLink.setTitle(title);
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Cannot build self link", 500);
         }
     }
@@ -475,6 +487,7 @@ public class AdapterOutputHelper {
             alternateLink.setRel(Constants.REL_ALTERNATE);
             alternateLink.setTitle(title);
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Cannot build alternate link", 500);
         }
     }
@@ -503,6 +516,7 @@ public class AdapterOutputHelper {
                 entry.setPublished(publishedDate);
             }
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Failed to set mandatory attributes", 500);
         }
         return entry;
@@ -535,14 +549,15 @@ public class AdapterOutputHelper {
                 entry.addLink(parentUrl + "/" + successorVersion.getUriKey(), Constants.REL_SUCCESSOR_VERSION);
             }
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Failed to add link elements to entry", 400);
         }
     }
 
-    private static void addSource(Version version, Entry entry) throws ResponseContextException {
+    private static void addSource(Version<?> version, Entry entry) throws ResponseContextException {
         try {
             Source source = Abdera.getNewFactory().newSource(entry);
-            net.metadata.dataspace.data.model.context.Source registrySource = version.getParent().getSource();
+            net.metadata.dataspace.data.model.context.Source registrySource = version.getSource();
             if (registrySource != null) {
                 source.setId(registrySource.getSourceURI());
                 source.setTitle(registrySource.getTitle());
@@ -551,15 +566,19 @@ public class AdapterOutputHelper {
                 source.setTitle(Constants.UQ_REGISTRY_TITLE);
             }
 
-            User descriptionAuthor = version.getParent().getDescriptionAuthor();
-            Person person = source.addAuthor(descriptionAuthor.getDisplayName());
-            person.setEmail(descriptionAuthor.getEmail());
+            for (SourceAuthor descriptionAuthor : version.getDescriptionAuthors()) {
+            	Person person = source.addAuthor(descriptionAuthor.getName());
+            	person.setEmail(descriptionAuthor.getEmail());
+            	if (descriptionAuthor.getUri() != null)
+            		person.setUri(descriptionAuthor.getUri().toString());
+            }
             Link publisher = source.addLink(Constants.UQ_URL, Constants.REL_PUBLISHER);
             publisher.setTitle(Constants.TERM_ANDS_GROUP);
             source.setRights(Constants.UQ_REGISTRY_RIGHTS);
             Link licenseLink = source.addLink(Constants.UQ_REGISTRY_LICENSE, Constants.REL_LICENSE);
             licenseLink.setMimeType(Constants.MIME_TYPE_RDF);
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Failed to add source", 500);
         }
     }

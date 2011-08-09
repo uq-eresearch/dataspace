@@ -2,8 +2,8 @@ package net.metadata.dataspace.data.access.impl;
 
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import net.metadata.dataspace.data.access.CollectionDao;
+import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.record.Collection;
-import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
 import javax.persistence.Query;
@@ -29,7 +29,7 @@ public class CollectionDaoImpl extends AbstractRegistryDao<Collection> implement
     }
 
     @Override
-    public CollectionVersion getByVersion(String uriKey, String version) {
+    public Version getByVersion(String uriKey, String version) {
         int parentAtomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, version);
         Query query = getEntityManager().createQuery("SELECT o FROM CollectionVersion o WHERE o.atomicNumber = :atomicNumber AND o.parent.atomicNumber = :parentAtomicNumber");
@@ -40,7 +40,7 @@ public class CollectionDaoImpl extends AbstractRegistryDao<Collection> implement
             return null;
         }
         assert resultList.size() == 1 : "id should be unique";
-        return (CollectionVersion) resultList.get(0);
+        return (Version) resultList.get(0);
     }
 
     @Override

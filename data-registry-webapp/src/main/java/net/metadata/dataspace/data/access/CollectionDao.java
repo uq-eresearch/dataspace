@@ -1,7 +1,7 @@
 package net.metadata.dataspace.data.access;
 
+import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.record.Collection;
-import net.metadata.dataspace.data.model.version.CollectionVersion;
 
 /**
  * User: alabri
@@ -10,7 +10,7 @@ import net.metadata.dataspace.data.model.version.CollectionVersion;
  */
 public interface CollectionDao extends RegistryDao<Collection> {
 
-    CollectionVersion getByVersion(String uriKey, String version);
+    Version getByVersion(String uriKey, String version);
 
     Collection getByOriginalId(String originalId);
 }

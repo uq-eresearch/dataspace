@@ -34,9 +34,9 @@ public class ServiceAtomicSequencerTest {
 
     @Test
     public void testServiceSequencing() throws Exception {
-        Record service1 = entityCreator.getNextRecord(Service.class);
-        Record service2 = entityCreator.getNextRecord(Service.class);
-        Record service3 = entityCreator.getNextRecord(Service.class);
+        Record<?> service1 = entityCreator.getNextRecord(Service.class);
+        Record<?> service2 = entityCreator.getNextRecord(Service.class);
+        Record<?> service3 = entityCreator.getNextRecord(Service.class);
 
         assertTrue("Atomic number should increase by 1.", service1.getAtomicNumber() + 1 == service2.getAtomicNumber());
         assertTrue("Atomic number should increase by 2.", service1.getAtomicNumber() + 2 == service3.getAtomicNumber());

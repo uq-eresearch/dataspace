@@ -115,8 +115,7 @@ public class LDAPUtil {
                 version.getParent().setPublished(version);
                 agent.setUpdated(now);
 
-                agent.setUpdated(now);
-                agent.setSource(systemSource);
+                version.setSource(systemSource);
 
                 return agent;
             } else {

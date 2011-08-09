@@ -1,6 +1,5 @@
 package net.metadata.dataspace.data.model.version;
 
-import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Spatial;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -25,7 +24,7 @@ import static javax.persistence.EnumType.STRING;
  * Time: 5:16:30 PM
  */
 @Entity
-public class CollectionVersion extends AbstractVersionEntity {
+public class CollectionVersion extends AbstractVersionEntity<Collection> {
 
     private static final long serialVersionUID = 1L;
 
@@ -99,7 +98,7 @@ public class CollectionVersion extends AbstractVersionEntity {
 
     @CollectionOfElements(fetch = FetchType.LAZY)
     private Set<String> pages = new HashSet<String>();
-
+    
     public CollectionVersion() {
     }
 
@@ -109,8 +108,8 @@ public class CollectionVersion extends AbstractVersionEntity {
     }
 
     @Override
-    public void setParent(Record parent) {
-        this.parent = (Collection) parent;
+    public void setParent(Collection parent) {
+        this.parent = parent;
     }
 
     public Set<Subject> getSubjects() {

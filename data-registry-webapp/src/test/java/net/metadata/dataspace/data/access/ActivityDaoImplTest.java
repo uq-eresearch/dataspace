@@ -63,7 +63,7 @@ public class ActivityDaoImplTest {
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
         activity.getVersions().add(activityVersion);
         Source source = PopulatorUtil.getSource();
-        activity.setSource(source);
+        activityVersion.setSource(source);
         entityManager.persist(source);
         entityManager.persist(activityVersion);
         entityManager.persist(activity);

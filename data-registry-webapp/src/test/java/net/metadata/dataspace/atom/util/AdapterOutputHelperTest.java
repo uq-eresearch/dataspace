@@ -8,6 +8,7 @@ import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.*;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
@@ -66,6 +67,10 @@ public class AdapterOutputHelperTest {
         Activity activity = (Activity) entityCreator.getNextRecord(Activity.class);
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
 
+        SourceAuthor currentSourceAuthor = 
+        		new SourceAuthor(currentUser.getDisplayName(), 
+        				currentUser.getEmail(), null);
+        
         agent.setUpdated(new Date());
         Subject subject1 = PopulatorUtil.getSubject();
         agentVersion.getSubjects().add(subject1);
@@ -73,8 +78,8 @@ public class AdapterOutputHelperTest {
         agentVersion.getSubjects().add(subject2);
         agent.getVersions().add(agentVersion);
         Source source = PopulatorUtil.getSource();
-        agent.setSource(source);
-        agent.setDescriptionAuthor(currentUser);
+        agentVersion.setSource(source);
+        agentVersion.getDescriptionAuthors().add(currentSourceAuthor);
 
         collection.setUpdated(new Date());
         Subject subject3 = PopulatorUtil.getSubject();
@@ -83,16 +88,16 @@ public class AdapterOutputHelperTest {
         collectionVersion.getSubjects().add(subject4);
         collection.getVersions().add(collectionVersion);
         collection.getCreators().add(agent);
-        collection.setDescriptionAuthor(currentUser);
+        collectionVersion.getDescriptionAuthors().add(currentSourceAuthor);
         agent.getMade().add(collection);
-        collection.setSource(source);
+        collectionVersion.setSource(source);
 
         service.setUpdated(new Date());
         service.getVersions().add(serviceVersion);
         collectionVersion.getAccessedVia().add(service);
         serviceVersion.getSupportedBy().add(collection);
-        service.setSource(source);
-        service.setDescriptionAuthor(currentUser);
+        serviceVersion.setSource(source);
+        serviceVersion.getDescriptionAuthors().add(currentSourceAuthor);
 
         activity.setUpdated(new Date());
         Subject subject5 = PopulatorUtil.getSubject();
@@ -102,10 +107,10 @@ public class AdapterOutputHelperTest {
         activity.getVersions().add(activityVersion);
         activity.getHasOutput().add(collection);
         activity.getHasParticipant().add(agent);
-        activity.setDescriptionAuthor(currentUser);
+        activityVersion.getDescriptionAuthors().add(currentSourceAuthor);
         agent.getParticipantIn().add(activity);
         collection.getOutputOf().add(activity);
-        activity.setSource(source);
+        activityVersion.setSource(source);
 
         entityManager.persist(source);
         entityManager.persist(subject1);

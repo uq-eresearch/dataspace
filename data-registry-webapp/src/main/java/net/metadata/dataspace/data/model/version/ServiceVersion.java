@@ -1,6 +1,5 @@
 package net.metadata.dataspace.data.model.version;
 
-import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
@@ -21,7 +20,7 @@ import static javax.persistence.EnumType.STRING;
  * Time: 5:16:16 PM
  */
 @Entity
-public class ServiceVersion extends AbstractVersionEntity {
+public class ServiceVersion extends AbstractVersionEntity<Service> {
     private static final long serialVersionUID = 1L;
 
     @ManyToOne
@@ -58,8 +57,8 @@ public class ServiceVersion extends AbstractVersionEntity {
     }
 
     @Override
-    public void setParent(Record parent) {
-        this.parent = (Service) parent;
+    public void setParent(Service parent) {
+        this.parent = parent;
     }
 
     public Set<Collection> getSupportedBy() {

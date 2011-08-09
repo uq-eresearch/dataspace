@@ -12,6 +12,7 @@ import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.context.Spatial;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.*;
@@ -30,6 +31,8 @@ import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.NamingEnumeration;
@@ -38,8 +41,10 @@ import javax.naming.directory.SearchResult;
 import javax.persistence.EntityManager;
 import javax.xml.namespace.QName;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Author: alabri
@@ -56,7 +61,9 @@ public class AdapterInputHelper {
     private static final EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
     private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
 
-    public static void addRelations(Entry entry, Version version, User currentUser) throws ResponseContextException, URISyntaxException {
+    private static final Logger logger = Logger.getLogger(AdapterInputHelper.class);
+    
+    public static void addRelations(Entry entry, Version<?> version, User currentUser) throws ResponseContextException, URISyntaxException {
         if (version instanceof ActivityVersion) {
             addRelationsToActivity(entry, (ActivityVersion) version);
         } else if (version instanceof CollectionVersion) {
@@ -478,19 +485,42 @@ public class AdapterInputHelper {
                     return existingSource;
                 }
             } catch (Throwable th) {
+            	logger.warn(th.getMessage(), th);
                 throw new ResponseContextException(500, th);
             }
         }
     }
 
-    public static void addDescriptionAuthors(Record record, RequestContext request) throws ResponseContextException {
+    public static void addDescriptionAuthors(
+    		Version<?> version, 
+    		List<Person> authors,
+    		RequestContext request) throws ResponseContextException 
+    {
         try {
-            AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
-            User currentUser = authenticationManager.getCurrentUser(request);
-            User user = RegistryApplication.getApplicationContext().getDaoManager().getUserDao().getByUsername(currentUser.getUsername());
-            record.setDescriptionAuthor(user);
-
+        	version.getDescriptionAuthors().clear();
+        	if (authors.size() == 0) {
+	            AuthenticationManager authenticationManager = 
+	            		RegistryApplication.getApplicationContext().getAuthenticationManager();
+	            User currentUser = authenticationManager.getCurrentUser(request);
+	            currentUser = RegistryApplication.getApplicationContext()
+	            		.getDaoManager().getUserDao()
+	            		.getByUsername(currentUser.getUsername());
+	            version.getDescriptionAuthors().add(
+	            		new SourceAuthor(
+	            				currentUser.getDisplayName(), 
+	            				currentUser.getEmail(), null));
+        	} else {
+        		for (Person person : authors) {
+        			URI uri = person.getUri() == null ? 
+        					null : person.getUri().toURI();
+        			version.getDescriptionAuthors().add(
+        					new SourceAuthor(person.getName(),
+        							person.getEmail(),
+        							uri));
+        		}
+        	}
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Could not add description author", 500);
         }
     }
@@ -610,6 +640,7 @@ public class AdapterInputHelper {
                 }
             }
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Cannot extract subjects from entry", 400);
         }
         return subjects;
@@ -633,6 +664,7 @@ public class AdapterInputHelper {
                 }
             }
         } catch (Throwable th) {
+        	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Cannot extract publications from entry", 400);
         }
         return publications;
@@ -804,9 +836,7 @@ public class AdapterInputHelper {
         agent.getVersions().add(version);
         version.getParent().setPublished(version);
         agent.setUpdated(now);
-
-        agent.setUpdated(now);
-        agent.setSource(systemSource);
+        version.setSource(systemSource);
         return agent;
     }
 }

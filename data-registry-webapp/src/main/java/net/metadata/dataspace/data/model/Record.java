@@ -1,8 +1,5 @@
 package net.metadata.dataspace.data.model;
 
-import net.metadata.dataspace.data.model.context.Source;
-import net.metadata.dataspace.data.model.record.User;
-
 import java.util.Date;
 import java.util.SortedSet;
 
@@ -11,7 +8,7 @@ import java.util.SortedSet;
  * Date: 03/11/2010
  * Time: 2:01:27 PM
  */
-public interface Record {
+public interface Record<V extends Version<?>> {
 
 
     Long getId();
@@ -21,23 +18,23 @@ public interface Record {
      *
      * @return Sorted set (by updated) of versions
      */
-    SortedSet getVersions();
+    SortedSet<V> getVersions();
 
     /**
      * Gets the published version of this record
      *
      * @return the published version this record
      */
-    Version getPublished();
+    V getPublished();
 
-    void setPublished(Version version);
+    void setPublished(V version);
 
     /**
      * Return the working copy of this record
      *
      * @return the latest version of this record
      */
-    Version getWorkingCopy();
+    V getWorkingCopy();
 
     /**
      * Return the date when the entity last modified
@@ -62,17 +59,9 @@ public interface Record {
 
     boolean isActive();
 
-    void setSource(Source source);
-
-    Source getSource();
-
     void setPublishDate(Date publishDate);
 
     Date getPublishDate();
-
-    User getDescriptionAuthor();
-
-    void setDescriptionAuthor(User descriptionAuthor);
 
     String getRights();
 

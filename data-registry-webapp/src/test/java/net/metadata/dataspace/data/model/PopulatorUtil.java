@@ -7,6 +7,10 @@ import net.metadata.dataspace.data.connector.JpaConnector;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
+import net.metadata.dataspace.data.model.record.Activity;
+import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.ActivityType;
 import net.metadata.dataspace.data.model.types.AgentType;
 import net.metadata.dataspace.data.model.types.CollectionType;
@@ -58,7 +62,7 @@ public class PopulatorUtil {
         return publication;
     }
 
-    public static CollectionVersion getCollectionVersion(Record collection) throws Exception {
+    public static CollectionVersion getCollectionVersion(Collection collection) throws Exception {
         CollectionVersion collectionVersion = (CollectionVersion) entityCreator.getNextVersion(collection);
         collectionVersion.setParent(collection);
 
@@ -71,7 +75,7 @@ public class PopulatorUtil {
         return collectionVersion;
     }
 
-    public static AgentVersion getAgentVersion(Record agent) throws Exception {
+    public static AgentVersion getAgentVersion(Agent agent) throws Exception {
         AgentVersion agentVersion = (AgentVersion) entityCreator.getNextVersion(agent);
         agentVersion.setParent(agent);
         agentVersion.setTitle("Test Agent Title");
@@ -85,7 +89,7 @@ public class PopulatorUtil {
         return agentVersion;
     }
 
-    public static ServiceVersion getServiceVersion(Record service) {
+    public static ServiceVersion getServiceVersion(Service service) {
         ServiceVersion serviceVersion = (ServiceVersion) entityCreator.getNextVersion(service);
         serviceVersion.setParent(service);
         serviceVersion.setTitle("Test Service Title");
@@ -96,7 +100,7 @@ public class PopulatorUtil {
         return serviceVersion;
     }
 
-    public static ActivityVersion getActivityVersion(Record activity) {
+    public static ActivityVersion getActivityVersion(Activity activity) {
         ActivityVersion activityVersion = (ActivityVersion) entityCreator.getNextVersion(activity);
         activityVersion.setParent(activity);
         activityVersion.setTitle("Test Activity Title");

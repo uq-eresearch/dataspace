@@ -64,7 +64,7 @@ public class ServiceDaoImplTest {
         ServiceVersion serviceVersion = PopulatorUtil.getServiceVersion(service);
         service.getVersions().add(serviceVersion);
         Source source = PopulatorUtil.getSource();
-        service.setSource(source);
+        serviceVersion.setSource(source);
         entityManager.persist(source);
         entityManager.persist(serviceVersion);
         entityManager.persist(service);

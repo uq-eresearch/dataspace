@@ -27,6 +27,8 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
+import au.edu.uq.itee.maenad.dataaccess.Dao;
+
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -86,7 +88,7 @@ public class HttpMethodHelper {
                         version.setParent(record);
                         Date now = new Date();
                         version.setUpdated(now);
-                        record.setSource(source);
+                        version.setSource(source);
                         //TODO these values (i.e. rights, license) should come from the entry
                         record.setLicense(Constants.UQ_REGISTRY_LICENSE);
                         record.setRights(Constants.UQ_REGISTRY_RIGHTS);
@@ -96,9 +98,7 @@ public class HttpMethodHelper {
                         entityManager.persist(record);
                         AdapterInputHelper.addRelations(entry, version, user);
                         List<Person> authors = entry.getSource().getAuthors();
-                        AdapterInputHelper.addDescriptionAuthors(record, request);
-                        //entityManager.merge(version);
-                        //entityManager.merge(record);
+                        AdapterInputHelper.addDescriptionAuthors(version, authors, request);
                         Entry createdEntry = AdapterOutputHelper.getEntryFromEntity(version, true);
                         return AdapterOutputHelper.getContextResponseForPost(createdEntry);
                     } catch (Exception th) {
@@ -371,7 +371,7 @@ public class HttpMethodHelper {
     public List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
         List<Person> personList = new ArrayList<Person>();
         if (record instanceof Collection) {
-        	CollectionVersion version = (CollectionVersion) record.getPublished();
+        	Version version = (Version) record.getPublished();
         	// If no published collection, then return empty
         	if (version == null)
         		return personList;

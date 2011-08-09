@@ -1,8 +1,6 @@
 package net.metadata.dataspace.data.model.record;
 
-import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
-import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import org.hibernate.annotations.Sort;
@@ -33,17 +31,10 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AgentVersion published;
 
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "agent_same_as")
     private Set<Agent> sameAs = new HashSet<Agent>();
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private User descriptionAuthor;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Source source;
-
+    
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FullName fullName;
 
@@ -96,8 +87,8 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     }
 
     @Override
-    public void setPublished(Version version) {
-        this.published = (AgentVersion) version;
+    public void setPublished(AgentVersion version) {
+        this.published = version;
     }
 
     @Override
@@ -112,25 +103,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     public void setSameAs(Set<Agent> sameAs) {
         this.sameAs = sameAs;
-    }
-
-    @Override
-    public void setDescriptionAuthor(User descriptionAuthor) {
-        this.descriptionAuthor = descriptionAuthor;
-    }
-
-    @Override
-    public User getDescriptionAuthor() {
-        return this.descriptionAuthor;
-    }
-
-    public Source getSource() {
-        return source;
-    }
-
-    @Override
-    public void setSource(Source source) {
-        this.source = source;
     }
 
     public FullName getFullName() {

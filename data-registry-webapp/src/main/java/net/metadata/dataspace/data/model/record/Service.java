@@ -1,16 +1,21 @@
 package net.metadata.dataspace.data.model.record;
 
-import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  * User: alabri
@@ -33,12 +38,6 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "service_same_as")
     private Set<Service> sameAs = new HashSet<Service>();
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private User descriptionAuthor;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Source source;
 
     public Service() {
     }
@@ -73,8 +72,8 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     }
 
     @Override
-    public void setPublished(net.metadata.dataspace.data.model.Version published) {
-        this.published = (ServiceVersion) published;
+    public void setPublished(ServiceVersion published) {
+        this.published = published;
     }
 
     @Override
@@ -90,22 +89,4 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
         this.sameAs = sameAs;
     }
 
-    @Override
-    public User getDescriptionAuthor() {
-        return this.descriptionAuthor;
-    }
-
-    @Override
-    public void setDescriptionAuthor(User descriptionAuthor) {
-        this.descriptionAuthor = descriptionAuthor;
-    }
-
-    public Source getSource() {
-        return source;
-    }
-
-    @Override
-    public void setSource(Source source) {
-        this.source = source;
-    }
 }

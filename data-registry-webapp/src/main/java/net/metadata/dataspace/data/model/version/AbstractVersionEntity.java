@@ -1,12 +1,31 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.util.DaoHelper;
+
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
-import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
 
 /**
  * Author: alabri
@@ -14,7 +33,7 @@ import java.util.Date;
  * Time: 11:40:11 AM
  */
 @MappedSuperclass
-public abstract class AbstractVersionEntity implements Serializable, Comparable<Object>, net.metadata.dataspace.data.model.Version {
+public abstract class AbstractVersionEntity<R extends Record<?>> implements Serializable, Comparable<Version<R>>, Version<R> {
 
     /**
 	 * 
@@ -45,6 +64,12 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable<
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
+
+	@CollectionOfElements(fetch = FetchType.LAZY)
+	private Set<SourceAuthor> descriptionAuthors = new HashSet<SourceAuthor>();
+
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Source source;
 
     public AbstractVersionEntity() {
         this.isActive = true;
@@ -114,9 +139,7 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable<
     }
 
     @Override
-    public int compareTo(Object o) {
-
-        net.metadata.dataspace.data.model.Version version = (net.metadata.dataspace.data.model.Version) o;
+    public int compareTo(Version<R> version) {
         if (this.getUpdated().equals(version.getUpdated())) {
             return 0;
         }
@@ -138,7 +161,8 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable<
         if (!(obj instanceof AbstractRecordEntity)) {
             return false;
         }
-        AbstractVersionEntity other = (AbstractVersionEntity) obj;
+        @SuppressWarnings("unchecked")
+		AbstractVersionEntity<R> other = (AbstractVersionEntity<R>) obj;
         return getId().equals(other.getId());
     }
 
@@ -150,5 +174,25 @@ public abstract class AbstractVersionEntity implements Serializable, Comparable<
     public void setCreated(Date created) {
         this.created = created;
     }
+
+	@Override
+	public Set<SourceAuthor> getDescriptionAuthors() {
+		return descriptionAuthors;
+	}
+
+	@Override
+	public void setDescriptionAuthors(Set<SourceAuthor> descriptionAuthors) {
+		this.descriptionAuthors = descriptionAuthors;
+	}
+
+	@Override
+	public Source getSource() {
+		return source;
+	}
+
+	@Override
+	public void setSource(Source source) {
+		this.source = source;
+	}
 
 }

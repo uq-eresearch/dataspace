@@ -1,6 +1,5 @@
 package net.metadata.dataspace.data.model.version;
 
-import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
@@ -23,7 +22,7 @@ import static javax.persistence.EnumType.STRING;
  * Time: 9:27:44 AM
  */
 @Entity
-public class AgentVersion extends AbstractVersionEntity {
+public class AgentVersion extends AbstractVersionEntity<Agent> {
     private static final long serialVersionUID = 1L;
 
     @ManyToOne
@@ -76,8 +75,8 @@ public class AgentVersion extends AbstractVersionEntity {
     }
 
     @Override
-    public void setParent(Record parent) {
-        this.parent = (Agent) parent;
+    public void setParent(Agent parent) {
+        this.parent = parent;
     }
 
     public Set<Subject> getSubjects() {
