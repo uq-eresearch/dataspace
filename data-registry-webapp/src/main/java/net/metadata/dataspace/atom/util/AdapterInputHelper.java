@@ -484,15 +484,15 @@ public class AdapterInputHelper {
     }
 
     public static void addDescriptionAuthors(Record record, RequestContext request) throws ResponseContextException {
-        //try {
+        try {
             AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
             User currentUser = authenticationManager.getCurrentUser(request);
             User user = RegistryApplication.getApplicationContext().getDaoManager().getUserDao().getByUsername(currentUser.getUsername());
             record.setDescriptionAuthor(user);
 
-        //} catch (Throwable th) {
-        //    throw new ResponseContextException("Could not add description author", 500);
-        //}
+        } catch (Throwable th) {
+            throw new ResponseContextException("Could not add description author", 500);
+        }
     }
 
     public static void addCollectionCreator(CollectionVersion version, List<Person> persons, User currentUser) throws ResponseContextException {

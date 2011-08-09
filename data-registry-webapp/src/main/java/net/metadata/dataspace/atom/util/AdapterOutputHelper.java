@@ -315,7 +315,6 @@ public class AdapterOutputHelper {
             }
             //Spatial Coverage links
             for (Spatial spatial : version.getSpatialCoverage()) {
-                //TODO need to add the href in the data model
             	Link link = entry.addLink(spatial.getLocation().toString(), 
             			Constants.REL_SPATIAL);
                 link.setTitle(spatial.getName());
