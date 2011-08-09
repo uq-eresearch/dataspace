@@ -22,7 +22,7 @@ public class XPathHelper {
     public XPathHelper() {
     }
 
-    public static XPath getXPath() throws Exception {
+    public static XPath getXPath() {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         NamespaceContext ctx = new AtomNamespaceContext();
