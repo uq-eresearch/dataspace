@@ -87,5 +87,6 @@ public interface Constants {
 	
     String RECORD_REL_DESCRIBES_PATH = "/atom:entry/atom:link[@rel=\"http://www.openarchives.org/ore/terms/describes\"]/@href";
     String RECORD_SOURCE_AUTHOR_NAME_PATH = "/atom:entry/atom:source/atom:author/atom:name";
+    String RECORD_SOURCE_AUTHOR_EMAIL_PATH = "/atom:entry/atom:source/atom:author/atom:email";
 
 }
