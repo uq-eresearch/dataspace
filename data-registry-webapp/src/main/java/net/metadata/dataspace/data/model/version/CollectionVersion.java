@@ -2,6 +2,7 @@ package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.context.Publication;
+import net.metadata.dataspace.data.model.context.Spatial;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.NotNull;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,7 +61,7 @@ public class CollectionVersion extends AbstractVersionEntity {
     private Set<String> geoRssPolygons = new HashSet<String>();
 
     @CollectionOfElements(fetch = FetchType.LAZY)
-    private Set<String> geoRssFeatureNames = new HashSet<String>();
+    private Set<Spatial> spatialCoverage = new HashSet<Spatial>();
 
     @CollectionOfElements(fetch = FetchType.LAZY)
     private Set<String> keywords = new HashSet<String>();
@@ -231,15 +233,15 @@ public class CollectionVersion extends AbstractVersionEntity {
         this.geoRssPolygons = geoRssBoxes;
     }
 
-    public Set<String> getGeoRssFeatureNames() {
-        return geoRssFeatureNames;
-    }
+    public Set<Spatial> getSpatialCoverage() {
+		return spatialCoverage;
+	}
 
-    public void setGeoRssFeatureNames(Set<String> geoRssFeatureNames) {
-        this.geoRssFeatureNames = geoRssFeatureNames;
-    }
+	public void setSpatialCoverage(Set<Spatial> spatialCoverage) {
+		this.spatialCoverage = spatialCoverage;
+	}
 
-    public Set<String> getAlternatives() {
+	public Set<String> getAlternatives() {
         return alternatives;
     }
 

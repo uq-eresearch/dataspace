@@ -12,6 +12,7 @@ import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.context.Spatial;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.*;
 import net.metadata.dataspace.data.model.record.Collection;
@@ -36,6 +37,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.SearchResult;
 import javax.persistence.EntityManager;
 import javax.xml.namespace.QName;
+
+import java.net.URISyntaxException;
 import java.util.*;
 
 /**
@@ -53,7 +56,7 @@ public class AdapterInputHelper {
     private static final EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
     private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
 
-    public static void addRelations(Entry entry, Version version, User currentUser) throws ResponseContextException {
+    public static void addRelations(Entry entry, Version version, User currentUser) throws ResponseContextException, URISyntaxException {
         if (version instanceof ActivityVersion) {
             addRelationsToActivity(entry, (ActivityVersion) version);
         } else if (version instanceof CollectionVersion) {
@@ -126,7 +129,7 @@ public class AdapterInputHelper {
         version.setUpdated(now);
     }
 
-    private static void addRelationsCollection(Entry entry, CollectionVersion version, User currentUser) throws ResponseContextException {
+    private static void addRelationsCollection(Entry entry, CollectionVersion version, User currentUser) throws ResponseContextException, URISyntaxException {
         EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
 
         //Add the original id
@@ -244,8 +247,10 @@ public class AdapterInputHelper {
 
         List<Link> links = entry.getLinks(Constants.REL_SPATIAL);
         for (Link link : links) {
-            //nTODO we need to add the href to the geo names service
-            version.getGeoRssFeatureNames().add(link.getTitle());
+        	Spatial spatial = new Spatial();
+        	spatial.setName(link.getTitle());
+        	spatial.setLocation(link.getHref().toURI());
+            version.getSpatialCoverage().add(spatial);
         }
         //add publications
         Set<Publication> publications = getPublications(entry);
@@ -479,15 +484,15 @@ public class AdapterInputHelper {
     }
 
     public static void addDescriptionAuthors(Record record, RequestContext request) throws ResponseContextException {
-        try {
+        //try {
             AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
             User currentUser = authenticationManager.getCurrentUser(request);
             User user = RegistryApplication.getApplicationContext().getDaoManager().getUserDao().getByUsername(currentUser.getUsername());
             record.setDescriptionAuthor(user);
 
-        } catch (Throwable th) {
-            throw new ResponseContextException("Could not add description author", 500);
-        }
+        //} catch (Throwable th) {
+        //    throw new ResponseContextException("Could not add description author", 500);
+        //}
     }
 
     public static void addCollectionCreator(CollectionVersion version, List<Person> persons, User currentUser) throws ResponseContextException {

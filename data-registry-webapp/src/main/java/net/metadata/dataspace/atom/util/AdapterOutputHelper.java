@@ -5,6 +5,7 @@ import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
+import net.metadata.dataspace.data.model.context.Spatial;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.*;
 import net.metadata.dataspace.data.model.record.Collection;
@@ -312,16 +313,13 @@ public class AdapterOutputHelper {
             for (String geoRssPolygon : geoRssPolygons) {
                 entry.addSimpleExtension(Constants.QNAME_GEO_RSS_POLYGON, geoRssPolygon);
             }
-            //GeoRss Feature Names
-            Set<String> geoRssFeatureNames = version.getGeoRssFeatureNames();
-            for (String geoRssFeatureName : geoRssFeatureNames) {
+            //Spatial Coverage links
+            for (Spatial spatial : version.getSpatialCoverage()) {
                 //TODO need to add the href in the data model
-                Link link = entry.addLink("http://sws.geonames.org/2172406/", Constants.REL_SPATIAL);
-                link.setTitle(geoRssFeatureName);
+            	Link link = entry.addLink(spatial.getLocation().toString(), 
+            			Constants.REL_SPATIAL);
+                link.setTitle(spatial.getName());
             }
-
-            //
-
         } catch (Throwable th) {
             throw new ResponseContextException(500, th);
         }
