@@ -52,5 +52,9 @@ public class SourceAuthor {
 		this.uri = (uri == null ? null : uri.toString());
 	}
 	
+	public String toString() {
+		return String.format("%s <%s>", getName(), getEmail());
+	}
+	
 
 }

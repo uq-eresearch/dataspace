@@ -88,17 +88,17 @@ public class HttpMethodHelper {
                         version.setParent(record);
                         Date now = new Date();
                         version.setUpdated(now);
+                        List<Person> authors = entry.getSource().getAuthors();
+                        AdapterInputHelper.addDescriptionAuthors(version, authors, request);
                         version.setSource(source);
                         //TODO these values (i.e. rights, license) should come from the entry
                         record.setLicense(Constants.UQ_REGISTRY_LICENSE);
                         record.setRights(Constants.UQ_REGISTRY_RIGHTS);
                         record.getVersions().add(version);
                         record.setUpdated(now);
+                        AdapterInputHelper.addRelations(entry, version, user);
                         entityManager.persist(version);
                         entityManager.persist(record);
-                        AdapterInputHelper.addRelations(entry, version, user);
-                        List<Person> authors = entry.getSource().getAuthors();
-                        AdapterInputHelper.addDescriptionAuthors(version, authors, request);
                         Entry createdEntry = AdapterOutputHelper.getEntryFromEntity(version, true);
                         return AdapterOutputHelper.getContextResponseForPost(createdEntry);
                     } catch (Exception th) {
@@ -136,10 +136,17 @@ public class HttpMethodHelper {
                             if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
                                 EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                                 try {
+                                	Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
+                                    if (source.getId() == null) {
+                                        entityManager.persist(source);
+                                    }
                                     record.getVersions().add(version);
                                     version.setParent(record);
                                     AdapterInputHelper.addRelations(entry, version, user);
                                     record.setUpdated(new Date());
+                                    List<Person> authors = entry.getSource().getAuthors();
+                                    AdapterInputHelper.addDescriptionAuthors(version, authors, request);
+                                    version.setSource(source);
                                     entityManager.persist(version);
                                     entityManager.merge(record);
                                     Entry updatedEntry = AdapterOutputHelper.getEntryFromEntity(version, false);

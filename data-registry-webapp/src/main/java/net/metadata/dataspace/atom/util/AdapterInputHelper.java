@@ -510,7 +510,7 @@ public class AdapterInputHelper {
 	            				currentUser.getDisplayName(), 
 	            				currentUser.getEmail(), null));
         	} else {
-        		for (Person person : authors) {
+            	for (Person person : authors) {
         			URI uri = person.getUri() == null ? 
         					null : person.getUri().toURI();
         			version.getDescriptionAuthors().add(
@@ -518,6 +518,7 @@ public class AdapterInputHelper {
         							person.getEmail(),
         							uri));
         		}
+            	logger.debug("Inserted "+version.getDescriptionAuthors().size()+" description authors from source");
         	}
         } catch (Throwable th) {
         	logger.warn(th.getMessage(), th);

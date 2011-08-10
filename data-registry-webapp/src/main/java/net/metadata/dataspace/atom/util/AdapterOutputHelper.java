@@ -565,7 +565,7 @@ public class AdapterOutputHelper {
                 source.setId(Constants.UQ_REGISTRY_URI_PREFIX);
                 source.setTitle(Constants.UQ_REGISTRY_TITLE);
             }
-
+            logger.info("Adding description authors: "+version.getDescriptionAuthors());
             for (SourceAuthor descriptionAuthor : version.getDescriptionAuthors()) {
             	Person person = source.addAuthor(descriptionAuthor.getName());
             	person.setEmail(descriptionAuthor.getEmail());
