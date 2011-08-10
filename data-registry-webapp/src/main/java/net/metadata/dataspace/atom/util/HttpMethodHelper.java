@@ -91,9 +91,9 @@ public class HttpMethodHelper {
                         record.setRights(Constants.UQ_REGISTRY_RIGHTS);
                         record.getVersions().add(version);
                         record.setUpdated(now);
-                        AdapterInputHelper.addRelations(entry, version, user);
                         entityManager.persist(version);
                         entityManager.persist(record);
+                        AdapterInputHelper.addRelations(entry, version, user);
                         Entry createdEntry = AdapterOutputHelper.getEntryFromEntity(version, true);
                         return AdapterOutputHelper.getContextResponseForPost(createdEntry);
                     } catch (Exception th) {
