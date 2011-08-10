@@ -4,13 +4,10 @@ import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import net.metadata.dataspace.data.access.RegistryDao;
 import net.metadata.dataspace.util.DaoHelper;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.Date;
 import java.util.List;
 

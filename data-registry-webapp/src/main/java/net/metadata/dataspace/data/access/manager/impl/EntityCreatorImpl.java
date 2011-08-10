@@ -43,7 +43,7 @@ public class EntityCreatorImpl implements EntityCreator {
     }
 
     @Override
-    public Record getNextRecord(Class<?> clazz) {
+    public <R extends Record<?>> Record<?> getNextRecord(Class<R> clazz) {
         if (clazz.equals(Activity.class)) {
             return getNextActivity();
         } else if (clazz.equals(Collection.class)) {

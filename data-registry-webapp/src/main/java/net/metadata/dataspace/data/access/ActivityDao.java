@@ -8,9 +8,4 @@ import net.metadata.dataspace.data.model.version.ActivityVersion;
  * Date: 27/10/2010
  * Time: 10:44:19 AM
  */
-public interface ActivityDao extends RegistryDao<Activity> {
-
-    ActivityVersion getByVersion(String uriKey, String version);
-
-    Activity getByOriginalId(String originalId);
-}
+public interface ActivityDao extends RecordDao<Activity,ActivityVersion> {}

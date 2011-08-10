@@ -25,9 +25,6 @@ import static javax.persistence.EnumType.STRING;
 public class AgentVersion extends AbstractVersionEntity<Agent> {
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    private Agent parent;
-
     @NotNull
     @Enumerated(STRING)
     private AgentType type;
@@ -67,16 +64,6 @@ public class AgentVersion extends AbstractVersionEntity<Agent> {
     private Set<Publication> publications = new HashSet<Publication>();
 
     public AgentVersion() {
-    }
-
-    @Override
-    public Agent getParent() {
-        return parent;
-    }
-
-    @Override
-    public void setParent(Agent parent) {
-        this.parent = parent;
     }
 
     public Set<Subject> getSubjects() {

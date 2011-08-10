@@ -3,7 +3,6 @@ package net.metadata.dataspace.data.connector;
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 
 import java.io.Serializable;

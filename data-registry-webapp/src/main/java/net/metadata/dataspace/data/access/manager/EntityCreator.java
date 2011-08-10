@@ -15,11 +15,11 @@ import net.metadata.dataspace.data.model.context.Subject;
  */
 public interface EntityCreator {
 
-    Record getNextRecord(Class<?> clazz);
+	<R extends Record<?>> Record<?> getNextRecord(Class<R> clazz);
 
     Context getNextResource(Class<?> clazz);
 
-    Version getNextVersion(Record record);
+    Version<?> getNextVersion(Record<? extends Version<?>> record);
 
     Subject getNextSubject();
 

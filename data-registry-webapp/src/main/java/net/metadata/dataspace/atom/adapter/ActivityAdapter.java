@@ -71,7 +71,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
     @Override
     public ResponseContext putMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().putMedia(request, Activity.class);
+            return HttpMethodHelper.putMedia(request, Activity.class);
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
         }
@@ -112,7 +112,7 @@ public class ActivityAdapter extends AbstractEntityCollectionAdapter<Activity> {
                 addFeedDetails(feed, request);
                 ResponseContext responseContext = buildGetFeedResponse(feed);
 
-                return HttpMethodHelper.getInstance().getFeed(request, responseContext, Activity.class);
+                return HttpMethodHelper.getFeed(request, responseContext, Activity.class);
             }
         } catch (ResponseContextException e) {
             return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());

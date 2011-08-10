@@ -8,11 +8,8 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
  * Date: 21/09/2010
  * Time: 1:21:30 PM
  */
-public interface AgentDao extends RegistryDao<Agent> {
-
-    AgentVersion getByVersion(String uriKey, String version);
+public interface AgentDao extends RecordDao<Agent, AgentVersion> {
 
     Agent getByEmail(String email);
 
-    Agent getByOriginalId(String originalId);
 }

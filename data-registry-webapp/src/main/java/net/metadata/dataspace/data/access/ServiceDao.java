@@ -8,9 +8,4 @@ import net.metadata.dataspace.data.model.version.ServiceVersion;
  * Date: 27/10/2010
  * Time: 10:44:04 AM
  */
-public interface ServiceDao extends RegistryDao<Service> {
-
-    ServiceVersion getByVersion(String uriKey, String version);
-
-    Service getByOriginalId(String originalId);
-}
+public interface ServiceDao extends RecordDao<Service, ServiceVersion> {}

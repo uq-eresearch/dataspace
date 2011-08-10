@@ -32,7 +32,6 @@ import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.NamingEnumeration;
@@ -44,7 +43,6 @@ import javax.xml.namespace.QName;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Author: alabri
@@ -447,7 +445,7 @@ public class AdapterInputHelper {
         version.setUpdated(now);
     }
 
-    public static Version assembleAndValidateVersionFromEntry(Record record, Entry entry) throws ResponseContextException {
+    public static Version<?> assembleAndValidateVersionFromEntry(Record<?> record, Entry entry) throws ResponseContextException {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             return null;
         } else {
@@ -455,7 +453,7 @@ public class AdapterInputHelper {
             if (content == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
             }
-            Version version = entityCreator.getNextVersion(record);
+            Version<?> version = entityCreator.getNextVersion(record);
             version.setTitle(entry.getTitle());
             version.setDescription(content);
             version.setUpdated(new Date());
@@ -679,7 +677,7 @@ public class AdapterInputHelper {
         }
     }
 
-    private static void addAlternativeTitles(Version version, Entry entry) {
+    private static void addAlternativeTitles(Version<?> version, Entry entry) {
         List<Element> extensions = entry.getExtensions(Constants.QNAME_RDFA_META);
         for (Element extension : extensions) {
             String property = extension.getAttributeValue("property");
@@ -690,7 +688,7 @@ public class AdapterInputHelper {
         }
     }
 
-    private static void addPages(Version version, Entry entry) throws ResponseContextException {
+    private static void addPages(Version<?> version, Entry entry) throws ResponseContextException {
         List<Link> links = entry.getLinks(Constants.REL_PAGE);
         for (Link link : links) {
             String page = link.getHref().toString();
@@ -720,7 +718,7 @@ public class AdapterInputHelper {
         return publications;
     }
 
-    private static void addType(Version version, Entry entry) throws ResponseContextException {
+    private static void addType(Version<?> version, Entry entry) throws ResponseContextException {
         if (version == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
         } else {
@@ -788,8 +786,6 @@ public class AdapterInputHelper {
 
     private static Agent findOrCreateAgent(String name, String email, User currentUser) throws ResponseContextException {
     	EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
-
-    	User user = daoManager.getUserDao().getByUsername(currentUser.getUsername());
     	
     	//Find the agent in our system first
         Agent agent = daoManager.getAgentDao().getByEmail(email);

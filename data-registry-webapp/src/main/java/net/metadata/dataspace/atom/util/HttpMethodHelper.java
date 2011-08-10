@@ -27,13 +27,8 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
-import au.edu.uq.itee.maenad.dataaccess.Dao;
-
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,7 +59,7 @@ public class HttpMethodHelper {
 	}
 
 	@Transactional
-    public ResponseContext postEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
+    public ResponseContext postEntry(RequestContext request, Class<? extends Record<?>> clazz) throws ResponseContextException {
 		EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                 
 		User user = authenticationManager.getCurrentUser(request);

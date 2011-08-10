@@ -1,8 +1,6 @@
 package net.metadata.dataspace.data.access;
 
 import au.edu.uq.itee.maenad.dataaccess.Dao;
-import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
-
 import java.util.Date;
 import java.util.List;
 

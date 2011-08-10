@@ -4,8 +4,6 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.model.record.User;
-import net.sf.saxon.TransformerFactoryImpl;
-
 import org.apache.abdera.model.Base;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.RequestContext;
