@@ -9,7 +9,6 @@ import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
-import org.apache.xpath.NodeSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,12 +18,20 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.gargoylesoftware.htmlunit.html.xpath.XPathUtils;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -201,6 +208,7 @@ public class CollectionTest {
         XPath xpath = XPathHelper.getXPath();
         InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
         Document docFromStream = XPathHelper.getDocFromStream(responseBodyAsStream);
+        
         Document docFromFile = XPathHelper.getDocFromFile(fileName);
 
         String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
@@ -234,7 +242,7 @@ public class CollectionTest {
         Element spatialLink = (Element) xpath.evaluate(spatialPath, docFromStream, XPathConstants.NODE);
         assertNotNull("Entry missing spatial rel link", spatialLink);
         assertXPathSameTextContent(spatialPath+"/@href", 
-        		docFromStream, docFromFile);
+        		docFromFile, docFromStream);
 
         //publish entry
         fileName = "/files/put/published-collection.xml";
@@ -270,10 +278,9 @@ public class CollectionTest {
         
         // Source author should be the one specified in the POST
         if (hasXPathMatch(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH, docFromFile)) {
-        	// TODO Find out why this keeps failing
         	// Check that the authors match
-	        //assertXPathSameTextContent(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH+"/text()", 
-	        //		docFromStream, docFromFile);
+	        assertXPathSameTextContent(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH+"/text()", 
+	        		docFromFile, docFromStream);
         } else {
         	// The current user should have been used as the source instead
         	Element authorEmailNode = (Element) xpath.evaluate(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH, docFromStream, XPathConstants.NODE);
@@ -363,7 +370,9 @@ public class CollectionTest {
     
     private boolean hasXPathMatch(String xpathExpression, Document doc) throws XPathExpressionException {
     	XPath xpath = XPathHelper.getXPath();
-    	return ((NodeList) xpath.evaluate(xpathExpression, doc, XPathConstants.NODESET)).getLength() > 0;
+    	NodeList matches = (NodeList) xpath.evaluate(xpathExpression, doc, XPathConstants.NODESET);
+    	System.out.println(matches.getLength() > 0 ? matches.item(0).getTextContent() : "null");
+    	return matches.getLength() > 0;
     }
     
     private void assertXPathSameTextContent(String xpathExpression, 
@@ -394,6 +403,23 @@ public class CollectionTest {
         	actualSet.add(actualNodes.item(i).getTextContent());
         }
         assertEquals("Content doesn't match for "+xpathExpression, expectedSet, actualSet );
+    }
+    
+    private String getXPathContent(String xpathExpression, Document doc) 
+    		throws TransformerException, XPathExpressionException 
+    {
+    	XPath xpath = XPathHelper.getXPath();
+    	NodeList nl = (NodeList) xpath.evaluate(xpathExpression, doc, XPathConstants.NODESET);
+    	StringWriter sw = new StringWriter();
+    	for (int i = 0; i < nl.getLength(); i++) {
+    		Node node = nl.item(i);
+	    	Transformer transformer = TransformerFactory.newInstance().newTransformer();
+	    	transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	        StreamResult outputTarget = new StreamResult(sw);
+	        transformer.transform(new DOMSource(node), outputTarget);
+    	}
+    	return sw.toString();
     }
     
 }
