@@ -64,7 +64,7 @@
                         <ul class="bread-crumbs-nav">
                             <xsl:call-template name="bread-crumbs">
                                 <xsl:with-param name="path">collections</xsl:with-param>
-                                <xsl:with-param name="title">collections</xsl:with-param>
+                                <xsl:with-param name="title">Collections</xsl:with-param>
                             </xsl:call-template>
                             <xsl:if test="$currentUser">
                                 <xsl:call-template name="bread-crumbs-options">
@@ -150,7 +150,7 @@
                         <ul class="bread-crumbs-nav">
                             <xsl:call-template name="bread-crumbs">
                                 <xsl:with-param name="path">collections</xsl:with-param>
-                                <xsl:with-param name="title">collections</xsl:with-param>
+                                <xsl:with-param name="title">Collections</xsl:with-param>
                             </xsl:call-template>
                             <xsl:if test="$currentUser">
                                 <xsl:call-template name="bread-crumbs-options">

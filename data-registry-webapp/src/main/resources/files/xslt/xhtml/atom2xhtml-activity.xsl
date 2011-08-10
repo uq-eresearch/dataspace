@@ -51,12 +51,12 @@
                         <!-- bread crumbs -->
                         <ul class="bread-crumbs-nav">
                             <xsl:call-template name="bread-crumbs">
-                                <xsl:with-param name="path">collections</xsl:with-param>
-                                <xsl:with-param name="title">collections</xsl:with-param>
+                                <xsl:with-param name="path">activities</xsl:with-param>
+                                <xsl:with-param name="title">Activities</xsl:with-param>
                             </xsl:call-template>
                             <xsl:if test="$currentUser">
                                 <xsl:call-template name="bread-crumbs-options">
-                                    <xsl:with-param name="path">collections</xsl:with-param>
+                                    <xsl:with-param name="path">activities</xsl:with-param>
                                 </xsl:call-template>
                             </xsl:if>
                         </ul>
@@ -69,7 +69,7 @@
                       <xsl:call-template name="latest-version"/>
                   </xsl:if>      -->
                         <!-- identifier -->
-                        <xsl:apply-templates select="atom:id"/>
+                        <xsl:call-template name="identifiers"/>
                         <!-- names -->
                         <xsl:apply-templates select="atom:title"/>
                         <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
@@ -96,6 +96,7 @@
 
                         <div class="provenance">
                             <h2>About the description</h2>
+                            <xsl:call-template name="description-id"/>
                             <xsl:apply-templates select="atom:source"/>
                             <xsl:call-template name="last-update"/>
                         </div>
@@ -106,12 +107,12 @@
                         <!-- bread crumbs -->
                         <ul class="bread-crumbs-nav">
                             <xsl:call-template name="bread-crumbs">
-                                <xsl:with-param name="path">collections</xsl:with-param>
-                                <xsl:with-param name="title">collections</xsl:with-param>
+                                <xsl:with-param name="path">activities</xsl:with-param>
+                                <xsl:with-param name="title">Activities</xsl:with-param>
                             </xsl:call-template>
                             <xsl:if test="$currentUser">
                                 <xsl:call-template name="bread-crumbs-options">
-                                    <xsl:with-param name="path">collections</xsl:with-param>
+                                    <xsl:with-param name="path">activities</xsl:with-param>
                                 </xsl:call-template>
                             </xsl:if>
                         </ul>

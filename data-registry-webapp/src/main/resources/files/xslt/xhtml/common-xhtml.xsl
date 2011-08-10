@@ -27,20 +27,14 @@
     <xsl:template name="identifiers">
         <p class="identifier">
             <span class="id-property">Identifier: </span>
-            <xsl:value-of select="atom:id"/>
+            <a href="{atom:id}"><xsl:value-of select="atom:id"/></a>
         </p>
         <xsl:if test="atom:id != atom:link[@rel = $RDF_DESCRIBES]/@href">
             <p class="identifier">
                 <span class="id-property">Local identifier: </span>
-                <xsl:value-of select="atom:link[@rel = $RDF_DESCRIBES]/@href"/>
+                <a href="{atom:link[@rel = $RDF_DESCRIBES]/@href}"><xsl:value-of select="atom:link[@rel = $RDF_DESCRIBES]/@href"/></a>
             </p>
         </xsl:if>
-    </xsl:template>
-    <xsl:template match="atom:id">
-        <p class="identifier">
-            <span class="id-property">Identifier: </span>
-            <xsl:value-of select="text()"/>
-        </p>
     </xsl:template>
 
     <!-- name -->
@@ -335,7 +329,7 @@
                 Description identifier
             </div>
             <div class="content">
-                <xsl:value-of select="atom:link[@rel = $REL_SELF]/@href"/>
+                <a href="{atom:link[@rel = $REL_SELF]/@href}"><xsl:value-of select="atom:link[@rel = $REL_SELF]/@href"/></a>
             </div>
         </div>
     </xsl:template>
@@ -448,7 +442,7 @@
         </li>
         <li class="bread-crumbs">
             <a href="/{$path}">
-                Browse <xsl:value-of select="$title"/>
+                <xsl:value-of select="$title"/>
             </a>
         </li>
         <li class="bread-crumbs-last">

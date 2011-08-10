@@ -52,7 +52,7 @@
                         <ul class="bread-crumbs-nav">
                             <xsl:call-template name="bread-crumbs">
                                 <xsl:with-param name="path">agents</xsl:with-param>
-                                <xsl:with-param name="title">agents</xsl:with-param>
+                                <xsl:with-param name="title">Agents</xsl:with-param>
                             </xsl:call-template>
                             <xsl:if test="$currentUser">
                                 <xsl:call-template name="bread-crumbs-options">
@@ -69,7 +69,7 @@
                       <xsl:call-template name="latest-version"/>
                   </xsl:if>      -->
                         <!-- identifier -->
-                        <xsl:apply-templates select="atom:id"/>
+                        <xsl:call-template name="identifiers"/>
                         <!-- names -->
                         <xsl:apply-templates select="atom:title"/>
                         <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
@@ -99,6 +99,7 @@
 
                         <div class="provenance">
                             <h2>About the description</h2>
+                            <xsl:call-template name="description-id"/>
                             <xsl:apply-templates select="atom:source"/>
                             <xsl:call-template name="last-update"/>
                         </div>
@@ -110,7 +111,7 @@
                         <ul class="bread-crumbs-nav">
                             <xsl:call-template name="bread-crumbs">
                                 <xsl:with-param name="path">agents</xsl:with-param>
-                                <xsl:with-param name="title">agents</xsl:with-param>
+                                <xsl:with-param name="title">Agents</xsl:with-param>
                             </xsl:call-template>
                             <xsl:if test="$currentUser">
                                 <xsl:call-template name="bread-crumbs-options">
