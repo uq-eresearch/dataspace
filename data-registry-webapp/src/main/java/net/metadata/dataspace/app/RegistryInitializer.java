@@ -104,6 +104,7 @@ public class RegistryInitializer {
                 logger.fatal("Solr configuration file not found, please ensure there is a 'conf/solr/solr.properties' on the classpath");
             }
             properties.load(resourceAsStream);
+            properties.putAll(System.getProperties());
         } catch (IOException ex) {
             logger.fatal("Failed to load solr configuration properties", ex);
         } finally {

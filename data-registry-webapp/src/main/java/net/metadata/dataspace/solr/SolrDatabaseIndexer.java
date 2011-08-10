@@ -23,7 +23,7 @@ public class SolrDatabaseIndexer implements Job {
         HttpClient client = new HttpClient();
         PostMethod post = new PostMethod(command.toString());
         try {
-            logger.info("Sending " + command.getName() + " solr command");
+            logger.info("Sending " + command.getName() + " solr command: " + command);
             client.executeMethod(post);
             int statusCode = post.getStatusCode();
             logger.info("Solr server returned " + statusCode);
