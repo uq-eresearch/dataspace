@@ -367,7 +367,11 @@
                     <xsl:value-of select="atom:link[@rel=$REL_LATEST_VERSION]/@title"/>
                     on <xsl:value-of select="fn:format-dateTime(fn:adjust-dateTime-to-timezone(atom:updated),
                 '[F,3-3], [D] [MNn] [Y], [H]:[m]:[s] [z]')"/>
-                    by <xsl:value-of select="atom:source/atom:author/atom:name"/>
+                    by
+                    <xsl:for-each select="atom:source/atom:author">
+                        <xsl:if test="position() != 1">, </xsl:if>
+                        <xsl:value-of select="atom:name"/>
+                    </xsl:for-each>
                 </p>
             </div>
         </div>
