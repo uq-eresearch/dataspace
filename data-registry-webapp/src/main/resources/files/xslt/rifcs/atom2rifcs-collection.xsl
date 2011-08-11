@@ -15,7 +15,7 @@
                 xmlns:georss="http://www.georss.org/georss"
                 xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
                 xmlns:fn="http://www.w3.org/2005/xpath-functions"
-                exclude-result-prefixes="atom ands dcterms rdfa georss fn str">
+                exclude-result-prefixes="atom ands dcterms rdfa georss fn">
 
     <xsl:include href="common-rifcs.xsl"/>
     <xsl:output method="xml" media-type="application/rifcs+xml" indent="yes"/>

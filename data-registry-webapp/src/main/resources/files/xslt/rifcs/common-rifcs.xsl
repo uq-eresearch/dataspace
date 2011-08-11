@@ -14,7 +14,7 @@
                 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfa="http://www.w3.org/ns/rdfa#"
                 xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
                 xmlns:fn="http://www.w3.org/2005/xpath-functions"
-                exclude-result-prefixes="atom ands dcterms rdfa fn str">
+                exclude-result-prefixes="atom ands dcterms rdfa fn">
     <xsl:include href="../constants.xsl"/>
 
     <!-- object to record ID translation -->
