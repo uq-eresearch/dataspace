@@ -65,13 +65,12 @@
     <lib path="../a-jar-that-does-not-exist.jar" />
     -->
 
-
-    <!-- <instanceDir dir="./solr-instance" />  -->
+    <instanceDir>${solr.instance.dir:/opt/solr}</instanceDir>
     
     <!-- Used to specify an alternate directory to hold all index data
 other than the default ./data under the Solr home.
 If replication is in use, this should match the replication configuration. -->
-    <dataDir>${solr.data.dir:/opt/solr/data}</dataDir>
+    <!-- <dataDir>${solr.data.dir:/opt/solr/data}</dataDir> -->
 
 
     <!-- WARNING: this <indexDefaults> section only provides defaults for index writers

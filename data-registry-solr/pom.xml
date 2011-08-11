@@ -43,12 +43,12 @@
 				<configuration>
 					<systemProperties>
 						<systemProperty>
-							<name>solr.data.dir</name>
-							<value>${project.build.directory}/solr/data</value>
+							<name>h2.identifiersToUpper</name>
+							<value>false</value>
 						</systemProperty>
 						<systemProperty>
-							<name>data.registry.persistenceUnitName</name>
-							<value>registry-mysql</value>
+							<name>solr.instance.dir</name>
+							<value>${project.build.directory}/solr</value>
 						</systemProperty>
 					</systemProperties>
 					<stopKey>/</stopKey>

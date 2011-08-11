@@ -44,19 +44,19 @@
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
             <entity name="collectionversion"
-                    query="SELECT title, description, type, id FROM collectionversion WHERE id=${collection.PUBLISHED_ID}">
+                    query="SELECT title, description, type, id FROM collectionversion WHERE id=${collection.published_id}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="collections_subjects"
-                        query="SELECT * FROM collections_subjects WHERE collectionversion_id=${collectionversion.ID}">
+                        query="SELECT * FROM collections_subjects WHERE collectionversion_id=${collectionversion.id}">
                     <entity name="collectionsubjects"
-                            query="SELECT label, term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID} AND label != 'keyword'">
+                            query="SELECT label, term FROM subject WHERE id=${collections_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
                     <entity name="collectionkeywords"
-                            query="SELECT term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID} AND label = 'keyword'">
+                            query="SELECT term FROM subject WHERE id=${collections_subjects.subjects_id} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
@@ -68,19 +68,19 @@
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
             <entity name="agentversion"
-                    query="SELECT title, description, type, id FROM agentversion WHERE id=${agent.PUBLISHED_ID}">
+                    query="SELECT title, description, type, id FROM agentversion WHERE id=${agent.published_id}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="agents_subjects"
-                        query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.ID}">
+                        query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.id}">
                     <entity name="agentsubjects"
-                            query="SELECT label, term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID} AND label != 'keyword'">
+                            query="SELECT label, term FROM subject WHERE id=${agents_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
                     <entity name="agentkeywords"
-                            query="SELECT term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID} AND label = 'keyword'">
+                            query="SELECT term FROM subject WHERE id=${agents_subjects.subjects_id} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
