@@ -6,12 +6,12 @@
                 url="jdbc:h2:file:local/database/registry;AUTO_SERVER=TRUE"
                 user="registry"
                 password="registry"
-                />
-                <!-- 
-                readOnly="true"
                 autoCommit="false"
                 transactionIsolation="TRANSACTION_READ_COMMITTED"
                 holdability="CLOSE_CURSORS_AT_COMMIT"
+                />
+                <!-- 
+                readOnly="true"
                  -->
     <document name="collections">
         <entity name="subject" dataSource="registry-ds"
@@ -21,20 +21,21 @@
                 query="SELECT id, atomicnumber, published_id FROM collection WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
-            <entity name="collectionversion" dataSource="registry-ds"
-                    query="SELECT title, description, type, id FROM collectionversion WHERE id=${collection.published_id}">
+            <field column="published_id" name="published_id"/>
+            <entity name="collectionversion"
+                    query="SELECT title, description, type, id FROM collectionversion WHERE id=${collection.PUBLISHED_ID}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
-                <entity name="collections_subjects" dataSource="registry-ds"
-                        query="SELECT * FROM collections_subjects WHERE collectionversion_id=${collectionversion.id}">
-                    <entity name="collectionsubjects" dataSource="registry-ds"
-                            query="SELECT label, term FROM subject WHERE id=${collections_subjects.subjects_id} AND label != 'keyword'">
+                <entity name="collections_subjects"
+                        query="SELECT * FROM collections_subjects WHERE collectionversion_id=${collectionversion.ID}">
+                    <entity name="collectionsubjects"
+                            query="SELECT label, term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
-                    <entity name="collectionkeywords" dataSource="registry-ds"
-                            query="SELECT term FROM subject WHERE id=${collections_subjects.subjects_id} AND label = 'keyword'">
+                    <entity name="collectionkeywords"
+                            query="SELECT term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
@@ -46,19 +47,19 @@
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
             <entity name="agentversion" dataSource="registry-ds"
-                    query="SELECT title, description, type, id FROM agentversion WHERE id=${agent.published_id}">
+                    query="SELECT title, description, type, id FROM agentversion WHERE id=${agent.PUBLISHED_ID}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="agents_subjects" dataSource="registry-ds"
-                        query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.id}">
+                        query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.ID}">
                     <entity name="agentsubjects" dataSource="registry-ds"
-                            query="SELECT label, term FROM subject WHERE id=${agents_subjects.subjects_id} AND label != 'keyword'">
+                            query="SELECT label, term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
                     <entity name="agentkeywords" dataSource="registry-ds"
-                            query="SELECT term FROM subject WHERE id=${agents_subjects.subjects_id} AND label = 'keyword'">
+                            query="SELECT term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
