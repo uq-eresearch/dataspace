@@ -29,9 +29,6 @@
 						<overlay>
 							<groupId>org.apache.solr</groupId>
 							<artifactId>solr</artifactId>
-							<excludes>
-								<exclude>WEB-INF/web.xml</exclude>
-							</excludes>
 						</overlay>
 						<overlay>
 							<!-- empty groupId/artifactId represents the current build -->

@@ -823,27 +823,7 @@ This component does not yet support distributed search. -->
         </arr>
     </requestHandler>
 
-
-    <!-- a search component that enables you to configure the top results for
-a given query regardless of the normal lucene scoring.-->
-    <searchComponent name="elevator" class="solr.QueryElevationComponent">
-        <!-- pick a fieldType to analyze queries -->
-        <str name="queryFieldType">string</str>
-        <str name="config-file">elevate.xml</str>
-    </searchComponent>
-
-    <!-- a request handler utilizing the elevator component -->
-    <requestHandler name="/elevate" class="solr.SearchHandler" startup="lazy">
-        <lst name="defaults">
-            <str name="echoParams">explicit</str>
-        </lst>
-        <arr name="last-components">
-            <str>elevator</str>
-        </arr>
-    </requestHandler>
-
-
-    <!-- Update request handler.
+	<!-- Update request handler.
 
        Note: Since solr1.1 requestHandlers requires a valid content type header if posted in
        the body. For example, curl now requires: -H 'Content-type:text/xml; charset=utf-8'
