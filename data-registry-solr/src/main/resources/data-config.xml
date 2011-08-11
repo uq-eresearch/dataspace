@@ -44,19 +44,19 @@
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
             <entity name="collectionversion"
-                    query="SELECT title, description, type, id FROM collectionversion WHERE id=${collection.published_id}">
+                    query="SELECT title, description, type, id FROM collectionversion WHERE id=${collection.PUBLISHED_ID}${collection.published_id}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="collections_subjects"
-                        query="SELECT * FROM collections_subjects WHERE collectionversion_id=${collectionversion.id}">
+                        query="SELECT * FROM collections_subjects WHERE collectionversion_id=${collectionversion.ID}${collectionversion.id}">
                     <entity name="collectionsubjects"
-                            query="SELECT label, term FROM subject WHERE id=${collections_subjects.subjects_id} AND label != 'keyword'">
+                            query="SELECT label, term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID}${collections_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
                     <entity name="collectionkeywords"
-                            query="SELECT term FROM subject WHERE id=${collections_subjects.subjects_id} AND label = 'keyword'">
+                            query="SELECT term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID}${collections_subjects.subjects_id} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
@@ -68,19 +68,19 @@
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
             <entity name="agentversion"
-                    query="SELECT title, description, type, id FROM agentversion WHERE id=${agent.published_id}">
+                    query="SELECT title, description, type, id FROM agentversion WHERE id=${agent.PUBLISHED_ID}${agent.published_id}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="agents_subjects"
-                        query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.id}">
+                        query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.ID}${agentversion.id}">
                     <entity name="agentsubjects"
-                            query="SELECT label, term FROM subject WHERE id=${agents_subjects.subjects_id} AND label != 'keyword'">
+                            query="SELECT label, term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID}${agents_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
                     <entity name="agentkeywords"
-                            query="SELECT term FROM subject WHERE id=${agents_subjects.subjects_id} AND label = 'keyword'">
+                            query="SELECT term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID}${agents_subjects.subjects_id} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
@@ -91,19 +91,19 @@
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
             <entity name="serviceversion"
-                    query="SELECT title, description, type, id FROM serviceversion WHERE id=${service.published_id}">
+                    query="SELECT title, description, type, id FROM serviceversion WHERE id=${service.PUBLISHED_ID}${service.published_id}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="services_subjects"
-                        query="SELECT * FROM services_subjects WHERE serviceversion_id=${serviceversion.id}">
+                        query="SELECT * FROM services_subjects WHERE serviceversion_id=${serviceversion.ID}${serviceversion.id}">
                     <entity name="servicesubjects"
-                            query="SELECT label, term FROM subject WHERE id=${services_subjects.subjects_id} AND label != 'keyword'">
+                            query="SELECT label, term FROM subject WHERE id=${services_subjects.SUBJECTS_ID}${services_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
                     <entity name="servicekeywords"
-                            query="SELECT term FROM subject WHERE id=${services_subjects.subjects_id} AND label = 'keyword'">
+                            query="SELECT term FROM subject WHERE id=${services_subjects.SUBJECTS_ID}${services_subjects.subjects_id} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
@@ -114,19 +114,19 @@
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
             <entity name="activityversion"
-                    query="SELECT title, description, type, id FROM activityversion WHERE id=${activity.published_id}">
+                    query="SELECT title, description, type, id FROM activityversion WHERE id=${activity.PUBLISHED_ID}${activity.published_id}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="activities_subjects"
-                        query="SELECT * FROM activities_subjects WHERE activityversion_id=${activityversion.id}">
+                        query="SELECT * FROM activities_subjects WHERE activityversion_id=${activityversion.ID}${activityversion.id}">
                     <entity name="activitiessubjects"
-                            query="SELECT label, term FROM subject WHERE id=${activities_subjects.subjects_id} AND label != 'keyword'">
+                            query="SELECT label, term FROM subject WHERE id=${activities_subjects.SUBJECTS_ID}${activities_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
                     <entity name="activitieskeywords"
-                            query="SELECT term FROM subject WHERE id=${activities_subjects.subjects_id} AND label = 'keyword'">
+                            query="SELECT term FROM subject WHERE id=${activities_subjects.SUBJECTS_ID}${activities_subjects.subjects_id} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
