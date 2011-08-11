@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<requestHandler name="/dataimport"
+	class="org.apache.solr.handler.dataimport.DataImportHandler" default="true">
+	<lst name="defaults">
+		<str name="config">data-config.xml</str>
+		<lst name="datasource">
+			<str name="driver">org.postgresql.Driver</str>
+			<str name="url">jdbc:postgresql://localhost/registry</str>
+			<str name="user">registry</str>
+			<str name="password">registry</str>
+		</lst>
+	</lst>
+</requestHandler>
