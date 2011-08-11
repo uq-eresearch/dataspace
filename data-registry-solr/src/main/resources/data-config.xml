@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataConfig>
-    <dataSource name="registry-ds"
+<!-- 
+    <dataSource name="test"
                 type="JdbcDataSource"
                 driver="org.h2.Driver"
                 url="jdbc:h2:file:local/database/registry;AUTO_SERVER=TRUE"
@@ -10,18 +11,38 @@
                 transactionIsolation="TRANSACTION_READ_COMMITTED"
                 holdability="CLOSE_CURSORS_AT_COMMIT"
                 />
-                <!-- 
-                readOnly="true"
-                 -->
+    
+    <dataSource name="registry-pgsql"
+                type="JdbcDataSource"
+                driver="org.postgresql.Driver"
+                url="jdbc:postgresql://localhost/registry"
+                user="registry"
+                password="registry"
+                autoCommit="false"
+                transactionIsolation="TRANSACTION_READ_COMMITTED"
+                holdability="CLOSE_CURSORS_AT_COMMIT"
+                />
+    
+    <dataSource name="registry-mysql"
+                type="JdbcDataSource"
+                driver="com.mysql.jdbc.Driver"
+                url="jdbc:mysql://localhost:3306/registry?autoReconnect=true"
+                user="registry"
+                password="registry"
+                autoCommit="false"
+                transactionIsolation="TRANSACTION_READ_COMMITTED"
+                holdability="CLOSE_CURSORS_AT_COMMIT"
+                />
+      -->
+                
     <document name="collections">
-        <entity name="subject" dataSource="registry-ds"
+        <entity name="subject"
                 query="SELECT * FROM subject WHERE isactive = true">
         </entity>
-        <entity name="collection" dataSource="registry-ds"
+        <entity name="collection"
                 query="SELECT id, atomicnumber, published_id FROM collection WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
-            <field column="published_id" name="published_id"/>
             <entity name="collectionversion"
                     query="SELECT title, description, type, id FROM collectionversion WHERE id=${collection.PUBLISHED_ID}">
                 <field column="title" name="title"/>
@@ -42,69 +63,69 @@
             </entity>
         </entity>
 
-        <entity name="agent" dataSource="registry-ds"
+        <entity name="agent"
                 query="SELECT id, atomicnumber, published_id FROM agent WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
-            <entity name="agentversion" dataSource="registry-ds"
+            <entity name="agentversion"
                     query="SELECT title, description, type, id FROM agentversion WHERE id=${agent.PUBLISHED_ID}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
-                <entity name="agents_subjects" dataSource="registry-ds"
+                <entity name="agents_subjects"
                         query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.ID}">
-                    <entity name="agentsubjects" dataSource="registry-ds"
+                    <entity name="agentsubjects"
                             query="SELECT label, term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
-                    <entity name="agentkeywords" dataSource="registry-ds"
+                    <entity name="agentkeywords"
                             query="SELECT term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
             </entity>
         </entity>
-        <entity name="service" dataSource="registry-ds"
+        <entity name="service"
                 query="SELECT id, atomicnumber, published_id FROM service WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
-            <entity name="serviceversion" dataSource="registry-ds"
+            <entity name="serviceversion"
                     query="SELECT title, description, type, id FROM serviceversion WHERE id=${service.published_id}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
-                <entity name="services_subjects" dataSource="registry-ds"
+                <entity name="services_subjects"
                         query="SELECT * FROM services_subjects WHERE serviceversion_id=${serviceversion.id}">
-                    <entity name="servicesubjects" dataSource="registry-ds"
+                    <entity name="servicesubjects"
                             query="SELECT label, term FROM subject WHERE id=${services_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
-                    <entity name="servicekeywords" dataSource="registry-ds"
+                    <entity name="servicekeywords"
                             query="SELECT term FROM subject WHERE id=${services_subjects.subjects_id} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>
                 </entity>
             </entity>
         </entity>
-        <entity name="activity" dataSource="registry-ds"
+        <entity name="activity"
                 query="SELECT id, atomicnumber, published_id FROM activity WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
-            <entity name="activityversion" dataSource="registry-ds"
+            <entity name="activityversion"
                     query="SELECT title, description, type, id FROM activityversion WHERE id=${activity.published_id}">
                 <field column="title" name="title"/>
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
-                <entity name="activities_subjects" dataSource="registry-ds"
+                <entity name="activities_subjects"
                         query="SELECT * FROM activities_subjects WHERE activityversion_id=${activityversion.id}">
-                    <entity name="activitiessubjects" dataSource="registry-ds"
+                    <entity name="activitiessubjects"
                             query="SELECT label, term FROM subject WHERE id=${activities_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
                         <field column="term" name="subjectterm"/>
                     </entity>
-                    <entity name="activitieskeywords" dataSource="registry-ds"
+                    <entity name="activitieskeywords"
                             query="SELECT term FROM subject WHERE id=${activities_subjects.subjects_id} AND label = 'keyword'">
                         <field column="term" name="subjectkeyword"/>
                     </entity>

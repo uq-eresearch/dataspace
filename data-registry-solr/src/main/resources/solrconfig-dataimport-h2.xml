@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<requestHandler name="/dataimport"
+	class="org.apache.solr.handler.dataimport.DataImportHandler" default="true">
+	<lst name="defaults">
+		<str name="config">data-config.xml</str>
+		<lst name="datasource">
+			<str name="driver">org.h2.Driver</str>
+			<str name="url">jdbc:h2:file:local/database/registry;AUTO_SERVER=TRUE</str>
+			<str name="user">registry</str>
+			<str name="password">registry</str>
+		</lst>
+	</lst>
+</requestHandler>

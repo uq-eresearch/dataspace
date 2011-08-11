@@ -46,6 +46,10 @@
 							<name>solr.data.dir</name>
 							<value>${project.build.directory}/solr/data</value>
 						</systemProperty>
+						<systemProperty>
+							<name>data.registry.persistenceUnitName</name>
+							<value>registry-mysql</value>
+						</systemProperty>
 					</systemProperties>
 					<stopKey>/</stopKey>
 					<stopPort>8281</stopPort>

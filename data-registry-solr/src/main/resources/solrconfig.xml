@@ -487,13 +487,12 @@ concurrently.  An error is returned if this limit is exceeded. Recommend
         </httpCaching>
     </requestDispatcher>
 
-
-    <requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler" default="true">
-        <lst name="defaults">
-            <str name="config">data-config.xml</str>
-        </lst>
-    </requestHandler>
-
+	<!-- Try PG config (included separately), otherwise use H2 -->
+	<xi:include href="solrconfig-dataimport-pgsql.xml" xmlns:xi="http://www.w3.org/2001/XInclude">
+      <xi:fallback>
+      	<xi:include href="solrconfig-dataimport-h2.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+      </xi:fallback>
+    </xi:include>
 
     <!-- requestHandler plugins... incoming queries will be dispatched to the
        correct handler based on the path or the qt (query type) param.
