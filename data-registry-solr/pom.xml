@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.metadata.dataspace</groupId>
 	<artifactId>data-registry-solr</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Data Collections Registry Solr</name>
 	<description>Solr overlay WAR for Data Collections Registry</description>
