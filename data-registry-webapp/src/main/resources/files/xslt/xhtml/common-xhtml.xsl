@@ -478,7 +478,7 @@
     <!-- representations -->
     <xsl:template name="representations">
         <xsl:if test="atom:link[@rel=$REL_ALTERNATE]">
-            <div>
+            <div class="representations">
                 Download description as:
                 <xsl:apply-templates select="atom:link[@rel=$REL_ALTERNATE]"/>
             </div>

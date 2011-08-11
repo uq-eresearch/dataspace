@@ -270,6 +270,10 @@ a:visited {
     float: left;
 }
 
+.button-bar .representations {
+    font-size: smaller;
+}
+
 .button-bar .entity-type {
     color: #ffffff;
     background-color: #38217a;
