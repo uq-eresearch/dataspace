@@ -92,15 +92,15 @@ This configuration can be run with "mvn integration-test".
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- we use a Jetty 6 -->
+                    <!-- we use a Jetty 7 -->
                     <container>
-                        <containerId>jetty6x</containerId>
+                        <containerId>jetty7x</containerId>
                         <type>embedded</type>
                         <!--Override the persistence unit-->
                         <systemProperties>
                             <data.registry.persistenceUnitName>test</data.registry.persistenceUnitName>
                             <data.registry.uri.prefix>http://localhost:9635/</data.registry.uri.prefix>
-							<solr.data.dir>${project.build.directory}/solr/data</solr.data.dir>
+							<solr.instance.dir>${project.build.directory}/solr</solr.instance.dir>
 							<solr.port>9635</solr.port>
                         </systemProperties>
                     </container>
