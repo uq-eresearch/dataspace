@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataConfig>
-    <!--<dataSource name="registry-ds"-->
-                <!--type="JdbcDataSource"-->
-                <!--driver="org.postgresql.Driver"-->
-                <!--url="jdbc:postgresql://localhost/registry"-->
-                <!--user="registry"-->
-                <!--password="registry"-->
-                <!--readOnly="true"-->
-                <!--autoCommit="false"-->
-                <!--transactionIsolation="TRANSACTION_READ_COMMITTED"-->
-                <!--holdability="CLOSE_CURSORS_AT_COMMIT"/>-->
+    <dataSource name="registry-ds"
+                type="JdbcDataSource"
+                driver="org.postgresql.Driver"
+                url="jdbc:postgresql://localhost/registry"
+                user="registry"
+                password="registry"
+                readOnly="true"
+                autoCommit="false"
+                transactionIsolation="TRANSACTION_READ_COMMITTED"
+                holdability="CLOSE_CURSORS_AT_COMMIT"/>
+    <!--
     <dataSource name="registry-ds"
                 type="JdbcDataSource"
                 driver="com.mysql.jdbc.Driver"
@@ -20,7 +21,8 @@
                 autoCommit="false"
                 transactionIsolation="TRANSACTION_READ_COMMITTED"
                 holdability="CLOSE_CURSORS_AT_COMMIT"/>
-
+	-->
+	<!--
     <document name="collections">
         <entity name="subject" dataSource="registry-ds"
                 query="SELECT * FROM subject WHERE isactive = true">
@@ -119,4 +121,5 @@
             </entity>
         </entity>
     </document>
+	-->
 </dataConfig>
