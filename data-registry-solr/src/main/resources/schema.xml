@@ -454,26 +454,10 @@ any data added to them will be ignored outright.  -->
         <field name="description" type="text" indexed="true" stored="true"/>
         <field name="type" type="text" indexed="true" stored="true"/>
 
-        <field name="subjectlabel" type="text" indexed="true" stored="true" multiValued="true"/>
+		<field name="subjectlabel" type="text" indexed="true" stored="true" multiValued="true"/>
         <field name="subjectterm" type="text" indexed="true" stored="true" multiValued="true"/>
         <field name="subjectkeyword" type="text" indexed="true" stored="true" multiValued="true"/>
-
-        <field name="activitytitle" type="text" indexed="true" stored="true"/>
-        <field name="activitydescription" type="text" indexed="true" stored="true"/>
-        <field name="activitytype" type="text" indexed="true" stored="true"/>
-
-        <field name="agenttitle" type="text" indexed="true" stored="true"/>
-        <field name="agentdescription" type="text" indexed="true" stored="true"/>
-        <field name="agenttype" type="text" indexed="true" stored="true"/>
-
-        <field name="collectiontitle" type="text" indexed="true" stored="true"/>
-        <field name="collectiondescription" type="text" indexed="true" stored="true"/>
-        <field name="collectiontype" type="text" indexed="true" stored="true"/>
-
-        <field name="servicetitle" type="text" indexed="true" stored="true"/>
-        <field name="servicedescription" type="text" indexed="true" stored="true"/>
-        <field name="servicetype" type="text" indexed="true" stored="true"/>
-
+ 		
         <field name="atomicnumber" type="pint" indexed="true" stored="true"/>
         <field name="created" type="pdate" indexed="true" stored="true"/>
         <field name="isactive" type="boolean" indexed="true" stored="true"/>
@@ -557,7 +541,10 @@ both match, the first appearing in the schema will be used.  -->
     <!-- Field to use to determine and enforce document uniqueness.
        Unless this field is marked with required="false", it will be a required field
     -->
+    <!-- 
+    TJD: Disabled, as CollectionVersoin and Collection were clashing.
     <uniqueKey>id</uniqueKey>
+	 -->
 
     <!-- field for the QueryParser to use when an explicit fieldname is absent -->
     <defaultSearchField>text</defaultSearchField>
@@ -581,44 +568,9 @@ or to add multiple fields to the same field for easier/faster searching.  -->
     <!--<copyField source="subjectlabel" dest="topics"/>-->
     <copyField source="subjectkeyword" dest="topics"/>
 
-    <copyField source="activitytitle" dest="text"/>
-    <copyField source="activitydescription" dest="text"/>
-    <copyField source="activitytype" dest="text"/>
-
-    <copyField source="agenttitle" dest="text"/>
-    <copyField source="agentdescription" dest="text"/>
-    <copyField source="agenttype" dest="text"/>
-
-    <copyField source="collectiontitle" dest="text"/>
-    <copyField source="collectiondescription" dest="text"/>
-    <copyField source="collectiontype" dest="text"/>
-
-    <copyField source="servicetitle" dest="text"/>
-    <copyField source="servicedescription" dest="text"/>
-    <copyField source="servicetype" dest="text"/>
-
     <copyField source="term" dest="subject"/>
     <copyField source="isdefinedby" dest="subject"/>
     <copyField source="label" dest="subject"/>
-
-    <copyField source="activitytitle" dest="activity"/>
-    <copyField source="activitydescription" dest="activity"/>
-    <copyField source="activitytype" dest="activity"/>
-
-    <copyField source="agenttitle" dest="agent"/>
-    <copyField source="agentdescription" dest="agent"/>
-    <copyField source="agenttype" dest="agent"/>
-
-    <copyField source="collectiontitle" dest="collection"/>
-    <copyField source="collectiondescription" dest="collection"/>
-    <copyField source="collectiontype" dest="collection"/>
-    <copyField source="subjectlabel" dest="collection"/>
-    <copyField source="subjectterm" dest="collection"/>
-
-    <copyField source="servicetitle" dest="service"/>
-    <copyField source="servicedescription" dest="service"/>
-    <copyField source="servicetype" dest="service"/>
-
 
     <!-- Above, multiple source fields are copied to the [text] field.
 Another way to map multiple source fields to the same

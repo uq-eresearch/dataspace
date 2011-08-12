@@ -36,9 +36,11 @@
       -->
                 
     <document name="collections">
+    
         <entity name="subject"
                 query="SELECT * FROM subject WHERE isactive = true">
         </entity>
+        
         <entity name="collection"
                 query="SELECT id, atomicnumber, published_id FROM collection WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
@@ -49,7 +51,7 @@
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="collections_subjects"
-                        query="SELECT * FROM collections_subjects WHERE collectionversion_id=${collectionversion.ID}${collectionversion.id}">
+                        query="SELECT subjects_id FROM collections_subjects WHERE collectionversion_id=${collectionversion.ID}${collectionversion.id}">
                     <entity name="collectionsubjects"
                             query="SELECT label, term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID}${collections_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
@@ -73,7 +75,7 @@
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="agents_subjects"
-                        query="SELECT * FROM agents_subjects WHERE agentversion_id=${agentversion.ID}${agentversion.id}">
+                        query="SELECT subjects_id FROM agents_subjects WHERE agentversion_id=${agentversion.ID}${agentversion.id}">
                     <entity name="agentsubjects"
                             query="SELECT label, term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID}${agents_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
@@ -86,6 +88,7 @@
                 </entity>
             </entity>
         </entity>
+        
         <entity name="service"
                 query="SELECT id, atomicnumber, published_id FROM service WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
@@ -96,7 +99,7 @@
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="services_subjects"
-                        query="SELECT * FROM services_subjects WHERE serviceversion_id=${serviceversion.ID}${serviceversion.id}">
+                        query="SELECT subjects_id FROM services_subjects WHERE serviceversion_id=${serviceversion.ID}${serviceversion.id}">
                     <entity name="servicesubjects"
                             query="SELECT label, term FROM subject WHERE id=${services_subjects.SUBJECTS_ID}${services_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
@@ -109,6 +112,7 @@
                 </entity>
             </entity>
         </entity>
+        
         <entity name="activity"
                 query="SELECT id, atomicnumber, published_id FROM activity WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
@@ -119,7 +123,7 @@
                 <field column="description" name="description"/>
                 <field column="type" name="type"/>
                 <entity name="activities_subjects"
-                        query="SELECT * FROM activities_subjects WHERE activityversion_id=${activityversion.ID}${activityversion.id}">
+                        query="SELECT subjects_id FROM activities_subjects WHERE activityversion_id=${activityversion.ID}${activityversion.id}">
                     <entity name="activitiessubjects"
                             query="SELECT label, term FROM subject WHERE id=${activities_subjects.SUBJECTS_ID}${activities_subjects.subjects_id} AND label != 'keyword'">
                         <field column="label" name="subjectlabel"/>
@@ -132,5 +136,6 @@
                 </entity>
             </entity>
         </entity>
+        
     </document>
 </dataConfig>
