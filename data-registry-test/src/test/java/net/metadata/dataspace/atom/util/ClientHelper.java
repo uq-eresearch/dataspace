@@ -3,8 +3,11 @@ package net.metadata.dataspace.atom.util;
 import net.metadata.dataspace.app.Constants;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.StaticApplicationContext;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -13,6 +16,8 @@ import java.net.URL;
  * Time: 4:06:52 PM
  */
 public class ClientHelper {
+	
+	private static ApplicationContext ctx = new StaticApplicationContext();
 
     public ClientHelper() {
     }
@@ -30,9 +35,7 @@ public class ClientHelper {
     public static PostMethod postEntry(HttpClient client, String fileName, String path) throws Exception {
         String fullURL = Constants.URL_PREFIX + path;
         PostMethod post = new PostMethod(fullURL);
-        URL resource = ClientHelper.class.getResource(fileName);
-        String pathToFile = resource.getPath();
-        File inputFile = new File(pathToFile);
+        File inputFile = getFile(fileName);
         RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
         post.setRequestEntity(entity);
         client.executeMethod(post);
@@ -42,9 +45,7 @@ public class ClientHelper {
     public static PutMethod putEntry(HttpClient client, String fileName, String uri, String acceptHeader) throws Exception {
         PutMethod putMethod = new PutMethod(uri);
         putMethod.setRequestHeader("Accept", acceptHeader);
-        URL resource = ClientHelper.class.getResource(fileName);
-        String path = resource.getPath();
-        File inputFile = new File(path);
+        File inputFile = getFile(fileName);
         RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
         putMethod.setRequestEntity(entity);
         client.executeMethod(putMethod);
@@ -68,6 +69,10 @@ public class ClientHelper {
     	GetMethod getMethod = new GetMethod(Constants.URL_PREFIX+"solr/dataimport?command=full-import");
         client.executeMethod(getMethod);
         return getMethod;
+    }
+    
+    private static File getFile(String fileName) throws IOException {
+        return ctx.getResource("classpath:"+fileName).getFile();
     }
     
 }
