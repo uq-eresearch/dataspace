@@ -18,6 +18,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -28,10 +31,14 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static junit.framework.Assert.*;
 
@@ -43,6 +50,8 @@ import static junit.framework.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
 public class CollectionTest {
+	
+	private final String SOLR_CONFIG_DIR = "target/solr-config/WEB-INF/classes/";
 
     @Test
     public void testCollectionCRUD() throws Exception {
@@ -284,6 +293,80 @@ public class CollectionTest {
         	Element authorEmailNode = (Element) xpath.evaluate(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH, docFromStream, XPathConstants.NODE);
             assertNotNull("Entry missing source author", authorEmailNode);
             assertEquals("Source author has unexpected email", authorEmailNode.getTextContent(), "Abdul Alabri");
+        }
+
+    }
+    
+
+    @Test
+    public void testCollectionSearchIndexing() throws Exception {
+        //create a client
+        HttpClient client = new HttpClient();
+        //authenticate
+        int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        assertEquals("Could not authenticate", 200, status);
+        //Post Entry
+        String fileName = "/files/post/new-collection.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_COLLECTIONS);
+        assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+        String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
+        postMethod.releaseConnection();
+        //publish entry
+        fileName = "/files/put/published-collection.xml";
+        PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
+        putMethod.releaseConnection();
+        //logout
+        status = ClientHelper.logout(client);
+        assertEquals("Could not logout", 200, status);
+
+        //get without authenticating
+        GetMethod getMethod = ClientHelper.getEntry(client, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Get without authenticating should now return OK", 200, getMethod.getStatusCode());
+        XPath xpath = XPathHelper.getXPath();
+        Document doc = XPathHelper.getDocFromStream(getMethod.getResponseBodyAsStream());
+        getMethod.releaseConnection();
+        String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, doc);
+        
+        // Force re-index
+        getMethod = ClientHelper.reindexSolr(client);
+        assertEquals("Solr failed to index successfully.", 200, getMethod.getStatusCode());
+        getMethod.releaseConnection();
+        
+
+        Set<String> stopwords = new TreeSet<String>();
+        {
+	        File stopwordsFile = new File(SOLR_CONFIG_DIR+"/stopwords.txt");
+	        BufferedReader r = new BufferedReader(new FileReader(stopwordsFile));
+	        String line;
+	        while ( (line = r.readLine()) != null) {
+	        	line = line.trim();
+	        	if (line.startsWith("#") || line.length() == 0)
+	        		continue;
+	        	stopwords.add(line);
+	        }
+        }
+        
+        // Test searching (but skip stopwords)
+        {
+	        final WebClient webClient = new WebClient();
+	        String searchTitle = title.replaceAll("\\W+"," ").trim();
+	        for (String word : searchTitle.split(" ")) {
+	        	if (stopwords.contains(word)) {
+	        		// Skip stopword
+	        		continue;
+	        	}
+	        	String url = Constants.URL_PREFIX+"search?q="+word;
+	        	final HtmlPage page = webClient.getPage(url);
+	        	// Wait for JS to eval
+	        	Thread.sleep(500);
+	        	final String pageAsText = page.asText();
+	        	assertTrue(
+	        			String.format(
+	        				"Cannot find \"%s\" in:\n%s", searchTitle, pageAsText),
+	        			pageAsText.contains(searchTitle));
+	        }
+	        webClient.closeAllWindows();
         }
 
     }

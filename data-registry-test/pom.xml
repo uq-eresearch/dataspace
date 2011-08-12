@@ -136,6 +136,28 @@ This configuration can be run with "mvn integration-test".
                 </configuration>
             </plugin>
             <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<executions>
+					<execution>
+						<phase>test</phase>
+                        <goals>
+                            <goal>exploded</goal>
+                        </goals>
+						<configuration>
+							<overlays>
+								<overlay>
+						            <groupId>net.metadata.dataspace</groupId>
+						            <artifactId>data-registry-solr</artifactId>
+								</overlay>
+							</overlays>
+							<webappDirectory>${project.build.directory}/solr-config</webappDirectory>
+						</configuration>
+					</execution>
+				</executions>
+            </plugin>
+            <plugin>
                 <!-- configure the Surefire plugin to run integration tests instead of the
                      running in the normal test phase of the lifecycle -->
                 <groupId>org.apache.maven.plugins</groupId>

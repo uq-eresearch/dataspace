@@ -63,4 +63,11 @@ public class ClientHelper {
         client.executeMethod(deleteMethod);
         return deleteMethod;
     }
+    
+    public static GetMethod reindexSolr(HttpClient client) throws Exception {
+    	GetMethod getMethod = new GetMethod(Constants.URL_PREFIX+"solr/dataimport?command=full-import");
+        client.executeMethod(getMethod);
+        return getMethod;
+    }
+    
 }
