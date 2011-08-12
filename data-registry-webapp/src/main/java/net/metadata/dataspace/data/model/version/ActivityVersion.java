@@ -23,6 +23,9 @@ import static javax.persistence.EnumType.STRING;
 public class ActivityVersion extends AbstractVersionEntity<Activity> {
     private static final long serialVersionUID = 1L;
 
+    @ManyToOne
+    private Activity parent;
+
     @NotNull
     @Enumerated(STRING)
     private ActivityType type;
@@ -49,6 +52,17 @@ public class ActivityVersion extends AbstractVersionEntity<Activity> {
     private Set<String> temporals = new HashSet<String>();
 
     public ActivityVersion() {
+    }
+
+    @Override
+    public Activity getParent() {
+        return parent;
+    }
+
+
+    @Override
+    public void setParent(Activity parent) {
+        this.parent = parent;
     }
 
     public Set<Collection> getHasOutput() {

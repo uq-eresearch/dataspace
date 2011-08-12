@@ -28,6 +28,9 @@ public class CollectionVersion extends AbstractVersionEntity<Collection> {
 
     private static final long serialVersionUID = 1L;
 
+    @ManyToOne
+    private Collection parent;
+
     @NotNull
     @Enumerated(STRING)
     private CollectionType type;
@@ -97,6 +100,16 @@ public class CollectionVersion extends AbstractVersionEntity<Collection> {
     private Set<String> pages = new HashSet<String>();
     
     public CollectionVersion() {
+    }
+
+    @Override
+    public Collection getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(Collection parent) {
+        this.parent = parent;
     }
 
     public Set<Subject> getSubjects() {

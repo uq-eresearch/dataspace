@@ -23,6 +23,9 @@ import static javax.persistence.EnumType.STRING;
 public class ServiceVersion extends AbstractVersionEntity<Service> {
     private static final long serialVersionUID = 1L;
 
+    @ManyToOne
+    private Service parent;
+
     @NotNull
     @Enumerated(STRING)
     private ServiceType type;
@@ -46,6 +49,16 @@ public class ServiceVersion extends AbstractVersionEntity<Service> {
     private Set<String> pages = new HashSet<String>();
 
     public ServiceVersion() {
+    }
+
+    @Override
+    public Service getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(Service parent) {
+        this.parent = parent;
     }
 
     public Set<Collection> getSupportedBy() {

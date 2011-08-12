@@ -71,9 +71,6 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Source source;
 
-	@ManyToOne
-	private R parent;
-
     public AbstractVersionEntity() {
         this.isActive = true;
         this.created = new Date();
@@ -197,15 +194,5 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
 	public void setSource(Source source) {
 		this.source = source;
 	}
-	
-    @Override
-    public R getParent() {
-		return parent;
-    }
-
-    @Override
-    public void setParent(R parent) {
-        this.parent = parent;
-    }
 
 }
