@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -345,6 +346,26 @@ public class CollectionTest {
 	        		continue;
 	        	stopwords.add(line);
 	        }
+        }
+
+        // Test tagcloud for stopwords
+        {
+        	String url = Constants.URL_PREFIX+"#tags";
+	        final WebClient webClient = new WebClient();
+        	final HtmlPage page = webClient.getPage(url);
+        	Thread.sleep(500);
+        	NodeList tagNodes = (NodeList) xpath.evaluate(
+        			"//div[@id='tags']/div[@class='tagcloud']/a/text()",
+        			page, XPathConstants.NODESET);
+
+        	Set<String> tags = new TreeSet<String>();
+        	for (int i = 0; i < tagNodes.getLength(); i++) {
+        		String tag = tagNodes.item(i).getTextContent().trim();
+        		tags.add(tag);
+        	}
+        	
+        	assertTrue("Tags should not include stopwords.",
+        			Collections.disjoint(tags, stopwords));
         }
         
         // Test searching (but skip stopwords)
