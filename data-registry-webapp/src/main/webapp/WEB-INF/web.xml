@@ -120,7 +120,14 @@
         <servlet-name>atomDocServlet</servlet-name>
         <url-pattern>/doc/atom</url-pattern>
     </servlet-mapping>
+    
     <welcome-file-list>
         <welcome-file id="welcome-page">index.jsp</welcome-file>
     </welcome-file-list>
+    
+    <!-- The modern JS mime-type -->
+    <mime-mapping> 
+	    <extension>.js</extension>
+	    <mime-type>application/javascript</mime-type> 
+	</mime-mapping>
 </web-app>
