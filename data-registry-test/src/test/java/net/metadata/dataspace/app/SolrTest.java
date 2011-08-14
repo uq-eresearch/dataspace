@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -141,15 +142,33 @@ public class SolrTest {
 
 	@Test
     public void testTagCloud() throws Exception {
+		final int expectedTagCount = 50;
+		
+    	//create a client
+        HttpClient client = new HttpClient();
+        
+        // Force re-index
+        GetMethod getMethod = ClientHelper.reindexSolr(client);
+        assertEquals("Solr failed to index successfully.", 200, getMethod.getStatusCode());
+        getMethod.releaseConnection();
+        
 		// Test tagcloud for stopwords
         {
         	String url = Constants.URL_PREFIX+"#tags";
 	        final WebClient webClient = new WebClient();
         	final HtmlPage page = webClient.getPage(url);
-        	Thread.sleep(500);
-        	NodeList tagNodes = (NodeList) xpath.evaluate(
-        			"//div[@id='tags']/div[@class='tagcloud']/a/text()",
-        			page, XPathConstants.NODESET);
+        	int tries = 0;
+        	NodeList tagNodes = null;
+        	do {
+        		// Wait for JS to render
+            	Thread.sleep(500);
+            	// Get the nodes
+	        	tagNodes = (NodeList) xpath.evaluate(
+	        			"//div[@id='tags']/div[@id='topics']/a/text()",
+	        			page, XPathConstants.NODESET);
+        	} while (tagNodes.getLength() < expectedTagCount && tries++ < 10);
+        	assertEquals("Tag count lower than expected", 
+        			expectedTagCount, tagNodes.getLength());
 
         	Set<String> tags = new TreeSet<String>();
         	for (int i = 0; i < tagNodes.getLength(); i++) {
