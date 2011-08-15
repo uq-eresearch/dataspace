@@ -368,7 +368,6 @@ public class CollectionTest {
     private boolean hasXPathMatch(String xpathExpression, Document doc) throws XPathExpressionException {
     	XPath xpath = XPathHelper.getXPath();
     	NodeList matches = (NodeList) xpath.evaluate(xpathExpression, doc, XPathConstants.NODESET);
-    	System.out.println(matches.getLength() > 0 ? matches.item(0).getTextContent() : "null");
     	return matches.getLength() > 0;
     }
     
@@ -402,7 +401,8 @@ public class CollectionTest {
         assertEquals("Content doesn't match for "+xpathExpression, expectedSet, actualSet );
     }
     
-    private String getXPathContent(String xpathExpression, Document doc) 
+    @SuppressWarnings("unused")
+	private String getXPathContent(String xpathExpression, Document doc) 
     		throws TransformerException, XPathExpressionException 
     {
     	XPath xpath = XPathHelper.getXPath();
