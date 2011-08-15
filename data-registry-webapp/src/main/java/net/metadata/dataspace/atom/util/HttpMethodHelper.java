@@ -296,7 +296,7 @@ public class HttpMethodHelper {
         String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
-            if (acceptHeader.equals(Constants.MIME_TYPE_HTML) || acceptHeader.equals(Constants.MIME_TYPE_ATOM_FEED)) {
+            if (acceptHeader != null && (acceptHeader.equals(Constants.MIME_TYPE_HTML) || acceptHeader.equals(Constants.MIME_TYPE_ATOM_FEED))) {
                 representationMimeType = acceptHeader;
             } else {
                 representationMimeType = Constants.MIME_TYPE_HTML;
