@@ -94,6 +94,11 @@ public class SolrTest {
 	            postMethod.releaseConnection();
 	        }
         }
+        
+        // Force re-index
+        GetMethod getMethod = ClientHelper.reindexSolr(client);
+        assertEquals("Solr failed to index successfully.", 200, getMethod.getStatusCode());
+        getMethod.releaseConnection();
     }
 
 	@Test
@@ -102,11 +107,6 @@ public class SolrTest {
 		
     	//create a client
         HttpClient client = new HttpClient();
-        
-        // Force re-index
-        GetMethod getMethod = ClientHelper.reindexSolr(client);
-        assertEquals("Solr failed to index successfully.", 200, getMethod.getStatusCode());
-        getMethod.releaseConnection();
         
 		// Test tagcloud for stopwords
         {
@@ -125,12 +125,16 @@ public class SolrTest {
         	} while (tagNodes.getLength() < expectedTagCount && tries++ < 10);
         	assertEquals("Tag count lower than expected", 
         			expectedTagCount, tagNodes.getLength());
-
+        	
         	Set<String> tags = new TreeSet<String>();
         	for (int i = 0; i < tagNodes.getLength(); i++) {
         		String tag = tagNodes.item(i).getTextContent().trim();
         		tags.add(tag);
         	}
+
+        	System.out.println(String.format("Tags: %s\nStopwords: %s", 
+        			tags, 
+        			stopwords));
         	
         	assertTrue("Tags should not include stopwords.",
         			Collections.disjoint(tags, stopwords));
