@@ -7,8 +7,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -27,6 +27,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.w3c.dom.Document;
@@ -60,83 +63,38 @@ public class SolrTest {
 
 	@Before
     public void loadLotsOfTestData() throws Exception {
+		ResourcePatternResolver resolver =  
+				new PathMatchingResourcePatternResolver();
+		
     	//create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
-                
-        List<String> testAgents;
-        {
-	        String[] tempStrs = {
-	    	        "files/carter-brown/toni-johnson-woods.atom",
-	    	        "files/crocs-acoustic/craig-franklin.atom",
-	    	        "files/crocs-acoustic/hamish-campbell.atom",
-	    	        "files/geochem-geochron/maria-mostert.atom",
-	    	        "files/geochem-geochron/paulo-vasconcelos.atom",
-	    	        "files/glow-worms/david-merritt.atom",
-	    	        "files/spatial-social/bob-stimson.atom",
-	    	        "files/spatial-social/paul-shyy.atom"
-		    };
-	        testAgents = Arrays.asList(tempStrs);
-        }
-        for (String fileName : testAgents) {
-        	PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
-            assertEquals("Could not post entry", 201, postMethod.getStatusCode());
-            postMethod.releaseConnection();
-        }
         
-        List<String> testCollections;
-        {
-	        String[] tempStrs = {
-	              "files/carter-brown/carter-brown-covers.atom",
-	              "files/carter-brown/pulp-fiction-collection.atom",
-	              "files/crocs-acoustic/crocs-acoustic.atom",
-	              "files/geochem-geochron/collection-geochemchron.atom",
-	              "files/glow-worms/collection-glowworms.atom",
-	              "files/spatial-social/census2006-voting2007.atom"
-	        };
-	        testCollections = Arrays.asList(tempStrs);
+        String[] types = {
+        		Constants.PATH_FOR_AGENTS, 
+        		Constants.PATH_FOR_COLLECTIONS, 
+        		Constants.PATH_FOR_ACTIVITIES, 
+        		Constants.PATH_FOR_SERVICES };
+        for (int t = 0; t < types.length; t++) {
+        	String type = types[t];
+        	List<String> testEntities = new LinkedList<String>();
+	        {
+	        	Resource[] resources = resolver.getResources(
+	        			"classpath:files/**/"+type+"/*.atom");
+		        for (int r = 0; r < resources.length; r++) {
+		        	Resource resource = resources[r];
+		        	testEntities.add(resource.getURI().toString());
+		        }
+	        }
+	        for (String fileName : testEntities) {
+	        	PostMethod postMethod = ClientHelper.postEntry(client, fileName, type);
+	            assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+	            postMethod.releaseConnection();
+	        }
         }
-        for (String fileName : testCollections) {
-        	PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_COLLECTIONS);
-            assertEquals("Could not post entry", 201, postMethod.getStatusCode());
-            postMethod.releaseConnection();
-        }
-        
-        List<String> testActivities;
-        {
-	        String[] tempStrs = {
-	              "files/carter-brown/activity-Aus-popular-fictions.atom",
-	              "files/crocs-acoustic/activity-croc-3D.atom",
-	              "files/crocs-acoustic/activity-croc-monitor.atom",
-	              "files/geochem-geochron/activity-qld-geochemchron.atom",
-	              "files/glow-worms/activity-distance-ed.atom",
-	              "files/glow-worms/activity-gloworm-tourism.atom",
-	              "files/spatial-social/activity-RNSISS.atom",
-	              "files/spatial-social/activity-SISSR-Facility.atom"
-	        };
-	        testActivities = Arrays.asList(tempStrs);
-        }
-        for (String fileName : testActivities) {
-        	PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
-            assertEquals("Could not post entry", 201, postMethod.getStatusCode());
-            postMethod.releaseConnection();
-        }
-        
-        List<String> testServices;
-        {
-	        String[] tempStrs = {
-	              "files/spatial-social/service-voting-patterns.atom"
-	        };
-	        testServices = Arrays.asList(tempStrs);
-        }
-        for (String fileName : testServices) {
-        	PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
-            assertEquals("Could not post entry", 201, postMethod.getStatusCode());
-            postMethod.releaseConnection();
-        }
-	}
+    }
 
 	@Test
     public void testTagCloud() throws Exception {

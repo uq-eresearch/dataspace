@@ -3,12 +3,11 @@ package net.metadata.dataspace.atom.util;
 import net.metadata.dataspace.app.Constants;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.*;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Author: alabri
@@ -17,7 +16,7 @@ import java.net.URL;
  */
 public class ClientHelper {
 	
-	private static ApplicationContext ctx = new StaticApplicationContext();
+	private static ResourceLoader loader = new DefaultResourceLoader();
 
     public ClientHelper() {
     }
@@ -72,7 +71,7 @@ public class ClientHelper {
     }
     
     private static File getFile(String fileName) throws IOException {
-        return ctx.getResource("classpath:"+fileName).getFile();
+        return loader.getResource(fileName).getFile();
     }
     
 }
