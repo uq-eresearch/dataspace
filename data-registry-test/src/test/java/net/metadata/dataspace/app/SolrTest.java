@@ -61,8 +61,8 @@ public class SolrTest {
         }
 	}
 
-	@Before
-    public void loadLotsOfTestData() throws Exception {
+	@BeforeClass
+    public static void loadLotsOfTestData() throws Exception {
 		ResourcePatternResolver resolver =  
 				new PathMatchingResourcePatternResolver();
 		
@@ -89,6 +89,7 @@ public class SolrTest {
 		        }
 	        }
 	        for (String fileName : testEntities) {
+	        	System.out.println("Loading test data: "+fileName);
 	        	PostMethod postMethod = ClientHelper.postEntry(client, fileName, type);
 	            assertEquals("Could not post entry", 201, postMethod.getStatusCode());
 	            postMethod.releaseConnection();
@@ -101,46 +102,39 @@ public class SolrTest {
         getMethod.releaseConnection();
     }
 
+	// Test tagcloud for stopwords
 	@Test
     public void testTagCloud() throws Exception {
 		final int expectedTagCount = 50;
-		
-    	//create a client
-        HttpClient client = new HttpClient();
         
-		// Test tagcloud for stopwords
-        {
-        	String url = Constants.URL_PREFIX+"#tags";
-	        final WebClient webClient = new WebClient();
-        	final HtmlPage page = webClient.getPage(url);
-        	int tries = 0;
-        	NodeList tagNodes = null;
-        	do {
-        		// Wait for JS to render
-            	Thread.sleep(500);
-            	// Get the nodes
-	        	tagNodes = (NodeList) xpath.evaluate(
-	        			"//div[@id='tags']/div[@id='topics']/a/text()",
-	        			page, XPathConstants.NODESET);
-        	} while (tagNodes.getLength() < expectedTagCount && tries++ < 10);
-        	assertEquals("Tag count lower than expected", 
-        			expectedTagCount, tagNodes.getLength());
-        	
-        	Set<String> tags = new TreeSet<String>();
-        	for (int i = 0; i < tagNodes.getLength(); i++) {
-        		String tag = tagNodes.item(i).getTextContent().trim();
-        		tags.add(tag);
-        	}
+    	String url = Constants.URL_PREFIX+"#tags";
+        final WebClient webClient = new WebClient();
+    	final HtmlPage page = webClient.getPage(url);
+    	int tries = 0;
+    	NodeList tagNodes = null;
+    	do {
+    		// Wait for JS to render
+        	Thread.sleep(500);
+        	// Get the nodes
+        	tagNodes = (NodeList) xpath.evaluate(
+        			"//div[@id='tags']/div[@id='topics']/a/text()",
+        			page, XPathConstants.NODESET);
+    	} while (tagNodes.getLength() < expectedTagCount && tries++ < 10);
+    	assertEquals("Tag count lower than expected", 
+    			expectedTagCount, tagNodes.getLength());
+    	
+    	Set<String> tags = new TreeSet<String>();
+    	for (int i = 0; i < tagNodes.getLength(); i++) {
+    		String tag = tagNodes.item(i).getTextContent().trim();
+    		tags.add(tag);
+    	}
 
-        	System.out.println(String.format("Tags: %s\nStopwords: %s", 
-        			tags, 
-        			stopwords));
-        	
-        	assertTrue("Tags should not include stopwords.",
-        			Collections.disjoint(tags, stopwords));
-        }
-        
-        
+    	System.out.println(String.format("Tags: %s\nStopwords: %s", 
+    			tags, 
+    			stopwords));
+    	
+    	assertTrue("Tags should not include stopwords.",
+    			Collections.disjoint(tags, stopwords));
 	}
 	
 	@Test
