@@ -4,7 +4,7 @@ CURL="curl -v"
 if [[ -z "$1" ]]; then
 	BASE_URL='http://localhost:9635'
 else
-	BASE_URL='$1'
+	BASE_URL="$1"
 fi
 FILE_DIR=`dirname $0`
 COOKIEJAR="$FILE_DIR/cookiejar.txt"
