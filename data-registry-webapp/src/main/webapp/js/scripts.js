@@ -339,7 +339,7 @@ var DataSpace = new function() {
 	};
 	
 	this.getCollectionAtom = function(isNew, isPublished) {
-	    var record = getAtomEntryElement();
+	    var record = this.getAtomEntryElement();
 	
 	    //id
 	    var id = this.getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'collections/abc');
@@ -351,7 +351,7 @@ var DataSpace = new function() {
 	    //type
 	    var recordType = $('#type-combobox').val();
 	    if (recordType) {
-	        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_DCMITYPE + recordType, recordType);
+	        var typeCategory = this.getCategoryElement(NS_DCMITYPE, NS_DCMITYPE + recordType, recordType);
 	        record.append(typeCategory);
 	    }
 	    //title
@@ -494,7 +494,7 @@ var DataSpace = new function() {
 	this.addLicense = function(record) {
 	    var license = $('#licence-type-combobox');
 	    if ($(license).val() != 'none') {
-	        var licenseLink = getLinkElement($(license).val(), REL_LICENSE, $(license).text());
+	        var licenseLink = this.getLinkElement($(license).val(), REL_LICENSE, $(license).text());
 	        licenseLink.attr('type', 'application/rdf+xml');
 	        record.append(licenseLink);
 	    }
@@ -519,7 +519,7 @@ var DataSpace = new function() {
 	    $('input[id|="page-text"]').each(function () {
 	        var href = $(this).val();
 	        if (href) {
-	            var linkElement = getLinkElement(href, REL_PAGE);
+	            var linkElement = this.getLinkElement(href, REL_PAGE);
 	            record.append(linkElement);
 	        }
 	    });
@@ -529,7 +529,7 @@ var DataSpace = new function() {
 	    $('input[id|="email-text"]').each(function () {
 	        var href = $(this).val();
 	        if (href) {
-	            var linkElement = getLinkElement(href, REL_MBOX);
+	            var linkElement = this.getLinkElement(href, REL_MBOX);
 	            record.append(linkElement);
 	        }
 	    });
@@ -537,25 +537,25 @@ var DataSpace = new function() {
 	
 	this.addAuthors = function(record) {
 	    //TODO authros needs to be retrieved from the UI
-	    var author = getAuthorElement('Dr Hamish Campbell', 'hamish.campbell@uq.edu.au');
+	    var author = this.getAuthorElement('Dr Hamish Campbell', 'hamish.campbell@uq.edu.au');
 	    record.append(author);
 	};
 	
 	this.addPublishers = function(record) {
 	    //TODO publishers needs to be retrieved from the UI
-	    var publisher = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'agents/1', REL_PUBLISHER, 'Abdul Alabri');
+	    var publisher = this.getLinkElement(UQ_REGISTRY_URI_PREFIX + 'agents/1', REL_PUBLISHER, 'Abdul Alabri');
 	    record.append(publisher);
 	};
 	
 	this.addOutputOf = function(record) {
 	    //TODO publishers needs to be retrieved from the UI
-	    var activity = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'activities/1', REL_IS_OUTPUT_OF);
+	    var activity = this.getLinkElement(UQ_REGISTRY_URI_PREFIX + 'activities/1', REL_IS_OUTPUT_OF);
 	    record.append(activity);
 	};
 	
 	this.addAccessedVia = function(record) {
 	    //TODO publishers needs to be retrieved from the UI
-	    var service = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'services/1', REL_IS_ACCESSED_VIA);
+	    var service = this.getLinkElement(UQ_REGISTRY_URI_PREFIX + 'services/1', REL_IS_ACCESSED_VIA);
 	    record.append(service);
 	};
 	
@@ -564,7 +564,7 @@ var DataSpace = new function() {
 	        var title = $(this).val();
 	        var href = $(this).parent().parent().find('input[id|="publication-url"]').eq(0).val();
 	        if (href) {
-	            var linkElement = getLinkElement(href, REL_IS_REFERENCED_BY, title);
+	            var linkElement = this.getLinkElement(href, REL_IS_REFERENCED_BY, title);
 	            record.append(linkElement);
 	        }
 	    });
@@ -572,7 +572,7 @@ var DataSpace = new function() {
 	
 	this.addTOA = function(record) {
 	    $('div[id="type-of-activities"]').children('input:checked').each(function() {
-	        var category = getCategoryElement(SCHEME_ANZSRC_TOA, SCHEME_ANZSRC_TOA + '/' + $(this).val(), $(this).val());
+	        var category = this.getCategoryElement(SCHEME_ANZSRC_TOA, SCHEME_ANZSRC_TOA + '/' + $(this).val(), $(this).val());
 	        record.append(category);
 	    });
 	};
@@ -581,7 +581,7 @@ var DataSpace = new function() {
 	    $('ul[id="keywords-list"]').children().each(function() {
 	        var keyword = $(this).clone();
 	        $(keyword).children().remove('a');
-	        var category = getCategoryElement(null, $(keyword).text(), null);
+	        var category = this.getCategoryElement(null, $(keyword).text(), null);
 	        record.append(category);
 	    });
 	};
@@ -614,7 +614,7 @@ var DataSpace = new function() {
 	        var title = $(this).val();
 	        var href = 'http://sws.geonames.org/';
 	        if (title) {
-	            var linkElement = getLinkElement(href + title, REL_SPATIAL, title);
+	            var linkElement = this.getLinkElement(href + title, REL_SPATIAL, title);
 	            record.append(linkElement);
 	        }
 	    });
@@ -628,7 +628,7 @@ var DataSpace = new function() {
 	    title.attr('type', 'text');
 	    source.append(title);
 	
-	    var author = getAuthorElement('Abdul Alabri', 'a.alabri@uq.edu.au');
+	    var author = this.getAuthorElement('Abdul Alabri', 'a.alabri@uq.edu.au');
 	    source.append(author);
 	
 	    record.append(source);
@@ -649,15 +649,15 @@ var DataSpace = new function() {
 	this.getLinkElement = function(href, rel, title) {
 	    var attributes = [];
 	    if (href) {
-	        attributes[0] = {name:'href',value: href};
+	    	attributes.push({name:'href',value: href});
 	    }
 	    if (rel) {
-	        attributes[1] = {name:'rel',value: rel};
+	        attributes.push({name:'rel',value: rel});
 	    }
 	    if (title) {
-	        attributes[2] = {name:'title',value: title};
+	        attributes.push({name:'title',value: title});
 	    }
-	    var link = getElementWithAttributes('link', attributes);
+	    var link = this.getElementWithAttributes('link', attributes);
 	    return link;
 	};
 	
@@ -668,7 +668,7 @@ var DataSpace = new function() {
 	        {name: "xmlns:georss", value:NS_GEORSS},
 	        {name: "xmlns:rdfa", value:NS_RDFA}
 	    ];
-	    var entry = getElementWithAttributes("entry", attributes);
+	    var entry = this.getElementWithAttributes("entry", attributes);
 	    return entry;
 	};
 	
@@ -677,7 +677,7 @@ var DataSpace = new function() {
 	    attributes[0] = {name:'scheme',value: scheme};
 	    attributes[1] = {name:'term',value: term};
 	    attributes[2] = {name:'label',value: label};
-	    var category = getElementWithAttributes('category', attributes);
+	    var category = this.getElementWithAttributes('category', attributes);
 	    return category;
 	};
 	

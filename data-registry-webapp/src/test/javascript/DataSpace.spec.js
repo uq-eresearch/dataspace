@@ -26,7 +26,6 @@ describe("DataSpace", function() {
 			expect(record.arg.length).toBe(1);
 			expect(record.arg[0] instanceof Element).toBe(true);
 			var element = record.arg[0];
-			document.myElement = element;
 			// Expect:
 			// <app:control>
 			//   <app:draft>{testArgs[1]}</app:draft>
@@ -37,6 +36,13 @@ describe("DataSpace", function() {
 			// Expect text
 			expect(element.firstChild.firstChild.data).toEqual(testArgs[1]);
 		});
+	});
+	
+	
+	it('should provide a valid new Collection', function() {
+		var collection = DataSpace.getCollectionAtom(true,false);
+		// TODO: Add some checks
+		//console.debug(collection);
 	});
 	
 });
