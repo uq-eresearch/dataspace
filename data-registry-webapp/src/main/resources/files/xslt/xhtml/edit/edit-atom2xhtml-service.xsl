@@ -136,11 +136,11 @@
                 </div>
                 <div class="save-links-div">
                     <a href="#" class="save-link" id="save-link" title="Save Record"
-                       onclick="ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','service',false, false); return false;">
+                       onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','service',false, false); return false;">
                         save
                     </a>
                     <a href="#" class="publish-link" id="publish-link" title="Publish Record"
-                       onclick="ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','service',false, true); return false;">
+                       onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','service',false, true); return false;">
                         publish
                     </a>
                 </div>

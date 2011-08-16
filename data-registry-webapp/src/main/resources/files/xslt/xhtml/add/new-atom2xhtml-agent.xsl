@@ -173,10 +173,10 @@
                 </div>
                 <div class="save-links-div">
                     <a href="#" class="save-link" id="save-link" title="Save Record"
-                       onclick="ingestRecord('/agents','agent',true, false); return false;">save
+                       onclick="DataSpace.ingestRecord('/agents','agent',true, false); return false;">save
                     </a>
                     <a href="#" class="publish-link" id="publish-link" title="Publish Record"
-                       onclick="ingestRecord('/agents','agent',true, true); return false;">publish
+                       onclick="DataSpace.ingestRecord('/agents','agent',true, true); return false;">publish
                     </a>
                 </div>
                 <xsl:call-template name="lookup-form"/>

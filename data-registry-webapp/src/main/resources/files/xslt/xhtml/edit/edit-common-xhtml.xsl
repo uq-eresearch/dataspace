@@ -80,7 +80,7 @@
 								type="text" value="{@content}" />
 							<xsl:text></xsl:text>
 							<a id="alternative-name-link" class="new-link" href="#"
-								onclick="replicateSimpleField('alternative-title-text'); return false;"
+								onclick="DataSpace.replicateSimpleField('alternative-title-text'); return false;"
 								title="Add Title">new
 							</a>
 						</xsl:when>
@@ -89,7 +89,7 @@
 								type="text" value="{@content}" />
 							<a id="alternative-title-text-{$index}-remove-link" class="remove-link"
 								href="#"
-								onclick="$('#alternative-title-text-{$index}').remove(); $(this).remove();">remove
+								onclick="DataSpace.$('#alternative-title-text-{$index}').remove(); $(this).remove();">remove
 							</a>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -100,7 +100,7 @@
 					type="text" value="" />
 				<xsl:text></xsl:text>
 				<a id="alternative-name-link" class="new-link" href="#"
-					onclick="replicateSimpleField('alternative-title-text'); return false;"
+					onclick="DataSpace.replicateSimpleField('alternative-title-text'); return false;"
 					title="Add Title">new
 				</a>
 			</xsl:otherwise>
@@ -280,7 +280,7 @@
 			<dt><label for="creator">Creators</label></dt>
 			<dd class="field">
 				<xsl:call-template name="lookup-edit">
-					<xsl:with-param name="field">creator</xsl:with-param>
+					<xsl:with-param name="field" select="'creator'"/>
 					<xsl:with-param name="relation">
 						<xsl:value-of select="$ATOM_CREATOR" />
 					</xsl:with-param>
@@ -294,7 +294,7 @@
 			<dt><label for="creator">Custodians/Contacts</label></dt>
 			<dd class="field">
 				<xsl:call-template name="lookup-edit">
-					<xsl:with-param name="field">publisher</xsl:with-param>
+					<xsl:with-param name="field" select="'publisher'"/>
 					<xsl:with-param name="relation">
 						<xsl:value-of select="$ATOM_PUBLISHER" />
 					</xsl:with-param>
@@ -308,7 +308,7 @@
 			<dt><label for="creator">Projects</label></dt>
 			<dd class="field">
 				<xsl:call-template name="lookup-edit">
-					<xsl:with-param name="field">isoutputof</xsl:with-param>
+					<xsl:with-param name="field" select="'isoutputof'"/>
 					<xsl:with-param name="relation">
 						<xsl:value-of select="$ATOM_IS_OUTPUT_OF" />
 					</xsl:with-param>
@@ -322,7 +322,7 @@
 			<dt><label for="creator">Fields of Research</label></dt>
 			<dd class="field">
 				<xsl:call-template name="edit-subject">
-					<xsl:with-param name="field">field-of-research</xsl:with-param>
+					<xsl:with-param name="field" select="'field-of-research'"/>
 					<xsl:with-param name="scheme">
 						<xsl:value-of select="$SCHEME_FOR" />
 					</xsl:with-param>
@@ -336,7 +336,7 @@
 			<dt><label for="creator">Socio-economic Impacts</label></dt>
 			<dd class="field">
 				<xsl:call-template name="edit-subject">
-					<xsl:with-param name="field">socio-economic-impact</xsl:with-param>
+					<xsl:with-param name="field" select="'socio-economic-impact'"/>
 					<xsl:with-param name="scheme">
 						<xsl:value-of select="$SCHEME_SEO" />
 					</xsl:with-param>
@@ -364,7 +364,7 @@
 							<input id="page-text" name="page-text" type="text" value="{@href}" />
 							<xsl:text></xsl:text>
 							<a id="other-pages-link" class="new-link" href="#"
-								onclick="replicateSimpleField('page-text'); return false;"
+								onclick="DataSpace.replicateSimpleField('page-text'); return false;"
 								title="Add Web Page">new
 							</a>
 						</xsl:when>
@@ -372,7 +372,7 @@
 							<input id="page-text-{$index}" name="page-text" type="text"
 								value="{@href}" />
 							<a id="page-text-{$index}-remove-link" class="remove-link"
-								href="#" onclick="$('#page-text-{$index}').remove(); $(this).remove();">remove
+								href="#" onclick="DataSpace.$('#page-text-{$index}').remove(); $(this).remove();">remove
 							</a>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -382,7 +382,7 @@
 				<input id="page-text" name="page-text" type="text" value="{@href}" />
 				<xsl:text></xsl:text>
 				<a id="other-pages-link" class="new-link" href="#"
-					onclick="replicateSimpleField('page-text'); return false;" title="Add Web Page">new
+					onclick="DataSpace.replicateSimpleField('page-text'); return false;" title="Add Web Page">new
 				</a>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -398,7 +398,7 @@
 							<input id="email-text" name="email-text" type="text" value="{@title}" />
 							<xsl:text></xsl:text>
 							<a id="add-email-link" class="new-link" href="#"
-								onclick="replicateSimpleField('email-text'); return false;"
+								onclick="DataSpace.replicateSimpleField('email-text'); return false;"
 								title="Add Email">new
 							</a>
 						</xsl:when>
@@ -406,7 +406,7 @@
 							<input id="email-text-{$index}" name="email-text" type="text"
 								value="{@title}" />
 							<a id="email-text-{$index}-remove-link" class="remove-link"
-								href="#" onclick="$('#email-text-{$index}').remove(); $(this).remove();">remove
+								href="#" onclick="DataSpace.$('#email-text-{$index}').remove(); $(this).remove();">remove
 							</a>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -416,7 +416,7 @@
 				<input id="email-text" name="email-text" type="text" value="" />
 				<xsl:text></xsl:text>
 				<a id="add-email-link" class="new-link" href="#"
-					onclick="replicateSimpleField('email-text'); return false;" title="Add Email">new
+					onclick="DataSpace.replicateSimpleField('email-text'); return false;" title="Add Email">new
 				</a>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -440,7 +440,7 @@
 										</td>
 										<td>
 											<a id="lookup-{$field}-link" class="lookup-link" href="#"
-												title="Lookup" onclick="showLookupDialog('{$field}'); return false;">
+												title="Lookup" onclick="DataSpace.showLookupDialog('{$field}'); return false;">
 												lookup
 											</a>
 											<xsl:text></xsl:text>
@@ -457,14 +457,14 @@
 										</td>
 										<td>
 											<a id="lookup-{$field}-link" class="lookup-link" href="#"
-												title="Lookup" onclick="showLookupDialog('{$field}'); return false;">
+												title="Lookup" onclick="DataSpace.showLookupDialog('{$field}'); return false;">
 												lookup
 											</a>
 											<xsl:text></xsl:text>
 										</td>
 										<td class="lookup-result">
 											<a id="{$field}-{$index}-remove-link" class="remove-link"
-												href="#" onclick="$(this).parent().parent().remove();">remove
+												href="#" onclick="DataSpace.$(this).parent().parent().remove();">remove
 											</a>
 											<xsl:value-of select="@title" />
 										</td>
@@ -480,7 +480,7 @@
 							</td>
 							<td>
 								<a id="lookup-{$field}-link" class="lookup-link" href="#"
-									title="Lookup" onclick="showLookupDialog('{$field}'); return false;">
+									title="Lookup" onclick="DataSpace.showLookupDialog('{$field}'); return false;">
 									lookup
 								</a>
 								<xsl:text></xsl:text>
@@ -493,7 +493,7 @@
 		</table>
 		<div>
 			<a class="new-link" id="add-{$field}-link" href="#" title="Add"
-				onclick="replicateLookupField('{$field}'); return false;">add
+				onclick="DataSpace.replicateLookupField('{$field}'); return false;">add
 			</a>
 		</div>
 	</xsl:template>
@@ -515,7 +515,7 @@
 										</td>
 										<td>
 											<a id="lookup-{$field}-link" class="lookup-link" href="#"
-												title="Lookup" onclick="showLookupDialog('subject'); return false;">lookup
+												title="Lookup" onclick="DataSpace.showLookupDialog('subject'); return false;">lookup
 											</a>
 											<xsl:text></xsl:text>
 										</td>
@@ -533,7 +533,7 @@
 										</td>
 										<td>
 											<a id="lookup-{$field}-{$index}-link" class="lookup-link"
-												href="#" title="Lookup" onclick="showLookupDialog('subject'); return false;">lookup
+												href="#" title="Lookup" onclick="DataSpace.showLookupDialog('subject'); return false;">lookup
 											</a>
 											<xsl:text></xsl:text>
 										</td>
@@ -554,7 +554,7 @@
 							</td>
 							<td>
 								<a id="lookup-{$field}-link" class="lookup-link" href="#"
-									title="Lookup" onclick="showLookupDialog('subject'); return false;">lookup
+									title="Lookup" onclick="DataSpace.showLookupDialog('subject'); return false;">lookup
 								</a>
 								<xsl:text></xsl:text>
 							</td>
@@ -566,7 +566,7 @@
 		</table>
 		<div>
 			<a class="new-link" id="add-{$field}-link" href="#" title="Add"
-				onclick="replicateLookupField('{$field}'); return false;">add
+				onclick="DataSpace.replicateLookupField('{$field}'); return false;">add
 			</a>
 		</div>
 	</xsl:template>
@@ -614,7 +614,7 @@
 									<li class="keyword">
 										<xsl:value-of select="@term" />
 										<a id="{@term}" href="#" class="remove-keyword" title="Remove Keyword"
-											onclick="$('#{@term}').parent().remove();">x
+											onclick="DataSpace.$('#{@term}').parent().remove();">x
 										</a>
 									</li>
 								</xsl:for-each>
@@ -628,7 +628,7 @@
 						<input id="keyword" value="" type="text" />
 						<xsl:text></xsl:text>
 						<a class="new-link" id="add-link" href="#" title="Add"
-							onclick="addKeyword('keyword', 'keywords-list')">add
+							onclick="DataSpace.addKeyword('keyword', 'keywords-list')">add
 						</a>
 					</td>
 				</tr>
@@ -663,7 +663,7 @@
 					</td>
 					<td>
 						<a id="lookup-location-link" href="#" title="Lookup"
-							onclick="showLookupDialog(); return false;">lookup
+							onclick="DataSpace.showLookupDialog(); return false;">lookup
 						</a>
 					</td>
 					<td class="lookup-result"></td>
@@ -672,7 +672,7 @@
 		</table>
 		<div>
 			<a class="new-link" id="add-locations-link" href="#" title="Add Location"
-				onclick="replicateLookupField('location-name'); return false;">add
+				onclick="DataSpace.replicateLookupField('location-name'); return false;">add
 			</a>
 		</div>
 		<h4>Region</h4>
@@ -681,18 +681,18 @@
 		<ul id="controlToggle">
 			<li>
 				<input type="radio" name="type" value="none" id="noneToggle"
-					onclick="toggleControl(this);" checked="checked" />
+					onclick="DataSpace.toggleControl(this);" checked="checked" />
 				<label for="noneToggle">navigate</label>
 
 			</li>
 			<li>
 				<input type="radio" name="type" value="point" id="pointToggle"
-					onclick="toggleControl(this);" />
+					onclick="DataSpace.toggleControl(this);" />
 				<label for="pointToggle">draw point</label>
 			</li>
 			<li>
 				<input type="radio" name="type" value="polygon" id="polygonToggle"
-					onclick="toggleControl(this);" />
+					onclick="DataSpace.toggleControl(this);" />
 				<label for="polygonToggle">draw polygon</label>
 			</li>
 		</ul>
@@ -718,7 +718,7 @@
 		</table>
 		<div>
 			<a class="new-link" id="add-related-publication-link" href="#"
-				title="Add Publication" onclick="replicateLookupField('publication-title'); return false;">add
+				title="Add Publication" onclick="DataSpace.replicateLookupField('publication-title'); return false;">add
 			</a>
 		</div>
 	</xsl:template>
@@ -747,7 +747,7 @@
 							<td>
 								<input type="button" name="lookup-submit" id="lookup-submit"
 									value="Search"
-									onclick="lookup($('#lookup-type').val(),$('#query').val()); return false;" />
+									onclick="DataSpace.lookup($('#lookup-type').val(),$('#query').val()); return false;" />
 							</td>
 						</tr>
 					</tbody>

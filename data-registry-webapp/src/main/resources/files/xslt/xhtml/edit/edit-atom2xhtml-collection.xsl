@@ -89,9 +89,7 @@
 								<dt><label for="isaccessedvia">Access Service/s</label></dt>
 								<dd>
 									<xsl:call-template name="lookup-edit">
-										<xsl:with-param name="field">
-											isaccessedvia
-										</xsl:with-param>
+										<xsl:with-param name="field" select="'isaccessedvia'"/>
 										<xsl:with-param name="relation">
 											<xsl:value-of select="$ATOM_IS_ACCESSED_VIA" />
 										</xsl:with-param>
@@ -103,9 +101,7 @@
 								<dt><label for="relation">Related Collection/s</label></dt>
 								<dd>
 									<xsl:call-template name="lookup-edit">
-										<xsl:with-param name="field">
-											relation
-										</xsl:with-param>
+										<xsl:with-param name="field" select="'relation'"/>
 										<xsl:with-param name="relation">
 											<xsl:value-of select="$ATOM_RELATION" />
 										</xsl:with-param>
@@ -180,11 +176,11 @@
 					</div>
 					<div class="save-links-div">
 						<a href="#" class="save-link" id="save-link" title="Save Record"
-							onclick="ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, false); return false;">
+							onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, false); return false;">
 							save
 						</a>
 						<a href="#" class="publish-link" id="publish-link" title="Publish Record"
-							onclick="ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, true); return false;">
+							onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, true); return false;">
 							publish
 						</a>
 					</div>

@@ -1,5 +1,6 @@
-OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
 function init() {
+	OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
+
     $('#map').text("");
     var map, vectorLayer,polygonFeature;
     var WGS84_google_mercator = new OpenLayers.Projection("EPSG:900913");
