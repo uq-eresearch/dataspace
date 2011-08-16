@@ -1352,3 +1352,21 @@ body {
 h1, h2, h3, h4 {
     line-height: 1;
 }
+
+<!--  -->
+dd, dt, dd
+{
+	display: block
+}
+
+dt
+{
+	float: left;
+	font-weight: bold;
+	width: 12em;
+	font-size: 1em;
+}
+
+
+
+
