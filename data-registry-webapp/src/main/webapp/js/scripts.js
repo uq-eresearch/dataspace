@@ -229,7 +229,7 @@ var DataSpace = new function() {
 	    var record = getAtomEntryElement();
 	
 	    //id
-	    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'activities/abc');
+	    var id = this.getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'activities/abc');
 	    if (!isNew) {
 	        //TODO id needs to be retrieved from UI
 	    }
@@ -244,7 +244,7 @@ var DataSpace = new function() {
 	    //title
 	    var titleValue = $('#edit-title-text').val();
 	    if (titleValue) {
-	        var title = getSimpleElementWithText('title', titleValue);
+	        var title = this.getSimpleElementWithText('title', titleValue);
 	        title.attr('type', 'text');
 	        record.append(title);
 	    }
@@ -254,7 +254,7 @@ var DataSpace = new function() {
 	
 	    var contentValue = $('#content-textarea').val();
 	    if (contentValue) {
-	        var content = getSimpleElementWithText('content', contentValue);
+	        var content = this.getSimpleElementWithText('content', contentValue);
 	        content.attr('type', 'text');
 	        record.append(content);
 	    }
@@ -269,7 +269,7 @@ var DataSpace = new function() {
 	    this.addKeywordToCollection(record);
 	
 	    //updated, format: '2010-10-08T05:58:02.781Z'
-	    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+	    var updated = this.getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
 	    record.append(updated);
 	
 	    //add source
@@ -284,7 +284,7 @@ var DataSpace = new function() {
 	    var record = getAtomEntryElement();
 	
 	    //id
-	    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'agents/abc');
+	    var id = this.getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'agents/abc');
 	    if (!isNew) {
 	        //TODO id needs to be retrieved from UI
 	    }
@@ -299,7 +299,7 @@ var DataSpace = new function() {
 	    //title
 	    var titleValue = $('#edit-title-text').val();
 	    if (titleValue) {
-	        var title = getSimpleElementWithText('title', titleValue);
+	        var title = this.getSimpleElementWithText('title', titleValue);
 	        title.attr('type', 'text');
 	        record.append(title);
 	    }
@@ -309,7 +309,7 @@ var DataSpace = new function() {
 	
 	    var contentValue = $('#content-textarea').val();
 	    if (contentValue) {
-	        var content = getSimpleElementWithText('content', contentValue);
+	        var content = this.getSimpleElementWithText('content', contentValue);
 	        content.attr('type', 'text');
 	        record.append(content);
 	    }
@@ -327,7 +327,7 @@ var DataSpace = new function() {
 	    this.addKeywordToCollection(record);
 	
 	    //updated, format: '2010-10-08T05:58:02.781Z'
-	    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+	    var updated = this.getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
 	    record.append(updated);
 	
 	    //add source
@@ -342,7 +342,7 @@ var DataSpace = new function() {
 	    var record = getAtomEntryElement();
 	
 	    //id
-	    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'collections/abc');
+	    var id = this.getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'collections/abc');
 	    if (!isNew) {
 	        //TODO id needs to be retrieved from UI
 	    }
@@ -357,7 +357,7 @@ var DataSpace = new function() {
 	    //title
 	    var titleValue = $('#edit-title-text').val();
 	    if (titleValue) {
-	        var title = getSimpleElementWithText('title', titleValue);
+	        var title = this.getSimpleElementWithText('title', titleValue);
 	        title.attr('type', 'text');
 	        record.append(title);
 	    }
@@ -367,7 +367,7 @@ var DataSpace = new function() {
 	
 	    var contentValue = $('#content-textarea').val();
 	    if (contentValue) {
-	        var content = getSimpleElementWithText('content', contentValue);
+	        var content = this.getSimpleElementWithText('content', contentValue);
 	        content.attr('type', 'text');
 	        record.append(content);
 	    }
@@ -400,7 +400,7 @@ var DataSpace = new function() {
 	    //rights
 	    var rightsValue = $('#rights-textarea').val();
 	    if (rightsValue) {
-	        var rights = getSimpleElementWithText('rights', rightsValue);
+	        var rights = this.getSimpleElementWithText('rights', rightsValue);
 	        record.append(rights);
 	    }
 	    //access rights
@@ -409,7 +409,7 @@ var DataSpace = new function() {
 	    this.addLicense(record);
 	
 	    //updated, format: '2010-10-08T05:58:02.781Z'
-	    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+	    var updated = this.getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
 	    record.append(updated);
 	
 	    //add source
@@ -424,7 +424,7 @@ var DataSpace = new function() {
 	    var record = getAtomEntryElement();
 	
 	    //id
-	    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'services/abc');
+	    var id = this.getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'services/abc');
 	    if (!isNew) {
 	        //TODO id needs to be retrieved from UI
 	    }
@@ -439,7 +439,7 @@ var DataSpace = new function() {
 	    //title
 	    var titleValue = $('#edit-title-text').val();
 	    if (titleValue) {
-	        var title = getSimpleElementWithText('title', titleValue);
+	        var title = this.getSimpleElementWithText('title', titleValue);
 	        title.attr('type', 'text');
 	        record.append(title);
 	    }
@@ -449,7 +449,7 @@ var DataSpace = new function() {
 	
 	    var contentValue = $('#content-textarea').val();
 	    if (contentValue) {
-	        var content = getSimpleElementWithText('content', contentValue);
+	        var content = this.getSimpleElementWithText('content', contentValue);
 	        content.attr('type', 'text');
 	        record.append(content);
 	    }
@@ -458,7 +458,7 @@ var DataSpace = new function() {
 	    this.addPages(record);
 	
 	    //updated, format: '2010-10-08T05:58:02.781Z'
-	    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+	    var updated = this.getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
 	    record.append(updated);
 	
 	    //add source
@@ -476,7 +476,7 @@ var DataSpace = new function() {
 	 */
 	
 	this.addAccessRights = function(record) {
-	    var accessRights = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
+	    var accessRights = this.getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
 	    var val = $('#access-rights-textarea').val();
 	    if (val) {
 	        var attributes = [
@@ -502,7 +502,7 @@ var DataSpace = new function() {
 	
 	this.addAlternativeTitles = function(record) {
 	    $('input[id|="alternative-title-text"]').each(function () {
-	        var alternativeTitle = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
+	        var alternativeTitle = this.getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
 	        var attributes = [
 	            {name: 'property', value: REL_ALTERNATIVE },
 	            {name: 'content', value:$(this).val() }
@@ -587,7 +587,7 @@ var DataSpace = new function() {
 	};
 	
 	this.addTemporal = function(record) {
-	    var termporal = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
+	    var termporal = this.getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
 	    var startDate = $('input[id|="start-date"]').val();
 	    var endDate = $('input[id|="end-date"]').val();
 	    var attributes = [];
@@ -621,10 +621,10 @@ var DataSpace = new function() {
 	};
 	
 	this.addSource = function(record) {
-	    var source = getSimpleElement('source');
-	    var id = getSimpleElementWithText('id', 'http://dataspace.uq.edu.au');
+	    var source = this.getSimpleElement('source');
+	    var id = this.getSimpleElementWithText('id', 'http://dataspace.uq.edu.au');
 	    source.append(id);
-	    var title = getSimpleElementWithText('title', 'The University of Queensland Data Collections Registry');
+	    var title = this.getSimpleElementWithText('title', 'The University of Queensland Data Collections Registry');
 	    title.attr('type', 'text');
 	    source.append(title);
 	
@@ -635,8 +635,8 @@ var DataSpace = new function() {
 	};
 	
 	this.setPublished = function(record, isPublished) {
-	    var appElement = getSimpleElementWithNameSpace('app:control', NS_APP);
-	    var draftElement = getSimpleElementWithNameSpace('app:draft', NS_APP);
+	    var appElement = this.getSimpleElementWithNameSpace('app:control', NS_APP);
+	    var draftElement = this.getSimpleElementWithNameSpace('app:draft', NS_APP);
 	    if (isPublished) {
 	        draftElement.text('no');
 	    } else {
@@ -682,19 +682,19 @@ var DataSpace = new function() {
 	};
 	
 	this.getAuthorElement = function(name, email, uri) {
-	    var author = getSimpleElement('author');
+	    var author = this.getSimpleElement('author');
 	    if (name) {
-	        var nameElement = getSimpleElement('name');
+	        var nameElement = this.getSimpleElement('name');
 	        nameElement.text(name);
 	        author.append(nameElement);
 	    }
 	    if (email) {
-	        var emailElement = getSimpleElement('email');
+	        var emailElement = this.getSimpleElement('email');
 	        emailElement.text(email);
 	        author.append(emailElement);
 	    }
 	    if (uri) {
-	        var uriElement = getSimpleElement('uri');
+	        var uriElement = this.getSimpleElement('uri');
 	        uriElement.text(uri);
 	        author.append(uriElement);
 	    }
@@ -707,13 +707,13 @@ var DataSpace = new function() {
 	 *
 	 * */
 	this.getSimpleElementWithText = function(name, text) {
-	    var element = getSimpleElement(name);
+	    var element = this.getSimpleElement(name);
 	    element.text(text);
 	    return element;
 	};
 	
 	this.getElementWithAttributes = function(name, attributes) {
-	    var element = getSimpleElement(name);
+	    var element = this.getSimpleElement(name);
 	    for (var i = 0; i < attributes.length; i++) {
 	        var attribute = attributes[i];
 	        if (attribute.name && attribute.value) {
