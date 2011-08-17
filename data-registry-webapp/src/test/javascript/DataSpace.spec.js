@@ -39,10 +39,36 @@ describe("DataSpace", function() {
 	});
 	
 	
+	it('should provide a valid new Activity', function() {
+		var newActivity = DataSpace.getActivityAtom(true,false);
+		var newActivityId = $(newActivity).find('id:not(source id)').text();
+		// New IDs should contain "ignore" by default
+		expect(newActivityId).toContain('ignore');
+		// TODO: Add some more checks
+	});
+	
+	it('should provide a valid new Agent', function() {
+		var newAgent = DataSpace.getAgentAtom(true,false);
+		var newAgentId = $(newAgent).find('id:not(source id)').text();
+		// New IDs should contain "ignore" by default
+		expect(newAgentId).toContain('ignore');
+		// TODO: Add some more checks
+	});
+	
 	it('should provide a valid new Collection', function() {
-		var collection = DataSpace.getCollectionAtom(true,false);
-		// TODO: Add some checks
-		//console.debug(collection);
+		var newCollection = DataSpace.getCollectionAtom(true,false);
+		var newCollectionId = $(newCollection).find('id:not(source id)').text();
+		// New IDs should contain "ignore" by default
+		expect(newCollectionId).toContain('ignore');
+		// TODO: Add some more checks
+	});
+	
+	it('should provide a valid new Service', function() {
+		var newService = DataSpace.getServiceAtom(true,false);
+		var newServiceId = $(newService).find('id:not(source id)').text();
+		// New IDs should contain "ignore" by default
+		expect(newServiceId).toContain('ignore');
+		// TODO: Add some more checks
 	});
 	
 });
