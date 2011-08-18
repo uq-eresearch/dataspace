@@ -241,7 +241,7 @@ var DataSpace = new function() {
 	    //id
 	    var id = getSimpleElementWithText('id', getNewEntryId('activities'));
 	    if (!isNew) {
-	        //TODO id needs to be retrieved from UI
+	    	id = getSimpleElementWithText('id', $('#page-text').val());
 	    }
 	    record.append(id);
 	
@@ -301,7 +301,7 @@ var DataSpace = new function() {
 	    //id
 	    var id = getSimpleElementWithText('id', getNewEntryId('agents'));
 	    if (!isNew) {
-	        //TODO id needs to be retrieved from UI
+	    	id = getSimpleElementWithText('id', $('#page-text').val());
 	    }
 	    record.append(id);
 	
@@ -452,7 +452,7 @@ var DataSpace = new function() {
 	    //id
 	    var id = getSimpleElementWithText('id', getNewEntryId('services'));
 	    if (!isNew) {
-	        //TODO id needs to be retrieved from UI
+	    	id = getSimpleElementWithText('id', $('#page-text').val());
 	    }
 	    record.append(id);
 	
@@ -533,10 +533,14 @@ var DataSpace = new function() {
 	
 	var addAlternativeTitles = function(record) {
 	    $('input[id|="alternative-title-text"]').each(function () {
+	    	var content = $.trim($(this).val());
+	    	// Don't add blank alternative values
+	    	if (content == "")
+	    		return;
 	        var alternativeTitle = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
 	        var attributes = [
 	            {name: 'property', value: REL_ALTERNATIVE },
-	            {name: 'content', value:$(this).val() }
+	            {name: 'content', value: $(this).val() }
 	        ];
 	        for (var i = 0; i < attributes.length; i++) {
 	            var attribute = attributes[i];
@@ -768,45 +772,23 @@ var DataSpace = new function() {
 	    return element;
 	};
 	
-	var serializeToString = function(domNode) {
-	    var stringXML = "";
-	    var elemType = domNode.nodeType;
-	    switch (elemType) {
-	        case 1: //element
-	            stringXML = "<" + domNode.tagName;
-	
-	            for (var i = 0; i < domNode.attributes.length; i++) {
-	                stringXML += " " + domNode.attributes[i].name + "=\"" + domNode.attributes[i].value + "\"";
-	            }
-	
-	            stringXML += ">";
-	
-	            for (var i = 0; i < domNode.childNodes.length; i++) {
-	                stringXML += serializeToString(domNode.childNodes[i]);
-	            }
-	
-	            stringXML += "</" + domNode.tagName + ">";
-	            break;
-	
-	        case 3: //text node
-	            stringXML = domNode.nodeValue;
-	            break;
-	        case 4: //cdata
-	            stringXML = "<![CDATA[" + domNode.nodeValue + "";
-	            break;
-	        case 7: //processing instruction
-	            stringXML = "<?" + domNode.nodevalue + "?>";
-	            break;
-	        case 8: //comment
-	            stringXML = "<!--" + domNode.nodevalue + "-->";
-	            break;
-	        case 9: //document
-	            for (var i = 0; i < domNode.childNodes.length; i++) {
-	                stringXML += serializeToString(domNode.childNodes[i]);
-	            }
-	            break;
-	    }
-	    return stringXML;
+	// From: http://stackoverflow.com/questions/43455/how-do-i-serialize-a-dom-to-xml-text-using-javascript-in-a-cross-browser-way/43468#43468
+	var serializeToString = function(xmlNode) {
+	  try {
+	      // Gecko- and Webkit-based browsers (Firefox, Chrome), Opera.
+	      return (new XMLSerializer()).serializeToString(xmlNode);
+	  } 
+	  catch (e) {
+	     try {
+	        // Internet Explorer.
+	        return xmlNode.xml;
+	     }
+	     catch (e) {  
+	        //Other browsers without XML Serializer
+	        alert('Xmlserializer not supported');
+	     }
+	   }
+	   return false;
 	};
 	
 	/* Sourced from: 
