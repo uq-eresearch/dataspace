@@ -140,19 +140,32 @@ var DataSpace = new function() {
 	    return false;
 	};
 	
+	var getRemoveLink = function(field) {
+		var link = $(document.createElement('a'));
+		return link.attr('href','#')
+				.attr('class','remove-link')
+				.attr('id', field.attr('id')+'-remove-link')
+				.text('remove')
+				.click(function() {
+			        field.parent().remove();
+			        return false;
+			    });
+		
+	}
+	
 	var replicateSimpleField = function(inputField) {
-	    var parentTd = $('#' + inputField).parent();
-	    var numberOfFields = parentTd.find('input').length;
+	    var parentWrapper = $('#' + inputField).parent();
+	    var wrapperType = parentWrapper.get(0).nodeName;
+	    var newWrapper = $(document.createElement(wrapperType));
+	    var numberOfFields = parentWrapper.parent().find(wrapperType).length;
 	    var newInputField = $('#' + inputField).clone(true);
 	    var newFieldId = inputField + '-' + numberOfFields;
 	    newInputField.attr('id', newFieldId);
-	    parentTd.append(newInputField);
+	    newWrapper.append(newInputField);
+	    parentWrapper.siblings().last().before(newWrapper);
 	    newInputField.val("");
-	    parentTd.append(' <a href="#" class="remove-link" id="' + newFieldId + '-remove-link">remove</a>');
-	    $('#' + newFieldId + '-remove-link').click(function() {
-	        $('#' + newFieldId).remove();
-	        $(this).remove();
-	    });
+	    newWrapper.append(getRemoveLink(newInputField));
+	    $('#' + newFieldId + '-remove-link');
 	    return false;
 	};
 	

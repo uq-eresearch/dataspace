@@ -338,48 +338,45 @@
 			</dd>
 		</dl>
 	</xsl:template>
-	
-	<xsl:template name="web-page">
-		<dl>
-			<dt>Web Page</dt>
-			<dd>
-				<xsl:call-template name="page" />
-			</dd>
-		</dl>
-	</xsl:template>
 
 	<xsl:template name="page">
+		<dl>
+			<dt>Web Page</dt>
 		<xsl:choose>
 			<xsl:when test="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
 				<xsl:for-each select="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
 					<xsl:variable name="index" select="position() - 1" />
 					<xsl:choose>
 						<xsl:when test="$index = 0">
+						<dd>
 							<input id="page-text" name="page-text" type="text" value="{@href}" />
-							<xsl:text></xsl:text>
-							<a id="other-pages-link" class="new-link" href="#"
-								onclick="DataSpace.replicateSimpleField('page-text'); return false;"
-								title="Add Web Page">new
-							</a>
+						</dd>
 						</xsl:when>
 						<xsl:otherwise>
+						<dd>
 							<input id="page-text-{$index}" name="page-text" type="text"
 								value="{@href}" />
 							<a id="page-text-{$index}-remove-link" class="remove-link"
-								href="#" onclick="DataSpace.$('#page-text-{$index}').remove(); $(this).remove();">remove
+								href="#" onclick="DataSpace.$('#page-text-{$index}').parent().remove(); return false;">remove
 							</a>
+						</dd>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<input id="page-text" name="page-text" type="text" value="{@href}" />
-				<xsl:text></xsl:text>
-				<a id="other-pages-link" class="new-link" href="#"
-					onclick="DataSpace.replicateSimpleField('page-text'); return false;" title="Add Web Page">new
-				</a>
+				<dd>
+					<input id="page-text" name="page-text" type="text" value="{@href}" />
+				</dd>
 			</xsl:otherwise>
 		</xsl:choose>
+			<dd>
+				<a id="other-pages-link" class="new-link" href="#"
+					onclick="DataSpace.replicateSimpleField('page-text'); return false;"
+					title="Add Web Page">new
+				</a>
+			</dd>
+		</dl>
 	</xsl:template>
 
 	<xsl:template name="email">
@@ -649,26 +646,28 @@
 		</table>
 	</xsl:template>
 	<xsl:template name="edit-locations">
-		<table id="edit-locations-table" class="lookup-table">
-			<tbody>
-				<tr>
-					<td>
-						<input id="location-name" value="" type="text" />
-					</td>
-					<td>
-						<a id="lookup-location-link" href="#" title="Lookup"
-							onclick="DataSpace.showLookupDialog(); return false;">lookup
-						</a>
-					</td>
-					<td class="lookup-result"></td>
-				</tr>
-			</tbody>
-		</table>
+		<dl>
+			<dt>
+				<label>Locations</label>
+			</dt>
+			<dd>
+				<input id="location-name" value="" type="text" />
+				<a id="lookup-location-link" href="http://www.geonames.org/" title="Open GeoNames Search"
+					onclick="window.open(this.href,'_blank'); return false;">
+					Open GeoNames
+				</a>
+			</dd>
+			<dd>
+				<a class="new-link" id="add-locations-link" href="#" title="Add Location"
+					onclick="DataSpace.replicateSimpleField('location-name'); return false;">add
+				</a>
+			</dd>
+		</dl>
 		<div>
-			<a class="new-link" id="add-locations-link" href="#" title="Add Location"
-				onclick="DataSpace.replicateLookupField('location-name'); return false;">add
-			</a>
 		</div>
+	</xsl:template>
+	
+	<xsl:template name="edit-region">
 		<h4>Region</h4>
 		<div id="map" class="smallmap" style="width: 500px; height: 400px">
 		</div>

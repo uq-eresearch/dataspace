@@ -81,7 +81,7 @@
 						</h2>
 						<div id="data-availability">
 
-							<xsl:call-template name="web-page" />
+							<xsl:call-template name="page" />
 							
 							<xsl:call-template name="access-rights" />
 							
@@ -145,12 +145,7 @@
 									<xsl:call-template name="edit-time-period" />
 								</dd>
 							</dl>
-							<dl>
-								<dt><label for="locations">Locations</label></dt>
-								<dd>
-									<xsl:call-template name="edit-locations" />
-								</dd>
-							</dl>
+							<xsl:call-template name="edit-locations" />
 						</div>
 						<h2>
 							<label for="subjects">Topics</label>
