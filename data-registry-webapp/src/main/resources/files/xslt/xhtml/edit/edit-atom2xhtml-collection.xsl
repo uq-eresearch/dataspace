@@ -29,7 +29,7 @@
 			<title>
 				<xsl:value-of select="atom:title" />
 			</title>
-			<link href="/description.css" rel="stylesheet" type="text/css" />
+			<link href="/css/description.css" rel="stylesheet" type="text/css" />
 			<xsl:call-template name="head" />
 			<script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js">;</script>
 			<script type="text/javascript"

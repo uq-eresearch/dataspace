@@ -91,5 +91,7 @@
     font-size: smaller;
 }
 
-
+h2 {
+	clear: both;
+}
 

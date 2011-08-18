@@ -64,6 +64,9 @@
 				<artifactId>maven-jetty-plugin</artifactId>
 
 				<configuration>
+					<systemPropertiesFile>
+						${basedir}/src/test/resources/registry-test.properties
+					</systemPropertiesFile>
 					<stopKey>/</stopKey>
 					<stopPort>8281</stopPort>
 					<!--<jettyEnvXml>${basedir}/conf/jetty-env.xml</jettyEnvXml> -->

@@ -12,8 +12,16 @@ describe("DataSpace", function() {
 	
 	});
 	
-	it('exposes prepareFields function', function() {
-		expect(typeof(DataSpace.prepareFields)).toBe("function");
+	describe('public functions', function() {
+		it('exposes prepareFields function', function() {
+			expect(typeof(DataSpace.prepareFields)).toBe("function");
+		});
+		it('exposes ingestRecord function', function() {
+			expect(typeof(DataSpace.ingestRecord)).toBe("function");
+		});
+		it('exposes replicateSimpleField function', function() {
+			expect(typeof(DataSpace.replicateSimpleField)).toBe("function");
+		});
 	});
 	
 	it('should set the publish flag correctly', function() {
@@ -52,6 +60,10 @@ describe("DataSpace", function() {
 		var newUpdated = $(entry).find('updated').text();
 		var now = new Date();
 		expect(newUpdated).toMatch('^'+now.getUTCFullYear());
+		
+		var newType = $(entry).find('link[rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]');
+		expect(newType.attr('href')).toMatch('^http://.+');
+		expect(newType.attr('title')).toMatch('[A-Z][a-z]+');
 		
 		// TODO: Add some more checks
 		//console.debug(entry);

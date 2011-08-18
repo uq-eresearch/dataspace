@@ -50,6 +50,7 @@ var DataSpace = new function() {
 	var REL_LICENSE = "license";
 	var REL_SUCCESSOR_VERSION = "successor-version";
 	var REL_TEMPORAL = NS_DC + "temporal";
+	var REL_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
 	var REL_ALTERNATIVE = NS_DC + "alternative";
 	var REL_SPATIAL = NS_DC + "spatial";
 	var REL_VIA = "via";
@@ -88,7 +89,8 @@ var DataSpace = new function() {
 	};
 	
 	var ingestRecord = function(url, type, isNew, isPublished) {
-	    if (confirm("Are you sure you want to create this record?")) {
+		var actionText = isNew ? 'create' : 'edit';
+	    if (confirm("Are you sure you want to "+actionText+" this record?")) {
 	        var record = null;
 	        if (type == 'activity') {
 	            record = getActivityAtom(isNew, isPublished);
@@ -244,6 +246,11 @@ var DataSpace = new function() {
 	    record.append(id);
 	
 	    //type
+	    var typeRelation = getLinkElement(
+	    	'http://xmlns.com/foaf/0.1/Project',
+	    	REL_TYPE,
+	    	'Project');
+	    record.append(typeRelation);
 	    var recordType = $('#type-combobox').val();
 	    if (recordType) {
 	        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_FOAF + recordType, recordType);
@@ -298,7 +305,13 @@ var DataSpace = new function() {
 	    }
 	    record.append(id);
 	
+
 	    //type
+	    var typeRelation = getLinkElement(
+	    	'http://xmlns.com/foaf/0.1/Person',
+	    	REL_TYPE,
+	    	'Person');
+	    record.append(typeRelation);
 	    var recordType = $('#type-combobox').val();
 	    if (recordType) {
 	        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_FOAF + recordType, recordType);
@@ -352,11 +365,16 @@ var DataSpace = new function() {
 	    //id
 	    var id = getSimpleElementWithText('id', getNewEntryId('collections'));
 	    if (!isNew) {
-	        //TODO id needs to be retrieved from UI
+	    	id = getSimpleElementWithText('id', $('#page-text').val());
 	    }
 	    record.append(id);
-	
+	    
 	    //type
+		var typeRelation = getLinkElement(
+			'http://purl.org/dc/dcmitype/Collection',
+			REL_TYPE,
+			'Collection');
+		record.append(typeRelation);
 	    var recordType = $('#type-combobox').val();
 	    if (recordType) {
 	        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_DCMITYPE + recordType, recordType);
@@ -439,6 +457,11 @@ var DataSpace = new function() {
 	    record.append(id);
 	
 	    //type
+		var typeRelation = getLinkElement(
+			'http://www.e-framework.org/Contributions/ServiceGenres/Report',
+			REL_TYPE,
+			'Report');
+		record.append(typeRelation);
 	    var recordType = $('#type-combobox').val();
 	    if (recordType) {
 	        var typeCategory = getCategoryElement(NS_DCMITYPE, NS_EFS + recordType, recordType);
@@ -806,6 +829,8 @@ var DataSpace = new function() {
 	this.setRecordType = setRecordType;
 	this.setLicenseType = setLicenseType;
 	this.showLookupDialog = showLookupDialog;
+	this.ingestRecord = ingestRecord;
+	this.replicateSimpleField = replicateSimpleField;
 	
 	this.getActivityAtom = getActivityAtom;
 	this.getAgentAtom = getAgentAtom;
