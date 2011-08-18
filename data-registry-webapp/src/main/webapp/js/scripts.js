@@ -1,8 +1,16 @@
+/* Avoid errors due to debugging left in */
+if (typeof(window.console) == 'undefined') {
+	window.console = new function () {
+		var noop = function() {}
+		this.debug = noop;
+	};
+}
+
 var DataSpace = new function() {
 	/**
 	 * Constants
 	 */
-	var UQ_REGISTRY_URI_PREFIX = 'http://localhost:8080/';
+	var UQ_REGISTRY_URI_PREFIX = window.location.protocol+'//'+window.location.host+'/';
 	var PERSISTENT_URL = "http://purl.org/";
 	var NS_FOAF = "http://xmlns.com/foaf/0.1/";
 	var NS_ANDS = "http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#";
@@ -229,7 +237,7 @@ var DataSpace = new function() {
 	    var record = getAtomEntryElement();
 	
 	    //id
-	    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'activities/ignore');
+	    var id = getSimpleElementWithText('id', getNewEntryId('activities'));
 	    if (!isNew) {
 	        //TODO id needs to be retrieved from UI
 	    }
@@ -269,7 +277,7 @@ var DataSpace = new function() {
 	    addKeywordToCollection(record);
 	
 	    //updated, format: '2010-10-08T05:58:02.781Z'
-	    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+	    var updated = getSimpleElementWithText('updated', getCurrentDateTime());
 	    record.append(updated);
 	
 	    //add source
@@ -284,7 +292,7 @@ var DataSpace = new function() {
 	    var record = getAtomEntryElement();
 	
 	    //id
-	    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'agents/ignore');
+	    var id = getSimpleElementWithText('id', getNewEntryId('agents'));
 	    if (!isNew) {
 	        //TODO id needs to be retrieved from UI
 	    }
@@ -327,7 +335,7 @@ var DataSpace = new function() {
 	    addKeywordToCollection(record);
 	
 	    //updated, format: '2010-10-08T05:58:02.781Z'
-	    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+	    var updated = getSimpleElementWithText('updated', getCurrentDateTime());
 	    record.append(updated);
 	
 	    //add source
@@ -342,7 +350,7 @@ var DataSpace = new function() {
 	    var record = getAtomEntryElement();
 	
 	    //id
-	    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'collections/ignore');
+	    var id = getSimpleElementWithText('id', getNewEntryId('collections'));
 	    if (!isNew) {
 	        //TODO id needs to be retrieved from UI
 	    }
@@ -409,7 +417,7 @@ var DataSpace = new function() {
 	    addLicense(record);
 	
 	    //updated, format: '2010-10-08T05:58:02.781Z'
-	    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+	    var updated = getSimpleElementWithText('updated', getCurrentDateTime());
 	    record.append(updated);
 	
 	    //add source
@@ -424,7 +432,7 @@ var DataSpace = new function() {
 	    var record = getAtomEntryElement();
 	
 	    //id
-	    var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX + 'services/ignore');
+	    var id = getSimpleElementWithText('id', getNewEntryId('services'));
 	    if (!isNew) {
 	        //TODO id needs to be retrieved from UI
 	    }
@@ -458,7 +466,7 @@ var DataSpace = new function() {
 	    addPages(record);
 	
 	    //updated, format: '2010-10-08T05:58:02.781Z'
-	    var updated = getSimpleElementWithText('updated', '2010-10-08T05:58:02.781Z');
+	    var updated = getSimpleElementWithText('updated', getCurrentDateTime());
 	    record.append(updated);
 	
 	    //add source
@@ -646,6 +654,10 @@ var DataSpace = new function() {
 	    record.append(appElement);
 	};
 	
+	var getNewEntryId = function(type) {
+		return UQ_REGISTRY_URI_PREFIX+type+'/ignore';
+	};
+	
 	var getLinkElement = function(href, rel, title) {
 	    var attributes = [];
 	    if (href) {
@@ -774,6 +786,19 @@ var DataSpace = new function() {
 	    return stringXML;
 	};
 	
+	/* Sourced from: 
+	 * https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date#Example.3a_ISO_8601_formatted_dates 
+	 */
+	var ISODateString = function(d) {
+		 function pad(n){return n<10 ? '0'+n : n}
+		 return d.getUTCFullYear()+'-'
+		      + pad(d.getUTCMonth()+1)+'-'
+		      + pad(d.getUTCDate())+'T'
+		      + pad(d.getUTCHours())+':'
+		      + pad(d.getUTCMinutes())+':'
+		      + pad(d.getUTCSeconds())+'Z'
+	}
+	var getCurrentDateTime = function() {return ISODateString(new Date());}
 	
 	/* Public Functions */
 	this.prepareFields = prepareFields;
@@ -787,6 +812,7 @@ var DataSpace = new function() {
 	this.getCollectionAtom = getCollectionAtom;
 	this.getServiceAtom = getServiceAtom;
 	
+	this.getNewEntryId = getNewEntryId;
 	this.setPublished = setPublished;
 	
 };

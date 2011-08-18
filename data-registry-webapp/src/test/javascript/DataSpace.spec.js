@@ -38,37 +38,51 @@ describe("DataSpace", function() {
 		});
 	});
 	
+	it('should provide new entry IDs for this host', function() {
+		expect(DataSpace.getNewEntryId('collection')).toContain(
+				window.location.protocol + "//" + window.location.host
+		);
+	});
+	
+	var runNewEntryChecks = function(entry, type) {
+		// New IDs should contain "ignore" by default
+		var newId = $(entry).find('id:not(source id)').text();
+		expect(newId).toContain('ignore');
+		// Updated should be current
+		var newUpdated = $(entry).find('updated').text();
+		var now = new Date();
+		expect(newUpdated).toMatch('^'+now.getUTCFullYear());
+		
+		// TODO: Add some more checks
+		//console.debug(entry);
+	}
 	
 	it('should provide a valid new Activity', function() {
 		var newActivity = DataSpace.getActivityAtom(true,false);
 		var newActivityId = $(newActivity).find('id:not(source id)').text();
-		// New IDs should contain "ignore" by default
-		expect(newActivityId).toContain('ignore');
+		runNewEntryChecks(newActivity,'activity');
 		// TODO: Add some more checks
 	});
 	
 	it('should provide a valid new Agent', function() {
 		var newAgent = DataSpace.getAgentAtom(true,false);
-		var newAgentId = $(newAgent).find('id:not(source id)').text();
-		// New IDs should contain "ignore" by default
-		expect(newAgentId).toContain('ignore');
+		runNewEntryChecks(newAgent,'agent');
 		// TODO: Add some more checks
 	});
 	
 	it('should provide a valid new Collection', function() {
 		var newCollection = DataSpace.getCollectionAtom(true,false);
 		var newCollectionId = $(newCollection).find('id:not(source id)').text();
-		// New IDs should contain "ignore" by default
-		expect(newCollectionId).toContain('ignore');
+		runNewEntryChecks(newCollection,'collection');
 		// TODO: Add some more checks
 	});
 	
 	it('should provide a valid new Service', function() {
 		var newService = DataSpace.getServiceAtom(true,false);
 		var newServiceId = $(newService).find('id:not(source id)').text();
-		// New IDs should contain "ignore" by default
-		expect(newServiceId).toContain('ignore');
+		runNewEntryChecks(newService,'service');
 		// TODO: Add some more checks
 	});
+	
 	
 });
