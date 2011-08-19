@@ -212,6 +212,42 @@ var DataSpace = new function() {
 	                    $('#pager').html('');
 	                    $('#pager-header').html('');
 	                    $(this).css('display', '');
+	                    $('#lookup-select').click(function() {
+	                    	var objs = $('#docs input:checked').map(
+	                    		function(i,n) { 
+	                    			var obj = $(n).parent().find('a');
+	                    			return {
+	                    				title: obj.text(),
+	                    				uri: obj.attr('href')
+	                    			};
+	                    		}
+	                    	);
+	                    	var elements = $(objs).map(function(i,obj) {
+	                    		var wrapper = $('<dd/>');
+	                    		var element = $('<a/>');
+	                    		element.attr('class', type+'-value');
+	                    		element.attr('href', obj.uri);
+	                    		element.text(obj.title);
+	                    		element.click(function() {
+	                    			window.open(element.attr('href'),'_blank'); 
+	                    			return false;
+	                    		});
+	                    		wrapper.append(element);
+	                    		var removeLink = $('<a>remove</a>');
+	                    		removeLink.attr('class', 'remove-link');
+	                    		removeLink.attr('href', "#");
+	                    		removeLink.click(function() {
+	                    			removeLink.parent().remove();
+	                    			return false;
+	                    		});
+	                    		wrapper.append(removeLink);
+	                    		return wrapper;
+	                    	});
+	                    	elements.each(function(i,n) {
+	                    		$('#add-'+type+'-link').parent().before(n);
+	                    	});
+	                    	$('#lookup-div').dialog('close');
+	                    });
 	                },
 	                height: 400,
 	                width: 600,

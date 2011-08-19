@@ -417,76 +417,25 @@
 	<xsl:template name="lookup-edit">
 		<xsl:param name="field" />
 		<xsl:param name="relation" />
-		<table id="edit-{$field}-table" class="lookup-table">
-			<tbody>
-				<xsl:choose>
-					<xsl:when test="atom:link[@rel=$relation]">
-						<xsl:for-each select="atom:link[@rel=$relation]">
-							<xsl:variable name="index" select="position() - 1" />
-							<xsl:choose>
-								<xsl:when test="$index = 0">
-									<tr>
-										<td>
-											<input id="{$field}" value="{@title}" type="text" />
-										</td>
-										<td>
-											<a id="lookup-{$field}-link" class="lookup-link" href="#"
-												title="Lookup" onclick="DataSpace.showLookupDialog('{$field}'); return false;">
-												lookup
-											</a>
-											<xsl:text></xsl:text>
-										</td>
-										<td class="lookup-result">
-											<xsl:value-of select="@title" />
-										</td>
-									</tr>
-								</xsl:when>
-								<xsl:otherwise>
-									<tr>
-										<td>
-											<input id="{$field}-{$index}" value="{@title}" type="text" />
-										</td>
-										<td>
-											<a id="lookup-{$field}-link" class="lookup-link" href="#"
-												title="Lookup" onclick="DataSpace.showLookupDialog('{$field}'); return false;">
-												lookup
-											</a>
-											<xsl:text></xsl:text>
-										</td>
-										<td class="lookup-result">
-											<a id="{$field}-{$index}-remove-link" class="remove-link"
-												href="#" onclick="DataSpace.$(this).parent().parent().remove();">remove
-											</a>
-											<xsl:value-of select="@title" />
-										</td>
-									</tr>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise>
-						<tr>
-							<td>
-								<input id="{$field}" value="" type="text" />
-							</td>
-							<td>
-								<a id="lookup-{$field}-link" class="lookup-link" href="#"
-									title="Lookup" onclick="DataSpace.showLookupDialog('{$field}'); return false;">
-									lookup
-								</a>
-								<xsl:text></xsl:text>
-							</td>
-							<td class="lookup-result"></td>
-						</tr>
-					</xsl:otherwise>
-				</xsl:choose>
-			</tbody>
-		</table>
-		<div>
+		<xsl:if test="atom:link[@rel=$relation]">
+			<xsl:for-each select="atom:link[@rel=$relation]">
+				<dd>
+					<a class="{$field}-value"
+						href="{@href}" 
+						onclick="window.open(this.href,'_blank'); return false;">
+						<xsl:value-of select="@title" />
+					</a>
+					<a class="remove-link"
+						href="#" onclick="$(this).parent().remove();">remove
+					</a>
+				</dd>
+			</xsl:for-each>
+		</xsl:if>
+		<dd>
 			<a class="new-link" id="add-{$field}-link" href="#" title="Add"
-				onclick="DataSpace.replicateLookupField('{$field}'); return false;">add
+				onclick="DataSpace.showLookupDialog('{$field}'); return false;">add
 			</a>
-		</div>
+		</dd>
 	</xsl:template>
 
 	<xsl:template name="edit-subject">

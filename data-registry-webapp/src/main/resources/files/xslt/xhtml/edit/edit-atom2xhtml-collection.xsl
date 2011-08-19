@@ -44,12 +44,8 @@
 				<div class="pad-top pad-sides">
 					<ul class="bread-crumbs-nav">
 						<xsl:call-template name="edit-bread-crumbs">
-							<xsl:with-param name="path">
-								collections
-							</xsl:with-param>
-							<xsl:with-param name="title">
-								Collections
-							</xsl:with-param>
+							<xsl:with-param name="path" select="'collections'"/>
+							<xsl:with-param name="title" select="'Collections'"/>
 						</xsl:call-template>
 					</ul>
 					<div id="ingest-error-msg">
@@ -64,9 +60,7 @@
 						</h2>
 						<div id="general">
 							<xsl:call-template name="type">
-								<xsl:with-param name="entity">
-									collection
-								</xsl:with-param>
+								<xsl:with-param name="entity" select="'collection'"/>
 							</xsl:call-template>
 
 							<xsl:call-template name="title" />

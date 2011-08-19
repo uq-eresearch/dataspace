@@ -64,16 +64,16 @@ function doSearch(term) {
 
 function doEntityLookup(type, term) {
     Manager.addWidget(new AjaxSolr.ResultWidget({
-                id: 'result',
-                target: '#docs',
-                afterRequest: function () {
-                    $(this.target).empty();
-                    for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
-                        var doc = this.manager.response.response.docs[i];
-                        $(this.target).append(AjaxSolr.theme(type + 'Lookup', doc));
-                    }
-                }
-            }));
+        id: 'result',
+        target: '#docs',
+        afterRequest: function () {
+            $(this.target).empty();
+            for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
+                var doc = this.manager.response.response.docs[i];
+                $(this.target).append(AjaxSolr.theme(type + 'Lookup', doc));
+            }
+        }
+    }));
     Manager.store.addByValue('q', 'type:'+type + ' AND (' + term + ')');
     Manager.doRequest();
 }
