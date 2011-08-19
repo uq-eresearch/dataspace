@@ -740,7 +740,7 @@
 	</xsl:template>
 	<xsl:template name="lookup-form">
 		<div id="lookup-div" style="display:none;">
-			<form id="lookup-form" method="post" action="" onSubmit="return false;">
+			<form id="lookup-form" method="post" action="" onSubmit="$('#lookup-submit').click(); return false;">
 				<input type="hidden" id="lookup-type" value="" />
 				<table width="100%">
 					<tbody>

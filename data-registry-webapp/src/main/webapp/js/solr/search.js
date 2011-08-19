@@ -83,15 +83,15 @@ function lookup(type, term) {
     if (type == 'subject') {
         entity = 'subject';
     } else if (type == 'isparticipantin') {
-        entity = 'activity';
+        entity = 'project';
     } else if (type == 'isoutputof') {
-        entity = 'activity';
+        entity = 'project';
     } else if (type == 'creator') {
-        entity = 'agent';
+        entity = 'person';
     } else if (type == 'publisher') {
-        entity = 'agent';
+        entity = 'person';
     } else if (type == 'hasparticipant') {
-        entity = 'agent';
+        entity = 'person';
     } else if (type == 'iscollectorof') {
         entity = 'collection';
     } else if (type == 'hasoutput') {
@@ -101,7 +101,7 @@ function lookup(type, term) {
     } else if (type == 'issupportedby') {
         entity = 'collection';
     } else if (type == 'isaccessedvia') {
-        entity = 'service';
+        entity = 'report';
     }
     doEntityLookup(entity, term);
 }

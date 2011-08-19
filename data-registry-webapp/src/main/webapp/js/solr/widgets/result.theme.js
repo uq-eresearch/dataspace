@@ -34,13 +34,13 @@
         return $.mustache('<p><input type="checkbox" id="lookup-{{atomicnumber}}" name="lookup" value="{{atomicnumber}}" /><abbr title="{{description}}">{{title}}</abbr></p>', doc);
     };
     
-    AjaxSolr.theme.prototype.activityLookup = genericLookup;
+    AjaxSolr.theme.prototype.projectLookup = genericLookup;
 
-    AjaxSolr.theme.prototype.agentLookup = genericLookup;
+    AjaxSolr.theme.prototype.personLookup = genericLookup;
     
     AjaxSolr.theme.prototype.collectionLookup = genericLookup;
     
-    AjaxSolr.theme.prototype.serviceLookup = genericLookup;
+    AjaxSolr.theme.prototype.reportLookup = genericLookup;
 
     AjaxSolr.theme.prototype.tag = function (value, weight, handler) {
         return $('<a href="/search?q=' + value + '" class="tagcloud_item"/>').text(value).addClass('tagcloud_size_' + weight);
