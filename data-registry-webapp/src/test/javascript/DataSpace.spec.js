@@ -22,6 +22,9 @@ describe("DataSpace", function() {
 		it('exposes replicateSimpleField function', function() {
 			expect(typeof(DataSpace.replicateSimpleField)).toBe("function");
 		});
+		it('exposes addKeyword function', function() {
+			expect(typeof(DataSpace.addKeyword)).toBe("function");
+		});
 	});
 	
 	it('should set the publish flag correctly', function() {

@@ -74,7 +74,7 @@ function doEntityLookup(type, term) {
                     }
                 }
             }));
-    Manager.store.addByValue('q', type + ':' + term);
+    Manager.store.addByValue('q', 'type:'+type + ' AND (' + term + ')');
     Manager.doRequest();
 }
 

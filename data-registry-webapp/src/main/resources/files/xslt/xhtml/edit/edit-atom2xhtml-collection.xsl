@@ -161,12 +161,8 @@
 									</div>
 								</dd>
 							</dl>
-							<dl>
-								<dt><label for="keywords">Keywords</label></dt>
-								<dd>
-									<xsl:call-template name="keywords" />
-								</dd>
-							</dl>
+							
+							<xsl:call-template name="keywords" />
 						</div>
 					</div>
 					<div class="save-links-div">

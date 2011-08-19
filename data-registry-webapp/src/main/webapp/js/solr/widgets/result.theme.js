@@ -30,19 +30,17 @@
         }
     };
 
-    AjaxSolr.theme.prototype.activityLookup = function (doc) {
-        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.activitytitle + '</p>';
+    var genericLookup = function (doc) {
+        return $.mustache('<p><input type="checkbox" id="lookup-{{atomicnumber}}" name="lookup" value="{{atomicnumber}}" /><abbr title="{{description}}">{{title}}</abbr></p>', doc);
     };
+    
+    AjaxSolr.theme.prototype.activityLookup = genericLookup;
 
-    AjaxSolr.theme.prototype.agentLookup = function (doc) {
-        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.agenttitle + '</p>';
-    };
-    AjaxSolr.theme.prototype.collectionLookup = function (doc) {
-        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.collectiontitle + '</p>';
-    };
-    AjaxSolr.theme.prototype.serviceLookup = function (doc) {
-        return '<p><input type="checkbox" id="' + doc.atomicnumber + '"/>' + doc.servicetitle + '</p>';
-    };
+    AjaxSolr.theme.prototype.agentLookup = genericLookup;
+    
+    AjaxSolr.theme.prototype.collectionLookup = genericLookup;
+    
+    AjaxSolr.theme.prototype.serviceLookup = genericLookup;
 
     AjaxSolr.theme.prototype.tag = function (value, weight, handler) {
         return $('<a href="/search?q=' + value + '" class="tagcloud_item"/>').text(value).addClass('tagcloud_size_' + weight);

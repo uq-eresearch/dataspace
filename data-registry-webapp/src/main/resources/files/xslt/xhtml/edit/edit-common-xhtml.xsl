@@ -69,43 +69,43 @@
 		<dt>
 			<label for="edit-alternative-title-text">Alternative Title</label>
 		</dt>
-		<dd>
 		<xsl:choose>
 			<xsl:when test="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
 				<xsl:for-each select="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
 					<xsl:variable name="index" select="position() - 1" />
 					<xsl:choose>
 						<xsl:when test="$index = 0">
+						<dd>
 							<input id="alternative-title-text" name="alternative-title-text"
 								type="text" value="{@content}" />
-							<xsl:text></xsl:text>
-							<a id="alternative-name-link" class="new-link" href="#"
-								onclick="DataSpace.replicateSimpleField('alternative-title-text'); return false;"
-								title="Add Title">new
-							</a>
+						</dd>
 						</xsl:when>
 						<xsl:otherwise>
+						<dd>
 							<input id="alternative-title-text-{$index}" name="alternative-title-text"
 								type="text" value="{@content}" />
 							<a id="alternative-title-text-{$index}-remove-link" class="remove-link"
 								href="#"
 								onclick="DataSpace.$('#alternative-title-text-{$index}').remove(); $(this).remove();">remove
 							</a>
+						</dd>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<input id="alternative-title-text" name="alternative-title-text"
-					type="text" value="" />
-				<xsl:text></xsl:text>
-				<a id="alternative-name-link" class="new-link" href="#"
-					onclick="DataSpace.replicateSimpleField('alternative-title-text'); return false;"
-					title="Add Title">new
-				</a>
+				<dd>
+					<input id="alternative-title-text" name="alternative-title-text"
+						type="text" value="" />
+				</dd>
 			</xsl:otherwise>
 		</xsl:choose>
-		</dd>
+			<dd>
+				<a id="alternative-name-link" class="new-link" href="#"
+					onclick="DataSpace.replicateSimpleField('alternative-title-text'); return false;"
+					title="Add Title">add
+				</a>
+			</dd>
 		</dl>
 	</xsl:template>
 	<xsl:template name="type">
@@ -595,36 +595,31 @@
 		</xsl:choose>
 	</xsl:template>
 	<xsl:template name="keywords">
-		<table id="keywords-table" class="lookup-table">
-			<tbody>
-				<tr>
-					<td>
-						<ul id="keywords-list">
-							<xsl:if test="atom:category[@label='keyword']">
-								<xsl:for-each select="atom:category[@label='keyword']">
-									<li class="keyword">
-										<xsl:value-of select="@term" />
-										<a id="{@term}" href="#" class="remove-keyword" title="Remove Keyword"
-											onclick="DataSpace.$('#{@term}').parent().remove();">x
-										</a>
-									</li>
-								</xsl:for-each>
-							</xsl:if>
-						</ul>
-					</td>
-				</tr>
-
-				<tr>
-					<td>
-						<input id="keyword" value="" type="text" />
-						<xsl:text></xsl:text>
-						<a class="new-link" id="add-link" href="#" title="Add"
-							onclick="DataSpace.addKeyword('keyword', 'keywords-list')">add
+		<dl id="keywords-list">
+			<dt>Keywords</dt>
+			<xsl:if test="atom:category">
+				<xsl:for-each select="atom:category">
+					<xsl:choose>
+					<xsl:when test="@scheme != ''"/>
+					<xsl:otherwise>
+					<dd>
+						<span class="keyword"><xsl:value-of select="@term" /></span>
+						<a href="#" class="remove-keyword" title="Remove Keyword"
+							onclick="$(this).parent().remove(); return false;">x
 						</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+					</dd>
+					</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</xsl:if>
+			<dd>
+				<input id="keyword" value="" type="text" />
+				<xsl:text></xsl:text>
+				<a class="new-link" id="add-link" href="#" title="Add"
+					onclick="DataSpace.addKeyword('keyword'); return false;">add
+				</a>
+			</dd>
+		</dl>
 	</xsl:template>
 
 	<xsl:template name="edit-time-period">
@@ -740,7 +735,7 @@
 							<td>
 								<input type="button" name="lookup-submit" id="lookup-submit"
 									value="Search"
-									onclick="DataSpace.lookup($('#lookup-type').val(),$('#query').val()); return false;" />
+									onclick="lookup($('#lookup-type').val(),$('#query').val()); return false;" />
 							</td>
 						</tr>
 					</tbody>
@@ -756,8 +751,10 @@
 
 					</div>
 				</div>
-				<div id="docs">
+				<div>
+					<form id="docs">
 
+					</form>
 				</div>
 				<input type="button" id="lookup-select" value="Select" />
 			</div>

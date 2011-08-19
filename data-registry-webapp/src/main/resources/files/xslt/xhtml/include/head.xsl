@@ -19,6 +19,7 @@
 
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js">;</script>
         <script type="text/javascript" src="/js/jquery-ui-1.8.14.custom.min.js">;</script>
+        <script type="text/javascript" src="/js/jquery.mustache.js">;</script>
 
         <script type="text/javascript" src="/js/login.js">;</script>
         <script type="text/javascript" src="/js/scripts.js">;</script>
@@ -40,5 +41,6 @@
         <script type="text/javascript" src="/js/solr/widgets/AutocompleteWidget.js">;</script>
         <script type="text/javascript" src="/js/solr/helpers/ajaxsolr.support.js">;</script>
         <script type="text/javascript" src="/js/solr/helpers/ajaxsolr.theme.js">;</script>
+        <script type="text/javascript" src="/js/solr/widgets/result.theme.js">;</script>
     </xsl:template>
 </xsl:stylesheet>

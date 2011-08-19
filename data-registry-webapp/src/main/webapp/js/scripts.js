@@ -186,19 +186,20 @@ var DataSpace = new function() {
 	    return false;
 	};
 	
-	var addKeyword = function(inputFieldId, listId) {
+	var addKeyword = function(inputFieldId) {
 	    var inputField = $('#' + inputFieldId);
 	    var keyword = inputField.val();
 	    if (keyword) {
-	        var list = $('#' + listId);
-	        list.append('<li class="keyword">' + keyword + '<a class="remove-keyword" id="' + keyword + '" href="#" title="Remove Keyword">x</a></li>');
-	        $('#' + keyword).click(function() {
-	            $(this).parent().remove();
-	        });
+	        inputField.parent().before($.mustache(
+	        		'<dd>'+
+	        		'<span class="keyword">{{keyword}}</span>'+
+	        		'<a class="remove-keyword"'+
+	        			' href="#" title="Remove Keyword"'+
+	        			' onclick="$(this).parent().remove(); return false;">x</a>'+
+	        		'</dd>',{ 'keyword': keyword }));
 	        inputField.val('');
-	        this.styleTables();
+	        styleTables();
 	    }
-	    return false;
 	};
 	
 	var showLookupDialog = function(type) {
@@ -331,7 +332,8 @@ var DataSpace = new function() {
 	        record.append(typeCategory);
 	    }
 	    //title
-	    var titleValue = $('#edit-title-text').val();
+	    var titleValue = $('#edit-title-text').val(
+	    		);
 	    if (titleValue) {
 	        var title = getSimpleElementWithText('title', titleValue);
 	        title.attr('type', 'text');
@@ -498,6 +500,7 @@ var DataSpace = new function() {
 	        record.append(content);
 	    }
 	
+	    
 	    //pages
 	    addPages(record);
 	
@@ -512,6 +515,7 @@ var DataSpace = new function() {
 	
 	    return record;
 	};
+	
 	
 	/**
 	 *
@@ -620,16 +624,15 @@ var DataSpace = new function() {
 	
 	var addTOA = function(record) {
 	    $('div[id="type-of-activities"]').children('input:checked').each(function() {
-	        var category = this.getCategoryElement(SCHEME_ANZSRC_TOA, SCHEME_ANZSRC_TOA + '/' + $(this).val(), $(this).val());
+	        var category = getCategoryElement(SCHEME_ANZSRC_TOA, SCHEME_ANZSRC_TOA + '/' + $(this).val(), $(this).val());
 	        record.append(category);
 	    });
 	};
 	
 	var addKeywordToCollection = function(record) {
-	    $('ul[id="keywords-list"]').children().each(function() {
+	    $('dl[id="keywords-list"] span.keyword').each(function() {
 	        var keyword = $(this).clone();
-	        $(keyword).children().remove('a');
-	        var category = this.getCategoryElement(null, $(keyword).text(), null);
+	        var category = getCategoryElement(null, $(keyword).text(), null);
 	        record.append(category);
 	    });
 	};
@@ -698,6 +701,7 @@ var DataSpace = new function() {
 		return UQ_REGISTRY_URI_PREFIX+type+'/ignore';
 	};
 	
+	
 	var getLinkElement = function(href, rel, title) {
 	    var attributes = [];
 	    if (href) {
@@ -762,6 +766,7 @@ var DataSpace = new function() {
 	    var element = getSimpleElement(name);
 	    element.text(text);
 	    return element;
+	    
 	};
 	
 	var getElementWithAttributes = function(name, attributes) {
@@ -826,6 +831,7 @@ var DataSpace = new function() {
 	this.showLookupDialog = showLookupDialog;
 	this.ingestRecord = ingestRecord;
 	this.replicateSimpleField = replicateSimpleField;
+	this.addKeyword = addKeyword;
 	
 	this.getActivityAtom = getActivityAtom;
 	this.getAgentAtom = getAgentAtom;

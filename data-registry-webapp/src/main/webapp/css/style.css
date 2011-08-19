@@ -1354,9 +1354,15 @@ h1, h2, h3, h4 {
 }
 
 <!--  -->
-dd, dt, dd
+dl, dt, dd
 {
 	display: block
+}
+
+dl
+{
+	margin-top: 1em;
+	margin-bottom: 1em;
 }
 
 dt
