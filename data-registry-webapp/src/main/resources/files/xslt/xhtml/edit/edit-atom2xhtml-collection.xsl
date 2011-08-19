@@ -153,15 +153,7 @@
 						<div id="subjects">
 							<xsl:call-template name="fields-of-research" />
 							<xsl:call-template name="socio-economic-impacts" />
-							<dl>
-								<dt><label for="type-of-activities">Type of Activity</label></dt>
-								<dd>
-									<div id="type-of-activities">
-										<xsl:call-template name="type-of-activities" />
-									</div>
-								</dd>
-							</dl>
-							
+							<xsl:call-template name="type-of-activities" />
 							<xsl:call-template name="keywords" />
 						</div>
 					</div>

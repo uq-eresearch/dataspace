@@ -623,8 +623,8 @@ var DataSpace = new function() {
 	};
 	
 	var addTOA = function(record) {
-	    $('div[id="type-of-activities"]').children('input:checked').each(function() {
-	        var category = getCategoryElement(SCHEME_ANZSRC_TOA, SCHEME_ANZSRC_TOA + '/' + $(this).val(), $(this).val());
+	    $('input[name="type-of-activity"]:checked').each(function() {
+	        var category = getCategoryElement(SCHEME_ANZSRC_TOA, SCHEME_ANZSRC_TOA + '/#' + $(this).val(), $(this).val());
 	        record.append(category);
 	    });
 	};

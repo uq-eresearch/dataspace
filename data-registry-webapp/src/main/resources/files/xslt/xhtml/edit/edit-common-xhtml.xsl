@@ -563,37 +563,53 @@
 	</xsl:template>
 
 	<xsl:template name="type-of-activities">
-		<xsl:choose>
-			<xsl:when test="atom:category[@scheme=$SCHEME_TOA]">
-				<input type="checkbox" class="type-of-activity" name="applied-research"
-					value="applied-research" />
+		<dl>
+			<dt>
+				<label for="type-of-activities">Type of Activity</label>
+			</dt>
+			<dd>
+				<input type="checkbox" class="type-of-activity" 
+					name="type-of-activity"
+					value="applied">
+					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#applied')]">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
 				Applied research
-				<input type="checkbox" class="type-of-activity" name="pure-basic-research"
-					value="pure basic research" />
-				Pure basic research
-				<input type="checkbox" class="type-of-activity" name="experimental-development"
-					value="experimental development" />
+			</dd>
+			<dd>
+				<input type="checkbox" class="type-of-activity" 
+					name="type-of-activity"
+					value="experimental">
+					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#experimental')]">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
 				Experimental development
-				<input type="checkbox" class="type-of-activity" name="strategic-basic-research"
-					value="strategic basic research" />
-				Strategic basic research
-			</xsl:when>
-			<xsl:otherwise>
-				<input type="checkbox" class="type-of-activity" name="applied-research"
-					value="applied-research" />
-				Applied research
-				<input type="checkbox" class="type-of-activity" name="pure-basic-research"
-					value="pure basic research" />
+			</dd>
+			<dd>
+				<input type="checkbox" class="type-of-activity" 
+					name="type-of-activity"
+					value="basic">
+					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#basic')]">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
 				Pure basic research
-				<input type="checkbox" class="type-of-activity" name="experimental-development"
-					value="experimental development" />
-				Experimental development
-				<input type="checkbox" class="type-of-activity" name="strategic-basic-research"
-					value="strategic basic research" />
+			</dd>
+			<dd>
+				<input type="checkbox" class="type-of-activity" 
+					name="type-of-activity"
+					value="strategic"> 
+					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#strategic')]">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
 				Strategic basic research
-			</xsl:otherwise>
-		</xsl:choose>
+			</dd>
+		</dl>
 	</xsl:template>
+	
 	<xsl:template name="keywords">
 		<dl id="keywords-list">
 			<dt>Keywords</dt>
