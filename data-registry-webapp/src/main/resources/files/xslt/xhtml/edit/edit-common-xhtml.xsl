@@ -14,6 +14,7 @@
 	<xsl:include href="../../constants.xsl" />
 	<xsl:output method="html" media-type="text/html;charset=utf-8"
 		indent="yes" />
+		
 	<xsl:template name="edit-bread-crumbs">
 		<xsl:param name="path" />
 		<xsl:param name="title" />
@@ -53,6 +54,7 @@
 			</xsl:choose>
 		</li>
 	</xsl:template>
+	
 	<xsl:template name="title">
 						<dl>
 		<dt>
@@ -64,6 +66,7 @@
 		</dd>
 		</dl>
 	</xsl:template>
+	
 	<xsl:template name="alternative-title">
 		<dl>
 		<dt>
@@ -108,6 +111,7 @@
 			</dd>
 		</dl>
 	</xsl:template>
+	
 	<xsl:template name="type">
 		<xsl:param name="entity" />
 		<dl>
@@ -349,13 +353,15 @@
 					<xsl:choose>
 						<xsl:when test="$index = 0">
 						<dd>
-							<input id="page-text" name="page-text" type="text" value="{@href}" />
+							<input id="page-text" name="page-text" class="required defaultInvalid url" type="text" value="{@href}">
+							</input>
 						</dd>
 						</xsl:when>
 						<xsl:otherwise>
 						<dd>
-							<input id="page-text-{$index}" name="page-text" type="text"
-								value="{@href}" />
+							<input id="page-text-{$index}" name="page-text" class="required defaultInvalid url" type="text"
+								value="{@href}">
+							</input>
 							<a id="page-text-{$index}-remove-link" class="remove-link"
 								href="#" onclick="DataSpace.$('#page-text-{$index}').parent().remove(); return false;">remove
 							</a>
@@ -426,7 +432,7 @@
 						<xsl:value-of select="@title" />
 					</a>
 					<a class="remove-link"
-						href="#" onclick="$(this).parent().remove();">remove
+						href="#" onclick="$(this).parent().remove();">x
 					</a>
 				</dd>
 			</xsl:for-each>

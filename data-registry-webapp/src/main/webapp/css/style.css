@@ -1379,6 +1379,13 @@ dd
 	font-size: 1em;
 }
 
+.remove-link {
+	margin-left: 1ex;
+}
 
+label.error {
+	color: red;
+	font-size: 0.7em;
+}
 
 

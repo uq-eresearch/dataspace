@@ -53,7 +53,7 @@
 					</div>
 					<xsl:call-template name="metadata" />
 
-
+					<form id="page-form">
 					<div>
 						<h2>
 							<label for="general">General Information</label>
@@ -161,6 +161,7 @@
 							publish
 						</a>
 					</div>
+					</form>
 					<xsl:call-template name="lookup-form" />
 				</div>
 			</div>

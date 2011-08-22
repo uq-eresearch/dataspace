@@ -53,7 +53,7 @@
     };
     
     AjaxSolr.theme.prototype.reportLookup = function(doc) { 
-    	var uriPrefix = $.mustache('{{protocol}}//{{host}}/reports',window.location);
+    	var uriPrefix = $.mustache('{{protocol}}//{{host}}/services',window.location);
     	doc.uri = uriPrefix+'/'+doc.atomicnumber;
     	return genericLookup(doc);
     };

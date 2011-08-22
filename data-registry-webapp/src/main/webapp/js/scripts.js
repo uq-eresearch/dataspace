@@ -86,9 +86,22 @@ var DataSpace = new function() {
 	            this.value = (this.defaultValue ? this.defaultValue : '');
 	        }
 	    });
+	    // Page form validates, but never submits itself
+	    $('#page-form').validate({
+	    	submitHandler: function(form) {
+	    	   	return false;
+	    	}
+	    });
 	};
 	
 	var ingestRecord = function(url, type, isNew, isPublished) {
+		// Trigger validation (which shouldn't trigger a submit
+		$('#page-form').submit();
+		// Abort if invalid
+		if (!$('#page-form').valid()) {
+			// TODO: Notify user of errors
+			return false;
+		}
 		var actionText = isNew ? 'create' : 'edit';
 	    if (confirm("Are you sure you want to "+actionText+" this record?")) {
 	        var record = null;
@@ -140,16 +153,12 @@ var DataSpace = new function() {
 	    return false;
 	};
 	
-	var getRemoveLink = function(field) {
+	var getRemoveLink = function(clickHandler) {
 		var link = $(document.createElement('a'));
 		return link.attr('href','#')
 				.attr('class','remove-link')
-				.attr('id', field.attr('id')+'-remove-link')
-				.text('remove')
-				.click(function() {
-			        field.parent().remove();
-			        return false;
-			    });
+				.text('x')
+				.click(clickHandler);
 		
 	}
 	
@@ -164,8 +173,10 @@ var DataSpace = new function() {
 	    newWrapper.append(newInputField);
 	    parentWrapper.siblings().last().before(newWrapper);
 	    newInputField.val("");
-	    newWrapper.append(getRemoveLink(newInputField));
-	    $('#' + newFieldId + '-remove-link');
+	    newWrapper.append(getRemoveLink(function() {
+	        $(this).parent().remove();
+	        return false;
+	    }));
 	    return false;
 	};
 	
@@ -176,7 +187,7 @@ var DataSpace = new function() {
 	    var newFieldId = inputField + '-' + numberOfRows;
 	    var resultTd = newRow.find('td').eq(2);
 	    resultTd.text('');
-	    resultTd.append(' <a href="#" class="remove-link" id="' + newFieldId + '-remove-link">remove</a>');
+	    resultTd.append(' <a href="#" class="remove-link">x</a>');
 	    newRow.find('input').val('');
 	    parentRow.parent().append(newRow);
 	    $('#' + newFieldId + '-remove-link').click(function() {
@@ -233,11 +244,8 @@ var DataSpace = new function() {
 	                    			return false;
 	                    		});
 	                    		wrapper.append(element);
-	                    		var removeLink = $('<a>remove</a>');
-	                    		removeLink.attr('class', 'remove-link');
-	                    		removeLink.attr('href', "#");
-	                    		removeLink.click(function() {
-	                    			removeLink.parent().remove();
+	                    		var removeLink = getRemoveLink(function() {
+	                    			$(this).parent().remove();
 	                    			return false;
 	                    		});
 	                    		wrapper.append(removeLink);

@@ -20,6 +20,7 @@
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js">;</script>
         <script type="text/javascript" src="/js/jquery-ui-1.8.14.custom.min.js">;</script>
         <script type="text/javascript" src="/js/jquery.mustache.js">;</script>
+        <script type="text/javascript" src="/js/jquery.validate.min.js">;</script>
 
         <script type="text/javascript" src="/js/login.js">;</script>
         <script type="text/javascript" src="/js/scripts.js">;</script>
