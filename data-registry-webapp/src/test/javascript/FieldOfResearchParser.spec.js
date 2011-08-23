@@ -1,8 +1,8 @@
-describe('SkosParser', function() {
+describe('FieldOfResearchParser', function() {
 	
 	var getTestRdf = function(callback) {
 		$.ajax({
-			url: '../../src/test/javascript/SkosParser_test.rdf',
+			url: '../../src/test/javascript/FieldOfResearchParser_test.rdf',
 			dataType: 'text',
 			success: function(data, textStatus, jqXHR) {
 				callback(data);
@@ -14,7 +14,7 @@ describe('SkosParser', function() {
 	}
 	
 	it('should be instantiable', function() {
-		var parser = new SkosParser();
+		var parser = new FieldOfResearchParser();
 		expect(parser).not.toBe(null);
 	});
 	
@@ -32,7 +32,7 @@ describe('SkosParser', function() {
 	});
 	
 	it('should be able to load RDF', function() {
-		var parser = new SkosParser();
+		var parser = new FieldOfResearchParser();
 		getTestRdf(function(rdf) {
 			parser.loadRdf(rdf);
 			expect(parser.getKnownTypes().length).toBeGreaterThan(0);

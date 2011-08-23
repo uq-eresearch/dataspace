@@ -1,4 +1,4 @@
-var SkosParser = function() {
+var FieldOfResearchParser = function() {
 	
 	var descriptions = {};
 	var typeIndex = {};	
