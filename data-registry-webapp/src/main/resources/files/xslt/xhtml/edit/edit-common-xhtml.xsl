@@ -423,98 +423,45 @@
 	<xsl:template name="lookup-edit">
 		<xsl:param name="field" />
 		<xsl:param name="relation" />
-		<xsl:if test="atom:link[@rel=$relation]">
-			<xsl:for-each select="atom:link[@rel=$relation]">
-				<dd>
-					<a class="{$field}-value"
-						href="{@href}" 
-						onclick="window.open(this.href,'_blank'); return false;">
-						<xsl:value-of select="@title" />
-					</a>
-					<a class="remove-link"
-						href="#" onclick="$(this).parent().remove();">x
-					</a>
-				</dd>
-			</xsl:for-each>
-		</xsl:if>
+		<xsl:for-each select="atom:link[@rel=$relation]">
+			<dd>
+				<a class="{$field}-value"
+					href="{@href}" 
+					onclick="window.open(this.href,'_blank'); return false;">
+					<xsl:value-of select="@title" />
+				</a>
+				<a class="remove-link"
+					href="#" onclick="$(this).parent().remove();">x
+				</a>
+			</dd>
+		</xsl:for-each>
 		<dd>
 			<a class="new-link" id="add-{$field}-link" href="#" title="Add"
 				onclick="DataSpace.showLookupDialog('{$field}'); return false;">add
 			</a>
 		</dd>
 	</xsl:template>
-
+	
 	<xsl:template name="edit-subject">
 		<xsl:param name="field" />
 		<xsl:param name="scheme" />
-		<table id="edit-{$field}-table" class="lookup-table">
-			<tbody>
-				<xsl:choose>
-					<xsl:when test="atom:category[@scheme=$scheme]">
-						<xsl:for-each select="atom:category[@scheme=$scheme]">
-							<xsl:variable name="index" select="position() - 1" />
-							<xsl:choose>
-								<xsl:when test="$index = 0">
-									<tr>
-										<td>
-											<input id="{$field}" value="{@label}" type="text" />
-										</td>
-										<td>
-											<a id="lookup-{$field}-link" class="lookup-link" href="#"
-												title="Lookup" onclick="DataSpace.showLookupDialog('subject'); return false;">lookup
-											</a>
-											<xsl:text></xsl:text>
-										</td>
-										<td class="lookup-result">
-											<a href="{@term}">
-												<xsl:value-of select="@label" />
-											</a>
-										</td>
-									</tr>
-								</xsl:when>
-								<xsl:otherwise>
-									<tr>
-										<td>
-											<input id="{$field}-{$index}" value="{@label}" type="text" />
-										</td>
-										<td>
-											<a id="lookup-{$field}-{$index}-link" class="lookup-link"
-												href="#" title="Lookup" onclick="DataSpace.showLookupDialog('subject'); return false;">lookup
-											</a>
-											<xsl:text></xsl:text>
-										</td>
-										<td class="lookup-result">
-											<a href="{@term}">
-												<xsl:value-of select="@label" />
-											</a>
-										</td>
-									</tr>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise>
-						<tr>
-							<td>
-								<input id="{$field}" value="" type="text" />
-							</td>
-							<td>
-								<a id="lookup-{$field}-link" class="lookup-link" href="#"
-									title="Lookup" onclick="DataSpace.showLookupDialog('subject'); return false;">lookup
-								</a>
-								<xsl:text></xsl:text>
-							</td>
-							<td class="lookup-result"></td>
-						</tr>
-					</xsl:otherwise>
-				</xsl:choose>
-			</tbody>
-		</table>
-		<div>
+		<xsl:for-each select="atom:category[@scheme=$scheme]">
+			<dd>
+				<a class="{$field}-value"
+					href="{@term}" 
+					onclick="window.open(this.href,'_blank'); return false;">
+					<xsl:value-of select="@label" />
+				</a>
+				<a class="remove-link"
+					href="#" onclick="$(this).parent().remove();">x
+				</a>
+			</dd>
+		</xsl:for-each>
+		<dd>
 			<a class="new-link" id="add-{$field}-link" href="#" title="Add"
-				onclick="DataSpace.replicateLookupField('{$field}'); return false;">add
+				onclick="DataSpace.showLookupDialog('{$field}'); return false;">add
 			</a>
-		</div>
+		</dd>
 	</xsl:template>
 
 	<xsl:template name="type-of-activities">
@@ -658,40 +605,51 @@
 	</xsl:template>
 
 	<xsl:template name="edit-related-publications">
-		<table id="edit-related-publications-table" class="lookup-table">
-			<tbody>
-				<tr>
-					<td>
-						Title
-						<input id="publication-title" value="" type="text" />
-					</td>
-					<td>
-						URL
-						<input id="publication-url" value="" type="text" />
-					</td>
-					<td>
-
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<div>
-			<a class="new-link" id="add-related-publication-link" href="#"
-				title="Add Publication" onclick="DataSpace.replicateLookupField('publication-title'); return false;">add
-			</a>
-		</div>
+		<dl>
+			<dt>
+				<label for="">Related Publications</label>
+			</dt>
+			<xsl:for-each select="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
+				<dd>
+					<input name="publication-title" 
+						class="required"
+						title="Publication Title"
+						value="{@title}" type="text" />
+					<input name="publication-url" 
+						class="required url"
+						title="Publication URL"
+						value="{@href}" type="text" />
+					<a class="remove-link" 
+						onclick="$(this).parent().remove(); return false;"
+						href="#">x</a>
+				</dd>
+			</xsl:for-each>
+			<dd>
+				<a class="new-link" id="add-related-publication-link" href="#"
+					title="Add Publication"
+					onclick="DataSpace.insertPublicationFields($(this)); return false;">add
+				</a>
+			</dd>
+		</dl>
 	</xsl:template>
 	<xsl:template name="licence-type">
-		<input type="hidden" id="licence-type" value="{atom:link[@rel=$REL_LICENSE]/@href}" />
-		<select id="licence-type-combobox" name="type-combobox">
-			<option value="none">None</option>
-			<option value="http://creativecommons.org/licenses/by/3.0/rdf">CC-BY</option>
-			<option value="http://creativecommons.org/licenses/by-sa/3.0/rdf">CC-BY-SA</option>
-			<option value="http://creativecommons.org/licenses/by-nd/3.0/rdf">CC-BY-ND</option>
-			<option value="http://creativecommons.org/licenses/by-nc/3.0/rdf">CC-BY-NC</option>
-			<option value="http://creativecommons.org/licenses/by-nc-sa/3.0/rdf">CC-BY-NC-SA</option>
-			<option value="http://creativecommons.org/licenses/by-nc-nd/3.0/rdf">CC-BY-NC-ND</option>
-		</select>
+		<dl>
+			<dt>
+				<label for="license-type">License</label>
+			</dt>
+			<dd>
+				<input type="hidden" id="licence-type" value="{atom:link[@rel=$REL_LICENSE]/@href}" />
+				<select id="licence-type-combobox" name="type-combobox">
+					<option value="none">None</option>
+					<option value="http://creativecommons.org/licenses/by/3.0/rdf">CC-BY</option>
+					<option value="http://creativecommons.org/licenses/by-sa/3.0/rdf">CC-BY-SA</option>
+					<option value="http://creativecommons.org/licenses/by-nd/3.0/rdf">CC-BY-ND</option>
+					<option value="http://creativecommons.org/licenses/by-nc/3.0/rdf">CC-BY-NC</option>
+					<option value="http://creativecommons.org/licenses/by-nc-sa/3.0/rdf">CC-BY-NC-SA</option>
+					<option value="http://creativecommons.org/licenses/by-nc-nd/3.0/rdf">CC-BY-NC-ND</option>
+				</select>
+			</dd>
+		</dl>
 	</xsl:template>
 	<xsl:template name="lookup-form">
 		<div id="lookup-div" style="display:none;">

@@ -180,20 +180,29 @@ var DataSpace = new function() {
 	    return false;
 	};
 	
-	var replicateLookupField = function(inputField) {
-	    var parentRow = $('#' + inputField).parent().parent();
-	    var newRow = parentRow.clone(true);
-	    var numberOfRows = parentRow.parent().find('tr').length;
-	    var newFieldId = inputField + '-' + numberOfRows;
-	    var resultTd = newRow.find('td').eq(2);
-	    resultTd.text('');
-	    resultTd.append(' <a href="#" class="remove-link">x</a>');
-	    newRow.find('input').val('');
-	    parentRow.parent().append(newRow);
-	    $('#' + newFieldId + '-remove-link').click(function() {
-	        $(this).parent().parent().remove();
-	    });
-	    this.styleTables();
+	var insertPublicationFields = function(addLink) {
+		var wrapper = $('<dd/>');
+		var publicationTitleInput = $('<input type="text"/>')
+			.attr('name', 'publication-title')
+			.attr('title', 'Publication Title')
+			.attr('minlength', 2)
+			.addClass('required')
+			.addClass('defaultInvalid');
+		wrapper.append(publicationTitleInput);
+		var publicationUrlInput = $('<input type="text"/>')
+			.attr('name', 'publication-url')
+			.attr('title', 'Publication URL')
+			.addClass('required')
+			.addClass('defaultInvalid')
+			.addClass('url')
+			.val('http://');
+		wrapper.append(publicationUrlInput);
+		wrapper.append(getRemoveLink(function(){
+			$(this).parent().remove(); 
+			return false;
+		}));
+		addLink.parent().before(wrapper);
+		prepareFields();
 	    return false;
 	};
 	
@@ -875,6 +884,7 @@ var DataSpace = new function() {
 	this.showLookupDialog = showLookupDialog;
 	this.ingestRecord = ingestRecord;
 	this.replicateSimpleField = replicateSimpleField;
+	this.insertPublicationFields = insertPublicationFields;
 	this.addKeyword = addKeyword;
 	
 	this.getActivityAtom = getActivityAtom;

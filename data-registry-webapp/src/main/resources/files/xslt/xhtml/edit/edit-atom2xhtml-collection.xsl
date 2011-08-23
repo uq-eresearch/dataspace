@@ -103,23 +103,11 @@
 								</dd>
 							</dl>
 							
-							<dl>
-								<dt><label for="">Related Publications</label></dt>
-								<dd>
-									<xsl:call-template name="edit-related-publications" />
-								</dd>
-							</dl>
+							<xsl:call-template name="edit-related-publications" />
 							
 							<xsl:call-template name="rights" />
 							
-							<dl>
-								<dt>
-									<label for="license-type">License</label>
-								</dt>
-								<dd>
-									<xsl:call-template name="licence-type" />
-								</dd>
-							</dl>
+							<xsl:call-template name="licence-type" />
 						</div>
 						<h2>
 							<label for="people-and-projects">People &amp; Projects</label>

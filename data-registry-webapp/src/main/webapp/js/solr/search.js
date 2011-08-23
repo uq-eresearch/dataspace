@@ -62,7 +62,7 @@ function doSearch(term) {
     Manager.doRequest();
 }
 
-function doEntityLookup(type, term) {
+function doEntityLookup(type, term, queryString) {
     Manager.addWidget(new AjaxSolr.ResultWidget({
         id: 'result',
         target: '#docs',
@@ -74,7 +74,7 @@ function doEntityLookup(type, term) {
             }
         }
     }));
-    Manager.store.addByValue('q', 'type:'+type + ' AND (' + term + ')');
+    Manager.store.addByValue('q', queryString);
     Manager.doRequest();
 }
 
@@ -103,7 +103,13 @@ function lookup(type, term) {
     } else if (type == 'isaccessedvia') {
         entity = 'report';
     }
-    doEntityLookup(entity, term);
+    
+    var queryString;
+    if (entity == 'subject')
+    	queryString = 'type:' + type + ' AND (' + term + ')';
+    else
+    	queryString = 'subject:' + term;
+    doEntityLookup(entity, term, queryString);
 }
 
 function selectItemsFromLookup(type) {
