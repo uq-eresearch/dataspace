@@ -293,7 +293,6 @@ public class AdapterOutputHelper {
             String license = version.getLicense();
             if (license != null) {
                 Link link = entry.addLink(license, Constants.REL_LICENSE);
-                link.setMimeType(Constants.MIME_TYPE_RDF);
             }
             //Access Rights
             Set<String> accessRights = version.getAccessRights();
@@ -574,8 +573,7 @@ public class AdapterOutputHelper {
             Link publisher = source.addLink(Constants.UQ_URL, Constants.REL_PUBLISHER);
             publisher.setTitle(Constants.TERM_ANDS_GROUP);
             source.setRights(Constants.UQ_REGISTRY_RIGHTS);
-            Link licenseLink = source.addLink(Constants.UQ_REGISTRY_LICENSE, Constants.REL_LICENSE);
-            licenseLink.setMimeType(Constants.MIME_TYPE_RDF);
+            source.addLink(Constants.UQ_REGISTRY_LICENSE, Constants.REL_LICENSE);
         } catch (Throwable th) {
         	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Failed to add source", 500);
