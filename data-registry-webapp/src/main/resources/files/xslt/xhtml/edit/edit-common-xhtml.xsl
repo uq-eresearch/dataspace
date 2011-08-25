@@ -459,7 +459,7 @@
 		</xsl:for-each>
 		<dd>
 			<a class="new-link" id="add-{$field}-link" href="#" title="Add"
-				onclick="DataSpace.showLookupDialog('{$field}'); return false;">add
+				onclick="DataSpace.showFieldOfResearchLookup('#for-lookup-div',window.fieldOfResearchParser);; return false;">add
 			</a>
 		</dd>
 	</xsl:template>
@@ -688,5 +688,32 @@
 				<input type="button" id="lookup-select" value="Select" />
 			</div>
 		</div>
+		<div id="for-lookup-div">
+			<form onSubmit="$(this).find('input.submit').click(); return false;">
+				<input type="text" name="query" value="" />
+				<input type="button" name="search"
+					value="Search"/>
+				<div class="result"/>
+				<div>
+					<input type="button" class="submit" value="Select" />
+				</div>
+			</form>
+		</div>
+		<script>
+		$(document).ready(function() {
+			$.ajax({
+				url: '/doc/for.rdf',
+				dataType: 'text',
+				success: function(data, textStatus, jqXHR) {
+					var parser = new FieldOfResearchParser(); 
+					parser.loadRdf(data);
+					window.fieldOfResearchParser = parser;
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					throw errorThrown;
+				}
+			});
+		});
+		</script>
 	</xsl:template>
 </xsl:stylesheet>

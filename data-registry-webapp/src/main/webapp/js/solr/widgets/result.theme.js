@@ -31,29 +31,29 @@
     };
 
     var genericLookup = function (doc) {
-        return $.mustache('<p><input type="checkbox" id="lookup-{{atomicnumber}}" name="lookup" value="{{atomicnumber}}" /><a href="{{uri}}" title="{{description}}" onclick="window.open(this.href, \'_blank\'); return false;">{{title}}</a></p>', doc);
+        return _.template('<p><input type="checkbox" id="lookup-<%=atomicnumber%>" name="lookup" value="<%=atomicnumber%>" /><a href="<%=uri%>" title="<%=description%>" onclick="window.open(this.href, \'_blank\'); return false;"><%=title%></a></p>', doc);
     };
     
     AjaxSolr.theme.prototype.projectLookup = function(doc) { 
-    	var uriPrefix = $.mustache('{{protocol}}//{{host}}/collections',window.location);
+    	var uriPrefix = _.template('<%=protocol%>//<%=host%>/collections',window.location);
     	doc.uri = uriPrefix+'/'+doc.atomicnumber;
     	return genericLookup(doc, uriPrefix);
     };
 
     AjaxSolr.theme.prototype.personLookup = function(doc) { 
-    	var uriPrefix = $.mustache('{{protocol}}//{{host}}/agents',window.location);
+    	var uriPrefix =  _.template('<%=protocol%>//<%=host%>/agents',window.location);
     	doc.uri = uriPrefix+'/'+doc.atomicnumber;
     	return genericLookup(doc);
     };
     
     AjaxSolr.theme.prototype.collectionLookup = function(doc) { 
-    	var uriPrefix = $.mustache('{{protocol}}//{{host}}/collections',window.location);
+    	var uriPrefix =  _.template('<%=protocol%>//<%=host%>/collections',window.location);
     	doc.uri = uriPrefix+'/'+doc.atomicnumber;
     	return genericLookup(doc);
     };
     
     AjaxSolr.theme.prototype.reportLookup = function(doc) { 
-    	var uriPrefix = $.mustache('{{protocol}}//{{host}}/services',window.location);
+    	var uriPrefix =  _.template('<%=protocol%>//<%=host%>/services',window.location);
     	doc.uri = uriPrefix+'/'+doc.atomicnumber;
     	return genericLookup(doc);
     };

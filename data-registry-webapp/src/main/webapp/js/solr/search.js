@@ -80,9 +80,7 @@ function doEntityLookup(type, term, queryString) {
 
 function lookup(type, term) {
     var entity = 'text';
-    if (type == 'subject') {
-        entity = 'subject';
-    } else if (type == 'isparticipantin') {
+    if (type == 'isparticipantin') {
         entity = 'project';
     } else if (type == 'isoutputof') {
         entity = 'project';
@@ -104,11 +102,7 @@ function lookup(type, term) {
         entity = 'report';
     }
     
-    var queryString;
-    if (entity == 'subject')
-    	queryString = 'type:' + type + ' AND (' + term + ')';
-    else
-    	queryString = 'subject:' + term;
+    var queryString = 'type:' + type + ' AND (' + term + ')';
     doEntityLookup(entity, term, queryString);
 }
 

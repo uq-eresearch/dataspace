@@ -210,13 +210,13 @@ var DataSpace = new function() {
 	    var inputField = $('#' + inputFieldId);
 	    var keyword = inputField.val();
 	    if (keyword) {
-	        inputField.parent().before($.mustache(
+	        inputField.parent().before(_.template(
 	        		'<dd>'+
-	        		'<span class="keyword">{{keyword}}</span>'+
+	        		'<span class="keyword"><%=keyword%></span>'+
 	        		'<a class="remove-keyword"'+
 	        			' href="#" title="Remove Keyword"'+
 	        			' onclick="$(this).parent().remove(); return false;">x</a>'+
-	        		'</dd>',{ 'keyword': keyword }));
+	        		'</dd>',{ keyword: keyword }));
 	        inputField.val('');
 	        styleTables();
 	    }
@@ -270,6 +270,81 @@ var DataSpace = new function() {
 	                width: 600,
 	                title: 'Lookup'
 	            });
+	};
+	
+	var getTree = function(searchTerm, parser) {
+		var results = parser.getByLabel(searchTerm);
+		var tree = parser.buildTree(results);
+		
+		var mapFunc = function(i,n) {
+			var hasChildren = (n.children && n.children.length > 0);
+			return {
+				title: _.template('<span title="FoR Code: <%=code%>"><%=label%></span>',n),
+				data: {
+					code: n.code,
+					jstree: { opened: false /*hasChildren*/ }
+				},
+				children: hasChildren ? $(n.children).map(mapFunc).toArray() : null
+			};
+		};
+		
+		return $(tree).map(mapFunc).toArray();
+		
+	};
+	
+	var showFieldOfResearchLookup = function(targetElement, parser) {
+		$(targetElement).dialog({
+            modal: true,
+            open: function() {
+            	var queryField = $(targetElement).find('form :input[@name="query"]');
+            	var resultDisplay = $(targetElement).find('.result');
+            	// Initially load everything
+            	getFieldOfResearchSelector(resultDisplay, getTree(/.*/, parser));
+            	$(targetElement).find('form :button[@name="search"]').click(function() {
+            		// Case-insensitive regex
+            		var query = new RegExp(queryField.val(),'i');
+            		var results = getTree(query, parser);
+            		getFieldOfResearchSelector(resultDisplay,results);
+            		resultDisplay.children().jstree('open_all');
+            		return false;
+            	})
+            	
+            },
+            height: 400,
+            width: 600,
+            title: 'Lookup'
+        });
+	}
+	
+	var getFieldOfResearchSelector = function(targetElement, tree) {
+		targetElement = $(targetElement);
+		targetElement.children().remove();
+		
+		var expandAllLink = $('<a href="#">Expand All</a>');
+		var closeAllLink =  $('<a href="#">Close All</a>');
+		targetElement.append(expandAllLink,closeAllLink);
+		
+		var treeDiv = $('<div style="height: 100%; width: 100%;"/>');
+		treeDiv
+			.css('overflow', 'scroll')
+			.css('height', '250px')
+			.css('width', '550px');
+		targetElement.append(treeDiv);
+		treeDiv.jstree({
+				json: {
+					data: tree,
+					progressive_render: true
+				},
+				themes: {
+					theme: 'apple'
+				},
+				plugins: [ 'core', 'themes', 'json', 'ui' ]
+			});
+		
+		expandAllLink.click(function(){treeDiv.jstree('open_all'); return false;});
+		closeAllLink.click(function(){treeDiv.jstree('close_all'); return false;});
+		
+		return treeDiv;
 	};
 	
 	var styleTables = function() {
@@ -885,6 +960,8 @@ var DataSpace = new function() {
 	this.ingestRecord = ingestRecord;
 	this.replicateSimpleField = replicateSimpleField;
 	this.insertPublicationFields = insertPublicationFields;
+	this.getTree = getTree;
+	this.showFieldOfResearchLookup = showFieldOfResearchLookup;
 	this.addKeyword = addKeyword;
 	
 	this.getActivityAtom = getActivityAtom;
