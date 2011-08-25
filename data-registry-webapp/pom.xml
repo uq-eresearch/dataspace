@@ -184,6 +184,7 @@
 				</executions>
 				<configuration>
 					<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
+					<browserVersion>FIREFOX_3_6</browserVersion>
 					<sourceExcludes>
 						<exclude>solr/**</exclude>
 					</sourceExcludes>

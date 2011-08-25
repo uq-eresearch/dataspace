@@ -892,7 +892,7 @@ var DataSpace = (function() {
 			};
 			attributes[1] = {
 				name : 'content',
-				value : content.trim()
+				value : $.trim(content)
 			};
 			_.each(attributes, function(attribute) {
 				termporal.attr(attribute.name, attribute.value);

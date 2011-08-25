@@ -69,7 +69,7 @@ var FieldOfResearchParser = function() {
 			var obj = {};
 			obj.about = e.attr('rdf:about');
 			obj.code = e.find('code').text();
-			obj.label = e.find('label').text().trim();
+			obj.label = $.trim(e.find('label').text());
 			obj.clone = function() { return jQuery.extend({}, this); };
 
 			_.each(['broader','narrower'], function(v) {
