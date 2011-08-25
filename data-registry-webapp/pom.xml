@@ -141,6 +141,37 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>com.googlecode.jslint4java</groupId>
+		        <artifactId>jslint4java-maven-plugin</artifactId>
+		        <version>2.0.0</version>
+		        <executions>
+		          <execution>
+		            <id>lint</id>
+		            <phase>process-resources</phase>
+		            <goals>
+		              <goal>lint</goal>
+		            </goals>
+		            <configuration>
+		              <failOnError>true</failOnError>
+		              <options>
+		              	<confusion>true</confusion>
+		                <eqeq>true</eqeq>
+		                <nomen>true</nomen>
+		                <regexp>true</regexp>
+		                <sloppy>true</sloppy>
+		                <vars>true</vars>
+		                <white>true</white>
+		                <undef>true</undef>
+		              </options>
+		              <includes>
+		              	<include>js/scripts.js</include>
+		              	<include>js/FieldOfResearchParser.js</include>
+		              </includes>
+		            </configuration>
+		          </execution>
+		        </executions>
+			</plugin>
+			<plugin>
 				<groupId>com.github.searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
 				<version>1.0.2-beta-5</version>
@@ -161,7 +192,7 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>

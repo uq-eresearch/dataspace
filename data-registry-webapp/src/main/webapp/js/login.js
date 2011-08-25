@@ -24,7 +24,7 @@ function getLoginLink() {
 
     });
     $("fieldset#signin_menu").mouseup(function() {
-        return false
+        return false;
     });
     $(document).mouseup(function(e) {
         if ($(e.target).parent("a.signin").length == 0) {

@@ -70,7 +70,7 @@ AjaxSolr.AbstractTextWidget = AjaxSolr.AbstractWidget.extend(
                 self.manager.doRequest(0);
             }
             return false;
-        }
+        };
     },
 
     /**
@@ -86,6 +86,6 @@ AjaxSolr.AbstractTextWidget = AjaxSolr.AbstractWidget.extend(
                 self.manager.doRequest(0);
             }
             return false;
-        }
+        };
     }
 });
