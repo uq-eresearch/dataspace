@@ -173,18 +173,7 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template name="agent-publications">
-        <xsl:if test="atom:link[@rel=$ATOM_PUBLICATIONS]">
-            <div class="statement">
-                <div class="property">
-                    <p>Publication/s</p>
-                </div>
-                <div class="content">
-                    <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLICATIONS]"/>
-                </div>
-            </div>
-        </xsl:if>
-    </xsl:template>
+
 
     <xsl:template name="publications">
         <xsl:if test="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">

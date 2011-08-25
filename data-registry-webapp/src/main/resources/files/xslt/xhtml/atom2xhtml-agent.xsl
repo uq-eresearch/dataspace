@@ -83,7 +83,7 @@
                         <h2>General information</h2>
                         <xsl:call-template name="websites"/>
                         <xsl:call-template name="mbox"/>
-                        <xsl:call-template name="publications"/>
+                        <xsl:call-template name="agent-publications"/>
                         <xsl:call-template name="activities"/>
 
                         <h2>Data</h2>
@@ -176,6 +176,20 @@
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="atom:link[@rel=$ATOM_MANAGES_SERVICE]"/>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- agent publications page -->
+    <xsl:template name="agent-publications">
+        <xsl:if test="atom:link[@rel=$ATOM_PUBLICATIONS]">
+            <div class="statement">
+                <div class="property">
+                    <p>Publications</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLICATIONS]"/>
                 </div>
             </div>
         </xsl:if>
