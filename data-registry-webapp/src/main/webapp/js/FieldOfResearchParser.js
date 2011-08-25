@@ -123,10 +123,9 @@ var FieldOfResearchParser = function() {
 				}
 			}
 		}
-		var results = [];
-		for (var i in rootDescriptions) {
-			results.push(rootDescriptions[i]);
-		}
+		var results = _.map(_.keys(rootDescriptions).sort(), function (k) {
+			return rootDescriptions[k];
+		});
 		return results;
 	}
 	

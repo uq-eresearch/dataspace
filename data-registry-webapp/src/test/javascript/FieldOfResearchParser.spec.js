@@ -61,10 +61,8 @@ describe('FieldOfResearchParser', function() {
 		expect(typeof(parser.getByLabel)).toBe('function');
 		var results = parser.getByLabel(/economics/i);
 		expect(results.length).toBeGreaterThan(0);
-		console.debug(results);
 		
 		var tree = parser.buildTree(results);
-		console.debug(tree);
 		
 		var searchTree = function(tree, label) {
 			if (tree == undefined)

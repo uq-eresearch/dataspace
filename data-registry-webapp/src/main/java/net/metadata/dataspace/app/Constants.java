@@ -67,7 +67,7 @@ public interface Constants {
     String NS_DC = PERSISTENT_URL + "dc/terms/";
     String NS_DCMITYPE = PERSISTENT_URL + "dc/dcmitype/";
     String NS_CLD = PERSISTENT_URL + "cld/terms/";
-    String NS_ANZSRC = PERSISTENT_URL + "anzsrc/";
+    String NS_ANZSRC = PERSISTENT_URL + "asc/1297.0/2008/";
     String NS_VIVO = "http://vivoweb.org/ontology/core#";
     String NS_ORE = "http://www.openarchives.org/ore/terms/";
     String NS_GEORSS = "http://www.georss.org/georss";

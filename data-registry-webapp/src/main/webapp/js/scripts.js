@@ -281,9 +281,9 @@ var DataSpace = new function() {
 		var tree = parser.buildTree(results);
 		
 		var titleTemplate = _.template(
-				'<span class="result" title="<%=code%>">'+
+				'<span class="result">'+
 				'<input type="hidden" name="result" value="<%=about%>"/>'+
-				'<%=label%>'+
+				'<%=code%> - <%=label%>'+
 				'</span>');
 		
 		var mapFunc = function(i,n) {
@@ -332,7 +332,6 @@ var DataSpace = new function() {
 	                		function(i,n) { 
 	                			var obj = $(n).find('.result');
 	                			return {
-	                				code: obj.attr('title'),
 	                				title: obj.text(),
 	                				uri: obj.find('input').val()
 	                			};
@@ -343,7 +342,7 @@ var DataSpace = new function() {
 	            		var element = $('<a/>');
                 		element.attr('class', field+'-value');
 	            		element.attr('href', obj.uri);
-	            		element.text(_.template('<%=code%> - <%=title%>', obj));
+	            		element.text(obj.title);
 	            		element.click(function() {
 	            			window.open(element.attr('href'),'_blank'); 
 	            			return false;
