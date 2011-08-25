@@ -17,7 +17,7 @@ var DataSpace = new function() {
 	var NS_DC = PERSISTENT_URL + "dc/terms/";
 	var NS_DCMITYPE = PERSISTENT_URL + "dc/dcmitype/";
 	var NS_CLD = PERSISTENT_URL + "cld/terms/";
-	var NS_ANZSRC = PERSISTENT_URL + "anzsrc/";
+	var NS_ANZSRC = PERSISTENT_URL + "asc/1297.0/2008/";
 	var NS_VIVO = "http://vivoweb.org/ontology/core#";
 	var NS_ORE = "http://www.openarchives.org/ore/terms/";
 	var NS_GEORSS = "http://www.georss.org/georss/";
@@ -232,7 +232,8 @@ var DataSpace = new function() {
 	                    $('#pager').html('');
 	                    $('#pager-header').html('');
 	                    $(this).css('display', '');
-	                    $('#lookup-select').click(function() {
+	                    
+	                    var selectHandler = function() {
 	                    	var objs = $('#docs input:checked').map(
 	                    		function(i,n) { 
 	                    			var obj = $(n).parent().find('a');
@@ -264,7 +265,10 @@ var DataSpace = new function() {
 	                    		$('#add-'+type+'-link').parent().before(n);
 	                    	});
 	                    	$('#lookup-div').dialog('close');
-	                    });
+	                    };
+	                    $('#lookup-select')
+	                    	.unbind('click', selectHandler)
+	                    	.bind('click',selectHandler);
 	                },
 	                height: 400,
 	                width: 600,
@@ -276,10 +280,16 @@ var DataSpace = new function() {
 		var results = parser.getByLabel(searchTerm);
 		var tree = parser.buildTree(results);
 		
+		var titleTemplate = _.template(
+				'<span class="result" title="<%=code%>">'+
+				'<input type="hidden" name="result" value="<%=about%>"/>'+
+				'<%=label%>'+
+				'</span>');
+		
 		var mapFunc = function(i,n) {
 			var hasChildren = (n.children && n.children.length > 0);
 			return {
-				title: _.template('<span title="FoR Code: <%=code%>"><%=label%></span>',n),
+				title: titleTemplate(n),
 				data: {
 					code: n.code,
 					jstree: { opened: false /*hasChildren*/ }
@@ -292,23 +302,68 @@ var DataSpace = new function() {
 		
 	};
 	
-	var showFieldOfResearchLookup = function(targetElement, parser) {
-		$(targetElement).dialog({
+	var showFieldOfResearchLookup = function(field, parser) {
+		var target = $('#for-lookup-div');
+		target.dialog({
             modal: true,
             open: function() {
-            	var queryField = $(targetElement).find('form :input[@name="query"]');
-            	var resultDisplay = $(targetElement).find('.result');
+            	var queryField = target.find(':input[name="query"]');
+            	var resultDisplay = target.find('.results');
+            	var searchButton = target.find(':button[name="search"]');
+            	var selectButton = target.find(':button[name="select"]');
+            	
             	// Initially load everything
             	getFieldOfResearchSelector(resultDisplay, getTree(/.*/, parser));
-            	$(targetElement).find('form :button[@name="search"]').click(function() {
+            	
+            	var searchHandler = function() {
             		// Case-insensitive regex
             		var query = new RegExp(queryField.val(),'i');
             		var results = getTree(query, parser);
             		getFieldOfResearchSelector(resultDisplay,results);
-            		resultDisplay.children().jstree('open_all');
-            		return false;
-            	})
+            	};
+            	searchButton
+            		.unbind('click.lookup')
+            		.bind('click.lookup',searchHandler);
             	
+            	var selectHandler = function() {
+            		var selected =  $('#for-lookup-div').find('.jstree')
+	        			.jstree('get_selected');
+	        		var objs = selected.map(
+	                		function(i,n) { 
+	                			var obj = $(n).find('.result');
+	                			return {
+	                				code: obj.attr('title'),
+	                				title: obj.text(),
+	                				uri: obj.find('input').val()
+	                			};
+	                		}
+	                	);
+	        		var elements = $(objs).map(function(i,obj) {
+	            		var wrapper = $('<dd/>');
+	            		var element = $('<a/>');
+                		element.attr('class', field+'-value');
+	            		element.attr('href', obj.uri);
+	            		element.text(_.template('<%=code%> - <%=title%>', obj));
+	            		element.click(function() {
+	            			window.open(element.attr('href'),'_blank'); 
+	            			return false;
+	            		});
+	            		wrapper.append(element);
+	            		var removeLink = getRemoveLink(function() {
+	            			$(this).parent().remove();
+	            			return false;
+	            		});
+	            		wrapper.append(removeLink);
+	            		return wrapper;
+	            	});
+	        		elements.each(function(i,n) {
+	            		$('#add-'+field+'-link').parent().before(n);
+	            	});
+	            	target.dialog('close');
+	        	}
+            	selectButton
+            		.unbind('click.lookup')
+            		.bind('click.lookup',selectHandler);
             },
             height: 400,
             width: 600,
@@ -321,7 +376,7 @@ var DataSpace = new function() {
 		targetElement.children().remove();
 		
 		var expandAllLink = $('<a href="#">Expand All</a>');
-		var closeAllLink =  $('<a href="#">Close All</a>');
+		var closeAllLink = $('<a href="#">Close All</a>');
 		targetElement.append(expandAllLink,closeAllLink);
 		
 		var treeDiv = $('<div style="height: 100%; width: 100%;"/>');
@@ -550,7 +605,10 @@ var DataSpace = new function() {
 	    addPublishers(record);
 	
 	    addOutputOf(record);
-	
+
+	    //add TOA
+	    addFieldOfResearch(record);
+	    
 	    //add TOA
 	    addTOA(record);
 	
@@ -747,6 +805,13 @@ var DataSpace = new function() {
 	            var linkElement = getLinkElement(href, REL_IS_REFERENCED_BY, title);
 	            record.append(linkElement);
 	        }
+	    });
+	};
+
+	var addFieldOfResearch = function(record) {
+	    $('a[class="field-of-research-value"]').each(function(i,v) {
+	        var category = getCategoryElement(SCHEME_ANZSRC_FOR, v.getAttribute('href'), $(v).text());
+	        record.append(category);
 	    });
 	};
 	

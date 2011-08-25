@@ -459,7 +459,7 @@
 		</xsl:for-each>
 		<dd>
 			<a class="new-link" id="add-{$field}-link" href="#" title="Add"
-				onclick="DataSpace.showFieldOfResearchLookup('#for-lookup-div',window.fieldOfResearchParser);; return false;">add
+				onclick="DataSpace.showFieldOfResearchLookup('{$field}',window.fieldOfResearchParser);; return false;">add
 			</a>
 		</dd>
 	</xsl:template>
@@ -689,13 +689,13 @@
 			</div>
 		</div>
 		<div id="for-lookup-div">
-			<form onSubmit="$(this).find('input.submit').click(); return false;">
+			<form action="" onSubmit="$(this).find(':button[@name=\'select']').click(); return false;">
 				<input type="text" name="query" value="" />
 				<input type="button" name="search"
 					value="Search"/>
-				<div class="result"/>
+				<div class="results"/>
 				<div>
-					<input type="button" class="submit" value="Select" />
+					<input type="button" name="select" value="Select" />
 				</div>
 			</form>
 		</div>
