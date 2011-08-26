@@ -136,4 +136,8 @@ var FieldOfResearchParser = function() {
 		return results;
 	};
 
+	this.toJSON = function() {
+		return descriptions;
+	};
+
 };

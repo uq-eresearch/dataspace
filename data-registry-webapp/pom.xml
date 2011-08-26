@@ -189,6 +189,14 @@
 						<exclude>solr/**</exclude>
 					</sourceExcludes>
 				</configuration>
+				<!-- Use a more recent version of HtmlUnit (the web moves fast!) -->
+				<dependencies>
+					<dependency>
+					<groupId>net.sourceforge.htmlunit</groupId>
+					<artifactId>htmlunit</artifactId>
+					<version>2.9</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 		<pluginManagement>

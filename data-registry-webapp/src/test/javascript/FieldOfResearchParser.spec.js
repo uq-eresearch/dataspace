@@ -1,5 +1,5 @@
 describe('FieldOfResearchParser', function() {
-	
+
 	var getTestRdf = function() {
 		var testRdf = null;
 		$.ajax({
@@ -15,55 +15,67 @@ describe('FieldOfResearchParser', function() {
 		});
 		return testRdf;
 	}
-	
+
 	it('should be instantiable', function() {
 		var parser = new FieldOfResearchParser();
 		expect(parser).not.toBe(null);
 	});
-	
+
 	it('should be able to load RDF and get types', function() {
 		var parser = new FieldOfResearchParser();
-		
+
 		var rdf = getTestRdf();
 		expect(rdf).not.toBeNull();
+		expect(rdf.length).toBeGreaterThan(10000);
+
 		parser.loadRdf(rdf);
-		
+
+		// Echo object to test server
+		/*$.ajax({
+			type: 'POST',
+			async: false,
+			crossDomain: true,
+			contentType: 'application/json',
+			url: 'http://localhost:1337/',
+			data: JSON.stringify(parser, null, 4)
+		});*/
+
 		expect(typeof(parser.getKnownTypes)).toBe('function');
 		expect(typeof(parser.getByType)).toBe('function');
-		
+
 		expect(parser.getKnownTypes()).not.toEqual([]);
 		$.each(parser.getKnownTypes(), function(i,v) {
 			expect(parser.getByType(v).length).toBeGreaterThan(0);
 		});
-	});	
-	
+	});
+
 	it('should be able to search labels', function() {
 		var parser = new FieldOfResearchParser();
 
 		var rdf = getTestRdf();
 		expect(rdf).not.toBeNull();
 		parser.loadRdf(rdf);
-		
+
 		expect(typeof(parser.getByLabel)).toBe('function');
 		var results = parser.getByLabel(/water/i);
 		expect(results.length).toBe(6);
-		
+
 		window.forParser = parser;
-	});	
-	
+	});
+
 	it('should be able to build trees', function() {
 		var parser = new FieldOfResearchParser();
 
 		var rdf = getTestRdf();
 		expect(rdf).not.toBeNull();
 		parser.loadRdf(rdf);
-		
+
 		expect(typeof(parser.getByLabel)).toBe('function');
 		var results = parser.getByLabel(/economics/i);
 		expect(results.length).toBeGreaterThan(0);
-		
+
 		var tree = parser.buildTree(results);
-		
+
 		var searchTree = function(tree, label) {
 			if (tree == undefined)
 				return false;
@@ -82,16 +94,16 @@ describe('FieldOfResearchParser', function() {
 			}
 			return false;
 		};
-		
-		
+
+
 		for (var i = 0; i < results.length; i++) {
 			expect(searchTree(tree, results[i].label)).toBeTruthy();
 		}
-		
-		
+
+
 		window.forParser = parser;
-	});	
-	
+	});
+
 });
 
 
