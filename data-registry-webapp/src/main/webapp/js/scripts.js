@@ -302,7 +302,7 @@ var DataSpace = (function() {
 			return '<span class="result">'
 			+ '<input type="hidden" name="about" value="<%=about%>"/>'
 			+ '<input type="hidden" name="scheme" value="<%=scheme%>"/>'
-			+ inner + '</span>'
+			+ inner + '</span>';
 		};
 		var codeAndTitleTemplate = _.template(tmpl('<%=code%> - <%=label%>'));
 		var titleTemplate = _.template(tmpl('<%=label%>'));
@@ -375,7 +375,7 @@ var DataSpace = (function() {
 									'_blank');
 							return false;
 						});
-						element.attr('scheme', obj.scheme)
+						element.attr('scheme', obj.scheme);
 						wrapper.append(element);
 						var removeLink = getRemoveLink(function() {
 							$(this).parent().remove();
