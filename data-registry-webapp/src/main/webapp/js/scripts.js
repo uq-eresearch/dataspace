@@ -321,11 +321,12 @@ var DataSpace = (function() {
 
 	};
 
-	var showAnzsrcoLookup = function(field) {
+	var createAnzsrcoLookup = function(field) {
 		var target = $('#'+field);
 		var lookupDialog = target.find('.dialog-window');
 		var parser = target.prop('anzsrcoParser');
-		var insertBefore = target.find('.new-link').parent();
+		var newLink = target.find('.new-link');
+		var insertBefore = newLink.parent();
 
 		var openHandler = function() {
 			var queryField = lookupDialog.find(':input[name="query"]');
@@ -390,12 +391,19 @@ var DataSpace = (function() {
 		};
 
 		lookupDialog.dialog({
+			autoOpen: false,
 			modal : true,
 			open : openHandler,
 			height : 400,
 			width : 600,
 			title : 'Lookup'
 		});
+
+		newLink.click(function() {
+			lookupDialog.dialog('open');
+			return false;
+		});
+
 	};
 
 	var getAnzsrcoSelector = function(targetElement, tree) {
@@ -1104,7 +1112,7 @@ var DataSpace = (function() {
 	instance.replicateSimpleField = replicateSimpleField;
 	instance.insertPublicationFields = insertPublicationFields;
 	instance.getTree = getTree;
-	instance.showAnzsrcoLookup = showAnzsrcoLookup;
+	instance.createAnzsrcoLookup = createAnzsrcoLookup;
 	instance.addKeyword = addKeyword;
 
 	instance.getActivityAtom = getActivityAtom;

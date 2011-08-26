@@ -471,9 +471,7 @@
 				</dd>
 			</xsl:for-each>
 			<dd>
-				<a class="new-link" href="#" title="Add"
-					onclick="DataSpace.showAnzsrcoLookup('{$field}'); return false;">add
-				</a>
+				<a class="new-link" href="#" title="Add">add</a>
 			</dd>
 			<script>
 			$(document).ready(function() {
@@ -481,9 +479,11 @@
 					url: '<xsl:value-of select="$rdfUrl" />',
 					dataType: 'text',
 					success: function(data, textStatus, jqXHR) {
+						var fieldName = '<xsl:value-of select="$field" />';
 						var anzsrcoParser = new AnzsrcoParser();
 						anzsrcoParser.loadRdf(data);
-						$('#<xsl:value-of select="$field" />').prop('anzsrcoParser',anzsrcoParser);
+						$('#'+fieldName).prop('anzsrcoParser',anzsrcoParser);
+						DataSpace.createAnzsrcoLookup(fieldName);
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						throw errorThrown;
