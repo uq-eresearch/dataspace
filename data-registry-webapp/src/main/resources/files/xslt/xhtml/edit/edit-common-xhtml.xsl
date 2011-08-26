@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<!-- Transforms UQ collection profile of Atom Syndication Format to XHTML 
+<!-- Transforms UQ collection profile of Atom Syndication Format to XHTML
 	with embedded RDFa XSLT 1.0 Abdul Alabri, 2011-01 -->
 <xsl:stylesheet version="2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -14,7 +14,7 @@
 	<xsl:include href="../../constants.xsl" />
 	<xsl:output method="html" media-type="text/html;charset=utf-8"
 		indent="yes" />
-		
+
 	<xsl:template name="edit-bread-crumbs">
 		<xsl:param name="path" />
 		<xsl:param name="title" />
@@ -54,7 +54,7 @@
 			</xsl:choose>
 		</li>
 	</xsl:template>
-	
+
 	<xsl:template name="title">
 						<dl>
 		<dt>
@@ -66,7 +66,7 @@
 		</dd>
 		</dl>
 	</xsl:template>
-	
+
 	<xsl:template name="alternative-title">
 		<dl>
 		<dt>
@@ -111,7 +111,7 @@
 			</dd>
 		</dl>
 	</xsl:template>
-	
+
 	<xsl:template name="type">
 		<xsl:param name="entity" />
 		<dl>
@@ -172,7 +172,7 @@
 			</dd>
 		</dl>
 	</xsl:template>
-	
+
 	<xsl:template name="rights">
 		<dl>
 			<dt>
@@ -286,7 +286,7 @@
 			</dd>
 		</dl>
 	</xsl:template>
-	
+
 	<xsl:template name="publishers">
 		<dl>
 			<dt><label for="creator">Custodians/Contacts</label></dt>
@@ -300,7 +300,7 @@
 			</dd>
 		</dl>
 	</xsl:template>
-	
+
 	<xsl:template name="projects">
 		<dl>
 			<dt><label for="creator">Projects</label></dt>
@@ -314,7 +314,7 @@
 			</dd>
 		</dl>
 	</xsl:template>
-	
+
 	<xsl:template name="fields-of-research">
 		<dl>
 			<dt><label for="creator">Fields of Research</label></dt>
@@ -328,7 +328,7 @@
 			</dd>
 		</dl>
 	</xsl:template>
-	
+
 	<xsl:template name="socio-economic-impacts">
 		<dl>
 			<dt><label for="creator">Socio-economic Impacts</label></dt>
@@ -426,7 +426,7 @@
 		<xsl:for-each select="atom:link[@rel=$relation]">
 			<dd>
 				<a class="{$field}-value"
-					href="{@href}" 
+					href="{@href}"
 					onclick="window.open(this.href,'_blank'); return false;">
 					<xsl:value-of select="@title" />
 				</a>
@@ -441,14 +441,14 @@
 			</a>
 		</dd>
 	</xsl:template>
-	
+
 	<xsl:template name="edit-subject">
 		<xsl:param name="field" />
 		<xsl:param name="scheme" />
 		<xsl:for-each select="atom:category[@scheme=$scheme]">
 			<dd>
 				<a class="{$field}-value"
-					href="{@term}" 
+					href="{@term}"
 					onclick="window.open(this.href,'_blank'); return false;">
 					<xsl:value-of select="@label" />
 				</a>
@@ -470,7 +470,7 @@
 				<label for="type-of-activities">Type of Activity</label>
 			</dt>
 			<dd>
-				<input type="checkbox" class="type-of-activity" 
+				<input type="checkbox" class="type-of-activity"
 					name="type-of-activity"
 					value="applied">
 					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#applied')]">
@@ -480,7 +480,7 @@
 				Applied research
 			</dd>
 			<dd>
-				<input type="checkbox" class="type-of-activity" 
+				<input type="checkbox" class="type-of-activity"
 					name="type-of-activity"
 					value="experimental">
 					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#experimental')]">
@@ -490,7 +490,7 @@
 				Experimental development
 			</dd>
 			<dd>
-				<input type="checkbox" class="type-of-activity" 
+				<input type="checkbox" class="type-of-activity"
 					name="type-of-activity"
 					value="basic">
 					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#basic')]">
@@ -500,9 +500,9 @@
 				Pure basic research
 			</dd>
 			<dd>
-				<input type="checkbox" class="type-of-activity" 
+				<input type="checkbox" class="type-of-activity"
 					name="type-of-activity"
-					value="strategic"> 
+					value="strategic">
 					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#strategic')]">
 						<xsl:attribute name="checked">checked</xsl:attribute>
 					</xsl:if>
@@ -511,7 +511,7 @@
 			</dd>
 		</dl>
 	</xsl:template>
-	
+
 	<xsl:template name="keywords">
 		<dl id="keywords-list">
 			<dt>Keywords</dt>
@@ -579,7 +579,7 @@
 		<div>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template name="edit-region">
 		<h4>Region</h4>
 		<div id="map" class="smallmap" style="width: 500px; height: 400px">
@@ -611,15 +611,15 @@
 			</dt>
 			<xsl:for-each select="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
 				<dd>
-					<input name="publication-title" 
+					<input name="publication-title"
 						class="required"
 						title="Publication Title"
 						value="{@title}" type="text" />
-					<input name="publication-url" 
+					<input name="publication-url"
 						class="required url"
 						title="Publication URL"
 						value="{@href}" type="text" />
-					<a class="remove-link" 
+					<a class="remove-link"
 						onclick="$(this).parent().remove(); return false;"
 						href="#">x</a>
 				</dd>
@@ -705,7 +705,7 @@
 				url: '/doc/for.rdf',
 				dataType: 'text',
 				success: function(data, textStatus, jqXHR) {
-					var parser = new FieldOfResearchParser(); 
+					var parser = new AnzsrcoParser();
 					parser.loadRdf(data);
 					window.fieldOfResearchParser = parser;
 				},

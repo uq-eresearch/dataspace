@@ -1,4 +1,4 @@
-var FieldOfResearchParser = function() {
+var AnzsrcoParser = function() {
 
 	var schemeRegex = /^http\:\/\/purl.org\/asc\/[\d\.]+\/\d+\/for\//;
 

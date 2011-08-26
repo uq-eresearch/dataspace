@@ -1,4 +1,4 @@
-describe('FieldOfResearchParser', function() {
+describe('AnzsrcoParser', function() {
 
 	var getTestRdf = function() {
 		var testRdf = null;
@@ -17,12 +17,12 @@ describe('FieldOfResearchParser', function() {
 	}
 
 	it('should be instantiable', function() {
-		var parser = new FieldOfResearchParser();
+		var parser = new AnzsrcoParser();
 		expect(parser).not.toBe(null);
 	});
 
 	it('should be able to load RDF and get types', function() {
-		var parser = new FieldOfResearchParser();
+		var parser = new AnzsrcoParser();
 
 		var rdf = getTestRdf();
 		expect(rdf).not.toBeNull();
@@ -50,7 +50,7 @@ describe('FieldOfResearchParser', function() {
 	});
 
 	it('should be able to search labels', function() {
-		var parser = new FieldOfResearchParser();
+		var parser = new AnzsrcoParser();
 
 		var rdf = getTestRdf();
 		expect(rdf).not.toBeNull();
@@ -64,7 +64,7 @@ describe('FieldOfResearchParser', function() {
 	});
 
 	it('should be able to build trees', function() {
-		var parser = new FieldOfResearchParser();
+		var parser = new AnzsrcoParser();
 
 		var rdf = getTestRdf();
 		expect(rdf).not.toBeNull();

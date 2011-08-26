@@ -175,7 +175,7 @@
 		              </options>
 		              <includes>
 		              	<include>js/scripts.js</include>
-		              	<include>js/FieldOfResearchParser.js</include>
+		              	<include>js/AnzsrcoParser.js</include>
 		              </includes>
 		            </configuration>
 		          </execution>
