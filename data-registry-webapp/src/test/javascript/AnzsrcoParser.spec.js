@@ -1,9 +1,12 @@
 describe('AnzsrcoParser', function() {
 
-	var getTestRdf = function() {
+	var FOR_RDF = '../../src/main/webapp/doc/for.rdf';
+	var SEO_RDF = '../../src/main/webapp/doc/seo.rdf';
+
+	var getTestRdf = function(rdfLocation) {
 		var testRdf = null;
 		$.ajax({
-			url: '../../src/main/webapp/doc/for.rdf',
+			url: rdfLocation,
 			async: false,
 			dataType: 'text',
 			success: function(data, textStatus, jqXHR) {
@@ -21,38 +24,40 @@ describe('AnzsrcoParser', function() {
 		expect(parser).not.toBe(null);
 	});
 
-	it('should be able to load RDF and get types', function() {
-		var parser = new AnzsrcoParser();
+	describe('valid SKOS schemas', function() {
 
-		var rdf = getTestRdf();
-		expect(rdf).not.toBeNull();
-		expect(rdf.length).toBeGreaterThan(10000);
+		var doTest = function(rdfLocation) {
+			var parser = new AnzsrcoParser();
+			var rdf = getTestRdf(rdfLocation);
+			expect(rdf).not.toBeNull();
+			expect(rdf.length).toBeGreaterThan(10000);
 
-		parser.loadRdf(rdf);
+			parser.loadRdf(rdf);
 
-		// Echo object to test server
-		/*$.ajax({
-			type: 'POST',
-			async: false,
-			crossDomain: true,
-			contentType: 'application/json',
-			url: 'http://localhost:1337/',
-			data: JSON.stringify(parser, null, 4)
-		});*/
+			expect(typeof(parser.getKnownTypes)).toBe('function');
+			expect(typeof(parser.getByType)).toBe('function');
 
-		expect(typeof(parser.getKnownTypes)).toBe('function');
-		expect(typeof(parser.getByType)).toBe('function');
+			expect(parser.getKnownTypes()).not.toEqual([]);
+			$.each(parser.getKnownTypes(), function(i,v) {
+				expect(parser.getByType(v).length).toBeGreaterThan(0);
+			});
 
-		expect(parser.getKnownTypes()).not.toEqual([]);
-		$.each(parser.getKnownTypes(), function(i,v) {
-			expect(parser.getByType(v).length).toBeGreaterThan(0);
+			return parser;
+		}
+
+		it('should be able to load the FOR RDF', function() {
+			var parser = doTest(FOR_RDF);
+		});
+
+		it('should be able to load the SEO RDF', function() {
+			var parser = doTest(SEO_RDF);
 		});
 	});
 
 	it('should be able to search labels', function() {
 		var parser = new AnzsrcoParser();
 
-		var rdf = getTestRdf();
+		var rdf = getTestRdf(FOR_RDF);
 		expect(rdf).not.toBeNull();
 		parser.loadRdf(rdf);
 
@@ -66,7 +71,7 @@ describe('AnzsrcoParser', function() {
 	it('should be able to build trees', function() {
 		var parser = new AnzsrcoParser();
 
-		var rdf = getTestRdf();
+		var rdf = getTestRdf(FOR_RDF);
 		expect(rdf).not.toBeNull();
 		parser.loadRdf(rdf);
 

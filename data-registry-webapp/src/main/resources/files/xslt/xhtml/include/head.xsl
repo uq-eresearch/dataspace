@@ -22,7 +22,7 @@
         <script type="text/javascript" src="/js/jquery.validate.min.js">;</script>
         <script type="text/javascript" src="/js/jquery.xmlns.js">;</script>
         <script type="text/javascript" src="/js/underscore-min.js">;</script>
-        
+
         <script type="text/javascript" src="/js/vakata.js">;</script>
         <script type="text/javascript" src="/js/jstree.core.js">;</script>
         <script type="text/javascript" src="/js/jstree.json.js">;</script>
@@ -32,7 +32,7 @@
 
         <script type="text/javascript" src="/js/login.js">;</script>
         <script type="text/javascript" src="/js/scripts.js">;</script>
-        <script type="text/javascript" src="/js/FieldOfResearchParser.js">;</script>
+        <script type="text/javascript" src="/js/AnzsrcoParser.js">;</script>
 
         <script type="text/javascript" src="/js/solr/search.js">;</script>
         <script type="text/javascript" src="/js/solr/core/Core.js">;</script>

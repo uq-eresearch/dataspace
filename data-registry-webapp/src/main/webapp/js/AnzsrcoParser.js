@@ -1,6 +1,6 @@
 var AnzsrcoParser = function() {
 
-	var schemeRegex = /^http\:\/\/purl.org\/asc\/[\d\.]+\/\d+\/for\//;
+	var schemeRegex = /^http\:\/\/purl.org\/asc\/[\d\.]+\/\d+\/[a-z]{3}\//;
 
 	var descriptions = {};
 
