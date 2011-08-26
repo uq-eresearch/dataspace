@@ -21,7 +21,7 @@ var DataSpace = (function() {
 	var NS_DC = PERSISTENT_URL + "dc/terms/";
 	var NS_DCMITYPE = PERSISTENT_URL + "dc/dcmitype/";
 	var NS_CLD = PERSISTENT_URL + "cld/terms/";
-	var NS_ANZSRC = PERSISTENT_URL + "asc/1297.0/2008/";
+	var NS_ANZSRC = PERSISTENT_URL + "asc/1297.0/";
 	var NS_VIVO = "http://vivoweb.org/ontology/core#";
 	var NS_ORE = "http://www.openarchives.org/ore/terms/";
 	var NS_GEORSS = "http://www.georss.org/georss/";
@@ -67,9 +67,9 @@ var DataSpace = (function() {
 	var LABEL_KEYWORD = "keyword";
 	var SCHEME_DCMITYPE = NS_DCMITYPE;
 	var SCHEME_KEYWORD = UQ_REGISTRY_URI_PREFIX + "keyword";
-	var SCHEME_ANZSRC_FOR = NS_ANZSRC + "for";
-	var SCHEME_ANZSRC_SEO = NS_ANZSRC + "seo";
-	var SCHEME_ANZSRC_TOA = NS_ANZSRC + "toa";
+	var SCHEME_ANZSRC_FOR = NS_ANZSRC + "2008/for";
+	var SCHEME_ANZSRC_SEO = NS_ANZSRC + "2008/seo";
+	var SCHEME_ANZSRC_TOA = NS_ANZSRC + "1993/toa";
 	var PROPERTY_TITLE = NS_FOAF + "title";
 	var PROPERTY_GIVEN_NAME = NS_FOAF + "givenName";
 	var PROPERTY_FAMILY_NAME = NS_FOAF + "familyName";
@@ -298,19 +298,21 @@ var DataSpace = (function() {
 		var results = parser.getByLabel(searchTerm);
 		var tree = parser.buildTree(results);
 
-		var titleTemplate = _.template('<span class="result">'
-				+ '<input type="hidden" name="result" value="<%=about%>"/>'
-				+ '<%=code%> - <%=label%>' + '</span>');
+		var tmpl = function(inner) {
+			return '<span class="result">'
+			+ '<input type="hidden" name="about" value="<%=about%>"/>'
+			+ '<input type="hidden" name="scheme" value="<%=scheme%>"/>'
+			+ inner + '</span>'
+		};
+		var codeAndTitleTemplate = _.template(tmpl('<%=code%> - <%=label%>'));
+		var titleTemplate = _.template(tmpl('<%=label%>'));
 
 		var mapFunc = function(i, n) {
 			var hasChildren = (n.children && n.children.length > 0);
 			return {
-				title : titleTemplate(n),
+				title : n.code ? codeAndTitleTemplate(n) : titleTemplate(n),
 				data : {
-					code : n.code,
-					jstree : {
-						opened : false
-					/* hasChildren */}
+					jstree : { opened : false}
 				},
 				children : hasChildren ? $(n.children).map(mapFunc).toArray()
 						: null
@@ -355,8 +357,9 @@ var DataSpace = (function() {
 				var objs = selected.map(function(i, n) {
 					var obj = $(n).find('.result');
 					return {
-						title : obj.text(),
-						uri : obj.find('input').val()
+						label : obj.text(),
+						term : obj.find('input[name="about"]').val(),
+						scheme : obj.find('input[name="scheme"]').val()
 					};
 				});
 				var elements = $(objs).map(
@@ -364,14 +367,15 @@ var DataSpace = (function() {
 						var wrapper = $('<dd/>');
 						var element = $('<a/>');
 						element.attr('class', 'field-value');
-						element.attr('href', obj.uri);
-						element.text(obj.title);
+						element.attr('href', obj.term);
+						element.text(obj.label);
 						element.click(function() {
 							window.open(element
 									.attr('href'),
 									'_blank');
 							return false;
 						});
+						element.attr('scheme', obj.scheme)
 						wrapper.append(element);
 						var removeLink = getRemoveLink(function() {
 							$(this).parent().remove();
@@ -857,32 +861,24 @@ var DataSpace = (function() {
 	};
 
 
-	var anzsrcoAddHandler = function(field,scheme) {
+	var anzsrcoAddHandler = function(field) {
 		return function(record) {
 			$('#'+field+' a[class="field-value"]').each(
 				function(i, v) {
-					var category = getCategoryElement(scheme, v
-							.getAttribute('href'), $(v).text());
+					var term = v.getAttribute('href');
+					var scheme = v.getAttribute('scheme');
+					var label =  $(v).text();
+					var category = getCategoryElement(scheme, term, label);
 					record.append(category);
 				});
 		};
 	};
 
-	var addFieldOfResearch = anzsrcoAddHandler(
-			'field-of-research', SCHEME_ANZSRC_FOR);
+	var addFieldOfResearch = anzsrcoAddHandler('field-of-research');
 
-	var addSocioEconomicImpact = anzsrcoAddHandler(
-			'socio-economic-impact', SCHEME_ANZSRC_SEO);
+	var addSocioEconomicImpact = anzsrcoAddHandler('socio-economic-impact');
 
-	var addTOA = function(record) {
-		$('input[name="type-of-activity"]:checked').each(
-				function() {
-					var category = getCategoryElement(SCHEME_ANZSRC_TOA,
-							SCHEME_ANZSRC_TOA + '/#' + $(this).val(), $(this)
-									.val());
-					record.append(category);
-				});
-	};
+	var addTOA = anzsrcoAddHandler('type-of-activity');
 
 	var addKeywordToCollection = function(record) {
 		$('dl[id="keywords-list"] span.keyword').each(function() {

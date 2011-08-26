@@ -2,6 +2,7 @@ describe('AnzsrcoParser', function() {
 
 	var FOR_RDF = '../../src/main/webapp/doc/for.rdf';
 	var SEO_RDF = '../../src/main/webapp/doc/seo.rdf';
+	var TOA_RDF = '../../src/main/webapp/doc/toa.rdf';
 
 	var getTestRdf = function(rdfLocation) {
 		var testRdf = null;
@@ -30,7 +31,7 @@ describe('AnzsrcoParser', function() {
 			var parser = new AnzsrcoParser();
 			var rdf = getTestRdf(rdfLocation);
 			expect(rdf).not.toBeNull();
-			expect(rdf.length).toBeGreaterThan(10000);
+			expect(rdf.length).toBeGreaterThan(1000);
 
 			parser.loadRdf(rdf);
 
@@ -38,8 +39,14 @@ describe('AnzsrcoParser', function() {
 			expect(typeof(parser.getByType)).toBe('function');
 
 			expect(parser.getKnownTypes()).not.toEqual([]);
-			$.each(parser.getKnownTypes(), function(i,v) {
-				expect(parser.getByType(v).length).toBeGreaterThan(0);
+			_.each(parser.getKnownTypes(), function(v) {
+				var descsOfType = parser.getByType(v);
+				expect(descsOfType.length).toBeGreaterThan(0);
+				_.each(descsOfType, function(desc) {
+					expect(typeof(desc.about)).toBe('string');
+					expect(typeof(desc.label)).toBe('string');
+					expect(typeof(desc.scheme)).toBe('string');
+				});
 			});
 
 			return parser;
@@ -51,6 +58,10 @@ describe('AnzsrcoParser', function() {
 
 		it('should be able to load the SEO RDF', function() {
 			var parser = doTest(SEO_RDF);
+		});
+
+		it('should be able to load the TOA RDF', function() {
+			var parser = doTest(TOA_RDF);
 		});
 	});
 

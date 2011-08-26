@@ -462,6 +462,7 @@
 				<dd>
 					<a class="field-value"
 						href="{@term}"
+						scheme="{@scheme}"
 						onclick="window.open(this.href,'_blank'); return false;">
 						<xsl:value-of select="@label" />
 					</a>
@@ -495,51 +496,17 @@
 	</xsl:template>
 
 	<xsl:template name="type-of-activities">
-		<dl>
-			<dt>
-				<label for="type-of-activities">Type of Activity</label>
-			</dt>
-			<dd>
-				<input type="checkbox" class="type-of-activity"
-					name="type-of-activity"
-					value="applied">
-					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#applied')]">
-						<xsl:attribute name="checked">checked</xsl:attribute>
-					</xsl:if>
-				</input>
-				Applied research
-			</dd>
-			<dd>
-				<input type="checkbox" class="type-of-activity"
-					name="type-of-activity"
-					value="experimental">
-					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#experimental')]">
-						<xsl:attribute name="checked">checked</xsl:attribute>
-					</xsl:if>
-				</input>
-				Experimental development
-			</dd>
-			<dd>
-				<input type="checkbox" class="type-of-activity"
-					name="type-of-activity"
-					value="basic">
-					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#basic')]">
-						<xsl:attribute name="checked">checked</xsl:attribute>
-					</xsl:if>
-				</input>
-				Pure basic research
-			</dd>
-			<dd>
-				<input type="checkbox" class="type-of-activity"
-					name="type-of-activity"
-					value="strategic">
-					<xsl:if test="atom:category[@scheme=$SCHEME_TOA][@term=concat($SCHEME_TOA,'/#strategic')]">
-						<xsl:attribute name="checked">checked</xsl:attribute>
-					</xsl:if>
-				</input>
-				Strategic basic research
-			</dd>
-		</dl>
+		<xsl:call-template name="edit-subject">
+			<xsl:with-param name="title">
+				Type of Activity
+			</xsl:with-param>
+			<xsl:with-param name="rdfUrl" select="'/doc/toa.rdf'"/>
+			<xsl:with-param name="field" select="'type-of-activity'"/>
+			<xsl:with-param name="scheme">
+				<xsl:value-of select="$SCHEME_TOA" />
+			</xsl:with-param>
+		</xsl:call-template>
+
 	</xsl:template>
 
 	<xsl:template name="keywords">

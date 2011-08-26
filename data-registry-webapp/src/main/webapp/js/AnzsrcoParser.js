@@ -67,8 +67,9 @@ var AnzsrcoParser = function() {
 				return;
 			}
 			var obj = {};
+			obj.scheme = scheme;
 			obj.about = e.attr('rdf:about');
-			obj.code = e.find('code').text();
+			obj.code = e.find('code').text() || undefined;
 			obj.label = $.trim(e.find('label').text());
 			obj.clone = function() { return jQuery.extend({}, this); };
 
