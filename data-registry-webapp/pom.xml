@@ -21,6 +21,16 @@
 			</roles>
 		</developer>
 		<developer>
+			<id>tim.dettrick</id>
+			<name>Tim Dettrick</name>
+			<email>t.dettrick@uq.edu.au</email>
+			<organization>School of ITEE, University of Queensland</organization>
+			<organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+		<developer>
 			<id>nigel.ward</id>
 			<name>Nigel Ward</name>
 			<email>n.ward4@uq.edu.au</email>
