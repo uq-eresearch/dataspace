@@ -460,7 +460,7 @@
 			<dt><label><xsl:value-of select="$title" /></label></dt>
 			<xsl:for-each select="atom:category[@scheme=$scheme]">
 				<dd>
-					<a class="{$field}-value"
+					<a class="field-value"
 						href="{@term}"
 						onclick="window.open(this.href,'_blank'); return false;">
 						<xsl:value-of select="@label" />

@@ -363,8 +363,7 @@ var DataSpace = (function() {
 					function(i, obj) {
 						var wrapper = $('<dd/>');
 						var element = $('<a/>');
-						element.attr('class', field
-								+ '-value');
+						element.attr('class', 'field-value');
 						element.attr('href', obj.uri);
 						element.text(obj.title);
 						element.click(function() {
@@ -641,8 +640,9 @@ var DataSpace = (function() {
 
 		addOutputOf(record);
 
-		// add TOA
+		// add FOR & SEO codes
 		addFieldOfResearch(record);
+		addSocioEconomicImpact(record);
 
 		// add TOA
 		addTOA(record);
@@ -856,14 +856,23 @@ var DataSpace = (function() {
 				});
 	};
 
-	var addFieldOfResearch = function(record) {
-		$('a[class="field-of-research-value"]').each(
+
+	var anzsrcoAddHandler = function(field,scheme) {
+		return function(record) {
+			$('#'+field+' a[class="field-value"]').each(
 				function(i, v) {
-					var category = getCategoryElement(SCHEME_ANZSRC_FOR, v
+					var category = getCategoryElement(scheme, v
 							.getAttribute('href'), $(v).text());
 					record.append(category);
 				});
+		};
 	};
+
+	var addFieldOfResearch = anzsrcoAddHandler(
+			'field-of-research', SCHEME_ANZSRC_FOR);
+
+	var addSocioEconomicImpact = anzsrcoAddHandler(
+			'socio-economic-impact', SCHEME_ANZSRC_SEO);
 
 	var addTOA = function(record) {
 		$('input[name="type-of-activity"]:checked').each(
