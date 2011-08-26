@@ -316,31 +316,29 @@
 	</xsl:template>
 
 	<xsl:template name="fields-of-research">
-		<dl>
-			<dt><label for="creator">Fields of Research</label></dt>
-			<dd class="field">
-				<xsl:call-template name="edit-subject">
-					<xsl:with-param name="field" select="'field-of-research'"/>
-					<xsl:with-param name="scheme">
-						<xsl:value-of select="$SCHEME_FOR" />
-					</xsl:with-param>
-				</xsl:call-template>
-			</dd>
-		</dl>
+		<xsl:call-template name="edit-subject">
+			<xsl:with-param name="title">
+				Fields of Research
+			</xsl:with-param>
+			<xsl:with-param name="rdfUrl" select="'/doc/for.rdf'"/>
+			<xsl:with-param name="field" select="'field-of-research'"/>
+			<xsl:with-param name="scheme">
+				<xsl:value-of select="$SCHEME_FOR" />
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="socio-economic-impacts">
-		<dl>
-			<dt><label for="creator">Socio-economic Impacts</label></dt>
-			<dd class="field">
-				<xsl:call-template name="edit-subject">
-					<xsl:with-param name="field" select="'socio-economic-impact'"/>
-					<xsl:with-param name="scheme">
-						<xsl:value-of select="$SCHEME_SEO" />
-					</xsl:with-param>
-				</xsl:call-template>
-			</dd>
-		</dl>
+		<xsl:call-template name="edit-subject">
+			<xsl:with-param name="title">
+				Socio-economic Impacts
+			</xsl:with-param>
+			<xsl:with-param name="rdfUrl" select="'/doc/seo.rdf'"/>
+			<xsl:with-param name="field" select="'socio-economic-impact'"/>
+			<xsl:with-param name="scheme">
+				<xsl:value-of select="$SCHEME_SEO" />
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="page">
@@ -443,25 +441,57 @@
 	</xsl:template>
 
 	<xsl:template name="edit-subject">
+		<xsl:param name="title" />
+		<xsl:param name="rdfUrl" />
 		<xsl:param name="field" />
 		<xsl:param name="scheme" />
-		<xsl:for-each select="atom:category[@scheme=$scheme]">
+		<dl id="{$field}">
+			<div class="dialog-window" style="display:none;">
+				<form action="" onSubmit="$(this).find(':button[@name=\'select']').click(); return false;">
+					<input type="text" name="query" value="" />
+					<input type="button" name="search"
+						value="Search"/>
+					<div class="results"/>
+					<div>
+						<input type="button" name="select" value="Select" />
+					</div>
+				</form>
+			</div>
+			<dt><label><xsl:value-of select="$title" /></label></dt>
+			<xsl:for-each select="atom:category[@scheme=$scheme]">
+				<dd>
+					<a class="{$field}-value"
+						href="{@term}"
+						onclick="window.open(this.href,'_blank'); return false;">
+						<xsl:value-of select="@label" />
+					</a>
+					<a class="remove-link"
+						href="#" onclick="$(this).parent().remove();">x
+					</a>
+				</dd>
+			</xsl:for-each>
 			<dd>
-				<a class="{$field}-value"
-					href="{@term}"
-					onclick="window.open(this.href,'_blank'); return false;">
-					<xsl:value-of select="@label" />
-				</a>
-				<a class="remove-link"
-					href="#" onclick="$(this).parent().remove();">x
+				<a class="new-link" href="#" title="Add"
+					onclick="DataSpace.showAnzsrcoLookup('{$field}'); return false;">add
 				</a>
 			</dd>
-		</xsl:for-each>
-		<dd>
-			<a class="new-link" id="add-{$field}-link" href="#" title="Add"
-				onclick="DataSpace.showFieldOfResearchLookup('{$field}',window.fieldOfResearchParser);; return false;">add
-			</a>
-		</dd>
+			<script>
+			$(document).ready(function() {
+				$.ajax({
+					url: '<xsl:value-of select="$rdfUrl" />',
+					dataType: 'text',
+					success: function(data, textStatus, jqXHR) {
+						var anzsrcoParser = new AnzsrcoParser();
+						anzsrcoParser.loadRdf(data);
+						$('#<xsl:value-of select="$field" />').prop('anzsrcoParser',anzsrcoParser);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						throw errorThrown;
+					}
+				});
+			});
+			</script>
+		</dl>
 	</xsl:template>
 
 	<xsl:template name="type-of-activities">
@@ -688,32 +718,5 @@
 				<input type="button" id="lookup-select" value="Select" />
 			</div>
 		</div>
-		<div id="for-lookup-div">
-			<form action="" onSubmit="$(this).find(':button[@name=\'select']').click(); return false;">
-				<input type="text" name="query" value="" />
-				<input type="button" name="search"
-					value="Search"/>
-				<div class="results"/>
-				<div>
-					<input type="button" name="select" value="Select" />
-				</div>
-			</form>
-		</div>
-		<script>
-		$(document).ready(function() {
-			$.ajax({
-				url: '/doc/for.rdf',
-				dataType: 'text',
-				success: function(data, textStatus, jqXHR) {
-					var parser = new AnzsrcoParser();
-					parser.loadRdf(data);
-					window.fieldOfResearchParser = parser;
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					throw errorThrown;
-				}
-			});
-		});
-		</script>
 	</xsl:template>
 </xsl:stylesheet>

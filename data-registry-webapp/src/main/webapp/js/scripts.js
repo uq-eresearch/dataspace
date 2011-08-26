@@ -321,82 +321,84 @@ var DataSpace = (function() {
 
 	};
 
-	var showFieldOfResearchLookup = function(field, parser) {
-		var target = $('#for-lookup-div');
-		target
-				.dialog({
-					modal : true,
-					open : function() {
-						var queryField = target.find(':input[name="query"]');
-						var resultDisplay = target.find('.results');
-						var searchButton = target
-								.find(':button[name="search"]');
-						var selectButton = target
-								.find(':button[name="select"]');
+	var showAnzsrcoLookup = function(field) {
+		var target = $('#'+field);
+		var lookupDialog = target.find('.dialog-window');
+		var parser = target.prop('anzsrcoParser');
+		var insertBefore = target.find('.new-link').parent();
 
-						// Initially load everything
-						getFieldOfResearchSelector(resultDisplay, getTree(/.*/,
-								parser));
+		var openHandler = function() {
+			var queryField = lookupDialog.find(':input[name="query"]');
+			var resultDisplay = lookupDialog.find('.results');
+			var searchButton = lookupDialog
+					.find(':button[name="search"]');
+			var selectButton = lookupDialog
+					.find(':button[name="select"]');
 
-						var searchHandler = function() {
-							// Case-insensitive regex
-							var query = new RegExp(queryField.val(), 'i');
-							var results = getTree(query, parser);
-							getFieldOfResearchSelector(resultDisplay, results);
-						};
-						searchButton.unbind('click.lookup').bind(
-								'click.lookup', searchHandler);
+			// Initially load everything
+			getAnzsrcoSelector(resultDisplay, getTree(/.*/,
+					parser));
 
-						var selectHandler = function() {
-							var selected = $('#for-lookup-div').find('.jstree')
-									.jstree('get_selected');
-							var objs = selected.map(function(i, n) {
-								var obj = $(n).find('.result');
-								return {
-									title : obj.text(),
-									uri : obj.find('input').val()
-								};
-							});
-							var elements = $(objs)
-									.map(
-											function(i, obj) {
-												var wrapper = $('<dd/>');
-												var element = $('<a/>');
-												element.attr('class', field
-														+ '-value');
-												element.attr('href', obj.uri);
-												element.text(obj.title);
-												element.click(function() {
-													window.open(element
-															.attr('href'),
-															'_blank');
-													return false;
-												});
-												wrapper.append(element);
-												var removeLink = getRemoveLink(function() {
-													$(this).parent().remove();
-													return false;
-												});
-												wrapper.append(removeLink);
-												return wrapper;
-											});
-							elements
-									.each(function(i, n) {
-										$('#add-' + field + '-link').parent()
-												.before(n);
-									});
-							target.dialog('close');
-						};
-						selectButton.unbind('click.lookup').bind(
-								'click.lookup', selectHandler);
-					},
-					height : 400,
-					width : 600,
-					title : 'Lookup'
+			var searchHandler = function() {
+				// Case-insensitive regex
+				var query = new RegExp(queryField.val(), 'i');
+				var results = getTree(query, parser);
+				getFieldOfResearchSelector(resultDisplay, results);
+			};
+			searchButton.unbind('click.lookup').bind(
+					'click.lookup', searchHandler);
+
+			var selectHandler = function() {
+				var selected = lookupDialog.find('.jstree')
+						.jstree('get_selected');
+				var objs = selected.map(function(i, n) {
+					var obj = $(n).find('.result');
+					return {
+						title : obj.text(),
+						uri : obj.find('input').val()
+					};
 				});
+				var elements = $(objs).map(
+					function(i, obj) {
+						var wrapper = $('<dd/>');
+						var element = $('<a/>');
+						element.attr('class', field
+								+ '-value');
+						element.attr('href', obj.uri);
+						element.text(obj.title);
+						element.click(function() {
+							window.open(element
+									.attr('href'),
+									'_blank');
+							return false;
+						});
+						wrapper.append(element);
+						var removeLink = getRemoveLink(function() {
+							$(this).parent().remove();
+							return false;
+						});
+						wrapper.append(removeLink);
+						return wrapper;
+					});
+				elements.each(function(i, n) {
+					insertBefore.before(n);
+				});
+				lookupDialog.dialog('close');
+			};
+			selectButton.unbind('click.lookup').bind(
+					'click.lookup', selectHandler);
+		};
+
+		lookupDialog.dialog({
+			modal : true,
+			open : openHandler,
+			height : 400,
+			width : 600,
+			title : 'Lookup'
+		});
 	};
 
-	var getFieldOfResearchSelector = function(targetElement, tree) {
+	var getAnzsrcoSelector = function(targetElement, tree) {
 		targetElement = $(targetElement);
 		targetElement.children().remove();
 
@@ -1102,7 +1104,7 @@ var DataSpace = (function() {
 	instance.replicateSimpleField = replicateSimpleField;
 	instance.insertPublicationFields = insertPublicationFields;
 	instance.getTree = getTree;
-	instance.showFieldOfResearchLookup = showFieldOfResearchLookup;
+	instance.showAnzsrcoLookup = showAnzsrcoLookup;
 	instance.addKeyword = addKeyword;
 
 	instance.getActivityAtom = getActivityAtom;
