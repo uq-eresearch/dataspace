@@ -412,7 +412,7 @@
 		<xsl:param name="relation" />
 		<dl id="{$field}">
 			<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
-				<form id="lookup-form" method="post" action="" onSubmit="$('#lookup-submit').click(); return false;">
+				<form id="lookup-form" method="post" action="" onSubmit="$('[name=lookup-submit]', this).click(); return false;">
 					<table width="100%">
 						<tbody>
 							<tr>
