@@ -1354,18 +1354,18 @@ h1, h2, h3, h4 {
 }
 
 <!--  -->
-dl, dt, dd
+#page-form dl, dt, dd
 {
 	display: block
 }
 
-dl
+#page-form dl
 {
 	margin-top: 1em;
 	margin-bottom: 1em;
 }
 
-dt
+#page-form dt
 {
 	float: left;
 	font-weight: bold;
@@ -1373,17 +1373,17 @@ dt
 	font-size: 1em;
 }
 
-dd
+#page-form dd
 {
 	margin-left: 12em;
 	font-size: 1em;
 }
 
-.remove-link {
+#page-form .remove-link {
 	margin-left: 1ex;
 }
 
-label.error {
+#page-form label.error {
 	color: red;
 	font-size: 0.7em;
 }

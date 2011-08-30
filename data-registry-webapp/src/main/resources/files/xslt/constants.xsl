@@ -149,15 +149,15 @@
         <xsl:value-of select="concat($NS_EF,'Syndicate')"/>
     </xsl:variable>
 
-    <xsl:variable name="SCHEME_FOR">http://purl.org/anzsrc/for</xsl:variable>
+    <xsl:variable name="SCHEME_FOR">http://purl.org/asc/1297.0/2008/for/</xsl:variable>
     <xsl:variable name="PREFIX_FOR">
         <xsl:value-of select="concat($SCHEME_FOR, '/#field_')"></xsl:value-of>
     </xsl:variable>
-    <xsl:variable name="SCHEME_SEO">http://purl.org/anzsrc/seo</xsl:variable>
+    <xsl:variable name="SCHEME_SEO">http://purl.org/asc/1297.0/2008/seo/</xsl:variable>
     <xsl:variable name="PREFIX_SEO">
         <xsl:value-of select="concat($SCHEME_SEO, '/#field_')"></xsl:value-of>
     </xsl:variable>
-    <xsl:variable name="SCHEME_TOA">http://purl.org/anzsrc/toa</xsl:variable>
+    <xsl:variable name="SCHEME_TOA">http://purl.org/asc/1297.0/1993/toa/</xsl:variable>
     <xsl:variable name="PREFIX_TOA">
         <xsl:value-of select="concat($SCHEME_TOA, '/#field_')"></xsl:value-of>
     </xsl:variable>

@@ -60,7 +60,7 @@ public class AdapterInputHelper {
     private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
 
     private static final Logger logger = Logger.getLogger(AdapterInputHelper.class);
-    
+
     public static void addRelations(Entry entry, Version<?> version, User currentUser) throws ResponseContextException, URISyntaxException {
         if (version instanceof ActivityVersion) {
             addRelationsToActivity(entry, (ActivityVersion) version);
@@ -490,14 +490,14 @@ public class AdapterInputHelper {
     }
 
     public static void addDescriptionAuthors(
-    		Version<?> version, 
+    		Version<?> version,
     		List<Person> authors,
-    		RequestContext request) throws ResponseContextException 
+    		RequestContext request) throws ResponseContextException
     {
         try {
         	version.getDescriptionAuthors().clear();
         	if (authors.size() == 0) {
-	            AuthenticationManager authenticationManager = 
+	            AuthenticationManager authenticationManager =
 	            		RegistryApplication.getApplicationContext().getAuthenticationManager();
 	            User currentUser = authenticationManager.getCurrentUser(request);
 	            currentUser = RegistryApplication.getApplicationContext()
@@ -505,11 +505,11 @@ public class AdapterInputHelper {
 	            		.getByUsername(currentUser.getUsername());
 	            version.getDescriptionAuthors().add(
 	            		new SourceAuthor(
-	            				currentUser.getDisplayName(), 
+	            				currentUser.getDisplayName(),
 	            				currentUser.getEmail(), null));
         	} else {
             	for (Person person : authors) {
-        			URI uri = person.getUri() == null ? 
+        			URI uri = person.getUri() == null ?
         					null : person.getUri().toURI();
         			version.getDescriptionAuthors().add(
         					new SourceAuthor(person.getName(),
@@ -614,18 +614,14 @@ public class AdapterInputHelper {
                 IRI scheme = category.getScheme();
                 String term = category.getTerm();
                 if (scheme != null) {
-                    if (scheme.toString().equals(Constants.SCHEME_ANZSRC_FOR) ||
-                            scheme.toString().equals(Constants.SCHEME_ANZSRC_SEO) ||
-                            scheme.toString().equals(Constants.SCHEME_ANZSRC_TOA)) {
-                        Subject subject = daoManager.getSubjectDao().getSubject(scheme.toString(), term);
-                        if (subject == null) {
-                            subject = entityCreator.getNextSubject();
-                            subject.setTerm(term);
-                            subject.setDefinedBy(scheme.toString());
-                            subject.setLabel(category.getLabel());
-                        }
-                        subjects.add(subject);
+                    Subject subject = daoManager.getSubjectDao().getSubject(scheme.toString(), term);
+                    if (subject == null) {
+                        subject = entityCreator.getNextSubject();
+                        subject.setTerm(term);
+                        subject.setDefinedBy(scheme.toString());
+                        subject.setLabel(category.getLabel());
                     }
+                    subjects.add(subject);
                 } else {
                     //It is a keyword
                     Subject subject = daoManager.getSubjectDao().getSubject(Constants.SCHEME_KEYWORD, term, Constants.LABEL_KEYWORD);
@@ -786,7 +782,7 @@ public class AdapterInputHelper {
 
     private static Agent findOrCreateAgent(String name, String email, User currentUser) throws ResponseContextException {
     	EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
-    	
+
     	//Find the agent in our system first
         Agent agent = daoManager.getAgentDao().getByEmail(email);
         if (agent == null) {
