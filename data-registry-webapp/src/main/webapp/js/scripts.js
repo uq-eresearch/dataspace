@@ -723,6 +723,9 @@ var DataSpace = (function() {
 		addAccessedVia(record);
 		addOutputOf(record);
 
+		// add related
+		addRelations(record);
+
 		// add FOR & SEO codes
 		addFieldOfResearch(record);
 		addSocioEconomicImpact(record);
@@ -922,6 +925,8 @@ var DataSpace = (function() {
 	var addOutputOf = entityAddHandler('isoutputof', REL_IS_OUTPUT_OF);
 
 	var addAccessedVia = entityAddHandler('isaccessedvia', REL_IS_ACCESSED_VIA);
+
+	var addRelations = entityAddHandler('relation', REL_RELATED);
 
 	var addPublications = function(record) {
 		$('input[id|="publication-title"]').each(
