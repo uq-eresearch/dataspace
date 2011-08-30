@@ -4,7 +4,7 @@
 
 <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
 <script type="text/javascript"
-        src="/js/jquery-ui-1.8.14.custom.min.js"></script>
+        src="/js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="/js/jquery.validate.min.js"></script>
 
 <script type="text/javascript" src="/js/login.js"></script>

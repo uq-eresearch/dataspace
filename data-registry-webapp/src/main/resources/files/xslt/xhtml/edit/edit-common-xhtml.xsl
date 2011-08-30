@@ -274,45 +274,33 @@
 	</xsl:template>
 
 	<xsl:template name="creators">
-		<dl>
-			<dt><label for="creator">Creators</label></dt>
-			<dd class="field">
-				<xsl:call-template name="lookup-edit">
-					<xsl:with-param name="field" select="'creator'"/>
-					<xsl:with-param name="relation">
-						<xsl:value-of select="$ATOM_CREATOR" />
-					</xsl:with-param>
-				</xsl:call-template>
-			</dd>
-		</dl>
+		<xsl:call-template name="lookup-edit">
+			<xsl:with-param name="title" select="'Creators'" />
+			<xsl:with-param name="field" select="'creator'"/>
+			<xsl:with-param name="relation">
+				<xsl:value-of select="$ATOM_CREATOR" />
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="publishers">
-		<dl>
-			<dt><label for="creator">Custodians/Contacts</label></dt>
-			<dd class="field">
-				<xsl:call-template name="lookup-edit">
-					<xsl:with-param name="field" select="'publisher'"/>
-					<xsl:with-param name="relation">
-						<xsl:value-of select="$ATOM_PUBLISHER" />
-					</xsl:with-param>
-				</xsl:call-template>
-			</dd>
-		</dl>
+		<xsl:call-template name="lookup-edit">
+			<xsl:with-param name="title" select="'Custodians/Contacts'" />
+			<xsl:with-param name="field" select="'publisher'"/>
+			<xsl:with-param name="relation">
+				<xsl:value-of select="$ATOM_PUBLISHER" />
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="projects">
-		<dl>
-			<dt><label for="creator">Projects</label></dt>
-			<dd class="field">
-				<xsl:call-template name="lookup-edit">
-					<xsl:with-param name="field" select="'isoutputof'"/>
-					<xsl:with-param name="relation">
-						<xsl:value-of select="$ATOM_IS_OUTPUT_OF" />
-					</xsl:with-param>
-				</xsl:call-template>
-			</dd>
-		</dl>
+		<xsl:call-template name="lookup-edit">
+			<xsl:with-param name="title" select="'Projects'" />
+			<xsl:with-param name="field" select="'isoutputof'"/>
+			<xsl:with-param name="relation">
+				<xsl:value-of select="$ATOM_IS_OUTPUT_OF" />
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="fields-of-research">
@@ -419,25 +407,69 @@
 
 
 	<xsl:template name="lookup-edit">
+		<xsl:param name="title" />
 		<xsl:param name="field" />
 		<xsl:param name="relation" />
-		<xsl:for-each select="atom:link[@rel=$relation]">
+		<dl id="{$field}">
+			<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
+				<form id="lookup-form" method="post" action="" onSubmit="$('#lookup-submit').click(); return false;">
+					<table width="100%">
+						<tbody>
+							<tr>
+								<td>
+									<input type="text" id="query" name="lookup-keyword" value="" />
+								</td>
+								<td>
+									<input type="button" name="lookup-submit"
+										value="Search"/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+				<div class="search-result">
+					<div class="navigation">
+						<ul class="pager">
+
+						</ul>
+
+						<div class="pager-header">
+
+						</div>
+					</div>
+					<div>
+						<form class="docs">
+
+						</form>
+					</div>
+					<div>
+						<input type="button" name="select" value="Select" />
+					</div>
+				</div>
+			</div>
+			<dt><label><xsl:value-of select="$title" /></label></dt>
+			<xsl:for-each select="atom:link[@rel=$relation]">
+				<dd>
+					<a class="{$field}-value"
+						href="{@href}"
+						onclick="window.open(this.href,'_blank'); return false;">
+						<xsl:value-of select="@title" />
+					</a>
+					<a class="remove-link"
+						href="#" onclick="$(this).parent().remove();">x
+					</a>
+				</dd>
+			</xsl:for-each>
 			<dd>
-				<a class="{$field}-value"
-					href="{@href}"
-					onclick="window.open(this.href,'_blank'); return false;">
-					<xsl:value-of select="@title" />
-				</a>
-				<a class="remove-link"
-					href="#" onclick="$(this).parent().remove();">x
+				<a class="new-link" href="#" title="Add"
+					onclick="DataSpace.showLookupDialog('{$field}'); return false;">add
 				</a>
 			</dd>
-		</xsl:for-each>
-		<dd>
-			<a class="new-link" id="add-{$field}-link" href="#" title="Add"
-				onclick="DataSpace.showLookupDialog('{$field}'); return false;">add
-			</a>
-		</dd>
+			<script>
+			$(document).ready(function() {
+			});
+			</script>
+		</dl>
 	</xsl:template>
 
 	<xsl:template name="edit-subject">
@@ -647,43 +679,5 @@
 				</select>
 			</dd>
 		</dl>
-	</xsl:template>
-	<xsl:template name="lookup-form">
-		<div id="lookup-div" style="display:none;">
-			<form id="lookup-form" method="post" action="" onSubmit="$('#lookup-submit').click(); return false;">
-				<input type="hidden" id="lookup-type" value="" />
-				<table width="100%">
-					<tbody>
-						<tr>
-							<td>
-								<input type="text" id="query" name="lookup-keyword" value="" />
-							</td>
-							<td>
-								<input type="button" name="lookup-submit" id="lookup-submit"
-									value="Search"
-									onclick="lookup($('#lookup-type').val(),$('#query').val()); return false;" />
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
-			<div id="search-result">
-				<div id="navigation">
-					<ul id="pager">
-
-					</ul>
-
-					<div id="pager-header">
-
-					</div>
-				</div>
-				<div>
-					<form id="docs">
-
-					</form>
-				</div>
-				<input type="button" id="lookup-select" value="Select" />
-			</div>
-		</div>
 	</xsl:template>
 </xsl:stylesheet>

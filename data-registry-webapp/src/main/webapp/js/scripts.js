@@ -223,75 +223,152 @@ var DataSpace = (function() {
 		}
 	};
 
-	var showLookupDialog = function(type) {
-		$('#lookup-type').val(type);
-		$('#lookup-div')
-				.dialog(
-						{
-							modal : true,
-							open : function() {
-								$('#query').val('');
-								$('#docs').html('');
-								$('#pager').html('');
-								$('#pager-header').html('');
-								$(this).css('display', '');
+	/**
+	 * Search Functions
+	 */
+	var doEntityLookup = function(target, type, term) {
+		Manager = new AjaxSolr.Manager({
+			// TODO change this
+			// solrUrl: 'http://evolvingweb.ca/solr/reuters/'
+			solrUrl : '/solr/'
+		});
 
-								var selectHandler = function() {
-									var objs = $('#docs input:checked').map(
-											function(i, n) {
-												var obj = $(n).parent().find(
-														'a');
-												return {
-													title : obj.text(),
-													uri : obj.attr('href')
-												};
-											});
-									var elements = $(objs)
-											.map(
-													function(i, obj) {
-														var wrapper = $('<dd/>');
-														var element = $('<a/>');
-														element
-																.attr(
-																		'class',
-																		type
-																				+ '-value');
-														element.attr('href',
-																obj.uri);
-														element.text(obj.title);
-														element
-																.click(function() {
-																	window
-																			.open(
-																					element
-																							.attr('href'),
-																					'_blank');
-																	return false;
-																});
-														wrapper.append(element);
-														var removeLink = getRemoveLink(function() {
-															$(this).parent()
-																	.remove();
-															return false;
-														});
-														wrapper
-																.append(removeLink);
-														return wrapper;
-													});
-									elements.each(function(i, n) {
-										$('#add-' + type + '-link').parent()
-												.before(n);
-									});
-									$('#lookup-div').dialog('close');
-								};
-								$('#lookup-select').unbind('click',
-										selectHandler).bind('click',
-										selectHandler);
-							},
-							height : 400,
-							width : 600,
-							title : 'Lookup'
+		Manager.addWidget(new AjaxSolr.PagerWidget({
+			id : type + '-pager',
+			target : $('.pager', target),
+			prevLabel : '&lt;',
+			nextLabel : '&gt;',
+			innerWindow : 1,
+			renderHeader : function(perPage, offset, total) {
+				$('.pager-header', target).html(
+						$('<span/>').text(
+								'displaying ' + Math.min(total, offset + 1)
+										+ ' to '
+										+ Math.min(total, offset + perPage)
+										+ ' of ' + total));
+			}
+		}));
+
+		Manager.init();
+
+		var params = {
+			'qt' : 'standard',
+			'rows' : 3
+		};
+		_.each(params, function(value, name) {
+			Manager.store.addByValue(name, value);
+		});
+
+		var resultWidget = new AjaxSolr.ResultWidget({
+			id : type + '-result',
+			target: $('.docs',target),
+			afterRequest : function() {
+				this.target.empty();
+				_.each(this.manager.response.response.docs, function(doc) {
+					this.append(AjaxSolr.theme(type + 'Lookup', doc));
+				}, this.target);
+			}
+		});
+		Manager.addWidget(resultWidget);
+
+		var queryString = 'type:' + type + ' AND (' + term + ')';
+		Manager.store.addByValue('q', queryString);
+		Manager.doRequest();
+	};
+
+	 var lookup = function(target, type, term) {
+	     var entity = 'text';
+	     if (type == 'isparticipantin') {
+	         entity = 'project';
+	     } else if (type == 'isoutputof') {
+	         entity = 'project';
+	     } else if (type == 'creator') {
+	         entity = 'person';
+	     } else if (type == 'publisher') {
+	         entity = 'person';
+	     } else if (type == 'hasparticipant') {
+	         entity = 'person';
+	     } else if (type == 'iscollectorof') {
+	         entity = 'collection';
+	     } else if (type == 'hasoutput') {
+	         entity = 'collection';
+	     } else if (type == 'relation') {
+	         entity = 'collection';
+	     } else if (type == 'issupportedby') {
+	         entity = 'collection';
+	     } else if (type == 'isaccessedvia') {
+	         entity = 'report';
+	     }
+	     doEntityLookup(target, entity, term);
+	 };
+
+	 var selectItemsFromLookup = function(type) {
+	     $('p:subject').each();
+	 };
+
+	var showLookupDialog = function(field) {
+		var dialogWindow = $('#'+field+'-dialog-window');
+
+		var openHandler = function() {
+			var queryField = $('[name="lookup-keyword"]', dialogWindow);
+			queryField.val('');
+			$('.docs', dialogWindow).html('');
+			$('.pager', dialogWindow).html('');
+			$('.pager-header', dialogWindow).html('');
+			$(this).css('display', '');
+
+			var searchHandler = function() {
+				lookup($('.search-result',dialogWindow), field, queryField.val());
+				return false;
+			};
+
+			$('[name="lookup-submit"]', dialogWindow)
+				.unbind('click', searchHandler)
+				.bind('click', searchHandler);
+
+			var selectHandler = function() {
+				var objs = $('.docs input:checked', dialogWindow).map(
+						function(i, n) {
+							var obj = $(n).parent().find(
+									'a');
+							return {
+								title : obj.text(),
+								uri : obj.attr('href')
+							};
 						});
+				var elements = $(objs).map(function(i, obj) {
+					var wrapper = $('<dd/>');
+					var element = $('<a/>');
+					element.attr('class', field + '-value');
+					element.attr('href', obj.uri);
+					element.text(obj.title);
+					element.click(function() {
+						window.open(element.attr('href'), '_blank');
+						return false;
+					});
+					wrapper.append(element);
+					var removeLink = getRemoveLink(function() {
+						$(this).parent().remove();
+						return false;
+					});
+					wrapper.append(removeLink);
+					return wrapper;
+				});
+				elements.each(function(i, n) {
+					$('#'+field+' dd').last().before(n);
+				});
+				dialogWindow.dialog('close');
+			};
+			$('[name="select"]', dialogWindow).unbind('click', selectHandler)
+					.bind('click', selectHandler);
+		};
+		dialogWindow.dialog({
+			modal : true,
+			open : openHandler,
+			height : 400,
+			width : 600,
+			title : 'Lookup'
+		});
 	};
 
 	var getTree = function(searchTerm, parser) {
@@ -739,6 +816,7 @@ var DataSpace = (function() {
 
 		return record;
 	};
+
 
 	/**
 	 *

@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<!-- Transforms UQ collection profile of Atom Syndication Format to XHTML 
+<!-- Transforms UQ collection profile of Atom Syndication Format to XHTML
 	with embedded RDFa XSLT 1.0 Nigel Ward, 2010-12 -->
 <xsl:stylesheet version="2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:atom="http://www.w3.org/2005/Atom"
@@ -76,37 +76,29 @@
 						<div id="data-availability">
 
 							<xsl:call-template name="page" />
-							
+
 							<xsl:call-template name="access-rights" />
-							
-							<dl>
-								<dt><label for="isaccessedvia">Access Service/s</label></dt>
-								<dd>
-									<xsl:call-template name="lookup-edit">
-										<xsl:with-param name="field" select="'isaccessedvia'"/>
-										<xsl:with-param name="relation">
-											<xsl:value-of select="$ATOM_IS_ACCESSED_VIA" />
-										</xsl:with-param>
-									</xsl:call-template>
-								</dd>
-							</dl>
-							
-							<dl>
-								<dt><label for="relation">Related Collection/s</label></dt>
-								<dd>
-									<xsl:call-template name="lookup-edit">
-										<xsl:with-param name="field" select="'relation'"/>
-										<xsl:with-param name="relation">
-											<xsl:value-of select="$ATOM_RELATION" />
-										</xsl:with-param>
-									</xsl:call-template>
-								</dd>
-							</dl>
-							
+
+							<xsl:call-template name="lookup-edit">
+								<xsl:with-param name="title" select="'Access Service/s'" />
+								<xsl:with-param name="field" select="'isaccessedvia'"/>
+								<xsl:with-param name="relation">
+									<xsl:value-of select="$ATOM_IS_ACCESSED_VIA" />
+								</xsl:with-param>
+							</xsl:call-template>
+
+							<xsl:call-template name="lookup-edit">
+								<xsl:with-param name="title" select="'Related Collection/s'" />
+								<xsl:with-param name="field" select="'relation'"/>
+								<xsl:with-param name="relation">
+									<xsl:value-of select="$ATOM_RELATION" />
+								</xsl:with-param>
+							</xsl:call-template>
+
 							<xsl:call-template name="edit-related-publications" />
-							
+
 							<xsl:call-template name="rights" />
-							
+
 							<xsl:call-template name="licence-type" />
 						</div>
 						<h2>
@@ -150,7 +142,6 @@
 						</a>
 					</div>
 					</form>
-					<xsl:call-template name="lookup-form" />
 				</div>
 			</div>
 			<xsl:call-template name="footer" />

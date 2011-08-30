@@ -388,13 +388,6 @@ a:visited {
     font-size: 0.9em;
 }
 
-#edit-record-link, #new-record-link, #add-creator-link, #add-custodian-link, #add-project-link,
-#add-socio-economic-impact-link, #add-fields-of-research-link, #add-locations-link, #add-related-collection-link,
-#add-related-service-link, #add-related-publication-link, #add-collection-link {
-    color: #339900;
-    font-size: 0.9em
-}
-
 #delete-record-link {
     font-size: 0.9em;
     color: #ff0000;
@@ -1234,12 +1227,12 @@ p.centenary {
     border-bottom: 1px solid #000;
 }
 
-#pager,
-#pager-header {
+.pager,
+.pager-header {
     display: inline;
 }
 
-#pager li,
+.pager li,
 .links li {
     list-style-type: none;
     display: inline;
