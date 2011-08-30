@@ -432,10 +432,8 @@
 
 						</div>
 					</div>
-					<div>
-						<form class="docs">
+					<div class="docs">
 
-						</form>
 					</div>
 					<div>
 						<input type="button" name="select" value="Select" />

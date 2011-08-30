@@ -914,10 +914,13 @@ var DataSpace = (function() {
 	};
 
 	var addAuthors = function(record) {
-		// TODO authros needs to be retrieved from the UI
-		var author = getAuthorElement('Dr Hamish Campbell',
-				'hamish.campbell@uq.edu.au');
-		record.append(author);
+		$('#creator a[class="field-value"]').each(
+			function(i, v) {
+				var entity = v.getAttribute('href');
+				var title =  $(v).text();
+				var author = getAuthorElement(title,null,entity);
+				record.append(author);
+			});
 	};
 
 	var addPublishers = entityAddHandler('publisher', REL_PUBLISHER);

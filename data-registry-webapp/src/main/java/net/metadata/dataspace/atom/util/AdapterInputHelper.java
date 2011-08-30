@@ -532,9 +532,6 @@ public class AdapterInputHelper {
             if (name == null) {
                 throw new ResponseContextException("Author missing name", 400);
             }
-            if (email == null) {
-                throw new ResponseContextException("Author missing email address", 400);
-            }
             if (uri != null) {
                 EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                 String uriKey = OperationHelper.getEntityID(uri.toString());
@@ -548,7 +545,10 @@ public class AdapterInputHelper {
                     agent.getMade().add(version.getParent());
                     entityManager.merge(agent);
                 } else {
-                    Agent newAgent = findOrCreateAgent(name, email, currentUser);
+                	if (email == null) {
+                		throw new ResponseContextException("Author URI doesn't exist and missing email address", 400);
+                	}
+                	Agent newAgent = findOrCreateAgent(name, email, currentUser);
                     if (newAgent == null) {
                         throw new ResponseContextException("Author cannot be found", 400);
                     } else {
@@ -557,6 +557,9 @@ public class AdapterInputHelper {
                     }
                 }
             } else {
+            	if (email == null) {
+            		throw new ResponseContextException("Author missing both email and uri address", 400);
+            	}
                 Agent newAgent = findOrCreateAgent(name, email, currentUser);
                 if (newAgent == null) {
                     throw new ResponseContextException("Author cannot be found", 400);
