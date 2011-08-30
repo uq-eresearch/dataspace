@@ -318,13 +318,15 @@ var DataSpace = (function() {
 			$(this).css('display', '');
 
 			var searchHandler = function() {
-				lookup($('.search-result',dialogWindow), field, queryField.val());
+				var query = queryField.val();
+				if (query != '') {
+					lookup($('.search-result',dialogWindow), field, query);
+				}
 				return false;
 			};
 
-			$('[name="lookup-submit"]', dialogWindow)
-				.unbind('click', searchHandler)
-				.bind('click', searchHandler);
+			$('[name="lookup-submit"]', dialogWindow).unbind('click.lookup')
+				.bind('click.lookup', searchHandler);
 
 			var selectHandler = function() {
 				var objs = $('.docs input:checked', dialogWindow).map(
@@ -339,7 +341,7 @@ var DataSpace = (function() {
 				var elements = $(objs).map(function(i, obj) {
 					var wrapper = $('<dd/>');
 					var element = $('<a/>');
-					element.attr('class', field + '-value');
+					element.attr('class', 'field-value');
 					element.attr('href', obj.uri);
 					element.text(obj.title);
 					element.click(function() {
@@ -359,8 +361,8 @@ var DataSpace = (function() {
 				});
 				dialogWindow.dialog('close');
 			};
-			$('[name="select"]', dialogWindow).unbind('click', selectHandler)
-					.bind('click', selectHandler);
+			$('[name="select"]', dialogWindow).unbind('click.lookup')
+					.bind('click.lookup', selectHandler);
 		};
 		dialogWindow.dialog({
 			modal : true,
@@ -716,9 +718,9 @@ var DataSpace = (function() {
 		// add authors
 		addAuthors(record);
 
-		// add publishers
+		// add publishers, access services and isoutputof
 		addPublishers(record);
-
+		addAccessedVia(record);
 		addOutputOf(record);
 
 		// add FOR & SEO codes
@@ -896,6 +898,18 @@ var DataSpace = (function() {
 		});
 	};
 
+	var entityAddHandler = function(field, relation) {
+		return function(record) {
+			$('#'+field+' a[class="field-value"]').each(
+				function(i, v) {
+					var entity = v.getAttribute('href');
+					var title =  $(v).text();
+					var category = getLinkElement(entity, relation, title);
+					record.append(category);
+				});
+		};
+	};
+
 	var addAuthors = function(record) {
 		// TODO authros needs to be retrieved from the UI
 		var author = getAuthorElement('Dr Hamish Campbell',
@@ -903,26 +917,11 @@ var DataSpace = (function() {
 		record.append(author);
 	};
 
-	var addPublishers = function(record) {
-		// TODO publishers needs to be retrieved from the UI
-		var publisher = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'agents/1',
-				REL_PUBLISHER, 'Abdul Alabri');
-		record.append(publisher);
-	};
+	var addPublishers = entityAddHandler('publisher', REL_PUBLISHER);
 
-	var addOutputOf = function(record) {
-		// TODO publishers needs to be retrieved from the UI
-		var activity = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'activities/1',
-				REL_IS_OUTPUT_OF);
-		record.append(activity);
-	};
+	var addOutputOf = entityAddHandler('isoutputof', REL_IS_OUTPUT_OF);
 
-	var addAccessedVia = function(record) {
-		// TODO publishers needs to be retrieved from the UI
-		var service = getLinkElement(UQ_REGISTRY_URI_PREFIX + 'services/1',
-				REL_IS_ACCESSED_VIA);
-		record.append(service);
-	};
+	var addAccessedVia = entityAddHandler('isaccessedvia', REL_IS_ACCESSED_VIA);
 
 	var addPublications = function(record) {
 		$('input[id|="publication-title"]').each(

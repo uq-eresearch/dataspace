@@ -275,7 +275,9 @@
 
 	<xsl:template name="creators">
 		<xsl:call-template name="lookup-edit">
-			<xsl:with-param name="title" select="'Creators'" />
+			<xsl:with-param name="title">
+				Creators
+			</xsl:with-param>
 			<xsl:with-param name="field" select="'creator'"/>
 			<xsl:with-param name="relation">
 				<xsl:value-of select="$ATOM_CREATOR" />
@@ -285,7 +287,9 @@
 
 	<xsl:template name="publishers">
 		<xsl:call-template name="lookup-edit">
-			<xsl:with-param name="title" select="'Custodians/Contacts'" />
+			<xsl:with-param name="title">
+				Custodians/Contacts
+			</xsl:with-param>
 			<xsl:with-param name="field" select="'publisher'"/>
 			<xsl:with-param name="relation">
 				<xsl:value-of select="$ATOM_PUBLISHER" />
@@ -295,7 +299,9 @@
 
 	<xsl:template name="projects">
 		<xsl:call-template name="lookup-edit">
-			<xsl:with-param name="title" select="'Projects'" />
+			<xsl:with-param name="title">
+				Projects
+			</xsl:with-param>
 			<xsl:with-param name="field" select="'isoutputof'"/>
 			<xsl:with-param name="relation">
 				<xsl:value-of select="$ATOM_IS_OUTPUT_OF" />
@@ -412,20 +418,9 @@
 		<xsl:param name="relation" />
 		<dl id="{$field}">
 			<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
-				<form id="lookup-form" method="post" action="" onSubmit="$('[name=lookup-submit]', this).click(); return false;">
-					<table width="100%">
-						<tbody>
-							<tr>
-								<td>
-									<input type="text" id="query" name="lookup-keyword" value="" />
-								</td>
-								<td>
-									<input type="button" name="lookup-submit"
-										value="Search"/>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+				<form action="" onSubmit="$('[name=lookup-submit]', this).click(); return false;">
+					<input type="text" id="query" name="lookup-keyword" value="" />
+					<input type="button" name="lookup-submit" value="Search"/>
 				</form>
 				<div class="search-result">
 					<div class="navigation">
@@ -450,7 +445,7 @@
 			<dt><label><xsl:value-of select="$title" /></label></dt>
 			<xsl:for-each select="atom:link[@rel=$relation]">
 				<dd>
-					<a class="{$field}-value"
+					<a class="field-value"
 						href="{@href}"
 						onclick="window.open(this.href,'_blank'); return false;">
 						<xsl:value-of select="@title" />
