@@ -20,10 +20,18 @@ import java.io.Writer;
 @Transactional
 public class OperationHelper {
 
-    public static String getEntityID(String fullUrl) {
+	private static String stripQueryAndFragments(String fullUrl) {
         if (fullUrl.contains("?")) {
             fullUrl = fullUrl.split("\\?")[0];
         }
+        if (fullUrl.contains("#")) {
+            fullUrl = fullUrl.split("#")[0];
+        }
+		return fullUrl;
+	}
+
+    public static String getEntityID(String fullUrl) {
+        fullUrl = stripQueryAndFragments(fullUrl);
         String[] segments = fullUrl.split("/");
         return UrlEncoding.decode(segments[segments.length - 1]);
     }

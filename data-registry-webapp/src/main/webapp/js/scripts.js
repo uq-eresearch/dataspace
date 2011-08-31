@@ -90,15 +90,16 @@ var DataSpace = (function() {
 				this.value = (this.defaultValue || '');
 			}
 		});
+	};
+
+	var ingestRecord = function(url, type, isNew, isPublished) {
 		// Page form validates, but never submits itself
 		$('#page-form').validate({
+			ignore: '.ignore',
 			submitHandler : function(form) {
 				return false;
 			}
 		});
-	};
-
-	var ingestRecord = function(url, type, isNew, isPublished) {
 		// Trigger validation (which shouldn't trigger a submit
 		$('#page-form').submit();
 		// Abort if invalid
@@ -306,8 +307,9 @@ var DataSpace = (function() {
 	     $('p:subject').each();
 	 };
 
-	var showLookupDialog = function(field) {
+	var createLookupDialog = function(field) {
 		var dialogWindow = $('#'+field+'-dialog-window');
+		var newLink = $('#'+field+' .new-link');
 
 		var openHandler = function() {
 			var queryField = $('[name="lookup-keyword"]', dialogWindow);
@@ -365,11 +367,17 @@ var DataSpace = (function() {
 					.bind('click.lookup', selectHandler);
 		};
 		dialogWindow.dialog({
+			autoOpen: false,
 			modal : true,
 			open : openHandler,
 			height : 400,
 			width : 600,
 			title : 'Lookup'
+		});
+
+		newLink.click(function() {
+			dialogWindow.dialog('open');
+			return false;
 		});
 	};
 
@@ -1197,7 +1205,7 @@ var DataSpace = (function() {
 	instance.styleTables = styleTables;
 	instance.setRecordType = setRecordType;
 	instance.setLicenseType = setLicenseType;
-	instance.showLookupDialog = showLookupDialog;
+	instance.createLookupDialog = createLookupDialog;
 	instance.ingestRecord = ingestRecord;
 	instance.replicateSimpleField = replicateSimpleField;
 	instance.insertPublicationFields = insertPublicationFields;

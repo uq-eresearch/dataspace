@@ -274,15 +274,34 @@
 	</xsl:template>
 
 	<xsl:template name="creators">
-		<xsl:call-template name="lookup-edit">
-			<xsl:with-param name="title">
-				Creators
-			</xsl:with-param>
-			<xsl:with-param name="field" select="'creator'"/>
-			<xsl:with-param name="relation">
-				<xsl:value-of select="$ATOM_CREATOR" />
-			</xsl:with-param>
-		</xsl:call-template>
+		<xsl:param name="title">
+			Creators
+		</xsl:param>
+		<xsl:param name="field" select="'creator'"/>
+
+		<dl id="{$field}">
+			<xsl:call-template name="lookup-dialog-window">
+				<xsl:with-param name="field" select='$field'/>
+			</xsl:call-template>
+			<dt><label><xsl:value-of select="$title" /></label></dt>
+			<xsl:for-each select="atom:author">
+				<dd>
+					<a class="field-value"
+						href="{atom:uri/text()}"
+						onclick="window.open(this.href,'_blank'); return false;">
+						<xsl:value-of select="atom:name/text()" />
+					</a>
+					<a class="remove-link"
+						href="#" onclick="$(this).parent().remove();">x
+					</a>
+				</dd>
+			</xsl:for-each>
+			<dd>
+				<a class="new-link" href="#" title="Add">
+				add
+				</a>
+			</dd>
+		</dl>
 	</xsl:template>
 
 	<xsl:template name="publishers">
@@ -411,35 +430,48 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template name="lookup-dialog-window">
+		<xsl:param name="field" />
+		<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
+			<form action="" onSubmit="$('[name=lookup-submit]', this).click(); return false;">
+				<input class=".ignore" type="text" name="lookup-keyword" value="" />
+				<input type="submit" name="lookup-submit" value="Search"/>
+			</form>
+			<div class="search-result">
+				<div class="navigation">
+					<ul class="pager">
+
+					</ul>
+
+					<div class="pager-header">
+
+					</div>
+				</div>
+				<div class="docs">
+
+				</div>
+				<div>
+					<input class=".ignore" type="button" name="select" value="Select" />
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+		$(document).ready(function() {
+			var fieldName = '<xsl:value-of select="$field" />';
+			DataSpace.createLookupDialog(fieldName);
+		});
+		</script>
+	</xsl:template>
+
 
 	<xsl:template name="lookup-edit">
 		<xsl:param name="title" />
 		<xsl:param name="field" />
 		<xsl:param name="relation" />
 		<dl id="{$field}">
-			<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
-				<form action="" onSubmit="$('[name=lookup-submit]', this).click(); return false;">
-					<input type="text" id="query" name="lookup-keyword" value="" />
-					<input type="button" name="lookup-submit" value="Search"/>
-				</form>
-				<div class="search-result">
-					<div class="navigation">
-						<ul class="pager">
-
-						</ul>
-
-						<div class="pager-header">
-
-						</div>
-					</div>
-					<div class="docs">
-
-					</div>
-					<div>
-						<input type="button" name="select" value="Select" />
-					</div>
-				</div>
-			</div>
+			<xsl:call-template name="lookup-dialog-window">
+				<xsl:with-param name="field" select='$field'/>
+			</xsl:call-template>
 			<dt><label><xsl:value-of select="$title" /></label></dt>
 			<xsl:for-each select="atom:link[@rel=$relation]">
 				<dd>
@@ -454,14 +486,10 @@
 				</dd>
 			</xsl:for-each>
 			<dd>
-				<a class="new-link" href="#" title="Add"
-					onclick="DataSpace.showLookupDialog('{$field}'); return false;">add
+				<a class="new-link" href="#" title="Add">
+				add
 				</a>
 			</dd>
-			<script>
-			$(document).ready(function() {
-			});
-			</script>
 		</dl>
 	</xsl:template>
 
@@ -473,12 +501,12 @@
 		<dl id="{$field}">
 			<div class="dialog-window" style="display:none;">
 				<form action="" onSubmit="$(this).find(':button[@name=\'select']').click(); return false;">
-					<input type="text" name="query" value="" />
-					<input type="button" name="search"
+					<input class=".ignore" type="text" name="query" value="" />
+					<input type="submit" name="search"
 						value="Search"/>
 					<div class="results"/>
 					<div>
-						<input type="button" name="select" value="Select" />
+						<input class=".ignore" type="button" name="select" value="Select" />
 					</div>
 				</form>
 			</div>
