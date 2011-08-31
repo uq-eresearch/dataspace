@@ -1,79 +1,104 @@
-var map, drawControls;
-//$(document).ready(function() {
-//    loadScript();
-//    getOpenLayersMaps();
-//});
+var MapEditor = function(jqueryObj) {
+	var target = jqueryObj.get(0);
+	var map, drawControls;
 
-function init() {
-    map = new OpenLayers.Map('map');
-    var osm = new OpenLayers.Layer.OSM();
-    var wmsLayer = new OpenLayers.Layer.WMS("OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0?", {layers: 'basic'});
-    var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
-    var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
-    var vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry");
+	var init = function() {
+		map = new OpenLayers.Map({div: target});
+		var osm = new OpenLayers.Layer.OSM();
+		var wmsLayer = new OpenLayers.Layer.WMS("OpenLayers WMS",
+				"http://vmap0.tiles.osgeo.org/wms/vmap0?", {
+					layers : 'basic',
+					attribution : 'Provided by OSGeo'
+				});
+		var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
+		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 
-    var gphy = new OpenLayers.Layer.Google(
-            "Google Physical",
-            {type: google.maps.MapTypeId.TERRAIN}
-            // used to be {type: G_PHYSICAL_MAP}
-    );
+		var gphy = new OpenLayers.Layer.GoogleNG({
+			name : "Google Physical",
+			type : google.maps.MapTypeId.TERRAIN
+		});
 
-    map.addLayers([gphy, osm, pointLayer, polygonLayer, vectorLayer]);
-    vectorLayer.addFeatures([drawPolygon()]);
+		map.addLayers([ gphy, osm, pointLayer, polygonLayer ]);
 
-    drawControls = {
-        point: new OpenLayers.Control.DrawFeature(pointLayer, OpenLayers.Handler.Point),
-        polygon: new OpenLayers.Control.DrawFeature(polygonLayer, OpenLayers.Handler.Polygon)
-    };
-    for (var key in drawControls) {
-        map.addControl(drawControls[key]);
-    }
+		drawControls = {
+			point : new OpenLayers.Control.DrawFeature(pointLayer,
+					OpenLayers.Handler.Point, {
+						callbacks: {
+							done: function(geometry) {
+								console.debug(geometry);
+							}
+						}
+					}),
+			box : new OpenLayers.Control.DrawFeature(polygonLayer,
+					OpenLayers.Handler.Box, {
+						callbacks: {
+							done: function(boundsOrPixel) {
+								if (boundsOrPixel instanceof OpenLayers.Pixel) {
+									var pixel = boundsOrPixel;
+									console.debug(pixel);
+								} else {
+									var polygon = boundsOrPixel.toGeometry();
+									console.debug(polygon);
+								}
+							}
+						}
+					}),
+			polygon : new OpenLayers.Control.DrawFeature(polygonLayer,
+					OpenLayers.Handler.Polygon, {
+						callbacks: {
+							done: function(geometry) {
+								console.debug(geometry);
+							}
+						}
+					})
+		};
+		for ( var key in drawControls) {
+			map.addControl(drawControls[key]);
+		}
 
+		var proj = new OpenLayers.Projection("EPSG:4326");
+		var center = new OpenLayers.LonLat(130.32129, -24.25231);
+		map.setCenter(center.transform(proj, map.getProjectionObject()), 3);
+		map.addControl(new OpenLayers.Control.LayerSwitcher());
+		polygonLayer.addFeatures([drawPolygon(map)]);
 
-    map.setCenter(new OpenLayers.LonLat(130.32129, -24.25231), 3);
-    map.addControl(new OpenLayers.Control.LayerSwitcher());
-    map.addControl(new OpenLayers.Control.MousePosition());
+	};
 
-}
+	var toggleControl = function(element) {
+		for (key in drawControls) {
+			var control = drawControls[key];
+			if (element.value == key && element.checked) {
+				control.activate();
+			} else {
+				control.deactivate();
+			}
+		}
+	};
 
-function toggleControl(element) {
-    for (key in drawControls) {
-        var control = drawControls[key];
-        if (element.value == key && element.checked) {
-            control.activate();
-        } else {
-            control.deactivate();
-        }
-    }
-}
+	var drawPolygon = function(map) {
+		var pointList = [];
 
+		var proj = new OpenLayers.Projection("EPSG:4326");
+		var point = map.getCenter().transform(map.getProjectionObject(),proj);
 
-function drawPolygon() {
-    var pointList = [];
-    var point = new OpenLayers.Geometry.Point(-110, 45);
+		for ( var p = 0; p < 6; ++p) {
+			var a = p * (2 * Math.PI) / 7;
+			var r = Math.random(1) + 1;
+			var x = point.lon + (r * Math.sin(a));
+			var y = point.lat + (r * Math.cos(a));
+			var newPoint = new OpenLayers.Geometry.Point(x, y);
+			newPoint = newPoint.transform(proj, map.getProjectionObject());
+			pointList.push(newPoint);
+		}
+		pointList.push(pointList[0]);
 
-    for (var p = 0; p < 6; ++p) {
-        var a = p * (2 * Math.PI) / 7;
-        var r = Math.random(1) + 1;
-        var newPoint = new OpenLayers.Geometry.Point(point.x + (r * Math.cos(a)),
-                point.y + (r * Math.sin(a)));
-        pointList.push(newPoint);
-    }
-    pointList.push(pointList[0]);
+		var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
+		var polygonFeature = new OpenLayers.Feature.Vector(
+				new OpenLayers.Geometry.Polygon([ linearRing ]));
+		return polygonFeature;
+	};
 
-    var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
-    var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linearRing]));
-    return polygonFeature;
-}
+	this.init = init;
+	this.toggleControl = toggleControl;
 
-//
-//function loadScript() {
-//    var script = document.createElement("script");
-//    script.type = "text/javascript";
-//    script.src = "http://maps.google.com/maps/api/js?sensor=false";
-//    $('head').append(script);
-//    var script2 = document.createElement("script");
-//    script2.type = "text/javascript";
-//    script2.src = "http://maps.gstatic.com/intl/en_us/mapfiles/api-3/5/3/main.js";
-//    $('head').append(script2);
-//}
+};

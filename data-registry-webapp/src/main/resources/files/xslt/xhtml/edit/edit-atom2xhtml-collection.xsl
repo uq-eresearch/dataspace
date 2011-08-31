@@ -31,14 +31,14 @@
 			</title>
 			<link href="/css/description.css" rel="stylesheet" type="text/css" />
 			<xsl:call-template name="head" />
-			<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js">;</script>
+			<script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js">;</script>
 			<script type="text/javascript"
-				src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false">;</script>
+				src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false">;</script>
 			<script type="text/javascript" src="/js/map/map.js">;</script>
 			<!--<script type="text/javascript" -->
 			<!--src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ">;</script> -->
 		</head>
-		<body onload="init();">
+		<body>
 			<xsl:call-template name="header" />
 			<div class="wrapper">
 				<div class="pad-top pad-sides">
@@ -120,6 +120,7 @@
 								</dd>
 							</dl>
 							<xsl:call-template name="edit-locations" />
+							<xsl:call-template name="edit-region" />
 						</div>
 						<h2>
 							<label for="subjects">Topics</label>

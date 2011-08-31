@@ -1,10 +1,13 @@
-/* Avoid errors due to debugging left in */
 if (typeof (window.console) == 'undefined') {
+	/* Avoid errors due to debugging left in */
 	window.console = function() {
 		var noop = function() {
 		};
 		this.debug = noop;
 	};
+} else {
+	// Otherwise fix OpenLayer problem
+    console.firebug=true;
 }
 
 var DataSpace = (function() {

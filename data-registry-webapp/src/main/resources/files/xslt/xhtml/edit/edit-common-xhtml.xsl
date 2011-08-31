@@ -631,27 +631,45 @@
 	</xsl:template>
 
 	<xsl:template name="edit-region">
-		<h4>Region</h4>
-		<div id="map" class="smallmap" style="width: 500px; height: 400px">
-		</div>
-		<ul id="controlToggle">
-			<li>
-				<input type="radio" name="type" value="none" id="noneToggle"
-					onclick="DataSpace.toggleControl(this);" checked="checked" />
-				<label for="noneToggle">navigate</label>
+		<dl>
+			<dt>Region</dt>
+			<dd>
+				<div id="map" class="smallmap" style="width: 500px; height: 400px">
+				</div>
+				<ul id="controlToggle">
+					<li>
+						<input type="radio" name="type" value="none" id="noneToggle"
+							onclick="$('#map').prop('map').toggleControl(this);" checked="checked" />
+						<label for="noneToggle">navigate</label>
 
-			</li>
-			<li>
-				<input type="radio" name="type" value="point" id="pointToggle"
-					onclick="DataSpace.toggleControl(this);" />
-				<label for="pointToggle">draw point</label>
-			</li>
-			<li>
-				<input type="radio" name="type" value="polygon" id="polygonToggle"
-					onclick="DataSpace.toggleControl(this);" />
-				<label for="polygonToggle">draw polygon</label>
-			</li>
-		</ul>
+					</li>
+					<li>
+						<input type="radio" name="type" value="point" id="pointToggle"
+							onclick="$('#map').prop('map').toggleControl(this);" />
+						<label for="pointToggle">draw point</label>
+					</li>
+					<li>
+						<input type="radio" name="type" value="box" id="boxToggle"
+							onclick="$('#map').prop('map').toggleControl(this);" />
+						<label for="boxToggle">draw box</label>
+					</li>
+					<li>
+						<input type="radio" name="type" value="polygon" id="polygonToggle"
+							onclick="$('#map').prop('map').toggleControl(this);" />
+						<label for="polygonToggle">draw polygon</label>
+					</li>
+				</ul>
+			</dd>
+			<script type="text/javascript">
+			$(document).ready(function(){
+				var target = $('#map');
+				var map = new MapEditor(target);
+				map.init();
+				target.prop('map', map);
+
+			});
+			</script>
+		</dl>
 	</xsl:template>
 
 	<xsl:template name="edit-related-publications">
