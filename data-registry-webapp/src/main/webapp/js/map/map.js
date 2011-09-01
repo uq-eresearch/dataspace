@@ -10,7 +10,6 @@ var MapEditor = function(jqueryObj) {
 					layers : 'basic',
 					attribution : 'Provided by OSGeo'
 				});
-		var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 
 		var gphy = new OpenLayers.Layer.GoogleNG({
@@ -18,14 +17,22 @@ var MapEditor = function(jqueryObj) {
 			type : google.maps.MapTypeId.TERRAIN
 		});
 
-		map.addLayers([ gphy, osm, pointLayer, polygonLayer ]);
+		map.addLayers([ gphy, osm, polygonLayer ]);
+
+		var changeFeature = function(geometry) {
+			polygonLayer.removeAllFeatures();
+			polygonLayer.addFeatures([
+				new OpenLayers.Feature.Vector(geometry)
+			]);
+		};
 
 		drawControls = {
-			point : new OpenLayers.Control.DrawFeature(pointLayer,
+			point : new OpenLayers.Control.DrawFeature(polygonLayer,
 					OpenLayers.Handler.Point, {
 						callbacks: {
 							done: function(geometry) {
 								console.debug(geometry);
+								changeFeature(geometry);
 							}
 						}
 					}),
@@ -35,10 +42,24 @@ var MapEditor = function(jqueryObj) {
 							done: function(boundsOrPixel) {
 								if (boundsOrPixel instanceof OpenLayers.Pixel) {
 									var pixel = boundsOrPixel;
-									console.debug(pixel);
+									var coord = map.getLonLatFromPixel(pixel);
+									var point = new OpenLayers.Geometry.Point(
+											coord.lon, coord.lat);
+									console.debug(point);
+									changeFeature(point);
 								} else {
-									var polygon = boundsOrPixel.toGeometry();
+									var bounds = boundsOrPixel;
+									var p1 = new OpenLayers.Pixel(bounds.left, bounds.top);
+									var p2 = new OpenLayers.Pixel(bounds.right, bounds.bottom);
+									var coord1 = map.getLonLatFromPixel(p1);
+									var coord2 = map.getLonLatFromPixel(p2);
+									bounds.left = coord1.lon;
+									bounds.top = coord1.lat;
+									bounds.right = coord2.lon;
+									bounds.bottom = coord2.lat;
+									var polygon = bounds.toGeometry();
 									console.debug(polygon);
+									changeFeature(polygon);
 								}
 							}
 						}
@@ -48,6 +69,7 @@ var MapEditor = function(jqueryObj) {
 						callbacks: {
 							done: function(geometry) {
 								console.debug(geometry);
+								changeFeature(geometry);
 							}
 						}
 					})

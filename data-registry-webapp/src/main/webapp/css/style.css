@@ -1383,6 +1383,11 @@ h1, h2, h3, h4 {
 
 .olMap .olControlAttribution {
 	left: 3px;
-	right: 3px;
+	right: auto;
 	bottom: 3px;
+}
+
+/* Hide Google logo, as it increases the size considerably */
+.olMap .olControlAttribution .olGoogleAttribution div a{
+	display: none
 }
