@@ -11,6 +11,7 @@ var MapEditor = function(jqueryObj) {
 					attribution : 'Provided by OSGeo'
 				});
 		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+		var longlatProj = new OpenLayers.Projection("EPSG:4326");
 
 		var gphy = new OpenLayers.Layer.GoogleNG({
 			name : "Google Physical",
@@ -24,6 +25,14 @@ var MapEditor = function(jqueryObj) {
 			polygonLayer.addFeatures([
 				new OpenLayers.Feature.Vector(geometry)
 			]);
+			var formatter = new OpenLayers.Format.GeoRSS();
+			var features = _.map(polygonLayer.features, function(feature) {
+				var geometry = feature.geometry.clone();
+				geometry.transform(map.getProjectionObject(), longlatProj);
+				return new OpenLayers.Feature.Vector(geometry);
+			});
+			var dom = $(formatter.createFeatureXML(features[0])).find(':not(title, description)').first();
+			console.debug(dom);
 		};
 
 		drawControls = {
@@ -31,7 +40,6 @@ var MapEditor = function(jqueryObj) {
 					OpenLayers.Handler.Point, {
 						callbacks: {
 							done: function(geometry) {
-								console.debug(geometry);
 								changeFeature(geometry);
 							}
 						}
@@ -45,7 +53,6 @@ var MapEditor = function(jqueryObj) {
 									var coord = map.getLonLatFromPixel(pixel);
 									var point = new OpenLayers.Geometry.Point(
 											coord.lon, coord.lat);
-									console.debug(point);
 									changeFeature(point);
 								} else {
 									var bounds = boundsOrPixel;
@@ -58,7 +65,6 @@ var MapEditor = function(jqueryObj) {
 									bounds.right = coord2.lon;
 									bounds.bottom = coord2.lat;
 									var polygon = bounds.toGeometry();
-									console.debug(polygon);
 									changeFeature(polygon);
 								}
 							}
@@ -68,7 +74,6 @@ var MapEditor = function(jqueryObj) {
 					OpenLayers.Handler.Polygon, {
 						callbacks: {
 							done: function(geometry) {
-								console.debug(geometry);
 								changeFeature(geometry);
 							}
 						}
@@ -78,9 +83,8 @@ var MapEditor = function(jqueryObj) {
 			map.addControl(drawControls[key]);
 		}
 
-		var proj = new OpenLayers.Projection("EPSG:4326");
 		var center = new OpenLayers.LonLat(130.32129, -24.25231);
-		map.setCenter(center.transform(proj, map.getProjectionObject()), 3);
+		map.setCenter(center.transform(longlatProj, map.getProjectionObject()), 3);
 		map.addControl(new OpenLayers.Control.LayerSwitcher());
 		polygonLayer.addFeatures([drawPolygon(map)]);
 
