@@ -30,7 +30,7 @@ describe("MapEditor", function() {
 		expect(feature.geometry).not.toBeNull();
 		// Export
 		var element = mapEditor.exportData();
-		expect(element.nodeName).toEqual('POLYGON');
+		expect(element.nodeName).toEqual('georss:polygon');
 		// Remove test div
 		testDiv.remove();
 	});

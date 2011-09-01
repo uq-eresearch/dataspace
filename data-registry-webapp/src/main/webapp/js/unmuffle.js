@@ -1,2 +1,4 @@
 // Disable OpenLayer muffling of console
-console.firebug=true;
+if (typeof(window.console) != 'undefined') {
+	window.console.firebug=true;
+}

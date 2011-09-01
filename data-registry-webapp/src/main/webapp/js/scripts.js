@@ -1011,9 +1011,12 @@ var DataSpace = (function() {
 						record.append(linkElement);
 					}
 				});
-		var region = $('#map').prop('map').exportData();
-		if (region != null) {
-			record.append(region);
+		var regionMap = $('#map').prop('map');
+		if (typeof(regionMap) != 'undefined') {
+			var region = $('#map').prop('map').exportData();
+			if (region != null) {
+				record.append(region);
+			}
 		}
 	};
 

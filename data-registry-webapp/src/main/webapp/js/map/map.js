@@ -126,7 +126,7 @@ var MapEditor = function(jqueryObj) {
 		feature = new OpenLayers.Feature.Vector(geometry);
 		var georssFormatter = new OpenLayers.Format.GeoRSS();
 		var rssEntry = georssFormatter.createFeatureXML(feature);
-		var georss = $(rssEntry).find(':not(title, description)').get(0);
+		var georss = $(rssEntry).find(':not(title, description)').last().get(0);
 		return georss;
 	}
 
