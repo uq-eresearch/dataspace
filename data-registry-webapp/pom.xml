@@ -90,6 +90,7 @@
 					<contextPath>/</contextPath>
 				</configuration>
 			</plugin>
+			<!--
 			<plugin>
 				<groupId>au.edu.uq.itee.maenad</groupId>
 				<artifactId>maven-svninfo-plugin</artifactId>
@@ -103,6 +104,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			 -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>properties-maven-plugin</artifactId>
@@ -193,6 +195,10 @@
 					</execution>
 				</executions>
 				<configuration>
+					<preloadSources>
+						<preloadSource>unmuffle.js</preloadSource>
+						<preloadSource>http://openlayers.org/dev/OpenLayers.js</preloadSource>
+					</preloadSources>
 					<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
 					<browserVersion>FIREFOX_3_6</browserVersion>
 					<sourceExcludes>

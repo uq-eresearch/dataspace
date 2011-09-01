@@ -1,6 +1,6 @@
 var MapEditor = function(jqueryObj) {
 	var target = jqueryObj.get(0);
-	var map, drawControls;
+	var map, drawControls, polygonLayer;
 
 	var init = function() {
 		map = new OpenLayers.Map({div: target});
@@ -10,29 +10,24 @@ var MapEditor = function(jqueryObj) {
 					layers : 'basic',
 					attribution : 'Provided by OSGeo'
 				});
-		var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+		polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 		var longlatProj = new OpenLayers.Projection("EPSG:4326");
 
-		var gphy = new OpenLayers.Layer.GoogleNG({
-			name : "Google Physical",
-			type : google.maps.MapTypeId.TERRAIN
-		});
+		if (typeof(google) != 'undefined') {
+			var gphy = new OpenLayers.Layer.GoogleNG({
+				name : "Google Physical",
+				type : google.maps.MapTypeId.TERRAIN
+			});
+			map.addLayers([ gphy ]);
+		}
 
-		map.addLayers([ gphy, osm, polygonLayer ]);
+		map.addLayers([ osm, polygonLayer ]);
 
 		var changeFeature = function(geometry) {
 			polygonLayer.removeAllFeatures();
 			polygonLayer.addFeatures([
 				new OpenLayers.Feature.Vector(geometry)
 			]);
-			var formatter = new OpenLayers.Format.GeoRSS();
-			var features = _.map(polygonLayer.features, function(feature) {
-				var geometry = feature.geometry.clone();
-				geometry.transform(map.getProjectionObject(), longlatProj);
-				return new OpenLayers.Feature.Vector(geometry);
-			});
-			var dom = $(formatter.createFeatureXML(features[0])).find(':not(title, description)').first();
-			console.debug(dom);
 		};
 
 		drawControls = {
@@ -86,9 +81,54 @@ var MapEditor = function(jqueryObj) {
 		var center = new OpenLayers.LonLat(130.32129, -24.25231);
 		map.setCenter(center.transform(longlatProj, map.getProjectionObject()), 3);
 		map.addControl(new OpenLayers.Control.LayerSwitcher());
-		polygonLayer.addFeatures([drawPolygon(map)]);
+
+
 
 	};
+
+	var parseXML = function(txt) {
+		var xmlDoc = null;
+		if (window.DOMParser) {
+			parser=new DOMParser();
+			xmlDoc=parser.parseFromString(txt,"text/xml");
+		} else {
+			// Internet Explorer
+			xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+			xmlDoc.async="false";
+			xmlDoc.loadXML(txt);
+		}
+		return xmlDoc;
+	}
+
+	var loadData = function(elementString) {
+		// Wrap in element and parse
+		var georssFormatter = new OpenLayers.Format.GeoRSS();
+		var wrappedTxt = '<entry>'+elementString+'</entry>';
+		var root = parseXML(wrappedTxt);
+		var feature = georssFormatter.createFeatureFromItem(root);
+		// Transform the geometry in relation to the map
+		var longlatProj = new OpenLayers.Projection("EPSG:4326");
+		feature.geometry.transform(longlatProj, map.getProjectionObject());
+		// Add the feature
+		polygonLayer.addFeatures([feature]);
+		polygonLayer.redraw();
+		return feature;
+	};
+
+	var exportData = function() {
+		if (polygonLayer.features.length == 0)
+			return null;
+		var feature = polygonLayer.features[0];
+		// Transform the geometry back to long/lat
+		var longlatProj = new OpenLayers.Projection("EPSG:4326");
+		var geometry = feature.geometry.clone();
+		geometry.transform(map.getProjectionObject(), longlatProj);
+		feature = new OpenLayers.Feature.Vector(geometry);
+		var georssFormatter = new OpenLayers.Format.GeoRSS();
+		var rssEntry = georssFormatter.createFeatureXML(feature);
+		var georss = $(rssEntry).find(':not(title, description)').get(0);
+		return georss;
+	}
 
 	var toggleControl = function(element) {
 		for (key in drawControls) {
@@ -126,5 +166,7 @@ var MapEditor = function(jqueryObj) {
 
 	this.init = init;
 	this.toggleControl = toggleControl;
+	this.loadData = loadData;
+	this.exportData = exportData;
 
 };

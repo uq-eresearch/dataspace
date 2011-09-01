@@ -1,15 +1,3 @@
-if (typeof (window.console) == 'undefined') {
-	/* Avoid errors due to debugging left in */
-	window.console = function() {
-		var noop = function() {
-		};
-		this.debug = noop;
-	};
-} else {
-	// Otherwise fix OpenLayer problem
-    console.firebug=true;
-}
-
 var DataSpace = (function() {
 	var instance = {};
 
@@ -27,7 +15,7 @@ var DataSpace = (function() {
 	var NS_ANZSRC = PERSISTENT_URL + "asc/1297.0/";
 	var NS_VIVO = "http://vivoweb.org/ontology/core#";
 	var NS_ORE = "http://www.openarchives.org/ore/terms/";
-	var NS_GEORSS = "http://www.georss.org/georss/";
+	var NS_GEORSS = "http://www.georss.org/georss";
 	var NS_RDFA = "http://www.w3.org/ns/rdfa#";
 	var NS_EFS = "http://www.e-framework.org/Contributions/ServiceGenres/";
 	var NS_ATOM = "http://www.w3.org/2005/Atom";
@@ -1023,6 +1011,10 @@ var DataSpace = (function() {
 						record.append(linkElement);
 					}
 				});
+		var region = $('#map').prop('map').exportData();
+		if (region != null) {
+			record.append(region);
+		}
 	};
 
 	var addSource = function(record) {

@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="/css/cupertino/jquery-ui-1.8.16.custom.css" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="/css/style.css"/>
 
+        <script type="text/javascript" src="/js/unmuffle.js">;</script>
         <script type="text/javascript" src="/js/jquery-1.6.2.min.js">;</script>
         <script type="text/javascript" src="/js/jquery-ui-1.8.16.custom.min.js">;</script>
         <script type="text/javascript" src="/js/jquery.validate.min.js">;</script>

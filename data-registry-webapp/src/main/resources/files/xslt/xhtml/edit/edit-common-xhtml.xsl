@@ -8,7 +8,7 @@
 	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
 	xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
 	xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-	xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:georss="http://www.georss.org/georss/"
+	xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:georss="http://www.georss.org/georss"
 	xmlns:app="http://www.w3.org/2007/app"
 	xmlns="http://www.w3.org/1999/xhtml" exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss app">
 	<xsl:include href="../../constants.xsl" />
@@ -662,11 +662,12 @@
 			</dd>
 			<script type="text/javascript">
 			$(document).ready(function(){
+				var initialData = '<xsl:copy-of select="georss:*"/>';
 				var target = $('#map');
 				var map = new MapEditor(target);
 				map.init();
+				map.loadData(initialData)
 				target.prop('map', map);
-
 			});
 			</script>
 		</dl>
