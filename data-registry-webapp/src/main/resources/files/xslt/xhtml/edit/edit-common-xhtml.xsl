@@ -215,6 +215,7 @@
 					<xsl:value-of select="$path" />
 				</textarea>
 			</xsl:when>
+
 			<xsl:otherwise>
 				<textarea id="{$field}-textarea" name="{$field}-textarea"
 					cols="50" rows="5">
@@ -666,7 +667,9 @@
 				var target = $('#map');
 				var map = new MapEditor(target);
 				map.init();
-				map.loadData(initialData)
+				if (initialData != '') {
+					map.loadData(initialData);
+				}
 				target.prop('map', map);
 			});
 			</script>
