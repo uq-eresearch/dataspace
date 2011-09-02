@@ -177,6 +177,7 @@
 		              </options>
 		              <includes>
 		              	<include>js/scripts.js</include>
+		              	<include>js/map/map.js</include>
 		              	<include>js/AnzsrcoParser.js</include>
 		              </includes>
 		            </configuration>

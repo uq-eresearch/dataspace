@@ -666,7 +666,7 @@
 				var initialData = '<xsl:copy-of select="georss:*"/>';
 				var target = $('#map');
 				var map = new MapEditor(target);
-				map.init();
+				map.makeEditable();
 				if (initialData != '') {
 					map.loadData(initialData);
 				}

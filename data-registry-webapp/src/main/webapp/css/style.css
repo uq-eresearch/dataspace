@@ -1385,6 +1385,8 @@ h1, h2, h3, h4 {
 	left: 3px;
 	right: auto;
 	bottom: 3px;
+	font-family: sans-serif;
+	font-size: 10px;
 }
 
 /* Hide Google logo, as it increases the size considerably */

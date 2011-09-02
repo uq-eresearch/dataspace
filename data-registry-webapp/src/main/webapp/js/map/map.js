@@ -4,30 +4,63 @@ var MapEditor = function(jqueryObj) {
 
 	var init = function() {
 		map = new OpenLayers.Map({div: target});
+		var layers = [];
 		var osm = new OpenLayers.Layer.OSM();
 		var wmsLayer = new OpenLayers.Layer.WMS("OpenLayers WMS",
 				"http://vmap0.tiles.osgeo.org/wms/vmap0?", {
 					layers : 'basic',
-					attribution : 'Provided by OSGeo'
+					attribution : 'Provided by OSGeo',
+					wrapDateLine: true
 				});
 		polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
-		var longlatProj = new OpenLayers.Projection("EPSG:4326");
 
 		if (typeof(google) != 'undefined') {
 			var gphy = new OpenLayers.Layer.GoogleNG({
 				name : "Google Physical",
-				type : google.maps.MapTypeId.TERRAIN
+	            type: google.maps.MapTypeId.HYBRID,
+	            sphericalMercator: true,
+	            numZoomLevels: 20,
+				wrapDateLine: true
 			});
 			map.addLayers([ gphy ]);
 		}
 
 		map.addLayers([ osm, polygonLayer ]);
+		map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+		recenter();
+	};
+
+	var makeEditable = function() {
 
 		var changeFeature = function(geometry) {
 			polygonLayer.removeAllFeatures();
 			polygonLayer.addFeatures([
 				new OpenLayers.Feature.Vector(geometry)
 			]);
+			recenter();
+		};
+
+		var boxHandler = function(boundsOrPixel) {
+			if (boundsOrPixel instanceof OpenLayers.Pixel) {
+				var pixel = boundsOrPixel;
+				var coord = map.getLonLatFromPixel(pixel);
+				var point = new OpenLayers.Geometry.Point(
+						coord.lon, coord.lat);
+				changeFeature(point);
+			} else {
+				var bounds = boundsOrPixel;
+				var p1 = new OpenLayers.Pixel(bounds.left, bounds.top);
+				var p2 = new OpenLayers.Pixel(bounds.right, bounds.bottom);
+				var coord1 = map.getLonLatFromPixel(p1);
+				var coord2 = map.getLonLatFromPixel(p2);
+				bounds.left = coord1.lon;
+				bounds.top = coord1.lat;
+				bounds.right = coord2.lon;
+				bounds.bottom = coord2.lat;
+				var polygon = bounds.toGeometry();
+				changeFeature(polygon);
+			}
 		};
 
 		drawControls = {
@@ -42,27 +75,7 @@ var MapEditor = function(jqueryObj) {
 			box : new OpenLayers.Control.DrawFeature(polygonLayer,
 					OpenLayers.Handler.Box, {
 						callbacks: {
-							done: function(boundsOrPixel) {
-								if (boundsOrPixel instanceof OpenLayers.Pixel) {
-									var pixel = boundsOrPixel;
-									var coord = map.getLonLatFromPixel(pixel);
-									var point = new OpenLayers.Geometry.Point(
-											coord.lon, coord.lat);
-									changeFeature(point);
-								} else {
-									var bounds = boundsOrPixel;
-									var p1 = new OpenLayers.Pixel(bounds.left, bounds.top);
-									var p2 = new OpenLayers.Pixel(bounds.right, bounds.bottom);
-									var coord1 = map.getLonLatFromPixel(p1);
-									var coord2 = map.getLonLatFromPixel(p2);
-									bounds.left = coord1.lon;
-									bounds.top = coord1.lat;
-									bounds.right = coord2.lon;
-									bounds.bottom = coord2.lat;
-									var polygon = bounds.toGeometry();
-									changeFeature(polygon);
-								}
-							}
+							done: boxHandler
 						}
 					}),
 			polygon : new OpenLayers.Control.DrawFeature(polygonLayer,
@@ -74,15 +87,9 @@ var MapEditor = function(jqueryObj) {
 						}
 					})
 		};
-		for ( var key in drawControls) {
-			map.addControl(drawControls[key]);
-		}
-
-		var center = new OpenLayers.LonLat(130.32129, -24.25231);
-		map.setCenter(center.transform(longlatProj, map.getProjectionObject()), 3);
-		map.addControl(new OpenLayers.Control.LayerSwitcher());
-
-
+		_.each(drawControls, function(control) {
+			map.addControl(control);
+		});
 
 	};
 
@@ -98,7 +105,7 @@ var MapEditor = function(jqueryObj) {
 			xmlDoc.loadXML(txt);
 		}
 		return xmlDoc;
-	}
+	};
 
 	var loadData = function(elementString) {
 		// Wrap in element and parse
@@ -111,13 +118,14 @@ var MapEditor = function(jqueryObj) {
 		feature.geometry.transform(longlatProj, map.getProjectionObject());
 		// Add the feature
 		polygonLayer.addFeatures([feature]);
-		polygonLayer.redraw();
+		recenter();
 		return feature;
 	};
 
 	var exportData = function() {
-		if (polygonLayer.features.length == 0)
+		if (polygonLayer.features.length == 0) {
 			return null;
+		}
 		var feature = polygonLayer.features[0];
 		// Transform the geometry back to long/lat
 		var longlatProj = new OpenLayers.Projection("EPSG:4326");
@@ -128,45 +136,37 @@ var MapEditor = function(jqueryObj) {
 		var rssEntry = georssFormatter.createFeatureXML(feature);
 		var georss = $(rssEntry).find(':not(title, description)').last().get(0);
 		return georss;
-	}
+	};
+
+	var recenter = function() {
+		if (polygonLayer.features.length == 0) {
+			var proj = new OpenLayers.Projection("EPSG:4326");
+			// Default center with no features
+			var center = new OpenLayers.LonLat(130.32129, -24.25231);
+			map.setCenter(center.transform(proj, map.getProjectionObject()), 3);
+		} else {
+			// Otherwise shoot for the middle
+			var feature = polygonLayer.features[0];
+			var point = feature.geometry.getCentroid();
+			var center = new OpenLayers.LonLat(point.x, point.y);
+			map.panTo(center);
+		}
+	};
 
 	var toggleControl = function(element) {
-		for (key in drawControls) {
-			var control = drawControls[key];
+		_.each(drawControls, function(control, key) {
 			if (element.value == key && element.checked) {
 				control.activate();
 			} else {
 				control.deactivate();
 			}
-		}
+		});
 	};
 
-	var drawPolygon = function(map) {
-		var pointList = [];
-
-		var proj = new OpenLayers.Projection("EPSG:4326");
-		var point = map.getCenter().transform(map.getProjectionObject(),proj);
-
-		for ( var p = 0; p < 6; ++p) {
-			var a = p * (2 * Math.PI) / 7;
-			var r = Math.random(1) + 1;
-			var x = point.lon + (r * Math.sin(a));
-			var y = point.lat + (r * Math.cos(a));
-			var newPoint = new OpenLayers.Geometry.Point(x, y);
-			newPoint = newPoint.transform(proj, map.getProjectionObject());
-			pointList.push(newPoint);
-		}
-		pointList.push(pointList[0]);
-
-		var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
-		var polygonFeature = new OpenLayers.Feature.Vector(
-				new OpenLayers.Geometry.Polygon([ linearRing ]));
-		return polygonFeature;
-	};
-
-	this.init = init;
+	this.makeEditable = makeEditable;
 	this.toggleControl = toggleControl;
 	this.loadData = loadData;
 	this.exportData = exportData;
 
+	init();
 };
