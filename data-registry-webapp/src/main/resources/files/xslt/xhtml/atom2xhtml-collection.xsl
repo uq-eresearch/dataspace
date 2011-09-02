@@ -44,8 +44,8 @@
 
             <xsl:if test="georss:point or georss:polygon">
                 <script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js">;</script>
-                <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false">;</script>
-                <script type="text/javascript" src="/js/map/view-map.js">;</script>
+                <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false">;</script>
+                <script type="text/javascript" src="/js/map/map.js">;</script>
             </xsl:if>
         </head>
         <body>
@@ -97,6 +97,17 @@
                                     <div id="map" class="smallmap">
                                         <xsl:text> </xsl:text>
                                     </div>
+									<script type="text/javascript">
+									$(document).ready(function(){
+										var initialData = '<xsl:copy-of select="georss:*"/>';
+										var target = $('#map');
+										var map = new MapEditor(target);
+										if (initialData != '') {
+											map.loadData(initialData);
+										}
+										target.prop('map', map);
+									});
+									</script>
                                 </div>
                             </xsl:when>
                             <xsl:otherwise>

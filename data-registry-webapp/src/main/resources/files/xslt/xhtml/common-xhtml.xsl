@@ -260,8 +260,6 @@
 
     <!-- spatial -->
     <xsl:template name="spatial">
-        <xsl:apply-templates select="georss:point"/>
-        <xsl:apply-templates select="georss:polygon"/>
         <xsl:if test="atom:link[@rel=$ATOM_SPATIAL]">
             <div class="statement">
                 <div class="property">
@@ -272,14 +270,6 @@
                 </div>
             </div>
         </xsl:if>
-    </xsl:template>
-
-    <xsl:template match="georss:point">
-        <input type="hidden" class="georss-point" value="{text()}"/>
-    </xsl:template>
-
-    <xsl:template match="georss:polygon">
-        <input type="hidden" class="georss-polygon" value="{text()}"/>
     </xsl:template>
 
     <xsl:template match="atom:link[@rel=$ATOM_SPATIAL]">
