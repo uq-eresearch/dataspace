@@ -6,13 +6,7 @@ var MapEditor = function(jqueryObj) {
 		map = new OpenLayers.Map({div: target});
 		var layers = [];
 		var osm = new OpenLayers.Layer.OSM();
-		var wmsLayer = new OpenLayers.Layer.WMS("OpenLayers WMS",
-				"http://vmap0.tiles.osgeo.org/wms/vmap0?", {
-					layers : 'basic',
-					attribution : 'Provided by OSGeo',
-					wrapDateLine: true
-				});
-		polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+		polygonLayer = new OpenLayers.Layer.Vector("Region Layer");
 
 		if (typeof(google) != 'undefined') {
 			var gphy = new OpenLayers.Layer.GoogleNG({
@@ -139,16 +133,17 @@ var MapEditor = function(jqueryObj) {
 	};
 
 	var recenter = function() {
+		var center;
 		if (polygonLayer.features.length == 0) {
 			var proj = new OpenLayers.Projection("EPSG:4326");
 			// Default center with no features
-			var center = new OpenLayers.LonLat(130.32129, -24.25231);
+			center = new OpenLayers.LonLat(130.32129, -24.25231);
 			map.setCenter(center.transform(proj, map.getProjectionObject()), 3);
 		} else {
 			// Otherwise shoot for the middle
 			var feature = polygonLayer.features[0];
 			var point = feature.geometry.getCentroid();
-			var center = new OpenLayers.LonLat(point.x, point.y);
+			center = new OpenLayers.LonLat(point.x, point.y);
 			map.panTo(center);
 		}
 	};
