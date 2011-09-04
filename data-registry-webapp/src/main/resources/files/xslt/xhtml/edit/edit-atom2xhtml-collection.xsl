@@ -44,8 +44,8 @@
 				<div class="pad-top pad-sides">
 					<ul class="bread-crumbs-nav">
 						<xsl:call-template name="edit-bread-crumbs">
-							<xsl:with-param name="path" select="'collections'"/>
-							<xsl:with-param name="title" select="'Collections'"/>
+							<xsl:with-param name="path" select="'collections'" />
+							<xsl:with-param name="title" select="'Collections'" />
 						</xsl:call-template>
 					</ul>
 					<div id="ingest-error-msg">
@@ -54,94 +54,96 @@
 					<xsl:call-template name="metadata" />
 
 					<form id="page-form">
-					<div>
-						<h2>
-							<label for="general">General Information</label>
-						</h2>
-						<div id="general">
-							<xsl:call-template name="type">
-								<xsl:with-param name="entity" select="'collection'"/>
-							</xsl:call-template>
+						<div>
+							<h2>
+								<label for="general">General Information</label>
+							</h2>
+							<div id="general">
+								<xsl:call-template name="type">
+									<xsl:with-param name="entity" select="'collection'" />
+								</xsl:call-template>
 
-							<xsl:call-template name="title" />
+								<xsl:call-template name="title" />
 
-							<xsl:call-template name="alternative-title" />
+								<xsl:call-template name="alternative-title" />
 
-							<xsl:call-template name="content" />
+								<xsl:call-template name="content" />
 
+							</div>
+							<h2>
+								<label for="data-availability">Data Availability</label>
+							</h2>
+							<div id="data-availability">
+
+								<xsl:call-template name="page" />
+
+								<xsl:call-template name="access-rights" />
+
+								<xsl:call-template name="lookup-edit">
+									<xsl:with-param name="title" select="'Access Service/s'" />
+									<xsl:with-param name="field" select="'isaccessedvia'" />
+									<xsl:with-param name="relation">
+										<xsl:value-of select="$ATOM_IS_ACCESSED_VIA" />
+									</xsl:with-param>
+								</xsl:call-template>
+
+								<xsl:call-template name="lookup-edit">
+									<xsl:with-param name="title" select="'Related Collection/s'" />
+									<xsl:with-param name="field" select="'relation'" />
+									<xsl:with-param name="relation">
+										<xsl:value-of select="$ATOM_RELATION" />
+									</xsl:with-param>
+								</xsl:call-template>
+
+								<xsl:call-template name="edit-related-publications" />
+
+								<xsl:call-template name="rights" />
+
+								<xsl:call-template name="licence-type" />
+							</div>
+							<h2>
+								<label for="people-and-projects">People &amp; Projects</label>
+							</h2>
+							<div id="people-and-projects">
+								<xsl:call-template name="creators" />
+								<xsl:call-template name="publishers" />
+								<xsl:call-template name="projects" />
+							</div>
+							<h2>
+								<label for="spacio-temporal">Time &amp; Space</label>
+							</h2>
+							<div id="spacio-temporal">
+								<dl>
+									<dt>
+										<label for="time-period">Time Period</label>
+									</dt>
+									<dd>
+										<xsl:call-template name="edit-time-period" />
+									</dd>
+								</dl>
+								<xsl:call-template name="edit-locations" />
+								<xsl:call-template name="edit-region" />
+							</div>
+							<h2>
+								<label for="subjects">Topics</label>
+							</h2>
+							<div id="subjects">
+								<xsl:call-template name="fields-of-research" />
+								<xsl:call-template name="socio-economic-impacts" />
+								<xsl:call-template name="type-of-activities" />
+								<xsl:call-template name="keywords" />
+							</div>
 						</div>
-						<h2>
-							<label for="data-availability">Data Availability</label>
-						</h2>
-						<div id="data-availability">
-
-							<xsl:call-template name="page" />
-
-							<xsl:call-template name="access-rights" />
-
-							<xsl:call-template name="lookup-edit">
-								<xsl:with-param name="title" select="'Access Service/s'" />
-								<xsl:with-param name="field" select="'isaccessedvia'"/>
-								<xsl:with-param name="relation">
-									<xsl:value-of select="$ATOM_IS_ACCESSED_VIA" />
-								</xsl:with-param>
-							</xsl:call-template>
-
-							<xsl:call-template name="lookup-edit">
-								<xsl:with-param name="title" select="'Related Collection/s'" />
-								<xsl:with-param name="field" select="'relation'"/>
-								<xsl:with-param name="relation">
-									<xsl:value-of select="$ATOM_RELATION" />
-								</xsl:with-param>
-							</xsl:call-template>
-
-							<xsl:call-template name="edit-related-publications" />
-
-							<xsl:call-template name="rights" />
-
-							<xsl:call-template name="licence-type" />
+						<div class="save-links-div">
+							<a href="#" class="save-link" id="save-link" title="Save Record"
+								onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, false); return false;">
+								save
+							</a>
+							<a href="#" class="publish-link" id="publish-link" title="Publish Record"
+								onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, true); return false;">
+								publish
+							</a>
 						</div>
-						<h2>
-							<label for="people-and-projects">People &amp; Projects</label>
-						</h2>
-						<div id="people-and-projects">
-							<xsl:call-template name="creators" />
-							<xsl:call-template name="publishers" />
-							<xsl:call-template name="projects" />
-						</div>
-						<h2>
-							<label for="spacio-temporal">Time &amp; Space</label>
-						</h2>
-						<div id="spacio-temporal">
-							<dl>
-								<dt><label for="time-period">Time Period</label></dt>
-								<dd>
-									<xsl:call-template name="edit-time-period" />
-								</dd>
-							</dl>
-							<xsl:call-template name="edit-locations" />
-							<xsl:call-template name="edit-region" />
-						</div>
-						<h2>
-							<label for="subjects">Topics</label>
-						</h2>
-						<div id="subjects">
-							<xsl:call-template name="fields-of-research" />
-							<xsl:call-template name="socio-economic-impacts" />
-							<xsl:call-template name="type-of-activities" />
-							<xsl:call-template name="keywords" />
-						</div>
-					</div>
-					<div class="save-links-div">
-						<a href="#" class="save-link" id="save-link" title="Save Record"
-							onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, false); return false;">
-							save
-						</a>
-						<a href="#" class="publish-link" id="publish-link" title="Publish Record"
-							onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, true); return false;">
-							publish
-						</a>
-					</div>
 					</form>
 				</div>
 			</div>

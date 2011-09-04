@@ -35,82 +35,80 @@
 			<xsl:call-template name="header" />
 			<div class="wrapper">
 				<div class="pad-top pad-sides">
-				<ul class="bread-crumbs-nav">
-					<xsl:call-template name="edit-bread-crumbs">
-						<xsl:with-param name="path">
-							agents
-						</xsl:with-param>
-						<xsl:with-param name="title">
-							Agents
-						</xsl:with-param>
-					</xsl:call-template>
-				</ul>
-				<div id="ingest-error-msg">
-
-				</div>
-				<xsl:call-template name="metadata" />
-
-				<form id="page-form">
-				<div>
-					<h2>
-						<label for="general">General Information</label>
-					</h2>
-					<div id="general">
-						<xsl:call-template name="title" />
-						<xsl:call-template name="alternative-title" />
-						<xsl:call-template name="type">
-							<xsl:with-param name="entity" select="'agent'" />
-						</xsl:call-template>
-
-						<xsl:call-template name="email" />
-						<xsl:call-template name="content" />
-						<xsl:call-template name="page" />
-					</div>
-					<h2>
-						<label for="related">Related</label>
-					</h2>
-					<div id="related">
-						<xsl:call-template name="lookup-edit">
+					<ul class="bread-crumbs-nav">
+						<xsl:call-template name="edit-bread-crumbs">
+							<xsl:with-param name="path" select="'agents'"/>
 							<xsl:with-param name="title">
-								Created
-							</xsl:with-param>
-							<xsl:with-param name="field" select="'iscollectorof'" />
-							<xsl:with-param name="relation">
-								<xsl:value-of select="$ATOM_IS_COLLECTOR_OF" />
+								Agents
 							</xsl:with-param>
 						</xsl:call-template>
-						<xsl:call-template name="lookup-edit">
-							<xsl:with-param name="title">
-								Participating In
-							</xsl:with-param>
-							<xsl:with-param name="field" select="'isparticipantin'" />
-							<xsl:with-param name="relation">
-								<xsl:value-of select="$ATOM_IS_PARTICIPANT_IN" />
-							</xsl:with-param>
-						</xsl:call-template>
+					</ul>
+					<div id="ingest-error-msg">
+
 					</div>
-					<h2>
-						<label for="subjects">Topics</label>
-					</h2>
-					<div id="subjects">
-						<xsl:call-template name="fields-of-research" />
-						<xsl:call-template name="socio-economic-impacts" />
-						<xsl:call-template name="type-of-activities" />
-						<xsl:call-template name="keywords" />
+					<xsl:call-template name="metadata" />
+
+					<form id="page-form">
+						<div>
+							<h2>
+								<label for="general">General Information</label>
+							</h2>
+							<div id="general">
+								<xsl:call-template name="title" />
+								<xsl:call-template name="alternative-title" />
+								<xsl:call-template name="type">
+									<xsl:with-param name="entity" select="'agent'" />
+								</xsl:call-template>
+
+								<xsl:call-template name="email" />
+								<xsl:call-template name="content" />
+								<xsl:call-template name="page" />
+							</div>
+							<h2>
+								<label for="related">Related</label>
+							</h2>
+							<div id="related">
+								<xsl:call-template name="lookup-edit">
+									<xsl:with-param name="title">
+										Created
+									</xsl:with-param>
+									<xsl:with-param name="field" select="'iscollectorof'" />
+									<xsl:with-param name="relation">
+										<xsl:value-of select="$ATOM_IS_COLLECTOR_OF" />
+									</xsl:with-param>
+								</xsl:call-template>
+								<xsl:call-template name="lookup-edit">
+									<xsl:with-param name="title">
+										Participating In
+									</xsl:with-param>
+									<xsl:with-param name="field" select="'isparticipantin'" />
+									<xsl:with-param name="relation">
+										<xsl:value-of select="$ATOM_IS_PARTICIPANT_IN" />
+									</xsl:with-param>
+								</xsl:call-template>
+							</div>
+							<h2>
+								<label for="subjects">Topics</label>
+							</h2>
+							<div id="subjects">
+								<xsl:call-template name="fields-of-research" />
+								<xsl:call-template name="socio-economic-impacts" />
+								<xsl:call-template name="type-of-activities" />
+								<xsl:call-template name="keywords" />
+							</div>
+						</div>
+					</form>
+					<div class="save-links-div">
+						<a href="#" class="save-link" id="save-link" title="Save Record"
+							onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, false); return false;">
+							save
+						</a>
+						<a href="#" class="publish-link" id="publish-link" title="Publish Record"
+							onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, true); return false;">
+							publish
+						</a>
 					</div>
 				</div>
-				</form>
-				<div class="save-links-div">
-					<a href="#" class="save-link" id="save-link" title="Save Record"
-						onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, false); return false;">
-						save
-					</a>
-					<a href="#" class="publish-link" id="publish-link" title="Publish Record"
-						onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, true); return false;">
-						publish
-					</a>
-				</div>
-			</div>
 			</div>
 			<xsl:call-template name="footer" />
 		</body>
