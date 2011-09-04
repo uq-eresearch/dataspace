@@ -892,7 +892,7 @@ var DataSpace = (function() {
 
 	var addEmails = function(record) {
 		$('input[id|="email-text"]').each(function() {
-			var href = $(this).val();
+			var href = 'mailto:'+$(this).val();
 			if (href) {
 				var linkElement = getLinkElement(href, REL_MBOX);
 				record.append(linkElement);
