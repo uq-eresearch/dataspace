@@ -83,7 +83,7 @@
                     </li>
                 </ul>
             </div>
-            <!--<xsl:call-template name="loginlink"/>-->
+            <xsl:call-template name="loginlink"/>
             <!--<fieldset id="signin_menu">-->
 
             <!--<form action="#" method="post" id="signin" onsubmit="login(); return false;">-->
@@ -106,14 +106,14 @@
         </div>
     </xsl:template>
 
-    <!--<xsl:template name="loginlink">-->
-    <!--<xsl:choose>-->
-    <!--<xsl:when test="$currentUser">-->
-    <!--<a href="#" class="signout" id="signin-link">Sign out</a>-->
-    <!--</xsl:when>-->
-    <!--<xsl:otherwise>-->
-    <!--<a href="#" class="signin" id="signin-link">Sign in</a>-->
-    <!--</xsl:otherwise>-->
-    <!--</xsl:choose>-->
-    <!--</xsl:template>-->
+	<xsl:template name="loginlink">
+		<xsl:choose>
+			<xsl:when test="$currentUser">
+				<a href="#" class="signout" id="signin-link">Sign out</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="#" class="signin" id="signin-link">Sign in</a>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 </xsl:stylesheet>

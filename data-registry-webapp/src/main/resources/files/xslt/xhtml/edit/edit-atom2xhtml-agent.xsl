@@ -1,196 +1,118 @@
 <?xml version='1.0'?>
-<!--
-          Transforms UQ collection profile of Atom Syndication Format to
-          XHTML with embedded RDFa
+<!-- Transforms UQ collection profile of Atom Syndication Format to XHTML
+	with embedded RDFa XSLT 1.0 Nigel Ward, 2010-12 -->
+<xsl:stylesheet version="2.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns="http://www.w3.org/1999/xhtml"
+	exclude-result-prefixes="atom rdfa">
 
-          XSLT 1.0
+	<xsl:include href="../include/header.xsl" />
+	<xsl:include href="../include/head.xsl" />
+	<xsl:include href="../include/footer.xsl" />
+	<xsl:include href="edit-common-xhtml.xsl" />
 
-          Nigel Ward, 2010-12
+	<xsl:output method="html" version="4.0"
+		doctype-public="-//W3C//DTD HTML 4.01//EN" doctype-system="http://www.w3.org/TR/html4/strict.dtd"
+		media-type="text/html;charset=utf-8" indent="yes" />
+	<xsl:template match="/">
+		<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en"
+			lang="en">
+			<xsl:apply-templates />
+		</html>
+	</xsl:template>
 
-    -->
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:atom="http://www.w3.org/2005/Atom"
-                xmlns:rdfa="http://www.w3.org/ns/rdfa#"
-                xmlns="http://www.w3.org/1999/xhtml"
-                exclude-result-prefixes="atom rdfa">
+	<!-- *** Atom entry *** -->
 
-    <xsl:include href="../include/header.xsl"/>
-    <xsl:include href="../include/head.xsl"/>
-    <xsl:include href="../include/footer.xsl"/>
-    <xsl:include href="edit-common-xhtml.xsl"/>
+	<xsl:template match="atom:entry">
+		<head>
+			<title>
+				<xsl:value-of select="atom:title" />
+			</title>
+			<link href="/css/description.css" rel="stylesheet" type="text/css" />
+			<xsl:call-template name="head" />
+		</head>
+		<body>
+			<xsl:call-template name="header" />
+			<div class="wrapper">
+				<div class="pad-top pad-sides">
+				<ul class="bread-crumbs-nav">
+					<xsl:call-template name="edit-bread-crumbs">
+						<xsl:with-param name="path">
+							agents
+						</xsl:with-param>
+						<xsl:with-param name="title">
+							Agents
+						</xsl:with-param>
+					</xsl:call-template>
+				</ul>
+				<div id="ingest-error-msg">
 
-    <xsl:output method="html" version="4.0"
-                doctype-public="-//W3C//DTD HTML 4.01//EN"
-                doctype-system="http://www.w3.org/TR/html4/strict.dtd"
-                media-type="text/html;charset=utf-8" indent="yes"/>
-    <xsl:template match="/">
-        <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
-            <xsl:apply-templates/>
-        </html>
-    </xsl:template>
+				</div>
+				<xsl:call-template name="metadata" />
 
-    <!-- *** Atom entry ***-->
+				<form id="page-form">
+				<div>
+					<h2>
+						<label for="general">General Information</label>
+					</h2>
+					<div id="general">
+						<xsl:call-template name="title" />
+						<xsl:call-template name="alternative-title" />
+						<xsl:call-template name="type">
+							<xsl:with-param name="entity" select="'agent'" />
+						</xsl:call-template>
 
-    <xsl:template match="atom:entry">
-        <head>
-            <title>
-                <xsl:value-of select="atom:title"/>
-            </title>
-            <link href="/css/description.css" rel="stylesheet" type="text/css"/>
-            <xsl:call-template name="head"/>
-        </head>
-        <body>
-            <!-- the collection description itself -->
-            <xsl:text>
-            </xsl:text>
-            <xsl:call-template name="header"/>
-            <div class="wrapper">
-                <ul class="bread-crumbs-nav">
-                    <xsl:call-template name="edit-bread-crumbs">
-                        <xsl:with-param name="path">agents</xsl:with-param>
-                        <xsl:with-param name="title">Agents</xsl:with-param>
-                    </xsl:call-template>
-                </ul>
-                <div id="ingest-error-msg">
-
-                </div>
-                <div id="edit-tabs">
-                    <ul>
-                        <li>
-                            <a href="#general">
-                                <span>General</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#related">
-                                <span>Projects</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#subjects">
-                                <span>Subjects</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div id="general">
-                        <table id="edit-general-table" class="edit-table">
-                            <tr>
-                                <th>Title</th>
-                                <td>
-                                    <xsl:call-template name="title"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Alternative Title</th>
-                                <td>
-                                    <xsl:call-template name="alternative-title"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Type</th>
-                                <td>
-                                    <xsl:call-template name="type">
-                                        <xsl:with-param name="entity">agent</xsl:with-param>
-                                    </xsl:call-template>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Description</th>
-                                <td>
-                                    <xsl:call-template name="text-area">
-                                        <xsl:with-param name="field">content</xsl:with-param>
-                                        <xsl:with-param name="path">
-                                            <xsl:value-of select="atom:content"/>
-                                        </xsl:with-param>
-                                    </xsl:call-template>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td>
-                                    <xsl:call-template name="email"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Webpage</th>
-                                <td>
-                                    <xsl:call-template name="page"/>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div id="related">
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Created</legend>
-                            <div class="field">
-                                <xsl:call-template name="lookup-edit">
-                                    <xsl:with-param name="field">iscollectorof</xsl:with-param>
-                                    <xsl:with-param name="relation">
-                                        <xsl:value-of select="$ATOM_IS_COLLECTOR_OF"/>
-                                    </xsl:with-param>
-                                </xsl:call-template>
-                            </div>
-                        </fieldset>
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Participating In</legend>
-                            <div class="field">
-                                <xsl:call-template name="lookup-edit">
-                                    <xsl:with-param name="field">isparticipantin</xsl:with-param>
-                                    <xsl:with-param name="relation">
-                                        <xsl:value-of select="$ATOM_IS_PARTICIPANT_IN"/>
-                                    </xsl:with-param>
-                                </xsl:call-template>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div id="subjects">
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Fields of Research</legend>
-                            <div class="field">
-                                <xsl:call-template name="edit-subject">
-                                    <xsl:with-param name="scheme" select="'for'"/>
-                                    <xsl:with-param name="field" select="'field-of-research'"/>
-                                </xsl:call-template>
-                            </div>
-                        </fieldset>
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Socio-economic Impact</legend>
-                            <div class="field">
-                                <xsl:call-template name="edit-subject">
-                                    <xsl:with-param name="scheme" select="'sei'"/>
-                                    <xsl:with-param name="field" select="'socio-economic-impact'"/>
-                                </xsl:call-template>
-                            </div>
-                        </fieldset>
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Type of Activity</legend>
-                            <div class="field">
-                                <div id="type-of-activities">
-                                    <xsl:call-template name="type-of-activities"/>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset class="ui-widget ui-widget-content">
-                            <legend class="ui-widget-header ui-corner-all">Keywords</legend>
-                            <div class="field">
-                                <xsl:call-template name="keywords"/>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-                <div class="save-links-div">
-                    <a href="#" class="save-link" id="save-link" title="Save Record"
-                       onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, false); return false;">
-                        save
-                    </a>
-                    <a href="#" class="publish-link" id="publish-link" title="Publish Record"
-                       onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, true); return false;">
-                        publish
-                    </a>
-                </div>
-                <xsl:call-template name="lookup-form"/>
-            </div>
-            <xsl:call-template name="footer"/>
-        </body>
-    </xsl:template>
+						<xsl:call-template name="email" />
+						<xsl:call-template name="content" />
+						<xsl:call-template name="page" />
+					</div>
+					<h2>
+						<label for="related">Related</label>
+					</h2>
+					<div id="related">
+						<xsl:call-template name="lookup-edit">
+							<xsl:with-param name="title">
+								Created
+							</xsl:with-param>
+							<xsl:with-param name="field" select="'iscollectorof'" />
+							<xsl:with-param name="relation">
+								<xsl:value-of select="$ATOM_IS_COLLECTOR_OF" />
+							</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="lookup-edit">
+							<xsl:with-param name="title">
+								Participating In
+							</xsl:with-param>
+							<xsl:with-param name="field" select="'isparticipantin'" />
+							<xsl:with-param name="relation">
+								<xsl:value-of select="$ATOM_IS_PARTICIPANT_IN" />
+							</xsl:with-param>
+						</xsl:call-template>
+					</div>
+					<h2>
+						<label for="subjects">Topics</label>
+					</h2>
+					<div id="subjects">
+						<xsl:call-template name="fields-of-research" />
+						<xsl:call-template name="socio-economic-impacts" />
+						<xsl:call-template name="type-of-activities" />
+						<xsl:call-template name="keywords" />
+					</div>
+				</div>
+				</form>
+				<div class="save-links-div">
+					<a href="#" class="save-link" id="save-link" title="Save Record"
+						onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, false); return false;">
+						save
+					</a>
+					<a href="#" class="publish-link" id="publish-link" title="Publish Record"
+						onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','agent',false, true); return false;">
+						publish
+					</a>
+				</div>
+			</div>
+			</div>
+			<xsl:call-template name="footer" />
+		</body>
+	</xsl:template>
 </xsl:stylesheet>

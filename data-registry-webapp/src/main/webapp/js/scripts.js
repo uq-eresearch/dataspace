@@ -1029,9 +1029,6 @@ var DataSpace = (function() {
 		title.attr('type', 'text');
 		source.append(title);
 
-		var author = getAuthorElement('Abdul Alabri', 'a.alabri@uq.edu.au');
-		source.append(author);
-
 		record.append(source);
 	};
 

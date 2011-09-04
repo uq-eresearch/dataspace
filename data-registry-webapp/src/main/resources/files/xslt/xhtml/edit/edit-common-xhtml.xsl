@@ -398,37 +398,42 @@
 	</xsl:template>
 
 	<xsl:template name="email">
+		<dl>
+		<dt>
+			<label for="edit-email-text">Email</label>
+		</dt>
 		<xsl:choose>
 			<xsl:when test="atom:link[@rel=$ATOM_MBOX]">
 				<xsl:for-each select="atom:link[@rel=$ATOM_MBOX]">
 					<xsl:variable name="index" select="position() - 1" />
 					<xsl:choose>
 						<xsl:when test="$index = 0">
-							<input id="email-text" name="email-text" type="text" value="{@title}" />
-							<xsl:text></xsl:text>
-							<a id="add-email-link" class="new-link" href="#"
-								onclick="DataSpace.replicateSimpleField('email-text'); return false;"
-								title="Add Email">new
-							</a>
+						<dd>
+							<input id="email-text" class="required email" name="email-text" type="text" value="{@title}" />
+						</dd>
 						</xsl:when>
 						<xsl:otherwise>
+						<dd>
 							<input id="email-text-{$index}" name="email-text" type="text"
 								value="{@title}" />
 							<a id="email-text-{$index}-remove-link" class="remove-link"
 								href="#" onclick="DataSpace.$('#email-text-{$index}').remove(); $(this).remove();">remove
 							</a>
+						</dd>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
 				<input id="email-text" name="email-text" type="text" value="" />
-				<xsl:text></xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+			<dd>
 				<a id="add-email-link" class="new-link" href="#"
 					onclick="DataSpace.replicateSimpleField('email-text'); return false;" title="Add Email">new
 				</a>
-			</xsl:otherwise>
-		</xsl:choose>
+			</dd>
+		</dl>
 	</xsl:template>
 
 	<xsl:template name="lookup-dialog-window">
