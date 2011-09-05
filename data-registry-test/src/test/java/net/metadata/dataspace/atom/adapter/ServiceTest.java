@@ -50,9 +50,6 @@ public class ServiceTest {
         //get first version
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/1", Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get first version of entry after post", 200, getMethod.getStatusCode());
-        //get working copy
-        getMethod = ClientHelper.getEntry(client, newEntryLocation + "/working-copy", Constants.ATOM_ENTRY_MIMETYPE);
-        assertEquals("Could not get working copy after post", 200, getMethod.getStatusCode());
         //Edit Entry
         fileName = "/files/put/update-service.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);

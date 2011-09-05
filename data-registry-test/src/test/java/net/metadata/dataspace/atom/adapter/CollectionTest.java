@@ -42,7 +42,7 @@ import static junit.framework.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
 public class CollectionTest {
-	
+
 	@Test
     public void testCollectionCRUD() throws Exception {
         //create a client
@@ -61,9 +61,6 @@ public class CollectionTest {
         //get first version
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/1", Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get first version of entry after post", 200, getMethod.getStatusCode());
-        //get working copy
-        getMethod = ClientHelper.getEntry(client, newEntryLocation + "/working-copy", Constants.ATOM_ENTRY_MIMETYPE);
-        assertEquals("Could not get working copy after post", 200, getMethod.getStatusCode());
         //Edit Entry
         fileName = "/files/put/update-collection.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
@@ -205,7 +202,7 @@ public class CollectionTest {
         XPath xpath = XPathHelper.getXPath();
         InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
         Document docFromStream = XPathHelper.getDocFromStream(responseBodyAsStream);
-        
+
         Document docFromFile = XPathHelper.getDocFromFile(fileName);
 
         String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
@@ -228,9 +225,9 @@ public class CollectionTest {
         assertNotNull("Entry missing updated", updated);
 
         // Note: we check the emails, because we've no guarantee that the names are the same.
-        assertXPathSameTextContent(Constants.RECORD_AUTHOR_EMAIL_PATH, 
+        assertXPathSameTextContent(Constants.RECORD_AUTHOR_EMAIL_PATH,
         		docFromStream, docFromFile);
-        
+
         String draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
         assertNotNull("Entry missing draft element", draft);
         assertEquals("Entry's should be draft", "yes", draft);
@@ -238,7 +235,7 @@ public class CollectionTest {
         String spatialPath = Constants.RECORD_LINK_PATH + "[@rel='http://purl.org/dc/terms/spatial']";
         Element spatialLink = (Element) xpath.evaluate(spatialPath, docFromStream, XPathConstants.NODE);
         assertNotNull("Entry missing spatial rel link", spatialLink);
-        assertXPathSameTextContent(spatialPath+"/@href", 
+        assertXPathSameTextContent(spatialPath+"/@href",
         		docFromFile, docFromStream);
 
         //publish entry
@@ -272,11 +269,11 @@ public class CollectionTest {
         String rifcsLink = rifcsLinkElement.getAttribute("href");
         String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
         assertEquals(expectedRifcsLink, rifcsLink);
-        
+
         // Source author should be the one specified in the POST
         if (hasXPathMatch(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH, docFromFile)) {
         	// Check that the authors match
-	        assertXPathSameTextContent(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH+"/text()", 
+	        assertXPathSameTextContent(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH+"/text()",
 	        		docFromFile, docFromStream);
         } else {
         	// The current user should have been used as the source instead
@@ -364,29 +361,29 @@ public class CollectionTest {
         assertFalse("Feed entry draft is empty", entryContent.isEmpty());
 
     }
-    
+
     private boolean hasXPathMatch(String xpathExpression, Document doc) throws XPathExpressionException {
     	XPath xpath = XPathHelper.getXPath();
     	NodeList matches = (NodeList) xpath.evaluate(xpathExpression, doc, XPathConstants.NODESET);
     	return matches.getLength() > 0;
     }
-    
-    private void assertXPathSameTextContent(String xpathExpression, 
+
+    private void assertXPathSameTextContent(String xpathExpression,
     	Document expected, Document actual) throws XPathExpressionException  {
     	XPath xpath = XPathHelper.getXPath();
     	NodeList expectedNodes = (NodeList) xpath.evaluate(
 				xpathExpression, expected, XPathConstants.NODESET);
     	NodeList actualNodes = (NodeList) xpath.evaluate(
     				xpathExpression, actual, XPathConstants.NODESET);
-        assertEquals("Number of entries don't match for "+xpathExpression, 
+        assertEquals("Number of entries don't match for "+xpathExpression,
         		expectedNodes.getLength(), actualNodes.getLength());
-        
+
         switch (actualNodes.getLength()) {
         	case 0:
         		return;
         	case 1:
-        		assertEquals("Content doesn't match for "+xpathExpression, 
-        				expectedNodes.item(0).getTextContent(), 
+        		assertEquals("Content doesn't match for "+xpathExpression,
+        				expectedNodes.item(0).getTextContent(),
         				actualNodes.item(0).getTextContent());
         		return;
         	default:
@@ -400,10 +397,10 @@ public class CollectionTest {
         }
         assertEquals("Content doesn't match for "+xpathExpression, expectedSet, actualSet );
     }
-    
+
     @SuppressWarnings("unused")
-	private String getXPathContent(String xpathExpression, Document doc) 
-    		throws TransformerException, XPathExpressionException 
+	private String getXPathContent(String xpathExpression, Document doc)
+    		throws TransformerException, XPathExpressionException
     {
     	XPath xpath = XPathHelper.getXPath();
     	NodeList nl = (NodeList) xpath.evaluate(xpathExpression, doc, XPathConstants.NODESET);
@@ -418,5 +415,5 @@ public class CollectionTest {
     	}
     	return sw.toString();
     }
-    
+
 }

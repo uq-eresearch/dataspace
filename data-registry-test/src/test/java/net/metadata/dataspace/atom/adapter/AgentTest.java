@@ -50,9 +50,6 @@ public class AgentTest {
         //get first version
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/1", Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get first version of entry after post", 200, getMethod.getStatusCode());
-        //get working copy
-        getMethod = ClientHelper.getEntry(client, newEntryLocation + "/working-copy", Constants.ATOM_ENTRY_MIMETYPE);
-        assertEquals("Could not get working copy after post", 200, getMethod.getStatusCode());
         //Edit Entry
         fileName = "/files/put/update-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
@@ -200,7 +197,7 @@ public class AgentTest {
         String originalId = xpath.evaluate(Constants.RECORD_ID_PATH, docFromFile);
         assertNotNull("Original Entry missing title", originalId);
         assertEquals("Entry's title is incorrect", originalId, id);
-        
+
         String relDescribes = xpath.evaluate(Constants.RECORD_REL_DESCRIBES_PATH, docFromStream);
         assertNotNull("Entry missing \"describes\" relation", relDescribes);
         assertTrue("Entry's \"describes\" relation does not contain path to entry: "+relDescribes, relDescribes.contains(Constants.PATH_FOR_AGENTS));
