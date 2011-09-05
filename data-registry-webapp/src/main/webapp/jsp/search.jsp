@@ -22,28 +22,19 @@
             Manager.addWidget(new AjaxSolr.ResultWidget({id: 'result',target: '#docs'}));
             Manager.addWidget(new AjaxSolr.PagerWidget({
                         id: 'pager',
-                        target: '#pager',
+                        target: $('.pager'),
                         prevLabel: '&lt;',
                         nextLabel: '&gt;',
                         innerWindow: 1,
                         renderHeader: function (perPage, offset, total) {
-                            $('#pager-header').html($('<span/>').text('displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
+                            $('.pager-header').html($('<span/>').text('displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
                         }
                     }));
             Manager.init();
 
             var params = {
-                facet: true,
-                'facet.field': [ 'title', 'description' ],
-                'qt':'standard',
-                'facet.limit': 20,
-                'facet.mincount': 1,
-                'f.topics.facet.limit': 50,
-                'f.countryCodes.facet.limit': -1,
-                'facet.date.start': '1987-02-26T00:00:00.000Z/DAY',
-                'facet.date.end': '1987-10-20T00:00:00.000Z/DAY+1DAY',
-                'facet.date.gap': '+1DAY',
-                'json.nl': 'map'
+       			'qt' : 'standard',
+       			'rows' : 5
             };
             for (var name in params) {
                 Manager.store.addByValue(name, params[name]);
@@ -78,37 +69,39 @@
 <jsp:include page="../include/header.jsp"/>
 
 <div class="wrapper">
-    <ul class="bread-crumbs-nav">
-        <li class="bread-crumbs">
-            <a href="/">Home</a>
-        </li>
-        <li class="bread-crumbs-last">
-            Search
-        </li>
-    </ul>
-    <div class="content">
-        <div id="search-form">
-            <table width="100%">
-                <tbody>
-                <tr>
-                    <td id="searching">
-                        <input type="text" id="query" name="query"/>
-                    </td>
-                    <td><input type="button" name="search-submit" id="search-submit" value="Search"
-                               onclick="reload($('#query').val()); return false;" style=""/></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div id="search-result">
-            <div id="navigation">
-                <ul id="pager"></ul>
+	<div class="pad-top pad-sides">
+	    <ul class="bread-crumbs-nav">
+	        <li class="bread-crumbs">
+	            <a href="/">Home</a>
+	        </li>
+	        <li class="bread-crumbs-last">
+	            Search
+	        </li>
+	    </ul>
+	    <div class="content">
+	        <div id="search-form">
+	            <table width="100%">
+	                <tbody>
+	                <tr>
+	                    <td id="searching">
+	                        <input type="text" id="query" name="query"/>
+	                    </td>
+	                    <td><input type="button" name="search-submit" id="search-submit" value="Search"
+	                               onclick="reload($('#query').val()); return false;" style=""/></td>
+	                </tr>
+	                </tbody>
+	            </table>
+	        </div>
+	        <div id="search-result">
+	            <div id="navigation">
+	                <ul class="pager"></ul>
 
-                <div id="pager-header"></div>
-            </div>
-            <div id="docs"></div>
-        </div>
-    </div>
+	                <div class="pager-header"></div>
+	            </div>
+	            <div id="docs"></div>
+	        </div>
+	    </div>
+	</div>
 </div>
 <jsp:include page="../include/footer.jsp"/>
 </body>
