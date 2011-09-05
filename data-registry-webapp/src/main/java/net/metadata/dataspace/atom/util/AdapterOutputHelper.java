@@ -218,7 +218,9 @@ public class AdapterOutputHelper {
             Set<Agent> authors = version.getCreators();
             for (Agent agent : authors) {
                 AgentVersion workingCopy = agent.getWorkingCopy();
-                entry.addAuthor(workingCopy.getTitle(), workingCopy.getMboxes().iterator().next(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#");
+                String email = workingCopy.getMboxes().size() > 0 ?
+                		workingCopy.getMboxes().iterator().next() : null;
+                entry.addAuthor(workingCopy.getTitle(), email, Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#");
             }
 
             String collectionTypeLabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
