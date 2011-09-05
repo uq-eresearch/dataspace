@@ -198,7 +198,7 @@
 				<configuration>
 					<preloadSources>
 						<preloadSource>unmuffle.js</preloadSource>
-						<preloadSource>http://openlayers.org/dev/OpenLayers.js</preloadSource>
+						<preloadSource>openlayers/OpenLayers.js</preloadSource>
 					</preloadSources>
 					<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
 					<browserVersion>FIREFOX_3_6</browserVersion>

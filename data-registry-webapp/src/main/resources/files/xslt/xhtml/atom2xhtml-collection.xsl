@@ -43,15 +43,12 @@
             <xsl:call-template name="head"/>
 
             <xsl:if test="georss:point or georss:polygon">
-                <script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js">;</script>
+                <script type="text/javascript" src="/js/openlayers/OpenLayers.js">;</script>
                 <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false">;</script>
                 <script type="text/javascript" src="/js/map/map.js">;</script>
             </xsl:if>
         </head>
         <body>
-            <xsl:if test="georss:point or georss:polygon">
-                <xsl:attribute name="onload">init();</xsl:attribute>
-            </xsl:if>
             <!-- the collection description itself -->
             <xsl:text>
             </xsl:text>

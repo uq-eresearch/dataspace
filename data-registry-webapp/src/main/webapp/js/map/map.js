@@ -3,19 +3,35 @@ var MapEditor = function(jqueryObj) {
 	var map, drawControls, polygonLayer;
 
 	var init = function() {
-		map = new OpenLayers.Map({div: target});
+		/* Close map data popup (which seems to auto-show itself on pan/zoom) */
+		var closeMapData = function() {
+			if ($('div.olLayerGoogleCopyright').css('display') == 'block') {
+				console.debug($('div.olLayerGoogleCopyright').css('display'));
+				$('div.olLayerGoogleCopyright').css('display', 'none');
+			}
+		};
+		map = new OpenLayers.Map({
+			div: target,
+			eventListeners: {
+                "moveend": closeMapData,
+                "zoomend": closeMapData
+            }
+		});
 		var layers = [];
 		var osm = new OpenLayers.Layer.OSM();
 		polygonLayer = new OpenLayers.Layer.Vector("Region Layer");
 
 		if (typeof(google) != 'undefined') {
-			var gphy = new OpenLayers.Layer.GoogleNG({
-				name : "Google Physical",
-	            type: google.maps.MapTypeId.HYBRID,
-	            sphericalMercator: true,
-	            numZoomLevels: 20,
-				wrapDateLine: true
-			});
+			var gphy = new OpenLayers.Layer.Google(
+				"Google Physical",
+				{
+		            type: google.maps.MapTypeId.HYBRID,
+		            sphericalMercator: true,
+		            numZoomLevels: 20,
+					wrapDateLine: true,
+					disableDefaultUI: true // hide Map Data window
+				}
+			);
 			map.addLayers([ gphy ]);
 		}
 
