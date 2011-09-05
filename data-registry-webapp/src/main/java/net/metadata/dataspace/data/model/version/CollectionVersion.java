@@ -8,8 +8,7 @@ import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.CollectionType;
-import org.hibernate.annotations.CollectionOfElements;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
 
@@ -35,34 +34,34 @@ public class CollectionVersion extends AbstractVersionEntity<Collection> {
     @Enumerated(STRING)
     private CollectionType type;
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> mboxes = new HashSet<String>();
 
     @NotNull
     @Column(length = 4096)
     private String rights;
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Column(name = "element", length = 4096)
     private Set<String> accessRights = new HashSet<String>();
 
     @Column(length = 4096)
     private String license;
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> temporals = new HashSet<String>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> geoRssPoints = new HashSet<String>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Column(name = "element", length = 4096)
     private Set<String> geoRssPolygons = new HashSet<String>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<Spatial> spatialCoverage = new HashSet<Spatial>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> keywords = new HashSet<String>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -93,10 +92,10 @@ public class CollectionVersion extends AbstractVersionEntity<Collection> {
     @JoinTable(name = "collections_relations")
     private Set<Collection> relations = new HashSet<Collection>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> alternatives = new HashSet<String>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> pages = new HashSet<String>();
     
     public CollectionVersion() {

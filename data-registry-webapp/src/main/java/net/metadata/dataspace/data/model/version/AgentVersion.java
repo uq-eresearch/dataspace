@@ -7,8 +7,7 @@ import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.AgentType;
-import org.hibernate.annotations.CollectionOfElements;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -32,7 +31,7 @@ public class AgentVersion extends AbstractVersionEntity<Agent> {
     @Enumerated(STRING)
     private AgentType type;
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> mboxes = new HashSet<String>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -56,10 +55,10 @@ public class AgentVersion extends AbstractVersionEntity<Agent> {
     private Set<Activity> currentProjects = new HashSet<Activity>();
 
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> alternatives = new HashSet<String>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> pages = new HashSet<String>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -7,8 +7,7 @@ import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.util.DaoHelper;
 
-import org.hibernate.annotations.CollectionOfElements;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 
 import java.io.Serializable;
@@ -18,6 +17,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,7 +36,7 @@ import javax.persistence.Temporal;
 public abstract class AbstractVersionEntity<R extends Record<?>> implements Serializable, Comparable<Version<R>>, Version<R> {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -7632183952742865428L;
 
@@ -65,7 +65,7 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date created;
 
-	@CollectionOfElements(fetch = FetchType.LAZY)
+	@ElementCollection(fetch = FetchType.LAZY)
 	private Set<SourceAuthor> descriptionAuthors = new HashSet<SourceAuthor>();
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

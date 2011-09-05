@@ -334,27 +334,21 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--<dependency> -->
-		<!--<groupId>javax.transaction</groupId> -->
-		<!--<artifactId>transaction-api</artifactId> -->
-		<!--<version>1.1</version> -->
-		<!--</dependency> -->
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>3.1.0.GA</version>
+			<version>4.2.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>3.4.0.GA</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>jta</artifactId>
-					<groupId>javax.transaction</groupId>
-				</exclusion>
-			</exclusions>
+			<version>3.6.7.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -391,12 +385,6 @@
 			<artifactId>cglib</artifactId>
 			<version>2.2</version>
 		</dependency>
-		<!--Local libraries -->
-		<!--<dependency> -->
-		<!--<groupId>au.edu.uq.itee.maenad</groupId> -->
-		<!--<artifactId>util</artifactId> -->
-		<!--<version>0.2.0</version> -->
-		<!--</dependency> -->
 		<dependency>
 			<groupId>au.edu.uq.itee.maenad</groupId>
 			<artifactId>dataaccess</artifactId>

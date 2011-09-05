@@ -1,9 +1,7 @@
 package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.version.ServiceVersion;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +14,10 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 /**
  * User: alabri

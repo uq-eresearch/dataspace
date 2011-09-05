@@ -3,7 +3,7 @@ package net.metadata.dataspace.data.model.record;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.util.DaoHelper;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.util.Date;

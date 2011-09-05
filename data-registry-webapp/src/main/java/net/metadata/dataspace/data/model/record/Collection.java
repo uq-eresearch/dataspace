@@ -4,7 +4,7 @@ import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     @JoinTable(name = "collection_same_as")
     private Set<Collection> sameAs = new HashSet<Collection>();
 
-    
+
     public Collection() {
 
     }

@@ -3,11 +3,13 @@ package net.metadata.dataspace.data.model.record;
 import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.version.AgentVersion;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
@@ -34,7 +36,7 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "agent_same_as")
     private Set<Agent> sameAs = new HashSet<Agent>();
-    
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FullName fullName;
 

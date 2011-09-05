@@ -1,6 +1,6 @@
 package net.metadata.dataspace.data.model.context;
 
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

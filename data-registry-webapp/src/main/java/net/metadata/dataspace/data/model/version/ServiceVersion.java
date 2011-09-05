@@ -5,8 +5,7 @@ import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.types.ServiceType;
-import org.hibernate.annotations.CollectionOfElements;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -42,10 +41,10 @@ public class ServiceVersion extends AbstractVersionEntity<Service> {
     @JoinTable(name = "services_subjects")
     private Set<Subject> subjects = new HashSet<Subject>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> alternatives = new HashSet<String>();
 
-    @CollectionOfElements(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> pages = new HashSet<String>();
 
     public ServiceVersion() {
