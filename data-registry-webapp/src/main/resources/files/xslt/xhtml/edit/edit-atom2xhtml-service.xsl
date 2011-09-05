@@ -90,17 +90,10 @@
 								</xsl:call-template>
 							</div>
 						</div>
-						<div class="save-links-div">
-							<a href="#" class="save-link" id="save-link" title="Save Record"
-								onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','service',false, false); return false;">
-								save
-							</a>
-							<a href="#" class="publish-link" id="publish-link" title="Publish Record"
-								onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','service',false, true); return false;">
-								publish
-							</a>
-						</div>
 					</form>
+					<xsl:call-template name="save-links">
+						<xsl:with-param name="type" select="'service'"/>
+					</xsl:call-template>
 				</div>
 			</div>
 			<xsl:call-template name="footer" />

@@ -18,7 +18,9 @@
     <xsl:variable name="REL_VIA">via</xsl:variable>
     <xsl:variable name="REL_RELATED">related</xsl:variable>
     <xsl:variable name="REL_ALTERNATE">alternate</xsl:variable>
+    <xsl:variable name="REL_WORKING_COPY">working-copy</xsl:variable>
     <xsl:variable name="REL_LATEST_VERSION">latest-version</xsl:variable>
+    <xsl:variable name="REL_EDIT">edit</xsl:variable>
     <xsl:variable name="REL_LICENSE">license</xsl:variable>
 
     <xsl:variable name="REL_TYPE">

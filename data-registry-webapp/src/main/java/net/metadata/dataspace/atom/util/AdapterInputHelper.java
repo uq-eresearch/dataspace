@@ -451,7 +451,7 @@ public class AdapterInputHelper {
         } else {
             String content = entry.getContent();
             if (content == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+                throw new ResponseContextException("Content is null", 400);
             }
             Version<?> version = entityCreator.getNextVersion(record);
             version.setTitle(entry.getTitle());
@@ -464,11 +464,11 @@ public class AdapterInputHelper {
 
     public static Source assembleAndValidateSourceFromEntry(Entry entry) throws ResponseContextException {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+            throw new ResponseContextException("Invalid entry", 400);
         } else {
             org.apache.abdera.model.Source abderaSource = entry.getSource();
             if (abderaSource == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+                throw new ResponseContextException("Source is null", 400);
             }
             try {
                 String sourceUri = entry.getSource().getId().toString();
@@ -719,7 +719,7 @@ public class AdapterInputHelper {
 
     private static void addType(Version<?> version, Entry entry) throws ResponseContextException {
         if (version == null) {
-            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+            throw new ResponseContextException("Version is null", 400);
         } else {
             List<Link> links = entry.getLinks(Constants.REL_TYPE);
             if (links.size() != 1) {

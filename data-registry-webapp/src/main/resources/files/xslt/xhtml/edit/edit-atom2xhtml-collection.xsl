@@ -134,17 +134,10 @@
 								<xsl:call-template name="keywords" />
 							</div>
 						</div>
-						<div class="save-links-div">
-							<a href="#" class="save-link" id="save-link" title="Save Record"
-								onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, false); return false;">
-								save
-							</a>
-							<a href="#" class="publish-link" id="publish-link" title="Publish Record"
-								onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','collection',false, true); return false;">
-								publish
-							</a>
-						</div>
 					</form>
+					<xsl:call-template name="save-links">
+						<xsl:with-param name="type" select="'collection'"/>
+					</xsl:call-template>
 				</div>
 			</div>
 			<xsl:call-template name="footer" />

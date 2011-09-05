@@ -53,7 +53,7 @@ public class HttpMethodHelper {
     private static AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
 
     private static HttpMethodHelper instance = new HttpMethodHelper();
-    
+
     public static HttpMethodHelper getInstance() {
 		return instance;
 	}
@@ -61,7 +61,7 @@ public class HttpMethodHelper {
 	@Transactional
     public ResponseContext postEntry(RequestContext request, Class<? extends Record<?>> clazz) throws ResponseContextException {
 		EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
-                
+
 		User user = authenticationManager.getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
@@ -73,7 +73,7 @@ public class HttpMethodHelper {
                 Record record = entityCreator.getNextRecord(clazz);
                 Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
                 if (version == null) {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+                    throw new ResponseContextException("Version is null", 400);
                 } else {
                     try {
                     	Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
@@ -126,7 +126,7 @@ public class HttpMethodHelper {
                     if (record.isActive()) {
                         Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
                         if (version == null) {
-                            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+                            throw new ResponseContextException("Version is null", 400);
                         } else {
                             if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
                                 EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
@@ -148,7 +148,7 @@ public class HttpMethodHelper {
                                     return AdapterOutputHelper.getContextResponseForPut(updatedEntry);
                                 } catch (Exception th) {
                                     logger.fatal("Invalid Entry, Rolling back database", th);
-                                    
+
                                     throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
                                 }
                             } else {
@@ -241,8 +241,6 @@ public class HttpMethodHelper {
                             Feed versionHistoryFeed = FeedOutputHelper.createVersionFeed(request);
                             ResponseContext versionHistoryFeed1 = FeedOutputHelper.getVersionHistoryFeed(request, versionHistoryFeed, record, clazz);
                             return versionHistoryFeed1;
-                        } else if (versionKey.equals(Constants.TARGET_TYPE_WORKING_COPY)) {
-                            version = record.getWorkingCopy();
                         } else {
                             version = getVersion(uriKey, versionKey, clazz);
                         }

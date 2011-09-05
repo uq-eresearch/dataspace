@@ -37,7 +37,7 @@ import java.util.SortedSet;
  */
 @Transactional
 public class AdapterOutputHelper {
-	
+
 	private static final Logger logger = Logger.getLogger(AdapterOutputHelper.class);
 
     public static Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
@@ -320,7 +320,7 @@ public class AdapterOutputHelper {
             }
             //Spatial Coverage links
             for (Spatial spatial : version.getSpatialCoverage()) {
-            	Link link = entry.addLink(spatial.getLocation().toString(), 
+            	Link link = entry.addLink(spatial.getLocation().toString(),
             			Constants.REL_SPATIAL);
                 link.setTitle(spatial.getName());
             }
@@ -522,9 +522,18 @@ public class AdapterOutputHelper {
 
     private static void addNavigationLinks(Version version, Entry entry, String parentUrl) throws ResponseContextException {
         try {
-            String workingCopyKey = version.getParent().getWorkingCopy().getUriKey();
-            Link link = entry.addLink(parentUrl + "/" + workingCopyKey, Constants.REL_LATEST_VERSION);
-            link.setTitle(workingCopyKey);
+            if (version.getParent().getWorkingCopy() != null) {
+	            String workingCopyKey = version.getParent().getWorkingCopy().getUriKey();
+	            Link link = entry.addLink(parentUrl + "/" + workingCopyKey, Constants.REL_WORKING_COPY);
+	            link.setTitle(workingCopyKey);
+            }
+            if (version.getParent().getPublished() != null) {
+	            String publishedCopyKey = version.getParent().getPublished().getUriKey();
+	            Link link = entry.addLink(parentUrl + "/" + publishedCopyKey, Constants.REL_LATEST_VERSION);
+	            link.setTitle(publishedCopyKey);
+            }
+            // Edit relation is always the parent entity
+	        entry.addLink(parentUrl, Constants.REL_EDIT);
             SortedSet<Version> versions = version.getParent().getVersions();
             Version[] versionArray = new Version[versions.size()];
             versionArray = (Version[]) version.getParent().getVersions().toArray(versionArray);

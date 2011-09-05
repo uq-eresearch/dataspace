@@ -95,18 +95,11 @@
 								<xsl:call-template name="type-of-activities" />
 								<xsl:call-template name="keywords" />
 							</div>
-							<div class="save-links-div">
-								<a href="#" class="save-link" id="save-link" title="Save Record"
-									onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','activity',false, false); return false;">
-									save
-								</a>
-								<a href="#" class="publish-link" id="publish-link" title="Publish Record"
-									onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_SELF]/@href}','activity',false, true); return false;">
-									publish
-								</a>
-							</div>
 						</div>
 					</form>
+					<xsl:call-template name="save-links">
+						<xsl:with-param name="type" select="'activity'"/>
+					</xsl:call-template>
 				</div>
 			</div>
 			<xsl:call-template name="footer" />

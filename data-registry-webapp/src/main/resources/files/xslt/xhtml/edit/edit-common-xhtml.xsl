@@ -235,7 +235,7 @@
 		<div id="status">
 			Version
 			<span id="version">
-				<xsl:value-of select="atom:link[@rel='self']/@title" />
+				<xsl:value-of select="atom:link[@rel=$REL_SELF]/@title" />
 			</span>
 			,
 			<xsl:call-template name="published" />
@@ -728,4 +728,19 @@
 			</dd>
 		</dl>
 	</xsl:template>
+
+	<xsl:template name="save-links">
+		<xsl:param name="type" />
+		<div class="save-links-div">
+			<a href="#" class="save-link" id="save-link" title="Save Record"
+				onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_EDIT]/@href}','{$type}',false, false); return false;">
+				save
+			</a>
+			<a href="#" class="publish-link" id="publish-link" title="Publish Record"
+				onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_EDIT]/@href}','{$type}',false, true); return false;">
+				publish
+			</a>
+		</div>
+	</xsl:template>
+
 </xsl:stylesheet>
