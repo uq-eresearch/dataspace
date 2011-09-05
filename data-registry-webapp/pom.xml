@@ -339,11 +339,6 @@
 			<version>3.6.7.Final</version>
 		</dependency>
 		<dependency>
-		    <groupId>javax.persistence</groupId>
-		    <artifactId>persistence-api</artifactId>
-		    <version>1.0.2</version>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.5.8</version>
@@ -382,6 +377,12 @@
 			<groupId>au.edu.uq.itee.maenad</groupId>
 			<artifactId>dataaccess</artifactId>
 			<version>1.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>persistence-api</artifactId>
+					<groupId>javax.persistence</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!--Database connectors and drivers -->
