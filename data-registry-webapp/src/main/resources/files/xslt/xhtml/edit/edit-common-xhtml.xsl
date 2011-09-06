@@ -731,13 +731,17 @@
 
 	<xsl:template name="save-links">
 		<xsl:param name="type" />
+
+		<xsl:variable name="isNew" select="count(atom:feed)>0"/>
+		<xsl:variable name="dest" select="atom:link[@rel = $REL_EDIT]/@href|atom:feed/atom:id/text()"/>
+
 		<div class="save-links-div">
 			<a href="#" class="save-link" id="save-link" title="Save Record"
-				onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_EDIT]/@href}','{$type}',false, false); return false;">
+				onclick="DataSpace.ingestRecord('{$dest}','{$type}',{$isNew}, false); return false;">
 				save
 			</a>
 			<a href="#" class="publish-link" id="publish-link" title="Publish Record"
-				onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_EDIT]/@href}','{$type}',false, true); return false;">
+				onclick="DataSpace.ingestRecord('{$dest}','{$type}',{$isNew}, true); return false;">
 				publish
 			</a>
 		</div>
