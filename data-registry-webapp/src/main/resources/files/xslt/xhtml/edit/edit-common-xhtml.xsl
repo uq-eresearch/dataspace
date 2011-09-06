@@ -62,7 +62,7 @@
 		</dt>
 		<dd>
 			<input id="edit-title-text" name="title-text" type="text"
-				value="{atom:title}" />
+				value="{atom:title}" class="required" />
 		</dd>
 		</dl>
 	</xsl:template>
@@ -165,6 +165,7 @@
 			<dd>
 				<xsl:call-template name="text-area">
 					<xsl:with-param name="field" select="'content'"/>
+					<xsl:with-param name="classes" select="'required'"/>
 					<xsl:with-param name="path">
 						<xsl:value-of select="atom:content" />
 					</xsl:with-param>
@@ -207,18 +208,19 @@
 
 	<xsl:template name="text-area">
 		<xsl:param name="field" />
+		<xsl:param name="classes" required="no"/>
 		<xsl:param name="path" />
 		<xsl:choose>
 			<xsl:when test="$path">
 				<textarea id="{$field}-textarea" name="{$field}-textarea"
-					cols="50" rows="5">
+					cols="50" rows="5" class="{$classes}">
 					<xsl:value-of select="$path" />
 				</textarea>
 			</xsl:when>
 
 			<xsl:otherwise>
 				<textarea id="{$field}-textarea" name="{$field}-textarea"
-					cols="50" rows="5">
+					cols="50" rows="5" class="{$classes}">
 				</textarea>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -425,7 +427,7 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<input id="email-text" name="email-text" type="text" value="" />
+				<input id="email-text" name="email-text" type="text" value="" class="required email"/>
 			</xsl:otherwise>
 		</xsl:choose>
 			<dd>

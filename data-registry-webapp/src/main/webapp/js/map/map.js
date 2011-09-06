@@ -6,7 +6,6 @@ var MapEditor = function(jqueryObj) {
 		/* Close map data popup (which seems to auto-show itself on pan/zoom) */
 		var closeMapData = function() {
 			if ($('div.olLayerGoogleCopyright').css('display') == 'block') {
-				console.debug($('div.olLayerGoogleCopyright').css('display'));
 				$('div.olLayerGoogleCopyright').css('display', 'none');
 			}
 		};
@@ -39,6 +38,9 @@ var MapEditor = function(jqueryObj) {
 		map.addControl(new OpenLayers.Control.LayerSwitcher());
 
 		recenter();
+
+		// Wait 3s for the map to load, then try to close data window.
+		_.delay(closeMapData, 3000);
 	};
 
 	var makeEditable = function() {

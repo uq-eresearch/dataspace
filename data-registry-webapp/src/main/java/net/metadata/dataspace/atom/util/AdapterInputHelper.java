@@ -446,8 +446,10 @@ public class AdapterInputHelper {
     }
 
     public static Version<?> assembleAndValidateVersionFromEntry(Record<?> record, Entry entry) throws ResponseContextException {
-        if (entry == null || !ProviderHelper.isValidEntry(entry)) {
-            return null;
+        if (entry == null) {
+            throw new ResponseContextException("Empty Atom entry", 400);
+        } else if(!ProviderHelper.isValidEntry(entry)) {
+            throw new ResponseContextException("Invalid Atom entry", 400);
         } else {
             String content = entry.getContent();
             if (content == null) {

@@ -649,6 +649,9 @@ var DataSpace = (function() {
 			record.append(content);
 		}
 
+		var author = getAuthorElement('user interface',null,null);
+		record.append(author);
+
 		// Emails
 		addEmails(record);
 
@@ -1022,12 +1025,16 @@ var DataSpace = (function() {
 
 	var addSource = function(record) {
 		var source = getSimpleElement('source');
-		var id = getSimpleElementWithText('id', 'http://dataspace.uq.edu.au');
+		var id = getSimpleElementWithText('id', 'http://dataspace.uq.edu.au/');
 		source.append(id);
 		var title = getSimpleElementWithText('title',
 				'The University of Queensland Data Collections Registry');
 		title.attr('type', 'text');
 		source.append(title);
+
+		// updated, format: '2010-10-08T05:58:02.781Z'
+		var updated = getSimpleElementWithText('updated', getCurrentDateTime());
+		record.append(updated);
 
 		record.append(source);
 	};
