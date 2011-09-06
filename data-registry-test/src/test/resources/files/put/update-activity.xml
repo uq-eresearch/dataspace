@@ -56,7 +56,7 @@
           href="http://www.uq.edu.au/uqresearchers/researcher/franklince.html?uv_category=prj&amp;prj=810449"/>
 
     <!--     subjects -->
-    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_060801"
+    <category scheme="http://purl.org/asc/1297.0/2008/for/" term="http://purl.org/asc/1297.0/2008/for/060801"
               label="060801 Animal Behaviour"/>
     <category label="habitat utilisation"/>
 

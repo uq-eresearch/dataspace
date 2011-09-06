@@ -33,16 +33,16 @@
     
     <!--     topics of interest -->
     <category
-        scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#field_060801"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
+        term="http://purl.org/asc/1297.0/2008/for/060801"
         label="060801 - Animal Behaviour"/>
     <category
-        scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#field_060205"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
+        term="http://purl.org/asc/1297.0/2008/for/060205"
         label="060205 - Marine and Estuarine Ecology (incl. Marine Ichthyology)"/>
     <category
-        scheme="http://purl.org/anzsrc/seo"
-        term="http://purl.org/anzsrc/seo/#field_970106"
+        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        term="http://purl.org/asc/1297.0/2008/seo/970106"
         label="970106 - Expanding Knowledge in the Biological Sciences"/>
     <category
         term="ecology"/>

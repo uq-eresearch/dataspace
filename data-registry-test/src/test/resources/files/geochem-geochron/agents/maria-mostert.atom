@@ -42,12 +42,12 @@
 
     <!--     topics of interest -->
     <category
-        scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#group_0402"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
+        term="http://purl.org/asc/1297.0/2008/for/0402"
         label="040200 - Geochemistry"/>
     <category
-        scheme="http://purl.org/anzsrc/seo"
-        term="http://purl.org/anzsrc/for/#field_040303"
+        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        term="http://purl.org/asc/1297.0/2008/for/040303"
         label="040303 - Geochronology"/>
 
     <!-- publications -->

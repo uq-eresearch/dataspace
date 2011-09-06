@@ -40,20 +40,20 @@
 
     <!--     subjects -->
     <category
-        scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#field_060203"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
+        term="http://purl.org/asc/1297.0/2008/for/060203"
         label="060203 - Ecological Physiology"/>
     <category
-        scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#field_060208"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
+        term="http://purl.org/asc/1297.0/2008/for/060208"
         label="060208 - Terrestrial Ecology"/>
     <category
-        scheme="http://purl.org/anzsrc/seo"
-        term="http://purl.org/anzsrc/for/#field_060603"
+        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        term="http://purl.org/asc/1297.0/2008/for/060603"
         label="060603 - Animal Physiology - Systems"/>
     <category
-        scheme="http://purl.org/anzsrc/seo"
-        term="http://purl.org/anzsrc/for/#field_060808"
+        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        term="http://purl.org/asc/1297.0/2008/for/060808"
         label="060808 - Invertebrate Biology"/>
     <category term="arachnocampa"/>
     <category term="weather effect"/>

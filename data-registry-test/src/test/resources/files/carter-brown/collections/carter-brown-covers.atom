@@ -30,12 +30,12 @@
 
     <!--     collection subjects -->
     <category
-        scheme="http://purl.org/asc/1297.0/2008/for"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
         term="http://purl.org/asc/1297.0/2008/for/200502"
         label="200502 - Australian Literature (excl. Aboriginal and Torres Strait Islander
         Literature)"/>
     <category
-        scheme="http://purl.org/asc/1297.0/2008/seo"
+        scheme="http://purl.org/asc/1297.0/2008/seo/"
         term="http://purl.org/asc/1297.0/2008/seo/950203"
         label="950203 - Languages and Literature"/>
     <category

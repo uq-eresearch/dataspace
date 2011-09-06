@@ -48,11 +48,11 @@
         href="http://dataspace.uq.edu.au/collections/4"/>
 
     <!--     topics of interest -->
-    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160300"
+    <category scheme="http://purl.org/asc/1297.0/2008/for/" term="http://purl.org/asc/1297.0/2008/for/160300"
         label="160300 - Demography"/>
-    <category scheme="http://purl.org/anzsrc/for" term="http://purl.org/anzsrc/for/#field_160400"
+    <category scheme="http://purl.org/asc/1297.0/2008/for/" term="http://purl.org/asc/1297.0/2008/for/160400"
         label="160400 - Human Geography"/>
-    <category scheme="http://purl.org/anzsrc/seo" term="http://purl.org/anzsrc/seo/#field_910102"
+    <category scheme="http://purl.org/asc/1297.0/2008/seo/" term="http://purl.org/asc/1297.0/2008/seo/910102"
         label="910102 - Demography"/>
     <category
         term="spatially integrated social science"/>

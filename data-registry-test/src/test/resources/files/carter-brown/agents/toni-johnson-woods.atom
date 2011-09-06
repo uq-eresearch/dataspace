@@ -52,13 +52,13 @@
 
     <!--     topics of interest -->
     <category
-        scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#field_200502"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
+        term="http://purl.org/asc/1297.0/2008/for/200502"
         label="200502 - Australian Literature (excl. Aboriginal and Torres Strait Islander
         Literature)"/>
     <category
-        scheme="http://purl.org/anzsrc/seo"
-        term="http://purl.org/anzsrc/seo/#field_950203"
+        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        term="http://purl.org/asc/1297.0/2008/seo/950203"
         label="950203 - Languages and Literature"/>
     <category
         term="Literary studies"/>

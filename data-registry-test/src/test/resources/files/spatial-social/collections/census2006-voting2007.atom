@@ -31,16 +31,16 @@
 
     <!--     collection subjects -->
     <category
-        scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#group_1603"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
+        term="http://purl.org/asc/1297.0/2008/for/1603"
         label="160300 - Demography"/>
     <category
-        scheme="http://purl.org/anzsrc/for"
-        term="http://purl.org/anzsrc/for/#group_1604"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
+        term="http://purl.org/asc/1297.0/2008/for/1604"
         label="160400 - Human Geography"/>
     <category
-        scheme="http://purl.org/anzsrc/seo"
-        term="http://purl.org/anzsrc/seo/#field_910102"
+        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        term="http://purl.org/asc/1297.0/2008/seo/910102"
         label="910102 - Demography"/>
 
     <!--     collection creator -->
