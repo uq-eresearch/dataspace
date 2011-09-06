@@ -631,6 +631,7 @@ var DataSpace = (function() {
 					+ recordType, recordType);
 			record.append(typeCategory);
 		}
+
 		// title
 		var titleValue = $('#edit-title-text').val();
 		if (titleValue) {
@@ -638,6 +639,22 @@ var DataSpace = (function() {
 			title.attr('type', 'text');
 			record.append(title);
 		}
+
+		var nameComponents = {
+				'honorific': PROPERTY_TITLE,
+				'givenname': PROPERTY_GIVEN_NAME,
+				'familyname': PROPERTY_FAMILY_NAME
+		}
+		_.each(nameComponents, function(uri,field) {
+			// honorific
+			var fieldValue = $('#edit-'+field+'-text').val();
+			if (fieldValue) {
+				var e = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
+				e.attr('property', uri);
+				e.attr('content', fieldValue);
+				record.append(e);
+			}
+		});
 
 		// Alternative titles
 		addAlternativeTitles(record);

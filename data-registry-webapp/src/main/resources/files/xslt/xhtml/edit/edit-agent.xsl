@@ -51,8 +51,13 @@
 								<label for="general">General Information</label>
 							</h2>
 							<div id="general">
-								<xsl:call-template name="title" />
-								<xsl:call-template name="alternative-title" />
+								<xsl:call-template name="title">
+									<xsl:with-param name="label" select="'Full Name'"/>
+								</xsl:call-template>
+								<xsl:call-template name="name-components"/>
+								<xsl:call-template name="alternative-title">
+									<xsl:with-param name="label" select="'Also Known As'"/>
+								</xsl:call-template>
 								<xsl:call-template name="type">
 									<xsl:with-param name="entity" select="'agent'" />
 								</xsl:call-template>

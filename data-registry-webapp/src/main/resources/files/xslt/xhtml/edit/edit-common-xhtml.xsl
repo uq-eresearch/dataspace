@@ -56,9 +56,12 @@
 	</xsl:template>
 
 	<xsl:template name="title">
-						<dl>
+		<xsl:param name="label" required="no" select="'Title'"/>
+		<dl>
 		<dt>
-			<label for="edit-title-text">Title</label>
+			<label for="edit-title-text">
+				<xsl:value-of select="$label" />
+			</label>
 		</dt>
 		<dd>
 			<input id="edit-title-text" name="title-text" type="text"
@@ -67,10 +70,52 @@
 		</dl>
 	</xsl:template>
 
-	<xsl:template name="alternative-title">
+	<xsl:template name="name-components">
 		<dl>
 		<dt>
-			<label for="edit-alternative-title-text">Alternative Title</label>
+			<label for="edit-honorific-text">
+				Honorific
+			</label>
+		</dt>
+		<dd>
+			<input id="edit-honorific-text" name="honorific-text" type="text"
+				value="{rdfa:meta[@property=$ATOM_HONORIFIC]/@content}"
+				size="10" />
+		</dd>
+		</dl>
+		<dl>
+		<dt>
+			<label for="edit-givenname-text">
+				Given Name
+			</label>
+		</dt>
+		<dd>
+			<input id="edit-givenname-text" name="givenname-text" type="text"
+				value="{rdfa:meta[@property=$ATOM_GIVEN_NAME]/@content}"
+				class="required" />
+		</dd>
+		</dl>
+		<dl>
+		<dt>
+			<label for="edit-familyname-text">
+				Family Name
+			</label>
+		</dt>
+		<dd>
+			<input id="edit-familyname-text" name="familyname-text" type="text"
+				value="{rdfa:meta[@property=$ATOM_FAMILY_NAME]/@content}"
+				class="required" />
+		</dd>
+		</dl>
+	</xsl:template>
+
+	<xsl:template name="alternative-title">
+		<xsl:param name="label" required="no" select="'Alternative Title'"/>
+		<dl>
+		<dt>
+			<label for="edit-alternative-title-text">
+				<xsl:value-of select="$label" />
+			</label>
 		</dt>
 		<xsl:choose>
 			<xsl:when test="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
@@ -208,7 +253,7 @@
 
 	<xsl:template name="text-area">
 		<xsl:param name="field" />
-		<xsl:param name="classes" required="no"/>
+		<xsl:param name="classes" required="no" select="''"/>
 		<xsl:param name="path" />
 		<xsl:choose>
 			<xsl:when test="$path">
