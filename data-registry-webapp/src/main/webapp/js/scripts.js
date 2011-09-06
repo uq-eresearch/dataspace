@@ -545,6 +545,14 @@ var DataSpace = (function() {
 		}
 	};
 
+	var getCurrentEntryId = function() {
+		var id = $('#page-text').val();
+		if (id == "") {
+			id = $('.identifier a').text();
+		}
+		return id;
+	};
+
 	/**
 	 *
 	 *
@@ -558,7 +566,7 @@ var DataSpace = (function() {
 		// id
 		var id = getSimpleElementWithText('id', getNewEntryId('activities'));
 		if (!isNew) {
-			id = getSimpleElementWithText('id', $('#page-text').val());
+			id = getSimpleElementWithText('id', getCurrentEntryId());
 		}
 		record.append(id);
 
@@ -590,6 +598,10 @@ var DataSpace = (function() {
 			record.append(content);
 		}
 
+		// Dummy author
+		var author = getAuthorElement('user interface',null,null);
+		record.append(author);
+
 		// pages
 		addPages(record);
 
@@ -598,10 +610,6 @@ var DataSpace = (function() {
 
 		// keywords
 		addKeywordToCollection(record);
-
-		// updated, format: '2010-10-08T05:58:02.781Z'
-		var updated = getSimpleElementWithText('updated', getCurrentDateTime());
-		record.append(updated);
 
 		// add source
 		addSource(record);
@@ -617,7 +625,7 @@ var DataSpace = (function() {
 		// id
 		var id = getSimpleElementWithText('id', getNewEntryId('agents'));
 		if (!isNew) {
-			id = getSimpleElementWithText('id', $('#page-text').val());
+			id = getSimpleElementWithText('id', getCurrentEntryId());
 		}
 		record.append(id);
 
@@ -666,6 +674,7 @@ var DataSpace = (function() {
 			record.append(content);
 		}
 
+		// Dummy author
 		var author = getAuthorElement('user interface',null,null);
 		record.append(author);
 
@@ -681,10 +690,6 @@ var DataSpace = (function() {
 		// keywords
 		addKeywordToCollection(record);
 
-		// updated, format: '2010-10-08T05:58:02.781Z'
-		var updated = getSimpleElementWithText('updated', getCurrentDateTime());
-		record.append(updated);
-
 		// add source
 		addSource(record);
 
@@ -699,7 +704,7 @@ var DataSpace = (function() {
 		// id
 		var id = getSimpleElementWithText('id', getNewEntryId('collections'));
 		if (!isNew) {
-			id = getSimpleElementWithText('id', $('#page-text').val());
+			id = getSimpleElementWithText('id', getCurrentEntryId());
 		}
 		record.append(id);
 
@@ -775,10 +780,6 @@ var DataSpace = (function() {
 
 		addLicense(record);
 
-		// updated, format: '2010-10-08T05:58:02.781Z'
-		var updated = getSimpleElementWithText('updated', getCurrentDateTime());
-		record.append(updated);
-
 		// add source
 		addSource(record);
 
@@ -793,7 +794,7 @@ var DataSpace = (function() {
 		// id
 		var id = getSimpleElementWithText('id', getNewEntryId('services'));
 		if (!isNew) {
-			id = getSimpleElementWithText('id', $('#page-text').val());
+			id = getSimpleElementWithText('id', getCurrentEntryId());
 		}
 		record.append(id);
 
@@ -826,12 +827,12 @@ var DataSpace = (function() {
 			record.append(content);
 		}
 
+		// Dummy author
+		var author = getAuthorElement('user interface',null,null);
+		record.append(author);
+
 		// pages
 		addPages(record);
-
-		// updated, format: '2010-10-08T05:58:02.781Z'
-		var updated = getSimpleElementWithText('updated', getCurrentDateTime());
-		record.append(updated);
 
 		// add source
 		addSource(record);
@@ -1051,6 +1052,7 @@ var DataSpace = (function() {
 
 		// updated, format: '2010-10-08T05:58:02.781Z'
 		var updated = getSimpleElementWithText('updated', getCurrentDateTime());
+		source.append(updated);
 		record.append(updated);
 
 		record.append(source);
