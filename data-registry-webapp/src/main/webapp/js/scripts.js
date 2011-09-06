@@ -644,7 +644,7 @@ var DataSpace = (function() {
 				'honorific': PROPERTY_TITLE,
 				'givenname': PROPERTY_GIVEN_NAME,
 				'familyname': PROPERTY_FAMILY_NAME
-		}
+		};
 		_.each(nameComponents, function(uri,field) {
 			// honorific
 			var fieldValue = $('#edit-'+field+'-text').val();
