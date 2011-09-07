@@ -6,8 +6,14 @@ import org.apache.commons.httpclient.methods.*;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.HttpMethod;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Author: alabri
@@ -15,7 +21,7 @@ import java.io.IOException;
  * Time: 4:06:52 PM
  */
 public class ClientHelper {
-	
+
 	private static ResourceLoader loader = new DefaultResourceLoader();
 
     public ClientHelper() {
@@ -25,6 +31,14 @@ public class ClientHelper {
         PostMethod postMethod = new PostMethod(Constants.URL_PREFIX + "login?username=" + username + "&password=" + password);
         return client.executeMethod(postMethod);
     }
+
+	public static void login(WebClient client, String username,
+			String password) throws FailingHttpStatusCodeException, IOException {
+		WebRequest request = new WebRequest(
+				new URL(Constants.URL_PREFIX + "login?username=" + username + "&password=" + password),
+				HttpMethod.POST);
+		client.getPage(request);
+	}
 
     public static int logout(HttpClient client) throws Exception {
         PostMethod postMethod = new PostMethod(Constants.URL_PREFIX + "logout");
@@ -63,15 +77,15 @@ public class ClientHelper {
         client.executeMethod(deleteMethod);
         return deleteMethod;
     }
-    
+
     public static GetMethod reindexSolr(HttpClient client) throws Exception {
     	GetMethod getMethod = new GetMethod(Constants.URL_PREFIX+"solr/dataimport?command=full-import");
         client.executeMethod(getMethod);
         return getMethod;
     }
-    
+
     private static File getFile(String fileName) throws IOException {
         return loader.getResource(fileName).getFile();
     }
-    
+
 }
