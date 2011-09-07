@@ -315,10 +315,9 @@ var DataSpace = (function() {
 				if (query != '') {
 					lookup($('.search-result',dialogWindow), field, query);
 				}
-				return false;
 			};
 
-			$('[name="lookup-submit"]', dialogWindow).unbind('click.lookup')
+			$('button.search', dialogWindow).unbind('click.lookup')
 				.bind('click.lookup', searchHandler);
 
 			var selectHandler = function() {
@@ -354,7 +353,7 @@ var DataSpace = (function() {
 				});
 				dialogWindow.dialog('close');
 			};
-			$('[name="select"]', dialogWindow).unbind('click.lookup')
+			$('button.select', dialogWindow).unbind('click.lookup')
 					.bind('click.lookup', selectHandler);
 		};
 		dialogWindow.dialog({
@@ -412,19 +411,19 @@ var DataSpace = (function() {
 			var queryField = lookupDialog.find(':input[name="query"]');
 			var resultDisplay = lookupDialog.find('.results');
 			var searchButton = lookupDialog
-					.find(':button[name="search"]');
+					.find('button.search');
 			var selectButton = lookupDialog
-					.find(':button[name="select"]');
+					.find('button.select');
 
 			// Initially load everything
 			getAnzsrcoSelector(resultDisplay, getTree(/.*/,
 					parser));
 
-			var searchHandler = function() {
+			var searchHandler = function(event) {
 				// Case-insensitive regex
 				var query = new RegExp(queryField.val(), 'i');
 				var results = getTree(query, parser);
-				getFieldOfResearchSelector(resultDisplay, results);
+				getAnzsrcoSelector(resultDisplay, results);
 			};
 			searchButton.unbind('click.lookup').bind(
 					'click.lookup', searchHandler);

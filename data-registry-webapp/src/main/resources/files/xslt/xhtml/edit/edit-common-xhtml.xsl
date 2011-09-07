@@ -484,9 +484,9 @@
 	<xsl:template name="lookup-dialog-window">
 		<xsl:param name="field" />
 		<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
-			<form action="" onSubmit="$('[name=lookup-submit]', this).click(); return false;">
+			<form action="" onSubmit="$('button.search', this).click(); return false;">
 				<input class=".ignore" type="text" name="lookup-keyword" value="" />
-				<input type="submit" name="lookup-submit" value="Search"/>
+				<button class="search">Search</button>
 			</form>
 			<div class="search-result">
 				<div class="navigation">
@@ -502,7 +502,7 @@
 
 				</div>
 				<div>
-					<input class=".ignore" type="button" name="select" value="Select" />
+					<button class="select">Select</button>
 				</div>
 			</div>
 		</div>
@@ -551,15 +551,14 @@
 		<xsl:param name="scheme" />
 		<dl id="{$field}">
 			<div class="dialog-window" style="display:none;">
-				<form action="" onSubmit="$(this).find(':button[@name=\'select']').click(); return false;">
+				<form action="" onSubmit="$('button.search', this).click(); return false;">
 					<input class=".ignore" type="text" name="query" value="" />
-					<input type="submit" name="search"
-						value="Search"/>
-					<div class="results"/>
-					<div>
-						<input class=".ignore" type="button" name="select" value="Select" />
-					</div>
+					<button class="search">Search</button>
 				</form>
+				<div class="results"/>
+				<div>
+					<button class="select">Select</button>
+				</div>
 			</div>
 			<dt><label><xsl:value-of select="$title" /></label></dt>
 			<xsl:for-each select="atom:category[@scheme=$scheme]">
