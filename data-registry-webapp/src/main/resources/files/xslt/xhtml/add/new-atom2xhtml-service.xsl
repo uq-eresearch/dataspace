@@ -16,10 +16,10 @@
 
     <xsl:include href="../edit/edit-service.xsl"/>
 
-    <xsl:output method="html" version="4.0"
-                doctype-public="-//W3C//DTD HTML 4.01//EN"
-                doctype-system="http://www.w3.org/TR/html4/strict.dtd"
-                media-type="text/html;charset=utf-8" indent="yes"/>
+	<xsl:output method="html" indent="yes"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		media-type="text/html;charset=utf-8" />
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en" lang="en">
             <xsl:call-template name="edit-service"/>

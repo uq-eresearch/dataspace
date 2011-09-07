@@ -11,7 +11,6 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns="http://www.w3.org/1999/xhtml">
 
-    <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template name="head">
 
         <link rel="stylesheet" href="/css/cupertino/jquery-ui-1.8.16.custom.css" type="text/css"/>

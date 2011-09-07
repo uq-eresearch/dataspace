@@ -15,7 +15,6 @@
 
     <xsl:param name="currentUser"/>
     <xsl:param name="applicationName"/>
-    <xsl:output method="html" media-type="text/html;charset=utf-8" indent="yes"/>
     <xsl:template name="header">
         <div id="header">
             <div id="header-inner">

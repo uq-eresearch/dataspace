@@ -1100,7 +1100,7 @@ var DataSpace = (function() {
 
 	var getAtomEntryElement = function() {
 		var attributes = [ {
-			name : "xmlns",
+			name : "xmlns:atom",
 			value : NS_ATOM
 		}, {
 			name : "xmlns:app",
@@ -1177,6 +1177,7 @@ var DataSpace = (function() {
 	};
 
 	var getSimpleElement = function(name) {
+		name = 'atom:'+name;
 		return $(document.createElementNS(NS_ATOM, name));
 		// return $('<' + name + '>');
 	};

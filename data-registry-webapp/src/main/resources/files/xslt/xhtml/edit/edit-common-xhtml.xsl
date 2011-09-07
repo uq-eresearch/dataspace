@@ -12,8 +12,6 @@
 	xmlns:app="http://www.w3.org/2007/app"
 	xmlns="http://www.w3.org/1999/xhtml" exclude-result-prefixes="rdf ore atom foaf dc dcterms dctype dcam cld ands rdfa georss app">
 	<xsl:include href="../../constants.xsl" />
-	<xsl:output method="html" media-type="text/html;charset=utf-8"
-		indent="yes" />
 
 	<xsl:template name="edit-bread-crumbs">
 		<xsl:param name="path" />
