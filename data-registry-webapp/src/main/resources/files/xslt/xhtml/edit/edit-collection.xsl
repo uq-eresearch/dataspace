@@ -110,14 +110,7 @@
 								<label for="spacio-temporal">Time &amp; Space</label>
 							</h2>
 							<div id="spacio-temporal">
-								<dl>
-									<dt>
-										<label for="time-period">Time Period</label>
-									</dt>
-									<dd>
-										<xsl:call-template name="edit-time-period" />
-									</dd>
-								</dl>
+								<xsl:call-template name="edit-time-period" />
 								<xsl:call-template name="edit-locations" />
 								<xsl:call-template name="edit-region" />
 							</div>

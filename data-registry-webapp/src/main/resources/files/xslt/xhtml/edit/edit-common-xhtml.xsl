@@ -641,22 +641,48 @@
 	</xsl:template>
 
 	<xsl:template name="edit-time-period">
-		<table id="time-period-table" class="lookup-table">
-			<tbody>
-				<tr>
-					<td>
-						Start Time:
-						<input name="start-date" id="start-date" class="date-picker" />
-					</td>
-				</tr>
-				<tr>
-					<td>
-						End Time:
-						<input name="end-date" id="end-date" class="date-picker" />
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<dl id="time-period">
+			<dt>
+				<label for="time-period">Time Period</label>
+			</dt>
+
+			<script type="text/javascript">
+			$(function() {
+				var initialDates = '<xsl:value-of select="rdfa:meta[@property=$RDFA_TEMPORAL]/@content"/>';
+				var dates = $( "#start-date, #end-date" ).datepicker({
+					autoSize: true,
+					defaultDate: "0d",
+					maxDate: '0d',
+					dateFormat: 'yy-mm-dd',
+					changeMonth: true,
+					numberOfMonths: 1,
+					onSelect: function( selectedDate ) {
+						var option = this.id == "start-date" ? "minDate" : "maxDate",
+							instance = $( this ).data( "datepicker" ),
+							date = $.datepicker.parseDate(
+								instance.settings.dateFormat ||
+								$.datepicker._defaults.dateFormat,
+								selectedDate, instance.settings );
+						dates.not( this ).datepicker( "option", option, date );
+					}
+				});
+				var startMatch = /start=(\S+)/.exec(initialDates);
+				if (startMatch != null) {
+					$('#start-date').val(startMatch[1]);
+				}
+				var endMatch = /end=(\S+)/.exec(initialDates);
+				if (endMatch != null) {
+					$('#end-date').val(endMatch[1]);
+				}
+			});
+			</script>
+			<dd>
+				<label for="start-date">From</label>
+				<input name="start-date" id="start-date" />
+				<label for="end-date">to</label>
+				<input name="end-date" id="end-date" />
+			</dd>
+		</dl>
 	</xsl:template>
 	<xsl:template name="edit-locations">
 		<dl>

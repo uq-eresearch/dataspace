@@ -1380,3 +1380,8 @@ h1, h2, h3, h4 {
 	color: red;
 	font-size: 0.7em;
 }
+
+.ui-datepicker {
+	/* Rise above all other widgets, including the map */
+	z-index: 1005 !important;
+}

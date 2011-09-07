@@ -67,7 +67,6 @@ var DataSpace = (function() {
 
 	var prepareFields = function() {
 		$("#edit-tabs").tabs();
-		$('.date-picker').datepicker();
 		$('#search-entry').focus(function() {
 			if (this.value == this.defaultValue) {
 				this.value = '';
