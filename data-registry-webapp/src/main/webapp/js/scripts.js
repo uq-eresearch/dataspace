@@ -1041,7 +1041,7 @@ var DataSpace = (function() {
 
 	var addSource = function(record) {
 		var source = getSimpleElement('source');
-		var id = getSimpleElementWithText('id', 'http://dataspace.uq.edu.au/');
+		var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX);
 		source.append(id);
 		var title = getSimpleElementWithText('title',
 				'The University of Queensland Data Collections Registry');

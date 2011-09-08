@@ -1390,3 +1390,7 @@ h1, h2, h3, h4 {
 	/* Rise above all other widgets, including the map */
 	z-index: 1005 !important;
 }
+
+.w3cdtf-w3cdtf {
+	display: inline;
+}

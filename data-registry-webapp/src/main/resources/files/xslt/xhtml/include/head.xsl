@@ -22,6 +22,7 @@
         <script type="text/javascript" src="/js/jquery.validate.min.js">;</script>
         <script type="text/javascript" src="/js/jquery.xmlns.js">;</script>
         <script type="text/javascript" src="/js/underscore-min.js">;</script>
+        <script type="text/javascript" src="/js/jquery-w3cdtf.js">;</script>
 
         <script type="text/javascript" src="/js/vakata.js">;</script>
         <script type="text/javascript" src="/js/jstree.core.js">;</script>
