@@ -8,17 +8,22 @@
 <body>
 <jsp:include page="../include/header.jsp"/>
 <div class="wrapper">
-    <ul class="bread-crumbs-nav">
-        <li class="bread-crumbs">
-            <a href="/">Home</a>
-        </li>
-        <li class="bread-crumbs-last">
-            About
-        </li>
-    </ul>
-    <div class="home-content">
-        <h1>About <%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
-        </h1>
+     <div class="content-top">
+        <div class="pad-sides pad-top">
+            <ul class="bread-crumbs-nav">
+                <li class="bread-crumbs">
+                    <a href="/">Home</a>
+                </li>
+                <li class="bread-crumbs-last">
+                    About
+                </li>
+            </ul>
+            <h1>About <%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
+            </h1>
+        </div>
+     </div>
+    <div class="col-container pad-sides">
+
 
         <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data outputs
         of staff and students at the University of Queensland. It aims to improve the visibility and accessibility of
@@ -32,8 +37,10 @@
             <li>the <a href="/services">services</a> for accessing and manipulating the data</li>
         </ul>
 
-        <p>UQ DataSpace aims to make UQ's research data visible and accessible at a national level by
-        syndicating information to Research Data Australia.</p>
+        <p><img src="/images/ands_logo.gif">
+            <br>
+            UQ DataSpace aims to make UQ's research data visible and accessible at a national level by
+        syndicating information to ANDS <a href="http://services.ands.org.au/home/orca/rda/">Research Data Australia</a>.</p>
 
 
         <h1>Describing your data</h1>
@@ -94,9 +101,6 @@
             <strong>Fax:</strong> +61 7 3365 4999 </p>
         </p>
 
-        <div class="clear">
-            <br/>
-        </div>
         <h1>Rights</h1>
 
         <p>Unless otherwise noted, all content &copy; The University of Queensland.</p>
@@ -108,6 +112,21 @@
         href="http://creativecommons.org/licenses/by-nc/3.0/au/">Creative Commons Attribution-NonCommercial
          3.0 Australia License</a>.
 
+    </div>
+
+    <div class="content-bottom">
+        <div class="pad-sides pad-top pad-bottom">
+            <div class="bread-crumbs-nav">
+                <ul class="bread-crumbs-nav">
+                    <li class="bread-crumbs">
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="bread-crumbs-last">
+                        About
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 <jsp:include page="../include/footer.jsp"/>

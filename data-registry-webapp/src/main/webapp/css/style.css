@@ -306,7 +306,7 @@ a:visited {
     color: #ffffff;
 }
 
-.col-container + ul {
+.col-container ul {
     margin-top: -0.62em;
 }
 
@@ -344,6 +344,7 @@ a:visited {
 #tabs-pane {
     border: 0;
     padding: 0;
+    font-family: Helvetica, Tahoma, Arial, clean, sans-serif;
 }
 
 #tabs-pane .ui-tabs-nav, #tabs-pane .ui-tabs {
@@ -352,6 +353,10 @@ a:visited {
 
 #tabs-pane .ui-widget-header {
     border-bottom: 1px solid #38217a;
+}
+
+#recent, #tags {
+    padding: 0.5em;
 }
 
 #result h2 {
