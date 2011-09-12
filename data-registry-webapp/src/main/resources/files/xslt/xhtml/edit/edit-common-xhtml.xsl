@@ -688,8 +688,6 @@
 				</a>
 			</dd>
 		</dl>
-		<div>
-		</div>
 	</xsl:template>
 
 	<xsl:template name="edit-region">
@@ -719,6 +717,11 @@
 						<input type="radio" name="type" value="polygon" id="polygonToggle"
 							onclick="$('#map').prop('map').toggleControl(this);" />
 						<label for="polygonToggle">draw polygon</label>
+					</li>
+					<li>
+						<button onclick="$('#map').prop('map').clearData(); return false;">
+							Clear
+						</button>
 					</li>
 				</ul>
 			</dd>

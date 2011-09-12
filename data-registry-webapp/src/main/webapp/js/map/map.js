@@ -150,6 +150,10 @@ var MapEditor = function(jqueryObj) {
 		return georss;
 	};
 
+	var clearData = function() {
+		polygonLayer.removeAllFeatures();
+	};
+
 	var recenter = function() {
 		var center;
 		if (polygonLayer.features.length == 0) {
@@ -180,6 +184,7 @@ var MapEditor = function(jqueryObj) {
 	this.toggleControl = toggleControl;
 	this.loadData = loadData;
 	this.exportData = exportData;
+	this.clearData = clearData;
 
 	init();
 };

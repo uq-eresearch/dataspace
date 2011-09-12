@@ -23,19 +23,36 @@ describe("MapEditor", function() {
 		it('exposes loadData function', function() {
 			expect(typeof(mapEditor.loadData)).toBe("function");
 		});
+		it('exposes exportData function', function() {
+			expect(typeof(mapEditor.exportData)).toBe("function");
+		});
+		it('exposes clearData function', function() {
+			expect(typeof(mapEditor.clearData)).toBe("function");
+		});
 	});
 
 	it('can import and export features', function() {
 
 		// Import
-		var initialData = '<georss:polygon xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss" xmlns:rdfa="http://www.w3.org/ns/rdfa#">-10.5 140 -17 140 -17 145.5 -10.5 145.5 -10.5 140</georss:polygon>';
-		var feature = mapEditor.loadData(initialData);
-		expect(feature.geometry).not.toBeNull();
+		(function() {
+			var initialData = '<georss:polygon xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss" xmlns:rdfa="http://www.w3.org/ns/rdfa#">-10.5 140 -17 140 -17 145.5 -10.5 145.5 -10.5 140</georss:polygon>';
+			var feature = mapEditor.loadData(initialData);
+			expect(feature.geometry).not.toBeNull();
+		})();
 
 		// Export
-		var element = mapEditor.exportData();
-		expect(element).not.toBe(null);
-		expect(element.nodeName).toEqual('georss:polygon');
+		(function() {
+			var element = mapEditor.exportData();
+			expect(element).not.toBe(null);
+			expect(element.nodeName).toEqual('georss:polygon');
+		})();
+
+		// Clear
+		(function() {
+			mapEditor.clearData();
+			var element = mapEditor.exportData();
+			expect(element).toBe(null);
+		})();
 
 	});
 
