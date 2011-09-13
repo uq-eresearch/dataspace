@@ -1396,6 +1396,12 @@ h1, h2, h3, h4 {
 	display: inline;
 }
 
+#refresh-geotags {
+	display: block;
+	clear: left;
+	font-size: 0.5em;
+}
+
 .geotags-geotags-tag {
 	display: inline-block;
 	font-size: 0.5em;

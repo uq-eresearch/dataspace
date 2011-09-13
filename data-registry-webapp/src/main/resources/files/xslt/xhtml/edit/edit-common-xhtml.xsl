@@ -687,14 +687,19 @@
 					});
 
 					var mapEditor = $('#map').prop('map');
-					var loadTags = _.throttle(_.bind(
-							$('#geotags').data('geotags').loadTags,
-							$('#geotags').data('geotags')),1000);
-					$('#refresh-geotags').bind('click.lookup', function(e) {
-						e.preventDefault();
-						var params = mapEditor.getViewingCircle();
-						loadTags(params.lat, params.lon, params.radius);
-					});
+					var geoTags = $('#geotags').data('geotags');
+					var loadTags = _.throttle(geoTags.loadTags,1000);
+					$('#refresh-geotags').button()
+						.bind('click.lookup', function(e) {
+							e.preventDefault();
+							var params = mapEditor.getViewingCircle();
+							loadTags(params.lat, params.lon, params.radius);
+						});
+					<xsl:for-each select="atom:link[@rel=$ATOM_SPATIAL]">
+					geoTags.addTag(
+						"<xsl:value-of select="@title"></xsl:value-of>",
+						"<xsl:value-of select="@href"></xsl:value-of>");
+					</xsl:for-each>
 				});
 			</script>
 		</dl>
