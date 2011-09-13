@@ -1020,10 +1020,13 @@ var DataSpace = (function() {
 	};
 
 	var addSpatial = function(record) {
-		_.each($('#geotags').data('geotags').getLocked(), function(tag) {
-			var linkElement = getLinkElement(tag.href, REL_SPATIAL, tag.label);
-			record.append(linkElement);
-		});
+		if ($('#geotags').length > 0) {
+			_.each($('#geotags').data('geotags').getLocked(), function(tag) {
+				var linkElement = getLinkElement(tag.href, REL_SPATIAL,
+						tag.label);
+				record.append(linkElement);
+			});
+		}
 		var regionMap = $('#map').prop('map');
 		if (typeof(regionMap) != 'undefined') {
 			var region = $('#map').prop('map').exportData();
