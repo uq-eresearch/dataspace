@@ -1020,16 +1020,10 @@ var DataSpace = (function() {
 	};
 
 	var addSpatial = function(record) {
-		$('input[id|="location-name"]').each(
-				function() {
-					var title = $(this).val();
-					var href = 'http://sws.geonames.org/';
-					if (title) {
-						var linkElement = getLinkElement(href + title,
-								REL_SPATIAL, title);
-						record.append(linkElement);
-					}
-				});
+		_.each($('#geotags').data('geotags').getLocked(), function(tag) {
+			var linkElement = getLinkElement(tag.href, REL_SPATIAL, tag.label);
+			record.append(linkElement);
+		});
 		var regionMap = $('#map').prop('map');
 		if (typeof(regionMap) != 'undefined') {
 			var region = $('#map').prop('map').exportData();
