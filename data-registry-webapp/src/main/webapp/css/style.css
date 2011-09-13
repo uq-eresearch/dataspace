@@ -1412,3 +1412,10 @@ h1, h2, h3, h4 {
 .geotags-geotags-locked, .geotags-geotags-unlocked {
 	margin-bottom: 0.5em;
 }
+
+.geotags-geotags-loading {
+	background-image: url('/images/ajax-loader.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+	min-height: 50px;
+}
