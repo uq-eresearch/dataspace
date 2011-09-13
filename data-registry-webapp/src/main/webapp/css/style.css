@@ -1361,6 +1361,7 @@ h1, h2, h3, h4 {
 {
 	margin-top: 1em;
 	margin-bottom: 1em;
+	clear: both;
 }
 
 #page-form dt
@@ -1393,4 +1394,15 @@ h1, h2, h3, h4 {
 
 .w3cdtf-w3cdtf {
 	display: inline;
+}
+
+.geotags-geotags-tag {
+	display: inline-block;
+	font-size: 0.5em;
+	margin-right: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.geotags-geotags-locked, .geotags-geotags-unlocked {
+	margin-bottom: 0.5em;
 }

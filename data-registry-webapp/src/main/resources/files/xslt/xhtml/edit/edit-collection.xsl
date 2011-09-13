@@ -111,8 +111,8 @@
 							</h2>
 							<div id="spacio-temporal">
 								<xsl:call-template name="edit-time-period" />
-								<xsl:call-template name="edit-locations" />
 								<xsl:call-template name="edit-region" />
+								<xsl:call-template name="edit-locations" />
 							</div>
 							<h2>
 								<label for="subjects">Topics</label>

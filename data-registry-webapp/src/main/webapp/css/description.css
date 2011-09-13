@@ -37,8 +37,13 @@
     margin-right: 2%;
 }
 
+#controlToggle {
+    display: inline-block;
+    position: absolute;
+}
+
 #map {
-    float: left;
+    display: inline-block;
     width: 50%;
     height: 400px;
 }

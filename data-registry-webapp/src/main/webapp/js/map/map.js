@@ -160,7 +160,8 @@ var MapEditor = function(jqueryObj) {
 			var proj = new OpenLayers.Projection("EPSG:4326");
 			// Default center with no features
 			center = new OpenLayers.LonLat(130.32129, -24.25231);
-			map.setCenter(center.transform(proj, map.getProjectionObject()), 3);
+			center.transform(proj, map.getProjectionObject());
+			map.setCenter(center, 3);
 		} else {
 			// Otherwise shoot for the middle
 			var feature = polygonLayer.features[0];
@@ -180,11 +181,25 @@ var MapEditor = function(jqueryObj) {
 		});
 	};
 
+	var getViewingCircle = function() {
+		var longlatProj = new OpenLayers.Projection("EPSG:4326");
+		var center = map.getCenter();
+		center.transform(map.getProjectionObject(),longlatProj);
+		var extent = map.getExtent();
+		var radius = _.min([extent.getWidth(), extent.getHeight()]) / 2000;
+		return {
+			lat: center.lat,
+			lon: center.lon,
+			radius: radius
+		};
+	};
+
 	this.makeEditable = makeEditable;
 	this.toggleControl = toggleControl;
 	this.loadData = loadData;
 	this.exportData = exportData;
 	this.clearData = clearData;
+	this.getViewingCircle = getViewingCircle;
 
 	init();
 };

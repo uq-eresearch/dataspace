@@ -671,22 +671,32 @@
 		</dl>
 	</xsl:template>
 	<xsl:template name="edit-locations">
-		<dl>
+		<dl id="locations">
 			<dt>
 				<label>Locations</label>
+				<button id="refresh-geotags">Refresh Suggestions</button>
 			</dt>
 			<dd>
-				<input id="location-name" value="" type="text" />
-				<a id="lookup-location-link" href="http://www.geonames.org/" title="Open GeoNames Search"
-					onclick="window.open(this.href,'_blank'); return false;">
-					Open GeoNames
-				</a>
+				<div id="geotags"></div>
 			</dd>
-			<dd>
-				<a class="new-link" id="add-locations-link" href="#" title="Add Location"
-					onclick="DataSpace.replicateSimpleField('location-name'); return false;">add
-				</a>
-			</dd>
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$('#geotags').geotags({
+						// uq_dataspace@mailinator.com
+						username: 'uq_dataspace'
+					});
+
+					var mapEditor = $('#map').prop('map');
+					var loadTags = _.throttle(_.bind(
+							$('#geotags').data('geotags').loadTags,
+							$('#geotags').data('geotags')),1000);
+					$('#refresh-geotags').bind('click.lookup', function(e) {
+						e.preventDefault();
+						var params = mapEditor.getViewingCircle();
+						loadTags(params.lat, params.lon, params.radius);
+					});
+				});
+			</script>
 		</dl>
 	</xsl:template>
 
@@ -728,13 +738,16 @@
 			<script type="text/javascript">
 			$(document).ready(function(){
 				var initialData = '<xsl:copy-of select="georss:*"/>';
+
 				var target = $('#map');
 				var map = new MapEditor(target);
+
 				map.makeEditable();
 				if (initialData != '') {
 					map.loadData(initialData);
 				}
 				target.prop('map', map);
+
 			});
 			</script>
 		</dl>

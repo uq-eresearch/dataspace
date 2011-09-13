@@ -199,6 +199,8 @@
 					<preloadSources>
 						<preloadSource>unmuffle.js</preloadSource>
 						<preloadSource>openlayers/OpenLayers.js</preloadSource>
+						<preloadSource>jquery-1.6.2.min.js</preloadSource>
+						<preloadSource>jquery-ui-1.8.16.custom.min.js</preloadSource>
 					</preloadSources>
 					<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
 					<browserVersion>FIREFOX_3_6</browserVersion>
