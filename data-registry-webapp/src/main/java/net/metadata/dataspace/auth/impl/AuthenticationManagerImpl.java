@@ -41,10 +41,14 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 
     @Override
     public ResponseContext login(RequestContext request) {
+        // If HEAD request, just send 200 OK
+        if (request.getMethod().equals("HEAD")) {
+        	return OperationHelper.createResponse(200, "", request.getHeader("Host"));
+        }
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         if (userName == null || password == null) {
-            return OperationHelper.createResponse(400, "Username and password missing");
+            return OperationHelper.createResponse(400, "Username and password missing", request.getHeader("Host"));
         } else {
             if (defaultUsers.containsKey(userName) && defaultUsers.get(userName)[1].equals(password)) {
                 UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
@@ -67,7 +71,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                     logger.warn("Could not set LDAP context for user " + userName);
                 }
                 logger.info("Authenticated user: " + userName);
-                return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
+                return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200, request.getHeader("Host"));
             } else {
                 try {
                     Hashtable<String, String> env = new Hashtable<String, String>();
@@ -105,16 +109,16 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
                         setDirContext(ctx, user);
                         logger.info("Authenticated user: " + userName);
-                        return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
+                        return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200, request.getHeader("Host"));
                     } else {
                         String message = "Authentication Failed, User not found";
                         logger.warn(message);
-                        return OperationHelper.createResponse(400, message);
+                        return OperationHelper.createResponse(400, message, request.getHeader("Host"));
                     }
                 } catch (NamingException e) {
                     String message = "Authentication Failed: " + e.getMessage();
                     logger.warn(message);
-                    return OperationHelper.createResponse(400, message);
+                    return OperationHelper.createResponse(400, message, request.getHeader("Host"));
                 }
             }
         }

@@ -136,4 +136,19 @@ public class OperationHelper {
         return rc;
     }
 
+    public static AbstractResponseContext createResponse(final int code,
+            final String message, final String host) {
+    	return setCrossDomainHeaders(createResponse(code,message), host);
+    }
+
+    private static AbstractResponseContext setCrossDomainHeaders(
+    		AbstractResponseContext rc, String host) {
+    	rc.addHeader("Access-Control-Allow-Origin",
+    			String.format("http://%s https://%s",
+    					host, (host.split(":"))[0]));
+    	rc.addHeader("Access-Control-Allow-Methods",
+    			"POST, GET, HEAD, OPTIONS");
+    	return rc;
+    }
+
 }
