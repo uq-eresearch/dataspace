@@ -1,4 +1,6 @@
 <%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
+<%@ page import="net.metadata.dataspace.app.Constants" %>
+<%@ page import="net.metadata.dataspace.data.model.record.User" %>
 <!--START: Header -->
 <div id="header">
     <div id="header-inner">
@@ -44,6 +46,15 @@
             <li><a href="/search">Search</a></li>
             <li><a href="/about">About</a></li>
         </ul>
+        <%
+        User user = (User) session.getAttribute(Constants.SESSION_ATTRIBUTE_CURRENT_USER);
+        if (user == null) { %>
+        <a href="#" class="signin" id="signin-link">Sign in</a>
+        <% } else { %>
+        <a href="#" class="signout"
+        	title="Sign out as <%= user.getDisplayName() %>"
+        	id="signout-link">Sign Out</a>
+        <% } %>
     </div>
     <%--<a href="#" class="signin" id="signin-link">Sign in</a>--%>
     <%--<fieldset id="signin_menu">--%>

@@ -1,12 +1,78 @@
 $(document).ready(function() {
     getLoginLink();
 });
+
+
 function getLoginLink() {
+	var login = function(e) {
+		e.preventDefault();
+	    var username = $('#username').val();
+	    var password = $('#password').val();
+	    var doLogin = function(url) {
+	        $.ajax({
+	            type: 'POST',
+	            url: url,
+	            data: {
+	            	'username': username,
+	            	'password': password
+	            },
+	            success: function(data) {
+	                location.reload();
+	            },
+	            error: function(xhr, textStatus, errorThrown) {
+	                $('#login-error').html('Authentication Failed: incorrect username or password');
+	            }
+	        });
+	    }
+
+	    // Try for a secure login
+	    var postUrl = '/login';
+	    if (window.location.protocol != 'https:') {
+	    	var securePostUrl = 'https://'+window.location.hostname+postUrl;
+	    	$.ajax({
+	            type: 'HEAD',
+	            url: securePostUrl,
+	            success: function() {
+	            	doLogin(securePostUrl);
+	            },
+	            error: function() {
+	            	doLogin(postUrl);
+	            }
+	    	});
+	    } else {
+	    	doLogin(postUrl);
+	    }
+
+	    return false;
+	}
+
     $(".signin").click(function(e) {
         e.preventDefault();
-        $('#login-error').html('');
-        $("fieldset#signin_menu").toggle();
-        $(".signin").toggleClass("menu-open");
+        if ($('#login-dialog').length == 0) {
+        	var dialog = $('<div id="login-dialog"></div>');
+        	_.each(['username','password'], function(field) {
+        		var capitalize = function(string) {
+        			return string.charAt(0).toUpperCase()+string.slice(1);
+        		}
+        		var wrapper = $('<dl />');
+        		$('<dt><label/></dt><dd><input/></dd>').appendTo(wrapper);
+        		$('input', wrapper).attr('id', field).keydown(function(e){
+        			if (e.keyCode == '13') {
+        				login(e);
+        			}
+        		});
+        		$('label', wrapper).text(capitalize(field)).attr('for', field);
+        		dialog.append(wrapper);
+        	});
+        	$('<div/>').attr('id', 'login-error').appendTo(dialog);
+        	$('<button/>').text('UQ Sign In').click(login).appendTo(dialog);
+        	$('body').append(dialog);
+        	dialog.dialog({
+        		autoOpen: false,
+        		title: 'Sign In'
+        	});
+        }
+        $('#login-dialog').dialog('open');
     });
     $(".signout").click(function(e) {
         e.preventDefault();
@@ -14,10 +80,6 @@ function getLoginLink() {
                     type: 'POST',
                     url: '/logout',
                     success: function(data) {
-                        $('#signin-link').html('Sign in');
-                        $('a#signin-link').attr('href', '#');
-                        $('a#signin-link').attr('class', 'signin');
-                        getLoginLink();
                         location.reload();
                     }
                 });
@@ -32,39 +94,4 @@ function getLoginLink() {
             $("fieldset#signin_menu").fadeOut(400);
         }
     });
-}
-function login() {
-    var username = $('#username').val();
-    var password = $('#password').val();
-    $.ajax({
-                type: 'POST',
-                url: '/login',
-                data: 'username=' + username + '&password=' + password,
-                success: function(data) {
-                    $('#signin-link').text('Sign out');
-                    $('a#signin-link').attr('href', '/logout');
-                    $('a#signin-link').attr('class', 'signout');
-                    $(".signin").removeClass("menu-open");
-                    $("fieldset#signin_menu").hide();
-                    $(".signout").click(function(e) {
-                        e.preventDefault();
-                        $.ajax({
-                                    type: 'POST',
-                                    url: '/logout',
-                                    success: function(data) {
-                                        $('#signin-link').text('Sign in');
-                                        $('a#signin-link').attr('href', '#');
-                                        $('a#signin-link').attr('class', 'signin');
-                                        getLoginLink();
-                                        location.reload();
-                                    }
-                                });
-                    });
-                    location.reload();
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    $('#login-error').html('Authentication Failed: incorrect username or password');
-                }
-            });
-    return false;
 }
