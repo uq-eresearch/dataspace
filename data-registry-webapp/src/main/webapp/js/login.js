@@ -8,7 +8,7 @@ function getLoginLink() {
 		e.preventDefault();
 	    var username = $('#username').val();
 	    var password = $('#password').val();
-	    var doLogin = function(url) {
+	    var doLogin = function(url, secureRedirect) {
 	        $.ajax({
 	            type: 'POST',
 	            url: url,
@@ -17,7 +17,13 @@ function getLoginLink() {
 	            	'password': password
 	            },
 	            success: function(data) {
-	                location.reload();
+	            	if (secureRedirect) {
+	            		window.location.href = _.template(
+	            				'https://<%=hostname+pathname%>',
+	                			window.location)
+	            	} else {
+	            		window.location.reload();
+	            	}
 	            },
 	            error: function(xhr, textStatus, errorThrown) {
 	                $('#login-error').html('Authentication Failed: incorrect username or password');
@@ -33,14 +39,14 @@ function getLoginLink() {
 	            type: 'HEAD',
 	            url: securePostUrl,
 	            success: function() {
-	            	doLogin(securePostUrl);
+	            	doLogin(securePostUrl, true);
 	            },
 	            error: function() {
-	            	doLogin(postUrl);
+	            	doLogin(postUrl, false);
 	            }
 	    	});
 	    } else {
-	    	doLogin(postUrl);
+	    	doLogin(postUrl, false);
 	    }
 
 	    return false;
