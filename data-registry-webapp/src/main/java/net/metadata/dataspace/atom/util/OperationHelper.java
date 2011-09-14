@@ -148,6 +148,7 @@ public class OperationHelper {
     	rc.addHeader("Access-Control-Allow-Methods",
     			"POST, GET, HEAD, OPTIONS");
     	rc.addHeader("Access-Control-Allow-Headers", '*');
+    	rc.addHeader("Access-Control-Allow-Credentials", "true");
     	return rc;
     }
 
