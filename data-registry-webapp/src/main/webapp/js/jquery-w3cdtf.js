@@ -125,7 +125,7 @@
             startIndex = this.options.minDate.getMonth() + 1;
           }
 
-          var months = _.range(startIndex, 12 + 1, 1).map(function(n) {
+          var months = _.map(_.range(startIndex, 12 + 1, 1), function(n) {
             return n < 10 ? '0' + n : n;
           });
           $(this._getSelectorOptions(months, this._current.month)).appendTo(
@@ -153,11 +153,10 @@
                   .getMonth() + 1) {
             startIndex = this.options.minDate.getDate();
           }
-          var days = _.range(startIndex,
-              daysInMonth(this._current.year, this._current.month) + 1).map(
-              function(n) {
-                return n < 10 ? '0' + n : n;
-              });
+          var days = _.map(_.range(startIndex, daysInMonth(this._current.year,
+              this._current.month) + 1), function(n) {
+            return n < 10 ? '0' + n : n;
+          });
           $(this._getSelectorOptions(days, this._current.day)).appendTo(
               daySelect);
 
