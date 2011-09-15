@@ -520,9 +520,6 @@
 		<xsl:param name="field" />
 		<xsl:param name="relation" />
 		<dl id="{$field}">
-			<xsl:call-template name="lookup-dialog-window">
-				<xsl:with-param name="field" select='$field'/>
-			</xsl:call-template>
 			<dt><label><xsl:value-of select="$title" /></label></dt>
 			<xsl:for-each select="atom:link[@rel=$relation]">
 				<dd>
@@ -542,6 +539,9 @@
 				</a>
 			</dd>
 		</dl>
+		<xsl:call-template name="lookup-dialog-window">
+			<xsl:with-param name="field" select='$field'/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="edit-subject">
