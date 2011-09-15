@@ -16,6 +16,10 @@ function getLoginLink() {
 	            	'username': username,
 	            	'password': password
 	            },
+	            xhrFields: {
+	                withCredentials: true
+	             },
+	            crossDomain: true,
 	            success: function(data) {
 	            	if (secureRedirect) {
 	            		window.location.href = _.template(
