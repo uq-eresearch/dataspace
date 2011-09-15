@@ -401,7 +401,7 @@ var DataSpace = (function() {
 
 	var createAnzsrcoLookup = function(field) {
 		var target = $('#'+field);
-		var lookupDialog = target.find('.dialog-window');
+		var lookupDialog = $('#'+field+'-dialog-window');
 		var parser = target.prop('anzsrcoParser');
 		var newLink = target.find('.new-link');
 		var insertBefore = newLink.parent();
@@ -536,10 +536,10 @@ var DataSpace = (function() {
 	};
 
 	var setLicenseType = function() {
-		var hiddenField = $("#licence-type");
+		var hiddenField = $("#license-type");
 		if (hiddenField) {
-			var licenceType = hiddenField.val();
-			$('#licence-type-combobox').val(licenceType);
+			var licenseType = hiddenField.val();
+			$('#license-type-combobox').val(licenseType);
 		}
 	};
 
@@ -866,7 +866,7 @@ var DataSpace = (function() {
 	};
 
 	var addLicense = function(record) {
-		var license = $('#licence-type-combobox');
+		var license = $('#license-type-combobox');
 		if ($(license).val() != 'none') {
 			var licenseLink = getLinkElement($(license).val(), REL_LICENSE, $(
 					license).text());

@@ -50,7 +50,7 @@
 						<xsl:call-template name="metadata" />
 					</xsl:if>
 
-					<form id="page-form">
+					<form id="page-form" action="">
 						<div>
 							<h2>
 								<label for="general">General Information</label>
@@ -96,7 +96,7 @@
 
 								<xsl:call-template name="rights" />
 
-								<xsl:call-template name="licence-type" />
+								<xsl:call-template name="license-type" />
 							</div>
 							<h2>
 								<label for="people-and-projects">People &amp; Projects</label>

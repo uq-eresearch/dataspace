@@ -109,7 +109,7 @@
 
 	<xsl:template name="alternative-title">
 		<xsl:param name="label" required="no" select="'Alternative Title'"/>
-		<dl>
+		<dl id="edit-alternative-title-text">
 		<dt>
 			<label for="edit-alternative-title-text">
 				<xsl:value-of select="$label" />
@@ -324,11 +324,7 @@
 			Creators
 		</xsl:param>
 		<xsl:param name="field" select="'creator'"/>
-
 		<dl id="{$field}">
-			<xsl:call-template name="lookup-dialog-window">
-				<xsl:with-param name="field" select='$field'/>
-			</xsl:call-template>
 			<dt><label><xsl:value-of select="$title" /></label></dt>
 			<xsl:for-each select="atom:author">
 				<dd>
@@ -348,6 +344,9 @@
 				</a>
 			</dd>
 		</dl>
+		<xsl:call-template name="lookup-dialog-window">
+			<xsl:with-param name="field" select='$field'/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="publishers">
@@ -484,15 +483,15 @@
 	<xsl:template name="lookup-dialog-window">
 		<xsl:param name="field" />
 		<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
-			<form action="" onSubmit="$('button.search', this).click(); return false;">
+			<form action="" onsubmit="$('button.search', this).click(); return false;">
 				<input class=".ignore" type="text" name="lookup-keyword" value="" />
 				<button class="search">Search</button>
 			</form>
 			<div class="search-result">
 				<div class="navigation">
-					<ul class="pager">
+					<div class="pager">
 
-					</ul>
+					</div>
 
 					<div class="pager-header">
 
@@ -520,7 +519,11 @@
 		<xsl:param name="field" />
 		<xsl:param name="relation" />
 		<dl id="{$field}">
-			<dt><label><xsl:value-of select="$title" /></label></dt>
+			<dt>
+				<label for="{$field}">
+					<xsl:value-of select="$title" />
+				</label>
+			</dt>
 			<xsl:for-each select="atom:link[@rel=$relation]">
 				<dd>
 					<a class="field-value"
@@ -550,16 +553,6 @@
 		<xsl:param name="field" />
 		<xsl:param name="scheme" />
 		<dl id="{$field}">
-			<div class="dialog-window" style="display:none;">
-				<form action="" onSubmit="$('button.search', this).click(); return false;">
-					<input class=".ignore" type="text" name="query" value="" />
-					<button class="search">Search</button>
-				</form>
-				<div class="results"/>
-				<div>
-					<button class="select">Select</button>
-				</div>
-			</div>
 			<dt><label><xsl:value-of select="$title" /></label></dt>
 			<xsl:for-each select="atom:category[@scheme=$scheme]">
 				<dd>
@@ -577,25 +570,35 @@
 			<dd>
 				<a class="new-link" href="#" title="Add">add</a>
 			</dd>
-			<script>
-			$(document).ready(function() {
-				$.ajax({
-					url: '<xsl:value-of select="$rdfUrl" />',
-					dataType: 'text',
-					success: function(data, textStatus, jqXHR) {
-						var fieldName = '<xsl:value-of select="$field" />';
-						var anzsrcoParser = new AnzsrcoParser();
-						anzsrcoParser.loadRdf(data);
-						$('#'+fieldName).prop('anzsrcoParser',anzsrcoParser);
-						DataSpace.createAnzsrcoLookup(fieldName);
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						throw errorThrown;
-					}
-				});
-			});
-			</script>
 		</dl>
+		<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
+			<form action="" onsubmit="$('button.search', this).click(); return false;">
+				<input class=".ignore" type="text" name="query" value="" />
+				<button class="search">Search</button>
+			</form>
+			<div class="results"/>
+			<div>
+				<button class="select">Select</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$.ajax({
+				url: '<xsl:value-of select="$rdfUrl" />',
+				dataType: 'text',
+				success: function(data, textStatus, jqXHR) {
+					var fieldName = '<xsl:value-of select="$field" />';
+					var anzsrcoParser = new AnzsrcoParser();
+					anzsrcoParser.loadRdf(data);
+					$('#'+fieldName).prop('anzsrcoParser',anzsrcoParser);
+					DataSpace.createAnzsrcoLookup(fieldName);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					throw errorThrown;
+				}
+			});
+		});
+		</script>
 	</xsl:template>
 
 	<xsl:template name="type-of-activities">
@@ -645,23 +648,6 @@
 			<dt>
 				<label for="time-period">Time Period</label>
 			</dt>
-
-			<script type="text/javascript">
-			$(function() {
-				var initialDates = '<xsl:value-of select="rdfa:meta[@property=$RDFA_TEMPORAL]/@content"/>';
-				var startMatch = /start=([\d-T:]+)/.exec(initialDates);
-				if (startMatch != null) {
-					$('#start-date').val(startMatch[1]);
-				}
-				var endMatch = /end=([\d-T:]+)/.exec(initialDates);
-				if (endMatch != null) {
-					$('#end-date').val(endMatch[1]);
-				}
-				var dates = $( "#start-date, #end-date" ).w3cdtf({
-					minDate: new Date(1800,0,1,0,0,0)
-				});
-			});
-			</script>
 			<dd>
 				<label for="start-date">From</label>
 				<input name="start-date" id="start-date" value=""/>
@@ -669,6 +655,22 @@
 				<input name="end-date" id="end-date" value=""/>
 			</dd>
 		</dl>
+		<script type="text/javascript">
+		$(function() {
+			var initialDates = '<xsl:value-of select="rdfa:meta[@property=$RDFA_TEMPORAL]/@content"/>';
+			var startMatch = /start=([\d-T:]+)/.exec(initialDates);
+			if (startMatch != null) {
+				$('#start-date').val(startMatch[1]);
+			}
+			var endMatch = /end=([\d-T:]+)/.exec(initialDates);
+			if (endMatch != null) {
+				$('#end-date').val(endMatch[1]);
+			}
+			var dates = $( "#start-date, #end-date" ).w3cdtf({
+				minDate: new Date(1800,0,1,0,0,0)
+			});
+		});
+		</script>
 	</xsl:template>
 	<xsl:template name="edit-locations">
 		<dl id="locations">
@@ -679,30 +681,30 @@
 			<dd>
 				<div id="geotags"></div>
 			</dd>
-			<script type="text/javascript">
-				$(document).ready(function() {
-					$('#geotags').geotags({
-						// uq_dataspace@mailinator.com
-						username: 'uq_dataspace'
-					});
-
-					var mapEditor = $('#map').prop('map');
-					var geoTags = $('#geotags').data('geotags');
-					var loadTags = _.throttle(geoTags.loadTags,1000);
-					$('#refresh-geotags').button()
-						.bind('click.lookup', function(e) {
-							e.preventDefault();
-							var params = mapEditor.getViewingCircle();
-							loadTags(params.lat, params.lon, params.radius);
-						});
-					<xsl:for-each select="atom:link[@rel=$ATOM_SPATIAL]">
-					geoTags.addTag(
-						"<xsl:value-of select="@title"></xsl:value-of>",
-						"<xsl:value-of select="@href"></xsl:value-of>");
-					</xsl:for-each>
-				});
-			</script>
 		</dl>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#geotags').geotags({
+					// uq_dataspace@mailinator.com
+					username: 'uq_dataspace'
+				});
+
+				var mapEditor = $('#map').prop('map');
+				var geoTags = $('#geotags').data('geotags');
+				var loadTags = _.throttle(geoTags.loadTags,1000);
+				$('#refresh-geotags').button()
+					.bind('click.lookup', function(e) {
+						e.preventDefault();
+						var params = mapEditor.getViewingCircle();
+						loadTags(params.lat, params.lon, params.radius);
+					});
+				<xsl:for-each select="atom:link[@rel=$ATOM_SPATIAL]">
+				geoTags.addTag(
+					"<xsl:value-of select="@title"></xsl:value-of>",
+					"<xsl:value-of select="@href"></xsl:value-of>");
+				</xsl:for-each>
+			});
+		</script>
 	</xsl:template>
 
 	<xsl:template name="edit-region">
@@ -740,28 +742,28 @@
 					</li>
 				</ul>
 			</dd>
-			<script type="text/javascript">
-			$(document).ready(function(){
-				var initialData = '<xsl:copy-of select="georss:*"/>';
-
-				var target = $('#map');
-				var map = new MapEditor(target);
-
-				map.makeEditable();
-				if (initialData != '') {
-					map.loadData(initialData);
-				}
-				target.prop('map', map);
-
-			});
-			</script>
 		</dl>
+		<script type="text/javascript">
+		$(document).ready(function(){
+			var initialData = '<xsl:copy-of select="georss:*"/>';
+
+			var target = $('#map');
+			var map = new MapEditor(target);
+
+			map.makeEditable();
+			if (initialData != '') {
+				map.loadData(initialData);
+			}
+			target.prop('map', map);
+
+		});
+		</script>
 	</xsl:template>
 
 	<xsl:template name="edit-related-publications">
-		<dl>
+		<dl id="related-publications">
 			<dt>
-				<label for="">Related Publications</label>
+				<label for="related-publications">Related Publications</label>
 			</dt>
 			<xsl:for-each select="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
 				<dd>
@@ -786,14 +788,14 @@
 			</dd>
 		</dl>
 	</xsl:template>
-	<xsl:template name="licence-type">
+	<xsl:template name="license-type">
 		<dl>
 			<dt>
 				<label for="license-type">License</label>
 			</dt>
 			<dd>
-				<input type="hidden" id="licence-type" value="{atom:link[@rel=$REL_LICENSE]/@href}" />
-				<select id="licence-type-combobox" name="type-combobox">
+				<input type="hidden" id="license-type" value="{atom:link[@rel=$REL_LICENSE]/@href}" />
+				<select id="license-type-combobox" name="type-combobox">
 					<option value="none">None</option>
 					<option value="http://creativecommons.org/licenses/by/3.0/rdf">CC-BY</option>
 					<option value="http://creativecommons.org/licenses/by-sa/3.0/rdf">CC-BY-SA</option>
