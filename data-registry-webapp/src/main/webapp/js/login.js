@@ -19,7 +19,7 @@ function getLoginLink() {
 	            xhrFields: {
 	                withCredentials: true
 	             },
-	            crossDomain: true,
+	            crossDomain: jQuery.support.cors,
 	            success: function(data) {
 	            	if (secureRedirect) {
 	            		window.location.href = _.template(
