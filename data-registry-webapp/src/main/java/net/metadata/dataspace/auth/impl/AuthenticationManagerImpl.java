@@ -60,7 +60,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                 request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
                 Hashtable<String, String> env = new Hashtable<String, String>();
                 env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-                env.put(Context.PROVIDER_URL, "ldaps://ldap.uq.edu.au");
+                env.put(Context.PROVIDER_URL, "ldap://ldap.uq.edu.au");
                 SearchControls ctls = new SearchControls();
                 ctls.setReturningObjFlag(true);
                 ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -76,7 +76,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                 try {
                     Hashtable<String, String> env = new Hashtable<String, String>();
                     env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-                    env.put(Context.PROVIDER_URL, "ldaps://ldap.uq.edu.au");
+                    env.put(Context.PROVIDER_URL, "ldap://ldap.uq.edu.au");
                     SearchControls ctls = new SearchControls();
                     ctls.setReturningObjFlag(true);
                     ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
