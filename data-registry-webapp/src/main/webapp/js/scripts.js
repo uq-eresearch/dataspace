@@ -318,6 +318,12 @@ var DataSpace = (function() {
 
 			$('button.search', dialogWindow).unbind('click.lookup')
 				.bind('click.lookup', searchHandler);
+			queryField.unbind('keydown.lookup')
+				.bind('keydown.lookup', function(e) {
+					if (e.keyCode == 13) {
+						searchHandler();
+					}
+				});
 
 			var selectHandler = function() {
 				var objs = $('.docs input:checked', dialogWindow).map(
@@ -426,6 +432,12 @@ var DataSpace = (function() {
 			};
 			searchButton.unbind('click.lookup').bind(
 					'click.lookup', searchHandler);
+			queryField.unbind('keydown.lookup')
+				.bind('keydown.lookup', function(e) {
+					if (e.keyCode == 13) {
+						searchHandler();
+					}
+				});
 
 			var selectHandler = function() {
 				var selected = lookupDialog.find('.jstree')

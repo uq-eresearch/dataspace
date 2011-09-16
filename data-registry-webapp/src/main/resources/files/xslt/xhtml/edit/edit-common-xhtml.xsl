@@ -483,10 +483,10 @@
 	<xsl:template name="lookup-dialog-window">
 		<xsl:param name="field" />
 		<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
-			<form action="" onsubmit="$('button.search', this).click(); return false;">
-				<input class=".ignore" type="text" name="lookup-keyword" value="" />
+			<div>
+				<input class="ignore" type="text" name="lookup-keyword" value="" />
 				<button class="search">Search</button>
-			</form>
+			</div>
 			<div class="search-result">
 				<div class="navigation">
 					<div class="pager">
@@ -572,10 +572,10 @@
 			</dd>
 		</dl>
 		<div id="{$field}-dialog-window" class="dialog-window" style="display:none;">
-			<form action="" onsubmit="$('button.search', this).click(); return false;">
-				<input class=".ignore" type="text" name="query" value="" />
+			<div>
+				<input class="ignore" type="text" name="query" value="" />
 				<button class="search">Search</button>
-			</form>
+			</div>
 			<div class="results"/>
 			<div>
 				<button class="select">Select</button>
@@ -695,8 +695,12 @@
 				$('#refresh-geotags').button()
 					.bind('click.lookup', function(e) {
 						e.preventDefault();
-						var params = mapEditor.getViewingCircle();
-						loadTags(params.lat, params.lon, params.radius);
+						if (jQuery.support.cors) {
+							var params = mapEditor.getViewingCircle();
+							loadTags(params.lat, params.lon, params.radius);
+						} else {
+							alert("This feature is currently unavailable for your web browser");
+						}
 					});
 				<xsl:for-each select="atom:link[@rel=$ATOM_SPATIAL]">
 				geoTags.addTag(
@@ -744,7 +748,9 @@
 			</dd>
 		</dl>
 		<script type="text/javascript">
-		$(document).ready(function(){
+		// IE8 and lower need the window to finish loading first,
+		// otherwise we'd do this earlier with $(document).ready()
+		$(window).load(function(){
 			var initialData = '<xsl:copy-of select="georss:*"/>';
 
 			var target = $('#map');
