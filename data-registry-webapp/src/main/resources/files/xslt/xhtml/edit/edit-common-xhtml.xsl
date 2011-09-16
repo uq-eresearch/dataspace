@@ -689,13 +689,13 @@
 					username: 'uq_dataspace'
 				});
 
-				var mapEditor = $('#map').prop('map');
 				var geoTags = $('#geotags').data('geotags');
 				var loadTags = _.throttle(geoTags.loadTags,1000);
 				$('#refresh-geotags').button()
 					.bind('click.lookup', function(e) {
 						e.preventDefault();
 						if (jQuery.support.cors) {
+							var mapEditor = $('#map').prop('map');
 							var params = mapEditor.getViewingCircle();
 							loadTags(params.lat, params.lon, params.radius);
 						} else {

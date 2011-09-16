@@ -367,6 +367,7 @@ var DataSpace = (function() {
 			open : openHandler,
 			height : 400,
 			width : 600,
+			zIndex : 1100, // So it's completely above the map
 			title : 'Lookup'
 		});
 
@@ -487,6 +488,7 @@ var DataSpace = (function() {
 			open : openHandler,
 			height : 400,
 			width : 600,
+			zIndex : 1100, // So it's completely above the map
 			title : 'Lookup'
 		});
 
