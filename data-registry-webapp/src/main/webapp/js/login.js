@@ -65,12 +65,15 @@ function getLoginLink() {
         			return string.charAt(0).toUpperCase()+string.slice(1);
         		}
         		var wrapper = $('<dl />');
-        		$('<dt><label/></dt><dd><input/></dd>').appendTo(wrapper);
-        		$('input', wrapper).attr('id', field).keydown(function(e){
+        		var input = field == 'password' ?
+        				$('<input type="password"/>') : $('<input />');
+        		$('<dt><label/></dt><dd></dd>').appendTo(wrapper);
+        		input.attr('id', field).keydown(function(e){
         			if (e.keyCode == '13') {
         				login(e);
         			}
         		});
+        		$('dd', wrapper).append(input);
         		$('label', wrapper).text(capitalize(field)).attr('for', field);
         		dialog.append(wrapper);
         	});
