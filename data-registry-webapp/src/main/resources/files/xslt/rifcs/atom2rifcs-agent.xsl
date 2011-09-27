@@ -88,14 +88,12 @@
     <!-- names -->
     <xsl:template name="names">
         <xsl:choose>
-            <xsl:when test="atom:link[@rel=$REL_TYPE]/@href = $ENTITY_PERSON">
-                <xsl:if test="rdfa:meta[@property=$ATOM_GIVEN_NAME] or rdfa:meta[@property=$ATOM_FAMILY_NAME]">
-                    <name type="primary">
-                        <xsl:apply-templates select="rdfa:meta[@property=$ATOM_HONORIFIC]"/>
-                        <xsl:apply-templates select="rdfa:meta[@property=$ATOM_GIVEN_NAME]"/>
-                        <xsl:apply-templates select="rdfa:meta[@property=$ATOM_FAMILY_NAME]"/>
-                    </name>
-                </xsl:if>
+            <xsl:when test="atom:link[@rel=$REL_TYPE]/@href = $ENTITY_PERSON and rdfa:meta[@property=$ATOM_FAMILY_NAME]">
+                <name type="primary">
+                    <xsl:apply-templates select="rdfa:meta[@property=$ATOM_HONORIFIC]"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$ATOM_GIVEN_NAME]"/>
+                    <xsl:apply-templates select="rdfa:meta[@property=$ATOM_FAMILY_NAME]"/>
+                </name>
             </xsl:when>
             <xsl:otherwise>
                 <name type="primary">
