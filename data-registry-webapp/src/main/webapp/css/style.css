@@ -1387,6 +1387,10 @@ h1, h2, h3, h4 {
 	font-size: 0.7em;
 }
 
+#page-form input[type='text'], textarea {
+    width: 90%;
+}
+
 .ui-datepicker {
 	/* Rise above all other widgets, including the map */
 	z-index: 1005 !important;
