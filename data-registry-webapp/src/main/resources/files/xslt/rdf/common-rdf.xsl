@@ -16,16 +16,27 @@
                 xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
                 xmlns:uqdata="http://dataspace.metadata.net/"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-                xmlns:rdfa="http://www.w3.org/ns/rdfa#">
+                xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+                xmlns:owl="http://www.w3.org/2002/07/owl#">
 
     <xsl:include href="../constants.xsl"/>
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
+
+    <!-- alternate entity URI -->
+    <xsl:template match="atom:id">
+        <owl:sameAs rdf:resource="{text()}"/>
+    </xsl:template>
 
     <!-- title -->
     <xsl:template match="atom:title">
         <dcterms:title>
             <xsl:value-of select="text()"/>
         </dcterms:title>
+    </xsl:template>
+    <xsl:template match="rdfa:meta[@property=$RDFA_ALTERNATIVE]">
+        <dcterms:alternative>
+            <xsl:value-of select="text()"/>
+        </dcterms:alternative>
     </xsl:template>
 
     <!-- description -->
@@ -37,9 +48,14 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- location -->
+    <!-- web page -->
     <xsl:template match="atom:link[@rel=$ATOM_IS_LOCATED_AT]">
-        <cld:isLocatedAt rdf:resource="{@href}"/>
+        <foaf:page rdf:resource="{@href}"/>
+    </xsl:template>
+
+    <!-- email -->
+    <xsl:template match="atom:link[@rel=$ATOM_MBOX]">
+        <foaf:mbox rdf:resource="{@href}"/>
     </xsl:template>
 
     <!-- creator -->
@@ -93,12 +109,7 @@
     </xsl:template>
 
     <!-- *** elements describing the metadata itself -->
-    <!-- description identifier -->
-    <xsl:template match="atom:id">
-        <dcterms:identifier>
-            <xsl:copy-of select="child::node()"/>
-        </dcterms:identifier>
-    </xsl:template>
+
 
     <!-- description publisher -->
     <!--<xsl:template-->

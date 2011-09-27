@@ -16,7 +16,8 @@
                 xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
                 xmlns:uqdata="http://dataspace.metadata.net/"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
-                xmlns:rdfa="http://www.w3.org/ns/rdfa#">
+                xmlns:rdfa="http://www.w3.org/ns/rdfa#"
+                xmlns:owl="http://www.w3.org/2002/07/owl#">
     <xsl:include href="common-rdf.xsl"/>
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
 
@@ -33,19 +34,30 @@
         <xsl:text>
 	    </xsl:text>
         <xsl:comment>Collection description</xsl:comment>
+        <xsl:text>
+	    </xsl:text>
 
         <rdf:Description
                 rdf:about="{atom:link[@rel=$RDF_DESCRIBES]/@href}">
+            <!-- alternate entity URI -->
+            <xsl:if test="atom:id != atom:link[@rel = $RDF_DESCRIBES]/@href">
+                <xsl:apply-templates select="atom:id"/>
+            </xsl:if>
             <!-- description type -->
             <xsl:apply-templates select="atom:link[@rel=$REL_TYPE]"/>
             <!-- title -->
             <xsl:apply-templates select="atom:title"/>
+            <xsl:apply-templates select="rdfa:meta[@property=$RDFA_ALTERNATIVE]"/>
             <!-- description -->
             <xsl:apply-templates select="atom:content"/>
+            <!-- web page -->
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
+            <!-- email -->
+            <xsl:apply-templates select="atom:link[@REL=$ATOM_MBOX]"/>
             <!-- subjects -->
             <xsl:apply-templates select="atom:category[@scheme!=$NS_DCMITYPE]"/>
             <!-- location -->
-            <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_LOCATED_AT]"/>
+
             <!-- creator -->
             <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
             <!-- curator -->
@@ -73,8 +85,6 @@
 	    </xsl:text>
         <xsl:comment>Metadata about the description</xsl:comment>
         <rdf:Description rdf:about="{atom:link[@rel=$REL_SELF]/@href}">
-            <!-- description id -->
-            <xsl:apply-templates select="atom:id"/>
             <!-- description publisher -->
             <!--<xsl:apply-templates select="atom:category[@scheme=$NS_GROUP]"/>-->
             <!-- description creator -->
