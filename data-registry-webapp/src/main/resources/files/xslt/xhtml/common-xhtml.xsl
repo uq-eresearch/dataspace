@@ -402,21 +402,6 @@
             </a>
     </xsl:template>
 
-    <!-- bread crumbs -->
-    <xsl:template name="bread-crumbs-options">
-        <xsl:param name="path"/>
-        <li class="bread-crumbs-options">
-            <a id="new-record-link" href="/{$path}?v=new" title="Add Record">new</a>
-            <xsl:text> </xsl:text>
-            <a id="edit-record-link" href="{atom:link[@rel=$REL_WORKING_COPY]/@href}?v=edit" title="Edit Record">edit</a>
-            <xsl:text> </xsl:text>
-            <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:link[@rel=$REL_SELF]/@href}'); "
-               title="Delete Record">
-                delete
-            </a>
-        </li>
-    </xsl:template>
-
     <xsl:template name="bread-crumbs">
         <xsl:param name="path"/>
         <xsl:param name="title"/>
@@ -446,12 +431,16 @@
 
     <!-- button bar -->
     <xsl:template name="button-bar">
+        <xsl:param name="path"/>
         <div class="entity-type">
             <xsl:call-template name="entity-icon"/>
             <span><xsl:value-of select="atom:link[@rel=$REL_TYPE]/@title"/></span>
         </div>
         <div class="arrow-right"></div>
         <xsl:call-template name="representations"/>
+        <xsl:call-template name="actions">
+            <xsl:with-param name="path" select="$path"/>
+        </xsl:call-template>
     </xsl:template>
 
     <!-- representations -->
@@ -490,6 +479,21 @@
                 <img src="/images/icons/ic_white_services.png" alt="Agent"/>
             </xsl:when>
         </xsl:choose>
+    </xsl:template>
+
+    <!-- actions for logged in users -->
+    <xsl:template name="actions">
+        <xsl:param name="path"/>
+        <xsl:if test="$currentUser">
+            <div class="actions">
+                <a class="button-bar-button" id="new-record-link" href="/{$path}?v=new" title="Add Record">New</a>
+                <xsl:text> </xsl:text>
+                <a class="button-bar-button" id="edit-record-link" href="{atom:link[@rel=$REL_WORKING_COPY]/@href}?v=edit" title="Edit Record">Edit</a>
+                <xsl:text> </xsl:text>
+                <a class="button-bar-button" id="delete-record-link" href="#" onclick="deleteRecord('{atom:link[@rel=$REL_SELF]/@href}'); "
+                   title="Delete Record">Delete</a>
+            </div>
+        </xsl:if>
     </xsl:template>
 
 </xsl:stylesheet>

@@ -63,15 +63,12 @@
                                 <xsl:with-param name="path">collections</xsl:with-param>
                                 <xsl:with-param name="title">Collections</xsl:with-param>
                             </xsl:call-template>
-                            <xsl:if test="$currentUser">
-                                <xsl:call-template name="bread-crumbs-options">
-                                    <xsl:with-param name="path">collections</xsl:with-param>
-                                </xsl:call-template>
-                            </xsl:if>
                         </ul>
                         <!-- buttons -->
                         <div class="button-bar">
-                            <xsl:call-template name="button-bar"/>
+                            <xsl:call-template name="button-bar">
+                                <xsl:with-param name="path">collections</xsl:with-param>
+                            </xsl:call-template>
                         </div>
                         <!-- TODO versions
                   <xsl:if test="$currentUser">
@@ -160,11 +157,6 @@
                                 <xsl:with-param name="path">collections</xsl:with-param>
                                 <xsl:with-param name="title">Collections</xsl:with-param>
                             </xsl:call-template>
-                            <xsl:if test="$currentUser">
-                                <xsl:call-template name="bread-crumbs-options">
-                                    <xsl:with-param name="path">collections</xsl:with-param>
-                                </xsl:call-template>
-                            </xsl:if>
                         </ul>
                     </div>
                 </div>

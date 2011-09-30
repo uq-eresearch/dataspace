@@ -274,6 +274,12 @@ a:visited {
     font-size: smaller;
 }
 
+.button-bar .actions {
+    font-size: smaller;
+    float: right;
+    padding-right: 1em;
+}
+
 .button-bar .entity-type {
     color: #ffffff;
     background-color: #38217a;
@@ -391,11 +397,6 @@ a:visited {
 
 #subscribe-link {
     font-size: 0.9em;
-}
-
-#delete-record-link {
-    font-size: 0.9em;
-    color: #ff0000;
 }
 
 #view-record-history-link {
