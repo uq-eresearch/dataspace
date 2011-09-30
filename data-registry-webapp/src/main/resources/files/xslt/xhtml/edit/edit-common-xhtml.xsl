@@ -116,27 +116,17 @@
 			</label>
 		</dt>
 		<xsl:choose>
-			<xsl:when test="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
-				<xsl:for-each select="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
-					<xsl:variable name="index" select="position() - 1" />
-					<xsl:choose>
-						<xsl:when test="$index = 0">
-						<dd>
-							<input id="alternative-title-text" name="alternative-title-text"
-								type="text" value="{@content}" />
-						</dd>
-						</xsl:when>
-						<xsl:otherwise>
-						<dd>
-							<input id="alternative-title-text-{$index}" name="alternative-title-text"
-								type="text" value="{@content}" />
-							<a id="alternative-title-text-{$index}-remove-link" class="remove-link"
-								href="#"
-								onclick="DataSpace.$('#alternative-title-text-{$index}').remove(); $(this).remove();">remove
-							</a>
-						</dd>
-						</xsl:otherwise>
-					</xsl:choose>
+            <xsl:when test="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
+                <xsl:for-each select="rdfa:meta[@property= $RDFA_ALTERNATIVE]">
+                    <xsl:variable name="index" select="position() - 1" />
+                    <dd>
+                        <input id="alternative-title-text-{$index}" name="alternative-title-text"
+                               type="text" value="{@content}" />
+                        <a id="alternative-title-text-{$index}-remove-link" class="remove-link"
+                           href="#"
+                           onclick="DataSpace.$('#alternative-title-text-{$index}').remove(); $(this).remove();">x
+                        </a>
+                    </dd>
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
@@ -149,7 +139,7 @@
 			<dd>
 				<a id="alternative-name-link" class="new-link" href="#"
 					onclick="DataSpace.replicateSimpleField('alternative-title-text'); return false;"
-					title="Add Title">add
+					title="Add Title">Add new
 				</a>
 			</dd>
 		</dl>
@@ -419,7 +409,7 @@
 								value="{@href}">
 							</input>
 							<a id="page-text-{$index}-remove-link" class="remove-link"
-								href="#" onclick="DataSpace.$('#page-text-{$index}').parent().remove(); return false;">remove
+								href="#" onclick="DataSpace.$('#page-text-{$index}').parent().remove(); return false;">x
 							</a>
 						</dd>
 						</xsl:otherwise>
@@ -461,7 +451,7 @@
 							<input id="email-text-{$index}" name="email-text" type="text"
 								value="{@title}" />
 							<a id="email-text-{$index}-remove-link" class="remove-link"
-								href="#" onclick="DataSpace.$('#email-text-{$index}').remove(); $(this).remove();">remove
+								href="#" onclick="DataSpace.$('#email-text-{$index}').remove(); $(this).remove();">x
 							</a>
 						</dd>
 						</xsl:otherwise>
