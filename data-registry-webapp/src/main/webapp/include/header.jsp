@@ -53,7 +53,7 @@
         <% } else { %>
         <a href="#" class="signout"
         	title="Sign out as <%= user.getDisplayName() %>"
-        	id="signout-link">Sign Out</a>
+        	id="signout-link">Sign Out <span id="current-user"><%= user.getDisplayName() %></span></a>
         <% } %>
     </div>
     <%--<a href="#" class="signin" id="signin-link">Sign in</a>--%>

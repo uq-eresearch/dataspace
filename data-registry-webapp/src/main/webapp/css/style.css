@@ -641,7 +641,7 @@ h6 {
 #header-inner, #topnav-inner {
     margin: 0pt auto;
     padding: 0pt;
-    width: 1000px;
+    width: 940px;
 }
 
 #header-inner h1 {
@@ -741,7 +741,7 @@ h6 {
 
 #topnav ul {
     margin: 0pt;
-    padding: 2pt 0pt 0pt 25px;
+    padding: 2pt 0pt 0pt 1em;
     list-style-type: none;
     list-style-image: none;
     list-style-position: outside;
@@ -1092,6 +1092,10 @@ p.centenary {
     text-transform: uppercase;
     margin: 0 0 0 -8px;
     padding: 12px 8px 12px 8px;
+}
+
+#current-user {
+    text-transform: none;
 }
 
 #topnav a:link {

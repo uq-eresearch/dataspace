@@ -81,15 +81,16 @@
                         <a href="/about">About</a>
                     </li>
                 </ul>
+                <xsl:call-template name="loginlink"/>
             </div>
-            <xsl:call-template name="loginlink"/>
+
         </div>
     </xsl:template>
 
 	<xsl:template name="loginlink">
 		<xsl:choose>
 			<xsl:when test="$currentUser">
-				<a href="#" class="signout" id="signin-link">Sign out</a>
+				<a href="#" class="signout" id="signout-link">Sign out <span id="current-user"><xsl:value-of select="$currentUser"/></span></a>
 			</xsl:when>
 			<xsl:otherwise>
 				<a href="#" class="signin" id="signin-link">Sign in</a>
