@@ -173,8 +173,6 @@
         </xsl:if>
     </xsl:template>
 
-
-
     <xsl:template name="publications">
         <xsl:if test="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
             <div class="statement">
@@ -335,6 +333,7 @@
             </div>
         </div>
     </xsl:template>
+
     <xsl:template name="last-update">
         <div class="statement">
             <div class="property">
@@ -413,20 +412,65 @@
                 <xsl:value-of select="$title"/>
             </a>
         </li>
-        <li class="bread-crumbs-last">
-            <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
-                <a href="{atom:link[@rel = $REL_SELF]/@href}">
-                    <xsl:choose>
-                        <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
-                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </a>
-            </xsl:if>
-        </li>
+        <xsl:choose>
+            <xsl:when test="$currentUser">
+                <li class="bread-crumbs">
+                    <a href="{atom:link[@rel = $REL_EDIT]/@href}">
+                        <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
+                    </a>
+                </li>
+                <li class="bread-crumbs-last">
+                    <xsl:call-template name="version-details"/>
+                </li>
+            </xsl:when>
+            <xsl:otherwise>
+                <li class="bread-crumbs-last">
+                    <a href="{atom:link[@rel = $REL_SELF]/@href}">
+                        <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title"/>
+                    </a>
+                </li>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="version-details">
+        Version
+        <xsl:choose>
+            <xsl:when test="atom:link[@rel = $REL_SELF]/@href = atom:link[@rel = $REL_EDIT]/@href">
+                <!-- have asked for work URL, being shown the latest-version -->
+                <xsl:value-of select="atom:link[@rel = $REL_LATEST_VERSION]/@title"/>  (published)
+                <xsl:choose>
+                    <xsl:when test="atom:link[@rel = $REL_LATEST_VERSION]/@href =
+                    atom:link[@rel = $REL_WORKING_COPY]/@href">
+                         (latest version)
+                    </xsl:when>
+                    <xsl:otherwise>
+                         (<a class="unpublished"
+                             href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">newer version available</a>)
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- have asked for a particular version URL -->
+                <xsl:value-of select="fn:substring-after(atom:link[@rel = $REL_SELF]/@href,
+                             fn:concat(atom:link[@rel = $REL_EDIT]/@href, '/'))"/>
+                <xsl:choose>
+                    <xsl:when test="atom:link[@rel = $REL_SELF]/@href = atom:link[@rel = $REL_LATEST_VERSION]/@href">
+                     (published)
+                    </xsl:when>
+                    <xsl:otherwise> (unpublished)</xsl:otherwise>
+                </xsl:choose>
+                <xsl:choose>
+                    <xsl:when test="atom:link[@rel = $REL_SELF]/@href = atom:link[@rel = $REL_WORKING_COPY]/@href">
+                         (latest version)
+                    </xsl:when>
+                    <xsl:otherwise>
+                         (<a class="unpublished"
+                             href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">newer version available</a>)
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <!-- button bar -->

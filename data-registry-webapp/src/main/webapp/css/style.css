@@ -239,6 +239,11 @@ a:visited {
     color: #777777;
 }
 
+/* text indicating unpublished version status */
+a.unpublished {
+    color: #f62ef9;
+}
+
 .bread-crumbs {
     background: url("/images/arrow-right.gif") no-repeat right top;
     margin: 0 6px 0 0;

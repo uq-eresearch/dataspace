@@ -20,24 +20,23 @@
 			<a href="/">Home</a>
 		</li>
 		<li class="bread-crumbs">
-			<a href="/browse">Browse</a>
-		</li>
-		<li class="bread-crumbs">
 			<a href="/{$path}">
-				<xsl:value-of select="$title" />&#160;
-				<xsl:if test="atom:link[@rel = $REL_SELF]/@href">
-					<a href="{atom:link[@rel = $REL_SELF]/@href}">
-						<xsl:choose>
-							<xsl:when test="atom:link[@rel=$REL_SELF]/@title">
-								<xsl:value-of select="atom:link[@rel=$REL_SELF]/@title" />
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="atom:link[@rel=$REL_SELF]/@href" />
-							</xsl:otherwise>
-						</xsl:choose>
-					</a>
-				</xsl:if>
-			</a>
+				<xsl:value-of select="$title" />
+            </a>
+        </li>
+        <li class="bread-crumbs">
+            <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
+                <a href="{atom:link[@rel = $REL_SELF]/@href}">
+                    <xsl:choose>
+                        <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
+                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@title" />
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="atom:link[@rel=$REL_SELF]/@href" />
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </a>
+            </xsl:if>
 		</li>
 		<li class="bread-crumbs-last">
 			<xsl:choose>
@@ -202,6 +201,7 @@
 					<xsl:with-param name="path">
 						<xsl:value-of select="atom:content" />
 					</xsl:with-param>
+                    <xsl:with-param name="rows" select="10"/>
 				</xsl:call-template>
 			</dd>
 		</dl>
@@ -243,17 +243,18 @@
 		<xsl:param name="field" />
 		<xsl:param name="classes" required="no" select="''"/>
 		<xsl:param name="path" />
+        <xsl:param name="rows" select="5"/>
 		<xsl:choose>
 			<xsl:when test="$path">
 				<textarea id="{$field}-textarea" name="{$field}-textarea"
-					cols="50" rows="5" class="{$classes}">
+					cols="50" rows="{$rows}" class="{$classes}">
 					<xsl:value-of select="$path" />
 				</textarea>
 			</xsl:when>
 
 			<xsl:otherwise>
 				<textarea id="{$field}-textarea" name="{$field}-textarea"
-					cols="50" rows="5" class="{$classes}">
+					cols="50" rows="{$rows}" class="{$classes}">
 				</textarea>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -270,7 +271,7 @@
 		<div id="status">
 			Version
 			<span id="version">
-				<xsl:value-of select="atom:link[@rel=$REL_SELF]/@title" />
+				<xsl:value-of select="atom:link[@rel=$REL_WORKING_COPY]/@title" />
 			</span>
 			,
 			<xsl:call-template name="published" />

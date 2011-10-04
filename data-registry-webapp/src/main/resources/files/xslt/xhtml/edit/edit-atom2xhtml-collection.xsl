@@ -6,7 +6,7 @@
 	xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns="http://www.w3.org/1999/xhtml"
 	exclude-result-prefixes="atom rdfa">
 
-    <xsl:include href="../edit/edit-collection.xsl"/>
+    <xsl:include href="edit-collection.xsl"/>
 
 	<xsl:output method="html" indent="yes"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
