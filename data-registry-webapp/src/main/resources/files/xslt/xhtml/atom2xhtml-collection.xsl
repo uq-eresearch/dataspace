@@ -145,7 +145,7 @@
                             <h2>About the description</h2>
                             <xsl:call-template name="description-id"/>
                             <xsl:apply-templates select="atom:source"/>
-                            <xsl:call-template name="last-update"/>
+                            <xsl:call-template name="version-info"/>
                         </div>
                     </div>
                 </div>

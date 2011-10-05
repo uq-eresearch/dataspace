@@ -313,6 +313,17 @@
     <xsl:template match="atom:source">
         <div class="statement">
             <div class="property">
+                <p>Description author/s</p>
+            </div>
+            <div class="content">
+                <xsl:for-each select="atom:author">
+                    <xsl:if test="position() != 1">, </xsl:if>
+                    <xsl:value-of select="atom:name"/>
+                </xsl:for-each>
+            </div>
+        </div>
+        <div class="statement">
+            <div class="property">
                 <p>Description publisher</p>
             </div>
             <div class="content">
@@ -334,23 +345,26 @@
         </div>
     </xsl:template>
 
-    <xsl:template name="last-update">
+    <xsl:template name="version-info">
+        <xsl:if test="$currentUser">
+            <div class="statement">
+                <div class="property">
+                    <p>This version</p>
+                </div>
+                <div class="content">
+                    <p>
+                        <xsl:call-template name="version-details"/>
+                    </p>
+                </div>
+            </div>
+        </xsl:if>
         <div class="statement">
             <div class="property">
-                <p>Last update</p>
+                Updated
             </div>
             <div class="content">
-                <p>
-                    Version
-                    <xsl:value-of select="atom:link[@rel=$REL_LATEST_VERSION]/@title"/>
-                    on <xsl:value-of select="fn:format-dateTime(fn:adjust-dateTime-to-timezone(atom:updated),
+                <xsl:value-of select="fn:format-dateTime(fn:adjust-dateTime-to-timezone(atom:updated),
                 '[F,3-3], [D] [MNn] [Y], [H]:[m]:[s] [z]')"/>
-                    by
-                    <xsl:for-each select="atom:source/atom:author">
-                        <xsl:if test="position() != 1">, </xsl:if>
-                        <xsl:value-of select="atom:name"/>
-                    </xsl:for-each>
-                </p>
             </div>
         </div>
     </xsl:template>
@@ -446,7 +460,8 @@
                     </xsl:when>
                     <xsl:otherwise>
                          (<a class="unpublished"
-                             href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">newer version available</a>)
+                             href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">version
+                        <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/> available</a>)
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
@@ -466,7 +481,8 @@
                     </xsl:when>
                     <xsl:otherwise>
                          (<a class="unpublished"
-                             href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">newer version available</a>)
+                             href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">version
+                        <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/> available</a>)
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>
