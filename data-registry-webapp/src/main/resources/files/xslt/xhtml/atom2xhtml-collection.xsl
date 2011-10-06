@@ -87,21 +87,23 @@
                         <xsl:choose>
                             <xsl:when test="georss:point or georss:polygon">
                                 <div class="desc-and-map">
-                                    <xsl:apply-templates select="atom:content"/>
-                                    <div id="map" class="smallmap">
-                                        <xsl:text> </xsl:text>
+                                    <div class="float-map">
+                                        <div id="map" class="smallmap">
+                                            <xsl:text> </xsl:text>
+                                        </div>
+                                        <script type="text/javascript">
+                                            $(document).ready(function(){
+                                            var initialData = '<xsl:copy-of select="georss:*"/>';
+                                            var target = $('#map');
+                                            var map = new MapEditor(target);
+                                            if (initialData != '') {
+                                            map.loadData(initialData);
+                                            }
+                                            target.prop('map', map);
+                                            });
+                                        </script>
                                     </div>
-									<script type="text/javascript">
-									$(document).ready(function(){
-										var initialData = '<xsl:copy-of select="georss:*"/>';
-										var target = $('#map');
-										var map = new MapEditor(target);
-										if (initialData != '') {
-											map.loadData(initialData);
-										}
-										target.prop('map', map);
-									});
-									</script>
+                                    <xsl:apply-templates select="atom:content"/>
                                 </div>
                             </xsl:when>
                             <xsl:otherwise>
