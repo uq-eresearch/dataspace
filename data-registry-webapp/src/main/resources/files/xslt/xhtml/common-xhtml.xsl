@@ -53,9 +53,30 @@
     <!-- description -->
     <xsl:template match="atom:content">
         <p class="description">
-            <xsl:value-of select="text()"/>
+            <xsl:call-template name="break">
+                <xsl:with-param name="text" select="text()"/>
+            </xsl:call-template>
         </p>
     </xsl:template>
+    <xsl:template name="break">
+        <!-- replace two carriage returns in a row with a br -->
+        <xsl:param name="text" select="."/>
+        <xsl:choose>
+            <xsl:when test="contains($text,'&#xa;&#xa;')">
+                <xsl:value-of select="substring-before($text,'&#xa;&#xa;')"/>
+                <br/>
+                <xsl:call-template name="break">
+                    <xsl:with-param name="text" select="substring-after($text,'&#xa;&#xa;')"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$text"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+
+
     <!-- object type -->
     <xsl:template name="type">
         <xsl:if test="atom:link[@rel=$REL_TYPE]">
@@ -367,6 +388,20 @@
                 '[F,3-3], [D] [MNn] [Y], [H]:[m]:[s] [z]')"/>
             </div>
         </div>
+        <xsl:if test="$currentUser
+        and atom:link[@rel = $REL_SELF]/@href != atom:link[@rel = $REL_EDIT]/@href
+        and atom:link[@rel = $REL_SELF]/@href != atom:link[@rel = $REL_LATEST_VERSION]/@href">
+            <div class="statement">
+                <div class="property">
+                    Published version
+                </div>
+                <div class="content">
+                    <a href="{atom:link[@rel = $REL_LATEST_VERSION]/@href}">
+                        Version <xsl:value-of select="atom:link[@rel = $REL_LATEST_VERSION]/@title"/>
+                    </a>
+                </div>
+            </div>
+        </xsl:if>
     </xsl:template>
 
     <!-- displayed links -->
@@ -473,7 +508,7 @@
                     <xsl:when test="atom:link[@rel = $REL_SELF]/@href = atom:link[@rel = $REL_LATEST_VERSION]/@href">
                      (published)
                     </xsl:when>
-                    <xsl:otherwise> (unpublished)</xsl:otherwise>
+                    <xsl:otherwise><span class="unpublished"> (unpublished)</span></xsl:otherwise>
                 </xsl:choose>
                 <xsl:choose>
                     <xsl:when test="atom:link[@rel = $REL_SELF]/@href = atom:link[@rel = $REL_WORKING_COPY]/@href">
@@ -548,7 +583,7 @@
             <div class="actions">
                 <a class="button-bar-button" id="new-record-link" href="/{$path}?v=new" title="Add Record">New</a>
                 <xsl:text> </xsl:text>
-                <a class="button-bar-button" id="edit-record-link" href="{atom:link[@rel=$REL_WORKING_COPY]/@href}?v=edit" title="Edit Record">Edit</a>
+                <a class="button-bar-button" id="edit-record-link" href="{atom:link[@rel=$REL_WORKING_COPY]/@href}?v=edit" title="Edit Latest Version">Edit</a>
                 <xsl:text> </xsl:text>
                 <a class="button-bar-button" id="delete-record-link" href="#" onclick="deleteRecord('{atom:link[@rel=$REL_SELF]/@href}'); "
                    title="Delete Record">Delete</a>

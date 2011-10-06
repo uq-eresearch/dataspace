@@ -240,7 +240,7 @@ a:visited {
 }
 
 /* text indicating unpublished version status */
-a.unpublished {
+a.unpublished, .unpublished {
     color: #f62ef9;
 }
 
