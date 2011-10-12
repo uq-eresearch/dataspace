@@ -41,13 +41,13 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
 public class SolrTest {
-	
+
 	private static final String SOLR_CONFIG_DIR = "target/solr-config/WEB-INF/classes/";
 
 	private static final Set<String> stopwords = new TreeSet<String>();
-	
+
 	private XPath xpath = XPathHelper.getXPath();
-	
+
 	@BeforeClass
 	public static void initStopwords() throws IOException {
 		File stopwordsFile = new File(SOLR_CONFIG_DIR+"/stopwords.txt");
@@ -63,19 +63,19 @@ public class SolrTest {
 
 	@BeforeClass
     public static void loadLotsOfTestData() throws Exception {
-		ResourcePatternResolver resolver =  
+		ResourcePatternResolver resolver =
 				new PathMatchingResourcePatternResolver();
-		
+
     	//create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
-        
+
         String[] types = {
-        		Constants.PATH_FOR_AGENTS, 
-        		Constants.PATH_FOR_COLLECTIONS, 
-        		Constants.PATH_FOR_ACTIVITIES, 
+        		Constants.PATH_FOR_AGENTS,
+        		Constants.PATH_FOR_COLLECTIONS,
+        		Constants.PATH_FOR_ACTIVITIES,
         		Constants.PATH_FOR_SERVICES };
         for (int t = 0; t < types.length; t++) {
         	String type = types[t];
@@ -95,7 +95,7 @@ public class SolrTest {
 	            postMethod.releaseConnection();
 	        }
         }
-        
+
         // Force re-index
         GetMethod getMethod = ClientHelper.reindexSolr(client);
         assertEquals("Solr failed to index successfully.", 200, getMethod.getStatusCode());
@@ -106,7 +106,7 @@ public class SolrTest {
 	@Test
     public void testTagCloud() throws Exception {
 		final int expectedTagCount = 50;
-        
+
     	String url = Constants.URL_PREFIX+"#tags";
         final WebClient webClient = new WebClient();
     	final HtmlPage page = webClient.getPage(url);
@@ -120,23 +120,26 @@ public class SolrTest {
         			"//div[@id='tags']/div[@id='topics']/a/text()",
         			page, XPathConstants.NODESET);
     	} while (tagNodes.getLength() < expectedTagCount && tries++ < 10);
-    	assertEquals("Tag count lower than expected", 
+    	assertEquals("Tag count lower than expected",
     			expectedTagCount, tagNodes.getLength());
-    	
+
     	Set<String> tags = new TreeSet<String>();
     	for (int i = 0; i < tagNodes.getLength(); i++) {
     		String tag = tagNodes.item(i).getTextContent().trim();
     		tags.add(tag);
     	}
 
-    	System.out.println(String.format("Tags: %s\nStopwords: %s", 
-    			tags, 
+    	System.out.println(String.format("Tags: %s\nStopwords: %s",
+    			tags,
     			stopwords));
-    	
-    	assertTrue("Tags should not include stopwords.",
+
+    	assertTrue("Tags should not include stopwords. Tags: "+tags+
+    			"\nStopwords:"+stopwords,
     			Collections.disjoint(tags, stopwords));
+
+        webClient.closeAllWindows();
 	}
-	
+
 	@Test
     public void testSearching() throws Exception {
     	//create a client
@@ -165,7 +168,7 @@ public class SolrTest {
         Document doc = XPathHelper.getDocFromStream(getMethod.getResponseBodyAsStream());
         getMethod.releaseConnection();
         String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, doc);
-        
+
         // Force re-index
         getMethod = ClientHelper.reindexSolr(client);
         assertEquals("Solr failed to index successfully.", 200, getMethod.getStatusCode());
