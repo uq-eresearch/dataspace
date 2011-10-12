@@ -129,13 +129,11 @@ public class SolrTest {
     		tags.add(tag);
     	}
 
-    	System.out.println(String.format("Tags: %s\nStopwords: %s",
-    			tags,
-    			stopwords));
-
+    	Set<String> intersection = (new TreeSet<String>(tags));
+    	intersection.retainAll(stopwords);
     	assertTrue("Tags should not include stopwords. Stopwords in tags: "+
-    			(new TreeSet<String>(tags)).retainAll(stopwords),
-    			Collections.disjoint(tags, stopwords));
+    			intersection,
+    			intersection.size() == 0);
 
         webClient.closeAllWindows();
 	}
