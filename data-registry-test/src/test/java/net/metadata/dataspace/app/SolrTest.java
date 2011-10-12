@@ -133,8 +133,8 @@ public class SolrTest {
     			tags,
     			stopwords));
 
-    	assertTrue("Tags should not include stopwords. Tags: "+tags+
-    			"\nStopwords:"+stopwords,
+    	assertTrue("Tags should not include stopwords. Stopwords in tags: "+
+    			(new TreeSet<String>(tags)).retainAll(stopwords),
     			Collections.disjoint(tags, stopwords));
 
         webClient.closeAllWindows();

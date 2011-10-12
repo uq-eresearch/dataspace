@@ -105,8 +105,6 @@ This configuration can be run with "mvn integration-test".
 							<solr.port>9635</solr.port>
                         </systemProperties>
                     </container>
-                    <!-- don't let Jetty ask for the Ctrl-C to stop -->
-                    <wait>false</wait>
                     <!-- the actual configuration for the webapp -->
                     <configuration>
                         <!-- pick some port likely to be free, it has be matched in the test definitions -->
