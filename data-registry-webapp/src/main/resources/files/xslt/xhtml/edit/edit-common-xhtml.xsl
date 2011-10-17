@@ -24,8 +24,8 @@
 				<xsl:value-of select="$title" />
             </a>
         </li>
-        <li class="bread-crumbs">
-            <xsl:if test="atom:link[@rel = $REL_SELF]/@href">
+        <xsl:if test="atom:link[@rel = $REL_SELF]">
+            <li class="bread-crumbs">
                 <a href="{atom:link[@rel = $REL_SELF]/@href}">
                     <xsl:choose>
                         <xsl:when test="atom:link[@rel=$REL_SELF]/@title">
@@ -36,15 +36,15 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </a>
-            </xsl:if>
-		</li>
+            </li>
+        </xsl:if>
 		<li class="bread-crumbs-last">
 			<xsl:choose>
-				<xsl:when test="atom:link[@rel = $REL_SELF]/@href">
+				<xsl:when test="atom:link[@rel = $REL_SELF]">
 					<span class="unpublished">Editing version <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/></span>
 				</xsl:when>
 				<xsl:otherwise>
-					<span class="unpublished"> New</span>
+					<span class="unpublished">New collection</span>
 				</xsl:otherwise>
 			</xsl:choose>
 		</li>
@@ -55,8 +55,19 @@
         <xsl:param name="path"/>
         <xsl:param name="type"/>
         <div class="entity-type">
-            <xsl:call-template name="entity-icon"/>
-            <span><xsl:value-of select="atom:link[@rel=$REL_TYPE]/@title"/></span>
+            <xsl:call-template name="entity-icon">
+                <xsl:with-param name="type" select="$type"/>
+            </xsl:call-template>
+            <span>
+                <xsl:choose>
+                    <xsl:when test="atom:link[@rel=$REL_TYPE]">
+                        <xsl:value-of select="atom:link[@rel=$REL_TYPE]/@title"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$type"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </span>
         </div>
         <div class="arrow-right"></div>
         <xsl:call-template name="edit-actions">
@@ -66,40 +77,31 @@
 
     <xsl:template name="edit-actions">
         <xsl:param name="type"/>
+        <xsl:variable name="isNew" select="not(boolean(atom:link[$REL_SELF]))"/>
         <div class="actions">
             <a class="button-bar-button save-link" href="#" title="Save"
-               onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_EDIT]/@href}','{$type}', false, false); return false;">Save &amp; Preview</a>
+               onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_EDIT]/@href}','{$type}', {$isNew}, false); return false;">Save &amp; Preview</a>
             <xsl:text> </xsl:text>
             <a class="button-bar-button publish-link" href="#" title="Publish"
-               onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_EDIT]/@href}','{$type}',false, true); return false;">Save &amp; Publish</a>
+               onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_EDIT]/@href}','{$type}',{$isNew}, true); return false;">Save &amp; Publish</a>
             <xsl:text> </xsl:text>
             <a class="button-bar-button cancel-link" href="{atom:link[@rel = $REL_WORKING_COPY]/@href}" title="Cancel edit">Cancel</a>
         </div>
     </xsl:template>
 
     <xsl:template name="entity-icon">
+        <xsl:param name="type"/>
         <xsl:choose>
-            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_COLLECTION or
-             atom:link[$REL_TYPE]/@href = $ENTITY_COLLECTION">
+            <xsl:when test="$type = 'collection'">
                 <img src="/images/icons/ic_white_collections.png" alt="Collection"/>
             </xsl:when>
-            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_PERSON or
-            atom:link[$REL_TYPE]/@href = $ENTITY_GROUP">
+            <xsl:when test="$type = 'agent'">
                 <img src="/images/icons/ic_white_agents.png" alt="Agent"/>
             </xsl:when>
-            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_PROJECT or
-            atom:link[$REL_TYPE]/@href = $ENTITY_PROGRAM">
+            <xsl:when test="$type = 'activity'">
                 <img src="/images/icons/ic_white_activities.png" alt="Agent"/>
             </xsl:when>
-            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_ANNOTATE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_ASSEMBLE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_CREATE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_GENERATE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_HARVEST or
-            atom:link[$REL_TYPE]/@href = $ENTITY_REPORT or
-            atom:link[$REL_TYPE]/@href = $ENTITY_SEARCH or
-            atom:link[$REL_TYPE]/@href = $ENTITY_SYNDICATE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_TRANSFORM">
+            <xsl:when test="$type = 'service'">
                 <img src="/images/icons/ic_white_services.png" alt="Agent"/>
             </xsl:when>
         </xsl:choose>
@@ -717,6 +719,7 @@
 		});
 		</script>
 	</xsl:template>
+
 	<xsl:template name="edit-locations">
 		<dl id="locations">
 			<dt>

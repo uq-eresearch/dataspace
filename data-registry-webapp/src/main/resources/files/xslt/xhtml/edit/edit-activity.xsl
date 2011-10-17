@@ -35,12 +35,17 @@
 				<div class="pad-top pad-sides">
 					<ul class="bread-crumbs-nav">
 						<xsl:call-template name="edit-bread-crumbs">
-							<xsl:with-param name="path" select="'activities'"/>
-							<xsl:with-param name="title">
-								Activities
-							</xsl:with-param>
+							<xsl:with-param name="path" select="'activities'" />
+							<xsl:with-param name="title" select="'Activities'" />
 						</xsl:call-template>
 					</ul>
+                     <!-- buttons -->
+                    <div class="button-bar">
+                        <xsl:call-template name="edit-button-bar">
+                            <xsl:with-param name="path" select="'activities'"/>
+                            <xsl:with-param name="type" select="'activity'"/>
+                        </xsl:call-template>
+                    </div>
 					<div id="ingest-error-msg">
 
 					</div>
@@ -96,9 +101,12 @@
 							</div>
 						</div>
 					</form>
-					<xsl:call-template name="save-links">
-						<xsl:with-param name="type" select="'activity'"/>
-					</xsl:call-template>
+                    <!-- actions -->
+                    <div class="button-bar">
+                            <xsl:call-template name="edit-actions">
+                                <xsl:with-param name="type">collection</xsl:with-param>
+                            </xsl:call-template>
+                    </div>
 				</div>
 			</div>
 			<xsl:call-template name="footer" />

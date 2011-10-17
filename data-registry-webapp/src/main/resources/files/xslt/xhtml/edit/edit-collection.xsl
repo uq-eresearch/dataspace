@@ -20,7 +20,7 @@
 						<xsl:value-of select="atom:title" />
 					</xsl:when>
 					<xsl:otherwise>
-						New Collection
+						New collection
 					</xsl:otherwise>
 				</xsl:choose>
 			</title>
@@ -46,8 +46,8 @@
                      <!-- buttons -->
                     <div class="button-bar">
                         <xsl:call-template name="edit-button-bar">
-                            <xsl:with-param name="path">collections</xsl:with-param>
-                            <xsl:with-param name="type">collection</xsl:with-param>
+                            <xsl:with-param name="path" select="'collections'"/>
+                            <xsl:with-param name="type" select="'collection'"/>
                         </xsl:call-template>
                     </div>
 					<div id="ingest-error-msg">
