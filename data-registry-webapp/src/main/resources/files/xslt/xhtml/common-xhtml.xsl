@@ -550,28 +550,28 @@
 
     <xsl:template name="entity-icon">
         <xsl:choose>
-            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_COLLECTION or
-             atom:link[$REL_TYPE]/@href = $ENTITY_COLLECTION">
+            <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_COLLECTION or
+             atom:link[@rel = $REL_TYPE]/@href = $ENTITY_COLLECTION">
                 <img src="/images/icons/ic_white_collections.png" alt="Collection"/>
             </xsl:when>
-            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_PERSON or
-            atom:link[$REL_TYPE]/@href = $ENTITY_GROUP">
+            <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_PERSON or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_GROUP">
                 <img src="/images/icons/ic_white_agents.png" alt="Agent"/>
             </xsl:when>
-            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_PROJECT or
-            atom:link[$REL_TYPE]/@href = $ENTITY_PROGRAM">
-                <img src="/images/icons/ic_white_activities.png" alt="Agent"/>
+            <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_PROJECT or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_PROGRAM">
+                <img src="/images/icons/ic_white_activities.png" alt="Activities"/>
             </xsl:when>
-            <xsl:when test="atom:link[$REL_TYPE]/@href = $ENTITY_ANNOTATE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_ASSEMBLE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_CREATE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_GENERATE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_HARVEST or
-            atom:link[$REL_TYPE]/@href = $ENTITY_REPORT or
-            atom:link[$REL_TYPE]/@href = $ENTITY_SEARCH or
-            atom:link[$REL_TYPE]/@href = $ENTITY_SYNDICATE or
-            atom:link[$REL_TYPE]/@href = $ENTITY_TRANSFORM">
-                <img src="/images/icons/ic_white_services.png" alt="Agent"/>
+            <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_ANNOTATE or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_ASSEMBLE or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_CREATE or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_GENERATE or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_HARVEST or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_REPORT or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_SEARCH or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_SYNDICATE or
+            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_TRANSFORM">
+                <img src="/images/icons/ic_white_services.png" alt="Services"/>
             </xsl:when>
         </xsl:choose>
     </xsl:template>

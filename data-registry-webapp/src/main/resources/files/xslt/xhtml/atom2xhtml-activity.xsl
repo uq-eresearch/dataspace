@@ -54,20 +54,13 @@
                                 <xsl:with-param name="path">activities</xsl:with-param>
                                 <xsl:with-param name="title">Activities</xsl:with-param>
                             </xsl:call-template>
-                            <xsl:if test="$currentUser">
-                                <xsl:call-template name="bread-crumbs-options">
-                                    <xsl:with-param name="path">activities</xsl:with-param>
-                                </xsl:call-template>
-                            </xsl:if>
                         </ul>
                         <!-- buttons -->
                         <div class="button-bar">
-                            <xsl:call-template name="button-bar"/>
+                            <xsl:call-template name="button-bar">
+                                <xsl:with-param name="path">activities</xsl:with-param>
+                            </xsl:call-template>
                         </div>
-                        <!-- TODO versions
-                  <xsl:if test="$currentUser">
-                      <xsl:call-template name="latest-version"/>
-                  </xsl:if>      -->
                         <!-- identifier -->
                         <xsl:call-template name="identifiers"/>
                         <!-- names -->
@@ -98,7 +91,7 @@
                             <h2>About the description</h2>
                             <xsl:call-template name="description-id"/>
                             <xsl:apply-templates select="atom:source"/>
-                            <xsl:call-template name="last-update"/>
+                            <xsl:call-template name="version-info"/>
                         </div>
                     </div>
                 </div>
@@ -110,11 +103,6 @@
                                 <xsl:with-param name="path">activities</xsl:with-param>
                                 <xsl:with-param name="title">Activities</xsl:with-param>
                             </xsl:call-template>
-                            <xsl:if test="$currentUser">
-                                <xsl:call-template name="bread-crumbs-options">
-                                    <xsl:with-param name="path">activities</xsl:with-param>
-                                </xsl:call-template>
-                            </xsl:if>
                         </ul>
                     </div>
                 </div>

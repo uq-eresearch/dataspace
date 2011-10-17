@@ -70,10 +70,6 @@
                                 <xsl:with-param name="path">collections</xsl:with-param>
                             </xsl:call-template>
                         </div>
-                        <!-- TODO versions
-                  <xsl:if test="$currentUser">
-                      <xsl:call-template name="latest-version"/>
-                  </xsl:if>      -->
                         <!-- identifiers -->
                         <xsl:call-template name="identifiers"/>
                         <!-- names -->

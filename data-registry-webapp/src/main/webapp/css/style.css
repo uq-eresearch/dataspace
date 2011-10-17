@@ -370,26 +370,26 @@ a.unpublished, .unpublished {
     padding: 0.5em;
 }
 
-#result h2 {
-    margin-bottom: 0.5em;
+#feed {
+    padding: 1em 0;
 }
 
-#result .record {
+#feed .record {
     border-bottom: 1px dashed #BE87E9;
     padding: 0.3em;
     font-size: 11pt;
 }
 
-#result .record .author {
+#feed .record .author {
     color: #4F7F37
 }
 
-#result .record-date {
+#feed .record-date {
     font-size: 0.8em;
     color: #888;
 }
 
-#result .draft {
+#feed .draft {
     font-size: 0.8em;
     color: #ff0000;
 }
