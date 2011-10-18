@@ -81,7 +81,7 @@
                                 <artifactId>data-collections-registry</artifactId>
                                 <type>war</type>
                                 <properties>
-                                    <context>/data-collections-registry</context>
+                                    <context>/</context>
                                 </properties>
                             </deployable>
                         </deployables>
