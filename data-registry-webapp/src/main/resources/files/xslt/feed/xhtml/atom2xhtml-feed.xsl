@@ -61,12 +61,16 @@
                                     <a id="new-record-link" href="{atom:id}?v=new" title="Add Record">new</a>
                                     <xsl:text> </xsl:text>
                                 </xsl:if>
-                                <a id="subscribe-link" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">
-                                    <img src="/images/icons/rss16px.png" alt="Subscribe to this feed"/>
-                                </a>
+
                             </li>
                         </ul>
-                        <!-- TODO: buttons here -->
+                        <div class="button-bar">
+                            <div class="actions">
+                                <a id="subscribe-link" class="button-bar-button" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">
+                                    <img src="/images/icons/rss16px.png" alt="Subscribe to this feed"/> Feed
+                                </a>
+                            </div>
+                        </div>
                         <h1>Browse <xsl:value-of select="atom:title"/></h1>
                     </div>
                 </div>
@@ -84,19 +88,26 @@
     <xsl:template match="atom:entry">
         <div class="record">
             <h2>
-                <xsl:call-template name="entity-type"/>
+                <xsl:call-template name="entity-icon"/>
                 <a href="{atom:id}"><xsl:value-of select="atom:title"/></a>
             </h2>
-
+            <xsl:if test="atom:author/atom:name">
+                <p>
+                    by <span class="author"><xsl:value-of select="atom:author/atom:name"/></span>
+                </p>
+                <p>
+                    <xsl:value-of select="substring(atom:content, 0, 255)"/>
+                    <a href="{atom:id}">
+                        more...
+                    </a>
+                </p>
+            </xsl:if>
 
             <xsl:choose>
                 <xsl:when test="$currentUser">
                     <xsl:if test="app:control/app:draft='yes'">
                         <span class="draft">(draft)</span>
                     </xsl:if>
-                    <a href="{atom:id}">
-                        <xsl:value-of select="atom:title"/>
-                    </a>
                     <xsl:if test="atom:author/atom:name">
                         <span>
                             <xsl:text> by </xsl:text>
@@ -150,35 +161,6 @@
                 </xsl:otherwise>
             </xsl:choose>
         </div>
-    </xsl:template>
-
-    <xsl:template name="entity-type">
-<xsl:choose>
-            <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_COLLECTION or
-             atom:link[@rel = $REL_TYPE]/@href = $ENTITY_COLLECTION">
-                <img src="/images/icons/ic_white_collections.png" alt="Collection"/>
-            </xsl:when>
-            <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_PERSON or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_GROUP">
-                <img src="/images/icons/ic_white_agents.png" alt="Agent"/>
-            </xsl:when>
-            <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_PROJECT or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_PROGRAM">
-                <img src="/images/icons/ic_white_activities.png" alt="Activities"/>
-            </xsl:when>
-            <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_ANNOTATE or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_ASSEMBLE or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_CREATE or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_GENERATE or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_HARVEST or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_REPORT or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_SEARCH or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_SYNDICATE or
-            atom:link[@rel = $REL_TYPE]/@href = $ENTITY_TRANSFORM">
-                <img src="/images/icons/ic_white_services.png" alt="Services"/>
-            </xsl:when>
-        </xsl:choose>
-        <xsl:value-of select="atom:link[@rel = $REL_TYPE]/@title"/>
     </xsl:template>
 
 </xsl:stylesheet>

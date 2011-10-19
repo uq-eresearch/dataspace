@@ -45,7 +45,6 @@
                      <!-- buttons -->
                     <div class="button-bar">
                         <xsl:call-template name="edit-button-bar">
-                            <xsl:with-param name="path" select="'services'"/>
                             <xsl:with-param name="type" select="'service'"/>
                         </xsl:call-template>
                     </div>

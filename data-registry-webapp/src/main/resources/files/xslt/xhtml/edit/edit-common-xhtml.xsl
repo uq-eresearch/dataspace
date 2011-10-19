@@ -52,10 +52,9 @@
 
     <!-- button bar -->
     <xsl:template name="edit-button-bar">
-        <xsl:param name="path"/>
         <xsl:param name="type"/>
         <div class="entity-type">
-            <xsl:call-template name="entity-icon">
+            <xsl:call-template name="entity-icon-type">
                 <xsl:with-param name="type" select="$type"/>
             </xsl:call-template>
             <span>
@@ -89,23 +88,6 @@
         </div>
     </xsl:template>
 
-    <xsl:template name="entity-icon">
-        <xsl:param name="type"/>
-        <xsl:choose>
-            <xsl:when test="$type = 'collection'">
-                <img src="/images/icons/ic_white_collections.png" alt="Collection"/>
-            </xsl:when>
-            <xsl:when test="$type = 'agent'">
-                <img src="/images/icons/ic_white_agents.png" alt="Agent"/>
-            </xsl:when>
-            <xsl:when test="$type = 'activity'">
-                <img src="/images/icons/ic_white_activities.png" alt="Agent"/>
-            </xsl:when>
-            <xsl:when test="$type = 'service'">
-                <img src="/images/icons/ic_white_services.png" alt="Agent"/>
-            </xsl:when>
-        </xsl:choose>
-    </xsl:template>
 
 
 	<xsl:template name="title">
@@ -217,14 +199,14 @@
 			</xsl:when>
 			<xsl:when test="$entity = 'agent'">
 				<select id="type-combobox" name="type-combobox">
+                    <option value="Person">Person</option>
 					<option value="Group">Group</option>
-					<option value="Person">Person</option>
 				</select>
 			</xsl:when>
 			<xsl:when test="$entity = 'activity'">
 				<select id="type-combobox" name="type-combobox">
-					<option value="Program">Program</option>
 					<option value="Project">Project</option>
+                    <option value="Program">Program</option>
 				</select>
 			</xsl:when>
 			<xsl:otherwise>

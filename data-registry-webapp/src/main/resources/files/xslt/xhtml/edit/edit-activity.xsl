@@ -42,7 +42,6 @@
                      <!-- buttons -->
                     <div class="button-bar">
                         <xsl:call-template name="edit-button-bar">
-                            <xsl:with-param name="path" select="'activities'"/>
                             <xsl:with-param name="type" select="'activity'"/>
                         </xsl:call-template>
                     </div>

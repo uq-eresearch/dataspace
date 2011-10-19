@@ -313,6 +313,10 @@ a.unpublished, .unpublished {
     margin: 0 0 0 0.5em;
 }
 
+.button-bar-button img {
+    width: 1em;
+}
+
 .button-bar a:link, .button-bar a:visited {
     color: #ffffff;
 }
@@ -398,10 +402,6 @@ a.unpublished, .unpublished {
     width: 100%;
     height: 1em;
     text-align: right;
-}
-
-#subscribe-link {
-    font-size: 0.9em;
 }
 
 #view-record-history-link {
