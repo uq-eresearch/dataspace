@@ -459,4 +459,8 @@
 		<!--</repository> -->
 	</repositories>
 
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>https://jenkins.metadata.net/job/data-collections-registry/</url>
+	</ciManagement>
 </project>
