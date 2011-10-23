@@ -72,7 +72,7 @@
                         <a href="/">Home</a>
                     </li>
                     <li>
-                        <a href="/browse">Browse</a>
+                        <a href="/collections">Browse</a>
                     </li>
                     <li>
                         <a href="/search">Search</a>

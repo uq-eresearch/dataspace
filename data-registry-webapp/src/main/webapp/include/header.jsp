@@ -42,7 +42,7 @@
     <div id="topnav-inner">
         <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/browse">Browse</a></li>
+            <li><a href="/collections">Browse</a></li>
             <li><a href="/search">Search</a></li>
             <li><a href="/about">About</a></li>
         </ul>

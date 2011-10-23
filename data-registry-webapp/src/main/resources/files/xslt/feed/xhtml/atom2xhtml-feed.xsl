@@ -11,8 +11,9 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:app="http://www.w3.org/2007/app"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns="http://www.w3.org/1999/xhtml"
-                exclude-result-prefixes="atom app">
+                exclude-result-prefixes="atom app fn">
 
     <xsl:include href="../../xhtml/include/header.xsl"/>
     <xsl:include href="../../xhtml/include/head.xsl"/>
@@ -35,10 +36,12 @@
         <head>
             <title>
                 <xsl:value-of select="$applicationName"/>
+                :
+                <xsl:value-of select="atom:title"/>
             </title>
             <link href="/css/description.css" rel="stylesheet" type="text/css"/>
             <link rel="alternate" type="application/atom+xml" title="{atom:title}"
-                  href="{atom:link[@rel = $REL_SELF]/@href}"/>
+                  href="{atom:link[@rel = $REL_SELF]/@href}?repr=application/atom+xml"/>
             <xsl:call-template name="head"/>
         </head>
         <body>
@@ -50,20 +53,19 @@
                             <li class="bread-crumbs">
                                 <a href="/">Home</a>
                             </li>
-                            <li class="bread-crumbs">
-                                <a href="/browse">Browse</a>
-                            </li>
                             <li class="bread-crumbs-last">
                                 <xsl:value-of select="atom:title"/>
                             </li>
-                            <li class="bread-crumbs-options">
-                                <xsl:if test="$currentUser">
-                                    <a id="new-record-link" href="{atom:id}?v=new" title="Add Record">new</a>
-                                    <xsl:text> </xsl:text>
-                                </xsl:if>
-
-                            </li>
                         </ul>
+                        <xsl:call-template name="browse-tab-nav">
+                            <xsl:with-param name="selected" select="atom:title"/>
+                        </xsl:call-template>
+                        <h1><xsl:value-of select="atom:title"/></h1>
+                    </div>
+                </div>
+
+                <div id="feed">
+                    <div class="pad-sides pad-bottom">
                         <div class="button-bar">
                             <div class="actions">
                                 <a id="subscribe-link" class="button-bar-button" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">
@@ -71,13 +73,21 @@
                                 </a>
                             </div>
                         </div>
-                        <h1>Browse <xsl:value-of select="atom:title"/></h1>
+                        <xsl:apply-templates select="atom:entry"/>
                     </div>
                 </div>
 
-                <div id="feed">
-                    <div class="pad-sides">
-                        <xsl:apply-templates select="atom:entry"/>
+                <div class="content-bottom">
+                    <div class="pad-sides pad-top pad-bottom">
+                        <!-- bread crumbs -->
+                        <ul class="bread-crumbs-nav">
+                            <li class="bread-crumbs">
+                                <a href="/">Home</a>
+                            </li>
+                            <li class="bread-crumbs-last">
+                                <xsl:value-of select="atom:title"/>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -85,81 +95,82 @@
         </body>
     </xsl:template>
 
+    <xsl:template name="browse-tab-nav">
+        <xsl:param name="selected"/>
+        <ul class="browse-tab-nav">
+            <xsl:call-template name="browse-tab">
+                <xsl:with-param name="selected" select="$selected"/>
+                <xsl:with-param name="title">Collections</xsl:with-param>
+            </xsl:call-template>
+            <xsl:call-template name="browse-tab">
+                <xsl:with-param name="selected" select="$selected"/>
+                <xsl:with-param name="title">Agents</xsl:with-param>
+            </xsl:call-template>
+            <xsl:call-template name="browse-tab">
+                <xsl:with-param name="selected" select="$selected"/>
+                <xsl:with-param name="title">Activities</xsl:with-param>
+            </xsl:call-template>
+            <xsl:call-template name="browse-tab">
+                <xsl:with-param name="selected" select="$selected"/>
+                <xsl:with-param name="title">Services</xsl:with-param>
+            </xsl:call-template>
+        </ul>
+    </xsl:template>
+
+    <xsl:template name="browse-tab">
+        <xsl:param name="title"/>
+        <xsl:param name="selected"/>
+        <li class="browse-tab">
+            <xsl:if test="$selected = $title">
+                <xsl:attribute name="id">selected-browse-tab</xsl:attribute>
+            </xsl:if>
+            <a href="/{fn:lower-case($title)}">
+                <xsl:call-template name="entity-icon-type">
+                    <xsl:with-param name="type" select="fn:lower-case($title)"/>
+                    <xsl:with-param name="colour" select="if ($selected = $title) then 'white' else 'black'"/>
+                </xsl:call-template>
+                <xsl:value-of select="$title"/>
+            </a>
+        </li>
+    </xsl:template>
+
     <xsl:template match="atom:entry">
         <div class="record">
             <h2>
-                <xsl:call-template name="entity-icon"/>
+                <xsl:call-template name="entity-icon">
+                    <xsl:with-param name="colour">black</xsl:with-param>
+                </xsl:call-template>
                 <a href="{atom:id}"><xsl:value-of select="atom:title"/></a>
             </h2>
             <xsl:if test="atom:author/atom:name">
                 <p>
                     by <span class="author"><xsl:value-of select="atom:author/atom:name"/></span>
                 </p>
-                <p>
-                    <xsl:value-of select="substring(atom:content, 0, 255)"/>
-                    <a href="{atom:id}">
-                        more...
-                    </a>
-                </p>
             </xsl:if>
+            <p>
+                <xsl:value-of select="substring(atom:content, 0, 255)"/>
+                <xsl:if test="fn:string-length(atom:content) > 255">
+                    <a href="{atom:id}">
+                        more...
+                    </a>
+                </xsl:if>
+            </p>
+            <p>
+                updated: <xsl:value-of select="fn:format-dateTime(fn:adjust-dateTime-to-timezone(atom:updated),
+                '[F,3-3], [D] [MNn] [Y], [H]:[m]:[s] [z]')"/>
+                <xsl:if test="$currentUser and app:control/app:draft='yes'">
+                    <span class="unpublished"> (unpublished version available)</span>
+                </xsl:if>
+            </p>
 
-            <xsl:choose>
-                <xsl:when test="$currentUser">
-                    <xsl:if test="app:control/app:draft='yes'">
-                        <span class="draft">(draft)</span>
-                    </xsl:if>
-                    <xsl:if test="atom:author/atom:name">
-                        <span>
-                            <xsl:text> by </xsl:text>
-                        </span>
-                        <span class="author">
-                            <xsl:value-of select="atom:author/atom:name"/>
-                        </span>
-                    </xsl:if>
-                    <br/>
-                    <xsl:value-of select="substring(atom:content, 0, 255)"/>
-                    <a href="{atom:id}">
-                        more...
-                    </a>
-                    <span class="record-date">
-                        <xsl:value-of select="atom:updated"/>
-                    </span>
-                    <div class="controls">
-                        <a id="view-record-link" href="{atom:id}" title="View Record">view</a>
-                        <a id="view-record-working-copy-link" href="{atom:id}/working-copy" title="View Working Copy">
-                            working copy
-                        </a>
-                        <a id="view-record-history-link" href="{atom:id}/version-history" title="View Record History">
-                            history
-                        </a>
-                        <a id="edit-record-link" href="{atom:id}?v=edit" title="Edit Record">edit</a>
-                        <a id="delete-record-link" href="#" onclick="deleteRecord('{atom:id}'); " title="Delete Record">
-                            delete
-                        </a>
-                    </div>
-                </xsl:when>
-                <xsl:otherwise>
-                    <a href="{atom:id}">
-                        <xsl:value-of select="atom:title"/>
-                    </a>
-                    <xsl:if test="atom:author/atom:name">
-                        <span>
-                            <xsl:text> by </xsl:text>
-                        </span>
-                        <span class="author">
-                            <xsl:value-of select="atom:author/atom:name"/>
-                        </span>
-                    </xsl:if>
-                    <br/>
-                    <xsl:value-of select="substring(atom:content, 0, 255)"/>
-                    <a href="{atom:id}">
-                        more...
-                    </a>
-                    <span class="record-date">
-                        <xsl:value-of select="atom:updated"/>
-                    </span>
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:if test="$currentUser">
+                <div class="controls">
+                    <a  class="button-bar-button" href="{atom:id}" title="View Record">view</a>
+                    <a  class="button-bar-button" href="{atom:id}?v=edit" title="Edit Record">edit</a>
+                    <a  class="button-bar-button" href="#" onclick="deleteRecord('{atom:id}'); "
+                        title="Delete Record">delete</a>
+                </div>
+            </xsl:if>
         </div>
     </xsl:template>
 

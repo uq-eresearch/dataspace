@@ -8,14 +8,12 @@ import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.model.record.Collection;
 import org.apache.abdera.i18n.iri.IRI;
-import org.apache.abdera.model.Content;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Feed;
-import org.apache.abdera.model.Person;
+import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
+import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -151,6 +149,8 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {
                     addContent(e, entryObj, request);
+                    Link typeLink = e.addLink(Constants.TERM_COLLECTION, Constants.REL_TYPE);
+                    typeLink.setTitle("Collection");
                 }
             }
         }

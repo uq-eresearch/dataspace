@@ -2,7 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean name="/browse" class="net.metadata.dataspace.controller.BrowseController"/>
     <bean name="/search" class="net.metadata.dataspace.controller.SearchController"/>
     <bean name="/anzsrc" class="net.metadata.dataspace.controller.ANZSRCCodesController"/>
     <bean name="/about" class="net.metadata.dataspace.controller.AboutController"/>

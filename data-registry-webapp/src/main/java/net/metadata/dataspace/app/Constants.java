@@ -120,7 +120,7 @@ public interface Constants {
     String TERM_ACTIVITY = NS_FOAF + "Project";
     String TERM_COLLECTION = NS_DCMITYPE + "Collection";
     String TERM_AGENT_AS_GROUP = NS_FOAF + "Group";
-    String TERM_AGENT_AS_AGENT = NS_FOAF + "Agent";
+    String TERM_AGENT_AS_PERSON = NS_FOAF + "Person";
     String TERM_SERVICE = NS_VIVO + "Service";
     String LABEL_KEYWORD = "keyword";
 

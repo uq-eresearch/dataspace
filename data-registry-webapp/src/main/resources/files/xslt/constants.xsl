@@ -167,23 +167,27 @@
     </xsl:variable>
 
     <xsl:template name="entity-icon">
+        <xsl:param name="colour"/>
         <xsl:choose>
             <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_COLLECTION or
              atom:link[@rel = $REL_TYPE]/@href = $ENTITY_COLLECTION">
                 <xsl:call-template name="entity-icon-type">
                     <xsl:with-param name="type">collection</xsl:with-param>
+                    <xsl:with-param name="colour" select="$colour"/>
                 </xsl:call-template>
             </xsl:when>
             <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_PERSON or
             atom:link[@rel = $REL_TYPE]/@href = $ENTITY_GROUP">
                 <xsl:call-template name="entity-icon-type">
                     <xsl:with-param name="type">agent</xsl:with-param>
+                    <xsl:with-param name="colour" select="$colour"/>
                 </xsl:call-template>
             </xsl:when>
             <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_PROJECT or
             atom:link[@rel = $REL_TYPE]/@href = $ENTITY_PROGRAM">
                 <xsl:call-template name="entity-icon-type">
                     <xsl:with-param name="type">activity</xsl:with-param>
+                    <xsl:with-param name="colour" select="$colour"/>
                 </xsl:call-template>
             </xsl:when>
             <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_ANNOTATE or
@@ -197,6 +201,7 @@
             atom:link[@rel = $REL_TYPE]/@href = $ENTITY_TRANSFORM">
                 <xsl:call-template name="entity-icon-type">
                     <xsl:with-param name="type">service</xsl:with-param>
+                    <xsl:with-param name="colour" select="$colour"/>
                 </xsl:call-template>
             </xsl:when>
         </xsl:choose>
@@ -204,19 +209,40 @@
 
     <xsl:template name="entity-icon-type">
         <xsl:param name="type"/>
+        <xsl:param name="colour"/>
         <xsl:choose>
-            <xsl:when test="$type = 'collection'">
-                <img src="/images/icons/ic_white_collections.png" alt="Collection"/>
+            <xsl:when test="$colour = 'white'">
+                <xsl:choose>
+                    <xsl:when test="$type = 'collection' or $type = 'collections'">
+                        <img src="/images/icons/ic_white_collections.png" alt="Collection"/>
+                    </xsl:when>
+                    <xsl:when test="$type = 'agent' or $type ='agents'">
+                        <img src="/images/icons/ic_white_agents.png" alt="Agent"/>
+                    </xsl:when>
+                    <xsl:when test="$type = 'activity' or $type = 'activities'">
+                        <img src="/images/icons/ic_white_activities.png" alt="Activity"/>
+                    </xsl:when>
+                    <xsl:when test="$type = 'service' or $type = 'services'">
+                        <img src="/images/icons/ic_white_services.png" alt="Service"/>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>
-            <xsl:when test="$type = 'agent'">
-                <img src="/images/icons/ic_white_agents.png" alt="Agent"/>
-            </xsl:when>
-            <xsl:when test="$type = 'activity'">
-                <img src="/images/icons/ic_white_activities.png" alt="Activity"/>
-            </xsl:when>
-            <xsl:when test="$type = 'service'">
-                <img src="/images/icons/ic_white_services.png" alt="Service"/>
-            </xsl:when>
+            <xsl:otherwise>
+                <xsl:choose>
+                    <xsl:when test="$type = 'collection' or $type = 'collections'">
+                        <img src="/images/icons/ic_black_collections.png" alt="Collection"/>
+                    </xsl:when>
+                    <xsl:when test="$type = 'agent' or $type ='agents'">
+                        <img src="/images/icons/ic_black_agents.png" alt="Agent"/>
+                    </xsl:when>
+                    <xsl:when test="$type = 'activity' or $type = 'activities'">
+                        <img src="/images/icons/ic_black_activities.png" alt="Activity"/>
+                    </xsl:when>
+                    <xsl:when test="$type = 'service' or $type = 'services'">
+                        <img src="/images/icons/ic_black_services.png" alt="Service"/>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 

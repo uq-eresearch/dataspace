@@ -530,7 +530,9 @@
     <xsl:template name="button-bar">
         <xsl:param name="path"/>
         <div class="entity-type">
-            <xsl:call-template name="entity-icon"/>
+            <xsl:call-template name="entity-icon">
+                <xsl:with-param name="colour">white</xsl:with-param>
+            </xsl:call-template>
             <span><xsl:value-of select="atom:link[@rel=$REL_TYPE]/@title"/></span>
         </div>
         <div class="arrow-right"></div>

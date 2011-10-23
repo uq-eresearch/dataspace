@@ -8,10 +8,7 @@ import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.model.record.Agent;
 import org.apache.abdera.i18n.iri.IRI;
-import org.apache.abdera.model.Content;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Feed;
-import org.apache.abdera.model.Person;
+import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
@@ -132,6 +129,8 @@ public class AgentAdapter extends AbstractEntityCollectionAdapter<Agent> {
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {
                     addContent(e, entryObj, request);
+                    Link typeLink = e.addLink(Constants.TERM_AGENT_AS_PERSON, Constants.REL_TYPE);
+                    typeLink.setTitle("Agent");
                 }
             }
         }

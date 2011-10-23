@@ -37,10 +37,6 @@ public class FeedOutputHelper {
     public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) {
         responseContext.setContentType(Constants.MIME_TYPE_HTML);
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
-        String viewRepresentation = OperationHelper.getViewRepresentation(request);
-        if (viewRepresentation != null && viewRepresentation.equals("new")) {
-            xslFilePath = "/files/xslt/xhtml/add/new-atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
-        }
         XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
         responseContext.setWriter(writer);
         return responseContext;
@@ -110,7 +106,7 @@ public class FeedOutputHelper {
     public static void setPublished(Version version, Entry entry) {
         Control control = entry.addControl();
         Version published = version.getParent().getPublished();
-        //False is used her to indicate the version is published and true (isDraft) is not published
+        //False is used here to indicate the version is published and true (isDraft) is not published
         if (published != null && version.equals(published)) {
             control.setDraft(false);
         } else {
@@ -121,9 +117,14 @@ public class FeedOutputHelper {
     public static void setPublished(Record record, Entry entry) {
         Control control = entry.addControl();
         Version published = record.getPublished();
-        //False is used her to indicate the version is published and true (isDraft) is not published
+        Version workingCopy = record.getWorkingCopy();
+        //False is used here to indicate the version is published and true (isDraft) is not published
         if (published != null) {
-            control.setDraft(false);
+            if (workingCopy == published) {
+                control.setDraft(false);
+            } else {
+                control.setDraft(true);
+            }
         } else {
             control.setDraft(true);
         }
