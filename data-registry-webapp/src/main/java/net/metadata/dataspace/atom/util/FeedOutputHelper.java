@@ -37,6 +37,10 @@ public class FeedOutputHelper {
     public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) {
         responseContext.setContentType(Constants.MIME_TYPE_HTML);
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
+        String viewRepresentation = OperationHelper.getViewRepresentation(request);
+        if (viewRepresentation != null && viewRepresentation.equals("new")) {
+            xslFilePath = "/files/xslt/xhtml/add/new-atom2xhtml-" + clazz.getSimpleName().toLowerCase() + ".xsl";
+        }
         XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
         responseContext.setWriter(writer);
         return responseContext;
