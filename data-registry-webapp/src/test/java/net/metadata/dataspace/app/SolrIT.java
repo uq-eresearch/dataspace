@@ -22,6 +22,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,9 +42,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class SolrIT {
 
 	private static final String SOLR_CONFIG_DIR = "src/main/resources/";
-
 	private static final Set<String> stopwords = new TreeSet<String>();
 
+    private static Logger logger = Logger.getLogger(SolrIT.class);
 	private XPath xpath = XPathHelper.getXPath();
 
 	@BeforeClass
@@ -87,7 +88,7 @@ public class SolrIT {
 		        }
 	        }
 	        for (String fileName : testEntities) {
-	        	System.out.println("Loading test data: "+fileName);
+	        	logger.info("Loading test data: "+fileName);
 	        	PostMethod postMethod = ClientHelper.postEntry(client, fileName, type);
 	            assertEquals("Could not post entry", 201, postMethod.getStatusCode());
 	            postMethod.releaseConnection();
@@ -95,7 +96,8 @@ public class SolrIT {
         }
 
         // Wait for re-index
-        Thread.sleep(10000);
+        // TODO: Implement event-based indexing so we don't do this!
+        Thread.sleep(15000);
     }
 
 	// Test tagcloud for stopwords
@@ -164,6 +166,7 @@ public class SolrIT {
         String title = xpath.evaluate(TestConstants.RECORD_TITLE_PATH, doc);
 
         // Wait for re-index
+        // TODO: Implement event-based indexing so we don't do this!
         Thread.sleep(10000);
 
         // Test searching (but skip stopwords)
