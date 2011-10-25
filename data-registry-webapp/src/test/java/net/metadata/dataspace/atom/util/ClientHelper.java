@@ -1,6 +1,6 @@
 package net.metadata.dataspace.atom.util;
 
-import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.app.TestConstants;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.*;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -28,28 +28,28 @@ public class ClientHelper {
     }
 
     public static int login(HttpClient client, String username, String password) throws Exception {
-        PostMethod postMethod = new PostMethod(Constants.URL_PREFIX + "login?username=" + username + "&password=" + password);
+        PostMethod postMethod = new PostMethod(TestConstants.URL_PREFIX + "login?username=" + username + "&password=" + password);
         return client.executeMethod(postMethod);
     }
 
 	public static void login(WebClient client, String username,
 			String password) throws FailingHttpStatusCodeException, IOException {
 		WebRequest request = new WebRequest(
-				new URL(Constants.URL_PREFIX + "login?username=" + username + "&password=" + password),
+				new URL(TestConstants.URL_PREFIX + "login?username=" + username + "&password=" + password),
 				HttpMethod.POST);
 		client.getPage(request);
 	}
 
     public static int logout(HttpClient client) throws Exception {
-        PostMethod postMethod = new PostMethod(Constants.URL_PREFIX + "logout");
+        PostMethod postMethod = new PostMethod(TestConstants.URL_PREFIX + "logout");
         return client.executeMethod(postMethod);
     }
 
     public static PostMethod postEntry(HttpClient client, String fileName, String path) throws Exception {
-        String fullURL = Constants.URL_PREFIX + path;
+        String fullURL = TestConstants.URL_PREFIX + path;
         PostMethod post = new PostMethod(fullURL);
         File inputFile = getFile(fileName);
-        RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
+        RequestEntity entity = new FileRequestEntity(inputFile, TestConstants.ATOM_ENTRY_MIMETYPE);
         post.setRequestEntity(entity);
         client.executeMethod(post);
         return post;
@@ -59,7 +59,7 @@ public class ClientHelper {
         PutMethod putMethod = new PutMethod(uri);
         putMethod.setRequestHeader("Accept", acceptHeader);
         File inputFile = getFile(fileName);
-        RequestEntity entity = new FileRequestEntity(inputFile, Constants.ATOM_ENTRY_MIMETYPE);
+        RequestEntity entity = new FileRequestEntity(inputFile, TestConstants.ATOM_ENTRY_MIMETYPE);
         putMethod.setRequestEntity(entity);
         client.executeMethod(putMethod);
         return putMethod;

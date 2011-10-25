@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +22,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,10 +37,10 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = Constants.TEST_CONTEXT)
+@ContextConfiguration(locations = TestConstants.TEST_CONTEXT)
 public class SolrIT {
 
-	private static final String SOLR_CONFIG_DIR = "target/solr-config/WEB-INF/classes/";
+	private static final String SOLR_CONFIG_DIR = "src/main/resources/";
 
 	private static final Set<String> stopwords = new TreeSet<String>();
 
@@ -69,14 +67,14 @@ public class SolrIT {
     	//create a client
         HttpClient client = new HttpClient();
         //authenticate
-        int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        int status = ClientHelper.login(client, TestConstants.USERNAME, TestConstants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
 
         String[] types = {
-        		Constants.PATH_FOR_AGENTS,
-        		Constants.PATH_FOR_COLLECTIONS,
-        		Constants.PATH_FOR_ACTIVITIES,
-        		Constants.PATH_FOR_SERVICES };
+        		TestConstants.PATH_FOR_AGENTS,
+        		TestConstants.PATH_FOR_COLLECTIONS,
+        		TestConstants.PATH_FOR_ACTIVITIES,
+        		TestConstants.PATH_FOR_SERVICES };
         for (int t = 0; t < types.length; t++) {
         	String type = types[t];
         	List<String> testEntities = new LinkedList<String>();
@@ -105,7 +103,7 @@ public class SolrIT {
     public void testTagCloud() throws Exception {
 		final int expectedTagCount = 50;
 
-    	String url = Constants.URL_PREFIX+"#tags";
+    	String url = TestConstants.URL_PREFIX+"#tags";
         final WebClient webClient = new WebClient();
     	final HtmlPage page = webClient.getPage(url);
     	int tries = 0;
@@ -141,17 +139,17 @@ public class SolrIT {
     	//create a client
         HttpClient client = new HttpClient();
         //authenticate
-        int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        int status = ClientHelper.login(client, TestConstants.USERNAME, TestConstants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
         String fileName = "/files/post/new-collection.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_COLLECTIONS);
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, TestConstants.PATH_FOR_COLLECTIONS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
         postMethod.releaseConnection();
         //publish entry
         fileName = "/files/put/published-collection.xml";
-        PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
         putMethod.releaseConnection();
         //logout
@@ -159,11 +157,11 @@ public class SolrIT {
         assertEquals("Could not logout", 200, status);
 
         //get without authenticating
-        GetMethod getMethod = ClientHelper.getEntry(client, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        GetMethod getMethod = ClientHelper.getEntry(client, newEntryLocation, TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Get without authenticating should now return OK", 200, getMethod.getStatusCode());
         Document doc = XPathHelper.getDocFromStream(getMethod.getResponseBodyAsStream());
         getMethod.releaseConnection();
-        String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, doc);
+        String title = xpath.evaluate(TestConstants.RECORD_TITLE_PATH, doc);
 
         // Wait for re-index
         Thread.sleep(10000);
@@ -177,7 +175,7 @@ public class SolrIT {
 	        		// Skip stopword
 	        		continue;
 	        	}
-	        	String url = Constants.URL_PREFIX+"search?q="+word;
+	        	String url = TestConstants.URL_PREFIX+"search?q="+word;
 	        	final HtmlPage page = webClient.getPage(url);
 	        	// Wait for JS to eval
 	        	while (!page.asText().contains("displaying"))

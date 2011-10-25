@@ -184,6 +184,74 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<!-- The Cargo plugin manages the Servlet engine -->
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<version>1.1.2</version>
+				<executions>
+					<!-- start engine before tests -->
+					<execution>
+						<id>start-container</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<!-- stop engine after tests -->
+					<execution>
+						<id>stop-container</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- we use a Jetty 7 -->
+					<container>
+						<containerId>jetty7x</containerId>
+						<type>embedded</type>
+						<!--Override the persistence unit -->
+						<systemProperties>
+							<data.registry.persistenceUnitName>test</data.registry.persistenceUnitName>
+							<data.registry.uri.prefix>http://localhost:9635/</data.registry.uri.prefix>
+						</systemProperties>
+					</container>
+					<!-- the actual configuration for the webapp -->
+					<configuration>
+						<!-- pick some port likely to be free, it has be matched in the test
+							definitions -->
+						<properties>
+							<cargo.servlet.port>9635</cargo.servlet.port>
+						</properties>
+						<!-- what to deploy and how (grabbed from dependencies below) -->
+						<deployables>
+							<deployable>
+								<groupId>net.metadata.dataspace</groupId>
+								<artifactId>data-collections-registry</artifactId>
+								<type>war</type>
+								<properties>
+									<context>/</context>
+								</properties>
+							</deployable>
+						</deployables>
+					</configuration>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -301,12 +369,6 @@
 			<version>8.4-701.jdbc4</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.4</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.dspace</groupId>
 			<artifactId>oaicat</artifactId>
 			<version>1.5.57</version>
@@ -336,7 +398,51 @@
 			<artifactId>solr-solrj</artifactId>
 			<version>${solr.version}</version>
 		</dependency>
+		<!-- we use the HTML unit variant of JWebUnit for integration testing -->
+		<dependency>
+			<groupId>net.sourceforge.jwebunit</groupId>
+			<artifactId>jwebunit-htmlunit-plugin</artifactId>
+			<version>2.2</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>net.sourceforge.htmlunit</groupId>
+					<artifactId>htmlunit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.htmlunit</groupId>
+			<artifactId>htmlunit</artifactId>
+			<version>2.9</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
+
 	<properties>
 		<solr.version>3.4.0</solr.version>
 	</properties>

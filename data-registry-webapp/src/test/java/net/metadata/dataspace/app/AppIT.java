@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
  * Time: 10:21:04 AM
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = Constants.TEST_CONTEXT)
+@ContextConfiguration(locations = TestConstants.TEST_CONTEXT)
 public class AppIT {
 
 	@Test
@@ -26,12 +26,12 @@ public class AppIT {
 		HttpClient client = new HttpClient();
         GetMethod result;
         String[] locations = { "",
-        		Constants.PATH_FOR_ACTIVITIES,
-        		Constants.PATH_FOR_AGENTS,
-        		Constants.PATH_FOR_COLLECTIONS,
-        		Constants.PATH_FOR_SERVICES };
+        		TestConstants.PATH_FOR_ACTIVITIES,
+        		TestConstants.PATH_FOR_AGENTS,
+        		TestConstants.PATH_FOR_COLLECTIONS,
+        		TestConstants.PATH_FOR_SERVICES };
         for (int i = 0; i < locations.length; i++) {
-        	result = ClientHelper.getEntry(client, Constants.URL_PREFIX+locations[i], "text/html");
+        	result = ClientHelper.getEntry(client, TestConstants.URL_PREFIX+locations[i], "text/html");
         	assertEquals(result.getURI()+" should return 200 OK", 200, result.getStatusCode());
         	assertTrue(result.getURI()+" should return not be zero length",
         			0 < result.getResponseBody().length);
@@ -43,7 +43,7 @@ public class AppIT {
         //create a client
         HttpClient client = new HttpClient();
         //correct username and password
-        int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        int status = ClientHelper.login(client, TestConstants.USERNAME, TestConstants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
 
         //logout
@@ -71,7 +71,7 @@ public class AppIT {
         HttpClient client = new HttpClient();
 
         //get without authenticating
-        GetMethod getMethod = ClientHelper.getEntry(client, Constants.URL_PREFIX + "registry.atomsvc", Constants.ATOM_ENTRY_MIMETYPE);
+        GetMethod getMethod = ClientHelper.getEntry(client, TestConstants.URL_PREFIX + "registry.atomsvc", TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get registry service description", 200, getMethod.getStatusCode());
     }
 

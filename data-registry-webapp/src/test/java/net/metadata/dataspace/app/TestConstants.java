@@ -5,7 +5,7 @@ package net.metadata.dataspace.app;
  * Date: 05/11/2010
  * Time: 3:14:35 PM
  */
-public interface Constants {
+public interface TestConstants {
 
     /**
      * Mime types
