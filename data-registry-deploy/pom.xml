@@ -70,14 +70,6 @@
                         <deployables>
                             <deployable>
                                 <groupId>net.metadata.dataspace</groupId>
-                                <artifactId>data-registry-solr</artifactId>
-                                <type>war</type>
-                                <properties>
-                                    <context>/solr</context>
-                                </properties>
-                            </deployable>
-                            <deployable>
-                                <groupId>net.metadata.dataspace</groupId>
                                 <artifactId>data-collections-registry</artifactId>
                                 <type>war</type>
                                 <properties>
@@ -91,12 +83,6 @@
         </plugins>
     </build>
     <dependencies>
-        <dependency>
-            <groupId>net.metadata.dataspace</groupId>
-            <artifactId>data-registry-solr</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>war</type>
-        </dependency>
         <dependency>
             <groupId>net.metadata.dataspace</groupId>
             <artifactId>data-collections-registry</artifactId>
