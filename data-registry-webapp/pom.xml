@@ -217,6 +217,12 @@
 							<data.registry.persistenceUnitName>test</data.registry.persistenceUnitName>
 							<data.registry.uri.prefix>http://localhost:9635/</data.registry.uri.prefix>
 						</systemProperties>
+						<dependencies>
+							<dependency>
+								<groupId>javax.servlet</groupId>
+								<artifactId>servlet-api</artifactId>
+							</dependency>
+						</dependencies>
 					</container>
 					<!-- the actual configuration for the webapp -->
 					<configuration>
