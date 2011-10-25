@@ -101,8 +101,6 @@ This configuration can be run with "mvn integration-test".
                         <systemProperties>
                             <data.registry.persistenceUnitName>test</data.registry.persistenceUnitName>
                             <data.registry.uri.prefix>http://localhost:9635/</data.registry.uri.prefix>
-							<solr.instance.dir>${project.build.directory}/solr</solr.instance.dir>
-							<solr.port>9635</solr.port>
                         </systemProperties>
                     </container>
                     <!-- the actual configuration for the webapp -->
@@ -113,14 +111,6 @@ This configuration can be run with "mvn integration-test".
                         </properties>
                         <!-- what to deploy and how (grabbed from dependencies below) -->
                         <deployables>
-                            <deployable>
-                                <groupId>net.metadata.dataspace</groupId>
-                                <artifactId>data-registry-solr</artifactId>
-                                <type>war</type>
-                                <properties>
-                                    <context>/solr</context>
-                                </properties>
-                            </deployable>
                             <deployable>
                                 <groupId>net.metadata.dataspace</groupId>
                                 <artifactId>data-collections-registry</artifactId>
@@ -147,7 +137,7 @@ This configuration can be run with "mvn integration-test".
 							<overlays>
 								<overlay>
 						            <groupId>net.metadata.dataspace</groupId>
-						            <artifactId>data-registry-solr</artifactId>
+            						<artifactId>data-collections-registry</artifactId>
 								</overlay>
 							</overlays>
 							<webappDirectory>${project.build.directory}/solr-config</webappDirectory>
@@ -193,20 +183,32 @@ This configuration can be run with "mvn integration-test".
                     <groupId>javax.servlet</groupId>
                     <artifactId>servlet-api</artifactId>
                 </exclusion>
+                <exclusion>
+                	<artifactId>slf4j-api</artifactId>
+                	<groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                	<artifactId>slf4j-log4j12</artifactId>
+                	<groupId>org.slf4j</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- we depend on our own app, so the deployment setup above can find it -->
         <dependency>
             <groupId>net.metadata.dataspace</groupId>
-            <artifactId>data-registry-solr</artifactId>
+            <artifactId>data-collections-registry</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>net.metadata.dataspace</groupId>
-            <artifactId>data-collections-registry</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>war</type>
+           	<groupId>org.slf4j</groupId>
+           	<artifactId>slf4j-api</artifactId>
+            <version>1.6.3</version>
+        </dependency>
+        <dependency>
+           	<groupId>org.slf4j</groupId>
+           	<artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.3</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>

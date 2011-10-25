@@ -15,8 +15,9 @@
             </list>
         </property>
     </bean>
+    <import resource="solr.xml"/>
     <import resource="registry.xml"/>
-    <bean id="initializer" class="net.metadata.dataspace.app.RegistryInitializer" destroy-method="cleanUp">
+    <!-- <bean id="initializer" class="net.metadata.dataspace.app.RegistryInitializer" destroy-method="cleanUp">
         <constructor-arg value="${data.registry.load.anzsrc.codes}"/>
-    </bean>
+    </bean> -->
 </beans>

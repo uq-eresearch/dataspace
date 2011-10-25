@@ -78,12 +78,6 @@ public class ClientHelper {
         return deleteMethod;
     }
 
-    public static GetMethod reindexSolr(HttpClient client) throws Exception {
-    	GetMethod getMethod = new GetMethod(Constants.URL_PREFIX+"solr/dataimport?command=full-import");
-        client.executeMethod(getMethod);
-        return getMethod;
-    }
-
     private static File getFile(String fileName) throws IOException {
         return loader.getResource(fileName).getFile();
     }

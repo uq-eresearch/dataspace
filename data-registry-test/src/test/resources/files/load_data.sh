@@ -30,4 +30,3 @@ do
 	done
 done
 
-$CURL -X POST -b @$COOKIEJAR "$BASE_URL/solr/dataimport?command=full-import"

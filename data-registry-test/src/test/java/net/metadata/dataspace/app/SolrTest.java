@@ -96,10 +96,8 @@ public class SolrTest {
 	        }
         }
 
-        // Force re-index
-        GetMethod getMethod = ClientHelper.reindexSolr(client);
-        assertEquals("Solr failed to index successfully.", 200, getMethod.getStatusCode());
-        getMethod.releaseConnection();
+        // Wait for re-index
+        Thread.sleep(10000);
     }
 
 	// Test tagcloud for stopwords
@@ -167,10 +165,8 @@ public class SolrTest {
         getMethod.releaseConnection();
         String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, doc);
 
-        // Force re-index
-        getMethod = ClientHelper.reindexSolr(client);
-        assertEquals("Solr failed to index successfully.", 200, getMethod.getStatusCode());
-        getMethod.releaseConnection();
+        // Wait for re-index
+        Thread.sleep(10000);
 
         // Test searching (but skip stopwords)
         {

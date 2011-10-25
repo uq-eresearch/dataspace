@@ -25,19 +25,19 @@ public class AppTest {
         //create a client
 		HttpClient client = new HttpClient();
         GetMethod result;
-        String[] locations = { "", "browse", 
-        		Constants.PATH_FOR_ACTIVITIES,  
+        String[] locations = { "",
+        		Constants.PATH_FOR_ACTIVITIES,
         		Constants.PATH_FOR_AGENTS,
         		Constants.PATH_FOR_COLLECTIONS,
         		Constants.PATH_FOR_SERVICES };
         for (int i = 0; i < locations.length; i++) {
         	result = ClientHelper.getEntry(client, Constants.URL_PREFIX+locations[i], "text/html");
         	assertEquals(result.getURI()+" should return 200 OK", 200, result.getStatusCode());
-        	assertTrue(result.getURI()+" should return not be zero length", 
+        	assertTrue(result.getURI()+" should return not be zero length",
         			0 < result.getResponseBody().length);
         }
     }
-	
+
     @Test
     public void testCorrectLoginLogout() throws Exception {
         //create a client
