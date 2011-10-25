@@ -29,9 +29,8 @@ import javax.persistence.PersistenceException;
  * Date: 24/09/2010
  * Time: 11:38:59 AM
  */
-public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metadata.dataspace.data.model.record.Collection> {
+public class CollectionAdapter extends AbstractRecordAdapter<net.metadata.dataspace.data.model.record.Collection> {
 
-    private Logger logger = Logger.getLogger(getClass());
     private CollectionDao collectionDao;
 
     public CollectionDao getCollectionDao() {
@@ -52,9 +51,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
 	        } catch (PersistenceException e) {
 	        	throw e;
 	        }
-        	return HttpMethodHelper.getInstance().postEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
+        	return getHttpMethodHelper().postEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
@@ -62,9 +61,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext postMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().postMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return getHttpMethodHelper().postMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
@@ -72,9 +71,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext putEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().putEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return getHttpMethodHelper().putEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
@@ -82,9 +81,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext putMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().putMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return getHttpMethodHelper().putMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
@@ -92,9 +91,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext deleteEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().deleteEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return getHttpMethodHelper().deleteEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
@@ -102,9 +101,9 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     @Transactional(readOnly=true)
     public ResponseContext getEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().getEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
+            return getHttpMethodHelper().getEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
@@ -122,22 +121,22 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
                             representationMimeType.equals(Constants.MIME_TYPE_ATOM))) {
                 return super.getFeed(request);
             } else {
-//                return HttpMethodHelper.getInstance().getFeed(request, Collection.class);
+//                return getHttpMethodHelper().getFeed(request, Collection.class);
                 Feed feed = createFeedBase(request);
                 addFeedDetails(feed, request);
                 ResponseContext responseContext = buildGetFeedResponse(feed);
 
-                return HttpMethodHelper.getInstance().getFeed(request, responseContext, Collection.class);
+                return getHttpMethodHelper().getFeed(request, responseContext, Collection.class);
             }
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
     @Override
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        HttpMethodHelper.getInstance().addFeedDetails(feed, request, Collection.class);
+        getHttpMethodHelper().addFeedDetails(feed, request, Collection.class);
         Iterable<Collection> entries = getEntries(request);
         if (entries != null) {
             for (Collection entryObj : entries) {
@@ -154,11 +153,6 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
                 }
             }
         }
-    }
-
-    @Transactional(readOnly=true)
-    public List<Person> getAuthors(net.metadata.dataspace.data.model.record.Collection collection, RequestContext request) throws ResponseContextException {
-        return HttpMethodHelper.getInstance().getAuthors(collection, request);
     }
 
     @Override
@@ -190,7 +184,7 @@ public class CollectionAdapter extends AbstractEntityCollectionAdapter<net.metad
     @Override
     @Transactional(readOnly=true)
     public Iterable<net.metadata.dataspace.data.model.record.Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return HttpMethodHelper.getInstance().getRecords(requestContext, Collection.class);
+        return getHttpMethodHelper().getRecords(requestContext, Collection.class);
     }
 
     @Override

@@ -25,11 +25,10 @@ import java.util.List;
  * Time: 3:22:53 PM
  */
 @Transactional
-public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
+public class ServiceAdapter extends AbstractRecordAdapter<Service> {
 
-    private Logger logger = Logger.getLogger(getClass());
     private ServiceDao serviceDao;
-    
+
     public ServiceDao getServiceDao() {
 		return serviceDao;
 	}
@@ -41,54 +40,54 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 	@Override
     public ResponseContext postEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().postEntry(request, Service.class);
+            return getHttpMethodHelper().postEntry(request, Service.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
     @Override
     public ResponseContext postMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().postMedia(request, Service.class);
+            return getHttpMethodHelper().postMedia(request, Service.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
     @Override
     public ResponseContext putEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().putEntry(request, Service.class);
+            return getHttpMethodHelper().putEntry(request, Service.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
     @Override
     public ResponseContext putMedia(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().putMedia(request, Service.class);
+            return getHttpMethodHelper().putMedia(request, Service.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
     @Override
     public ResponseContext deleteEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().deleteEntry(request, Service.class);
+            return getHttpMethodHelper().deleteEntry(request, Service.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
     @Override
     public ResponseContext getEntry(RequestContext request) {
         try {
-            return HttpMethodHelper.getInstance().getEntry(request, Service.class);
+            return getHttpMethodHelper().getEntry(request, Service.class);
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
@@ -108,16 +107,16 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 Feed feed = createFeedBase(request);
                 addFeedDetails(feed, request);
                 ResponseContext responseContext = buildGetFeedResponse(feed);
-                return HttpMethodHelper.getInstance().getFeed(request, responseContext, Service.class);
+                return getHttpMethodHelper().getFeed(request, responseContext, Service.class);
             }
         } catch (ResponseContextException e) {
-            return OperationHelper.createResponse(e.getStatusCode(), e.getMessage());
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        HttpMethodHelper.getInstance().addFeedDetails(feed, request, Service.class);
+        getHttpMethodHelper().addFeedDetails(feed, request, Service.class);
         Iterable<Service> entries = getEntries(request);
         if (entries != null) {
             for (Service entryObj : entries) {
@@ -134,10 +133,6 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
                 }
             }
         }
-    }
-
-    public List<Person> getAuthors(Service service, RequestContext request) throws ResponseContextException {
-        return HttpMethodHelper.getInstance().getAuthors(service, request);
     }
 
     @Override
@@ -165,7 +160,7 @@ public class ServiceAdapter extends AbstractEntityCollectionAdapter<Service> {
 
     @Override
     public Iterable<Service> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return HttpMethodHelper.getInstance().getRecords(requestContext, Service.class);
+        return getHttpMethodHelper().getRecords(requestContext, Service.class);
     }
 
     @Override

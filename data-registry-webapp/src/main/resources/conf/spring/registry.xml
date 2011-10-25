@@ -1,27 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
        	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
+	<bean id="httpMethodHelper" class="net.metadata.dataspace.atom.util.HttpMethodHelper">
+		<property name="activityDao" ref="activityDao"/>
+		<property name="agentDao" ref="agentDao"/>
+		<property name="collectionDao" ref="collectionDao"/>
+		<property name="serviceDao" ref="serviceDao"/>
+	</bean>
+
 	<bean id="activityAdapter" class="net.metadata.dataspace.atom.adapter.ActivityAdapter">
 		<property name="activityDao" ref="activityDao"/>
+		<property name="httpMethodHelper" ref="httpMethodHelper"/>
 	</bean>
-	
+
 	<bean id="agentAdapter" class="net.metadata.dataspace.atom.adapter.AgentAdapter">
 		<property name="agentDao" ref="agentDao"/>
+		<property name="httpMethodHelper" ref="httpMethodHelper"/>
 	</bean>
-	
+
 	<bean id="collectionAdapter" class="net.metadata.dataspace.atom.adapter.CollectionAdapter">
 		<property name="collectionDao" ref="collectionDao"/>
+		<property name="httpMethodHelper" ref="httpMethodHelper"/>
 	</bean>
-	
+
 	<bean id="serviceAdapter" class="net.metadata.dataspace.atom.adapter.ServiceAdapter">
 		<property name="serviceDao" ref="serviceDao"/>
+		<property name="httpMethodHelper" ref="httpMethodHelper"/>
 	</bean>
 
 

@@ -4,6 +4,10 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
+
 import org.apache.abdera.factory.Factory;
 import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -69,8 +73,8 @@ public class FeedOutputHelper {
             entry.setContent(version.getDescription());
             Link selfLink = entry.addLink(uri, Constants.REL_SELF);
             selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
-            List<Person> personList = HttpMethodHelper.getInstance().getAuthors(record, request);
-            
+            List<Person> personList = getAuthors(record, request);
+
             entry.setUpdated(version.getUpdated());
             setPublished(version, entry);
         }
@@ -132,6 +136,28 @@ public class FeedOutputHelper {
         } else {
             control.setDraft(true);
         }
+    }
+
+
+    public static List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
+        List<Person> personList = new ArrayList<Person>();
+        if (record instanceof Collection) {
+        	Version version = (Version) record.getPublished();
+        	// If no published collection, then return empty
+        	if (version == null)
+        		return personList;
+            Set<Agent> authors = ((CollectionVersion) record.getPublished()).getCreators();
+            for (Agent author : authors) {
+                Person person = request.getAbdera().getFactory().newAuthor();
+                person.setName(author.getTitle());
+                if (author.getMBoxes().size() > 0) {
+                	person.setEmail(author.getMBoxes().iterator().next());
+                }
+                person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
+                personList.add(person);
+            }
+        }
+        return personList;
     }
 
 }

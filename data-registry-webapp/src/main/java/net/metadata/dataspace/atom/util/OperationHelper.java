@@ -3,6 +3,7 @@ package net.metadata.dataspace.atom.util;
 import net.metadata.dataspace.app.Constants;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.protocol.server.RequestContext;
+import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.context.AbstractResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
@@ -151,5 +152,9 @@ public class OperationHelper {
     	rc.addHeader("Access-Control-Allow-Credentials", "true");
     	return rc;
     }
+
+	public static ResponseContext createErrorResponse(ResponseContextException e) {
+		return createResponse(e.getStatusCode(), e.getMessage());
+	}
 
 }

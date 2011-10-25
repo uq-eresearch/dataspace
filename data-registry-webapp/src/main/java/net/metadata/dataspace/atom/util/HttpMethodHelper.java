@@ -44,25 +44,19 @@ import java.util.Set;
 public class HttpMethodHelper {
 
     private static Logger logger = Logger.getLogger(HttpMethodHelper.class.getName());
-    private static CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
-    private static AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
-    private static ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
-    private static ServiceDao serviceDao = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
-    private static EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
-    private static AuthorizationManager<User> authorizationManager = RegistryApplication.getApplicationContext().getAuthorizationManager();
-    private static AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
-
-    private static HttpMethodHelper instance = new HttpMethodHelper();
-
-    public static HttpMethodHelper getInstance() {
-		return instance;
-	}
+    private CollectionDao collectionDao;
+    private AgentDao agentDao;
+    private ActivityDao activityDao;
+    private ServiceDao serviceDao;
+    private EntityCreator entityCreator;
+    private AuthorizationManager<User> authorizationManager;
+    private AuthenticationManager authenticationManager;
 
 	@Transactional
     public ResponseContext postEntry(RequestContext request, Class<? extends Record<?>> clazz) throws ResponseContextException {
 		EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
 
-		User user = authenticationManager.getCurrentUser(request);
+		User user = getAuthenticationManager().getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
@@ -70,7 +64,7 @@ public class HttpMethodHelper {
             String baseType = mimeType.getBaseType();
             if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
                 Entry entry = getEntryFromRequest(request);
-                Record record = entityCreator.getNextRecord(clazz);
+                Record record = getEntityCreator().getNextRecord(clazz);
                 Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
                 if (version == null) {
                     throw new ResponseContextException("Version is null", 400);
@@ -109,7 +103,7 @@ public class HttpMethodHelper {
 
     @Transactional
     public ResponseContext putEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
-        User user = authenticationManager.getCurrentUser(request);
+        User user = getAuthenticationManager().getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
@@ -128,7 +122,7 @@ public class HttpMethodHelper {
                         if (version == null) {
                             throw new ResponseContextException("Version is null", 400);
                         } else {
-                            if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
+                            if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
                                 EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                                 try {
                                 	Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
@@ -174,7 +168,7 @@ public class HttpMethodHelper {
      * @throws ResponseContextException
      */
     public ResponseContext postMedia(RequestContext request, Class<?> clazz) throws ResponseContextException {
-        User user = authenticationManager.getCurrentUser(request);
+        User user = getAuthenticationManager().getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
@@ -190,8 +184,8 @@ public class HttpMethodHelper {
      * @return
      * @throws ResponseContextException
      */
-    public static ResponseContext putMedia(RequestContext request, Class<?> clazz) throws ResponseContextException {
-        User user = authenticationManager.getCurrentUser(request);
+    public ResponseContext putMedia(RequestContext request, Class<?> clazz) throws ResponseContextException {
+        User user = getAuthenticationManager().getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
@@ -200,7 +194,7 @@ public class HttpMethodHelper {
     }
 
     public ResponseContext deleteEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
-        User user = authenticationManager.getCurrentUser(request);
+        User user = getAuthenticationManager().getCurrentUser(request);
         if (user == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         } else {
@@ -211,7 +205,7 @@ public class HttpMethodHelper {
             } else {
                 refreshRecord(record, clazz);
                 if (record.isActive()) {
-                    if (authorizationManager.getAccessLevelForInstance(user, record).canDelete()) {
+                    if (getAuthorizationManager().getAccessLevelForInstance(user, record).canDelete()) {
                         deleteRecord(uriKey, clazz);
                         return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
                     } else {
@@ -233,10 +227,10 @@ public class HttpMethodHelper {
             refreshRecord(record, clazz);
             if (record.isActive()) {
                 String versionKey = OperationHelper.getEntryVersionID(request);
-                User user = authenticationManager.getCurrentUser(request);
+                User user = getAuthenticationManager().getCurrentUser(request);
                 Version version;
                 if (versionKey != null) {
-                    if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate()) {
+                    if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
                         if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
                             Feed versionHistoryFeed = FeedOutputHelper.createVersionFeed(request);
                             ResponseContext versionHistoryFeed1 = FeedOutputHelper.getVersionHistoryFeed(request, versionHistoryFeed, record, clazz);
@@ -248,7 +242,7 @@ public class HttpMethodHelper {
                         throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
                     }
                 } else {
-                    if (authorizationManager.getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
+                    if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
 //                        Feed versionHistoryFeed = FeedOutputHelper.createVersionFeed(request);
 //                        return FeedOutputHelper.getVersionHistoryFeed(versionHistoryFeed, record);
                         version = record.getWorkingCopy();
@@ -268,7 +262,7 @@ public class HttpMethodHelper {
         }
     }
 
-    public static ResponseContext getFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) throws ResponseContextException {
+    public ResponseContext getFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) throws ResponseContextException {
         String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
@@ -334,9 +328,9 @@ public class HttpMethodHelper {
     }
 
     public Iterable getRecords(RequestContext request, Class<?> clazz) {
-        User user = authenticationManager.getCurrentUser(request);
+        User user = getAuthenticationManager().getCurrentUser(request);
         List list;
-        if (authorizationManager.canAccessWorkingCopy(user, Collection.class)) {
+        if (getAuthorizationManager().canAccessWorkingCopy(user, Collection.class)) {
             if (clazz.equals(Activity.class)) {
                 list = activityDao.getAllPublished();
                 list.addAll(activityDao.getAllUnpublished());
@@ -366,27 +360,6 @@ public class HttpMethodHelper {
             }
         }
         return list;
-    }
-
-    public List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
-        List<Person> personList = new ArrayList<Person>();
-        if (record instanceof Collection) {
-        	Version version = (Version) record.getPublished();
-        	// If no published collection, then return empty
-        	if (version == null)
-        		return personList;
-            Set<Agent> authors = ((CollectionVersion) record.getPublished()).getCreators();
-            for (Agent author : authors) {
-                Person person = request.getAbdera().getFactory().newAuthor();
-                person.setName(author.getTitle());
-                if (author.getMBoxes().size() > 0) {
-                	person.setEmail(author.getMBoxes().iterator().next());
-                }
-                person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
-                personList.add(person);
-            }
-        }
-        return personList;
     }
 
     private Record getExistingRecord(String uriKey, Class<?> clazz) {
@@ -497,5 +470,55 @@ public class HttpMethodHelper {
         }
         return null;
     }
+
+	public CollectionDao getCollectionDao() {
+		return collectionDao;
+	}
+
+	public void setCollectionDao(CollectionDao collectionDao) {
+		this.collectionDao = collectionDao;
+	}
+
+	public AgentDao getAgentDao() {
+		return agentDao;
+	}
+
+	public void setAgentDao(AgentDao agentDao) {
+		this.agentDao = agentDao;
+	}
+
+	public ActivityDao getActivityDao() {
+		return activityDao;
+	}
+
+	public void setActivityDao(ActivityDao activityDao) {
+		this.activityDao = activityDao;
+	}
+
+	public ServiceDao getServiceDao() {
+		return serviceDao;
+	}
+
+	public void setServiceDao(ServiceDao serviceDao) {
+		this.serviceDao = serviceDao;
+	}
+
+	public EntityCreator getEntityCreator() {
+		if (entityCreator == null)
+			entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
+		return entityCreator;
+	}
+
+	public AuthorizationManager<User> getAuthorizationManager() {
+		if (authorizationManager == null)
+			authorizationManager = RegistryApplication.getApplicationContext().getAuthorizationManager();
+		return authorizationManager;
+	}
+
+	public AuthenticationManager getAuthenticationManager() {
+		if (authenticationManager == null)
+			authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
+		return authenticationManager;
+	}
 
 }
