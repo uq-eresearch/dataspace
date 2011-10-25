@@ -40,7 +40,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
-public class SolrTest {
+public class SolrIT {
 
 	private static final String SOLR_CONFIG_DIR = "target/solr-config/WEB-INF/classes/";
 

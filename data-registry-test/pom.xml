@@ -1,242 +1,231 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-=== POM for testing a war file coming out of a separate build. ===
-
-Basic idea:
-- run Surefire plugin for tests, but in the integration-test phase
-- use Cargo to start an embedded Servlet engine before the integration-tests, shut it down afterwards
-- use tests written with JWebUnit with the HtmlUnit backend to do the actual testing work
-
-This configuration can be run with "mvn integration-test".
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>net.metadata.dataspace</groupId>
-    <artifactId>data-registry-test</artifactId>
-    <name>Data Collections Registry Test Suite</name>
-    <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <description>A set of functional tests for the Data Collections Registry web application</description>
-    <developers>
-        <developer>
-            <id>abdul.alabri</id>
-            <name>Abdul Alabri</name>
-            <email>a.alabri@uq.edu.au</email>
-            <url>http://archive.itee.uq.edu.au/~alabri/</url>
-            <organization>School of ITEE, University of Queensland</organization>
-            <organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
-            <roles>
-                <role>Developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>nigel.ward</id>
-            <name>Nigel Ward</name>
-            <email>n.ward4@uq.edu.au</email>
-            <url>http://www.itee.uq.edu.au/~uqnward/</url>
-            <organization>School of IT and EE, University of Queensland
+<!-- === POM for testing a war file coming out of a separate build. === Basic
+	idea: - run Surefire plugin for tests, but in the integration-test phase
+	- use Cargo to start an embedded Servlet engine before the integration-tests,
+	shut it down afterwards - use tests written with JWebUnit with the HtmlUnit
+	backend to do the actual testing work This configuration can be run with
+	"mvn integration-test". -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.metadata.dataspace</groupId>
+	<artifactId>data-registry-test</artifactId>
+	<name>Data Collections Registry Test Suite</name>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<description>A set of functional tests for the Data Collections Registry web application</description>
+	<developers>
+		<developer>
+			<id>abdul.alabri</id>
+			<name>Abdul Alabri</name>
+			<email>a.alabri@uq.edu.au</email>
+			<url>http://archive.itee.uq.edu.au/~alabri/</url>
+			<organization>School of ITEE, University of Queensland</organization>
+			<organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>nigel.ward</id>
+			<name>Nigel Ward</name>
+			<email>n.ward4@uq.edu.au</email>
+			<url>http://www.itee.uq.edu.au/~uqnward/</url>
+			<organization>School of IT and EE, University of Queensland
             </organization>
-            <organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
-            <roles>
-                <role>Project Manager</role>
-            </roles>
-        </developer>
-    </developers>
-    <organization>
-        <name>eResearch, ITEE, UQ</name>
-        <url>http://www.itee.uq.edu.au/~eresearch</url>
-    </organization>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${basedir}/local</directory>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
+			<organizationUrl>http://www.itee.uq.edu.au</organizationUrl>
+			<roles>
+				<role>Project Manager</role>
+			</roles>
+		</developer>
+	</developers>
+	<organization>
+		<name>eResearch, ITEE, UQ</name>
+		<url>http://www.itee.uq.edu.au/~eresearch</url>
+	</organization>
+	<build>
+		<plugins>
 			<plugin>
-                <!-- The Cargo plugin manages the Servlet engine -->
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
-                <version>1.1.2</version>
-                <executions>
-                    <!-- start engine before tests -->
-                    <execution>
-                        <id>start-container</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <!--  stop engine after tests -->
-                    <execution>
-                        <id>stop-container</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- we use a Jetty 7 -->
-                    <container>
-                        <containerId>jetty7x</containerId>
-                        <type>embedded</type>
-                        <!--Override the persistence unit-->
-                        <systemProperties>
-                            <data.registry.persistenceUnitName>test</data.registry.persistenceUnitName>
-                            <data.registry.uri.prefix>http://localhost:9635/</data.registry.uri.prefix>
-                        </systemProperties>
-                    </container>
-                    <!-- the actual configuration for the webapp -->
-                    <configuration>
-                        <!-- pick some port likely to be free, it has be matched in the test definitions -->
-                        <properties>
-                            <cargo.servlet.port>9635</cargo.servlet.port>
-                        </properties>
-                        <!-- what to deploy and how (grabbed from dependencies below) -->
-                        <deployables>
-                            <deployable>
-                                <groupId>net.metadata.dataspace</groupId>
-                                <artifactId>data-collections-registry</artifactId>
-                                <type>war</type>
-                                <properties>
-                                    <context>/</context>
-                                </properties>
-                            </deployable>
-                        </deployables>
-                    </configuration>
-                </configuration>
-            </plugin>
-            <plugin>
-            	<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}/local</directory>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- The Cargo plugin manages the Servlet engine -->
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<version>1.1.2</version>
+				<executions>
+					<!-- start engine before tests -->
+					<execution>
+						<id>start-container</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<!-- stop engine after tests -->
+					<execution>
+						<id>stop-container</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- we use a Jetty 7 -->
+					<container>
+						<containerId>jetty7x</containerId>
+						<type>embedded</type>
+						<!--Override the persistence unit -->
+						<systemProperties>
+							<data.registry.persistenceUnitName>test</data.registry.persistenceUnitName>
+							<data.registry.uri.prefix>http://localhost:9635/</data.registry.uri.prefix>
+						</systemProperties>
+					</container>
+					<!-- the actual configuration for the webapp -->
+					<configuration>
+						<!-- pick some port likely to be free, it has be matched in the test
+							definitions -->
+						<properties>
+							<cargo.servlet.port>9635</cargo.servlet.port>
+						</properties>
+						<!-- what to deploy and how (grabbed from dependencies below) -->
+						<deployables>
+							<deployable>
+								<groupId>net.metadata.dataspace</groupId>
+								<artifactId>data-collections-registry</artifactId>
+								<type>war</type>
+								<properties>
+									<context>/</context>
+								</properties>
+							</deployable>
+						</deployables>
+					</configuration>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
 				<executions>
 					<execution>
 						<phase>test</phase>
-                        <goals>
-                            <goal>exploded</goal>
-                        </goals>
+						<goals>
+							<goal>exploded</goal>
+						</goals>
 						<configuration>
 							<overlays>
 								<overlay>
-						            <groupId>net.metadata.dataspace</groupId>
-            						<artifactId>data-collections-registry</artifactId>
+									<groupId>net.metadata.dataspace</groupId>
+									<artifactId>data-collections-registry</artifactId>
 								</overlay>
 							</overlays>
 							<webappDirectory>${project.build.directory}/solr-config</webappDirectory>
 						</configuration>
 					</execution>
 				</executions>
-            </plugin>
-            <plugin>
-                <!-- configure the Surefire plugin to run integration tests instead of the
-                     running in the normal test phase of the lifecycle -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-    <dependencies>
-        <!-- we use the HTML unit variant of JWebUnit for testing -->
-        <dependency>
-            <groupId>net.sourceforge.jwebunit</groupId>
-            <artifactId>jwebunit-htmlunit-plugin</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.htmlunit</groupId>
-                    <artifactId>htmlunit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-                <exclusion>
-                	<artifactId>slf4j-api</artifactId>
-                	<groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                	<artifactId>slf4j-log4j12</artifactId>
-                	<groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- we depend on our own app, so the deployment setup above can find it -->
-        <dependency>
-            <groupId>net.metadata.dataspace</groupId>
-            <artifactId>data-collections-registry</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-           	<groupId>org.slf4j</groupId>
-           	<artifactId>slf4j-api</artifactId>
-            <version>1.6.3</version>
-        </dependency>
-        <dependency>
-           	<groupId>org.slf4j</groupId>
-           	<artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.3</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <version>2.9</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-            <version>2.5.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>3.0.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-		    <groupId>commons-httpclient</groupId>
-		    <artifactId>commons-httpclient</artifactId>
-		    <version>3.1</version>
-            <scope>test</scope>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<!-- we use the HTML unit variant of JWebUnit for testing -->
+		<dependency>
+			<groupId>net.sourceforge.jwebunit</groupId>
+			<artifactId>jwebunit-htmlunit-plugin</artifactId>
+			<version>2.2</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>net.sourceforge.htmlunit</groupId>
+					<artifactId>htmlunit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-    </dependencies>
+		<!-- we depend on our own app, so the deployment setup above can find it -->
+		<dependency>
+			<groupId>net.metadata.dataspace</groupId>
+			<artifactId>data-collections-registry</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.3</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.htmlunit</groupId>
+			<artifactId>htmlunit</artifactId>
+			<version>2.9</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring</artifactId>
+			<version>2.5.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.0.4.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

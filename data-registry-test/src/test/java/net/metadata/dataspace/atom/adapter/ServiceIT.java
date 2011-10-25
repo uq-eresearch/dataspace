@@ -1,6 +1,5 @@
 package net.metadata.dataspace.atom.adapter;
 
-
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.atom.util.ClientHelper;
 import net.metadata.dataspace.atom.util.XPathHelper;
@@ -27,21 +26,22 @@ import static junit.framework.Assert.*;
 /**
  * Author: alabri
  * Date: 05/11/2010
- * Time: 3:08:31 PM
+ * Time: 5:32:54 PM
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
-public class ActivityTest {
+public class ServiceIT {
 
-    public void testActivityCRUD() throws Exception {
+    @Test
+    public void testServiceCRUD() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-activity.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
+        String fileName = "/files/post/new-service.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
         //Get entry
@@ -51,7 +51,7 @@ public class ActivityTest {
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/1", Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get first version of entry after post", 200, getMethod.getStatusCode());
         //Edit Entry
-        fileName = "/files/put/update-activity.xml";
+        fileName = "/files/put/update-service.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not edit entry", 200, putMethod.getStatusCode());
         //get second version
@@ -59,7 +59,7 @@ public class ActivityTest {
         assertEquals("Could not get second version of entry after edit", 200, getMethod.getStatusCode());
         //Get version history
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/version-history", Constants.ATOM_ENTRY_MIMETYPE);
-        assertEquals("Could not get version history", 200, getMethod.getStatusCode());
+        assertEquals("Could not get working copy after post", 200, getMethod.getStatusCode());
         //Delete Entry
         DeleteMethod deleteMethod = ClientHelper.deleteEntry(client, newEntryLocation);
         assertEquals("Could not delete entry", 200, deleteMethod.getStatusCode());
@@ -69,13 +69,13 @@ public class ActivityTest {
     }
 
     @Test
-    public void testActivityUnauthorized() throws Exception {
+    public void testServiceUnauthorized() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
 
         //post without authentication
-        String fileName = "/files/post/new-activity.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
+        String fileName = "/files/post/new-service.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
         assertEquals("Posting without authenticating, Wrong status code", 401, postMethod.getStatusCode());
 
         //login
@@ -83,7 +83,7 @@ public class ActivityTest {
         assertEquals("Could not authenticate", 200, status);
 
         //post with authentication
-        postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
+        postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
@@ -108,7 +108,7 @@ public class ActivityTest {
         assertEquals("Get version history without authenticating, Wrong status code", 401, getMethod.getStatusCode());
 
         //Edit without authenticating
-        fileName = "/files/put/update-activity.xml";
+        fileName = "/files/put/update-service.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Editing without authenticating, Wrong status code", 401, putMethod.getStatusCode());
 
@@ -118,20 +118,20 @@ public class ActivityTest {
     }
 
     @Test
-    public void testActivityPublishing() throws Exception {
+    public void testServicePublishing() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-activity.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
+        String fileName = "/files/post/new-service.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
         //publish entry
-        fileName = "/files/put/published-activity.xml";
+        fileName = "/files/put/published-service.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
 
@@ -145,20 +145,20 @@ public class ActivityTest {
     }
 
     @Test
-    public void testActivityFeed() throws Exception {
+    public void testServiceFeed() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-activity.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
+        String fileName = "/files/post/new-service.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
         //publish entry
-        fileName = "/files/put/published-activity.xml";
+        fileName = "/files/put/published-service.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
 
@@ -166,120 +166,114 @@ public class ActivityTest {
         status = ClientHelper.logout(client);
         assertEquals("Could not logout", 200, status);
 
-        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_ACTIVITIES;
+        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_SERVICES;
         //get without authenticating
         GetMethod getMethod = ClientHelper.getEntry(client, feedUrl, Constants.ATOM_FEED_MIMETYPE);
         assertEquals("Could not get feed", 200, getMethod.getStatusCode());
-
     }
 
-    	@Test
-        public void testActivityRecordContent() throws Exception {
-
-            //create a client
-            HttpClient client = new HttpClient();
-            //authenticate
-            int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
-            assertEquals("Could not authenticate", 200, status);
-            //Post Entry
-            String fileName = "/files/post/new-activity.xml";
-            PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
-            assertEquals("Could not post entry", 201, postMethod.getStatusCode());
-            String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
-
-            XPath xpath = XPathHelper.getXPath();
-            InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
-            Document docFromStream = XPathHelper.getDocFromStream(responseBodyAsStream);
-            Document docFromFile = XPathHelper.getDocFromFile(fileName);
-
-            String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
-            assertNotNull("Entry missing id", id);
-            String originalId = xpath.evaluate(Constants.RECORD_ID_PATH, docFromFile);
-            assertNotNull("Original Entry missing title", originalId);
-            assertEquals("Entry's title is incorrect", originalId, id);
-
-            String relDescribes = xpath.evaluate(Constants.RECORD_REL_DESCRIBES_PATH, docFromStream);
-            assertNotNull("Entry missing \"describes\" relation", relDescribes);
-            assertTrue("Entry's \"describes\" relation does not contain path to entry: "+relDescribes, relDescribes.contains(Constants.PATH_FOR_ACTIVITIES));
-
-            String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromStream);
-            assertNotNull("Entry missing title", title);
-            String originalTitle = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromFile);
-            assertNotNull("Original Entry missing title", originalTitle);
-            assertEquals("Entry's title is incorrect", originalTitle, title);
-
-            String content = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromStream);
-            assertNotNull("Entry missing content", content);
-            String originalContent = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromFile);
-            assertNotNull("Original Entry missing content", originalContent);
-            assertEquals("Entry's content is incorrect", originalContent, content);
-
-            String updated = xpath.evaluate(Constants.RECORD_UPDATED_PATH, docFromStream);
-            assertNotNull("Entry missing updated", updated);
-
-            String authorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromStream);
-            assertNotNull("Entry missing author name", authorName);
-            String originalAuthorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromFile);
-            assertNotNull("Original Entry missing author name", originalAuthorName);
-            assertEquals("Entry's author name is incorrect", originalAuthorName, authorName);
-
-            String draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
-            assertNotNull("Entry missing draft element", draft);
-            assertEquals("Entry's should be draft", "yes", draft);
-
-            //publish entry
-            fileName = "/files/put/published-activity.xml";
-            PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
-            assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
-            docFromStream = XPathHelper.getDocFromStream(putMethod.getResponseBodyAsStream());
-
-            draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
-            assertNotNull("Entry missing draft element", draft);
-            assertEquals("Entry's should be published", "no", draft);
-
-            Element selfLink = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@rel='self']", docFromStream, XPathConstants.NODE);
-            assertNotNull("Entry missing self link", selfLink);
-            String entryLocation = selfLink.getAttribute("href");
-
-            Element xhtmlLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
-            assertNotNull("Entry missing xhtml link", xhtmlLinkElement);
-            String xhtmlLink = xhtmlLinkElement.getAttribute("href");
-            String expectedXhtmlLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
-            assertEquals(expectedXhtmlLink, xhtmlLink);
-
-            Element rdfLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_RDF + "']", docFromStream, XPathConstants.NODE);
-            assertNotNull("Entry missing rdf link", rdfLinkElement);
-            String rdfLink = rdfLinkElement.getAttribute("href");
-            String expectedRdfLink = entryLocation + "?repr=" + Constants.MIME_TYPE_RDF;
-            assertEquals(expectedRdfLink, rdfLink);
-
-            Element rifcsLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
-            assertNotNull("Entry missing rifcs link", rifcsLinkElement);
-            String rifcsLink = rifcsLinkElement.getAttribute("href");
-            String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
-            assertEquals(expectedRifcsLink, rifcsLink);
-
-        }
-
     @Test
-    public void testActivityFeedContent() throws Exception {
+    public void testServiceRecordContent() throws Exception {
+
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-activity.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_ACTIVITIES);
+        String fileName = "/files/post/new-service.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
+        assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+        String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
+
+        XPath xpath = XPathHelper.getXPath();
+        InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
+        Document docFromStream = XPathHelper.getDocFromStream(responseBodyAsStream);
+        Document docFromFile = XPathHelper.getDocFromFile(fileName);
+
+        String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
+        assertNotNull("Entry missing id", id);
+        assertTrue("Entry's id does not contain path to entry", id.contains(Constants.PATH_FOR_SERVICES));
+
+        String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromStream);
+        assertNotNull("Entry missing title", title);
+        String originalTitle = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromFile);
+        assertNotNull("Original Entry missing title", originalTitle);
+        assertEquals("Entry's title is incorrect", originalTitle, title);
+
+        String content = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromStream);
+        assertNotNull("Entry missing content", content);
+        String originalContent = xpath.evaluate(Constants.RECORD_CONTENT_PATH, docFromFile);
+        assertNotNull("Original Entry missing content", originalContent);
+        assertEquals("Entry's content is incorrect", originalContent, content);
+
+        String updated = xpath.evaluate(Constants.RECORD_UPDATED_PATH, docFromStream);
+        assertNotNull("Entry missing updated", updated);
+
+        // TODO: Disabled until business rule for author/source author relationship is provided by Nigel
+//        String authorName = xpath.evaluate(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH, docFromStream);
+//        assertNotNull("Entry missing author name", authorName);
+//        String originalAuthorName = xpath.evaluate(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH, docFromFile);
+//        assertNotNull("Original Entry missing author name", originalAuthorName);
+//        assertEquals("Entry's author name is incorrect", originalAuthorName, authorName);
+
+        String draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
+        assertNotNull("Entry missing draft element", draft);
+        assertEquals("Entry's should be draft", "yes", draft);
+
+        //publish entry
+        fileName = "/files/put/published-service.xml";
+        PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
+        assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
+        docFromStream = XPathHelper.getDocFromStream(putMethod.getResponseBodyAsStream());
+
+        draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
+        assertNotNull("Entry missing draft element", draft);
+        assertEquals("Entry's should be published", "no", draft);
+
+        Element selfLink = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@rel='self']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing self link", selfLink);
+        String entryLocation = selfLink.getAttribute("href");
+
+        Element xhtmlLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing xhtml link", xhtmlLinkElement);
+        String xhtmlLink = xhtmlLinkElement.getAttribute("href");
+        String expectedXhtmlLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
+        assertEquals(expectedXhtmlLink, xhtmlLink);
+
+        Element rdfLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_RDF + "']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing rdf link", rdfLinkElement);
+        String rdfLink = rdfLinkElement.getAttribute("href");
+        String expectedRdfLink = entryLocation + "?repr=" + Constants.MIME_TYPE_RDF;
+        assertEquals(expectedRdfLink, rdfLink);
+
+        Element rifcsLinkElement = (Element) xpath.evaluate(Constants.RECORD_LINK_PATH + "[@type='" + Constants.MIME_TYPE_XHTML + "']", docFromStream, XPathConstants.NODE);
+        assertNotNull("Entry missing rifcs link", rifcsLinkElement);
+        String rifcsLink = rifcsLinkElement.getAttribute("href");
+        String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
+        assertEquals(expectedRifcsLink, rifcsLink);
+
+    }
+
+    @Test
+    public void testServiceFeedContent() throws Exception {
+        //create a client
+        HttpClient client = new HttpClient();
+        //authenticate
+        int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
+        assertEquals("Could not authenticate", 200, status);
+        //Post Entry
+        String fileName = "/files/post/new-service.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
         //publish entry
-        fileName = "/files/put/published-activity.xml";
+        fileName = "/files/put/published-service.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
 
-        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_ACTIVITIES;
+        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_SERVICES;
         //get without authenticating
         GetMethod getMethod = ClientHelper.getEntry(client, feedUrl, Constants.ATOM_FEED_MIMETYPE);
         assertEquals("Could not get feed", 200, getMethod.getStatusCode());
@@ -290,11 +284,11 @@ public class ActivityTest {
 
         String id = xpath.evaluate(Constants.FEED_ID_PATH, docFromStream);
         assertNotNull("Feed missing id", id);
-        assertTrue("Feed's id does not contain path to entry", id.contains(Constants.PATH_FOR_ACTIVITIES));
+        assertTrue("Feed's id does not contain path to entry", id.contains(Constants.PATH_FOR_SERVICES));
 
         String title = xpath.evaluate(Constants.FEED_TITLE_PATH, docFromStream);
         assertNotNull("Feed missing title", title);
-        assertEquals("Feed's title is incorrect", Constants.TITLE_FOR_ACTIVITIES, title);
+        assertEquals("Feed's title is incorrect", Constants.TITLE_FOR_SERVICES, title);
 
         String updated = xpath.evaluate(Constants.FEED_UPDATED_PATH, docFromStream);
         assertNotNull("Feed missing updated", updated);
@@ -319,7 +313,7 @@ public class ActivityTest {
 
         String entryId = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_ID_PATH, entry);
         assertNotNull("Feed entry missing id", entryId);
-        assertTrue("Feed entry's id does not contain path to entry", entryId.contains(Constants.PATH_FOR_ACTIVITIES));
+        assertTrue("Feed entry's id does not contain path to entry", entryId.contains(Constants.PATH_FOR_SERVICES));
 
         String entryTitle = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_TITLE_PATH, entry);
         assertNotNull("Feed entry missing title", entryTitle);
@@ -338,6 +332,5 @@ public class ActivityTest {
         assertFalse("Feed entry draft is empty", entryContent.isEmpty());
 
     }
-
-
 }
+

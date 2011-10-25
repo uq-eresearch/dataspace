@@ -26,22 +26,22 @@ import static junit.framework.Assert.*;
 /**
  * Author: alabri
  * Date: 05/11/2010
- * Time: 5:32:54 PM
+ * Time: 5:32:34 PM
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
-public class ServiceTest {
+public class AgentIT {
 
     @Test
-    public void testServiceCRUD() throws Exception {
+    public void testAgentCRUD() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-service.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
         //Get entry
@@ -51,7 +51,7 @@ public class ServiceTest {
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/1", Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get first version of entry after post", 200, getMethod.getStatusCode());
         //Edit Entry
-        fileName = "/files/put/update-service.xml";
+        fileName = "/files/put/update-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not edit entry", 200, putMethod.getStatusCode());
         //get second version
@@ -59,7 +59,7 @@ public class ServiceTest {
         assertEquals("Could not get second version of entry after edit", 200, getMethod.getStatusCode());
         //Get version history
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/version-history", Constants.ATOM_ENTRY_MIMETYPE);
-        assertEquals("Could not get working copy after post", 200, getMethod.getStatusCode());
+        assertEquals("Could not version history", 200, getMethod.getStatusCode());
         //Delete Entry
         DeleteMethod deleteMethod = ClientHelper.deleteEntry(client, newEntryLocation);
         assertEquals("Could not delete entry", 200, deleteMethod.getStatusCode());
@@ -69,13 +69,13 @@ public class ServiceTest {
     }
 
     @Test
-    public void testServiceUnauthorized() throws Exception {
+    public void testAgentUnauthorized() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
 
         //post without authentication
-        String fileName = "/files/post/new-service.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Posting without authenticating, Wrong status code", 401, postMethod.getStatusCode());
 
         //login
@@ -83,7 +83,7 @@ public class ServiceTest {
         assertEquals("Could not authenticate", 200, status);
 
         //post with authentication
-        postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
+        postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
@@ -108,7 +108,7 @@ public class ServiceTest {
         assertEquals("Get version history without authenticating, Wrong status code", 401, getMethod.getStatusCode());
 
         //Edit without authenticating
-        fileName = "/files/put/update-service.xml";
+        fileName = "/files/put/update-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Editing without authenticating, Wrong status code", 401, putMethod.getStatusCode());
 
@@ -118,20 +118,20 @@ public class ServiceTest {
     }
 
     @Test
-    public void testServicePublishing() throws Exception {
+    public void testAgentPublishing() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-service.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
         //publish entry
-        fileName = "/files/put/published-service.xml";
+        fileName = "/files/put/published-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
 
@@ -145,20 +145,20 @@ public class ServiceTest {
     }
 
     @Test
-    public void testServiceFeed() throws Exception {
+    public void testAgentFeed() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-service.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
         //publish entry
-        fileName = "/files/put/published-service.xml";
+        fileName = "/files/put/published-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
 
@@ -166,14 +166,15 @@ public class ServiceTest {
         status = ClientHelper.logout(client);
         assertEquals("Could not logout", 200, status);
 
-        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_SERVICES;
+        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_AGENTS;
         //get without authenticating
         GetMethod getMethod = ClientHelper.getEntry(client, feedUrl, Constants.ATOM_FEED_MIMETYPE);
         assertEquals("Could not get feed", 200, getMethod.getStatusCode());
     }
 
+
     @Test
-    public void testServiceRecordContent() throws Exception {
+    public void testAgentRecordContent() throws Exception {
 
         //create a client
         HttpClient client = new HttpClient();
@@ -181,8 +182,8 @@ public class ServiceTest {
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-service.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
@@ -193,7 +194,13 @@ public class ServiceTest {
 
         String id = xpath.evaluate(Constants.RECORD_ID_PATH, docFromStream);
         assertNotNull("Entry missing id", id);
-        assertTrue("Entry's id does not contain path to entry", id.contains(Constants.PATH_FOR_SERVICES));
+        String originalId = xpath.evaluate(Constants.RECORD_ID_PATH, docFromFile);
+        assertNotNull("Original Entry missing title", originalId);
+        assertEquals("Entry's title is incorrect", originalId, id);
+
+        String relDescribes = xpath.evaluate(Constants.RECORD_REL_DESCRIBES_PATH, docFromStream);
+        assertNotNull("Entry missing \"describes\" relation", relDescribes);
+        assertTrue("Entry's \"describes\" relation does not contain path to entry: "+relDescribes, relDescribes.contains(Constants.PATH_FOR_AGENTS));
 
         String title = xpath.evaluate(Constants.RECORD_TITLE_PATH, docFromStream);
         assertNotNull("Entry missing title", title);
@@ -210,19 +217,19 @@ public class ServiceTest {
         String updated = xpath.evaluate(Constants.RECORD_UPDATED_PATH, docFromStream);
         assertNotNull("Entry missing updated", updated);
 
-        // TODO: Disabled until business rule for author/source author relationship is provided by Nigel
-//        String authorName = xpath.evaluate(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH, docFromStream);
-//        assertNotNull("Entry missing author name", authorName);
-//        String originalAuthorName = xpath.evaluate(Constants.RECORD_SOURCE_AUTHOR_NAME_PATH, docFromFile);
-//        assertNotNull("Original Entry missing author name", originalAuthorName);
-//        assertEquals("Entry's author name is incorrect", originalAuthorName, authorName);
+        String authorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromStream);
+        assertNotNull("Entry missing author name", authorName);
+        String originalAuthorName = xpath.evaluate(Constants.RECORD_AUTHOR_NAME_PATH, docFromFile);
+        assertNotNull("Original Entry missing author name", originalAuthorName);
+        assertEquals("Entry's author name is incorrect", originalAuthorName, authorName);
 
         String draft = xpath.evaluate(Constants.RECORD_DRAFT_PATH, docFromStream);
         assertNotNull("Entry missing draft element", draft);
         assertEquals("Entry's should be draft", "yes", draft);
 
+
         //publish entry
-        fileName = "/files/put/published-service.xml";
+        fileName = "/files/put/published-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
         docFromStream = XPathHelper.getDocFromStream(putMethod.getResponseBodyAsStream());
@@ -252,28 +259,28 @@ public class ServiceTest {
         String rifcsLink = rifcsLinkElement.getAttribute("href");
         String expectedRifcsLink = entryLocation + "?repr=" + Constants.MIME_TYPE_XHTML;
         assertEquals(expectedRifcsLink, rifcsLink);
-
     }
 
+
     @Test
-    public void testServiceFeedContent() throws Exception {
+    public void testAgentFeedContent() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
         int status = ClientHelper.login(client, Constants.USERNAME, Constants.PASSWORD);
         assertEquals("Could not authenticate", 200, status);
         //Post Entry
-        String fileName = "/files/post/new-service.xml";
-        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_SERVICES);
+        String fileName = "/files/post/new-agent.xml";
+        PostMethod postMethod = ClientHelper.postEntry(client, fileName, Constants.PATH_FOR_AGENTS);
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
         //publish entry
-        fileName = "/files/put/published-service.xml";
+        fileName = "/files/put/published-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, Constants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not publish entry", 200, putMethod.getStatusCode());
 
-        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_SERVICES;
+        String feedUrl = Constants.URL_PREFIX + Constants.PATH_FOR_AGENTS;
         //get without authenticating
         GetMethod getMethod = ClientHelper.getEntry(client, feedUrl, Constants.ATOM_FEED_MIMETYPE);
         assertEquals("Could not get feed", 200, getMethod.getStatusCode());
@@ -284,11 +291,11 @@ public class ServiceTest {
 
         String id = xpath.evaluate(Constants.FEED_ID_PATH, docFromStream);
         assertNotNull("Feed missing id", id);
-        assertTrue("Feed's id does not contain path to entry", id.contains(Constants.PATH_FOR_SERVICES));
+        assertTrue("Feed's id does not contain path to entry", id.contains(Constants.PATH_FOR_AGENTS));
 
         String title = xpath.evaluate(Constants.FEED_TITLE_PATH, docFromStream);
         assertNotNull("Feed missing title", title);
-        assertEquals("Feed's title is incorrect", Constants.TITLE_FOR_SERVICES, title);
+        assertEquals("Feed's title is incorrect", Constants.TITLE_FOR_AGENTS, title);
 
         String updated = xpath.evaluate(Constants.FEED_UPDATED_PATH, docFromStream);
         assertNotNull("Feed missing updated", updated);
@@ -313,7 +320,7 @@ public class ServiceTest {
 
         String entryId = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_ID_PATH, entry);
         assertNotNull("Feed entry missing id", entryId);
-        assertTrue("Feed entry's id does not contain path to entry", entryId.contains(Constants.PATH_FOR_SERVICES));
+        assertTrue("Feed entry's id does not contain path to entry: "+entryId, entryId.contains(Constants.PATH_FOR_AGENTS));
 
         String entryTitle = xpath.evaluate(Constants.FEED_PATH + Constants.RECORD_TITLE_PATH, entry);
         assertNotNull("Feed entry missing title", entryTitle);
@@ -333,4 +340,3 @@ public class ServiceTest {
 
     }
 }
-

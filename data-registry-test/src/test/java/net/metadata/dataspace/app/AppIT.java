@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = Constants.TEST_CONTEXT)
-public class AppTest {
+public class AppIT {
 
 	@Test
     public void testPublicFrontPage() throws Exception {
