@@ -13,6 +13,9 @@
 		<property name="agentDao" ref="agentDao"/>
 		<property name="collectionDao" ref="collectionDao"/>
 		<property name="serviceDao" ref="serviceDao"/>
+        <property name="entityCreator" ref="entityCreator"/>
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authorizationManager" ref="authorizationManager"/>
 	</bean>
 
 	<bean id="activityAdapter" class="net.metadata.dataspace.atom.adapter.ActivityAdapter">

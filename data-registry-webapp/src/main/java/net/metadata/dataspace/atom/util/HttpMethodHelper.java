@@ -13,7 +13,6 @@ import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.*;
-import net.metadata.dataspace.data.model.version.CollectionVersion;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
@@ -25,15 +24,14 @@ import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.activation.MimeType;
 import javax.persistence.EntityManager;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Author: alabri
@@ -475,6 +473,7 @@ public class HttpMethodHelper {
 		return collectionDao;
 	}
 
+	@Required
 	public void setCollectionDao(CollectionDao collectionDao) {
 		this.collectionDao = collectionDao;
 	}
@@ -483,6 +482,7 @@ public class HttpMethodHelper {
 		return agentDao;
 	}
 
+	@Required
 	public void setAgentDao(AgentDao agentDao) {
 		this.agentDao = agentDao;
 	}
@@ -491,6 +491,7 @@ public class HttpMethodHelper {
 		return activityDao;
 	}
 
+	@Required
 	public void setActivityDao(ActivityDao activityDao) {
 		this.activityDao = activityDao;
 	}
@@ -499,26 +500,37 @@ public class HttpMethodHelper {
 		return serviceDao;
 	}
 
+	@Required
 	public void setServiceDao(ServiceDao serviceDao) {
 		this.serviceDao = serviceDao;
 	}
 
 	public EntityCreator getEntityCreator() {
-		if (entityCreator == null)
-			entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
 		return entityCreator;
 	}
 
 	public AuthorizationManager<User> getAuthorizationManager() {
-		if (authorizationManager == null)
-			authorizationManager = RegistryApplication.getApplicationContext().getAuthorizationManager();
 		return authorizationManager;
 	}
 
 	public AuthenticationManager getAuthenticationManager() {
-		if (authenticationManager == null)
-			authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
 		return authenticationManager;
+	}
+
+	@Required
+	public void setEntityCreator(EntityCreator entityCreator) {
+		this.entityCreator = entityCreator;
+	}
+
+	@Required
+	public void setAuthorizationManager(
+			AuthorizationManager<User> authorizationManager) {
+		this.authorizationManager = authorizationManager;
+	}
+
+	@Required
+	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
 	}
 
 }
