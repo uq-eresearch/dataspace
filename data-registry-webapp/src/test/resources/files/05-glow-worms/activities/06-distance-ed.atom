@@ -25,12 +25,12 @@
     <!--    participants -->
     <link
         rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
-        href="http://dataspace.uq.edu.au/agents/c"/>
+        href="http://dataspace.uq.edu.au/agents/6"/>
 
     <!--    created collections -->
     <link
         rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
-        href="http://dataspace.uq.edu.au/collections/d"
+        href="http://dataspace.uq.edu.au/collections/5"
         title="Glow-worm bioluminescence and associated weather data for a rainforest gully near Springbrook since April 2010"/>
 
     <!--    webpage about the activity -->

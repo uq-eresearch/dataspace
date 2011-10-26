@@ -59,6 +59,9 @@ The University of Queensland, Australia Zoo and the Queensland Parks and Wildlif
         <email>hamish.campbell@uq.edu.au</email>
     </author>
 
+    <!--    collection manager -->
+    <link rel="http://purl.org/dc/terms/publisher" href="http://dataspace.uq.edu.au/agents/3" title="Professor Craig Franklin"/>
+
     <!--     temporal coverage -->
     <rdfa:meta
         property="http://purl.org/dc/terms/temporal"

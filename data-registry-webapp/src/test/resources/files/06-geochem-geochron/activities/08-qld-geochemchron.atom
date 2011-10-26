@@ -25,12 +25,12 @@
     <!--    participants -->
     <link
         rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasParticipant"
-        href="http://dataspace.uq.edu.au/agents/9"/>
+        href="http://dataspace.uq.edu.au/agents/8"/>
 
     <!--    created collections -->
     <link
         rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
-        href="http://dataspace.uq.edu.au/collections/9"
+        href="http://dataspace.uq.edu.au/collections/6"
         title="Geological Survey of Queensland and University of Queensland, School of Earth Sciences Theses Geochemistry and Geochronology Databases"/>
 
     <!--    webpage about the activity -->

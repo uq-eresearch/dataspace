@@ -49,6 +49,10 @@
         <email>t.shyy@uq.edu.au</email>
     </author>
 
+    <!-- collection manager -->
+    <link rel="http://purl.org/dc/terms/publisher" href="http://dataspace.uq.edu.au/agents/5"
+          title="Professor Robert J (Bob) Stimson"/>
+
     <!--     temporal coverage -->
     <rdfa:meta
         property="http://purl.org/dc/terms/temporal"

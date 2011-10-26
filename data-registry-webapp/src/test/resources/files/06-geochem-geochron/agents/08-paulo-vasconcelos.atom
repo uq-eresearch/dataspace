@@ -31,7 +31,7 @@
         href="http://www.uq.edu.au/uqresearchers/researcher/vasconcelospmdp.html"/>
     
     <!--    curated data collections  -->
-    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf" href="http://dataspace.uq.edu.au/collections/9"/>
+    <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#isManagerOf" href="http://dataspace.uq.edu.au/collections/6"/>
     
     <!--     topics of interest -->
     <category
