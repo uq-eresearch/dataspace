@@ -2,13 +2,14 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
 
 /**
  * User: alabri
  * Date: 24/09/2010
  * Time: 11:38:59 AM
  */
-public class CollectionAdapter extends AbstractRecordAdapter<Collection> {
+public class CollectionAdapter extends AbstractRecordAdapter<Collection,CollectionVersion> {
 
 	@Override
 	protected Class<Collection> getRecordClass() {

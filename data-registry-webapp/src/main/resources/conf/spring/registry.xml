@@ -10,47 +10,36 @@
 
 	<bean id="feedOutputHelper" class="net.metadata.dataspace.atom.util.FeedOutputHelper"/>
 
-	<bean id="httpMethodHelper" class="net.metadata.dataspace.atom.util.HttpMethodHelper">
-		<property name="activityDao" ref="activityDao"/>
-		<property name="agentDao" ref="agentDao"/>
-		<property name="collectionDao" ref="collectionDao"/>
-		<property name="serviceDao" ref="serviceDao"/>
-        <property name="entityCreator" ref="entityCreator"/>
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authorizationManager" ref="authorizationManager"/>
-		<property name="feedOutputHelper" ref="feedOutputHelper"/>
-	</bean>
-
 	<bean id="activityAdapter" class="net.metadata.dataspace.atom.adapter.ActivityAdapter">
 		<property name="dao" ref="activityDao"/>
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
+        <property name="entityCreator" ref="entityCreator"/>
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
-		<property name="httpMethodHelper" ref="httpMethodHelper"/>
 	</bean>
 
 	<bean id="agentAdapter" class="net.metadata.dataspace.atom.adapter.AgentAdapter">
 		<property name="dao" ref="agentDao"/>
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
+        <property name="entityCreator" ref="entityCreator"/>
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
-		<property name="httpMethodHelper" ref="httpMethodHelper"/>
 	</bean>
 
 	<bean id="collectionAdapter" class="net.metadata.dataspace.atom.adapter.CollectionAdapter">
 		<property name="dao" ref="collectionDao"/>
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
+        <property name="entityCreator" ref="entityCreator"/>
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
-		<property name="httpMethodHelper" ref="httpMethodHelper"/>
 	</bean>
 
 	<bean id="serviceAdapter" class="net.metadata.dataspace.atom.adapter.ServiceAdapter">
 		<property name="dao" ref="serviceDao"/>
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
+        <property name="entityCreator" ref="entityCreator"/>
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
-		<property name="httpMethodHelper" ref="httpMethodHelper"/>
 	</bean>
 
 

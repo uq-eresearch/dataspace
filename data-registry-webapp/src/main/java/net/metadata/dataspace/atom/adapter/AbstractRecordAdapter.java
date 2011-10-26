@@ -1,29 +1,46 @@
 package net.metadata.dataspace.atom.adapter;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.activation.MimeType;
+import javax.persistence.EntityManager;
+
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.atom.util.AdapterInputHelper;
+import net.metadata.dataspace.atom.util.AdapterOutputHelper;
 import net.metadata.dataspace.atom.util.FeedOutputHelper;
-import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
+import net.metadata.dataspace.data.access.ActivityDao;
+import net.metadata.dataspace.data.access.AgentDao;
+import net.metadata.dataspace.data.access.CollectionDao;
+import net.metadata.dataspace.data.access.RecordDao;
 import net.metadata.dataspace.data.access.RegistryDao;
+import net.metadata.dataspace.data.access.ServiceDao;
+import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.record.User;
 
+import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
+import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Feed;
 import org.apache.abdera.model.Link;
 import org.apache.abdera.model.Person;
+import org.apache.abdera.parser.ParseException;
+import org.apache.abdera.parser.Parser;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
@@ -33,16 +50,16 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-public abstract class AbstractRecordAdapter<R extends Record<?>> extends
+public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Version<R>> extends
         AbstractEntityCollectionAdapter<R> {
 
     protected Logger logger = Logger.getLogger(getClass());
 
     private AuthenticationManager authenticationManager;
     private AuthorizationManager<User> authorizationManager;
-    private HttpMethodHelper httpMethodHelper;
+    private EntityCreator entityCreator;
     private FeedOutputHelper feedOutputHelper;
-    private RegistryDao<R> dao;
+    private RecordDao<R,V> dao;
 
     public AbstractRecordAdapter() {
         super();
@@ -52,7 +69,7 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
         R latestRecord = getDao().getMostRecentUpdated();
         if (latestRecord != null) {
-            getHttpMethodHelper().refreshRecord(latestRecord, getRecordClass());
+        	getDao().refresh(latestRecord);
             feed.setUpdated(latestRecord.getUpdated());
         } else {
             //TODO what would the date be if the feed is empty??
@@ -102,10 +119,39 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext deleteEntry(RequestContext request) {
         try {
-            return getHttpMethodHelper().deleteEntry(request, getRecordClass());
+            User user = getAuthenticationManager().getCurrentUser(request);
+            if (user == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+            } else {
+                String uriKey = OperationHelper.getEntryID(request);
+                R record = getExistingRecord(uriKey);
+                if (record == null) {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+                } else {
+                	getDao().refresh(record);
+                    if (record.isActive()) {
+                        if (getAuthorizationManager().getAccessLevelForInstance(user, record).canDelete()) {
+                            try {
+                                getDao().softDelete(uriKey);
+                            } catch (Throwable th) {
+                                throw new ResponseContextException(500, th);
+                            }
+                            return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
+                        } else {
+                            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+                        }
+                    } else {
+                        throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
+                    }
+                }
+            }
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
+    }
+
+    public R getExistingRecord(String uriKey) {
+        return getDao().getByKey(uriKey);
     }
 
     @Override
@@ -146,8 +192,12 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
         return content;
     }
 
-    public RegistryDao<R> getDao() {
+    public RecordDao<R,V> getDao() {
         return dao;
+    }
+
+    public EntityCreator getEntityCreator() {
+        return entityCreator;
     }
 
     @Override
@@ -159,7 +209,45 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
     @Transactional(readOnly=true)
     public ResponseContext getEntry(RequestContext request) {
         try {
-            return getHttpMethodHelper().getEntry(request, getRecordClass());
+            String uriKey = OperationHelper.getEntryID(request);
+            R record = getExistingRecord(uriKey);
+            if (record == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+            } else {
+                getDao().refresh(record);
+                if (record.isActive()) {
+                    String versionKey = OperationHelper.getEntryVersionID(request);
+                    User user = getAuthenticationManager().getCurrentUser(request);
+                    Version version;
+                    if (versionKey != null) {
+                        if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
+                            if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
+                                Feed versionHistoryFeed = getFeedOutputHelper().createVersionFeed(request);
+                                ResponseContext versionHistoryFeed1 = getFeedOutputHelper().getVersionHistoryFeed(request, versionHistoryFeed, record, getRecordClass());
+                                return versionHistoryFeed1;
+                            } else {
+                            	version = getDao().getByVersion(uriKey, versionKey);
+                            }
+                        } else {
+                            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+                        }
+                    } else {
+                        if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
+                            version = record.getWorkingCopy();
+                        } else {
+                            version = record.getPublished();
+                        }
+                    }
+                    if (version == null) {
+                        throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+                    } else {
+                        Entry entry = AdapterOutputHelper.getEntryFromEntity(version, versionKey == null);
+                        return AdapterOutputHelper.getContextResponseForGetEntry(request, entry, getRecordClass());
+                    }
+                } else {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
+                }
+            }
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
@@ -216,10 +304,6 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
         return feedOutputHelper;
     }
 
-    public HttpMethodHelper getHttpMethodHelper() {
-        return httpMethodHelper;
-    }
-
     @Override
     public String getId(R record) throws ResponseContextException {
         return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "/" + record.getUriKey();
@@ -272,7 +356,51 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ResponseContext postEntry(RequestContext request) {
         try {
-            return getHttpMethodHelper().postEntry(request, getRecordClass());
+            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+
+            User user = getAuthenticationManager().getCurrentUser(request);
+            if (user == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+            } else {
+                MimeType mimeType = request.getContentType();
+                String baseType = mimeType.getBaseType();
+                if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
+                    Entry entry = getEntryFromRequest(request);
+                    Record record = getEntityCreator().getNextRecord(getRecordClass());
+                    Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
+                    if (version == null) {
+                        throw new ResponseContextException("Version is null", 400);
+                    } else {
+                        try {
+                            Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
+                            if (source.getId() == null) {
+                                entityManager.persist(source);
+                            }
+                            version.setParent(record);
+                            Date now = new Date();
+                            version.setUpdated(now);
+                            List<Person> authors = entry.getSource().getAuthors();
+                            AdapterInputHelper.addDescriptionAuthors(version, authors, request);
+                            version.setSource(source);
+                            //TODO these values (i.e. rights, license) should come from the entry
+                            record.setLicense(Constants.UQ_REGISTRY_LICENSE);
+                            record.setRights(Constants.UQ_REGISTRY_RIGHTS);
+                            record.getVersions().add(version);
+                            record.setUpdated(now);
+                            entityManager.persist(version);
+                            entityManager.persist(record);
+                            AdapterInputHelper.addRelations(entry, version, user);
+                            Entry createdEntry = AdapterOutputHelper.getEntryFromEntity(version, true);
+                            return AdapterOutputHelper.getContextResponseForPost(createdEntry);
+                        } catch (Exception th) {
+                            logger.warn("Invalid Entry, Rolling back database", th);
+                            throw new ResponseContextException(th.getMessage(), 400);
+                        }
+                    }
+                } else {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+                }
+            }
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
@@ -310,9 +438,82 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext putEntry(RequestContext request) {
         try {
-            return getHttpMethodHelper().putEntry(request, getRecordClass());
+            User user = getAuthenticationManager().getCurrentUser(request);
+            if (user == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+            } else {
+                logger.info("Updating Entry");
+                String mimeBaseType = request.getContentType().getBaseType();
+                if (mimeBaseType.equals(Constants.MIME_TYPE_ATOM)) {
+                    Entry entry = getFomEntryFromRequest(request);
+                    String uriKey = OperationHelper.getEntryID(request);
+                    R record = getExistingRecord(uriKey);
+                    if (record == null) {
+                        throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+                    } else {
+                        getDao().refresh(record);
+                        if (record.isActive()) {
+                        	V version = (V) AdapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
+                            if (version == null) {
+                                throw new ResponseContextException("Version is null", 400);
+                            } else {
+                                if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
+                                    EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+                                    try {
+                                        Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
+                                        if (source.getId() == null) {
+                                            entityManager.persist(source);
+                                        }
+                                        record.getVersions().add(version);
+                                        version.setParent(record);
+                                        AdapterInputHelper.addRelations(entry, version, user);
+                                        record.setUpdated(new Date());
+                                        List<Person> authors = entry.getSource().getAuthors();
+                                        AdapterInputHelper.addDescriptionAuthors(version, authors, request);
+                                        version.setSource(source);
+                                        entityManager.persist(version);
+                                        entityManager.merge(record);
+                                        Entry updatedEntry = AdapterOutputHelper.getEntryFromEntity(version, false);
+                                        return AdapterOutputHelper.getContextResponseForPut(updatedEntry);
+                                    } catch (Exception th) {
+                                        logger.fatal("Invalid Entry, Rolling back database", th);
+
+                                        throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
+                                    }
+                                } else {
+                                    throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+                                }
+                            }
+                        } else {
+                            throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
+                        }
+                    }
+                } else {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+                }
+            }
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
+        }
+    }
+
+	/**
+     * Retrieves the FOM Entry object from the request payload.
+     */
+    private Entry getFomEntryFromRequest(RequestContext request) throws ResponseContextException {
+        Abdera abdera = request.getAbdera();
+        Parser parser = abdera.getParser();
+        Document<Entry> entry_doc;
+        try {
+            entry_doc = (Document<Entry>) request.getDocument(parser).clone();
+            if (entry_doc == null) {
+                return null;
+            }
+            return entry_doc.getRoot();
+        } catch (ParseException e) {
+            throw new ResponseContextException(400, e);
+        } catch (IOException e) {
+            throw new ResponseContextException(500, e);
         }
     }
 
@@ -343,18 +544,17 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
         this.authorizationManager = authorizationManager;
     }
 
-    public void setDao(RegistryDao<R> dao) {
+    public void setDao(RecordDao<R,V> dao) {
         this.dao = dao;
+    }
+
+    public void setEntityCreator(EntityCreator entityCreator) {
+        this.entityCreator = entityCreator;
     }
 
     @Required
     public void setFeedOutputHelper(FeedOutputHelper feedOutputHelper) {
         this.feedOutputHelper = feedOutputHelper;
-    }
-
-    @Required
-    public void setHttpMethodHelper(HttpMethodHelper httpMethodHelper) {
-        this.httpMethodHelper = httpMethodHelper;
     }
 
 }

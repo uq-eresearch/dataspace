@@ -2,6 +2,8 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.data.model.record.Service;
+import net.metadata.dataspace.data.model.version.ServiceVersion;
+
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -10,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Time: 3:22:53 PM
  */
 @Transactional
-public class ServiceAdapter extends AbstractRecordAdapter<Service> {
+public class ServiceAdapter extends AbstractRecordAdapter<Service,ServiceVersion> {
 
 	@Override
 	protected Class<Service> getRecordClass() {

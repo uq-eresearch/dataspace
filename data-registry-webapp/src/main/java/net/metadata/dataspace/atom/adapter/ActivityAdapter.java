@@ -2,6 +2,8 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.data.model.record.Activity;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
+
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -10,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Time: 3:24:08 PM
  */
 @Transactional
-public class ActivityAdapter extends AbstractRecordAdapter<Activity> {
+public class ActivityAdapter extends AbstractRecordAdapter<Activity,ActivityVersion> {
 
 	@Override
 	protected Class<Activity> getRecordClass() {
