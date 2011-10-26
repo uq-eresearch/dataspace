@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.FeedOutputHelper;
 import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.atom.util.OperationHelper;
@@ -14,7 +15,11 @@ import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.User;
 
+import org.apache.abdera.i18n.iri.IRI;
+import org.apache.abdera.model.Content;
+import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Feed;
+import org.apache.abdera.model.Link;
 import org.apache.abdera.model.Person;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
@@ -139,7 +144,9 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
     }
 
 	protected abstract Class<R> getRecordClass();
+	protected abstract String getLinkTerm();
 	protected abstract String getBasePath();
+	protected abstract String getTitle();
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
@@ -219,6 +226,87 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
     @Override
     public Date getUpdated(R record) throws ResponseContextException {
         return record.getUpdated();
+    }
+
+    @Override
+    public R getEntry(String key, RequestContext request) throws ResponseContextException {
+        R entry = getDao().getByKey(key);
+        if (entry != null) {
+            getDao().refresh(entry);
+        }
+        return entry;
+
+    }
+
+    @Override
+    public String[] getAccepts(RequestContext requestContext) {
+        return new String[]{Constants.MIME_TYPE_ATOM_ENTRY};
+    }
+
+    @Override
+    public R postEntry(String title, IRI id, String summary, Date updated, List<Person> authors, Content content, RequestContext requestContext) throws ResponseContextException {
+        logger.warn("Method not supported.");
+        return null;
+    }
+
+    @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        getDao().softDelete(key);
+    }
+
+    @Override
+    public Iterable<R> getEntries(RequestContext requestContext) throws ResponseContextException {
+        return getRecords(requestContext);
+    }
+
+    @Override
+    public Object getContent(R entry, RequestContext request) throws ResponseContextException {
+        Content content = request.getAbdera().getFactory().newContent(Content.Type.TEXT);
+        content.setText(entry.getContent());
+        return content;
+    }
+
+    @Override
+    public void putEntry(R entry, String title, Date updated, List<Person> authors, String summary, Content content, RequestContext request) throws ResponseContextException {
+        logger.warn("Method not supported.");
+    }
+
+	@Override
+	public String getAuthor(RequestContext requestContext) throws ResponseContextException {
+	    return RegistryApplication.getApplicationContext().getUriPrefix();
+	}
+
+	@Override
+	public String getId(RequestContext requestContext) {
+	    return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
+	}
+
+	@Override
+    public String getTitle(RequestContext request) {
+        return getTitle();
+    }
+
+    @Override
+    protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
+        getHttpMethodHelper().addFeedDetails(feed, request, getRecordClass());
+        Iterable<R> entries = getEntries(request);
+        if (entries == null) {
+        	return;
+        }
+        for (R entryObj : entries) {
+            Entry e = feed.addEntry();
+            IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
+            addEntryDetails(request, e, feedIri, entryObj);
+            getFeedOutputHelper().setPublished(entryObj, e);
+            if (isMediaEntry(entryObj)) {
+                addMediaContent(feedIri, e, entryObj, request);
+            } else {
+                addContent(e, entryObj, request);
+                Link typeLink = e.addLink(getLinkTerm(), Constants.REL_TYPE);
+                typeLink.setTitle(getTitle());
+            }
+        }
     }
 
 }

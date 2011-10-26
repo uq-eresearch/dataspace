@@ -162,6 +162,4 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
         this.publishDate = publishDate;
     }
 
-    public abstract String getTitle();
-
 }

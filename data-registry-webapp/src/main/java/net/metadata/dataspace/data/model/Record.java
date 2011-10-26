@@ -21,6 +21,13 @@ public interface Record<V extends Version<?>> {
     String getTitle();
 
     /**
+     * Get the current content (often the description) for this record
+     *
+     * @return Description string
+     */
+    String getContent();
+
+    /**
      * Gets a all versions of this record
      *
      * @return Sorted set (by updated) of versions
