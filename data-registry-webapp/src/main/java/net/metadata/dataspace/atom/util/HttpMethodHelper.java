@@ -49,6 +49,7 @@ public class HttpMethodHelper {
     private EntityCreator entityCreator;
     private AuthorizationManager<User> authorizationManager;
     private AuthenticationManager authenticationManager;
+    private FeedOutputHelper feedOutputHelper;
 
 	@Transactional
     public ResponseContext postEntry(RequestContext request, Class<? extends Record<?>> clazz) throws ResponseContextException {
@@ -230,8 +231,8 @@ public class HttpMethodHelper {
                 if (versionKey != null) {
                     if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
                         if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
-                            Feed versionHistoryFeed = FeedOutputHelper.createVersionFeed(request);
-                            ResponseContext versionHistoryFeed1 = FeedOutputHelper.getVersionHistoryFeed(request, versionHistoryFeed, record, clazz);
+                            Feed versionHistoryFeed = getFeedOutputHelper().createVersionFeed(request);
+                            ResponseContext versionHistoryFeed1 = getFeedOutputHelper().getVersionHistoryFeed(request, versionHistoryFeed, record, clazz);
                             return versionHistoryFeed1;
                         } else {
                             version = getVersion(uriKey, versionKey, clazz);
@@ -241,8 +242,8 @@ public class HttpMethodHelper {
                     }
                 } else {
                     if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
-//                        Feed versionHistoryFeed = FeedOutputHelper.createVersionFeed(request);
-//                        return FeedOutputHelper.getVersionHistoryFeed(versionHistoryFeed, record);
+//                        Feed versionHistoryFeed = getFeedOutputHelper().createVersionFeed(request);
+//                        return getFeedOutputHelper().getVersionHistoryFeed(versionHistoryFeed, record);
                         version = record.getWorkingCopy();
                     } else {
                         version = record.getPublished();
@@ -261,15 +262,15 @@ public class HttpMethodHelper {
     }
 
     public ResponseContext getFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) throws ResponseContextException {
-        String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
+        String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-                return FeedOutputHelper.getHtmlRepresentationOfFeed(request, responseContext, clazz);
+                return getFeedOutputHelper().getHtmlRepresentationOfFeed(request, responseContext, clazz);
             } else {
                 throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
             }
         } else {
-            return FeedOutputHelper.getHtmlRepresentationOfFeed(request, responseContext, clazz);
+            return getFeedOutputHelper().getHtmlRepresentationOfFeed(request, responseContext, clazz);
         }
     }
 
@@ -283,7 +284,7 @@ public class HttpMethodHelper {
             feed.setUpdated(new Date());
         }
 
-        String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
+        String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
         if (representationMimeType == null) {
             String acceptHeader = request.getAccept();
             if (acceptHeader != null && (acceptHeader.equals(Constants.MIME_TYPE_HTML) || acceptHeader.equals(Constants.MIME_TYPE_ATOM_FEED))) {
@@ -295,11 +296,11 @@ public class HttpMethodHelper {
         String atomFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getPath(clazz) + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
         String htmlFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getPath(clazz);
         if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-            FeedOutputHelper.prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
-            FeedOutputHelper.prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
+            getFeedOutputHelper().prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
+            getFeedOutputHelper().prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
         } else if (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) || representationMimeType.equals(Constants.MIME_TYPE_ATOM)) {
-            FeedOutputHelper.prepareFeedSelfLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
-            FeedOutputHelper.prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
+            getFeedOutputHelper().prepareFeedSelfLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
+            getFeedOutputHelper().prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
         }
         feed.setTitle(getTitle(clazz));
     }
@@ -323,41 +324,6 @@ public class HttpMethodHelper {
         } catch (IOException e) {
             throw new ResponseContextException(500, e);
         }
-    }
-
-    public Iterable getRecords(RequestContext request, Class<?> clazz) {
-        User user = getAuthenticationManager().getCurrentUser(request);
-        List list;
-        if (getAuthorizationManager().canAccessWorkingCopy(user, Collection.class)) {
-            if (clazz.equals(Activity.class)) {
-                list = activityDao.getAllPublished();
-                list.addAll(activityDao.getAllUnpublished());
-            } else if (clazz.equals(Collection.class)) {
-                list = collectionDao.getAllPublished();
-                list.addAll(collectionDao.getAllUnpublished());
-            } else if (clazz.equals(Agent.class)) {
-                list = agentDao.getAllPublished();
-                list.addAll(agentDao.getAllUnpublished());
-            } else if (clazz.equals(Service.class)) {
-                list = serviceDao.getAllPublished();
-                list.addAll(serviceDao.getAllUnpublished());
-            } else {
-                return null;
-            }
-        } else {
-            if (clazz.equals(Activity.class)) {
-                list = activityDao.getAllPublished();
-            } else if (clazz.equals(Collection.class)) {
-                list = collectionDao.getAllPublished();
-            } else if (clazz.equals(Agent.class)) {
-                list = agentDao.getAllPublished();
-            } else if (clazz.equals(Service.class)) {
-                list = serviceDao.getAllPublished();
-            } else {
-                return null;
-            }
-        }
-        return list;
     }
 
     private Record getExistingRecord(String uriKey, Class<?> clazz) {
@@ -531,6 +497,14 @@ public class HttpMethodHelper {
 	@Required
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
+	}
+
+	public FeedOutputHelper getFeedOutputHelper() {
+		return feedOutputHelper;
+	}
+
+	public void setFeedOutputHelper(FeedOutputHelper feedOutputHelper) {
+		this.feedOutputHelper = feedOutputHelper;
 	}
 
 }

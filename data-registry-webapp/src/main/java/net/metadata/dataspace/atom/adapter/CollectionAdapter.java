@@ -2,19 +2,13 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.atom.util.FeedOutputHelper;
-import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.atom.util.OperationHelper;
-import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.model.record.Collection;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
-import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
-import org.apache.commons.lang.WordUtils;
-import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,16 +24,6 @@ import javax.persistence.PersistenceException;
  * Time: 11:38:59 AM
  */
 public class CollectionAdapter extends AbstractRecordAdapter<net.metadata.dataspace.data.model.record.Collection> {
-
-    private CollectionDao collectionDao;
-
-    public CollectionDao getCollectionDao() {
-		return collectionDao;
-	}
-
-	public void setCollectionDao(CollectionDao collectionDao) {
-		this.collectionDao = collectionDao;
-	}
 
 	@Override
     @Transactional(propagation=Propagation.REQUIRES_NEW)
@@ -111,7 +95,7 @@ public class CollectionAdapter extends AbstractRecordAdapter<net.metadata.datasp
     @Transactional(readOnly=true)
     public ResponseContext getFeed(RequestContext request) {
         try {
-            String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
+            String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
             String accept = request.getAccept();
             if (representationMimeType == null) {
                 representationMimeType = accept;
@@ -143,7 +127,7 @@ public class CollectionAdapter extends AbstractRecordAdapter<net.metadata.datasp
                 Entry e = feed.addEntry();
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
-                FeedOutputHelper.setPublished(entryObj, e);
+                getFeedOutputHelper().setPublished(entryObj, e);
                 if (isMediaEntry(entryObj)) {
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {
@@ -170,7 +154,7 @@ public class CollectionAdapter extends AbstractRecordAdapter<net.metadata.datasp
     @Override
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        collectionDao.softDelete(key);
+        getDao().softDelete(key);
     }
 
     @Override
@@ -184,15 +168,15 @@ public class CollectionAdapter extends AbstractRecordAdapter<net.metadata.datasp
     @Override
     @Transactional(readOnly=true)
     public Iterable<net.metadata.dataspace.data.model.record.Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return getHttpMethodHelper().getRecords(requestContext, Collection.class);
+        return getRecords(requestContext, Collection.class);
     }
 
     @Override
     @Transactional(readOnly=true)
     public net.metadata.dataspace.data.model.record.Collection getEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(key);
+        net.metadata.dataspace.data.model.record.Collection collection = getDao().getByKey(key);
         if (collection != null) {
-            collectionDao.refresh(collection);
+            getDao().refresh(collection);
         }
         return collection;
     }

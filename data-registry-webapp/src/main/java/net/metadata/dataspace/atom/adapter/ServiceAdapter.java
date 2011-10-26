@@ -2,18 +2,13 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.atom.util.FeedOutputHelper;
-import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.atom.util.OperationHelper;
-import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.record.Service;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
-import org.apache.abdera.protocol.server.impl.AbstractEntityCollectionAdapter;
-import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -26,16 +21,6 @@ import java.util.List;
  */
 @Transactional
 public class ServiceAdapter extends AbstractRecordAdapter<Service> {
-
-    private ServiceDao serviceDao;
-
-    public ServiceDao getServiceDao() {
-		return serviceDao;
-	}
-
-	public void setServiceDao(ServiceDao serviceDao) {
-		this.serviceDao = serviceDao;
-	}
 
 	@Override
     public ResponseContext postEntry(RequestContext request) {
@@ -94,7 +79,7 @@ public class ServiceAdapter extends AbstractRecordAdapter<Service> {
     @Override
     public ResponseContext getFeed(RequestContext request) {
         try {
-            String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
+            String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
             String accept = request.getAccept();
             if (representationMimeType == null) {
                 representationMimeType = accept;
@@ -123,7 +108,7 @@ public class ServiceAdapter extends AbstractRecordAdapter<Service> {
                 Entry e = feed.addEntry();
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
-                FeedOutputHelper.setPublished(entryObj, e);
+                getFeedOutputHelper().setPublished(entryObj, e);
                 if (isMediaEntry(entryObj)) {
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {
@@ -148,7 +133,7 @@ public class ServiceAdapter extends AbstractRecordAdapter<Service> {
 
     @Override
     public void deleteEntry(String key, RequestContext request) throws ResponseContextException {
-        serviceDao.softDelete(key);
+        getDao().softDelete(key);
     }
 
     @Override
@@ -160,14 +145,14 @@ public class ServiceAdapter extends AbstractRecordAdapter<Service> {
 
     @Override
     public Iterable<Service> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return getHttpMethodHelper().getRecords(requestContext, Service.class);
+        return getRecords(requestContext, Service.class);
     }
 
     @Override
     public Service getEntry(String key, RequestContext request) throws ResponseContextException {
-        Service service = serviceDao.getByKey(key);
+        Service service = getDao().getByKey(key);
         if (service != null) {
-            serviceDao.refresh(service);
+            getDao().refresh(service);
         }
         return service;
 

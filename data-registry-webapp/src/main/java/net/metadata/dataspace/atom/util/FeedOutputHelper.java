@@ -29,7 +29,7 @@ import static org.apache.abdera.protocol.server.ProviderHelper.calculateEntityTa
 @Transactional
 public class FeedOutputHelper {
 
-    public static String getRepresentationMimeType(RequestContext request) {
+	public String getRepresentationMimeType(RequestContext request) {
         String fullUrl = request.getUri().toString();
         String representation = null;
         if (fullUrl.contains("?repr")) {
@@ -38,7 +38,7 @@ public class FeedOutputHelper {
         return representation;
     }
 
-    public static ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) {
+    public ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) {
         responseContext.setContentType(Constants.MIME_TYPE_HTML);
         String xslFilePath = "/files/xslt/feed/xhtml/atom2xhtml-feed.xsl";
         String viewRepresentation = OperationHelper.getViewRepresentation(request);
@@ -50,20 +50,20 @@ public class FeedOutputHelper {
         return responseContext;
     }
 
-    public static void prepareFeedSelfLink(Feed feed, String selfLinkHref, String mimeType) {
+    public void prepareFeedSelfLink(Feed feed, String selfLinkHref, String mimeType) {
         feed.getSelfLink().setHref(selfLinkHref);
         feed.getSelfLink().setRel(Constants.REL_SELF);
         feed.getSelfLink().setMimeType(mimeType);
     }
 
 
-    public static void prepareFeedAlternateLink(Feed feed, String alternateLinkHref, String mimeType) {
+    public void prepareFeedAlternateLink(Feed feed, String alternateLinkHref, String mimeType) {
         feed.getAlternateLink().setHref(alternateLinkHref);
         feed.getAlternateLink().setRel(Constants.REL_ALTERNATE);
         feed.getAlternateLink().setMimeType(mimeType);
     }
 
-    public static ResponseContext getVersionHistoryFeed(RequestContext request, Feed feed, Record record, Class<?> clazz) throws ResponseContextException {
+    public ResponseContext getVersionHistoryFeed(RequestContext request, Feed feed, Record record, Class<?> clazz) throws ResponseContextException {
         SortedSet<Version> versions = record.getVersions();
         for (Version version : versions) {
             Entry entry = feed.addEntry();
@@ -101,7 +101,7 @@ public class FeedOutputHelper {
         }
     }
 
-    public static Feed createVersionFeed(RequestContext request) {
+    public Feed createVersionFeed(RequestContext request) {
         Factory factory = request.getAbdera().getFactory();
         Feed feed = factory.newFeed();
         String uri = request.getUri().toString();
@@ -111,7 +111,7 @@ public class FeedOutputHelper {
         return feed;
     }
 
-    public static void setPublished(Version version, Entry entry) {
+    public void setPublished(Version version, Entry entry) {
         Control control = entry.addControl();
         Version published = version.getParent().getPublished();
         //False is used here to indicate the version is published and true (isDraft) is not published
@@ -122,7 +122,7 @@ public class FeedOutputHelper {
         }
     }
 
-    public static void setPublished(Record record, Entry entry) {
+    public void setPublished(Record record, Entry entry) {
         Control control = entry.addControl();
         Version published = record.getPublished();
         Version workingCopy = record.getWorkingCopy();
@@ -139,7 +139,7 @@ public class FeedOutputHelper {
     }
 
 
-    public static List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
+    public List<Person> getAuthors(Record record, RequestContext request) throws ResponseContextException {
         List<Person> personList = new ArrayList<Person>();
         if (record instanceof Collection) {
         	Version version = (Version) record.getPublished();

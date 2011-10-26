@@ -2,10 +2,7 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.atom.util.FeedOutputHelper;
-import net.metadata.dataspace.atom.util.HttpMethodHelper;
 import net.metadata.dataspace.atom.util.OperationHelper;
-import net.metadata.dataspace.data.access.ActivityDao;
 import net.metadata.dataspace.data.model.record.Activity;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.*;
@@ -24,15 +21,6 @@ import java.util.List;
  */
 @Transactional
 public class ActivityAdapter extends AbstractRecordAdapter<Activity> {
-
-    private ActivityDao activityDao;
-    public ActivityDao getActivityDao() {
-		return activityDao;
-	}
-
-	public void setActivityDao(ActivityDao activityDao) {
-		this.activityDao = activityDao;
-	}
 
     @Override
     public ResponseContext postEntry(RequestContext request) {
@@ -91,7 +79,7 @@ public class ActivityAdapter extends AbstractRecordAdapter<Activity> {
     @Override
     public ResponseContext getFeed(RequestContext request) {
         try {
-            String representationMimeType = FeedOutputHelper.getRepresentationMimeType(request);
+            String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
             String accept = request.getAccept();
             if (representationMimeType == null) {
                 representationMimeType = accept;
@@ -121,7 +109,7 @@ public class ActivityAdapter extends AbstractRecordAdapter<Activity> {
                 Entry e = feed.addEntry();
                 IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
                 addEntryDetails(request, e, feedIri, entryObj);
-                FeedOutputHelper.setPublished(entryObj, e);
+                getFeedOutputHelper().setPublished(entryObj, e);
                 if (isMediaEntry(entryObj)) {
                     addMediaContent(feedIri, e, entryObj, request);
                 } else {
@@ -146,7 +134,7 @@ public class ActivityAdapter extends AbstractRecordAdapter<Activity> {
 
     @Override
     public void deleteEntry(String key, RequestContext request) throws ResponseContextException {
-        activityDao.softDelete(key);
+        getDao().softDelete(key);
     }
 
     @Override
@@ -158,14 +146,14 @@ public class ActivityAdapter extends AbstractRecordAdapter<Activity> {
 
     @Override
     public Iterable<Activity> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return getHttpMethodHelper().getRecords(requestContext, Activity.class);
+        return getRecords(requestContext, Activity.class);
     }
 
     @Override
     public Activity getEntry(String key, RequestContext request) throws ResponseContextException {
-        Activity activity = activityDao.getByKey(key);
+        Activity activity = getDao().getByKey(key);
         if (activity != null) {
-            activityDao.refresh(activity);
+            getDao().refresh(activity);
         }
         return activity;
     }

@@ -40,6 +40,8 @@ public class AdapterOutputHelper {
 
 	private static final Logger logger = Logger.getLogger(AdapterOutputHelper.class);
 
+	private static final FeedOutputHelper feedOutputHelper = new FeedOutputHelper();
+
     public static Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
         if (version == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
@@ -111,7 +113,7 @@ public class AdapterOutputHelper {
         	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
-        FeedOutputHelper.setPublished(version, entry);
+        feedOutputHelper.setPublished(version, entry);
         addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
@@ -203,7 +205,7 @@ public class AdapterOutputHelper {
         	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
-        FeedOutputHelper.setPublished(version, entry);
+        feedOutputHelper.setPublished(version, entry);
         addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
@@ -330,7 +332,7 @@ public class AdapterOutputHelper {
         	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
-        FeedOutputHelper.setPublished(version, entry);
+        feedOutputHelper.setPublished(version, entry);
         addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
@@ -373,7 +375,7 @@ public class AdapterOutputHelper {
         	logger.warn(th.getMessage(), th);
             throw new ResponseContextException(500, th);
         }
-        FeedOutputHelper.setPublished(version, entry);
+        feedOutputHelper.setPublished(version, entry);
         addSource(version, entry);
         addNavigationLinks(version, entry, parentUrl);
         return entry;
