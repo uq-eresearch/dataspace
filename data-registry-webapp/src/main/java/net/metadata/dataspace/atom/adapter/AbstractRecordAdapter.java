@@ -31,80 +31,118 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 public abstract class AbstractRecordAdapter<R extends Record<?>> extends
-		AbstractEntityCollectionAdapter<R> {
+        AbstractEntityCollectionAdapter<R> {
 
-	protected Logger logger = Logger.getLogger(getClass());
+    protected Logger logger = Logger.getLogger(getClass());
 
-	private AuthenticationManager authenticationManager;
-	private AuthorizationManager<User> authorizationManager;
-	private HttpMethodHelper httpMethodHelper;
-	private FeedOutputHelper feedOutputHelper;
+    private AuthenticationManager authenticationManager;
+    private AuthorizationManager<User> authorizationManager;
+    private HttpMethodHelper httpMethodHelper;
+    private FeedOutputHelper feedOutputHelper;
     private RegistryDao<R> dao;
 
-    public RegistryDao<R> getDao() {
-		return dao;
-	}
+    public AbstractRecordAdapter() {
+        super();
+    }
 
-	public void setDao(RegistryDao<R> dao) {
-		this.dao = dao;
-	}
+    @Override
+    protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
+        getHttpMethodHelper().addFeedDetails(feed, request, getRecordClass());
+        Iterable<R> entries = getEntries(request);
+        if (entries == null) {
+            return;
+        }
+        for (R entryObj : entries) {
+            Entry e = feed.addEntry();
+            IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
+            addEntryDetails(request, e, feedIri, entryObj);
+            getFeedOutputHelper().setPublished(entryObj, e);
+            if (isMediaEntry(entryObj)) {
+                addMediaContent(feedIri, e, entryObj, request);
+            } else {
+                addContent(e, entryObj, request);
+                Link typeLink = e.addLink(getLinkTerm(), Constants.REL_TYPE);
+                typeLink.setTitle(getTitle());
+            }
+        }
+    }
 
-	public AbstractRecordAdapter() {
-		super();
-	}
+    @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public ResponseContext deleteEntry(RequestContext request) {
+        try {
+            return getHttpMethodHelper().deleteEntry(request, getRecordClass());
+        } catch (ResponseContextException e) {
+            return OperationHelper.createErrorResponse(e);
+        }
+    }
 
-	public AuthenticationManager getAuthenticationManager() {
-		return authenticationManager;
-	}
+    @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
+        getDao().softDelete(key);
+    }
 
-	public AuthorizationManager<User> getAuthorizationManager() {
-		return authorizationManager;
-	}
+    @Override
+    public String[] getAccepts(RequestContext requestContext) {
+        return new String[]{Constants.MIME_TYPE_ATOM_ENTRY};
+    }
 
-	@Transactional(readOnly=true)
+    public AuthenticationManager getAuthenticationManager() {
+        return authenticationManager;
+    }
+
+    @Override
+    public String getAuthor(RequestContext requestContext) throws ResponseContextException {
+        return RegistryApplication.getApplicationContext().getUriPrefix();
+    }
+
+    public AuthorizationManager<User> getAuthorizationManager() {
+        return authorizationManager;
+    }
+
+    @Transactional(readOnly=true)
     public List<Person> getAuthors(R record, RequestContext request) throws ResponseContextException {
         return getFeedOutputHelper().getAuthors(record, request);
     }
 
-	public FeedOutputHelper getFeedOutputHelper() {
-		return feedOutputHelper;
-	}
+    protected abstract String getBasePath();
 
-	public HttpMethodHelper getHttpMethodHelper() {
-		return httpMethodHelper;
-	}
-
-	public List<R> getRecords(RequestContext request) {
-        User user = getAuthenticationManager().getCurrentUser(request);
-        List<R> list;
-        if (getAuthorizationManager().canAccessWorkingCopy(user, Collection.class)) {
-            list = getDao().getAllPublished();
-            list.addAll(getDao().getAllUnpublished());
-        } else {
-        	list = getDao().getAllPublished();
-        }
-        return list;
+    @Override
+    public Object getContent(R entry, RequestContext request) throws ResponseContextException {
+        Content content = request.getAbdera().getFactory().newContent(Content.Type.TEXT);
+        content.setText(entry.getContent());
+        return content;
     }
 
-	@Required
-	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-		this.authenticationManager = authenticationManager;
-	}
+    public RegistryDao<R> getDao() {
+        return dao;
+    }
 
-	@Required
-	public void setAuthorizationManager(AuthorizationManager<User> authorizationManager) {
-		this.authorizationManager = authorizationManager;
-	}
+    @Override
+    public Iterable<R> getEntries(RequestContext requestContext) throws ResponseContextException {
+        return getRecords(requestContext);
+    }
 
-	@Required
-	public void setFeedOutputHelper(FeedOutputHelper feedOutputHelper) {
-		this.feedOutputHelper = feedOutputHelper;
-	}
+    @Override
+    @Transactional(readOnly=true)
+    public ResponseContext getEntry(RequestContext request) {
+        try {
+            return getHttpMethodHelper().getEntry(request, getRecordClass());
+        } catch (ResponseContextException e) {
+            return OperationHelper.createErrorResponse(e);
+        }
+    }
 
-	@Required
-	public void setHttpMethodHelper(HttpMethodHelper httpMethodHelper) {
-		this.httpMethodHelper = httpMethodHelper;
-	}
+    @Override
+    public R getEntry(String key, RequestContext request) throws ResponseContextException {
+        R entry = getDao().getByKey(key);
+        if (entry != null) {
+            getDao().refresh(entry);
+        }
+        return entry;
+
+    }
 
     @Override
     @Transactional(readOnly=true)
@@ -130,8 +168,8 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
         }
     }
 
-	protected ResponseContext getFeed(RequestContext request, ResponseContext responseContext) throws ResponseContextException {
-		String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
+    protected ResponseContext getFeed(RequestContext request, ResponseContext responseContext) throws ResponseContextException {
+        String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
         if (representationMimeType != null) {
             if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
                 return getFeedOutputHelper().getHtmlRepresentationOfFeed(request, responseContext, getRecordClass());
@@ -143,84 +181,55 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
         }
     }
 
-	protected abstract Class<R> getRecordClass();
-	protected abstract String getLinkTerm();
-	protected abstract String getBasePath();
-	protected abstract String getTitle();
+    public FeedOutputHelper getFeedOutputHelper() {
+        return feedOutputHelper;
+    }
 
-	@Override
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	public ResponseContext postMedia(RequestContext request) {
-	    try {
-	        return getHttpMethodHelper().postMedia(request, getRecordClass());
-	    } catch (ResponseContextException e) {
-	        return OperationHelper.createErrorResponse(e);
-	    }
-	}
+    public HttpMethodHelper getHttpMethodHelper() {
+        return httpMethodHelper;
+    }
 
-	@Override
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	public ResponseContext putEntry(RequestContext request) {
-	    try {
-	        return getHttpMethodHelper().putEntry(request, getRecordClass());
-	    } catch (ResponseContextException e) {
-	        return OperationHelper.createErrorResponse(e);
-	    }
-	}
-
-	@Override
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	public ResponseContext putMedia(RequestContext request) {
-	    try {
-	        return getHttpMethodHelper().putMedia(request, getRecordClass());
-	    } catch (ResponseContextException e) {
-	        return OperationHelper.createErrorResponse(e);
-	    }
-	}
-
-	@Override
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	public ResponseContext deleteEntry(RequestContext request) {
-	    try {
-	        return getHttpMethodHelper().deleteEntry(request, getRecordClass());
-	    } catch (ResponseContextException e) {
-	        return OperationHelper.createErrorResponse(e);
-	    }
-	}
-
-	@Override
-	@Transactional(readOnly=true)
-	public ResponseContext getEntry(RequestContext request) {
-	    try {
-	        return getHttpMethodHelper().getEntry(request, getRecordClass());
-	    } catch (ResponseContextException e) {
-	        return OperationHelper.createErrorResponse(e);
-	    }
-	}
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public ResponseContext postEntry(RequestContext request) {
-	    try {
-	        return getHttpMethodHelper().postEntry(request, getRecordClass());
-	    } catch (ResponseContextException e) {
-	        return OperationHelper.createErrorResponse(e);
-	    }
-	}
-
-	@Override
+    @Override
     public String getId(R record) throws ResponseContextException {
         return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "/" + record.getUriKey();
     }
+
+    @Override
+    public String getId(RequestContext requestContext) {
+        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
+    }
+
+    protected abstract String getLinkTerm();
 
     @Override
     public String getName(R record) throws ResponseContextException {
         return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "/" + record.getUriKey();
     }
 
+    protected abstract Class<R> getRecordClass();
+
+    public List<R> getRecords(RequestContext request) {
+        User user = getAuthenticationManager().getCurrentUser(request);
+        List<R> list;
+        if (getAuthorizationManager().canAccessWorkingCopy(user, Collection.class)) {
+            list = getDao().getAllPublished();
+            list.addAll(getDao().getAllUnpublished());
+        } else {
+            list = getDao().getAllPublished();
+        }
+        return list;
+    }
+
+    protected abstract String getTitle();
+
     @Override
     public String getTitle(R record) throws ResponseContextException {
         return record.getTitle();
+    }
+
+    @Override
+    public String getTitle(RequestContext request) {
+        return getTitle();
     }
 
     @Override
@@ -229,18 +238,13 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
     }
 
     @Override
-    public R getEntry(String key, RequestContext request) throws ResponseContextException {
-        R entry = getDao().getByKey(key);
-        if (entry != null) {
-            getDao().refresh(entry);
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ResponseContext postEntry(RequestContext request) {
+        try {
+            return getHttpMethodHelper().postEntry(request, getRecordClass());
+        } catch (ResponseContextException e) {
+            return OperationHelper.createErrorResponse(e);
         }
-        return entry;
-
-    }
-
-    @Override
-    public String[] getAccepts(RequestContext requestContext) {
-        return new String[]{Constants.MIME_TYPE_ATOM_ENTRY};
     }
 
     @Override
@@ -251,20 +255,12 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
 
     @Override
     @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
-        getDao().softDelete(key);
-    }
-
-    @Override
-    public Iterable<R> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return getRecords(requestContext);
-    }
-
-    @Override
-    public Object getContent(R entry, RequestContext request) throws ResponseContextException {
-        Content content = request.getAbdera().getFactory().newContent(Content.Type.TEXT);
-        content.setText(entry.getContent());
-        return content;
+    public ResponseContext postMedia(RequestContext request) {
+        try {
+            return getHttpMethodHelper().postMedia(request, getRecordClass());
+        } catch (ResponseContextException e) {
+            return OperationHelper.createErrorResponse(e);
+        }
     }
 
     @Override
@@ -272,41 +268,48 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
         logger.warn("Method not supported.");
     }
 
-	@Override
-	public String getAuthor(RequestContext requestContext) throws ResponseContextException {
-	    return RegistryApplication.getApplicationContext().getUriPrefix();
-	}
-
-	@Override
-	public String getId(RequestContext requestContext) {
-	    return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
-	}
-
-	@Override
-    public String getTitle(RequestContext request) {
-        return getTitle();
+    @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public ResponseContext putEntry(RequestContext request) {
+        try {
+            return getHttpMethodHelper().putEntry(request, getRecordClass());
+        } catch (ResponseContextException e) {
+            return OperationHelper.createErrorResponse(e);
+        }
     }
 
     @Override
-    protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        getHttpMethodHelper().addFeedDetails(feed, request, getRecordClass());
-        Iterable<R> entries = getEntries(request);
-        if (entries == null) {
-        	return;
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public ResponseContext putMedia(RequestContext request) {
+        try {
+            return getHttpMethodHelper().putMedia(request, getRecordClass());
+        } catch (ResponseContextException e) {
+            return OperationHelper.createErrorResponse(e);
         }
-        for (R entryObj : entries) {
-            Entry e = feed.addEntry();
-            IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
-            addEntryDetails(request, e, feedIri, entryObj);
-            getFeedOutputHelper().setPublished(entryObj, e);
-            if (isMediaEntry(entryObj)) {
-                addMediaContent(feedIri, e, entryObj, request);
-            } else {
-                addContent(e, entryObj, request);
-                Link typeLink = e.addLink(getLinkTerm(), Constants.REL_TYPE);
-                typeLink.setTitle(getTitle());
-            }
-        }
+    }
+
+    @Required
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    @Required
+    public void setAuthorizationManager(AuthorizationManager<User> authorizationManager) {
+        this.authorizationManager = authorizationManager;
+    }
+
+    public void setDao(RegistryDao<R> dao) {
+        this.dao = dao;
+    }
+
+    @Required
+    public void setFeedOutputHelper(FeedOutputHelper feedOutputHelper) {
+        this.feedOutputHelper = feedOutputHelper;
+    }
+
+    @Required
+    public void setHttpMethodHelper(HttpMethodHelper httpMethodHelper) {
+        this.httpMethodHelper = httpMethodHelper;
     }
 
 }
