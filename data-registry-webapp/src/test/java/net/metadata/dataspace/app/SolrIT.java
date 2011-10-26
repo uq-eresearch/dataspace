@@ -88,7 +88,7 @@ public class SolrIT {
 		        }
 	        }
 	        for (String fileName : testEntities) {
-	        	logger.info("Loading test data: "+fileName);
+	        	logger.info("Loading test data from "+fileName);
 	        	PostMethod postMethod = ClientHelper.postEntry(client, fileName, type);
 	            assertEquals("Could not post entry", 201, postMethod.getStatusCode());
 	            postMethod.releaseConnection();
