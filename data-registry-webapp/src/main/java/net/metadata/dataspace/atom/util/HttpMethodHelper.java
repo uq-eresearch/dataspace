@@ -158,40 +158,6 @@ public class HttpMethodHelper {
         }
     }
 
-    /**
-     * We do not support media posting
-     *
-     * @param request
-     * @param clazz
-     * @return
-     * @throws ResponseContextException
-     */
-    public ResponseContext postMedia(RequestContext request, Class<?> clazz) throws ResponseContextException {
-        User user = getAuthenticationManager().getCurrentUser(request);
-        if (user == null) {
-            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-        } else {
-            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-        }
-    }
-
-    /**
-     * We do not support media putting
-     *
-     * @param request
-     * @param clazz
-     * @return
-     * @throws ResponseContextException
-     */
-    public ResponseContext putMedia(RequestContext request, Class<?> clazz) throws ResponseContextException {
-        User user = getAuthenticationManager().getCurrentUser(request);
-        if (user == null) {
-            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-        } else {
-            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-        }
-    }
-
     public ResponseContext deleteEntry(RequestContext request, Class<?> clazz) throws ResponseContextException {
         User user = getAuthenticationManager().getCurrentUser(request);
         if (user == null) {
@@ -205,7 +171,19 @@ public class HttpMethodHelper {
                 refreshRecord(record, clazz);
                 if (record.isActive()) {
                     if (getAuthorizationManager().getAccessLevelForInstance(user, record).canDelete()) {
-                        deleteRecord(uriKey, clazz);
+                        try {
+                            if (clazz.equals(Activity.class)) {
+                                activityDao.softDelete(uriKey);
+                            } else if (clazz.equals(Collection.class)) {
+                                collectionDao.softDelete(uriKey);
+                            } else if (clazz.equals(Agent.class)) {
+                                agentDao.softDelete(uriKey);
+                            } else if (clazz.equals(Service.class)) {
+                                serviceDao.softDelete(uriKey);
+                            }
+                        } catch (Throwable th) {
+                            throw new ResponseContextException(500, th);
+                        }
                         return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
                     } else {
                         throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
@@ -235,7 +213,17 @@ public class HttpMethodHelper {
                             ResponseContext versionHistoryFeed1 = getFeedOutputHelper().getVersionHistoryFeed(request, versionHistoryFeed, record, clazz);
                             return versionHistoryFeed1;
                         } else {
-                            version = getVersion(uriKey, versionKey, clazz);
+                            if (clazz.equals(Activity.class)) {
+                            	version = activityDao.getByVersion(uriKey, versionKey);
+                            } else if (clazz.equals(Collection.class)) {
+                            	version = collectionDao.getByVersion(uriKey, versionKey);
+                            } else if (clazz.equals(Agent.class)) {
+                            	version = agentDao.getByVersion(uriKey, versionKey);
+                            } else if (clazz.equals(Service.class)) {
+                            	version = serviceDao.getByVersion(uriKey, versionKey);
+                            } else {
+                            	version = null;
+                            }
                         }
                     } else {
                         throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
@@ -261,41 +249,9 @@ public class HttpMethodHelper {
         }
     }
 
-    public void addFeedDetails(Feed feed, RequestContext request, Class<?> clazz) throws ResponseContextException {
-        Record latestService = getLatestRecord(clazz);
-        if (latestService != null) {
-            refreshRecord(latestService, clazz);
-            feed.setUpdated(latestService.getUpdated());
-        } else {
-            //TODO what would the date be if the feed is empty??
-            feed.setUpdated(new Date());
-        }
-
-        String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
-        if (representationMimeType == null) {
-            String acceptHeader = request.getAccept();
-            if (acceptHeader != null && (acceptHeader.equals(Constants.MIME_TYPE_HTML) || acceptHeader.equals(Constants.MIME_TYPE_ATOM_FEED))) {
-                representationMimeType = acceptHeader;
-            } else {
-                representationMimeType = Constants.MIME_TYPE_HTML;
-            }
-        }
-        String atomFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getPath(clazz) + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
-        String htmlFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getPath(clazz);
-        if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-            getFeedOutputHelper().prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
-            getFeedOutputHelper().prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
-        } else if (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) || representationMimeType.equals(Constants.MIME_TYPE_ATOM)) {
-            getFeedOutputHelper().prepareFeedSelfLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
-            getFeedOutputHelper().prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
-        }
-        feed.setTitle(getTitle(clazz));
-    }
-
     /**
      * Retrieves the FOM Entry object from the request payload.
      */
-    @SuppressWarnings("unchecked")
     private Entry getEntryFromRequest(RequestContext request) throws ResponseContextException {
         Abdera abdera = request.getAbdera();
         Parser parser = abdera.getParser();
@@ -326,7 +282,7 @@ public class HttpMethodHelper {
         return null;
     }
 
-    private void refreshRecord(Record record, Class<?> clazz) throws ResponseContextException {
+    public void refreshRecord(Record record, Class<?> clazz) throws ResponseContextException {
         try {
             if (clazz.equals(Activity.class)) {
                 activityDao.refresh((Activity) record);
@@ -342,87 +298,7 @@ public class HttpMethodHelper {
         }
     }
 
-    private void deleteRecord(String uriKey, Class<?> clazz) throws ResponseContextException {
-        try {
-            if (clazz.equals(Activity.class)) {
-                activityDao.softDelete(uriKey);
-            } else if (clazz.equals(Collection.class)) {
-                collectionDao.softDelete(uriKey);
-            } else if (clazz.equals(Agent.class)) {
-                agentDao.softDelete(uriKey);
-            } else if (clazz.equals(Service.class)) {
-                serviceDao.softDelete(uriKey);
-            }
-        } catch (Throwable th) {
-            throw new ResponseContextException(500, th);
-        }
-    }
-
-    private Version getVersion(String uriKey, String versionKey, Class<?> clazz) throws ResponseContextException {
-        try {
-            if (clazz.equals(Activity.class)) {
-                return activityDao.getByVersion(uriKey, versionKey);
-            } else if (clazz.equals(Collection.class)) {
-                return collectionDao.getByVersion(uriKey, versionKey);
-            } else if (clazz.equals(Agent.class)) {
-                return agentDao.getByVersion(uriKey, versionKey);
-            } else if (clazz.equals(Service.class)) {
-                return serviceDao.getByVersion(uriKey, versionKey);
-            }
-            return null;
-        } catch (Throwable th) {
-            throw new ResponseContextException(500, th);
-        }
-    }
-
-    private String getPath(Class<?> clazz) throws ResponseContextException {
-        try {
-            if (clazz.equals(Activity.class)) {
-                return Constants.PATH_FOR_ACTIVITIES;
-            } else if (clazz.equals(Collection.class)) {
-                return Constants.PATH_FOR_COLLECTIONS;
-            } else if (clazz.equals(Agent.class)) {
-                return Constants.PATH_FOR_AGENTS;
-            } else if (clazz.equals(Service.class)) {
-                return Constants.PATH_FOR_SERVICES;
-            }
-            return null;
-        } catch (Throwable th) {
-            throw new ResponseContextException(500, th);
-        }
-    }
-
-    private static String getTitle(Class<?> clazz) throws ResponseContextException {
-        try {
-            if (clazz.equals(Activity.class)) {
-                return Constants.TITLE_FOR_ACTIVITIES;
-            } else if (clazz.equals(Collection.class)) {
-                return Constants.TITLE_FOR_COLLECTIONS;
-            } else if (clazz.equals(Agent.class)) {
-                return Constants.TITLE_FOR_AGENTS;
-            } else if (clazz.equals(Service.class)) {
-                return Constants.TITLE_FOR_SERVICES;
-            }
-            return null;
-        } catch (Throwable th) {
-            throw new ResponseContextException(500, th);
-        }
-    }
-
-    private Record getLatestRecord(Class<?> clazz) {
-        if (clazz.equals(Activity.class)) {
-            return activityDao.getMostRecentUpdated();
-        } else if (clazz.equals(Collection.class)) {
-            return collectionDao.getMostRecentUpdated();
-        } else if (clazz.equals(Agent.class)) {
-            return agentDao.getMostRecentUpdated();
-        } else if (clazz.equals(Service.class)) {
-            return serviceDao.getMostRecentUpdated();
-        }
-        return null;
-    }
-
-	public CollectionDao getCollectionDao() {
+    public CollectionDao getCollectionDao() {
 		return collectionDao;
 	}
 

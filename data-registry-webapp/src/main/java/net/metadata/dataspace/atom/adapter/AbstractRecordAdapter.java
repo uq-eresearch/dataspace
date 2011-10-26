@@ -12,7 +12,10 @@ import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.RegistryDao;
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.record.Activity;
+import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.record.User;
 
 import org.apache.abdera.i18n.iri.IRI;
@@ -47,7 +50,35 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        getHttpMethodHelper().addFeedDetails(feed, request, getRecordClass());
+        R latestRecord = getDao().getMostRecentUpdated();
+        if (latestRecord != null) {
+            getHttpMethodHelper().refreshRecord(latestRecord, getRecordClass());
+            feed.setUpdated(latestRecord.getUpdated());
+        } else {
+            //TODO what would the date be if the feed is empty??
+            feed.setUpdated(new Date());
+        }
+
+        String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
+        if (representationMimeType == null) {
+            String acceptHeader = request.getAccept();
+            if (acceptHeader != null && (acceptHeader.equals(Constants.MIME_TYPE_HTML) || acceptHeader.equals(Constants.MIME_TYPE_ATOM_FEED))) {
+                representationMimeType = acceptHeader;
+            } else {
+                representationMimeType = Constants.MIME_TYPE_HTML;
+            }
+        }
+        String atomFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
+        String htmlFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
+        if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
+            getFeedOutputHelper().prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
+            getFeedOutputHelper().prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
+        } else if (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) || representationMimeType.equals(Constants.MIME_TYPE_ATOM)) {
+            getFeedOutputHelper().prepareFeedSelfLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
+            getFeedOutputHelper().prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
+        }
+        feed.setTitle(getTitle());
+
         Iterable<R> entries = getEntries(request);
         if (entries == null) {
             return;
@@ -253,11 +284,18 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
         return null;
     }
 
+    /**
+     * We do not support media posting
+     */
     @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext postMedia(RequestContext request) {
         try {
-            return getHttpMethodHelper().postMedia(request, getRecordClass());
+            User user = getAuthenticationManager().getCurrentUser(request);
+            if (user == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+            } else {
+                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            }
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
@@ -278,11 +316,18 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
         }
     }
 
+    /**
+     * We do not support media putting
+     */
     @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext putMedia(RequestContext request) {
         try {
-            return getHttpMethodHelper().putMedia(request, getRecordClass());
+            User user = getAuthenticationManager().getCurrentUser(request);
+            if (user == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+            } else {
+                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            }
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
