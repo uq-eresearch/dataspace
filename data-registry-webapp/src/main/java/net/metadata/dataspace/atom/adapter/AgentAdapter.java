@@ -84,26 +84,6 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent> {
     }
 
     @Override
-    public String getId(Agent agent) throws ResponseContextException {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey();
-    }
-
-    @Override
-    public String getName(Agent agent) throws ResponseContextException {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey();
-    }
-
-    @Override
-    public String getTitle(Agent agent) throws ResponseContextException {
-        return agent.getTitle();
-    }
-
-    @Override
-    public Date getUpdated(Agent agent) throws ResponseContextException {
-        return agent.getUpdated();
-    }
-
-    @Override
     public void putEntry(Agent agent, String title, Date updated, List<Person> authors, String summary, Content content,
                          RequestContext requestContext) throws ResponseContextException {
         logger.warn("Method not supported");
@@ -116,11 +96,16 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent> {
 
     @Override
     public String getId(RequestContext requestContext) {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS;
+        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
     }
 
     @Override
     public String getTitle(RequestContext requestContext) {
         return Constants.TITLE_FOR_AGENTS;
     }
+
+	@Override
+	protected String getBasePath() {
+		return Constants.PATH_FOR_AGENTS;
+	}
 }

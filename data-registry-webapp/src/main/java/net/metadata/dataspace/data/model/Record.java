@@ -14,6 +14,13 @@ public interface Record<V extends Version<?>> {
     Long getId();
 
     /**
+     * Get the current title for this record
+     *
+     * @return Title string
+     */
+    String getTitle();
+
+    /**
      * Gets a all versions of this record
      *
      * @return Sorted set (by updated) of versions

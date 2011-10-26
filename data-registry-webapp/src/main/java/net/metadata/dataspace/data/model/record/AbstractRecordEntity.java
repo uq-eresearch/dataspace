@@ -25,7 +25,7 @@ import javax.persistence.Temporal;
 public abstract class AbstractRecordEntity<V extends Version<?>> implements Serializable, Record<V> {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3739725990930325307L;
 
@@ -161,4 +161,7 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
     public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
     }
+
+    public abstract String getTitle();
+
 }

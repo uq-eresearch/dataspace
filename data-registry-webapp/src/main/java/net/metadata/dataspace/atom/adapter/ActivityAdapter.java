@@ -84,26 +84,6 @@ public class ActivityAdapter extends AbstractRecordAdapter<Activity> {
     }
 
     @Override
-    public String getId(Activity entry) throws ResponseContextException {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + entry.getUriKey();
-    }
-
-    @Override
-    public String getName(Activity entry) throws ResponseContextException {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + entry.getUriKey();
-    }
-
-    @Override
-    public String getTitle(Activity entry) throws ResponseContextException {
-        return entry.getTitle();
-    }
-
-    @Override
-    public Date getUpdated(Activity entry) throws ResponseContextException {
-        return entry.getUpdated();
-    }
-
-    @Override
     public void putEntry(Activity entry, String title, Date updated, List<Person> authors, String summary, Content content, RequestContext request) throws ResponseContextException {
         logger.warn("Method not supported.");
     }
@@ -115,11 +95,16 @@ public class ActivityAdapter extends AbstractRecordAdapter<Activity> {
 
     @Override
     public String getId(RequestContext request) {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES;
+        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
     }
 
     @Override
     public String getTitle(RequestContext request) {
         return Constants.TITLE_FOR_ACTIVITIES;
     }
+
+	@Override
+	protected String getBasePath() {
+		return Constants.PATH_FOR_ACTIVITIES;
+	}
 }

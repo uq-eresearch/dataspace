@@ -111,30 +111,6 @@ public class CollectionAdapter extends AbstractRecordAdapter<Collection> {
     }
 
     @Override
-    @Transactional(readOnly=true)
-    public String getId(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
-    }
-
-    @Override
-    @Transactional(readOnly=true)
-    public String getName(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey();
-    }
-
-    @Override
-    @Transactional(readOnly=true)
-    public String getTitle(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
-        return collection.getTitle();
-    }
-
-    @Override
-    @Transactional(readOnly=true)
-    public Date getUpdated(net.metadata.dataspace.data.model.record.Collection collection) throws ResponseContextException {
-        return collection.getUpdated();
-    }
-
-    @Override
     public void putEntry(net.metadata.dataspace.data.model.record.Collection collection, String title, Date updated, List<Person> authors, String summary,
                          Content content, RequestContext requestContext) throws ResponseContextException {
         logger.warn("Method not supported.");
@@ -147,12 +123,17 @@ public class CollectionAdapter extends AbstractRecordAdapter<Collection> {
 
     @Override
     public String getId(RequestContext requestContext) {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS;
+        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
     }
 
     @Override
     public String getTitle(RequestContext requestContext) {
         return Constants.TITLE_FOR_COLLECTIONS;
     }
+
+	@Override
+	protected String getBasePath() {
+		return Constants.PATH_FOR_COLLECTIONS;
+	}
 
 }

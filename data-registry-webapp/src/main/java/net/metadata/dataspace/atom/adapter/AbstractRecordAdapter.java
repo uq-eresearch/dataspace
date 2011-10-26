@@ -1,5 +1,6 @@
 package net.metadata.dataspace.atom.adapter;
 
+import java.util.Date;
 import java.util.List;
 
 import net.metadata.dataspace.app.Constants;
@@ -138,6 +139,7 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
     }
 
 	protected abstract Class<R> getRecordClass();
+	protected abstract String getBasePath();
 
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
@@ -198,5 +200,25 @@ public abstract class AbstractRecordAdapter<R extends Record<?>> extends
 	        return OperationHelper.createErrorResponse(e);
 	    }
 	}
+
+	@Override
+    public String getId(R record) throws ResponseContextException {
+        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "/" + record.getUriKey();
+    }
+
+    @Override
+    public String getName(R record) throws ResponseContextException {
+        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "/" + record.getUriKey();
+    }
+
+    @Override
+    public String getTitle(R record) throws ResponseContextException {
+        return record.getTitle();
+    }
+
+    @Override
+    public Date getUpdated(R record) throws ResponseContextException {
+        return record.getUpdated();
+    }
 
 }

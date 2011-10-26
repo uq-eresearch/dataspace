@@ -85,26 +85,6 @@ public class ServiceAdapter extends AbstractRecordAdapter<Service> {
     }
 
     @Override
-    public String getId(Service entry) throws ResponseContextException {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + entry.getUriKey();
-    }
-
-    @Override
-    public String getName(Service entry) throws ResponseContextException {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + entry.getUriKey();
-    }
-
-    @Override
-    public String getTitle(Service entry) throws ResponseContextException {
-        return entry.getTitle();
-    }
-
-    @Override
-    public Date getUpdated(Service entry) throws ResponseContextException {
-        return entry.getUpdated();
-    }
-
-    @Override
     public void putEntry(Service entry, String title, Date updated, List<Person> authors, String summary, Content content, RequestContext request) throws ResponseContextException {
         logger.warn("Method not supported.");
     }
@@ -116,12 +96,17 @@ public class ServiceAdapter extends AbstractRecordAdapter<Service> {
 
     @Override
     public String getId(RequestContext request) {
-        return Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES;
+        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
     }
 
     @Override
     public String getTitle(RequestContext request) {
         return Constants.TITLE_FOR_SERVICES;
     }
+
+	@Override
+	protected String getBasePath() {
+		return Constants.PATH_FOR_SERVICES;
+	}
 
 }
