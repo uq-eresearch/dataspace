@@ -23,10 +23,15 @@ import javax.persistence.PersistenceException;
  * Date: 24/09/2010
  * Time: 11:38:59 AM
  */
-public class CollectionAdapter extends AbstractRecordAdapter<net.metadata.dataspace.data.model.record.Collection> {
+public class CollectionAdapter extends AbstractRecordAdapter<Collection> {
 
 	@Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
+	protected Class<Collection> getRecordClass() {
+		return Collection.class;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRES_NEW)
     public ResponseContext postEntry(RequestContext request) {
         try {
         	EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
@@ -35,83 +40,7 @@ public class CollectionAdapter extends AbstractRecordAdapter<net.metadata.datasp
 	        } catch (PersistenceException e) {
 	        	throw e;
 	        }
-        	return getHttpMethodHelper().postEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public ResponseContext postMedia(RequestContext request) {
-        try {
-            return getHttpMethodHelper().postMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public ResponseContext putEntry(RequestContext request) {
-        try {
-            return getHttpMethodHelper().putEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public ResponseContext putMedia(RequestContext request) {
-        try {
-            return getHttpMethodHelper().putMedia(request, net.metadata.dataspace.data.model.record.Collection.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public ResponseContext deleteEntry(RequestContext request) {
-        try {
-            return getHttpMethodHelper().deleteEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly=true)
-    public ResponseContext getEntry(RequestContext request) {
-        try {
-            return getHttpMethodHelper().getEntry(request, net.metadata.dataspace.data.model.record.Collection.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly=true)
-    public ResponseContext getFeed(RequestContext request) {
-        try {
-            String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
-            String accept = request.getAccept();
-            if (representationMimeType == null) {
-                representationMimeType = accept;
-            }
-            if (representationMimeType != null &&
-                    (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) ||
-                            representationMimeType.equals(Constants.MIME_TYPE_ATOM))) {
-                return super.getFeed(request);
-            } else {
-//                return getHttpMethodHelper().getFeed(request, Collection.class);
-                Feed feed = createFeedBase(request);
-                addFeedDetails(feed, request);
-                ResponseContext responseContext = buildGetFeedResponse(feed);
-
-                return getHttpMethodHelper().getFeed(request, responseContext, Collection.class);
-            }
+        	return getHttpMethodHelper().postEntry(request, getRecordClass());
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
@@ -168,7 +97,7 @@ public class CollectionAdapter extends AbstractRecordAdapter<net.metadata.datasp
     @Override
     @Transactional(readOnly=true)
     public Iterable<net.metadata.dataspace.data.model.record.Collection> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return getRecords(requestContext, Collection.class);
+        return getRecords(requestContext);
     }
 
     @Override

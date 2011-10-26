@@ -2,12 +2,10 @@ package net.metadata.dataspace.atom.adapter;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
-import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.data.model.record.Agent;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.*;
 import org.apache.abdera.protocol.server.RequestContext;
-import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,86 +20,14 @@ import java.util.List;
 @Transactional
 public class AgentAdapter extends AbstractRecordAdapter<Agent> {
 
-    @Override
-    public ResponseContext postEntry(RequestContext request) {
-        try {
-            return getHttpMethodHelper().postEntry(request, Agent.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseContext postMedia(RequestContext request) {
-        try {
-            return getHttpMethodHelper().postMedia(request, Agent.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseContext putEntry(RequestContext request) {
-        try {
-            return getHttpMethodHelper().putEntry(request, Agent.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseContext putMedia(RequestContext request) {
-        try {
-            return getHttpMethodHelper().putMedia(request, Agent.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseContext deleteEntry(RequestContext request) {
-        try {
-            return getHttpMethodHelper().deleteEntry(request, Agent.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseContext getEntry(RequestContext request) {
-        try {
-            return getHttpMethodHelper().getEntry(request, Agent.class);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseContext getFeed(RequestContext request) {
-        try {
-            String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
-            String accept = request.getAccept();
-            if (representationMimeType == null) {
-                representationMimeType = accept;
-            }
-            if (representationMimeType != null &&
-                    (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) ||
-                            representationMimeType.equals(Constants.MIME_TYPE_ATOM))) {
-                return super.getFeed(request);
-            } else {
-                Feed feed = createFeedBase(request);
-                addFeedDetails(feed, request);
-                ResponseContext responseContext = buildGetFeedResponse(feed);
-                return getHttpMethodHelper().getFeed(request, responseContext, Agent.class);
-            }
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
+	@Override
+	protected Class<Agent> getRecordClass() {
+		return Agent.class;
+	}
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-        getHttpMethodHelper().addFeedDetails(feed, request, Agent.class);
+        getHttpMethodHelper().addFeedDetails(feed, request, getRecordClass());
         Iterable<Agent> entries = getEntries(request);
         if (entries != null) {
             for (Agent entryObj : entries) {
@@ -145,7 +71,7 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent> {
 
     @Override
     public Iterable<Agent> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return getRecords(requestContext, Agent.class);
+        return getRecords(requestContext);
     }
 
     @Override

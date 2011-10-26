@@ -261,19 +261,6 @@ public class HttpMethodHelper {
         }
     }
 
-    public ResponseContext getFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) throws ResponseContextException {
-        String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
-        if (representationMimeType != null) {
-            if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-                return getFeedOutputHelper().getHtmlRepresentationOfFeed(request, responseContext, clazz);
-            } else {
-                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-            }
-        } else {
-            return getFeedOutputHelper().getHtmlRepresentationOfFeed(request, responseContext, clazz);
-        }
-    }
-
     public void addFeedDetails(Feed feed, RequestContext request, Class<?> clazz) throws ResponseContextException {
         Record latestService = getLatestRecord(clazz);
         if (latestService != null) {
