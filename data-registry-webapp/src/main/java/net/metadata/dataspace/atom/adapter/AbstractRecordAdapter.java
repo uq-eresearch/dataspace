@@ -15,20 +15,12 @@ import net.metadata.dataspace.atom.util.FeedOutputHelper;
 import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
-import net.metadata.dataspace.data.access.ActivityDao;
-import net.metadata.dataspace.data.access.AgentDao;
-import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.RecordDao;
-import net.metadata.dataspace.data.access.RegistryDao;
-import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
-import net.metadata.dataspace.data.model.record.Activity;
-import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
-import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.record.User;
 
 import org.apache.abdera.Abdera;
@@ -55,6 +47,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
     protected Logger logger = Logger.getLogger(getClass());
 
+    private AdapterInputHelper adapterInputHelper;
+    private AdapterOutputHelper adapterOutputHelper;
     private AuthenticationManager authenticationManager;
     private AuthorizationManager<User> authorizationManager;
     private EntityCreator entityCreator;
@@ -69,7 +63,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
         R latestRecord = getDao().getMostRecentUpdated();
         if (latestRecord != null) {
-        	getDao().refresh(latestRecord);
+            getDao().refresh(latestRecord);
             feed.setUpdated(latestRecord.getUpdated());
         } else {
             //TODO what would the date be if the feed is empty??
@@ -128,7 +122,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                 if (record == null) {
                     throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
                 } else {
-                	getDao().refresh(record);
+                    getDao().refresh(record);
                     if (record.isActive()) {
                         if (getAuthorizationManager().getAccessLevelForInstance(user, record).canDelete()) {
                             try {
@@ -150,10 +144,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
     }
 
-    public R getExistingRecord(String uriKey) {
-        return getDao().getByKey(uriKey);
-    }
-
     @Override
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
@@ -163,6 +153,14 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Override
     public String[] getAccepts(RequestContext requestContext) {
         return new String[]{Constants.MIME_TYPE_ATOM_ENTRY};
+    }
+
+    public AdapterInputHelper getAdapterInputHelper() {
+        return adapterInputHelper;
+    }
+
+    public AdapterOutputHelper getAdapterOutputHelper() {
+        return adapterOutputHelper;
     }
 
     public AuthenticationManager getAuthenticationManager() {
@@ -226,7 +224,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                                 ResponseContext versionHistoryFeed1 = getFeedOutputHelper().getVersionHistoryFeed(request, versionHistoryFeed, record, getRecordClass());
                                 return versionHistoryFeed1;
                             } else {
-                            	version = getDao().getByVersion(uriKey, versionKey);
+                                version = getDao().getByVersion(uriKey, versionKey);
                             }
                         } else {
                             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
@@ -241,8 +239,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                     if (version == null) {
                         throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
                     } else {
-                        Entry entry = AdapterOutputHelper.getEntryFromEntity(version, versionKey == null);
-                        return AdapterOutputHelper.getContextResponseForGetEntry(request, entry, getRecordClass());
+                        Entry entry = adapterOutputHelper.getEntryFromEntity(version, versionKey == null);
+                        return adapterOutputHelper.getContextResponseForGetEntry(request, entry, getRecordClass());
                     }
                 } else {
                     throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
@@ -261,6 +259,10 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
         return entry;
 
+    }
+
+    public R getExistingRecord(String uriKey) {
+        return getDao().getByKey(uriKey);
     }
 
     @Override
@@ -302,6 +304,26 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
     public FeedOutputHelper getFeedOutputHelper() {
         return feedOutputHelper;
+    }
+
+    /**
+     * Retrieves the FOM Entry object from the request payload.
+     */
+    private Entry getFomEntryFromRequest(RequestContext request) throws ResponseContextException {
+        Abdera abdera = request.getAbdera();
+        Parser parser = abdera.getParser();
+        Document<Entry> entry_doc;
+        try {
+            entry_doc = (Document<Entry>) request.getDocument(parser).clone();
+            if (entry_doc == null) {
+                return null;
+            }
+            return entry_doc.getRoot();
+        } catch (ParseException e) {
+            throw new ResponseContextException(400, e);
+        } catch (IOException e) {
+            throw new ResponseContextException(500, e);
+        }
     }
 
     @Override
@@ -367,12 +389,12 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                 if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
                     Entry entry = getEntryFromRequest(request);
                     Record record = getEntityCreator().getNextRecord(getRecordClass());
-                    Version version = AdapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
+                    Version version = adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
                     if (version == null) {
                         throw new ResponseContextException("Version is null", 400);
                     } else {
                         try {
-                            Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
+                            Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
                             if (source.getId() == null) {
                                 entityManager.persist(source);
                             }
@@ -380,7 +402,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                             Date now = new Date();
                             version.setUpdated(now);
                             List<Person> authors = entry.getSource().getAuthors();
-                            AdapterInputHelper.addDescriptionAuthors(version, authors, request);
+                            adapterInputHelper.addDescriptionAuthors(version, authors, request);
                             version.setSource(source);
                             //TODO these values (i.e. rights, license) should come from the entry
                             record.setLicense(Constants.UQ_REGISTRY_LICENSE);
@@ -389,9 +411,9 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                             record.setUpdated(now);
                             entityManager.persist(version);
                             entityManager.persist(record);
-                            AdapterInputHelper.addRelations(entry, version, user);
-                            Entry createdEntry = AdapterOutputHelper.getEntryFromEntity(version, true);
-                            return AdapterOutputHelper.getContextResponseForPost(createdEntry);
+                            adapterInputHelper.addRelations(entry, version, user);
+                            Entry createdEntry = adapterOutputHelper.getEntryFromEntity(version, true);
+                            return adapterOutputHelper.getContextResponseForPost(createdEntry);
                         } catch (Exception th) {
                             logger.warn("Invalid Entry, Rolling back database", th);
                             throw new ResponseContextException(th.getMessage(), 400);
@@ -453,28 +475,28 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                     } else {
                         getDao().refresh(record);
                         if (record.isActive()) {
-                        	V version = (V) AdapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
+                            V version = (V) adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
                             if (version == null) {
                                 throw new ResponseContextException("Version is null", 400);
                             } else {
                                 if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
                                     EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
                                     try {
-                                        Source source = AdapterInputHelper.assembleAndValidateSourceFromEntry(entry);
+                                        Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
                                         if (source.getId() == null) {
                                             entityManager.persist(source);
                                         }
                                         record.getVersions().add(version);
                                         version.setParent(record);
-                                        AdapterInputHelper.addRelations(entry, version, user);
+                                        adapterInputHelper.addRelations(entry, version, user);
                                         record.setUpdated(new Date());
                                         List<Person> authors = entry.getSource().getAuthors();
-                                        AdapterInputHelper.addDescriptionAuthors(version, authors, request);
+                                        adapterInputHelper.addDescriptionAuthors(version, authors, request);
                                         version.setSource(source);
                                         entityManager.persist(version);
                                         entityManager.merge(record);
-                                        Entry updatedEntry = AdapterOutputHelper.getEntryFromEntity(version, false);
-                                        return AdapterOutputHelper.getContextResponseForPut(updatedEntry);
+                                        Entry updatedEntry = adapterOutputHelper.getEntryFromEntity(version, false);
+                                        return adapterOutputHelper.getContextResponseForPut(updatedEntry);
                                     } catch (Exception th) {
                                         logger.fatal("Invalid Entry, Rolling back database", th);
 
@@ -497,26 +519,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
     }
 
-	/**
-     * Retrieves the FOM Entry object from the request payload.
-     */
-    private Entry getFomEntryFromRequest(RequestContext request) throws ResponseContextException {
-        Abdera abdera = request.getAbdera();
-        Parser parser = abdera.getParser();
-        Document<Entry> entry_doc;
-        try {
-            entry_doc = (Document<Entry>) request.getDocument(parser).clone();
-            if (entry_doc == null) {
-                return null;
-            }
-            return entry_doc.getRoot();
-        } catch (ParseException e) {
-            throw new ResponseContextException(400, e);
-        } catch (IOException e) {
-            throw new ResponseContextException(500, e);
-        }
-    }
-
     /**
      * We do not support media putting
      */
@@ -532,6 +534,14 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
+    }
+
+    public void setAdapterInputHelper(AdapterInputHelper adapterInputHelper) {
+        this.adapterInputHelper = adapterInputHelper;
+    }
+
+    public void setAdapterOutputHelper(AdapterOutputHelper adapterOutputHelper) {
+        this.adapterOutputHelper = adapterOutputHelper;
     }
 
     @Required

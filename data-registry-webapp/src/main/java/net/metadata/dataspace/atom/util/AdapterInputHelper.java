@@ -52,16 +52,12 @@ import java.util.*;
 @Transactional
 public class AdapterInputHelper {
 
-    private static CollectionDao collectionDao = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao();
-    private static AgentDao agentDao = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao();
-    private static ActivityDao activityDao = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao();
-    private static ServiceDao serviceDao = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao();
-    private static final EntityCreator entityCreator = RegistryApplication.getApplicationContext().getEntityCreator();
-    private static DaoManager daoManager = RegistryApplication.getApplicationContext().getDaoManager();
+    private EntityCreator entityCreator;
+    private DaoManager daoManager;
 
-    private static final Logger logger = Logger.getLogger(AdapterInputHelper.class);
+    private final Logger logger = Logger.getLogger(getClass());
 
-    public static void addRelations(Entry entry, Version<?> version, User currentUser) throws ResponseContextException, URISyntaxException {
+    public void addRelations(Entry entry, Version<?> version, User currentUser) throws ResponseContextException, URISyntaxException {
         if (version instanceof ActivityVersion) {
             addRelationsToActivity(entry, (ActivityVersion) version);
         } else if (version instanceof CollectionVersion) {
@@ -73,8 +69,8 @@ public class AdapterInputHelper {
         }
     }
 
-    private static void addRelationsToActivity(Entry entry, ActivityVersion version) throws ResponseContextException {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+    private void addRelationsToActivity(Entry entry, ActivityVersion version) throws ResponseContextException {
+        EntityManager entityManager = daoManager.getEntityManagerSource().getEntityManager();
 
         //Add the original id
         IRI entryId = entry.getId();
@@ -102,7 +98,7 @@ public class AdapterInputHelper {
 
         Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_HAS_OUTPUT);
         for (String key : collectionUriKeys) {
-            Collection collection = collectionDao.getByKey(key);
+            Collection collection = daoManager.getCollectionDao().getByKey(key);
             if (collection != null) {
                 Activity parent = version.getParent();
                 version.getHasOutput().add(collection);
@@ -112,7 +108,7 @@ public class AdapterInputHelper {
         }
         Set<String> agentUriKeys = getUriKeysFromLink(entry, Constants.REL_HAS_PARTICIPANT);
         for (String agentKey : agentUriKeys) {
-            Agent agent = agentDao.getByKey(agentKey);
+            Agent agent = daoManager.getAgentDao().getByKey(agentKey);
             if (agent != null) {
                 Activity parent = version.getParent();
                 agent.getParticipantIn().add(parent);
@@ -134,8 +130,8 @@ public class AdapterInputHelper {
         version.setUpdated(now);
     }
 
-    private static void addRelationsCollection(Entry entry, CollectionVersion version, User currentUser) throws ResponseContextException, URISyntaxException {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+    private void addRelationsCollection(Entry entry, CollectionVersion version, User currentUser) throws ResponseContextException, URISyntaxException {
+        EntityManager entityManager = daoManager.getEntityManagerSource().getEntityManager();
 
         //Add the original id
         IRI entryId = entry.getId();
@@ -185,7 +181,7 @@ public class AdapterInputHelper {
         //Add outputof
         Set<String> outputOfUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_OUTPUT_OF);
         for (String uriKey : outputOfUriKeys) {
-            Activity activity = activityDao.getByKey(uriKey);
+            Activity activity = daoManager.getActivityDao().getByKey(uriKey);
             if (activity != null) {
                 Collection parent = version.getParent();
                 version.getOutputOf().add(activity);
@@ -196,7 +192,7 @@ public class AdapterInputHelper {
 
         Set<String> supportUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_ACCESSED_VIA);
         for (String uriKey : supportUriKeys) {
-            Service service = serviceDao.getByKey(uriKey);
+            Service service = daoManager.getServiceDao().getByKey(uriKey);
             if (service != null) {
                 Collection parent = version.getParent();
                 version.getAccessedVia().add(service);
@@ -208,7 +204,7 @@ public class AdapterInputHelper {
         //related collections
         Set<String> relatedCollectionsUriKeys = getUriKeysFromLink(entry, Constants.REL_RELATED);
         for (String uriKey : relatedCollectionsUriKeys) {
-            Collection collection = collectionDao.getByKey(uriKey);
+            Collection collection = daoManager.getCollectionDao().getByKey(uriKey);
             if (collection != null) {
                 version.getRelations().add(collection);
                 Collection parent = version.getParent();
@@ -267,8 +263,8 @@ public class AdapterInputHelper {
         version.setUpdated(now);
     }
 
-    private static void addRelationsAgent(Entry entry, AgentVersion version) throws ResponseContextException {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+    private void addRelationsAgent(Entry entry, AgentVersion version) throws ResponseContextException {
+        EntityManager entityManager = daoManager.getEntityManagerSource().getEntityManager();
 
         //Add the original id
         IRI entryId = entry.getId();
@@ -355,7 +351,7 @@ public class AdapterInputHelper {
 
         Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_MADE);
         for (String uriKey : collectionUriKeys) {
-            net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(uriKey);
+            net.metadata.dataspace.data.model.record.Collection collection = daoManager.getCollectionDao().getByKey(uriKey);
             if (collection != null) {
                 Agent parent = version.getParent();
                 collection.getCreators().add(parent);
@@ -366,7 +362,7 @@ public class AdapterInputHelper {
 
         Set<String> publishedCollectionsUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_MANAGER_OF);
         for (String uriKey : publishedCollectionsUriKeys) {
-            net.metadata.dataspace.data.model.record.Collection collection = collectionDao.getByKey(uriKey);
+            net.metadata.dataspace.data.model.record.Collection collection = daoManager.getCollectionDao().getByKey(uriKey);
             if (collection != null) {
                 Agent parent = version.getParent();
                 collection.getPublishers().add(parent);
@@ -377,7 +373,7 @@ public class AdapterInputHelper {
 
         Set<String> isParticipantInUriKeys = getUriKeysFromLink(entry, Constants.REL_CURRENT_PROJECT);
         for (String uriKey : isParticipantInUriKeys) {
-            Activity activity = activityDao.getByKey(uriKey);
+            Activity activity = daoManager.getActivityDao().getByKey(uriKey);
             if (activity != null) {
                 Agent parent = version.getParent();
                 activity.getHasParticipant().add(parent);
@@ -388,7 +384,7 @@ public class AdapterInputHelper {
 
         Set<String> managedServiceInUriKeys = getUriKeysFromLink(entry, Constants.REL_MANAGES_SERVICE);
         for (String uriKey : managedServiceInUriKeys) {
-            Service service = serviceDao.getByKey(uriKey);
+            Service service = daoManager.getServiceDao().getByKey(uriKey);
             if (service != null) {
                 Agent parent = version.getParent();
                 service.getManagedBy().add(parent);
@@ -401,8 +397,8 @@ public class AdapterInputHelper {
         version.setUpdated(now);
     }
 
-    private static void addRelationsService(Entry entry, ServiceVersion version) throws ResponseContextException {
-        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+    private void addRelationsService(Entry entry, ServiceVersion version) throws ResponseContextException {
+        EntityManager entityManager = daoManager.getEntityManagerSource().getEntityManager();
 
         //Add the original id
         IRI entryId = entry.getId();
@@ -420,7 +416,7 @@ public class AdapterInputHelper {
         addPages(version, entry);
         Set<String> collectionUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_SUPPORTED_BY);
         for (String uriKey : collectionUriKeys) {
-            Collection collection = collectionDao.getByKey(uriKey);
+            Collection collection = daoManager.getCollectionDao().getByKey(uriKey);
             if (collection != null) {
                 Service parent = version.getParent();
                 version.getSupportedBy().add(collection);
@@ -431,7 +427,7 @@ public class AdapterInputHelper {
 
         Set<String> agentsUriKeys = getUriKeysFromLink(entry, Constants.REL_IS_MANAGED_BY);
         for (String agentUriKey : agentsUriKeys) {
-            Agent agent = agentDao.getByKey(agentUriKey);
+            Agent agent = daoManager.getAgentDao().getByKey(agentUriKey);
             if (agent != null) {
                 Service parent = version.getParent();
                 version.getManagedBy().add(agent);
@@ -445,7 +441,7 @@ public class AdapterInputHelper {
         version.setUpdated(now);
     }
 
-    public static Version<?> assembleAndValidateVersionFromEntry(Record<?> record, Entry entry) throws ResponseContextException {
+    public Version<?> assembleAndValidateVersionFromEntry(Record<?> record, Entry entry) throws ResponseContextException {
         if (entry == null) {
             throw new ResponseContextException("Empty Atom entry", 400);
         } else if(!ProviderHelper.isValidEntry(entry)) {
@@ -464,7 +460,7 @@ public class AdapterInputHelper {
         }
     }
 
-    public static Source assembleAndValidateSourceFromEntry(Entry entry) throws ResponseContextException {
+    public Source assembleAndValidateSourceFromEntry(Entry entry) throws ResponseContextException {
         if (entry == null || !ProviderHelper.isValidEntry(entry)) {
             throw new ResponseContextException("Invalid entry", 400);
         } else {
@@ -491,7 +487,7 @@ public class AdapterInputHelper {
         }
     }
 
-    public static void addDescriptionAuthors(
+    public void addDescriptionAuthors(
     		Version<?> version,
     		List<Person> authors,
     		RequestContext request) throws ResponseContextException
@@ -502,8 +498,7 @@ public class AdapterInputHelper {
 	            AuthenticationManager authenticationManager =
 	            		RegistryApplication.getApplicationContext().getAuthenticationManager();
 	            User currentUser = authenticationManager.getCurrentUser(request);
-	            currentUser = RegistryApplication.getApplicationContext()
-	            		.getDaoManager().getUserDao()
+	            currentUser = daoManager.getUserDao()
 	            		.getByUsername(currentUser.getUsername());
 	            version.getDescriptionAuthors().add(
 	            		new SourceAuthor(
@@ -526,7 +521,7 @@ public class AdapterInputHelper {
         }
     }
 
-    public static void addCollectionCreator(CollectionVersion version, List<Person> persons, User currentUser) throws ResponseContextException {
+    public void addCollectionCreator(CollectionVersion version, List<Person> persons, User currentUser) throws ResponseContextException {
         for (Person person : persons) {
             String name = person.getName();
             String email = person.getEmail();
@@ -535,7 +530,7 @@ public class AdapterInputHelper {
                 throw new ResponseContextException("Author missing name", 400);
             }
             if (uri != null) {
-                EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+                EntityManager entityManager = daoManager.getEntityManagerSource().getEntityManager();
                 String uriKey = OperationHelper.getEntityID(uri.toString());
                 Agent agent = daoManager.getAgentDao().getByKey(uriKey);
                 if (agent != null) {
@@ -573,7 +568,7 @@ public class AdapterInputHelper {
         }
     }
 
-    public static void addCollectionPublishers(CollectionVersion version, List<Link> publishers, User currentUser) throws ResponseContextException {
+    public void addCollectionPublishers(CollectionVersion version, List<Link> publishers, User currentUser) throws ResponseContextException {
         for (Link publisherLink : publishers) {
             String title = publisherLink.getTitle();
             if (title == null) {
@@ -601,7 +596,7 @@ public class AdapterInputHelper {
                     if (agent != null) {
                         version.getPublishers().add(agent);
                         agent.getIsManagerOf().add(version.getParent());
-                        EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+                        EntityManager entityManager = daoManager.getEntityManagerSource().getEntityManager();
                         entityManager.merge(agent);
                     } else {
                         //Cannot do much here
@@ -611,7 +606,7 @@ public class AdapterInputHelper {
         }
     }
 
-    private static Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
+    private Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
         Set<Subject> subjects = new HashSet<Subject>();
         try {
             List<Category> categories = entry.getCategories();
@@ -647,7 +642,7 @@ public class AdapterInputHelper {
     }
 
 
-    private static Set<Publication> getPublications(Entry entry) throws ResponseContextException {
+    private Set<Publication> getPublications(Entry entry) throws ResponseContextException {
         Set<Publication> publications = new HashSet<Publication>();
         try {
             List<Link> links = entry.getLinks(Constants.REL_IS_REFERENCED_BY);
@@ -670,7 +665,7 @@ public class AdapterInputHelper {
         return publications;
     }
 
-    private static void setPublished(Entry entry, Version version) {
+    private void setPublished(Entry entry, Version version) {
         Control control = entry.getControl();
         if (control != null && !control.isDraft()) {
             version.getParent().setPublished(version);
@@ -678,7 +673,7 @@ public class AdapterInputHelper {
         }
     }
 
-    private static void addAlternativeTitles(Version<?> version, Entry entry) {
+    private void addAlternativeTitles(Version<?> version, Entry entry) {
         List<Element> extensions = entry.getExtensions(Constants.QNAME_RDFA_META);
         for (Element extension : extensions) {
             String property = extension.getAttributeValue("property");
@@ -689,7 +684,7 @@ public class AdapterInputHelper {
         }
     }
 
-    private static void addPages(Version<?> version, Entry entry) throws ResponseContextException {
+    private void addPages(Version<?> version, Entry entry) throws ResponseContextException {
         List<Link> links = entry.getLinks(Constants.REL_PAGE);
         for (Link link : links) {
             String page = link.getHref().toString();
@@ -697,7 +692,7 @@ public class AdapterInputHelper {
         }
     }
 
-    private static Set<Publication> getAgentPublications(Entry entry) throws ResponseContextException {
+    private Set<Publication> getAgentPublications(Entry entry) throws ResponseContextException {
         Set<Publication> publications = new HashSet<Publication>();
         try {
             List<Link> links = entry.getLinks(Constants.REL_PUBLICATIONS);
@@ -719,7 +714,7 @@ public class AdapterInputHelper {
         return publications;
     }
 
-    private static void addType(Version<?> version, Entry entry) throws ResponseContextException {
+    private void addType(Version<?> version, Entry entry) throws ResponseContextException {
         if (version == null) {
             throw new ResponseContextException("Version is null", 400);
         } else {
@@ -769,7 +764,7 @@ public class AdapterInputHelper {
         }
     }
 
-    private static Set<String> getUriKeysFromLink(Entry entry, String rel) throws ResponseContextException {
+    private Set<String> getUriKeysFromLink(Entry entry, String rel) throws ResponseContextException {
         Set<String> uriKeys = new HashSet<String>();
         try {
             List<Link> links = entry.getLinks(rel);
@@ -785,8 +780,8 @@ public class AdapterInputHelper {
         return uriKeys;
     }
 
-    private static Agent findOrCreateAgent(String name, String email, User currentUser) throws ResponseContextException {
-    	EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+    private Agent findOrCreateAgent(String name, String email, User currentUser) throws ResponseContextException {
+    	EntityManager entityManager = daoManager.getEntityManagerSource().getEntityManager();
 
     	//Find the agent in our system first
         Agent agent = daoManager.getAgentDao().getByEmail(email);
@@ -818,10 +813,10 @@ public class AdapterInputHelper {
         return agent;
     }
 
-    private static Agent createBasicAgent(String name, String email) {
+    private Agent createBasicAgent(String name, String email) {
         Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
         AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
-        SourceDao sourceDao = RegistryApplication.getApplicationContext().getDaoManager().getSourceDao();
+        SourceDao sourceDao = daoManager.getSourceDao();
         Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
         version.setTitle(name);
         version.setDescription(name);
@@ -837,4 +832,21 @@ public class AdapterInputHelper {
         version.setSource(systemSource);
         return agent;
     }
+
+	public EntityCreator getEntityCreator() {
+		return entityCreator;
+	}
+
+	public void setEntityCreator(EntityCreator entityCreator) {
+		this.entityCreator = entityCreator;
+	}
+
+	public DaoManager getDaoManager() {
+		return daoManager;
+	}
+
+	public void setDaoManager(DaoManager daoManager) {
+		this.daoManager = daoManager;
+	}
+
 }

@@ -8,6 +8,12 @@
        	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
+    <bean id="adapterInputHelper" class="net.metadata.dataspace.atom.util.AdapterInputHelper">
+        <property name="daoManager" ref="daoManager"/>
+        <property name="entityCreator" ref="entityCreator"/>
+    </bean>
+
+    <bean id="adapterOutputHelper" class="net.metadata.dataspace.atom.util.AdapterOutputHelper"/>
 	<bean id="feedOutputHelper" class="net.metadata.dataspace.atom.util.FeedOutputHelper"/>
 
 	<bean id="activityAdapter" class="net.metadata.dataspace.atom.adapter.ActivityAdapter">
@@ -16,6 +22,8 @@
         <property name="authorizationManager" ref="authorizationManager"/>
         <property name="entityCreator" ref="entityCreator"/>
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
+        <property name="adapterInputHelper" ref="adapterInputHelper"/>
+        <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
 	</bean>
 
 	<bean id="agentAdapter" class="net.metadata.dataspace.atom.adapter.AgentAdapter">
@@ -24,6 +32,8 @@
         <property name="authorizationManager" ref="authorizationManager"/>
         <property name="entityCreator" ref="entityCreator"/>
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
+        <property name="adapterInputHelper" ref="adapterInputHelper"/>
+        <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
 	</bean>
 
 	<bean id="collectionAdapter" class="net.metadata.dataspace.atom.adapter.CollectionAdapter">
@@ -32,6 +42,8 @@
         <property name="authorizationManager" ref="authorizationManager"/>
         <property name="entityCreator" ref="entityCreator"/>
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
+        <property name="adapterInputHelper" ref="adapterInputHelper"/>
+        <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
 	</bean>
 
 	<bean id="serviceAdapter" class="net.metadata.dataspace.atom.adapter.ServiceAdapter">
@@ -40,6 +52,8 @@
         <property name="authorizationManager" ref="authorizationManager"/>
         <property name="entityCreator" ref="entityCreator"/>
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
+        <property name="adapterInputHelper" ref="adapterInputHelper"/>
+        <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
 	</bean>
 
 

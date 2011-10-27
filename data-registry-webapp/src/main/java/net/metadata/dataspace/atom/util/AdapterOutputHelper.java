@@ -38,11 +38,11 @@ import java.util.SortedSet;
 @Transactional
 public class AdapterOutputHelper {
 
-	private static final Logger logger = Logger.getLogger(AdapterOutputHelper.class);
+	private final Logger logger = Logger.getLogger(AdapterOutputHelper.class);
 
-	private static final FeedOutputHelper feedOutputHelper = new FeedOutputHelper();
+	private final FeedOutputHelper feedOutputHelper = new FeedOutputHelper();
 
-    public static Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
+    public Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
         if (version == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
         } else {
@@ -59,7 +59,7 @@ public class AdapterOutputHelper {
         return null;
     }
 
-    private static Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
+    private Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
 
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
@@ -119,7 +119,7 @@ public class AdapterOutputHelper {
         return entry;
     }
 
-    private static Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
+    private Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
 
@@ -211,7 +211,7 @@ public class AdapterOutputHelper {
         return entry;
     }
 
-    private static Entry getEntryFromCollection(CollectionVersion version, boolean isParentLevel) throws ResponseContextException {
+    private Entry getEntryFromCollection(CollectionVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
@@ -338,7 +338,7 @@ public class AdapterOutputHelper {
         return entry;
     }
 
-    private static Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
+    private Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
@@ -381,7 +381,7 @@ public class AdapterOutputHelper {
         return entry;
     }
 
-    public static ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry, Class<?> clazz) throws ResponseContextException {
+    public ResponseContext getContextResponseForGetEntry(RequestContext request, Entry entry, Class<?> clazz) throws ResponseContextException {
 
         String accept = OperationHelper.getAcceptHeader(request);
         ResponseContext responseContext = ProviderHelper.returnBase(entry, 200, entry.getUpdated()).setEntityTag(ProviderHelper.calculateEntityTag(entry));
@@ -434,7 +434,7 @@ public class AdapterOutputHelper {
         return responseContext;
     }
 
-    public static ResponseContext getContextResponseForPost(Entry entry) throws ResponseContextException {
+    public ResponseContext getContextResponseForPost(Entry entry) throws ResponseContextException {
         try {
             String selfLinkHref = entry.getLink(Constants.REL_SELF).getHref().toString();
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
@@ -450,7 +450,7 @@ public class AdapterOutputHelper {
         }
     }
 
-    public static ResponseContext getContextResponseForPut(Entry entry) throws ResponseContextException {
+    public ResponseContext getContextResponseForPut(Entry entry) throws ResponseContextException {
         try {
             String selfLinkHref = entry.getLink(Constants.REL_SELF).getHref().toString();
             prepareAlternateLink(entry, selfLinkHref, Constants.MIME_TYPE_XHTML, Constants.MIM_TYPE_NAME_XHTML);
@@ -466,7 +466,7 @@ public class AdapterOutputHelper {
         }
     }
 
-    private static void prepareSelfLink(Entry entry, String href, String title) throws ResponseContextException {
+    private void prepareSelfLink(Entry entry, String href, String title) throws ResponseContextException {
         try {
             Link selfLink = entry.getSelfLink();
             if (selfLink == null) {
@@ -481,7 +481,7 @@ public class AdapterOutputHelper {
         }
     }
 
-    private static void prepareAlternateLink(Entry entry, String href, String mimeType, String title) throws ResponseContextException {
+    private void prepareAlternateLink(Entry entry, String href, String mimeType, String title) throws ResponseContextException {
         try {
             Link alternateLink = entry.addLink(entry.getId().toString());
             alternateLink.setHref(href + "?repr=" + mimeType);
@@ -494,7 +494,7 @@ public class AdapterOutputHelper {
         }
     }
 
-    private static Entry setCommonAttributes(Version version, boolean isParentLevel, String parentUrl) throws ResponseContextException {
+    private Entry setCommonAttributes(Version version, boolean isParentLevel, String parentUrl) throws ResponseContextException {
         Abdera abdera = new Abdera();
         Entry entry;
         try {
@@ -524,7 +524,7 @@ public class AdapterOutputHelper {
         return entry;
     }
 
-    private static void addNavigationLinks(Version version, Entry entry, String parentUrl) throws ResponseContextException {
+    private void addNavigationLinks(Version version, Entry entry, String parentUrl) throws ResponseContextException {
         try {
             if (version.getParent().getWorkingCopy() != null) {
 	            String workingCopyKey = version.getParent().getWorkingCopy().getUriKey();
@@ -565,7 +565,7 @@ public class AdapterOutputHelper {
         }
     }
 
-    private static void addSource(Version<?> version, Entry entry) throws ResponseContextException {
+    private void addSource(Version<?> version, Entry entry) throws ResponseContextException {
         try {
             Source source = Abdera.getNewFactory().newSource(entry);
             net.metadata.dataspace.data.model.context.Source registrySource = version.getSource();
@@ -593,7 +593,7 @@ public class AdapterOutputHelper {
         }
     }
 
-    private static void addSubjectToEntry(Entry entry, Set<Subject> subjectSet) {
+    private void addSubjectToEntry(Entry entry, Set<Subject> subjectSet) {
         for (Subject sub : subjectSet) {
             if (sub.getLabel().equals(Constants.LABEL_KEYWORD)) {
                 entry.addCategory(sub.getTerm());

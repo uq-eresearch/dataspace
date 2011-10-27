@@ -26,6 +26,7 @@ import java.util.Properties;
  */
 public class RIFCSCrosswalk extends Crosswalk {
 
+	private AdapterOutputHelper adapterOutputHelper = new AdapterOutputHelper();
     private Logger logger = Logger.getLogger(getClass());
 
     public RIFCSCrosswalk(Properties props) {
@@ -47,7 +48,7 @@ public class RIFCSCrosswalk extends Crosswalk {
                 xslFilePath = "/files/xslt/rifcs/atom2rifcs-" + Service.class.getSimpleName().toLowerCase() + ".xsl";
             }
             XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath);
-            Entry entry = AdapterOutputHelper.getEntryFromEntity((Version) nativeItem, true);
+            Entry entry = adapterOutputHelper.getEntryFromEntity((Version) nativeItem, true);
             AbstractWriterOptions writerOptions = new AbstractWriterOptions() {
             };
             writerOptions.setCharset("UTF8");

@@ -19,6 +19,7 @@ import java.util.Properties;
  */
 public class RIFCSOaiRecordFactory extends RecordFactory {
 
+	private AdapterOutputHelper adapterOutputHelper = new AdapterOutputHelper();
     private Logger logger = Logger.getLogger(getClass());
 
     public RIFCSOaiRecordFactory(Properties properties) {
@@ -40,7 +41,7 @@ public class RIFCSOaiRecordFactory extends RecordFactory {
     @Override
     public String getOAIIdentifier(Object o) {
         try {
-            return AdapterOutputHelper.getEntryFromEntity((Version) o, true).getLink(Constants.REL_SELF).getHref().toString();
+            return adapterOutputHelper.getEntryFromEntity((Version) o, true).getLink(Constants.REL_SELF).getHref().toString();
         } catch (ResponseContextException e) {
             e.printStackTrace();
             return null;
