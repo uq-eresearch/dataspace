@@ -1,12 +1,13 @@
 package net.metadata.dataspace.servlets;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.app.RegistryConfiguration;
 import net.metadata.dataspace.atom.adapter.ActivityAdapter;
 import net.metadata.dataspace.atom.adapter.AgentAdapter;
 import net.metadata.dataspace.atom.adapter.CollectionAdapter;
 import net.metadata.dataspace.atom.adapter.ServiceAdapter;
 import net.metadata.dataspace.atom.util.OperationHelper;
+import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.servlets.processor.VersionRequestProcessor;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.templates.Route;
@@ -39,7 +40,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 		ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 
         SimpleWorkspaceInfo registryWorkSpace = new SimpleWorkspaceInfo();
-        registryWorkSpace.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle());
+        registryWorkSpace.setTitle(((RegistryConfiguration)context.getBean("applicationContext")).getRegistryTitle());
 
         AgentAdapter agentAdapter = (AgentAdapter) context.getBean("agentAdapter");
         agentAdapter.setHref(Constants.PATH_FOR_AGENTS);
@@ -125,16 +126,21 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
             }
 
             protected ResponseContext login(RequestContext request) {
-                return RegistryApplication.getApplicationContext().getAuthenticationManager().login(request);
+                return getAuthenticationManager().login(request);
             }
 
             protected ResponseContext logout(RequestContext request) {
-                return RegistryApplication.getApplicationContext().getAuthenticationManager().logout(request);
+                return getAuthenticationManager().logout(request);
             }
         };
         registryServiceProvider.addWorkspace(registryWorkSpace);
         registryServiceProvider.init(getAbdera(), null);
         return registryServiceProvider;
     }
+
+	private AuthenticationManager getAuthenticationManager() {
+		ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+		return (AuthenticationManager) context.getBean("authenticationManager");
+	}
 
 }
