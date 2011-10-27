@@ -30,13 +30,15 @@ import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.SearchControls;
+import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchResult;
 import javax.persistence.EntityManager;
 import javax.xml.namespace.QName;
@@ -56,6 +58,7 @@ public class AdapterInputHelper {
     private AuthenticationManager authenticationManager;
     private EntityCreator entityCreator;
     private DaoManager daoManager;
+    private LdapTemplate ldapTemplate;
 
     private final Logger logger = Logger.getLogger(getClass());
 
@@ -786,21 +789,11 @@ public class AdapterInputHelper {
     	//Find the agent in our system first
         Agent agent = daoManager.getAgentDao().getByEmail(email);
         if (agent == null) {
-            NamingEnumeration<SearchResult> namingEnumeration = searchLDAPByEmail(email, currentUser);
-            if (namingEnumeration != null) {
-                Map<String, String> attributesAsMap;
-				try {
-					attributesAsMap = getAttributesAsMap(namingEnumeration);
-				} catch (NamingException e) {
-					throw new ResponseContextException("Could not find agent: " + email, 500);
-				}
-                agent = createAgent(attributesAsMap);
-                if (agent == null) {
-                    //Else create it from email and name
-                    agent = createBasicAgent(name, email);
-                }
-            } else {
+            List<Agent> agents = searchLDAPByEmail(email);
+            if (agents.size() == 0) {
                 agent = createBasicAgent(name, email);
+            } else {
+            	agent = agents.get(0);
             }
             //agent.setDescriptionAuthor(user);
             entityManager.persist(agent);
@@ -833,46 +826,20 @@ public class AdapterInputHelper {
         return agent;
     }
 
-    public NamingEnumeration<SearchResult> searchLDAPByEmail(String email, User currentUser) {
-        AuthenticationManager authenticationManager = getAuthenticationManager();
-        DirContext dirContext = authenticationManager.getDirContext(currentUser);
-        NamingEnumeration<SearchResult> namingEnum;
-        try {
-            SearchControls ctls = new SearchControls();
-            ctls.setReturningObjFlag(true);
-            ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            namingEnum = dirContext.search("ou=staff,ou=people,o=the university of queensland,c=au", "(mail=" + email + ")", ctls);
-        } catch (NamingException e) {
-            String message = "User not found in LDAP";
-            System.err.println(message);
-            return null;
-        }
-        return namingEnum;
+    @SuppressWarnings("unchecked")
+	public List<Agent> searchLDAPByEmail(String email) {
+    	return (List<Agent>) ldapTemplate.search(
+    			"ou=staff,ou=people",
+    			"(mail=" + email + ")",
+    			new AgentAttributesMapper());
     }
 
-    public Map<String, String> getAttributesAsMap(NamingEnumeration<SearchResult> namingEnum) throws NamingException {
-        Map<String, String> attributes = new HashMap<String, String>();
-        if (namingEnum.hasMore()) {
-            for (NamingEnumeration<? extends Attribute> attrs = namingEnum.next().getAttributes().getAll(); attrs.hasMore(); ) {
-                Attribute attr = (Attribute) attrs.next();
-                String id = attr.getID();
-                NamingEnumeration<?> values = attr.getAll();
-                String result = "";
-                while (values.hasMore()) {
-                    result = result + values.next() + " ";
-                }
-                attributes.put(id, result.trim());
-            }
-        }
-        return attributes;
-    }
+    private class AgentAttributesMapper implements AttributesMapper {
 
-    public Agent createAgent(Map<String, String> attributesMap) {
-        if (attributesMap == null || attributesMap.isEmpty()) {
-            return null;
-        } else {
-            AgentDao agentDao = getDaoManager().getAgentDao();
-            String mail = attributesMap.get("mail");
+		@Override
+		public Agent mapFromAttributes(Attributes attrs) throws NamingException {
+			AgentDao agentDao = getDaoManager().getAgentDao();
+            String mail = (String) attrs.get("mail").get();
             Agent agent = agentDao.getByEmail(mail);
             if (agent == null) {
                 EntityCreator entityCreator = getEntityCreator();
@@ -881,13 +848,13 @@ public class AdapterInputHelper {
                 SourceDao sourceDao = getDaoManager().getSourceDao();
                 Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
                 //always available attributes
-                String name = attributesMap.get("cn");
-                String organisation = attributesMap.get("ou");
+                String name = (String) attrs.get("cn").get();
+                String organisation = (String) attrs.get("ou").get();
 
                 //attributes available when logged in
-                String title = attributesMap.get("personalTitle");
-                String givenName = attributesMap.get("givenName");
-                String familyName = attributesMap.get("sn");
+                String title = (String) attrs.get("personalTitle").get();
+                String givenName = (String) attrs.get("givenName").get();
+                String familyName = (String) attrs.get("sn").get();
                 if (title != null && givenName != null & familyName != null) {
                     FullName fullName = entityCreator.getFullName();
                     fullName.setTitle(title);
@@ -895,15 +862,15 @@ public class AdapterInputHelper {
                     fullName.setFamilyName(familyName);
                     agent.setFullName(fullName);
                 }
-                String jobTitle = attributesMap.get("title");
+                String jobTitle = (String) attrs.get("title").get();
                 if (jobTitle == null) {
                     jobTitle = "Staff Member";
                 }
-                String page = attributesMap.get("labeledURI");
+                String page = (String) attrs.get("labeledURI").get();
                 if (page != null) {
                     version.getPages().add(page);
                 }
-                String nickName = attributesMap.get("pub-displayname");
+                String nickName = (String) attrs.get("nickname").get();
                 if (nickName != null) {
                     version.getAlternatives().add(nickName);
                 }
@@ -912,6 +879,8 @@ public class AdapterInputHelper {
                 Date now = new Date();
                 version.setUpdated(now);
                 version.setType(AgentType.PERSON);
+
+                // TODO: Add alternate mailboxes too
                 version.getMboxes().add(mail);
 
                 version.setParent(agent);
@@ -920,19 +889,17 @@ public class AdapterInputHelper {
                 agent.setUpdated(now);
 
                 version.setSource(systemSource);
-
-                return agent;
-            } else {
-                return agent;
             }
-        }
+            return agent;
+		}
+
     }
 
-
-	public EntityCreator getEntityCreator() {
+    public EntityCreator getEntityCreator() {
 		return entityCreator;
 	}
 
+	@Required
 	public void setEntityCreator(EntityCreator entityCreator) {
 		this.entityCreator = entityCreator;
 	}
@@ -941,6 +908,7 @@ public class AdapterInputHelper {
 		return daoManager;
 	}
 
+	@Required
 	public void setDaoManager(DaoManager daoManager) {
 		this.daoManager = daoManager;
 	}
@@ -949,8 +917,18 @@ public class AdapterInputHelper {
 		return authenticationManager;
 	}
 
+	@Required
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
+	}
+
+	public LdapTemplate getLdapTemplate() {
+		return ldapTemplate;
+	}
+
+	@Required
+	public void setLdapTemplate(LdapTemplate ldapTemplate) {
+		this.ldapTemplate = ldapTemplate;
 	}
 
 }

@@ -12,6 +12,7 @@
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="daoManager" ref="daoManager"/>
         <property name="entityCreator" ref="entityCreator"/>
+        <property name="ldapTemplate" ref="ldapTemplate"/>
     </bean>
 
     <bean id="adapterOutputHelper" class="net.metadata.dataspace.atom.util.AdapterOutputHelper"/>
@@ -76,6 +77,7 @@
 
     <import resource="dao.xml"/>
     <import resource="oaipmh.xml"/>
+    <import resource="ldap.xml"/>
 
     <bean id="applicationContext" class="net.metadata.dataspace.app.RegistryConfigurationImpl">
         <property name="registryTitle" value="${data.registry.title}"/>
@@ -170,7 +172,6 @@
     <bean id="authenticationManager" class="net.metadata.dataspace.auth.impl.AuthenticationManagerImpl">
         <property name="defaultUsersProperties" ref="defaultUsers"/>
         <property name="daoManager" ref="daoManager"/>
-        <property name="adapterInputHelper" ref="adapterInputHelper"/>
     </bean>
     <bean id="authorizationManager" class="net.metadata.dataspace.auth.impl.AuthorizationManagerImpl"/>
 

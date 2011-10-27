@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
@@ -30,11 +31,9 @@ import java.util.*;
 @Transactional
 public class AuthenticationManagerImpl implements AuthenticationManager {
     private Logger logger = Logger.getLogger(getClass());
-    private Map<String, DirContext> userDirContexts = new HashMap<String, DirContext>();
     private Properties defaultUsersProperties;
     private Map<String, String[]> defaultUsers = new HashMap<String, String[]>();
     private DaoManager daoManager;
-    private AdapterInputHelper adapterInputHelper;
 
     @Override
     public User getCurrentUser(RequestContext request) {
@@ -67,12 +66,6 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                 SearchControls ctls = new SearchControls();
                 ctls.setReturningObjFlag(true);
                 ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                try {
-                    DirContext ctx = new InitialDirContext(env);
-                    setDirContext(ctx, user);
-                } catch (NamingException e) {
-                    logger.warn("Could not set LDAP context for user " + userName);
-                }
                 logger.info("Authenticated user: " + userName);
                 return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200, request.getHeader("Host"));
             } else {
@@ -94,7 +87,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                         ctx = new InitialDirContext(env);
 
                         NamingEnumeration<SearchResult> namingEnum = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
-                        Map<String, String> attributesMap = getAdapterInputHelper().getAttributesAsMap(namingEnum);
+                        Map<String, String> attributesMap = getAttributesAsMap(namingEnum);
 
                         UserDao userDao = getDaoManager().getUserDao();
                         User user = userDao.getByUsername(userName);
@@ -110,7 +103,6 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                             userDao.save(user);
                         }
                         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, user);
-                        setDirContext(ctx, user);
                         logger.info("Authenticated user: " + userName);
                         return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200, request.getHeader("Host"));
                     } else {
@@ -128,26 +120,28 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 
     }
 
+
+    private Map<String, String> getAttributesAsMap(NamingEnumeration<SearchResult> namingEnum) throws NamingException {
+        Map<String, String> attributes = new HashMap<String, String>();
+        if (namingEnum.hasMore()) {
+            for (NamingEnumeration<? extends Attribute> attrs = namingEnum.next().getAttributes().getAll(); attrs.hasMore(); ) {
+                Attribute attr = (Attribute) attrs.next();
+                String id = attr.getID();
+                NamingEnumeration<?> values = attr.getAll();
+                String result = "";
+                while (values.hasMore()) {
+                    result = result + values.next() + " ";
+                }
+                attributes.put(id, result.trim());
+            }
+        }
+        return attributes;
+    }
+
     @Override
     public ResponseContext logout(RequestContext request) {
-        User user = (User) request.getAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER);
-        userDirContexts.remove(user.getEmail());
         request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, null);
         return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
-    }
-
-    @Override
-    public DirContext getDirContext(User currentUser) {
-        if (currentUser == null) {
-            return null;
-        } else {
-            return userDirContexts.get(currentUser.getEmail());
-        }
-    }
-
-    @Override
-    public void setDirContext(DirContext ctx, User currentUser) {
-        userDirContexts.put(currentUser.getEmail(), ctx);
     }
 
     public void setDefaultUsersProperties(Properties defaultUsersProperties) {
@@ -171,11 +165,4 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 		this.daoManager = daoManager;
 	}
 
-	public AdapterInputHelper getAdapterInputHelper() {
-		return adapterInputHelper;
-	}
-
-	public void setAdapterInputHelper(AdapterInputHelper adapterInputHelper) {
-		this.adapterInputHelper = adapterInputHelper;
-	}
 }

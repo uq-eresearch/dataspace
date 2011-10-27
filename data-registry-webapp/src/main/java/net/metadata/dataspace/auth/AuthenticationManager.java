@@ -37,9 +37,4 @@ public interface AuthenticationManager {
      * @param request The request of the HTTP conversation. Not null.
      */
     ResponseContext logout(RequestContext request);
-
-
-    DirContext getDirContext(User currentUser);
-
-    void setDirContext(DirContext ctx, User currentUser);
 }
