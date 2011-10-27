@@ -66,32 +66,11 @@ public interface RegistryConfiguration {
     String getUriPrefix();
 
     /**
-     * Return a register of dao
-     *
-     * @return DaoRegister bean
-     */
-    DaoManager getDaoManager();
-
-    /**
-     * Return an entity creator
-     *
-     * @return EntityCreator
-     */
-    EntityCreator getEntityCreator();
-
-    /**
      * Return the application's authentication manager
      *
      * @return AuthenticationManager
      */
     AuthenticationManager getAuthenticationManager();
-
-    /**
-     * Return the application's authorization manager
-     *
-     * @return AuthorizationManager
-     */
-    AuthorizationManager<User> getAuthorizationManager();
 
     /**
      * Return OAI-PMH catalog

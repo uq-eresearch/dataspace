@@ -3,6 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
+    <bean id="jpaConnector" class="net.metadata.dataspace.data.connector.JpaConnector">
+    </bean>
+
     <bean id="collectionDao" class="net.metadata.dataspace.data.access.impl.CollectionDaoImpl">
         <constructor-arg ref="jpaConnector"/>
     </bean>

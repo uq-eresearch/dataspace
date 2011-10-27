@@ -96,7 +96,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                         NamingEnumeration<SearchResult> namingEnum = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
                         Map<String, String> attributesMap = getAdapterInputHelper().getAttributesAsMap(namingEnum);
 
-                        UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
+                        UserDao userDao = getDaoManager().getUserDao();
                         User user = userDao.getByUsername(userName);
                         if (user == null) {
                             user = new User(userName);

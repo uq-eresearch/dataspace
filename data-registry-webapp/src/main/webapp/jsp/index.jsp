@@ -1,22 +1,11 @@
-<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
-<%@ page import="net.metadata.dataspace.data.model.record.Collection" %>
-<%@ page import="net.metadata.dataspace.data.model.version.CollectionVersion" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-
-    List<Collection> recentPublishedCollections = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getRecentPublished(5);
-    List<CollectionVersion> collectionVersions = new ArrayList<CollectionVersion>();
-    for (Collection collection : recentPublishedCollections) {
-        collectionVersions.add(collection.getPublished());
-    }
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <title><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> - Home</title>
-    <jsp:include page="include/head.jsp"/>
+    <title>${registryTitle} - Home</title>
+    <jsp:include page="../include/head.jsp"/>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -60,7 +49,7 @@
     </script>
 </head>
 <body>
-<jsp:include page="include/header.jsp"/>
+<jsp:include page="../include/header.jsp"/>
 
 <div class="wrapper">
     <div class="content-top">
@@ -70,7 +59,7 @@
                     Home
                 </li>
             </ul>
-            <h1>Welcome to <%=RegistryApplication.getApplicationContext().getRegistryTitle()%></h1>
+            <h1>Welcome to ${registryTitle}</h1>
 
             <h2>A catalog of the University of Queensland's research data assets</h2>
         </div>
@@ -78,7 +67,7 @@
     <div class="col-container">
         <div class="pad-sides">
             <div class="col1">
-                <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data
+                <p>${registryTitle} catalogs the research data
                     outputs of staff and students at the University of Queensland. It aims to promote
                     the University of Queensland's research data to the wider world.</p>
 
@@ -115,16 +104,12 @@
 
                     <div id="recent">
                         <ul>
-                            <%
-                                for (CollectionVersion version : collectionVersions) {
-                            %>
+                            <c:forEach items="${collectionVersionList}" var="version">
                             <li>
-                                <a href="/collections/<%=version.getParent().getUriKey()%>"><%=version.getTitle()%>
+                                <a href="/collections/${version.parent.uriKey}">${version.title}
                                 </a>
                             </li>
-                            <%
-                                }
-                            %>
+                            </c:forEach>
                         </ul>
                     </div>
 
@@ -158,6 +143,6 @@
 
 </div>
 
-<jsp:include page="include/footer.jsp"/>
+<jsp:include page="../include/footer.jsp"/>
 </body>
 </html>

@@ -19,15 +19,12 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     private String registryTitle;
     private String version;
     private String uriPrefix;
-    private DaoManager daoManager;
-    private EntityCreator entityCreator;
-    private AuthenticationManager authenticationManager;
-    private AuthorizationManager<User> authorizationManager;
     private RIFCSOaiCatalog oaiCatalog;
     private OAIProperties oaiProperties;
     private String registryEmail;
     private String registryLicense;
     private String registryRights;
+	private AuthenticationManager authenticationManager;
 
     public RegistryConfigurationImpl() {
     }
@@ -72,36 +69,12 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
         return uriPrefix;
     }
 
-    public void setDaoManager(DaoManager daoManager) {
-        this.daoManager = daoManager;
-    }
-
-    public DaoManager getDaoManager() {
-        return daoManager;
-    }
-
-    public void setEntityCreator(EntityCreator entityCreator) {
-        this.entityCreator = entityCreator;
-    }
-
-    public EntityCreator getEntityCreator() {
-        return entityCreator;
-    }
-
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
     public AuthenticationManager getAuthenticationManager() {
         return authenticationManager;
-    }
-
-    public void setAuthorizationManager(AuthorizationManager<User> authorizationManager) {
-        this.authorizationManager = authorizationManager;
-    }
-
-    public AuthorizationManager<User> getAuthorizationManager() {
-        return authorizationManager;
     }
 
     public void setOaiCatalog(RIFCSOaiCatalog oaiCatalog) {
@@ -136,8 +109,4 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
         return registryRights;
     }
 
-    public void cleanUp() {
-        getDaoManager().getEntityManagerSource().getEntityManager().close();
-        logger.info("Successfully closed the database connection.... OK!");
-    }
 }

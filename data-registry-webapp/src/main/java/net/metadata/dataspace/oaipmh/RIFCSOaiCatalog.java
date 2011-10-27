@@ -5,6 +5,10 @@ import ORG.oclc.oai.server.verb.*;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.util.OperationHelper;
+import net.metadata.dataspace.data.access.ActivityDao;
+import net.metadata.dataspace.data.access.AgentDao;
+import net.metadata.dataspace.data.access.CollectionDao;
+import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
@@ -13,6 +17,7 @@ import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.util.DateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.ObjectNotFoundException;
+import org.springframework.beans.factory.annotation.Required;
 
 import java.text.ParseException;
 import java.util.*;
@@ -25,6 +30,12 @@ import java.util.*;
 public class RIFCSOaiCatalog extends AbstractCatalog {
 
     private Logger logger = Logger.getLogger(getClass());
+
+    private ActivityDao activityDao;
+    private AgentDao agentDao;
+    private CollectionDao collectionDao;
+    private ServiceDao serviceDao;
+
 
     public RIFCSOaiCatalog() {
     }
@@ -82,7 +93,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
          * outPutOf (Activities) of Collections
          * accessedVia (Services) of Collections
          * */
-        List<net.metadata.dataspace.data.model.record.Collection> collectionList = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getAllPublishedBetween(fromDate, toDate);
+        List<net.metadata.dataspace.data.model.record.Collection> collectionList = getCollectionDao().getAllPublishedBetween(fromDate, toDate);
         Set<Activity> uniqueActivitySet = new HashSet<Activity>();
         Set<Agent> uniqueAgentSet = new HashSet<Agent>();
         Set<Service> uniqueServiceSet = new HashSet<Service>();
@@ -149,13 +160,13 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             Record record = null;
             String key = OperationHelper.getEntityID(identifier);
             if (identifier.contains(Constants.PATH_FOR_ACTIVITIES)) {
-                record = RegistryApplication.getApplicationContext().getDaoManager().getActivityDao().getByKey(key);
+                record = getActivityDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_COLLECTIONS)) {
-                record = RegistryApplication.getApplicationContext().getDaoManager().getCollectionDao().getByKey(key);
+                record = getCollectionDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_AGENTS)) {
-                record = RegistryApplication.getApplicationContext().getDaoManager().getAgentDao().getByKey(key);
+                record = getAgentDao().getByKey(key);
             } else if (identifier.contains(Constants.PATH_FOR_SERVICES)) {
-                record = RegistryApplication.getApplicationContext().getDaoManager().getServiceDao().getByKey(key);
+                record = getServiceDao().getByKey(key);
             }
             if (record == null) {
                 throw new IdDoesNotExistException(identifier);
@@ -180,4 +191,40 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
     public String toFinestUntil(String until) {
         return until;
     }
+
+	public ActivityDao getActivityDao() {
+		return activityDao;
+	}
+
+	@Required
+	public void setActivityDao(ActivityDao activityDao) {
+		this.activityDao = activityDao;
+	}
+
+	public AgentDao getAgentDao() {
+		return agentDao;
+	}
+
+	@Required
+	public void setAgentDao(AgentDao agentDao) {
+		this.agentDao = agentDao;
+	}
+
+	public CollectionDao getCollectionDao() {
+		return collectionDao;
+	}
+
+	@Required
+	public void setCollectionDao(CollectionDao collectionDao) {
+		this.collectionDao = collectionDao;
+	}
+
+	public ServiceDao getServiceDao() {
+		return serviceDao;
+	}
+
+	@Required
+	public void setServiceDao(ServiceDao serviceDao) {
+		this.serviceDao = serviceDao;
+	}
 }

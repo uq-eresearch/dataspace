@@ -3,6 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
+    <import resource="dao.xml"/>
+
     <bean id="oaiProperties" class="net.metadata.dataspace.oaipmh.OAIProperties">
         <constructor-arg value="/conf/oai/oaicat.properties"/>
     </bean>
@@ -20,6 +22,10 @@
                 <constructor-arg ref="oaiProperties"/>
             </bean>
         </property>
+        <property name="activityDao" ref="activityDao"/>
+        <property name="agentDao" ref="agentDao"/>
+        <property name="collectionDao" ref="collectionDao"/>
+        <property name="serviceDao" ref="serviceDao"/>
     </bean>
 
 </beans>

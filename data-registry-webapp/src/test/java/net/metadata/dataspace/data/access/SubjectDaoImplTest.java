@@ -24,8 +24,6 @@ import static org.junit.Assert.*;
 public class SubjectDaoImplTest {
 
     @Autowired
-    private RegistryConfiguration registryConfigurationImpl;
-    @Autowired
     private SubjectDao subjectDao;
 
 //    @Before
@@ -52,7 +50,7 @@ public class SubjectDaoImplTest {
         Subject subject = subjectDao.getAll().get(0);
         Long id = subject.getId();
         String originalVocabUri = subject.getTerm();
-        String newVocabURI = registryConfigurationImpl.getUriPrefix() + "subject/" + UUID.randomUUID().toString();
+        String newVocabURI = "subject/" + UUID.randomUUID().toString();
         subject.setTerm(newVocabURI);
 
         subjectDao.update(subject);

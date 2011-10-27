@@ -1,9 +1,11 @@
 package net.metadata.dataspace.data.access;
 
+import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.app.RegistryConfiguration;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Publication;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +27,6 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class PublicationDaoImplTest {
 
-    @Autowired
-    private RegistryConfiguration registryConfigurationImpl;
     @Autowired
     private PublicationDao publicationDao;
 
@@ -54,7 +54,7 @@ public class PublicationDaoImplTest {
         Publication publication = publicationDao.getAll().get(0);
         Long id = publication.getId();
         String originalPublicationUri = publication.getPublicationURI();
-        String newPublicationURI = registryConfigurationImpl.getUriPrefix() + "publication/" + UUID.randomUUID().toString();
+        String newPublicationURI = "publication/" + UUID.randomUUID().toString();
         publication.setPublicationURI(newPublicationURI);
         publicationDao.update(publication);
         Publication publicationByID = publicationDao.getById(id);

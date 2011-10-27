@@ -1,6 +1,6 @@
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
-<web-app>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
 
     <display-name>Seeding the Commons</display-name>
     <description>Seeding the Commons project</description>
@@ -107,19 +107,11 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
-        <url-pattern>/browse</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
         <url-pattern>/search</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>springmvc</servlet-name>
-        <url-pattern>/lookup</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>springmvc</servlet-name>
-        <url-pattern>/anzsrc</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
@@ -133,10 +125,6 @@
         <servlet-name>solrServer</servlet-name>
         <url-pattern>/solr/select</url-pattern>
     </servlet-mapping>
-
-    <welcome-file-list>
-        <welcome-file id="welcome-page">index.jsp</welcome-file>
-    </welcome-file-list>
 
     <!-- The modern JS mime-type -->
     <mime-mapping>

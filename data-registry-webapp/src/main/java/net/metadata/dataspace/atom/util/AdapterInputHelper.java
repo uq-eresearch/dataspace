@@ -1,7 +1,6 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
-import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
@@ -835,7 +834,7 @@ public class AdapterInputHelper {
     }
 
     public NamingEnumeration<SearchResult> searchLDAPByEmail(String email, User currentUser) {
-        AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
+        AuthenticationManager authenticationManager = getAuthenticationManager();
         DirContext dirContext = authenticationManager.getDirContext(currentUser);
         NamingEnumeration<SearchResult> namingEnum;
         try {

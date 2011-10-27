@@ -26,8 +26,6 @@ import static org.junit.Assert.*;
 public class SourceDaoImplTest {
 
     @Autowired
-    private RegistryConfiguration registryConfigurationImpl;
-    @Autowired
     private SourceDao sourceDao;
 
     @Before
@@ -54,7 +52,7 @@ public class SourceDaoImplTest {
         Source source = sourceDao.getAll().get(0);
         Long id = source.getId();
         String originalSourceUri = source.getSourceURI();
-        String newSourceURI = registryConfigurationImpl.getUriPrefix() + "source/" + UUID.randomUUID().toString();
+        String newSourceURI = "source/" + UUID.randomUUID().toString();
         source.setSourceURI(newSourceURI);
 
         sourceDao.update(source);
