@@ -16,6 +16,7 @@ import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.data.access.RecordDao;
+import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
@@ -51,6 +52,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     private AdapterOutputHelper adapterOutputHelper;
     private AuthenticationManager authenticationManager;
     private AuthorizationManager<User> authorizationManager;
+    private DaoManager daoManager;
     private EntityCreator entityCreator;
     private FeedOutputHelper feedOutputHelper;
     private RecordDao<R,V> dao;
@@ -378,7 +380,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ResponseContext postEntry(RequestContext request) {
         try {
-            EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+            EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
 
             User user = getAuthenticationManager().getCurrentUser(request);
             if (user == null) {
@@ -480,7 +482,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                                 throw new ResponseContextException("Version is null", 400);
                             } else {
                                 if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
-                                    EntityManager entityManager = RegistryApplication.getApplicationContext().getDaoManager().getEntityManagerSource().getEntityManager();
+                                    EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
                                     try {
                                         Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
                                         if (source.getId() == null) {
@@ -566,5 +568,13 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     public void setFeedOutputHelper(FeedOutputHelper feedOutputHelper) {
         this.feedOutputHelper = feedOutputHelper;
     }
+
+	public DaoManager getDaoManager() {
+		return daoManager;
+	}
+
+	public void setDaoManager(DaoManager daoManager) {
+		this.daoManager = daoManager;
+	}
 
 }

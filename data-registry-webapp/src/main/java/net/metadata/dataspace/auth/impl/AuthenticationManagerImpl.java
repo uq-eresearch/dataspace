@@ -2,10 +2,11 @@ package net.metadata.dataspace.auth.impl;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.atom.util.AdapterInputHelper;
 import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.auth.AuthenticationManager;
-import net.metadata.dataspace.auth.util.LDAPUtil;
 import net.metadata.dataspace.data.access.UserDao;
+import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.model.record.User;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
@@ -32,6 +33,8 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     private Map<String, DirContext> userDirContexts = new HashMap<String, DirContext>();
     private Properties defaultUsersProperties;
     private Map<String, String[]> defaultUsers = new HashMap<String, String[]>();
+    private DaoManager daoManager;
+    private AdapterInputHelper adapterInputHelper;
 
     @Override
     public User getCurrentUser(RequestContext request) {
@@ -51,7 +54,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
             return OperationHelper.createResponse(400, "Username and password missing", request.getHeader("Host"));
         } else {
             if (defaultUsers.containsKey(userName) && defaultUsers.get(userName)[1].equals(password)) {
-                UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
+                UserDao userDao = getDaoManager().getUserDao();
                 User user = userDao.getByUsername(userName);
                 if (user == null) {
                     user = new User(userName, defaultUsers.get(userName)[3], defaultUsers.get(userName)[2]);
@@ -91,7 +94,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
                         ctx = new InitialDirContext(env);
 
                         NamingEnumeration<SearchResult> namingEnum = ctx.search("ou=staff,ou=people,o=the university of queensland,c=au", "(uid=" + userName + ")", ctls);
-                        Map<String, String> attributesMap = LDAPUtil.getAttributesAsMap(namingEnum);
+                        Map<String, String> attributesMap = getAdapterInputHelper().getAttributesAsMap(namingEnum);
 
                         UserDao userDao = RegistryApplication.getApplicationContext().getDaoManager().getUserDao();
                         User user = userDao.getByUsername(userName);
@@ -159,4 +162,20 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     public Properties getDefaultUsersProperties() {
         return defaultUsersProperties;
     }
+
+	public DaoManager getDaoManager() {
+		return daoManager;
+	}
+
+	public void setDaoManager(DaoManager daoManager) {
+		this.daoManager = daoManager;
+	}
+
+	public AdapterInputHelper getAdapterInputHelper() {
+		return adapterInputHelper;
+	}
+
+	public void setAdapterInputHelper(AdapterInputHelper adapterInputHelper) {
+		this.adapterInputHelper = adapterInputHelper;
+	}
 }

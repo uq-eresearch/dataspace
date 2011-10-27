@@ -3,7 +3,6 @@ package net.metadata.dataspace.atom.util;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
-import net.metadata.dataspace.auth.util.LDAPUtil;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
@@ -36,6 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.persistence.EntityManager;
 import javax.xml.namespace.QName;
@@ -52,6 +54,7 @@ import java.util.*;
 @Transactional
 public class AdapterInputHelper {
 
+    private AuthenticationManager authenticationManager;
     private EntityCreator entityCreator;
     private DaoManager daoManager;
 
@@ -495,8 +498,6 @@ public class AdapterInputHelper {
         try {
         	version.getDescriptionAuthors().clear();
         	if (authors.size() == 0) {
-	            AuthenticationManager authenticationManager =
-	            		RegistryApplication.getApplicationContext().getAuthenticationManager();
 	            User currentUser = authenticationManager.getCurrentUser(request);
 	            currentUser = daoManager.getUserDao()
 	            		.getByUsername(currentUser.getUsername());
@@ -786,15 +787,15 @@ public class AdapterInputHelper {
     	//Find the agent in our system first
         Agent agent = daoManager.getAgentDao().getByEmail(email);
         if (agent == null) {
-            NamingEnumeration<SearchResult> namingEnumeration = LDAPUtil.searchLDAPByEmail(email, currentUser);
+            NamingEnumeration<SearchResult> namingEnumeration = searchLDAPByEmail(email, currentUser);
             if (namingEnumeration != null) {
                 Map<String, String> attributesAsMap;
 				try {
-					attributesAsMap = LDAPUtil.getAttributesAsMap(namingEnumeration);
+					attributesAsMap = getAttributesAsMap(namingEnumeration);
 				} catch (NamingException e) {
 					throw new ResponseContextException("Could not find agent: " + email, 500);
 				}
-                agent = LDAPUtil.createAgent(attributesAsMap);
+                agent = createAgent(attributesAsMap);
                 if (agent == null) {
                     //Else create it from email and name
                     agent = createBasicAgent(name, email);
@@ -833,6 +834,102 @@ public class AdapterInputHelper {
         return agent;
     }
 
+    public NamingEnumeration<SearchResult> searchLDAPByEmail(String email, User currentUser) {
+        AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
+        DirContext dirContext = authenticationManager.getDirContext(currentUser);
+        NamingEnumeration<SearchResult> namingEnum;
+        try {
+            SearchControls ctls = new SearchControls();
+            ctls.setReturningObjFlag(true);
+            ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            namingEnum = dirContext.search("ou=staff,ou=people,o=the university of queensland,c=au", "(mail=" + email + ")", ctls);
+        } catch (NamingException e) {
+            String message = "User not found in LDAP";
+            System.err.println(message);
+            return null;
+        }
+        return namingEnum;
+    }
+
+    public Map<String, String> getAttributesAsMap(NamingEnumeration<SearchResult> namingEnum) throws NamingException {
+        Map<String, String> attributes = new HashMap<String, String>();
+        if (namingEnum.hasMore()) {
+            for (NamingEnumeration<? extends Attribute> attrs = namingEnum.next().getAttributes().getAll(); attrs.hasMore(); ) {
+                Attribute attr = (Attribute) attrs.next();
+                String id = attr.getID();
+                NamingEnumeration<?> values = attr.getAll();
+                String result = "";
+                while (values.hasMore()) {
+                    result = result + values.next() + " ";
+                }
+                attributes.put(id, result.trim());
+            }
+        }
+        return attributes;
+    }
+
+    public Agent createAgent(Map<String, String> attributesMap) {
+        if (attributesMap == null || attributesMap.isEmpty()) {
+            return null;
+        } else {
+            AgentDao agentDao = getDaoManager().getAgentDao();
+            String mail = attributesMap.get("mail");
+            Agent agent = agentDao.getByEmail(mail);
+            if (agent == null) {
+                EntityCreator entityCreator = getEntityCreator();
+                agent = ((Agent) entityCreator.getNextRecord(Agent.class));
+                AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
+                SourceDao sourceDao = getDaoManager().getSourceDao();
+                Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
+                //always available attributes
+                String name = attributesMap.get("cn");
+                String organisation = attributesMap.get("ou");
+
+                //attributes available when logged in
+                String title = attributesMap.get("personalTitle");
+                String givenName = attributesMap.get("givenName");
+                String familyName = attributesMap.get("sn");
+                if (title != null && givenName != null & familyName != null) {
+                    FullName fullName = entityCreator.getFullName();
+                    fullName.setTitle(title);
+                    fullName.setGivenName(givenName);
+                    fullName.setFamilyName(familyName);
+                    agent.setFullName(fullName);
+                }
+                String jobTitle = attributesMap.get("title");
+                if (jobTitle == null) {
+                    jobTitle = "Staff Member";
+                }
+                String page = attributesMap.get("labeledURI");
+                if (page != null) {
+                    version.getPages().add(page);
+                }
+                String nickName = attributesMap.get("pub-displayname");
+                if (nickName != null) {
+                    version.getAlternatives().add(nickName);
+                }
+                version.setTitle(name);
+                version.setDescription(name + " is a " + jobTitle + " in " + organisation + " at The University of Queensland");
+                Date now = new Date();
+                version.setUpdated(now);
+                version.setType(AgentType.PERSON);
+                version.getMboxes().add(mail);
+
+                version.setParent(agent);
+                agent.getVersions().add(version);
+                version.getParent().setPublished(version);
+                agent.setUpdated(now);
+
+                version.setSource(systemSource);
+
+                return agent;
+            } else {
+                return agent;
+            }
+        }
+    }
+
+
 	public EntityCreator getEntityCreator() {
 		return entityCreator;
 	}
@@ -847,6 +944,14 @@ public class AdapterInputHelper {
 
 	public void setDaoManager(DaoManager daoManager) {
 		this.daoManager = daoManager;
+	}
+
+	public AuthenticationManager getAuthenticationManager() {
+		return authenticationManager;
+	}
+
+	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
 	}
 
 }

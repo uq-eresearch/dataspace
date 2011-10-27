@@ -2,11 +2,13 @@ package net.metadata.dataspace.auth.util;
 
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.atom.util.AdapterInputHelper;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.model.record.User;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -33,22 +35,27 @@ import static org.junit.Assert.fail;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = NonProductionConstants.TEST_CONTEXT)
 public class LDAPUtilTest {
-    
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private AdapterInputHelper adapterInputHelper;
+
 	@Test
     public void testSearchLDAPByEmail() throws Exception {
         String testEmail = "t.shyy@uq.edu.au";
-        NamingEnumeration<SearchResult> namingEnumeration = 
-        		LDAPUtil.searchLDAPByEmail(testEmail, getTestUser(testEmail));
+        NamingEnumeration<SearchResult> namingEnumeration =
+        		adapterInputHelper.searchLDAPByEmail(testEmail, getTestUser(testEmail));
         assertNotNull(namingEnumeration);
-        Map<String, String> map = LDAPUtil.getAttributesAsMap(namingEnumeration);
+        Map<String, String> map = adapterInputHelper.getAttributesAsMap(namingEnumeration);
         for (String s : map.keySet()) {
             System.out.println(s + ": " + map.get(s));
         }
         assertEquals("Email is not the same: ", testEmail, map.get("mail"));
     }
-	
+
 	private User getTestUser(String email) {
-		AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
         User testUser = new User();
         testUser.setEmail(email);
         authenticationManager.setDirContext(getTestDirContext(), testUser);
@@ -69,6 +76,6 @@ public class LDAPUtilTest {
 			e.printStackTrace();
 			fail("Unable to initialize DirContext");
 			return null;
-		}    
+		}
     }
 }

@@ -9,6 +9,7 @@
        	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
     <bean id="adapterInputHelper" class="net.metadata.dataspace.atom.util.AdapterInputHelper">
+        <property name="authenticationManager" ref="authenticationManager"/>
         <property name="daoManager" ref="daoManager"/>
         <property name="entityCreator" ref="entityCreator"/>
     </bean>
@@ -24,6 +25,7 @@
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
         <property name="adapterInputHelper" ref="adapterInputHelper"/>
         <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
+        <property name="daoManager" ref="daoManager"/>
 	</bean>
 
 	<bean id="agentAdapter" class="net.metadata.dataspace.atom.adapter.AgentAdapter">
@@ -34,6 +36,7 @@
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
         <property name="adapterInputHelper" ref="adapterInputHelper"/>
         <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
+        <property name="daoManager" ref="daoManager"/>
 	</bean>
 
 	<bean id="collectionAdapter" class="net.metadata.dataspace.atom.adapter.CollectionAdapter">
@@ -44,6 +47,7 @@
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
         <property name="adapterInputHelper" ref="adapterInputHelper"/>
         <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
+        <property name="daoManager" ref="daoManager"/>
 	</bean>
 
 	<bean id="serviceAdapter" class="net.metadata.dataspace.atom.adapter.ServiceAdapter">
@@ -54,6 +58,7 @@
 		<property name="feedOutputHelper" ref="feedOutputHelper"/>
         <property name="adapterInputHelper" ref="adapterInputHelper"/>
         <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
+        <property name="daoManager" ref="daoManager"/>
 	</bean>
 
 
@@ -170,6 +175,8 @@
     </bean>
     <bean id="authenticationManager" class="net.metadata.dataspace.auth.impl.AuthenticationManagerImpl">
         <property name="defaultUsersProperties" ref="defaultUsers"/>
+        <property name="daoManager" ref="daoManager"/>
+        <property name="adapterInputHelper" ref="adapterInputHelper"/>
     </bean>
     <bean id="authorizationManager" class="net.metadata.dataspace.auth.impl.AuthorizationManagerImpl"/>
 
