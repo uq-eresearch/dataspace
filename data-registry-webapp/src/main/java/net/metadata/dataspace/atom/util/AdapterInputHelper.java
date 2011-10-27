@@ -848,6 +848,7 @@ public class AdapterInputHelper {
                 SourceDao sourceDao = getDaoManager().getSourceDao();
                 Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
                 //always available attributes
+                String uid = (String) attrs.get("uid").get();
                 String name = (String) attrs.get("cn").get();
                 String organisation = (String) attrs.get("ou").get();
 
@@ -879,6 +880,9 @@ public class AdapterInputHelper {
                 Date now = new Date();
                 version.setUpdated(now);
                 version.setType(AgentType.PERSON);
+
+                // Set ID to eSpace search
+                agent.setOriginalId("https://espace.library.uq.edu.au/"+uid);
 
                 // TODO: Add alternate mailboxes too
                 version.getMboxes().add(mail);

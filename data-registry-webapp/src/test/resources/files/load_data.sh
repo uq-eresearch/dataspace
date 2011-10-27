@@ -16,10 +16,14 @@ rm $COOKIEJAR
 
 $CURL -X POST -c $COOKIEJAR "$BASE_URL/login?username=$USERNAME&password=$PASSWORD"
 
-TYPES="agents
+TYPES=$2
+
+if [ "$TYPES" == "" ]; then
+	TYPES="agents
 collections
 activities
 services"
+fi
 
 for t in $TYPES
 do
