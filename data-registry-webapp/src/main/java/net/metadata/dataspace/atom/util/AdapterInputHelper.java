@@ -873,7 +873,9 @@ public class AdapterInputHelper {
                 }
                 String nickName = (String) attrs.get("nickname").get();
                 if (nickName != null) {
-                    version.getAlternatives().add(nickName);
+                    version.getAlternatives().add(
+                    			String.format("%s %s", nickName, familyName)
+                    		);
                 }
                 version.setTitle(name);
                 version.setDescription(name + " is a " + jobTitle + " in " + organisation + " at The University of Queensland");
