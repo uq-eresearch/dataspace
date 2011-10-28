@@ -119,7 +119,7 @@
                         <xsl:call-template name="managers"/>
                         <xsl:call-template name="projects"/>
 
-                        <xsl:if test="georss:point or georss:polygon or atom:link[@rel=$ATOM_SPATIAL]">
+                        <xsl:if test="atom:link[@rel=$ATOM_SPATIAL] or rdfa:meta[@property=$RDFA_TEMPORAL]">
                             <h2>Coverage</h2>
                             <!-- spatial -->
                             <xsl:call-template name="spatial"/>
