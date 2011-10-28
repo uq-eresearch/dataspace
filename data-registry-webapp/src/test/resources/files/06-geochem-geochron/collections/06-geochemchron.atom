@@ -49,11 +49,11 @@ Disclaimer: The datasets are not yet complete, and the accuracy of the informati
         term="http://purl.org/asc/1297.0/2008/for/040203"
         label="040203 - Isotope Geochemistry"/>
     <category
-        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
         term="http://purl.org/asc/1297.0/2008/for/0403"
         label="040300 - Geology"/>
     <category
-        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
         term="http://purl.org/asc/1297.0/2008/for/040303"
         label="040303 - Geochronology"/>
     <category
@@ -74,6 +74,10 @@ Disclaimer: The datasets are not yet complete, and the accuracy of the informati
         <name>Maria Mostert</name>
         <email>m.mostert@uq.edu.au</email>
     </author>
+
+    <!-- collection manager -->
+    <link rel="http://purl.org/dc/terms/publisher" href="http://dataspace.uq.edu.au/agents/8"
+          title="Professor Paulo Vasconcelos"/>
 
     <!--     temporal coverage -->
     <rdfa:meta
