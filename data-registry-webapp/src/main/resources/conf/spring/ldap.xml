@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
    <bean id="ldapContextSource" class="org.springframework.ldap.core.support.LdapContextSource">
-      <property name="url" value="ldap://ldap.uq.edu.au" />
+      <property name="url" value="ldaps://ldap.uq.edu.au" />
       <property name="base" value="o=the university of queensland,c=au" />
       <property name="userDn" value="uid=dataspace,ou=special,o=the university of queensland,c=au" />
       <property name="password" value="blue4Cat7table1" />
