@@ -35,6 +35,8 @@ import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -786,8 +788,15 @@ public class AdapterInputHelper {
     private Agent findOrCreateAgent(String name, String email, User currentUser) throws ResponseContextException {
     	EntityManager entityManager = daoManager.getEntityManagerSource().getEntityManager();
 
+    	InternetAddress emailAddress;
+		try {
+			emailAddress = new InternetAddress(email);
+		} catch (AddressException e) {
+            throw new ResponseContextException("Invalid agent email address", 400);
+		}
+
     	//Find the agent in our system first
-        Agent agent = daoManager.getAgentDao().getByEmail(email);
+        Agent agent = daoManager.getAgentDao().getByEmail(emailAddress);
         if (agent == null) {
             List<Agent> agents = searchLDAPByEmail(email);
             if (agents.size() == 0) {
@@ -840,7 +849,13 @@ public class AdapterInputHelper {
 		public Agent mapFromAttributes(Attributes attrs) throws NamingException {
 			AgentDao agentDao = getDaoManager().getAgentDao();
             String mail = (String) attrs.get("mail").get();
-            Agent agent = agentDao.getByEmail(mail);
+            Agent agent;
+			try {
+				agent = agentDao.getByEmail(new InternetAddress(mail));
+			} catch (AddressException e) {
+				logger.error("Failed to validate LDAP email address: "+mail);
+				return null;
+			}
             if (agent == null) {
                 EntityCreator entityCreator = getEntityCreator();
                 agent = ((Agent) entityCreator.getNextRecord(Agent.class));

@@ -6,6 +6,7 @@ import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
+import javax.mail.internet.InternetAddress;
 import javax.persistence.Query;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +23,12 @@ import java.util.List;
 public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao, Serializable {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6085537803929252268L;
 
 	public AgentDaoImpl() {}
-	
+
 	public AgentDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }
@@ -48,7 +49,11 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
     }
 
     @Override
-    public Agent getByEmail(String email) {
+    public Agent getByEmail(InternetAddress email) {
+    	return getByEmail(email.toString());
+    }
+
+    protected Agent getByEmail(String email) {
         Query query = getEntityManager().createQuery("SELECT DISTINCT(v.parent) FROM AgentVersion v WHERE :email IN elements(v.mboxes)");
         query.setParameter("email", email);
         List<?> resultList = query.getResultList();

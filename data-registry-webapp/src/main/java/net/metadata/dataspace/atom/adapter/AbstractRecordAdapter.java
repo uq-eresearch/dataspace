@@ -208,8 +208,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Override
     @Transactional(readOnly=true)
     public ResponseContext getEntry(RequestContext request) {
+        String uriKey = OperationHelper.getEntryID(request);
         try {
-            String uriKey = OperationHelper.getEntryID(request);
             R record = getExistingRecord(uriKey);
             if (record == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
@@ -329,7 +329,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     }
 
     @Override
-    public String getId(R record) throws ResponseContextException {
+    public String getId(R record) {
         return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "/" + record.getUriKey();
     }
 

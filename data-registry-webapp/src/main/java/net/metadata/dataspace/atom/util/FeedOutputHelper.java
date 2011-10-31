@@ -90,11 +90,7 @@ public class FeedOutputHelper {
         responseContext.setHeader("Vary", "Accept");
         if (accept.equals(Constants.MIME_TYPE_XHTML)) {
             ResponseContext htmlRepresentationOfFeed = getHtmlRepresentationOfFeed(request, responseContext, clazz);
-//                if (request.getHeader("user-agent").indexOf("MSIE ") > -1) {
             responseContext.setContentType(Constants.MIME_TYPE_HTML);
-//                } else {
-//                    responseContext.setContentType(Constants.MIME_TYPE_XHTML);
-//                }
             return htmlRepresentationOfFeed;
         } else {
             return responseContext;

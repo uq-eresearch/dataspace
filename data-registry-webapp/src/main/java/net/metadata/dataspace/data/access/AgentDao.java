@@ -1,5 +1,7 @@
 package net.metadata.dataspace.data.access;
 
+import javax.mail.internet.InternetAddress;
+
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 
@@ -10,6 +12,6 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
  */
 public interface AgentDao extends RecordDao<Agent, AgentVersion> {
 
-    Agent getByEmail(String email);
+    Agent getByEmail(InternetAddress email);
 
 }

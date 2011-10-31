@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataConfig>
-<!-- 
+<!--
     <dataSource name="test"
                 type="JdbcDataSource"
                 driver="org.h2.Driver"
@@ -11,7 +11,7 @@
                 transactionIsolation="TRANSACTION_READ_COMMITTED"
                 holdability="CLOSE_CURSORS_AT_COMMIT"
                 />
-    
+
     <dataSource name="registry-pgsql"
                 type="JdbcDataSource"
                 driver="org.postgresql.Driver"
@@ -22,7 +22,7 @@
                 transactionIsolation="TRANSACTION_READ_COMMITTED"
                 holdability="CLOSE_CURSORS_AT_COMMIT"
                 />
-    
+
     <dataSource name="registry-mysql"
                 type="JdbcDataSource"
                 driver="com.mysql.jdbc.Driver"
@@ -34,13 +34,9 @@
                 holdability="CLOSE_CURSORS_AT_COMMIT"
                 />
       -->
-                
+
     <document name="collections">
-    
-        <entity name="subject"
-                query="SELECT * FROM subject WHERE isactive = true">
-        </entity>
-        
+
         <entity name="collection"
                 query="SELECT id, atomicnumber, published_id FROM collection WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
@@ -88,7 +84,7 @@
                 </entity>
             </entity>
         </entity>
-        
+
         <entity name="service"
                 query="SELECT id, atomicnumber, published_id FROM service WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
@@ -112,7 +108,7 @@
                 </entity>
             </entity>
         </entity>
-        
+
         <entity name="activity"
                 query="SELECT id, atomicnumber, published_id FROM activity WHERE isactive = true AND published_id is not null">
             <field column="id" name="id"/>
@@ -136,6 +132,6 @@
                 </entity>
             </entity>
         </entity>
-        
+
     </document>
 </dataConfig>
