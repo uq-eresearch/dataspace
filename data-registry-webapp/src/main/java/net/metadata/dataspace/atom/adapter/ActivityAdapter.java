@@ -28,9 +28,4 @@ public class ActivityAdapter extends AbstractRecordAdapter<Activity,ActivityVers
     protected String getTitle() {
     	return Constants.TITLE_FOR_ACTIVITIES;
     }
-
-	@Override
-	protected String getBasePath() {
-		return Constants.PATH_FOR_ACTIVITIES;
-	}
 }

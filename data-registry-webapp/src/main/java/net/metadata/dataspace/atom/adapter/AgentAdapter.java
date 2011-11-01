@@ -41,11 +41,6 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent,AgentVersion> {
         return Constants.TITLE_FOR_AGENTS;
     }
 
-	@Override
-	protected String getBasePath() {
-		return Constants.PATH_FOR_AGENTS;
-	}
-
     @Override
     @Transactional(readOnly=true)
     public ResponseContext getEntry(RequestContext request) {
@@ -63,7 +58,7 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent,AgentVersion> {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRED)
     public ResponseContext postEntry(RequestContext request) {
     	try {
     		enforceAuthentication(request);

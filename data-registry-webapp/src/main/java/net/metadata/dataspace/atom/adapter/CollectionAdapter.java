@@ -26,9 +26,4 @@ public class CollectionAdapter extends AbstractRecordAdapter<Collection,Collecti
         return Constants.TITLE_FOR_COLLECTIONS;
     }
 
-	@Override
-	protected String getBasePath() {
-		return Constants.PATH_FOR_COLLECTIONS;
-	}
-
 }

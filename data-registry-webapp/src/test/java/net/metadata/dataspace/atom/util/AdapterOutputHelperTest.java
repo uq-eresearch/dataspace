@@ -150,7 +150,7 @@ public class AdapterOutputHelperTest {
         Agent agent = agents.get(agents.size() - 1);
         AgentVersion agentVersion = agent.getVersions().first();
         Entry entry = adapterOutputHelper.getEntryFromEntity(agentVersion, true);
-        assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey());
         assertEquals("Entry title", entry.getTitle(), agent.getTitle());
         assertEquals("Entry content", entry.getContent(), agent.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
@@ -165,7 +165,7 @@ public class AdapterOutputHelperTest {
         Collection collection = collections.get(collections.size() - 1);
         CollectionVersion version = collection.getVersions().first();
         Entry entry = adapterOutputHelper.getEntryFromEntity(version, true);
-        assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
         assertEquals("Entry title", entry.getTitle(), collection.getTitle());
         assertEquals("Entry content", entry.getContent(), collection.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
@@ -183,7 +183,7 @@ public class AdapterOutputHelperTest {
         Activity activity = activities.get(activities.size() - 1);
         ActivityVersion version = activity.getVersions().first();
         Entry entry = adapterOutputHelper.getEntryFromEntity(version, true);
-        assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
         assertEquals("Entry title", entry.getTitle(), activity.getTitle());
         assertEquals("Entry content", entry.getContent(), activity.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
@@ -198,7 +198,7 @@ public class AdapterOutputHelperTest {
         List<Service> services = daoManager.getServiceDao().getAll();
         Service service = services.get(services.size() - 1);
         Entry entry = adapterOutputHelper.getEntryFromEntity(service.getVersions().first(), true);
-        assertEquals("Entry id", entry.getId().toString(), Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
+        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
         assertEquals("Entry title", entry.getTitle(), service.getTitle());
         assertEquals("Entry content", entry.getContent(), service.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);

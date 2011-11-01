@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="
-       	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-       	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util">
 
     <bean id="adapterInputHelper" class="net.metadata.dataspace.atom.util.AdapterInputHelper">
         <property name="authenticationManager" ref="authenticationManager"/>
@@ -27,6 +28,9 @@
         <property name="adapterInputHelper" ref="adapterInputHelper"/>
         <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
         <property name="daoManager" ref="daoManager"/>
+        <property name="href">
+            <util:constant id="activityAdapterPath" static-field="net.metadata.dataspace.app.Constants.PATH_FOR_ACTIVITIES"/>
+        </property>
 	</bean>
 
 	<bean id="agentAdapter" class="net.metadata.dataspace.atom.adapter.AgentAdapter">
@@ -38,6 +42,9 @@
         <property name="adapterInputHelper" ref="adapterInputHelper"/>
         <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
         <property name="daoManager" ref="daoManager"/>
+        <property name="href">
+            <util:constant id="agentAdapterPath" static-field="net.metadata.dataspace.app.Constants.PATH_FOR_AGENTS"/>
+        </property>
 	</bean>
 
 	<bean id="collectionAdapter" class="net.metadata.dataspace.atom.adapter.CollectionAdapter">
@@ -49,6 +56,9 @@
         <property name="adapterInputHelper" ref="adapterInputHelper"/>
         <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
         <property name="daoManager" ref="daoManager"/>
+        <property name="href">
+            <util:constant id="collectionAdapterPath" static-field="net.metadata.dataspace.app.Constants.PATH_FOR_COLLECTIONS"/>
+        </property>
 	</bean>
 
 	<bean id="serviceAdapter" class="net.metadata.dataspace.atom.adapter.ServiceAdapter">
@@ -60,6 +70,9 @@
         <property name="adapterInputHelper" ref="adapterInputHelper"/>
         <property name="adapterOutputHelper" ref="adapterOutputHelper"/>
         <property name="daoManager" ref="daoManager"/>
+        <property name="href">
+            <util:constant id="serviceAdapterPath" static-field="net.metadata.dataspace.app.Constants.PATH_FOR_SERVICES"/>
+        </property>
 	</bean>
 
 
@@ -71,8 +84,7 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
     <context:annotation-config/>
-    <tx:annotation-driven transaction-manager="transactionManager"
-    	proxy-target-class="true"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
     <context:component-scan base-package="net.metadata.dataspace.data.model"/>
 
     <import resource="dao.xml"/>

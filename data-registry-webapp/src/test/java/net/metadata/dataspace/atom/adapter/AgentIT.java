@@ -161,6 +161,10 @@ public class AgentIT {
         assertEquals("Could not post entry", 201, postMethod.getStatusCode());
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
 
+        //check duplicate entry detection
+        postMethod = ClientHelper.postEntry(client, fileName, TestConstants.PATH_FOR_AGENTS);
+        assertEquals("Failed to detect duplicate POST", 409, postMethod.getStatusCode());
+
         //publish entry
         fileName = "/files/put/published-agent.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, TestConstants.ATOM_ENTRY_MIMETYPE);

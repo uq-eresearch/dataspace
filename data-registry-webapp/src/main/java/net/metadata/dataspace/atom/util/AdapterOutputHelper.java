@@ -1,6 +1,7 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
@@ -60,7 +61,7 @@ public class AdapterOutputHelper {
     }
 
     private Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
+        String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
 
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
@@ -88,13 +89,13 @@ public class AdapterOutputHelper {
 
             Set<Agent> agentSet = version.getHasParticipants();
             for (Agent agent : agentSet) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_HAS_PARTICIPANT);
                 link.setTitle(agent.getTitle());
             }
             Set<Collection> collectionSet = version.getHasOutput();
             for (Collection collection : collectionSet) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_HAS_OUTPUT);
                 link.setTitle(collection.getTitle());
             }
@@ -120,7 +121,7 @@ public class AdapterOutputHelper {
     }
 
     private Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
+        String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
 
         try {
@@ -174,28 +175,28 @@ public class AdapterOutputHelper {
 
             Set<Collection> collectionSet = version.getMade();
             for (Collection collection : collectionSet) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_MADE);
                 link.setTitle(collection.getTitle());
             }
 
             Set<Collection> collections = version.getIsManagerOf();
             for (Collection collection : collections) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_IS_MANAGER_OF);
                 link.setTitle(collection.getTitle());
             }
 
             Set<Service> services = version.getManagedServices();
             for (Service service : services) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_MANAGES_SERVICE);
                 link.setTitle(service.getTitle());
             }
 
             Set<Activity> activities = version.getCurrentProjects();
             for (Activity activity : activities) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_CURRENT_PROJECT);
                 link.setTitle(activity.getTitle());
             }
@@ -214,7 +215,7 @@ public class AdapterOutputHelper {
     }
 
     private Entry getEntryFromCollection(CollectionVersion version, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
+        String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
 
@@ -224,7 +225,7 @@ public class AdapterOutputHelper {
                 AgentVersion workingCopy = agent.getWorkingCopy();
                 String email = workingCopy.getMboxes().size() > 0 ?
                 		workingCopy.getMboxes().iterator().next() : null;
-                entry.addAuthor(workingCopy.getTitle(), email, Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#");
+                entry.addAuthor(workingCopy.getTitle(), email, RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#");
             }
 
             String collectionTypeLabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
@@ -257,28 +258,28 @@ public class AdapterOutputHelper {
             //Publishers
             Set<Agent> publishers = version.getPublishers();
             for (Agent publisher : publishers) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + publisher.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + publisher.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_PUBLISHER);
                 link.setTitle(publisher.getTitle());
             }
             //Is Output of
             Set<Activity> activities = version.getOutputOf();
             for (Activity activity : activities) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_IS_OUTPUT_OF);
                 link.setTitle(activity.getTitle());
             }
             //Accessed via
             Set<Service> services = version.getAccessedVia();
             for (Service service : services) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_IS_ACCESSED_VIA);
                 link.setTitle(service.getTitle());
             }
 
             Set<Collection> collections = version.getRelations();
             for (Collection collection : collections) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_RELATED);
                 link.setTitle(collection.getTitle());
             }
@@ -341,7 +342,7 @@ public class AdapterOutputHelper {
     }
 
     private Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
-        String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
+        String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
             entry.addLink(parentUrl + "#", Constants.REL_DESCRIBES);
@@ -361,14 +362,14 @@ public class AdapterOutputHelper {
             }
             Set<Collection> collectionSet = version.getSupportedBy();
             for (Collection collection : collectionSet) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_IS_SUPPORTED_BY);
                 link.setTitle(collection.getTitle());
             }
 
             Set<Agent> agents = version.getManagedBy();
             for (Agent agent : agents) {
-                String href = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
+                String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_IS_MANAGED_BY);
                 link.setTitle(agent.getTitle());
             }
@@ -575,8 +576,8 @@ public class AdapterOutputHelper {
                 source.setId(registrySource.getSourceURI());
                 source.setTitle(registrySource.getTitle());
             } else {
-                source.setId(Constants.UQ_REGISTRY_URI_PREFIX);
-                source.setTitle(Constants.UQ_REGISTRY_TITLE);
+                source.setId(RegistryApplication.getApplicationContext().getUriPrefix());
+                source.setTitle(RegistryApplication.getApplicationContext().getRegistryTitle());
             }
             logger.debug("Adding description authors: "+version.getDescriptionAuthors());
             for (SourceAuthor descriptionAuthor : version.getDescriptionAuthors()) {
@@ -587,8 +588,8 @@ public class AdapterOutputHelper {
             }
             Link publisher = source.addLink(Constants.UQ_URL, Constants.REL_PUBLISHER);
             publisher.setTitle(Constants.TERM_ANDS_GROUP);
-            source.setRights(Constants.UQ_REGISTRY_RIGHTS);
-            source.addLink(Constants.UQ_REGISTRY_LICENSE, Constants.REL_LICENSE);
+            source.setRights(RegistryApplication.getApplicationContext().getRegistryRights());
+            source.addLink(RegistryApplication.getApplicationContext().getRegistryLicense(), Constants.REL_LICENSE);
         } catch (Throwable th) {
         	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Failed to add source", 500);

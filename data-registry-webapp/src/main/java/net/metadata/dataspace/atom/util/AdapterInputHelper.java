@@ -1,6 +1,7 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.data.access.*;
 import net.metadata.dataspace.data.access.manager.DaoManager;
@@ -85,10 +86,10 @@ public class AdapterInputHelper {
             throw new ResponseContextException("Activity has empty id", 400);
         }
         if (entryId.toString().trim().endsWith(Constants.PATH_FOR_ACTIVITIES + "/ignore")) {
-            String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
+            String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
             version.getParent().setOriginalId(parentUrl + "#");
 
-        } else if (!entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)){
+        } else if (!entryId.toString().startsWith(RegistryApplication.getApplicationContext().getUriPrefix())){
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -169,10 +170,10 @@ public class AdapterInputHelper {
             throw new ResponseContextException("Collection has empty id", 400);
         }
         if (entryId.toString().trim().endsWith(Constants.PATH_FOR_COLLECTIONS + "/ignore")) {
-            String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
+            String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
             version.getParent().setOriginalId(parentUrl + "#");
 
-        } else if (!entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)){
+        } else if (!entryId.toString().startsWith(RegistryApplication.getApplicationContext().getUriPrefix())){
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -294,10 +295,10 @@ public class AdapterInputHelper {
             throw new ResponseContextException("Agent has empty id", 400);
         }
         if (entryId.toString().trim().endsWith(Constants.PATH_FOR_AGENTS + "/ignore")) {
-            String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
+            String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
             version.getParent().setOriginalId(parentUrl + "#");
 
-        } else if (!entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)){
+        } else if (!entryId.toString().startsWith(RegistryApplication.getApplicationContext().getUriPrefix())){
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -428,10 +429,10 @@ public class AdapterInputHelper {
             throw new ResponseContextException("Service has empty id", 400);
         }
         if (entryId.toString().trim().endsWith(Constants.PATH_FOR_SERVICES + "/ignore")) {
-            String parentUrl = Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
+            String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
             version.getParent().setOriginalId(parentUrl + "#");
 
-        } else if (!entryId.toString().startsWith(Constants.UQ_REGISTRY_URI_PREFIX)){
+        } else if (!entryId.toString().startsWith(RegistryApplication.getApplicationContext().getUriPrefix())){
             version.getParent().setOriginalId(entryId.toString());
         }
 
@@ -627,6 +628,8 @@ public class AdapterInputHelper {
     }
 
     private Set<Subject> getSubjects(Entry entry) throws ResponseContextException {
+    	final String SCHEME_KEYWORD =
+    			RegistryApplication.getApplicationContext().getUriPrefix()+Constants.SCHEME_KEYWORD_SUFFIX;
         Set<Subject> subjects = new HashSet<Subject>();
         try {
             List<Category> categories = entry.getCategories();
@@ -644,11 +647,11 @@ public class AdapterInputHelper {
                     subjects.add(subject);
                 } else {
                     //It is a keyword
-                    Subject subject = daoManager.getSubjectDao().getSubject(Constants.SCHEME_KEYWORD, term, Constants.LABEL_KEYWORD);
+                    Subject subject = daoManager.getSubjectDao().getSubject(SCHEME_KEYWORD, term, Constants.LABEL_KEYWORD);
                     if (subject == null) {
                         subject = entityCreator.getNextSubject();
                         subject.setTerm(term);
-                        subject.setDefinedBy(Constants.SCHEME_KEYWORD);
+                        subject.setDefinedBy(SCHEME_KEYWORD);
                         subject.setLabel(Constants.LABEL_KEYWORD);
                     }
                     subjects.add(subject);
@@ -834,7 +837,7 @@ public class AdapterInputHelper {
         Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
         AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
         SourceDao sourceDao = daoManager.getSourceDao();
-        Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
+        Source systemSource = sourceDao.getBySourceURI(RegistryApplication.getApplicationContext().getUriPrefix());
         version.setTitle(name);
         version.setDescription(name);
         Date now = new Date();
@@ -876,7 +879,7 @@ public class AdapterInputHelper {
                 agent = ((Agent) entityCreator.getNextRecord(Agent.class));
                 AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
                 SourceDao sourceDao = getDaoManager().getSourceDao();
-                Source systemSource = sourceDao.getBySourceURI(Constants.UQ_REGISTRY_URI_PREFIX);
+                Source systemSource = sourceDao.getBySourceURI(RegistryApplication.getApplicationContext().getUriPrefix());
                 //always available attributes
                 String uid = (String) attrs.get("uid").get();
                 String name = (String) attrs.get("cn").get();

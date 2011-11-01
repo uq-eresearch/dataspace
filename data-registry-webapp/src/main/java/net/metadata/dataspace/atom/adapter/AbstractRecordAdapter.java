@@ -81,8 +81,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                 representationMimeType = Constants.MIME_TYPE_HTML;
             }
         }
-        String atomFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
-        String htmlFeedUrl = Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
+        String atomFeedUrl = RegistryApplication.getApplicationContext().getUriPrefix() + getBasePath() + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
+        String htmlFeedUrl = RegistryApplication.getApplicationContext().getUriPrefix() + getBasePath();
         if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
             getFeedOutputHelper().prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
             getFeedOutputHelper().prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
@@ -112,7 +112,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     }
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    @Transactional(propagation=Propagation.REQUIRED)
     public ResponseContext deleteEntry(RequestContext request) {
         try {
             User user = getAuthenticationManager().getCurrentUser(request);
@@ -147,7 +147,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     }
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    @Transactional(propagation=Propagation.REQUIRED)
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
         getDao().softDelete(key);
     }
@@ -182,8 +182,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     public List<Person> getAuthors(R record, RequestContext request) throws ResponseContextException {
         return getFeedOutputHelper().getAuthors(record, request);
     }
-
-    protected abstract String getBasePath();
 
     @Override
     public Object getContent(R entry, RequestContext request) throws ResponseContextException {
@@ -330,19 +328,19 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
     @Override
     public String getId(R record) {
-        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "/" + record.getUriKey();
+        return RegistryApplication.getApplicationContext().getUriPrefix() + getBasePath() + "/" + record.getUriKey();
     }
 
     @Override
     public String getId(RequestContext requestContext) {
-        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath();
+        return RegistryApplication.getApplicationContext().getUriPrefix() + getBasePath();
     }
 
     protected abstract String getLinkTerm();
 
     @Override
     public String getName(R record) throws ResponseContextException {
-        return Constants.UQ_REGISTRY_URI_PREFIX + getBasePath() + "/" + record.getUriKey();
+        return RegistryApplication.getApplicationContext().getUriPrefix() + getBasePath() + "/" + record.getUriKey();
     }
 
     protected abstract Class<R> getRecordClass();
@@ -377,7 +375,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRED)
     public ResponseContext postEntry(RequestContext request) {
         try {
         	enforceAuthentication(request);
@@ -420,8 +418,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                     adapterInputHelper.addDescriptionAuthors(version, authors, request);
                     version.setSource(source);
                     //TODO these values (i.e. rights, license) should come from the entry
-                    record.setLicense(Constants.UQ_REGISTRY_LICENSE);
-                    record.setRights(Constants.UQ_REGISTRY_RIGHTS);
+                    record.setLicense(RegistryApplication.getApplicationContext().getRegistryLicense());
+                    record.setRights(RegistryApplication.getApplicationContext().getRegistryRights());
                     record.getVersions().add(version);
                     record.setUpdated(now);
                     entityManager.persist(version);
@@ -469,7 +467,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     }
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    @Transactional(propagation=Propagation.REQUIRED)
     public ResponseContext putEntry(RequestContext request) {
         try {
             User user = getAuthenticationManager().getCurrentUser(request);
@@ -585,6 +583,10 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
 	public void setDaoManager(DaoManager daoManager) {
 		this.daoManager = daoManager;
+	}
+
+	protected String getBasePath() {
+		return getHref();
 	}
 
 }

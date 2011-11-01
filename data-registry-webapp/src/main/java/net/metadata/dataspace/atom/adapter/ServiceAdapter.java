@@ -29,9 +29,4 @@ public class ServiceAdapter extends AbstractRecordAdapter<Service,ServiceVersion
         return Constants.TITLE_FOR_SERVICES;
     }
 
-	@Override
-	protected String getBasePath() {
-		return Constants.PATH_FOR_SERVICES;
-	}
-
 }

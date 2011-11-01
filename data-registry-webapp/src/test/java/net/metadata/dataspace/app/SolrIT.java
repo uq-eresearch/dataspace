@@ -97,7 +97,7 @@ public class SolrIT {
 
         // Wait for re-index
         // TODO: Implement event-based indexing so we don't do this!
-        Thread.sleep(15000);
+        Thread.sleep(10000);
     }
 
 	// Test tagcloud for stopwords

@@ -1,6 +1,7 @@
 package net.metadata.dataspace.atom.util;
 
 import net.metadata.dataspace.app.Constants;
+import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
@@ -101,7 +102,7 @@ public class FeedOutputHelper {
         Factory factory = request.getAbdera().getFactory();
         Feed feed = factory.newFeed();
         String uri = request.getUri().toString();
-        feed.setId(Constants.UQ_REGISTRY_URI_PREFIX + uri.substring(1));
+        feed.setId(RegistryApplication.getApplicationContext().getUriPrefix() + uri.substring(1));
         feed.setTitle("Version History");
         feed.addLink(uri, "self");
         return feed;
@@ -149,7 +150,7 @@ public class FeedOutputHelper {
                 if (author.getMBoxes().size() > 0) {
                 	person.setEmail(author.getMBoxes().iterator().next());
                 }
-                person.setUri(Constants.UQ_REGISTRY_URI_PREFIX + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
+                person.setUri(RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
                 personList.add(person);
             }
         }

@@ -42,21 +42,10 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
         SimpleWorkspaceInfo registryWorkSpace = new SimpleWorkspaceInfo();
         registryWorkSpace.setTitle(((RegistryConfiguration)context.getBean("applicationContext")).getRegistryTitle());
 
-        AgentAdapter agentAdapter = (AgentAdapter) context.getBean("agentAdapter");
-        agentAdapter.setHref(Constants.PATH_FOR_AGENTS);
-        registryWorkSpace.addCollection(agentAdapter);
-
-        CollectionAdapter collectionAdapter = (CollectionAdapter) context.getBean("collectionAdapter");
-        collectionAdapter.setHref(Constants.PATH_FOR_COLLECTIONS);
-        registryWorkSpace.addCollection(collectionAdapter);
-
-        ServiceAdapter serviceAdapter = (ServiceAdapter) context.getBean("serviceAdapter");
-        serviceAdapter.setHref(Constants.PATH_FOR_SERVICES);
-        registryWorkSpace.addCollection(serviceAdapter);
-
-        ActivityAdapter activityAdapter = (ActivityAdapter) context.getBean("activityAdapter");
-        activityAdapter.setHref(Constants.PATH_FOR_ACTIVITIES);
-        registryWorkSpace.addCollection(activityAdapter);
+        registryWorkSpace.addCollection((CollectionInfo) context.getBean("agentAdapter"));
+        registryWorkSpace.addCollection((CollectionInfo) context.getBean("collectionAdapter"));
+        registryWorkSpace.addCollection((CollectionInfo) context.getBean("serviceAdapter"));
+        registryWorkSpace.addCollection((CollectionInfo) context.getBean("activityAdapter"));
 
         String base = "/";
         DefaultProvider registryServiceProvider = new DefaultProvider(base) {

@@ -43,12 +43,7 @@ public interface Constants {
     String TITLE_FOR_ACTIVITIES = "Activities";
     String TITLE_FOR_SERVICES = "Services";
 
-    String UQ_REGISTRY_URI_PREFIX = RegistryApplication.getApplicationContext().getUriPrefix();
-    String UQ_REGISTRY_TITLE = RegistryApplication.getApplicationContext().getRegistryTitle();
-    String UQ_REGISTRY_EMAIL = RegistryApplication.getApplicationContext().getRegistryEmail();
-    String UQ_REGISTRY_LICENSE = RegistryApplication.getApplicationContext().getRegistryLicense();
-    String UQ_REGISTRY_RIGHTS = RegistryApplication.getApplicationContext().getRegistryRights();
-    String UQ_URL = "http://uq.edu.au";
+    String UQ_URL = "http://www.uq.edu.au";
     /**
      * Target Type names
      */
@@ -125,7 +120,7 @@ public interface Constants {
     String LABEL_KEYWORD = "keyword";
 
     String SCHEME_DCMITYPE = NS_DCMITYPE;
-    String SCHEME_KEYWORD = UQ_REGISTRY_URI_PREFIX + "keyword";
+    String SCHEME_KEYWORD_SUFFIX = "keyword";
     String SCHEME_ANZSRC_FOR = NS_ANZSRC + "for";
     String SCHEME_ANZSRC_SEO = NS_ANZSRC + "seo";
     String SCHEME_ANZSRC_TOA = NS_ANZSRC + "toa";
