@@ -138,9 +138,11 @@ public class AdapterOutputHelper {
 
             FullName fullName = version.getParent().getFullName();
             if (fullName != null) {
-                Element fullNameTitle = entry.addExtension(Constants.QNAME_RDFA_META);
-                fullNameTitle.setAttributeValue("property", Constants.PROPERTY_TITLE);
-                fullNameTitle.setAttributeValue("content", fullName.getTitle());
+            	if (fullName.getTitle() != null) {
+	                Element fullNameTitle = entry.addExtension(Constants.QNAME_RDFA_META);
+	                fullNameTitle.setAttributeValue("property", Constants.PROPERTY_TITLE);
+	                fullNameTitle.setAttributeValue("content", fullName.getTitle());
+            	}
                 Element givenNameElement = entry.addExtension(Constants.QNAME_RDFA_META);
                 givenNameElement.setAttributeValue("property", Constants.PROPERTY_GIVEN_NAME);
                 givenNameElement.setAttributeValue("content", fullName.getGivenName());

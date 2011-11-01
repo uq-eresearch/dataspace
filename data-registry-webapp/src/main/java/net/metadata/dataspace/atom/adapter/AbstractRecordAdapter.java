@@ -380,53 +380,63 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ResponseContext postEntry(RequestContext request) {
         try {
-            EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
-
-            User user = getAuthenticationManager().getCurrentUser(request);
-            if (user == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-            } else {
-                MimeType mimeType = request.getContentType();
-                String baseType = mimeType.getBaseType();
-                if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
-                    Entry entry = getEntryFromRequest(request);
-                    Record record = getEntityCreator().getNextRecord(getRecordClass());
-                    Version version = adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
-                    if (version == null) {
-                        throw new ResponseContextException("Version is null", 400);
-                    } else {
-                        try {
-                            Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
-                            if (source.getId() == null) {
-                                entityManager.persist(source);
-                            }
-                            version.setParent(record);
-                            Date now = new Date();
-                            version.setUpdated(now);
-                            List<Person> authors = entry.getSource().getAuthors();
-                            adapterInputHelper.addDescriptionAuthors(version, authors, request);
-                            version.setSource(source);
-                            //TODO these values (i.e. rights, license) should come from the entry
-                            record.setLicense(Constants.UQ_REGISTRY_LICENSE);
-                            record.setRights(Constants.UQ_REGISTRY_RIGHTS);
-                            record.getVersions().add(version);
-                            record.setUpdated(now);
-                            entityManager.persist(version);
-                            entityManager.persist(record);
-                            adapterInputHelper.addRelations(entry, version, user);
-                            Entry createdEntry = adapterOutputHelper.getEntryFromEntity(version, true);
-                            return adapterOutputHelper.getContextResponseForPost(createdEntry);
-                        } catch (Exception th) {
-                            logger.warn("Invalid Entry, Rolling back database", th);
-                            throw new ResponseContextException(th.getMessage(), 400);
-                        }
-                    }
-                } else {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-                }
-            }
+        	enforceAuthentication(request);
+            return processPostedEntry(request);
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
+        }
+    }
+
+    protected void enforceAuthentication(RequestContext request)
+    		throws ResponseContextException
+    {
+        if (getAuthenticationManager().getCurrentUser(request) == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+        }
+    }
+
+    protected ResponseContext processPostedEntry(RequestContext request)
+    		throws ResponseContextException
+    {
+        EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
+    	MimeType mimeType = request.getContentType();
+        String baseType = mimeType.getBaseType();
+        if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
+            Entry entry = getEntryFromRequest(request);
+            Record record = getEntityCreator().getNextRecord(getRecordClass());
+            Version version = adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
+            if (version == null) {
+                throw new ResponseContextException("Version is null", 400);
+            } else {
+                try {
+                    Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
+                    if (source.getId() == null) {
+                        entityManager.persist(source);
+                    }
+                    version.setParent(record);
+                    Date now = new Date();
+                    version.setUpdated(now);
+                    List<Person> authors = entry.getSource().getAuthors();
+                    adapterInputHelper.addDescriptionAuthors(version, authors, request);
+                    version.setSource(source);
+                    //TODO these values (i.e. rights, license) should come from the entry
+                    record.setLicense(Constants.UQ_REGISTRY_LICENSE);
+                    record.setRights(Constants.UQ_REGISTRY_RIGHTS);
+                    record.getVersions().add(version);
+                    record.setUpdated(now);
+                    entityManager.persist(version);
+                    entityManager.persist(record);
+                    adapterInputHelper.addRelations(entry, version,
+                    		getAuthenticationManager().getCurrentUser(request));
+                    Entry createdEntry = adapterOutputHelper.getEntryFromEntity(version, true);
+                    return adapterOutputHelper.getContextResponseForPost(createdEntry);
+                } catch (Exception th) {
+                    logger.warn("Invalid Entry, Rolling back database", th);
+                    throw new ResponseContextException(th.getMessage(), 400);
+                }
+            }
+        } else {
+            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
         }
     }
 

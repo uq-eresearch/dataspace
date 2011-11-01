@@ -137,6 +137,29 @@ public class AdapterInputHelper {
         version.setUpdated(now);
     }
 
+    public InternetAddress getEmailFromHref(IRI href)
+    		throws ResponseContextException
+    {
+        if (href == null) {
+        	throw new ResponseContextException(
+            		"Empty agent email address.", 400);
+        }
+        String token = "mailto:";
+        String mailTo = href.toString();
+        String emailStr = mailTo.startsWith(token) ?
+        	mailTo.substring(mailTo.indexOf(":") + 1) :
+        	mailTo;
+        InternetAddress emailAddress;
+        try {
+        	emailAddress = new InternetAddress(emailStr);
+        } catch (AddressException e) {
+            throw new ResponseContextException(
+            		"Invalid agent email address ("+emailStr+
+            		"): "+e.getMessage(), 400);
+		}
+		return emailAddress;
+    }
+
     private void addRelationsCollection(Entry entry, CollectionVersion version, User currentUser) throws ResponseContextException, URISyntaxException {
         EntityManager entityManager = daoManager.getEntityManagerSource().getEntityManager();
 
@@ -155,16 +178,8 @@ public class AdapterInputHelper {
 
         List<Link> emails = entry.getLinks(Constants.REL_MBOX);
         for (Link emailLink : emails) {
-            IRI href = emailLink.getHref();
-            if (href != null) {
-                String token = "mailto:";
-                String mailTo = href.toString();
-                if (mailTo.startsWith(token)) {
-                    version.getMboxes().add(mailTo.substring(mailTo.indexOf(":") + 1));
-                } else {
-                    version.getMboxes().add(mailTo);
-                }
-            }
+            version.getMboxes().add(
+            		getEmailFromHref(emailLink.getHref()).toString());
         }
 
         addAlternativeTitles(version, entry);

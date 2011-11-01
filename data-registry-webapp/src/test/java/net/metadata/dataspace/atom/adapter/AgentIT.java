@@ -1,13 +1,17 @@
 package net.metadata.dataspace.atom.adapter;
 
+import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.TestConstants;
 import net.metadata.dataspace.atom.util.ClientHelper;
 import net.metadata.dataspace.atom.util.XPathHelper;
+
+import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,6 +35,31 @@ import static junit.framework.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = TestConstants.TEST_CONTEXT)
 public class AgentIT {
+
+	@Before
+	public void deleteAnyExistingEntry() throws Exception {
+        // Get email
+        String fileName = "/files/post/new-agent.xml";
+        XPath xpath = XPathHelper.getXPath();
+        Document docFromFile = XPathHelper.getDocFromFile(fileName);
+        String xpathQuery = TestConstants.RECORD_LINK_PATH+"[@rel='"+Constants.REL_MBOX+"']/@href";
+        String currentEmail = xpath.evaluate(xpathQuery, docFromFile);
+        currentEmail = currentEmail.replaceFirst("^mailto:", "");
+        currentEmail = UrlEncoding.encode(currentEmail);
+        //create a client
+        HttpClient client = new HttpClient();
+        //authenticate
+        int status = ClientHelper.login(client, TestConstants.USERNAME, TestConstants.PASSWORD);
+        assertEquals("Could not authenticate", 200, status);
+        String emailBasedUrl = TestConstants.URL_PREFIX +
+        		TestConstants.PATH_FOR_AGENTS + "/" + currentEmail;
+		GetMethod getMethod = ClientHelper.getEntry(client, emailBasedUrl, TestConstants.ATOM_ENTRY_MIMETYPE);
+		if (getMethod.getStatusCode() < 400) {
+	        String entryLocation = getMethod.getResponseHeader("Location").getValue();
+	        DeleteMethod deleteMethod = ClientHelper.deleteEntry(client, entryLocation);
+	        assertEquals("Could not delete entry", 200, deleteMethod.getStatusCode());
+		}
+	}
 
     @Test
     public void testAgentCRUD() throws Exception {
@@ -75,6 +104,8 @@ public class AgentIT {
 
         //post without authentication
         String fileName = "/files/post/new-agent.xml";
+        Document docFromFile = XPathHelper.getDocFromFile(fileName);
+
         PostMethod postMethod = ClientHelper.postEntry(client, fileName, TestConstants.PATH_FOR_AGENTS);
         assertEquals("Posting without authenticating, Wrong status code", 401, postMethod.getStatusCode());
 

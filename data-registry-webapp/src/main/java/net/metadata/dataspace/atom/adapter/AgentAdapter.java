@@ -9,9 +9,13 @@ import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Link;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.EmptyResponseContext;
+import org.apache.abdera.protocol.server.context.ResponseContextException;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -58,11 +62,33 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent,AgentVersion> {
     	return super.getEntry(request);
     }
 
-    public Agent getAgentWithEmail(InternetAddress email) {
-    	return ((AgentDao)getDao()).getByEmail(email);
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ResponseContext postEntry(RequestContext request) {
+    	try {
+    		enforceAuthentication(request);
+			Entry entry = getEntryFromRequest(request);
+			for (Link link : entry.getLinks(Constants.REL_MBOX)) {
+				InternetAddress emailAddress =
+						getAdapterInputHelper().getEmailFromHref(link.getHref());
+				Agent existingAgent = getAgentWithEmail(emailAddress);
+				if (existingAgent != null) {
+					throw new ResponseContextException(
+		            		"Agent already exists: "+existingAgent, 409);
+				}
+			}
+    	} catch (ResponseContextException e) {
+            return OperationHelper.createErrorResponse(e);
+        }
+    	return super.postEntry(request);
     }
 
-    public ResponseContext getCanonicalRedirect(Agent agent) {
+    protected Agent getAgentWithEmail(InternetAddress email) {
+    	Agent agent = ((AgentDao)getDao()).getByEmail(email);
+    	return agent != null && agent.isActive() ? agent : null;
+    }
+
+    protected ResponseContext getCanonicalRedirect(Agent agent) {
     	String location = getId(agent);
 		ResponseContext response = new EmptyResponseContext(303,
 				"Agent found with email address");

@@ -162,4 +162,8 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
         this.publishDate = publishDate;
     }
 
+    public String toString() {
+    	return String.format("%s (%s)", getTitle(), getUriKey());
+    }
+
 }
