@@ -21,6 +21,8 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
+import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.User;
 
@@ -115,32 +117,25 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Transactional(propagation=Propagation.REQUIRED)
     public ResponseContext deleteEntry(RequestContext request) {
         try {
-            User user = getAuthenticationManager().getCurrentUser(request);
-            if (user == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-            } else {
-                String uriKey = OperationHelper.getEntryID(request);
-                R record = getExistingRecord(uriKey);
-                if (record == null) {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
-                } else {
-                    getDao().refresh(record);
-                    if (record.isActive()) {
-                        if (getAuthorizationManager().getAccessLevelForInstance(user, record).canDelete()) {
-                            try {
-                                getDao().softDelete(uriKey);
-                            } catch (Throwable th) {
-                                throw new ResponseContextException(500, th);
-                            }
-                            return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
-                        } else {
-                            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-                        }
-                    } else {
-                        throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
-                    }
-                }
+            enforceAuthentication(request);
+            R record = getExistingRecord(request);
+            if (record == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
             }
+            getDao().refresh(record);
+            if (!record.isActive()) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+            }
+            User user = getAuthenticationManager().getCurrentUser(request);
+            if (!getAuthorizationManager().getAccessLevelForInstance(user, record).canDelete()) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+            }
+            try {
+                getDao().softDelete(record.getUriKey());
+            } catch (Throwable th) {
+                throw new ResponseContextException(500, th);
+            }
+            return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
@@ -206,45 +201,42 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Override
     @Transactional(readOnly=true)
     public ResponseContext getEntry(RequestContext request) {
-        String uriKey = OperationHelper.getEntryID(request);
         try {
-            R record = getExistingRecord(uriKey);
+            R record = getExistingRecord(request);
             if (record == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
             } else {
                 getDao().refresh(record);
-                if (record.isActive()) {
-                    String versionKey = OperationHelper.getEntryVersionID(request);
-                    User user = getAuthenticationManager().getCurrentUser(request);
-                    Version version;
-                    if (versionKey != null) {
-                        if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
-                            if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
-                                Feed versionHistoryFeed = getFeedOutputHelper().createVersionFeed(request);
-                                ResponseContext versionHistoryFeed1 = getFeedOutputHelper().getVersionHistoryFeed(request, versionHistoryFeed, record, getRecordClass());
-                                return versionHistoryFeed1;
-                            } else {
-                                version = getDao().getByVersion(uriKey, versionKey);
-                            }
+                if (!record.isActive()) {
+                	throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+                }
+                String versionKey = OperationHelper.getEntryVersionID(request);
+                User user = getAuthenticationManager().getCurrentUser(request);
+                Version version;
+                if (versionKey != null) {
+                    if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
+                        if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
+                            Feed versionHistoryFeed = getFeedOutputHelper().createVersionFeed(request);
+                            ResponseContext versionHistoryFeed1 = getFeedOutputHelper().getVersionHistoryFeed(request, versionHistoryFeed, record, getRecordClass());
+                            return versionHistoryFeed1;
                         } else {
-                            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+                            version = getDao().getByVersion(record.getUriKey(), versionKey);
                         }
                     } else {
-                        if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
-                            version = record.getWorkingCopy();
-                        } else {
-                            version = record.getPublished();
-                        }
-                    }
-                    if (version == null) {
-                        throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
-                    } else {
-                        Entry entry = adapterOutputHelper.getEntryFromEntity(version, versionKey == null);
-                        return adapterOutputHelper.getContextResponseForGetEntry(request, entry, getRecordClass());
+                        throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
                     }
                 } else {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
+                    if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
+                        version = record.getWorkingCopy();
+                    } else {
+                        version = record.getPublished();
+                    }
                 }
+                if (version == null) {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+                }
+                Entry entry = adapterOutputHelper.getEntryFromEntity(version, versionKey == null);
+                return adapterOutputHelper.getContextResponseForGetEntry(request, entry, getRecordClass());
             }
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
@@ -261,7 +253,10 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
     }
 
-    public R getExistingRecord(String uriKey) {
+    public R getExistingRecord(RequestContext request)
+    		throws ResponseContextException
+    {
+        String uriKey = OperationHelper.getEntryID(request);
         return getDao().getByKey(uriKey);
     }
 
@@ -374,13 +369,31 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         return record.getUpdated();
     }
 
+    /**
+     * For agents it is possible to match an existing record based on email
+     * address. In those cases, POST requests will reinstate a deleted record
+     * but will not overwrite an active record.
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public ResponseContext postEntry(RequestContext request) {
-        try {
-        	enforceAuthentication(request);
-            return processPostedEntry(request);
-        } catch (ResponseContextException e) {
+    	try {
+    		enforceAuthentication(request);
+    		R existingRecord = getExistingRecord(request);
+    		// If it doesn't exist, create a new record
+    		if (existingRecord == null) {
+    			Entry createdEntry = processPostRequest(request);
+                return adapterOutputHelper.getContextResponseForPost(createdEntry);
+    		}
+    		// If active, this is a conflict
+    		if (existingRecord.isActive()) {
+				throw new ResponseContextException(
+	            		"Entry already exists: "+existingRecord, 409);
+    		}
+    		// Otherwise, reinstate the record
+    		Entry reinstatedEntry = processPutRequest(request);
+            return adapterOutputHelper.getContextResponseForPost(reinstatedEntry);
+    	} catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
     }
@@ -393,50 +406,53 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
     }
 
-    protected ResponseContext processPostedEntry(RequestContext request)
+    protected Entry processPostRequest(RequestContext request)
     		throws ResponseContextException
     {
         EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
-    	MimeType mimeType = request.getContentType();
-        String baseType = mimeType.getBaseType();
-        if (baseType.equals(Constants.MIME_TYPE_ATOM)) {
-            Entry entry = getEntryFromRequest(request);
-            Record record = getEntityCreator().getNextRecord(getRecordClass());
-            Version version = adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
-            if (version == null) {
-                throw new ResponseContextException("Version is null", 400);
-            } else {
-                try {
-                    Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
-                    if (source.getId() == null) {
-                        entityManager.persist(source);
-                    }
-                    version.setParent(record);
-                    Date now = new Date();
-                    version.setUpdated(now);
-                    List<Person> authors = entry.getSource().getAuthors();
-                    adapterInputHelper.addDescriptionAuthors(version, authors, request);
-                    version.setSource(source);
-                    //TODO these values (i.e. rights, license) should come from the entry
-                    record.setLicense(RegistryApplication.getApplicationContext().getRegistryLicense());
-                    record.setRights(RegistryApplication.getApplicationContext().getRegistryRights());
-                    record.getVersions().add(version);
-                    record.setUpdated(now);
-                    entityManager.persist(version);
-                    entityManager.persist(record);
-                    adapterInputHelper.addRelations(entry, version,
-                    		getAuthenticationManager().getCurrentUser(request));
-                    Entry createdEntry = adapterOutputHelper.getEntryFromEntity(version, true);
-                    return adapterOutputHelper.getContextResponseForPost(createdEntry);
-                } catch (Exception th) {
-                    logger.warn("Invalid Entry, Rolling back database", th);
-                    throw new ResponseContextException(th.getMessage(), 400);
-                }
+    	ensureRequestIsAtom(request);
+        Entry entry = getEntryFromRequest(request);
+        Record record = getEntityCreator().getNextRecord(getRecordClass());
+        Version version = adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
+        if (version == null) {
+            throw new ResponseContextException("Version is null", 400);
+        }
+        try {
+            Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
+            if (source.getId() == null) {
+                entityManager.persist(source);
             }
-        } else {
-            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+            version.setParent(record);
+            Date now = new Date();
+            version.setUpdated(now);
+            List<Person> authors = entry.getSource().getAuthors();
+            adapterInputHelper.addDescriptionAuthors(version, authors, request);
+            version.setSource(source);
+            //TODO these values (i.e. rights, license) should come from the entry
+            record.setLicense(RegistryApplication.getApplicationContext().getRegistryLicense());
+            record.setRights(RegistryApplication.getApplicationContext().getRegistryRights());
+            record.getVersions().add(version);
+            record.setUpdated(now);
+            entityManager.persist(version);
+            entityManager.persist(record);
+            adapterInputHelper.addRelations(entry, version,
+            		getAuthenticationManager().getCurrentUser(request));
+            // Return created entry
+            return adapterOutputHelper.getEntryFromEntity(version, true);
+        } catch (Exception th) {
+            logger.warn("Invalid Entry, Rolling back database", th);
+            throw new ResponseContextException(th.getMessage(), 400);
         }
     }
+
+	protected void ensureRequestIsAtom(RequestContext request)
+			throws ResponseContextException {
+		MimeType mimeType = request.getContentType();
+        String baseType = mimeType.getBaseType();
+        if (!baseType.equals(Constants.MIME_TYPE_ATOM)) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+        }
+	}
 
     @Override
     public R postEntry(String title, IRI id, String summary, Date updated, List<Person> authors, Content content, RequestContext requestContext) throws ResponseContextException {
@@ -450,12 +466,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Override
     public ResponseContext postMedia(RequestContext request) {
         try {
-            User user = getAuthenticationManager().getCurrentUser(request);
-            if (user == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-            } else {
-                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-            }
+            enforceAuthentication(request);
+            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
@@ -470,64 +482,59 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Transactional(propagation=Propagation.REQUIRED)
     public ResponseContext putEntry(RequestContext request) {
         try {
-            User user = getAuthenticationManager().getCurrentUser(request);
-            if (user == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-            } else {
-                logger.info("Updating Entry");
-                String mimeBaseType = request.getContentType().getBaseType();
-                if (mimeBaseType.equals(Constants.MIME_TYPE_ATOM)) {
-                    Entry entry = getFomEntryFromRequest(request);
-                    String uriKey = OperationHelper.getEntryID(request);
-                    R record = getExistingRecord(uriKey);
-                    if (record == null) {
-                        throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
-                    } else {
-                        getDao().refresh(record);
-                        if (record.isActive()) {
-                            V version = (V) adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
-                            if (version == null) {
-                                throw new ResponseContextException("Version is null", 400);
-                            } else {
-                                if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
-                                    EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
-                                    try {
-                                        Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
-                                        if (source.getId() == null) {
-                                            entityManager.persist(source);
-                                        }
-                                        record.getVersions().add(version);
-                                        version.setParent(record);
-                                        adapterInputHelper.addRelations(entry, version, user);
-                                        record.setUpdated(new Date());
-                                        List<Person> authors = entry.getSource().getAuthors();
-                                        adapterInputHelper.addDescriptionAuthors(version, authors, request);
-                                        version.setSource(source);
-                                        entityManager.persist(version);
-                                        entityManager.merge(record);
-                                        Entry updatedEntry = adapterOutputHelper.getEntryFromEntity(version, false);
-                                        return adapterOutputHelper.getContextResponseForPut(updatedEntry);
-                                    } catch (Exception th) {
-                                        logger.fatal("Invalid Entry, Rolling back database", th);
-
-                                        throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
-                                    }
-                                } else {
-                                    throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-                                }
-                            }
-                        } else {
-                            throw new ResponseContextException(Constants.HTTP_STATUS_410, 410);
-                        }
-                    }
-                } else {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-                }
-            }
+            enforceAuthentication(request);
+            Entry updatedEntry = processPutRequest(request);
+            return adapterOutputHelper.getContextResponseForPut(updatedEntry);
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
     }
+
+	protected Entry processPutRequest(RequestContext request)
+			throws ResponseContextException
+	{
+		logger.info("Updating Entry");
+		ensureRequestIsAtom(request);
+	    Entry entry = getFomEntryFromRequest(request);
+	    R record = getExistingRecord(request);
+	    if (record == null) {
+	        throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+	    }
+        getDao().refresh(record);
+        if (!record.isActive()) {
+        	((AbstractRecordEntity<V>) record).setActive(true);
+        }
+        V version = (V) adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
+        if (version == null) {
+            throw new ResponseContextException("Version is null", 400);
+        }
+        User user = getAuthenticationManager().getCurrentUser(request);
+        if (!getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+        }
+        EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
+        try {
+            Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
+            if (source.getId() == null) {
+                entityManager.persist(source);
+            }
+            record.getVersions().add(version);
+            version.setParent(record);
+            adapterInputHelper.addRelations(entry, version, user);
+            record.setUpdated(new Date());
+            List<Person> authors = entry.getSource().getAuthors();
+            adapterInputHelper.addDescriptionAuthors(version, authors, request);
+            version.setSource(source);
+            entityManager.persist(version);
+            entityManager.merge(record);
+            // Return updated entry (with parent-level location)
+            // return adapterOutputHelper.getEntryFromEntity(version, false);
+            return adapterOutputHelper.getEntryFromEntity(version, true);
+        } catch (Exception th) {
+            logger.fatal("Invalid Entry, Rolling back database", th);
+            throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
+        }
+	}
 
     /**
      * We do not support media putting
@@ -535,12 +542,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Override
     public ResponseContext putMedia(RequestContext request) {
         try {
-            User user = getAuthenticationManager().getCurrentUser(request);
-            if (user == null) {
-                throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
-            } else {
-                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-            }
+            enforceAuthentication(request);
+            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }

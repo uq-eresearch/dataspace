@@ -129,7 +129,7 @@ public class OperationHelper {
 
             @Override
             public void writeTo(Writer writer) throws IOException {
-                writer.write(message);
+                writer.write(message == null ? "" : message);
             }
         };
         rc.setStatus(code);

@@ -257,6 +257,9 @@
 						</goals>
 					</execution>
 				</executions>
+                <configuration>
+                    <!-- <debugForkedProcess>true</debugForkedProcess> -->
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

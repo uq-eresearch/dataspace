@@ -18,9 +18,9 @@ import java.util.List;
  */
 @Transactional
 public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements RegistryDao<T> {
-	
+
 	public AbstractRegistryDao() {}
-	
+
 	public AbstractRegistryDao(EntityManagerSource entityManagerSource) {
     	super(entityManagerSource);
     }
@@ -39,6 +39,10 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
 
     @Override
     public T getByKey(String uriKey) {
+    	// It's possible the key is null, so check first
+    	if (uriKey == null)
+    		return null;
+    	// Convert to atomic number and search
         int atomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
         Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.atomicNumber = :atomicNumber");
         query.setParameter("atomicNumber", atomicNumber);

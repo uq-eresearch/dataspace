@@ -5,7 +5,6 @@ import net.metadata.dataspace.app.TestConstants;
 import net.metadata.dataspace.atom.util.ClientHelper;
 import net.metadata.dataspace.atom.util.XPathHelper;
 
-import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -24,6 +23,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import java.io.InputStream;
+import java.net.URLEncoder;
 
 import static junit.framework.Assert.*;
 
@@ -45,7 +45,7 @@ public class AgentIT {
         String xpathQuery = TestConstants.RECORD_LINK_PATH+"[@rel='"+Constants.REL_MBOX+"']/@href";
         String currentEmail = xpath.evaluate(xpathQuery, docFromFile);
         currentEmail = currentEmail.replaceFirst("^mailto:", "");
-        currentEmail = UrlEncoding.encode(currentEmail);
+        currentEmail = URLEncoder.encode(currentEmail, "UTF-8");
         //create a client
         HttpClient client = new HttpClient();
         //authenticate
@@ -92,9 +92,9 @@ public class AgentIT {
         //Delete Entry
         DeleteMethod deleteMethod = ClientHelper.deleteEntry(client, newEntryLocation);
         assertEquals("Could not delete entry", 200, deleteMethod.getStatusCode());
-        //check that entry is deleted
+        //check that entry is deleted (but may be reinstated later)
         getMethod = ClientHelper.getEntry(client, newEntryLocation, TestConstants.ATOM_ENTRY_MIMETYPE);
-        assertEquals("Entry should be GONE", 410, getMethod.getStatusCode());
+        assertEquals("Entry should not be found", 404, getMethod.getStatusCode());
     }
 
     @Test

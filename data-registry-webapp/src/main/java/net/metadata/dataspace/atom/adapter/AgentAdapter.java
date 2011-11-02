@@ -6,6 +6,7 @@ import javax.mail.internet.InternetAddress;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.data.access.AgentDao;
+import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 
@@ -57,30 +58,34 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent,AgentVersion> {
     	return super.getEntry(request);
     }
 
+    /**
+     * Existing agents are detected based on email address as well as URI key.
+     */
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
-    public ResponseContext postEntry(RequestContext request) {
-    	try {
-    		enforceAuthentication(request);
-			Entry entry = getEntryFromRequest(request);
-			for (Link link : entry.getLinks(Constants.REL_MBOX)) {
-				InternetAddress emailAddress =
-						getAdapterInputHelper().getEmailFromHref(link.getHref());
-				Agent existingAgent = getAgentWithEmail(emailAddress);
-				if (existingAgent != null) {
-					throw new ResponseContextException(
-		            		"Agent already exists: "+existingAgent, 409);
-				}
+    public Agent getExistingRecord(RequestContext request)
+    		throws ResponseContextException
+    {
+    	// Try super method first
+    	Agent existingAgent = super.getExistingRecord(request);
+    	if (existingAgent != null) {
+    		return existingAgent;
+    	}
+    	// If not, it's time for some Agent-specific searching
+    	Entry entry = getEntryFromRequest(request);
+		for (Link link : entry.getLinks(Constants.REL_MBOX)) {
+			InternetAddress emailAddress =
+					getAdapterInputHelper().getEmailFromHref(link.getHref());
+			existingAgent = getAgentWithEmail(emailAddress);
+			if (existingAgent != null) {
+				return existingAgent;
 			}
-    	} catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    	return super.postEntry(request);
+		}
+		return null;
     }
 
     protected Agent getAgentWithEmail(InternetAddress email) {
     	Agent agent = ((AgentDao)getDao()).getByEmail(email);
-    	return agent != null && agent.isActive() ? agent : null;
+    	return agent != null ? agent : null;
     }
 
     protected ResponseContext getCanonicalRedirect(Agent agent) {

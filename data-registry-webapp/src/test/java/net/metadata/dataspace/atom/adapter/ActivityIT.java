@@ -63,9 +63,9 @@ public class ActivityIT {
         //Delete Entry
         DeleteMethod deleteMethod = ClientHelper.deleteEntry(client, newEntryLocation);
         assertEquals("Could not delete entry", 200, deleteMethod.getStatusCode());
-        //check that entry is deleted
+        //check that entry is deleted (but may be reinstated later)
         getMethod = ClientHelper.getEntry(client, newEntryLocation, TestConstants.ATOM_ENTRY_MIMETYPE);
-        assertEquals("Entry should be GONE", 410, getMethod.getStatusCode());
+        assertEquals("Entry should not be found", 404, getMethod.getStatusCode());
     }
 
     @Test
