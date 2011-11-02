@@ -59,8 +59,11 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     private FeedOutputHelper feedOutputHelper;
     private RecordDao<R,V> dao;
 
+    private String basePath = null;
+
     public AbstractRecordAdapter() {
         super();
+		basePath = getHref();
     }
 
     @Override
@@ -205,39 +208,39 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             R record = getExistingRecord(request);
             if (record == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
-            } else {
-                getDao().refresh(record);
-                if (!record.isActive()) {
-                	throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+            }
+            getDao().refresh(record);
+            if (!record.isActive()) {
+            	throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+            }
+            String versionKey = OperationHelper.getEntryVersionID(request);
+            User user = getAuthenticationManager().getCurrentUser(request);
+            Version version;
+            if (versionKey == null) {
+                if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
+                    version = record.getWorkingCopy();
+                } else {
+                    version = record.getPublished();
                 }
-                String versionKey = OperationHelper.getEntryVersionID(request);
-                User user = getAuthenticationManager().getCurrentUser(request);
-                Version version;
-                if (versionKey != null) {
-                    if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
-                        if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
-                            Feed versionHistoryFeed = getFeedOutputHelper().createVersionFeed(request);
-                            ResponseContext versionHistoryFeed1 = getFeedOutputHelper().getVersionHistoryFeed(request, versionHistoryFeed, record, getRecordClass());
-                            return versionHistoryFeed1;
-                        } else {
-                            version = getDao().getByVersion(record.getUriKey(), versionKey);
-                        }
+
+            } else {
+            	if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
+                    if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
+                        Feed versionHistoryFeed = getFeedOutputHelper().createVersionFeed(request);
+                        ResponseContext versionHistoryFeed1 = getFeedOutputHelper().getVersionHistoryFeed(request, versionHistoryFeed, record, getRecordClass());
+                        return versionHistoryFeed1;
                     } else {
-                        throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+                        version = getDao().getByVersion(record.getUriKey(), versionKey);
                     }
                 } else {
-                    if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
-                        version = record.getWorkingCopy();
-                    } else {
-                        version = record.getPublished();
-                    }
+                    throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
                 }
-                if (version == null) {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
-                }
-                Entry entry = adapterOutputHelper.getEntryFromEntity(version, versionKey == null);
-                return adapterOutputHelper.getContextResponseForGetEntry(request, entry, getRecordClass());
             }
+            if (version == null) {
+                throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
+            }
+            Entry entry = adapterOutputHelper.getEntryFromEntity(version, versionKey == null);
+            return adapterOutputHelper.getContextResponseForGetEntry(request, entry, getRecordClass());
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
         }
@@ -589,7 +592,17 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 	}
 
 	protected String getBasePath() {
-		return getHref();
+		return basePath;
+	}
+
+    /**
+     * Get href (but do it synchronously, because otherwise we get
+     * java.util.ConcurrentModificationException from the underlying
+     * HashMap context.
+     */
+	@Override
+	public synchronized String getHref(RequestContext request) {
+		return super.getHref(request);
 	}
 
 }
