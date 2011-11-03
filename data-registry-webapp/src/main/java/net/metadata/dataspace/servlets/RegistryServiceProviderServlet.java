@@ -90,6 +90,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 
                 super.setTargetResolver(
 	                new RegexTargetResolver()
+			        	.setPattern("/(registry.atomsvc)", TargetType.TYPE_SERVICE, "service")
 				        .setPattern("/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.TYPE_COLLECTION, "collection")
 				        .setPattern("/([^/#?]+)/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.TYPE_ENTRY, "collection","entry")
 				        .setPattern("/([^/#?]+)/([^/#?]+)/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.get(Constants.TARGET_TYPE_VERSION), "collection","entry","version")
@@ -101,44 +102,9 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                 TargetType targetType = target.getType();
                 if (targetType.equals(TargetType.TYPE_COLLECTION)) {
                     //TODO looks like a hack, find a better way to do this later.
-                    boolean isServiceRequest = target.getParameter("collection").equals("registry.atomsvc");
                     boolean isLoginRequest = target.getParameter("collection").equals("login");
                     boolean isLogoutRequest = target.getParameter("collection").equals("logout");
-                    if (isServiceRequest) {
-                        TargetType type = TargetType.get(TargetType.SERVICE);
-                        RequestProcessor processor = this.requestProcessors.get(type);
-                        if (processor == null) {
-                            return OperationHelper.createResponse(400, Constants.HTTP_STATUS_404);
-                        }
-
-                        WorkspaceManager wm = getWorkspaceManager(request);
-                        org.apache.abdera.protocol.server.CollectionAdapter adapter = wm.getCollectionAdapter(request);
-                        Transactional transaction = adapter instanceof Transactional ? (Transactional) adapter : null;
-                        ResponseContext response = null;
-                        try {
-                            transactionStart(transaction, request);
-                            response = processor.process(request, wm, adapter);
-                            response = response != null ? response : processExtensionRequest(request, adapter);
-                        } catch (Throwable e) {
-                            if (e instanceof ResponseContextException) {
-                                ResponseContextException rce = (ResponseContextException) e;
-                                if (rce.getStatusCode() >= 400 && rce.getStatusCode() < 500) {
-                                    // don't report routine 4xx HTTP errors
-                                    logger.info(e);
-                                } else {
-                                    logger.error(e);
-                                }
-                            } else {
-                                logger.error(e);
-                            }
-                            transactionCompensate(transaction, request, e);
-                            response = createErrorResponse(request, e);
-                            return response;
-                        } finally {
-                            transactionEnd(transaction, request, response);
-                        }
-                        return response != null ? response : OperationHelper.createResponse(400, Constants.HTTP_STATUS_400);
-                    } else if (isLoginRequest) {
+                    if (isLoginRequest) {
                         return login(request);
                     } else if (isLogoutRequest) {
                         return logout(request);

@@ -49,25 +49,11 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Version<R>> extends
         AbstractEntityCollectionAdapter<R> {
 
-	public static final int DEFAULT_PAGE_SIZE = 20;
-	public static final KnownContentType[] feedTypes = {
-		KnownContentType.ATOM,
-		KnownContentType.HTML
-	};
-
 	public enum KnownContentType {
 		ATOM("application/atom+xml","atom"),
 		HTML("text/html","html"),
 		RDF("application/rdf+xml","rdf"),
 		RIFCS("application/vnd.ands.rifcs+xml","xml");
-
-		public final String mimeType;
-		public final String fileExt;
-
-		private KnownContentType(String mimeType, String fileExt) {
-			this.fileExt = fileExt;
-			this.mimeType = mimeType;
-		}
 
 		public static KnownContentType matchAccept(String acceptType) {
 			for (AbstractRecordAdapter.KnownContentType type : Arrays.asList(values())) {
@@ -77,7 +63,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 			}
 			return null;
 		}
-
 		public static KnownContentType matchUri(IRI uri) {
 			for (AbstractRecordAdapter.KnownContentType type : Arrays.asList(values())) {
 				if (uri.getPath().endsWith("."+type.fileExt)) {
@@ -87,6 +72,15 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 			return null;
 		}
 
+		public final String mimeType;
+
+		public final String fileExt;
+
+		private KnownContentType(String mimeType, String fileExt) {
+			this.fileExt = fileExt;
+			this.mimeType = mimeType;
+		}
+
 		public IRI getUri(IRI base) {
 			return new IRI(base.getScheme(), base.getAuthority(),
 					base.getPath() +"."+ this.fileExt,
@@ -94,6 +88,12 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 		}
 
 	}
+	public static final int DEFAULT_PAGE_SIZE = 20;
+
+	public static final KnownContentType[] feedTypes = {
+		KnownContentType.ATOM,
+		KnownContentType.HTML
+	};
 
     protected Logger logger = Logger.getLogger(getClass());
 
@@ -149,43 +149,10 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 	        }
         }
 
-        setPagingLinks(feed, request);
+        addPagingLinks(feed, request);
     }
 
-	protected void addSelfAndAlternateLinks(Feed feed,
-			KnownContentType representationMimeType)
-	{
-
-
-        IRI baseUri = new IRI(
-        		RegistryApplication.getApplicationContext().getUriPrefix() +
-        		getBasePath());
-
-        for (KnownContentType type : Arrays.asList(feedTypes)) {
-        	String rel = type == representationMimeType ?
-        			Link.REL_SELF : Link.REL_ALTERNATE;
-        	feed.getLink(rel).discard();
-        	feed.addLink(type.getUri(baseUri).toString(), rel, type.mimeType,
-        			null, null, -1);
-        }
-	}
-
-	protected KnownContentType getRepresentationMimeType(RequestContext request) {
-		KnownContentType representationMimeType = KnownContentType.matchUri(request.getUri());
-        System.out.println(representationMimeType);
-        if (representationMimeType != null) {
-        	return representationMimeType;
-        }
-        String acceptHeader = request.getAccept();
-        if (acceptHeader != null) {
-            representationMimeType = KnownContentType.matchAccept(acceptHeader);
-            if (representationMimeType != null)
-            	return representationMimeType;
-        }
-    	return KnownContentType.HTML;
-	}
-
-	protected void setPagingLinks(Feed feed, RequestContext request) {
+	protected void addPagingLinks(Feed feed, RequestContext request) {
 		int pageNumber = getPageNumber(request);
         int pageSize = getPageSize(request);
         FeedPagingHelper.setComplete(feed, false);
@@ -208,15 +175,25 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
 	}
 
-	protected String getHrefForPage(IRI base, int pageNumber) {
-		String queryString = base.getQuery() == null ? "" : base.getQuery()+"&";
-        IRI uri = new IRI(base.getScheme(), base.getHost(),
-				base.getPath(),
-				queryString+"page="+pageNumber, base.getFragment());
-		return uri.toString();
+	protected void addSelfAndAlternateLinks(Feed feed,
+			KnownContentType representationMimeType)
+	{
+
+
+        IRI baseUri = new IRI(
+        		RegistryApplication.getApplicationContext().getUriPrefix() +
+        		getBasePath());
+
+        for (KnownContentType type : Arrays.asList(feedTypes)) {
+        	String rel = type == representationMimeType ?
+        			Link.REL_SELF : Link.REL_ALTERNATE;
+        	feed.getLink(rel).discard();
+        	feed.addLink(type.getUri(baseUri).toString(), rel, type.mimeType,
+        			null, null, -1);
+        }
 	}
 
-    @Override
+	@Override
     @Transactional(propagation=Propagation.REQUIRED)
     public ResponseContext deleteEntry(RequestContext request) {
         try {
@@ -244,11 +221,28 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
     }
 
-    @Override
+	@Override
     @Transactional(propagation=Propagation.REQUIRED)
     public void deleteEntry(String key, RequestContext requestContext) throws ResponseContextException {
         getDao().softDelete(key);
     }
+
+    protected void enforceAuthentication(RequestContext request)
+    		throws ResponseContextException
+    {
+        if (getAuthenticationManager().getCurrentUser(request) == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+        }
+    }
+
+    protected void ensureRequestIsAtom(RequestContext request)
+			throws ResponseContextException {
+		MimeType knownMimeType = request.getContentType();
+        String baseType = knownMimeType.getBaseType();
+        if (KnownContentType.matchAccept(baseType) != KnownContentType.ATOM) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+        }
+	}
 
     @Override
     public String[] getAccepts(RequestContext requestContext) {
@@ -280,6 +274,10 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         return getFeedOutputHelper().getAuthors(record, request);
     }
 
+    protected String getBasePath() {
+		return getHref();
+	}
+
     @Override
     public Object getContent(R entry, RequestContext request) throws ResponseContextException {
         Content content = request.getAbdera().getFactory().newContent(Content.Type.TEXT);
@@ -290,6 +288,10 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     public RecordDao<R,V> getDao() {
         return dao;
     }
+
+    public DaoManager getDaoManager() {
+		return daoManager;
+	}
 
     public EntityCreator getEntityCreator() {
         return entityCreator;
@@ -307,33 +309,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 	        list = getDao().getPublished(pageSize,pageNumber);
 	    }
         return list;
-    }
-
-    @Override
-    public ResponseContext getFeed(RequestContext request) {
-    	ResponseContext response = super.getFeed(request);
-
-        if (getRepresentationMimeType(request) == KnownContentType.HTML) {
-            return feedOutputHelper.getHtmlRepresentationOfFeed(request, response, getRecordClass());
-        } else {
-        	return response;
-        }
-    }
-
-    protected int getPageNumber(RequestContext requestContext) {
-	    try {
-	    	return Integer.parseInt(requestContext.getParameter("page"));
-	    } catch (Exception e) {
-	    	return 1;
-	    }
-    }
-
-    protected int getPageSize(RequestContext requestContext) {
-	    try {
-	    	return Integer.parseInt(requestContext.getParameter("size"));
-	    } catch (Exception e) {
-	    	return DEFAULT_PAGE_SIZE;
-	    }
     }
 
     @Override
@@ -397,6 +372,17 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         return getDao().getByKey(uriKey);
     }
 
+    @Override
+    public ResponseContext getFeed(RequestContext request) {
+    	ResponseContext response = super.getFeed(request);
+
+        if (getRepresentationMimeType(request) == KnownContentType.HTML) {
+            return feedOutputHelper.getHtmlRepresentationOfFeed(request, response, getRecordClass());
+        } else {
+        	return response;
+        }
+    }
+
     public FeedOutputHelper getFeedOutputHelper() {
         return feedOutputHelper;
     }
@@ -421,6 +407,24 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
     }
 
+    /**
+     * Get href (but do it synchronously, because otherwise we get
+     * java.util.ConcurrentModificationException from the underlying
+     * HashMap context.
+     */
+	@Override
+	public synchronized String getHref(RequestContext request) {
+		return super.getHref(request);
+	}
+
+    protected String getHrefForPage(IRI base, int pageNumber) {
+		String queryString = base.getQuery() == null ? "" : base.getQuery()+"&";
+        IRI uri = new IRI(base.getScheme(), base.getHost(),
+				base.getPath(),
+				queryString+"page="+pageNumber, base.getFragment());
+		return uri.toString();
+	}
+
     @Override
     public String getId(R record) {
         return RegistryApplication.getApplicationContext().getUriPrefix() + getBasePath() + "/" + record.getUriKey();
@@ -438,7 +442,37 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         return RegistryApplication.getApplicationContext().getUriPrefix() + getBasePath() + "/" + record.getUriKey();
     }
 
+    protected int getPageNumber(RequestContext requestContext) {
+	    try {
+	    	return Integer.parseInt(requestContext.getParameter("page"));
+	    } catch (Exception e) {
+	    	return 1;
+	    }
+    }
+
+    protected int getPageSize(RequestContext requestContext) {
+	    try {
+	    	return Integer.parseInt(requestContext.getParameter("size"));
+	    } catch (Exception e) {
+	    	return DEFAULT_PAGE_SIZE;
+	    }
+    }
+
     protected abstract Class<R> getRecordClass();
+
+    protected KnownContentType getRepresentationMimeType(RequestContext request) {
+		KnownContentType representationMimeType = KnownContentType.matchUri(request.getUri());
+        if (representationMimeType != null) {
+        	return representationMimeType;
+        }
+        String acceptHeader = request.getAccept();
+        if (acceptHeader != null) {
+            representationMimeType = KnownContentType.matchAccept(acceptHeader);
+            if (representationMimeType != null)
+            	return representationMimeType;
+        }
+    	return KnownContentType.HTML;
+	}
 
     protected abstract String getTitle();
 
@@ -447,7 +481,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         return record.getTitle();
     }
 
-    @Override
+	@Override
     public String getTitle(RequestContext request) {
         return getTitle();
     }
@@ -486,15 +520,26 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
     }
 
-    protected void enforceAuthentication(RequestContext request)
-    		throws ResponseContextException
-    {
-        if (getAuthenticationManager().getCurrentUser(request) == null) {
-            throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+    @Override
+    public R postEntry(String title, IRI id, String summary, Date updated, List<Person> authors, Content content, RequestContext requestContext) throws ResponseContextException {
+        logger.warn("Method not supported.");
+        return null;
+    }
+
+    /**
+     * We do not support media posting
+     */
+    @Override
+    public ResponseContext postMedia(RequestContext request) {
+        try {
+            enforceAuthentication(request);
+            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+        } catch (ResponseContextException e) {
+            return OperationHelper.createErrorResponse(e);
         }
     }
 
-    protected Entry processPostRequest(RequestContext request)
+	protected Entry processPostRequest(RequestContext request)
     		throws ResponseContextException
     {
         EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
@@ -533,52 +578,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
     }
 
-	protected void ensureRequestIsAtom(RequestContext request)
-			throws ResponseContextException {
-		MimeType knownMimeType = request.getContentType();
-        String baseType = knownMimeType.getBaseType();
-        if (KnownContentType.matchAccept(baseType) != KnownContentType.ATOM) {
-            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-        }
-	}
-
-    @Override
-    public R postEntry(String title, IRI id, String summary, Date updated, List<Person> authors, Content content, RequestContext requestContext) throws ResponseContextException {
-        logger.warn("Method not supported.");
-        return null;
-    }
-
-    /**
-     * We do not support media posting
-     */
-    @Override
-    public ResponseContext postMedia(RequestContext request) {
-        try {
-            enforceAuthentication(request);
-            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    @Override
-    public void putEntry(R entry, String title, Date updated, List<Person> authors, String summary, Content content, RequestContext request) throws ResponseContextException {
-        logger.warn("Method not supported.");
-    }
-
-    @Override
-    @Transactional(propagation=Propagation.REQUIRED)
-    public ResponseContext putEntry(RequestContext request) {
-        try {
-            enforceAuthentication(request);
-            Entry updatedEntry = processPutRequest(request);
-            return adapterOutputHelper.getContextResponseForPut(updatedEntry);
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-	protected Entry processPutRequest(RequestContext request)
+    protected Entry processPutRequest(RequestContext request)
 			throws ResponseContextException
 	{
 		logger.info("Updating Entry");
@@ -624,6 +624,23 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
 	}
 
+    @Override
+    public void putEntry(R entry, String title, Date updated, List<Person> authors, String summary, Content content, RequestContext request) throws ResponseContextException {
+        logger.warn("Method not supported.");
+    }
+
+    @Override
+    @Transactional(propagation=Propagation.REQUIRED)
+    public ResponseContext putEntry(RequestContext request) {
+        try {
+            enforceAuthentication(request);
+            Entry updatedEntry = processPutRequest(request);
+            return adapterOutputHelper.getContextResponseForPut(updatedEntry);
+        } catch (ResponseContextException e) {
+            return OperationHelper.createErrorResponse(e);
+        }
+    }
+
     /**
      * We do not support media putting
      */
@@ -655,11 +672,15 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         this.authorizationManager = authorizationManager;
     }
 
-    public void setDao(RecordDao<R,V> dao) {
+	public void setDao(RecordDao<R,V> dao) {
         this.dao = dao;
     }
 
-    public void setEntityCreator(EntityCreator entityCreator) {
+	public void setDaoManager(DaoManager daoManager) {
+		this.daoManager = daoManager;
+	}
+
+	public void setEntityCreator(EntityCreator entityCreator) {
         this.entityCreator = entityCreator;
     }
 
@@ -667,27 +688,5 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     public void setFeedOutputHelper(FeedOutputHelper feedOutputHelper) {
         this.feedOutputHelper = feedOutputHelper;
     }
-
-	public DaoManager getDaoManager() {
-		return daoManager;
-	}
-
-	public void setDaoManager(DaoManager daoManager) {
-		this.daoManager = daoManager;
-	}
-
-	protected String getBasePath() {
-		return getHref();
-	}
-
-    /**
-     * Get href (but do it synchronously, because otherwise we get
-     * java.util.ConcurrentModificationException from the underlying
-     * HashMap context.
-     */
-	@Override
-	public synchronized String getHref(RequestContext request) {
-		return super.getHref(request);
-	}
 
 }

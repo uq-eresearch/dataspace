@@ -73,81 +73,14 @@
 
 
     <!--Servlet Mappings-->
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/agents/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/agents.atom/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/agents.html/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/collections/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/collections.atom/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/collections.html/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/activities/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/activities.atom/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/activities.html/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/services/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/services.atom/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/services.html/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/registry.atomsvc</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/login/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>registryServiceServlet</servlet-name>
-        <url-pattern>/logout/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>oaipmhServlet</servlet-name>
-        <url-pattern>/oai/*</url-pattern>
-    </servlet-mapping>
+    <!-- Spring MVC is the default (it also dispatches to registry servlet) -->
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>springmvc</servlet-name>
-        <url-pattern>/search</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>springmvc</servlet-name>
-        <url-pattern>/about</url-pattern>
+        <servlet-name>oaipmhServlet</servlet-name>
+        <url-pattern>/oai/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>atomDocServlet</servlet-name>
