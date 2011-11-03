@@ -1,6 +1,7 @@
 package net.metadata.dataspace.atom.adapter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -22,11 +23,11 @@ import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
-import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.User;
 
 import org.apache.abdera.Abdera;
+import org.apache.abdera.ext.history.FeedPagingHelper;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Content;
 import org.apache.abdera.model.Document;
@@ -48,6 +49,52 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Version<R>> extends
         AbstractEntityCollectionAdapter<R> {
 
+	public static final int DEFAULT_PAGE_SIZE = 20;
+	public static final KnownContentType[] feedTypes = {
+		KnownContentType.ATOM,
+		KnownContentType.HTML
+	};
+
+	public enum KnownContentType {
+		ATOM("application/atom+xml","atom"),
+		HTML("text/html","html"),
+		RDF("application/rdf+xml","rdf"),
+		RIFCS("application/vnd.ands.rifcs+xml","xml");
+
+		public final String mimeType;
+		public final String fileExt;
+
+		private KnownContentType(String mimeType, String fileExt) {
+			this.fileExt = fileExt;
+			this.mimeType = mimeType;
+		}
+
+		public static KnownContentType matchAccept(String acceptType) {
+			for (AbstractRecordAdapter.KnownContentType type : Arrays.asList(values())) {
+				if (acceptType.startsWith(type.mimeType)) {
+					return type;
+				}
+			}
+			return null;
+		}
+
+		public static KnownContentType matchUri(IRI uri) {
+			for (AbstractRecordAdapter.KnownContentType type : Arrays.asList(values())) {
+				if (uri.getPath().endsWith("."+type.fileExt)) {
+					return type;
+				}
+			}
+			return null;
+		}
+
+		public IRI getUri(IRI base) {
+			return new IRI(base.getScheme(), base.getAuthority(),
+					base.getPath() +"."+ this.fileExt,
+					base.getQuery(), base.getFragment());
+		}
+
+	}
+
     protected Logger logger = Logger.getLogger(getClass());
 
     private AdapterInputHelper adapterInputHelper;
@@ -59,15 +106,19 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     private FeedOutputHelper feedOutputHelper;
     private RecordDao<R,V> dao;
 
-    private String basePath = null;
-
     public AbstractRecordAdapter() {
         super();
-		basePath = getHref();
     }
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
+		KnownContentType representationMimeType =
+				getRepresentationMimeType(request);
+
+		if (!Arrays.asList(feedTypes).contains(representationMimeType)) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
+		}
+
         R latestRecord = getDao().getMostRecentUpdated();
         if (latestRecord != null) {
             getDao().refresh(latestRecord);
@@ -77,44 +128,93 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             feed.setUpdated(new Date());
         }
 
-        String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
-        if (representationMimeType == null) {
-            String acceptHeader = request.getAccept();
-            if (acceptHeader != null && (acceptHeader.equals(Constants.MIME_TYPE_HTML) || acceptHeader.equals(Constants.MIME_TYPE_ATOM_FEED))) {
-                representationMimeType = acceptHeader;
-            } else {
-                representationMimeType = Constants.MIME_TYPE_HTML;
-            }
-        }
-        String atomFeedUrl = RegistryApplication.getApplicationContext().getUriPrefix() + getBasePath() + "?repr=" + Constants.MIME_TYPE_ATOM_FEED;
-        String htmlFeedUrl = RegistryApplication.getApplicationContext().getUriPrefix() + getBasePath();
-        if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-            getFeedOutputHelper().prepareFeedSelfLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
-            getFeedOutputHelper().prepareFeedAlternateLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
-        } else if (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) || representationMimeType.equals(Constants.MIME_TYPE_ATOM)) {
-            getFeedOutputHelper().prepareFeedSelfLink(feed, atomFeedUrl, Constants.MIME_TYPE_ATOM_FEED);
-            getFeedOutputHelper().prepareFeedAlternateLink(feed, htmlFeedUrl, Constants.MIME_TYPE_HTML);
-        }
+        addSelfAndAlternateLinks(feed, representationMimeType);
+
         feed.setTitle(getTitle());
 
         Iterable<R> entries = getEntries(request);
-        if (entries == null) {
-            return;
+        if (entries != null) {
+	        for (R entryObj : entries) {
+	            Entry e = feed.addEntry();
+	            IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
+	            addEntryDetails(request, e, feedIri, entryObj);
+	            getFeedOutputHelper().setPublished(entryObj, e);
+	            if (isMediaEntry(entryObj)) {
+	                addMediaContent(feedIri, e, entryObj, request);
+	            } else {
+	                addContent(e, entryObj, request);
+	                Link typeLink = e.addLink(getLinkTerm(), Constants.REL_TYPE);
+	                typeLink.setTitle(getTitle());
+	            }
+	        }
         }
-        for (R entryObj : entries) {
-            Entry e = feed.addEntry();
-            IRI feedIri = new IRI(getFeedIriForEntry(entryObj, request));
-            addEntryDetails(request, e, feedIri, entryObj);
-            getFeedOutputHelper().setPublished(entryObj, e);
-            if (isMediaEntry(entryObj)) {
-                addMediaContent(feedIri, e, entryObj, request);
-            } else {
-                addContent(e, entryObj, request);
-                Link typeLink = e.addLink(getLinkTerm(), Constants.REL_TYPE);
-                typeLink.setTitle(getTitle());
-            }
-        }
+
+        setPagingLinks(feed, request);
     }
+
+	protected void addSelfAndAlternateLinks(Feed feed,
+			KnownContentType representationMimeType)
+	{
+
+
+        IRI baseUri = new IRI(
+        		RegistryApplication.getApplicationContext().getUriPrefix() +
+        		getBasePath());
+
+        for (KnownContentType type : Arrays.asList(feedTypes)) {
+        	String rel = type == representationMimeType ?
+        			Link.REL_SELF : Link.REL_ALTERNATE;
+        	feed.getLink(rel).discard();
+        	feed.addLink(type.getUri(baseUri).toString(), rel, type.mimeType,
+        			null, null, -1);
+        }
+	}
+
+	protected KnownContentType getRepresentationMimeType(RequestContext request) {
+		KnownContentType representationMimeType = KnownContentType.matchUri(request.getUri());
+        System.out.println(representationMimeType);
+        if (representationMimeType != null) {
+        	return representationMimeType;
+        }
+        String acceptHeader = request.getAccept();
+        if (acceptHeader != null) {
+            representationMimeType = KnownContentType.matchAccept(acceptHeader);
+            if (representationMimeType != null)
+            	return representationMimeType;
+        }
+    	return KnownContentType.HTML;
+	}
+
+	protected void setPagingLinks(Feed feed, RequestContext request) {
+		int pageNumber = getPageNumber(request);
+        int pageSize = getPageSize(request);
+        FeedPagingHelper.setComplete(feed, false);
+
+        IRI base = feed.getSelfLink().getHref();
+        if (pageSize != DEFAULT_PAGE_SIZE) {
+    		String queryString = base.getQuery() == null ? "" : base.getQuery()+"&";
+            queryString += "size="+pageSize;
+            base = new IRI(base.getScheme(), base.getHost(),
+    				base.getPath(),
+    				queryString, base.getFragment());
+        }
+
+        FeedPagingHelper.setCurrent(feed, getHrefForPage(base,pageNumber));
+        if (pageNumber > 1) {
+        	FeedPagingHelper.setPrevious(feed, getHrefForPage(base,pageNumber-1));
+        }
+        if (feed.getEntries().size() == pageSize) {
+        	FeedPagingHelper.setNext(feed, getHrefForPage(base,pageNumber+1));
+        }
+	}
+
+	protected String getHrefForPage(IRI base, int pageNumber) {
+		String queryString = base.getQuery() == null ? "" : base.getQuery()+"&";
+        IRI uri = new IRI(base.getScheme(), base.getHost(),
+				base.getPath(),
+				queryString+"page="+pageNumber, base.getFragment());
+		return uri.toString();
+	}
 
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
@@ -197,7 +297,43 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
     @Override
     public Iterable<R> getEntries(RequestContext requestContext) throws ResponseContextException {
-        return getRecords(requestContext);
+    	User user = getAuthenticationManager().getCurrentUser(requestContext);
+    	int pageNumber = getPageNumber(requestContext);
+    	int pageSize = getPageSize(requestContext);
+	    List<R> list;
+	    if (getAuthorizationManager().canAccessWorkingCopy(user, Collection.class)) {
+	        list = getDao().getActive(pageSize,pageNumber);
+	    } else {
+	        list = getDao().getPublished(pageSize,pageNumber);
+	    }
+        return list;
+    }
+
+    @Override
+    public ResponseContext getFeed(RequestContext request) {
+    	ResponseContext response = super.getFeed(request);
+
+        if (getRepresentationMimeType(request) == KnownContentType.HTML) {
+            return feedOutputHelper.getHtmlRepresentationOfFeed(request, response, getRecordClass());
+        } else {
+        	return response;
+        }
+    }
+
+    protected int getPageNumber(RequestContext requestContext) {
+	    try {
+	    	return Integer.parseInt(requestContext.getParameter("page"));
+	    } catch (Exception e) {
+	    	return 1;
+	    }
+    }
+
+    protected int getPageSize(RequestContext requestContext) {
+	    try {
+	    	return Integer.parseInt(requestContext.getParameter("size"));
+	    } catch (Exception e) {
+	    	return DEFAULT_PAGE_SIZE;
+	    }
     }
 
     @Override
@@ -261,42 +397,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         return getDao().getByKey(uriKey);
     }
 
-    @Override
-    public ResponseContext getFeed(RequestContext request) {
-        try {
-            String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
-            String accept = request.getAccept();
-            if (representationMimeType == null) {
-                representationMimeType = accept;
-            }
-            if (representationMimeType != null &&
-                    (representationMimeType.equals(Constants.MIME_TYPE_ATOM_FEED) ||
-                            representationMimeType.equals(Constants.MIME_TYPE_ATOM))) {
-                return super.getFeed(request);
-            } else {
-                Feed feed = createFeedBase(request);
-                addFeedDetails(feed, request);
-                ResponseContext responseContext = buildGetFeedResponse(feed);
-                return getFeed(request, responseContext);
-            }
-        } catch (ResponseContextException e) {
-            return OperationHelper.createErrorResponse(e);
-        }
-    }
-
-    protected ResponseContext getFeed(RequestContext request, ResponseContext responseContext) throws ResponseContextException {
-        String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
-        if (representationMimeType != null) {
-            if (representationMimeType.equals(Constants.MIME_TYPE_HTML)) {
-                return getFeedOutputHelper().getHtmlRepresentationOfFeed(request, responseContext, getRecordClass());
-            } else {
-                throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
-            }
-        } else {
-            return getFeedOutputHelper().getHtmlRepresentationOfFeed(request, responseContext, getRecordClass());
-        }
-    }
-
     public FeedOutputHelper getFeedOutputHelper() {
         return feedOutputHelper;
     }
@@ -339,18 +439,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     }
 
     protected abstract Class<R> getRecordClass();
-
-    public List<R> getRecords(RequestContext request) {
-        User user = getAuthenticationManager().getCurrentUser(request);
-        List<R> list;
-        if (getAuthorizationManager().canAccessWorkingCopy(user, Collection.class)) {
-            list = getDao().getAllPublished();
-            list.addAll(getDao().getAllUnpublished());
-        } else {
-            list = getDao().getAllPublished();
-        }
-        return list;
-    }
 
     protected abstract String getTitle();
 
@@ -447,9 +535,9 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
 	protected void ensureRequestIsAtom(RequestContext request)
 			throws ResponseContextException {
-		MimeType mimeType = request.getContentType();
-        String baseType = mimeType.getBaseType();
-        if (!baseType.equals(Constants.MIME_TYPE_ATOM)) {
+		MimeType knownMimeType = request.getContentType();
+        String baseType = knownMimeType.getBaseType();
+        if (KnownContentType.matchAccept(baseType) != KnownContentType.ATOM) {
             throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
         }
 	}
@@ -589,7 +677,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 	}
 
 	protected String getBasePath() {
-		return basePath;
+		return getHref();
 	}
 
     /**

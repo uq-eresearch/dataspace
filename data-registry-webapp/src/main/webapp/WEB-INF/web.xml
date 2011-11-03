@@ -79,7 +79,23 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/agents.atom/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/agents.html/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
         <url-pattern>/collections/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/collections.atom/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/collections.html/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>
@@ -87,7 +103,23 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/activities.atom/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/activities.html/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
         <url-pattern>/services/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/services.atom/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registryServiceServlet</servlet-name>
+        <url-pattern>/services.html/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>registryServiceServlet</servlet-name>

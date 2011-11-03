@@ -30,14 +30,6 @@ import static org.apache.abdera.protocol.server.ProviderHelper.calculateEntityTa
 @Transactional
 public class FeedOutputHelper {
 
-	public String getRepresentationMimeType(RequestContext request) {
-        String fullUrl = request.getUri().toString();
-        String representation = null;
-        if (fullUrl.contains("?repr")) {
-            representation = fullUrl.split("repr=")[1];
-        }
-        return representation;
-    }
 
     public ResponseContext getHtmlRepresentationOfFeed(RequestContext request, ResponseContext responseContext, Class<?> clazz) {
         responseContext.setContentType(Constants.MIME_TYPE_HTML);
@@ -49,19 +41,6 @@ public class FeedOutputHelper {
         XSLTTransformerWriter writer = new XSLTTransformerWriter(xslFilePath, request);
         responseContext.setWriter(writer);
         return responseContext;
-    }
-
-    public void prepareFeedSelfLink(Feed feed, String selfLinkHref, String mimeType) {
-        feed.getSelfLink().setHref(selfLinkHref);
-        feed.getSelfLink().setRel(Constants.REL_SELF);
-        feed.getSelfLink().setMimeType(mimeType);
-    }
-
-
-    public void prepareFeedAlternateLink(Feed feed, String alternateLinkHref, String mimeType) {
-        feed.getAlternateLink().setHref(alternateLinkHref);
-        feed.getAlternateLink().setRel(Constants.REL_ALTERNATE);
-        feed.getAlternateLink().setMimeType(mimeType);
     }
 
     public ResponseContext getVersionHistoryFeed(RequestContext request, Feed feed, Record record, Class<?> clazz) throws ResponseContextException {

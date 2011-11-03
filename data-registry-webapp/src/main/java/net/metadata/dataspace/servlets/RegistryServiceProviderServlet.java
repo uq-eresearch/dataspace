@@ -14,6 +14,8 @@ import org.apache.abdera.i18n.templates.Route;
 import org.apache.abdera.protocol.server.*;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.DefaultProvider;
+import org.apache.abdera.protocol.server.impl.DefaultWorkspaceManager;
+import org.apache.abdera.protocol.server.impl.RegexTargetResolver;
 import org.apache.abdera.protocol.server.impl.RouteManager;
 import org.apache.abdera.protocol.server.impl.SimpleWorkspaceInfo;
 import org.apache.abdera.protocol.server.servlet.AbderaServlet;
@@ -21,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -35,6 +38,32 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 	 */
 	private static final long serialVersionUID = -6861319035092045064L;
 	private Logger logger = Logger.getLogger(getClass());
+
+
+	static class FileExtWorkspaceManager extends DefaultWorkspaceManager {
+
+		@Override
+		public org.apache.abdera.protocol.server.CollectionAdapter getCollectionAdapter(RequestContext request) {
+			org.apache.abdera.protocol.server.CollectionAdapter ca = super.getCollectionAdapter(request);
+	        if (ca != null) {
+	            return ca;
+	        }
+	        // Otherwise, check again using "." as a delimiter
+	        String path = request.getContextPath() + request.getTargetPath();
+
+	        for (WorkspaceInfo wi : workspaces) {
+	            for (CollectionInfo ci : wi.getCollections(request)) {
+	                String href = ci.getHref(request);
+	                if (path.equals(href) || (href != null && path.startsWith(href) && ".".equals(path
+	                    .substring(href.length(), href.length() + 1)))) {
+	                    return (org.apache.abdera.protocol.server.CollectionAdapter)ci;
+	                }
+	            }
+	        }
+
+	        return null;
+	    }
+	}
 
 	protected Provider createProvider() {
 		ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
@@ -56,14 +85,21 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                 super.init(abdera, properties);
                 this.requestProcessors.put(TargetType.get(Constants.TARGET_TYPE_VERSION, true), new VersionRequestProcessor());
 //                this.requestProcessors.put(TargetType.get(Constants.TARGET_TYPE_WORKING_COPY, true), new VersionRequestProcessor());
-                this.targetResolver.addRoute(new Route(Constants.TARGET_TYPE_VERSION, "/:collection/:entry/:version"), TargetType.get(Constants.TARGET_TYPE_VERSION));
+//                this.targetResolver.addRoute(new Route(Constants.TARGET_TYPE_VERSION, "/:collection/:entry/:version"), TargetType.get(Constants.TARGET_TYPE_VERSION));
 //                this.targetResolver.addRoute(new Route(Constants.TARGET_TYPE_WORKING_COPY, "/:collection/:entry/:working-copy"), TargetType.get(Constants.TARGET_TYPE_WORKING_COPY));
+
+                super.setTargetResolver(
+	                new RegexTargetResolver()
+				        .setPattern("/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.TYPE_COLLECTION, "collection")
+				        .setPattern("/([^/#?]+)/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.TYPE_ENTRY, "collection","entry")
+				        .setPattern("/([^/#?]+)/([^/#?]+)/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.get(Constants.TARGET_TYPE_VERSION), "collection","entry","version")
+	                );
             }
 
             public ResponseContext process(RequestContext request) {
                 Target target = request.getTarget();
                 TargetType targetType = target.getType();
-                if (targetType.equals(TargetType.get(TargetType.COLLECTION))) {
+                if (targetType.equals(TargetType.TYPE_COLLECTION)) {
                     //TODO looks like a hack, find a better way to do this later.
                     boolean isServiceRequest = target.getParameter("collection").equals("registry.atomsvc");
                     boolean isLoginRequest = target.getParameter("collection").equals("login");
@@ -122,6 +158,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                 return getAuthenticationManager().logout(request);
             }
         };
+        registryServiceProvider.setWorkspaceManager(new FileExtWorkspaceManager());
         registryServiceProvider.addWorkspace(registryWorkSpace);
         registryServiceProvider.init(getAbdera(), null);
         return registryServiceProvider;

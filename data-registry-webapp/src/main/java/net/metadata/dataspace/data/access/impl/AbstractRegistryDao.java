@@ -66,9 +66,16 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<T> getAllActive() {
         Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true ORDER BY o.updated");
+        return getActive(0,0);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getActive(int pageSize, int pageNumber) {
+        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true ORDER BY o.updated");
+        applyPaging(query, pageSize, pageNumber);
         return query.getResultList();
     }
 
@@ -80,9 +87,15 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<T> getAllPublished() {
-        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.updated DESC");
+    	return getPublished(0,0);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<T> getPublished(int pageSize, int pageNumber) {
+    	Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.updated DESC");
+        applyPaging(query, pageSize, pageNumber);
         return query.getResultList();
     }
 
@@ -130,6 +143,15 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
         }
         assert resultList.size() == 1 : "id should be unique";
         return (T) resultList.get(0);
+    }
+
+    protected Query applyPaging(Query query, int pageSize, int pageNumber) {
+    	if (pageSize > 0) {
+	    	query.setMaxResults(pageSize);
+	    	pageNumber = Math.max(pageNumber, 1);
+	    	query.setFirstResult((pageNumber-1)*pageSize);
+    	}
+    	return query;
     }
 
 }

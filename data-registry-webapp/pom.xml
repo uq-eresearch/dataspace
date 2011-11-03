@@ -288,7 +288,7 @@
 		<dependency>
 			<groupId>org.apache.abdera</groupId>
 			<artifactId>abdera-server</artifactId>
-			<version>1.1.2</version>
+			<version>${abdera.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>xercesImpl</artifactId>
@@ -296,6 +296,16 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.abdera</groupId>
+            <artifactId>abdera-extensions-main</artifactId>
+            <version>${abdera.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.abdera</groupId>
+            <artifactId>abdera-extensions-features</artifactId>
+            <version>${abdera.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
@@ -305,11 +315,6 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.abdera</groupId>
-			<artifactId>abdera-extensions-features</artifactId>
-			<version>1.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -486,6 +491,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<solr.version>3.4.0</solr.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
+		<abdera.version>1.1.2</abdera.version>
 	</properties>
 
 	<repositories>

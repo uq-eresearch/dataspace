@@ -43,6 +43,15 @@ public interface RegistryDao<T> extends Dao<T> {
     List<T> getAllActive();
 
     /**
+     * Returns a page of active entries
+     *
+     * @param pageSize	Size of page to return
+     * @param pageNumber	Index of page
+     * @return List of active entities
+     */
+    List<T> getActive(int pageSize, int pageNumber);
+
+    /**
      * Returns all inactive entities
      *
      * @return List of inactive entities
@@ -55,6 +64,15 @@ public interface RegistryDao<T> extends Dao<T> {
      * @return List of published entities
      */
     List<T> getAllPublished();
+
+    /**
+     * Returns a page of published entries
+     *
+     * @param pageSize	Size of page to return
+     * @param pageNumber	Index of page
+     * @return List of published entities
+     */
+    List<T> getPublished(int pageSize, int pageNumber);
 
     /**
      * Returns recent published entities
