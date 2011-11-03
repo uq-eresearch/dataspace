@@ -176,7 +176,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         return authorizationManager;
     }
 
-    @Transactional(readOnly=true)
     public List<Person> getAuthors(R record, RequestContext request) throws ResponseContextException {
         return getFeedOutputHelper().getAuthors(record, request);
     }
@@ -202,7 +201,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     }
 
     @Override
-    @Transactional(readOnly=true)
     public ResponseContext getEntry(RequestContext request) {
         try {
             R record = getExistingRecord(request);
@@ -264,7 +262,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     }
 
     @Override
-    @Transactional(readOnly=true)
     public ResponseContext getFeed(RequestContext request) {
         try {
             String representationMimeType = getFeedOutputHelper().getRepresentationMimeType(request);
