@@ -43,7 +43,6 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent,AgentVersion> {
     }
 
     @Override
-    @Transactional(readOnly=true)
     public ResponseContext getEntry(RequestContext request) {
         String uriKey = OperationHelper.getEntryID(request);
         try {

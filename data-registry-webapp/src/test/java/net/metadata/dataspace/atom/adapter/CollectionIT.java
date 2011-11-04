@@ -18,6 +18,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.activation.MimeType;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -328,7 +329,9 @@ public class CollectionIT {
         Element selfLink = (Element) xpath.evaluate(TestConstants.FEED_LINK_PATH + "[@rel='self']", docFromStream, XPathConstants.NODE);
         assertNotNull("Feed missing self link", selfLink);
         String feedSelfLink = selfLink.getAttribute("href");
-        assertTrue(feedSelfLink.contains(TestConstants.ATOM_FEED_MIMETYPE));
+        String feedSelfType = selfLink.getAttribute("type");
+        assertTrue("Incorrect SELF link file extension: "+feedSelfLink, feedSelfLink.contains(".atom"));
+        assertTrue("Incorrect SELF mime-type: "+feedSelfType, (new MimeType(TestConstants.ATOM_FEED_MIMETYPE)).match(feedSelfType));
 
         Element alternateLink = (Element) xpath.evaluate(TestConstants.FEED_LINK_PATH + "[@rel='alternate']", docFromStream, XPathConstants.NODE);
         assertNotNull("Feed missing alternate link", alternateLink);

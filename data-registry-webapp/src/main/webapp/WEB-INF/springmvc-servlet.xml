@@ -4,7 +4,9 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+    xmlns:util="http://www.springframework.org/schema/util">
 
 	<context:component-scan base-package="net.metadata.dataspace.controller" />
 
@@ -21,9 +23,13 @@
                 <prop key="/login">registryServiceServletForward</prop>
                 <prop key="/logout">registryServiceServletForward</prop>
                 <prop key="/activities*">registryServiceServletForward</prop>
+                <prop key="/activities/**">registryServiceServletForward</prop>
                 <prop key="/agents*">registryServiceServletForward</prop>
+                <prop key="/agents/**">registryServiceServletForward</prop>
                 <prop key="/collections*">registryServiceServletForward</prop>
+                <prop key="/collections/**">registryServiceServletForward</prop>
                 <prop key="/services*">registryServiceServletForward</prop>
+                <prop key="/services/**">registryServiceServletForward</prop>
             </props>
         </property>
     </bean>
@@ -45,7 +51,20 @@
 		<property name="servletName">
 			<value>registryServiceServlet</value>
 		</property>
+		<property name="supportedMethods">
+		  <bean factory-bean="supportedMethodList" factory-method="toArray"/>
+		</property>
 	</bean>
+
+
+    <util:list id="supportedMethodList" value-type="java.lang.String">
+      <value>GET</value>
+      <value>POST</value>
+      <value>PUT</value>
+      <value>DELETE</value>
+      <value>HEAD</value>
+      <value>OPTIONS</value>
+    </util:list>
 
     <mvc:default-servlet-handler/>
 

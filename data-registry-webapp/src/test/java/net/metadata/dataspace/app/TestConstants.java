@@ -11,7 +11,6 @@ public interface TestConstants {
      * Mime types
      */
     String JSON_MIMETYPE = "application/json";
-    String ATOM_MIMETYPE = "application/atom+xml";
     String ATOM_ENTRY_MIMETYPE = "application/atom+xml;type=entry";
     String ATOM_FEED_MIMETYPE = "application/atom+xml;type=feed";
     String HTML_MIME_TYPE = "text/html";

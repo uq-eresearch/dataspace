@@ -3,9 +3,12 @@ package net.metadata.dataspace.atom.adapter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 import javax.persistence.EntityManager;
 
 import net.metadata.dataspace.app.Constants;
@@ -49,22 +52,56 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Version<R>> extends
         AbstractEntityCollectionAdapter<R> {
 
-	public enum KnownContentType {
-		ATOM("application/atom+xml","atom"),
-		HTML("text/html","html"),
-		RDF("application/rdf+xml","rdf"),
-		RIFCS("application/vnd.ands.rifcs+xml","xml");
+	protected enum KnownContentTypes {
+		ATOM("atom", "application/atom+xml;type=feed", "application/atom+xml;type=entry"),
+		HTML("html", "text/html", "text/html"),
+		RDF("rdf", null, "application/rdf+xml"),
+		RIFCS("xml", null, "application/vnd.ands.rifcs+xml");
 
-		public static KnownContentType matchAccept(String acceptType) {
-			for (AbstractRecordAdapter.KnownContentType type : Arrays.asList(values())) {
-				if (acceptType.startsWith(type.mimeType)) {
+		public static Set<KnownContentTypes> getEntryTypes() {
+			Set<KnownContentTypes> types = new LinkedHashSet<KnownContentTypes>();
+			for (KnownContentTypes type : Arrays.asList(values())) {
+				if (type.entryMimeType != null) {
+					types.add(type);
+				}
+			}
+			return types;
+		}
+
+		public static Set<KnownContentTypes> getFeedTypes() {
+			Set<KnownContentTypes> types = new LinkedHashSet<KnownContentTypes>();
+			for (KnownContentTypes type : Arrays.asList(values())) {
+				if (type.feedMimeType != null) {
+					types.add(type);
+				}
+			}
+			return types;
+		}
+
+		public static KnownContentTypes matchAccept(String acceptType) {
+			try {
+				return matchAccept(new MimeType(acceptType));
+			} catch (MimeTypeParseException e) {
+				return null;
+			}
+		}
+
+		public static KnownContentTypes matchAccept(MimeType acceptType) {
+			for (AbstractRecordAdapter.KnownContentTypes type : Arrays.asList(values())) {
+				if (type.feedMimeType != null &&
+						type.feedMimeType.match(acceptType)) {
+					return type;
+				}
+				if (type.entryMimeType != null &&
+						type.entryMimeType.match(acceptType)) {
 					return type;
 				}
 			}
 			return null;
 		}
-		public static KnownContentType matchUri(IRI uri) {
-			for (AbstractRecordAdapter.KnownContentType type : Arrays.asList(values())) {
+
+		public static KnownContentTypes matchUri(IRI uri) {
+			for (AbstractRecordAdapter.KnownContentTypes type : Arrays.asList(values())) {
 				if (uri.getPath().endsWith("."+type.fileExt)) {
 					return type;
 				}
@@ -72,13 +109,21 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 			return null;
 		}
 
-		public final String mimeType;
-
 		public final String fileExt;
+		public final MimeType feedMimeType;
+		public final MimeType entryMimeType;
 
-		private KnownContentType(String mimeType, String fileExt) {
+		private KnownContentTypes(String fileExt, String feedMimeType, String entryMimeType) {
 			this.fileExt = fileExt;
-			this.mimeType = mimeType;
+			try {
+				this.feedMimeType = feedMimeType == null ?
+						null : new MimeType(feedMimeType);
+				this.entryMimeType = entryMimeType == null ?
+						null : new MimeType(entryMimeType);
+			} catch (MimeTypeParseException e) {
+				// Should never happen
+				throw new RuntimeException(e);
+			}
 		}
 
 		public IRI getUri(IRI base) {
@@ -89,11 +134,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
 	}
 	public static final int DEFAULT_PAGE_SIZE = 20;
-
-	public static final KnownContentType[] feedTypes = {
-		KnownContentType.ATOM,
-		KnownContentType.HTML
-	};
 
     protected Logger logger = Logger.getLogger(getClass());
 
@@ -112,10 +152,11 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
     @Override
     protected void addFeedDetails(Feed feed, RequestContext request) throws ResponseContextException {
-		KnownContentType representationMimeType =
+		KnownContentTypes representationMimeType =
 				getRepresentationMimeType(request);
 
-		if (!Arrays.asList(feedTypes).contains(representationMimeType)) {
+		if (!KnownContentTypes.getFeedTypes().contains(representationMimeType)) {
+			System.out.println(KnownContentTypes.getFeedTypes()+" does not contain "+representationMimeType);
             throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
 		}
 
@@ -176,19 +217,18 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 	}
 
 	protected void addSelfAndAlternateLinks(Feed feed,
-			KnownContentType representationMimeType)
+			KnownContentTypes representationMimeType)
 	{
-
-
         IRI baseUri = new IRI(
         		RegistryApplication.getApplicationContext().getUriPrefix() +
         		getBasePath());
 
-        for (KnownContentType type : Arrays.asList(feedTypes)) {
+        for (KnownContentTypes type : KnownContentTypes.getFeedTypes()) {
         	String rel = type == representationMimeType ?
         			Link.REL_SELF : Link.REL_ALTERNATE;
         	feed.getLink(rel).discard();
-        	feed.addLink(type.getUri(baseUri).toString(), rel, type.mimeType,
+        	feed.addLink(type.getUri(baseUri).toString(), rel,
+        			type.feedMimeType.toString(),
         			null, null, -1);
         }
 	}
@@ -238,8 +278,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     protected void ensureRequestIsAtom(RequestContext request)
 			throws ResponseContextException {
 		MimeType knownMimeType = request.getContentType();
-        String baseType = knownMimeType.getBaseType();
-        if (KnownContentType.matchAccept(baseType) != KnownContentType.ATOM) {
+        if (KnownContentTypes.matchAccept(knownMimeType) != KnownContentTypes.ATOM) {
+			System.out.println(knownMimeType+" is not atom.");
             throw new ResponseContextException(Constants.HTTP_STATUS_415, 415);
         }
 	}
@@ -376,7 +416,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     public ResponseContext getFeed(RequestContext request) {
     	ResponseContext response = super.getFeed(request);
 
-        if (getRepresentationMimeType(request) == KnownContentType.HTML) {
+        if (getRepresentationMimeType(request) == KnownContentTypes.HTML) {
             return feedOutputHelper.getHtmlRepresentationOfFeed(request, response, getRecordClass());
         } else {
         	return response;
@@ -460,18 +500,18 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
     protected abstract Class<R> getRecordClass();
 
-    protected KnownContentType getRepresentationMimeType(RequestContext request) {
-		KnownContentType representationMimeType = KnownContentType.matchUri(request.getUri());
+    protected KnownContentTypes getRepresentationMimeType(RequestContext request) {
+		KnownContentTypes representationMimeType = KnownContentTypes.matchUri(request.getUri());
         if (representationMimeType != null) {
         	return representationMimeType;
         }
         String acceptHeader = request.getAccept();
         if (acceptHeader != null) {
-            representationMimeType = KnownContentType.matchAccept(acceptHeader);
+            representationMimeType = KnownContentTypes.matchAccept(acceptHeader);
             if (representationMimeType != null)
             	return representationMimeType;
         }
-    	return KnownContentType.HTML;
+    	return KnownContentTypes.HTML;
 	}
 
     protected abstract String getTitle();

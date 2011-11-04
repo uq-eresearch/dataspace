@@ -11,6 +11,7 @@ import net.metadata.dataspace.auth.AuthenticationManager;
 import net.metadata.dataspace.servlets.processor.VersionRequestProcessor;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.i18n.templates.Route;
+import org.apache.abdera.protocol.Request;
 import org.apache.abdera.protocol.server.*;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.abdera.protocol.server.impl.DefaultProvider;
@@ -18,13 +19,19 @@ import org.apache.abdera.protocol.server.impl.DefaultWorkspaceManager;
 import org.apache.abdera.protocol.server.impl.RegexTargetResolver;
 import org.apache.abdera.protocol.server.impl.RouteManager;
 import org.apache.abdera.protocol.server.impl.SimpleWorkspaceInfo;
+import org.apache.abdera.protocol.server.impl.RegexTargetResolver.RegexTarget;
 import org.apache.abdera.protocol.server.servlet.AbderaServlet;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * User: alabri
@@ -92,6 +99,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 	                new RegexTargetResolver()
 			        	.setPattern("/(registry.atomsvc)", TargetType.TYPE_SERVICE, "service")
 				        .setPattern("/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.TYPE_COLLECTION, "collection")
+				        .setPattern("/([^/#?]+)/([^/#?]+@[^/#?]+)/?(\\?[^#]*)?", TargetType.TYPE_ENTRY, "collection","entry")
 				        .setPattern("/([^/#?]+)/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.TYPE_ENTRY, "collection","entry")
 				        .setPattern("/([^/#?]+)/([^/#?]+)/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.get(Constants.TARGET_TYPE_VERSION), "collection","entry","version")
 	                );
