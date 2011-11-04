@@ -99,7 +99,7 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 	                new RegexTargetResolver()
 			        	.setPattern("/(registry.atomsvc)", TargetType.TYPE_SERVICE, "service")
 				        .setPattern("/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.TYPE_COLLECTION, "collection")
-				        .setPattern("/([^/#?]+)/([^/#?]+@[^/#?]+)/?(\\?[^#]*)?", TargetType.TYPE_ENTRY, "collection","entry")
+				        .setPattern("/([^/#?]+)/([^/#?]+%40[^/#?]+)/?(\\?[^#]*)?", TargetType.TYPE_ENTRY, "collection","entry")
 				        .setPattern("/([^/#?]+)/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.TYPE_ENTRY, "collection","entry")
 				        .setPattern("/([^/#?]+)/([^/#?]+)/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.get(Constants.TARGET_TYPE_VERSION), "collection","entry","version")
 	                );
