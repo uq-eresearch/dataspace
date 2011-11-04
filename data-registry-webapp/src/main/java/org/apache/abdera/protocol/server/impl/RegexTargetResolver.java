@@ -20,6 +20,7 @@ package org.apache.abdera.protocol.server.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -39,7 +40,7 @@ import org.apache.abdera.protocol.server.TargetType;
  * TargetMatcher is essentially just a simplified version of the java.util.regex.Matcher that also specifies the
  * Resource Type.
  * </p>
- * 
+ *
  * <pre>
  *  RequestContext request = ...
  *  RegexTargetResolver tr = new RegexTargetResolver();
@@ -49,7 +50,7 @@ import org.apache.abdera.protocol.server.TargetType;
  *    .setPattern("/atom/([^/#?]+)/([^/#?]+)\\?edit",ResourceType.ENTRY_EDIT)
  *    .setPattern("/atom/([^/#?]+)/([^/#?]+)\\?media",ResourceType.MEDIA)
  *    .setPattern("/atom/([^/#?]+)/([^/#?]+)\\?edit-media",ResourceType.MEDIA_EDIT);
- *  
+ *
  *  Target target = tr.resolve(request);
  *  System.out.println(target.getType());
  *  System.out.println(targer.getParameter("foo"));
@@ -61,8 +62,8 @@ public class RegexTargetResolver implements Resolver<Target> {
     protected final Map<Pattern, String[]> fields;
 
     public RegexTargetResolver() {
-        this.patterns = new HashMap<Pattern, TargetType>();
-        this.fields = new HashMap<Pattern, String[]>();
+        this.patterns = new LinkedHashMap<Pattern, TargetType>();
+        this.fields = new LinkedHashMap<Pattern, String[]>();
     }
 
     public RegexTargetResolver(Map<String, TargetType> patterns) {
