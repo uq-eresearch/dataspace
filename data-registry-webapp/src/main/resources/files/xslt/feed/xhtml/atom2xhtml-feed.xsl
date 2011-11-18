@@ -68,12 +68,19 @@
                     <div class="pad-sides pad-bottom">
                         <div class="button-bar">
                             <div class="actions">
+                                <xsl:if test="$currentUser">
+                                    <a class="button-bar-button" href="{concat(atom:id, '?v=new')}">New</a>
+                                </xsl:if>
                                 <a id="subscribe-link" class="button-bar-button" href="{atom:link[@type = $TYPE_ATOM_FEED]/@href}">
                                     <img src="/images/icons/rss16px.png" alt="Subscribe to this feed"/> Feed
                                 </a>
                             </div>
                         </div>
-                        <xsl:apply-templates select="atom:entry"/>
+                        <xsl:if test="atom:entry">
+                            <xsl:call-template name="paging"/>
+                            <xsl:apply-templates select="atom:entry"/>
+                            <xsl:call-template name="paging"/>
+                        </xsl:if>
                     </div>
                 </div>
 
@@ -132,6 +139,36 @@
                 <xsl:value-of select="$title"/>
             </a>
         </li>
+    </xsl:template>
+    
+    <xsl:template name="paging">
+        <xsl:if test="atom:link[@rel = $REL_CURRENT]">
+            <div class="paging">
+                <xsl:choose>
+                    <xsl:when test="atom:link[@rel = $REL_PREVIOUS]">
+                        <a href="{atom:link[@rel = $REL_PREVIOUS]/@href}">
+                            <img src="/images/icons/back_active.png" alt="previous"/>
+                        </a>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <img src="/images/icons/back_inactive.png" alt="previous"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <span id="current-page">
+                    <xsl:value-of select="substring-after(atom:link[@rel = $REL_CURRENT]/@href, 'page=')"/>
+                </span>
+                <xsl:choose>
+                    <xsl:when test="atom:link[@rel = $REL_NEXT]">
+                        <a href="{atom:link[@rel = $REL_NEXT]/@href}">
+                            <img src="/images/icons/forward_active.png" alt="next"/>
+                        </a>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <img src="/images/icons/forward_inactive.png" alt="next"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </div>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="atom:entry">

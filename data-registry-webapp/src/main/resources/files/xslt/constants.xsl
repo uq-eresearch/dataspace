@@ -24,6 +24,9 @@
     <xsl:variable name="REL_LATEST_VERSION">latest-version</xsl:variable>
     <xsl:variable name="REL_EDIT">edit</xsl:variable>
     <xsl:variable name="REL_LICENSE">license</xsl:variable>
+    <xsl:variable name="REL_PREVIOUS">previous</xsl:variable>
+    <xsl:variable name="REL_CURRENT">current</xsl:variable>
+    <xsl:variable name="REL_NEXT">next</xsl:variable>
 
     <xsl:variable name="REL_TYPE">
         <xsl:value-of select="concat($NS_RDF_99 ,'#type')"/>

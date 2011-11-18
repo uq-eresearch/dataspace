@@ -218,7 +218,7 @@ body {
 }
 
 .col2 {
-    margin-right: 1%;
+    margin-left: 1%;
 }
 
 p {
@@ -325,6 +325,19 @@ a.unpublished, .unpublished {
 
 .button-bar a:link, .button-bar a:visited {
     color: #ffffff;
+}
+
+/* feed paging */
+
+.paging {
+    float:right;
+    padding: 0.33em 0;
+}
+
+#current-page {
+    margin: 1em;
+    padding: 0.2em;
+    border: 0.1em solid gray;
 }
 
 /* browse page tabs */

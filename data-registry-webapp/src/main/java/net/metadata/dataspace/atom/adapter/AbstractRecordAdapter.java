@@ -459,8 +459,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
     protected String getHrefForPage(IRI base, int pageNumber) {
 		String queryString = base.getQuery() == null ? "" : base.getQuery()+"&";
-        IRI uri = new IRI(base.getScheme(), base.getHost(),
-				base.getPath(),
+        IRI uri = new IRI(base.getScheme(), base.getUserInfo(), base.getHost(),
+				base.getPort(), base.getPath(),
 				queryString+"page="+pageNumber, base.getFragment());
 		return uri.toString();
 	}
