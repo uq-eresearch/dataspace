@@ -61,8 +61,12 @@
             </entity>
         </entity>
 
+<!--    tODO create a separate index for unpublished entities
         <entity name="agent"
                 query="SELECT id, atomicnumber, published_id FROM agent WHERE isactive = true AND published_id is not null">
+-->
+        <entity name="agent"
+                query="SELECT id, atomicnumber, published_id FROM agent WHERE isactive = true">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
             <entity name="agentversion"
