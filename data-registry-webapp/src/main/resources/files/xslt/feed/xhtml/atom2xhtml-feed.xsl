@@ -76,11 +76,9 @@
                                 </a>
                             </div>
                         </div>
-                        <xsl:if test="atom:entry">
-                            <xsl:call-template name="paging"/>
-                            <xsl:apply-templates select="atom:entry"/>
-                            <xsl:call-template name="paging"/>
-                        </xsl:if>
+                        <xsl:call-template name="paging"/>
+                        <xsl:apply-templates select="atom:entry"/>
+                        <xsl:call-template name="paging"/>
                     </div>
                 </div>
 
@@ -142,23 +140,34 @@
     </xsl:template>
     
     <xsl:template name="paging">
-        <xsl:if test="atom:link[@rel = $REL_CURRENT]">
+        <xsl:if test="atom:link[@rel = $REL_PREVIOUS] or atom:link[@rel = $REL_NEXT]">
+            <xsl:variable name="current" select="substring-after(atom:link[@rel = $REL_CURRENT]/@href, 'page=')"/>
             <div class="paging">
                 <xsl:choose>
                     <xsl:when test="atom:link[@rel = $REL_PREVIOUS]">
+                        <a href="{atom:link[@rel = $REL_FIRST]}">
+                            <img src="/images/icons/start_active.png" alt="first"/>
+                        </a>
                         <a href="{atom:link[@rel = $REL_PREVIOUS]/@href}">
                             <img src="/images/icons/back_active.png" alt="previous"/>
                         </a>
+                        <a href="{atom:link[@rel = $REL_PREVIOUS]/@href}" class="page-number">
+                            <xsl:value-of select="number($current) - 1"/>
+                        </a>
                     </xsl:when>
                     <xsl:otherwise>
+                        <img src="/images/icons/start_inactive.png" alt="first"/>
                         <img src="/images/icons/back_inactive.png" alt="previous"/>
                     </xsl:otherwise>
                 </xsl:choose>
-                <span id="current-page">
-                    <xsl:value-of select="substring-after(atom:link[@rel = $REL_CURRENT]/@href, 'page=')"/>
+                <span class="current-page">
+                    <xsl:value-of select="$current"/>
                 </span>
                 <xsl:choose>
                     <xsl:when test="atom:link[@rel = $REL_NEXT]">
+                        <a href="{atom:link[@rel = $REL_NEXT]/@href}" class="page-number">
+                            <xsl:value-of select="number($current) + 1"/>
+                        </a>
                         <a href="{atom:link[@rel = $REL_NEXT]/@href}">
                             <img src="/images/icons/forward_active.png" alt="next"/>
                         </a>
