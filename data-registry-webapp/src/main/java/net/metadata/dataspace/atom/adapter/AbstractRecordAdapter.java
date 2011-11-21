@@ -207,6 +207,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     				queryString, base.getFragment());
         }
 
+        FeedPagingHelper.setFirst(feed, base.toString());
         FeedPagingHelper.setCurrent(feed, getHrefForPage(base,pageNumber));
         if (pageNumber > 1) {
         	FeedPagingHelper.setPrevious(feed, getHrefForPage(base,pageNumber-1));
