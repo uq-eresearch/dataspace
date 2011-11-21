@@ -143,6 +143,7 @@ public interface Constants {
      *
      */
     String SESSION_ATTRIBUTE_CURRENT_USER = "currentUser";
+    String SESSION_ATTRIBUTE_CURRENT_EMAIL = "currentEmail";
     String SESSION_ATTRIBUTE_LDAP_CONTEXT = "currentUser";
 
     /**

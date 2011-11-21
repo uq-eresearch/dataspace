@@ -129,7 +129,9 @@
 								<xsl:call-template name="type-of-activities" />
 								<xsl:call-template name="keywords" />
 							</div>
-						</div>
+                            <input type="hidden" name="source-user" value="{$currentUser}"/>
+                            <input type="hidden" name="source-email" value="{$currentEmail}"/>
+                        </div>
 					</form>
                     <!-- actions -->
                     <div class="button-bar">

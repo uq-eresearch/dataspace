@@ -14,6 +14,7 @@
                 exclude-result-prefixes="atom">
 
     <xsl:param name="currentUser"/>
+    <xsl:param name="currentEmail"/>
     <xsl:param name="applicationName"/>
     <xsl:template name="header">
         <div id="header">

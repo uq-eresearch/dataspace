@@ -178,7 +178,7 @@ var DataSpace = (function() {
 		var wrapper = $('<dd/>');
 		var publicationTitleInput = $('<input type="text"/>').attr('name',
 				'publication-title').attr('title', 'Publication Title').attr(
-				'minlength', 2).addClass('required').addClass('defaultInvalid');
+				'minlength', 2).addClass('required').addClass('defaultInvalid').val('Publication title');
 		wrapper.append(publicationTitleInput);
 		var publicationUrlInput = $('<input type="text"/>').attr('name',
 				'publication-url').attr('title', 'Publication URL').addClass(
@@ -1006,7 +1006,7 @@ var DataSpace = (function() {
 	};
 
 	var addTemporal = function(record) {
-		var termporal = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
+		var temporal = getSimpleElementWithNameSpace('rdfa:meta', NS_RDFA);
 		var startDate = $('input[id|="start-date"]').val();
 		var endDate = $('input[id|="end-date"]').val();
 		var attributes = [];
@@ -1027,9 +1027,9 @@ var DataSpace = (function() {
 				value : $.trim(content)
 			};
 			_.each(attributes, function(attribute) {
-				termporal.attr(attribute.name, attribute.value);
+				temporal.attr(attribute.name, attribute.value);
 			});
-			record.append(termporal);
+			record.append(temporal);
 		}
 	};
 
@@ -1063,6 +1063,11 @@ var DataSpace = (function() {
 		var updated = getSimpleElementWithText('updated', getCurrentDateTime());
 		source.append(updated);
 		record.append(updated);
+
+        var sourceUser = $('input[name|="source-user"]').val();
+        var sourceEmail = $('input[name|="source-email"]').val();
+        var sourceAuthor = getAuthorElement(sourceUser, sourceEmail,null);
+        source.append(sourceAuthor);
 
 		record.append(source);
 	};

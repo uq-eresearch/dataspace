@@ -193,9 +193,9 @@
 			<!--atom:category[@scheme=$NS_DCMITYPE] -->
 			<xsl:when test="$entity = 'collection'">
 				<select id="type-combobox" name="type-combobox">
+                    <option value="Dataset">Dataset</option>
 					<option value="Collection">Collection</option>
-					<option value="Dataset">Dataset</option>
-				</select>
+                </select>
 			</xsl:when>
 			<xsl:when test="$entity = 'agent'">
 				<select id="type-combobox" name="type-combobox">

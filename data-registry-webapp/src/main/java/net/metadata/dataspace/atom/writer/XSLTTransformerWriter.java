@@ -101,7 +101,8 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
                 AuthenticationManager authenticationManager = RegistryApplication.getApplicationContext().getAuthenticationManager();
                 User currentUser = authenticationManager.getCurrentUser(this.contextRequest);
                 if (currentUser != null) {
-                    transformer.setParameter("currentUser", currentUser.getDisplayName());
+                    transformer.setParameter(Constants.SESSION_ATTRIBUTE_CURRENT_USER, currentUser.getDisplayName());
+                    transformer.setParameter(Constants.SESSION_ATTRIBUTE_CURRENT_EMAIL, currentUser.getEmail());
                 }
             }
             transformer.setParameter("applicationName", title);
