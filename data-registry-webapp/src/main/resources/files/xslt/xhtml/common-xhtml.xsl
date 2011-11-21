@@ -488,17 +488,27 @@
         Version
         <xsl:choose>
             <xsl:when test="atom:link[@rel = $REL_SELF]/@href = atom:link[@rel = $REL_EDIT]/@href">
-                <!-- have asked for work URL, being shown the latest-version -->
-                <xsl:value-of select="atom:link[@rel = $REL_LATEST_VERSION]/@title"/>  (published)
+                <!-- have asked for work URL -->
                 <xsl:choose>
-                    <xsl:when test="atom:link[@rel = $REL_LATEST_VERSION]/@href =
+                    <xsl:when test="atom:link[@rel = $REL_LATEST_VERSION]">
+                        <!-- being shown the latest version -->
+                        <xsl:value-of select="atom:link[@rel = $REL_LATEST_VERSION]/@title"/>  (published)
+                        <xsl:choose>
+                            <xsl:when test="atom:link[@rel = $REL_LATEST_VERSION]/@href =
                     atom:link[@rel = $REL_WORKING_COPY]/@href">
-                         (latest version)
+                                (latest version)
+                            </xsl:when>
+                            <xsl:otherwise>
+                                (<a class="unpublished"
+                                    href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">version
+                                <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/> available</a>)
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
-                         (<a class="unpublished"
-                             href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">version
-                        <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/> available</a>)
+                        <!-- no published version, being shown the working copy -->
+                        <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/>
+                        <span class="unpublished"> (unpublished)</span>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
