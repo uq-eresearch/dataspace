@@ -1,6 +1,4 @@
-<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
-<%@ page import="net.metadata.dataspace.app.Constants" %>
-<%@ page import="net.metadata.dataspace.data.model.record.User" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!--START: Header -->
 <div id="header">
     <div id="header-inner">
@@ -8,7 +6,7 @@
 
         <h2 style="z-index: 500;">
             <a href="/"
-               title="<%=RegistryApplication.getApplicationContext().getRegistryTitle()%>"><%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
+               title="${registryTitle}">${registryTitle}
             </a>
         </h2>
 
@@ -46,15 +44,16 @@
             <li><a href="/search">Search</a></li>
             <li><a href="/about">About</a></li>
         </ul>
-        <%
-        User user = (User) session.getAttribute(Constants.SESSION_ATTRIBUTE_CURRENT_USER);
-        if (user == null) { %>
+        <c:choose>
+        <c:when test="${currentUser == null}">
         <a href="#" class="signin" id="signin-link">Sign in</a>
-        <% } else { %>
+        </c:when>
+        <c:otherwise>
         <a href="#" class="signout"
-        	title="Sign out as <%= user.getDisplayName() %>"
-        	id="signout-link">Sign Out <span id="current-user"><%= user.getDisplayName() %></span></a>
-        <% } %>
+        	title="Sign out as ${currentUser.displayName}"
+        	id="signout-link">Sign Out <span id="current-user">${currentUser.displayName}</span></a>
+        </c:otherwise>
+        </c:choose>
     </div>
     <%--<a href="#" class="signin" id="signin-link">Sign in</a>--%>
     <%--<fieldset id="signin_menu">--%>

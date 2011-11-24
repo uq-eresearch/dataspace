@@ -111,11 +111,8 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
                 if (targetType.equals(TargetType.TYPE_COLLECTION)) {
                     //TODO looks like a hack, find a better way to do this later.
                     boolean isLoginRequest = target.getParameter("collection").equals("login");
-                    boolean isLogoutRequest = target.getParameter("collection").equals("logout");
                     if (isLoginRequest) {
                         return login(request);
-                    } else if (isLogoutRequest) {
-                        return logout(request);
                     } else {
                         return super.process(request);
                     }
@@ -126,10 +123,6 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 
             protected ResponseContext login(RequestContext request) {
                 return getAuthenticationManager().login(request);
-            }
-
-            protected ResponseContext logout(RequestContext request) {
-                return getAuthenticationManager().logout(request);
             }
         };
         registryServiceProvider.setWorkspaceManager(new FileExtWorkspaceManager());

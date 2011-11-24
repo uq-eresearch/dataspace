@@ -28,13 +28,4 @@ public interface AuthenticationManager {
      * @param request The request of the HTTP conversation. Not null.
      */
     ResponseContext login(RequestContext request);
-
-    /**
-     * Removes any user from the HTTP conversation.
-     * <p/>
-     * If no user is logged in this operation should do nothing.
-     *
-     * @param request The request of the HTTP conversation. Not null.
-     */
-    ResponseContext logout(RequestContext request);
 }

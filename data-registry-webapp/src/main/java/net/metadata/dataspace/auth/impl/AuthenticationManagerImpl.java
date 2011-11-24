@@ -138,12 +138,6 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         return attributes;
     }
 
-    @Override
-    public ResponseContext logout(RequestContext request) {
-        request.setAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER, null);
-        return OperationHelper.createResponse(200, Constants.HTTP_STATUS_200);
-    }
-
     public void setDefaultUsersProperties(Properties defaultUsersProperties) {
         this.defaultUsersProperties = defaultUsersProperties;
         Collection<Object> defaultUsersString = defaultUsersProperties.values();

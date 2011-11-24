@@ -1,7 +1,7 @@
 <%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
 <%@ page import="java.util.Date" %>
 <div id="footer">
-    <input type="hidden" value="version <%=RegistryApplication.getApplicationContext().getVersion()%>"/>
+    <input type="hidden" value="version ${registryVersion}"/>
 
     <div class="footer-wrapper">
         <div id="siteinfo" class="vcard">

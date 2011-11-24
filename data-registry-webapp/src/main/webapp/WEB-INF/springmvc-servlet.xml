@@ -21,7 +21,6 @@
             <props>
                 <prop key="/registry.atomsvc">registryServiceServletForward</prop>
                 <prop key="/login">registryServiceServletForward</prop>
-                <prop key="/logout">registryServiceServletForward</prop>
                 <prop key="/activities*">registryServiceServletForward</prop>
                 <prop key="/activities/**">registryServiceServletForward</prop>
                 <prop key="/agents*">registryServiceServletForward</prop>
@@ -35,8 +34,10 @@
     </bean>
 
     <mvc:annotation-driven />
-	<mvc:view-controller path="/about" view-name="about" />
-	<mvc:view-controller path="/search" view-name="search" />
+
+    <!-- No idea why one of these is needed, but if it's not there then
+    the SimpleUrlHandlerMapping doesn't behave. -->
+	<mvc:view-controller path="/dummy" view-name="dummy" />
 
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

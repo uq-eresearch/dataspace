@@ -1,8 +1,8 @@
-<%@ page import="net.metadata.dataspace.app.RegistryApplication" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <title><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> - About</title>
+    <title>${registryTitle} - About</title>
     <jsp:include page="../include/head.jsp"/>
 </head>
 <body>
@@ -18,14 +18,14 @@
                     About
                 </li>
             </ul>
-            <h1>About <%=RegistryApplication.getApplicationContext().getRegistryTitle()%>
+            <h1>About ${registryTitle}
             </h1>
         </div>
      </div>
     <div class="col-container pad-sides">
 
 
-        <p><%=RegistryApplication.getApplicationContext().getRegistryTitle()%> catalogs the research data outputs
+        <p>${registryTitle} catalogs the research data outputs
         of staff and students at the University of Queensland. It aims to improve the visibility and accessibility of
         UQ data to the wider world.</p>
 
