@@ -20,7 +20,6 @@
         <property name="mappings">
             <props>
                 <prop key="/registry.atomsvc">registryServiceServletForward</prop>
-                <prop key="/login">registryServiceServletForward</prop>
                 <prop key="/activities*">registryServiceServletForward</prop>
                 <prop key="/activities/**">registryServiceServletForward</prop>
                 <prop key="/agents*">registryServiceServletForward</prop>

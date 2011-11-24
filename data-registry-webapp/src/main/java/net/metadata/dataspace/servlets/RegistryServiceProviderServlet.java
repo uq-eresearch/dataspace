@@ -44,7 +44,6 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 	 *
 	 */
 	private static final long serialVersionUID = -6861319035092045064L;
-	private Logger logger = Logger.getLogger(getClass());
 
 
 	static class FileExtWorkspaceManager extends DefaultWorkspaceManager {
@@ -85,16 +84,10 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 
         String base = "/";
         DefaultProvider registryServiceProvider = new DefaultProvider(base) {
-            RouteManager targetResolver = (RouteManager) this.getTargetResolver();
-
             @Override
             public void init(Abdera abdera, Map<String, String> properties) {
                 super.init(abdera, properties);
                 this.requestProcessors.put(TargetType.get(Constants.TARGET_TYPE_VERSION, true), new VersionRequestProcessor());
-//                this.requestProcessors.put(TargetType.get(Constants.TARGET_TYPE_WORKING_COPY, true), new VersionRequestProcessor());
-//                this.targetResolver.addRoute(new Route(Constants.TARGET_TYPE_VERSION, "/:collection/:entry/:version"), TargetType.get(Constants.TARGET_TYPE_VERSION));
-//                this.targetResolver.addRoute(new Route(Constants.TARGET_TYPE_WORKING_COPY, "/:collection/:entry/:working-copy"), TargetType.get(Constants.TARGET_TYPE_WORKING_COPY));
-
                 super.setTargetResolver(
 	                new RegexTargetResolver()
 			        	.setPattern("/(registry.atomsvc)", TargetType.TYPE_SERVICE, "service")
@@ -104,36 +97,11 @@ public class RegistryServiceProviderServlet extends AbderaServlet {
 				        .setPattern("/([^/#?]+)/([^/#?]+)/([^/#?\\.]+)(\\.\\w+)?/?(\\?[^#]*)?", TargetType.get(Constants.TARGET_TYPE_VERSION), "collection","entry","version")
 	                );
             }
-
-            public ResponseContext process(RequestContext request) {
-                Target target = request.getTarget();
-                TargetType targetType = target.getType();
-                if (targetType.equals(TargetType.TYPE_COLLECTION)) {
-                    //TODO looks like a hack, find a better way to do this later.
-                    boolean isLoginRequest = target.getParameter("collection").equals("login");
-                    if (isLoginRequest) {
-                        return login(request);
-                    } else {
-                        return super.process(request);
-                    }
-                } else {
-                    return super.process(request);
-                }
-            }
-
-            protected ResponseContext login(RequestContext request) {
-                return getAuthenticationManager().login(request);
-            }
         };
         registryServiceProvider.setWorkspaceManager(new FileExtWorkspaceManager());
         registryServiceProvider.addWorkspace(registryWorkSpace);
         registryServiceProvider.init(getAbdera(), null);
         return registryServiceProvider;
     }
-
-	private AuthenticationManager getAuthenticationManager() {
-		ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
-		return (AuthenticationManager) context.getBean("authenticationManager");
-	}
 
 }
