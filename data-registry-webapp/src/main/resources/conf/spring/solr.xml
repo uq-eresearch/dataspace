@@ -20,8 +20,8 @@
 
 	<bean id="reindexTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="solrReindexJob"/>
-		<!-- 30 second start delay -->
-		<property name="startDelay" value="30000"/>
+		<!-- 10 second start delay -->
+		<property name="startDelay" value="10000"/>
 		<!-- repeat every 5 minutes -->
 		<property name="repeatInterval" value="300000"/>
 	</bean>
