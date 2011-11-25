@@ -155,13 +155,13 @@
 				<groupId>com.github.searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
 				<version>1.0.2-beta-5</version>
-				<executions>
+				<!--<executions>
 					<execution>
 						<goals>
 							<goal>test</goal>
 						</goals>
 					</execution>
-				</executions>
+				</executions>-->
 				<configuration>
 					<preloadSources>
 						<preloadSource>unmuffle.js</preloadSource>
