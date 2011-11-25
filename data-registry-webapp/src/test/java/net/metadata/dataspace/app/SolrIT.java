@@ -96,9 +96,8 @@ public class SolrIT {
 	        }
         }
 
-        // Wait for re-index
-        // TODO: Implement event-based indexing so we don't do this!
-        Thread.sleep(10000);
+        // Trigger re-index
+        ClientHelper.reindex(client);
     }
 
 	// Test tagcloud for stopwords
@@ -168,9 +167,8 @@ public class SolrIT {
         String authorName = xpath.evaluate(TestConstants.RECORD_AUTHOR_NAME_PATH, doc);
         String authorEmail = xpath.evaluate(TestConstants.RECORD_AUTHOR_EMAIL_PATH, doc);
 
-        // Wait for re-index
-        // TODO: Implement event-based indexing so we don't do this!
-        Thread.sleep(10000);
+        // Trigger re-index
+        ClientHelper.reindex(client);
 
         // Test searching on title (but skip stopwords)
         {
@@ -194,23 +192,6 @@ public class SolrIT {
 	        }
 	        webClient.closeAllWindows();
         }
-        /*
-        // Test searching on email (but skip stopwords)
-        {
-	        final WebClient webClient = new WebClient();
-        	String url = TestConstants.URL_PREFIX+"search?q="+
-        			URLEncoder.encode(authorEmail, "UTF-8");
-        	final HtmlPage page = webClient.getPage(url);
-        	// Wait for JS to eval
-        	while (!page.asText().contains("displaying"))
-	        	Thread.sleep(100);
-        	final String pageAsText = page.asText();
-        	assertTrue(
-        			String.format(
-        				"Cannot find \"%s\" in:\n%s", authorName, pageAsText),
-        			pageAsText.contains(authorName));
-	        webClient.closeAllWindows();
-        }
-		*/
     }
+
 }

@@ -40,6 +40,11 @@ public class ClientHelper {
 		client.getPage(request);
 	}
 
+	public static int reindex(HttpClient client) throws Exception {
+        PostMethod postMethod = new PostMethod(TestConstants.URL_PREFIX + "reindex");
+        return client.executeMethod(postMethod);
+    }
+
     public static int logout(HttpClient client) throws Exception {
         PostMethod postMethod = new PostMethod(TestConstants.URL_PREFIX + "logout");
         return client.executeMethod(postMethod);

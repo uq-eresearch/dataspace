@@ -11,14 +11,19 @@ import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.User;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
+import net.metadata.dataspace.solr.SolrServerManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MainController {
+
+	@Autowired
+	private SolrServerManager solrServerManager;
 
 	@Autowired
 	private CollectionDao collectionDao;
@@ -50,6 +55,11 @@ public class MainController {
         ModelAndView modelAndView = new ModelAndView("search");
         populateHeaderFooterObjects(modelAndView, session);
         return modelAndView;
+	}
+
+	@RequestMapping(value="/reindex", method={RequestMethod.POST})
+	public void reindex() {
+		solrServerManager.reindex();
 	}
 
 	private void populateHeaderFooterObjects(
