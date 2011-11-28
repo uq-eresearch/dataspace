@@ -52,6 +52,7 @@
 
     <!-- button bar -->
     <xsl:template name="edit-button-bar">
+        <xsl:param name="path"/>
         <xsl:param name="type"/>
         <div class="entity-type">
             <xsl:call-template name="entity-icon-type">
@@ -70,11 +71,13 @@
         </div>
         <div class="arrow-right"></div>
         <xsl:call-template name="edit-actions">
+            <xsl:with-param name="path" select="$path"/>
             <xsl:with-param name="type" select="$type"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template name="edit-actions">
+        <xsl:param name="path"/>
         <xsl:param name="type"/>
         <xsl:variable name="isNew" select="not(boolean(atom:link[$REL_SELF]))"/>
         <div class="actions">
@@ -84,7 +87,14 @@
             <a class="button-bar-button publish-link" href="#" title="Publish"
                onclick="DataSpace.ingestRecord('{atom:link[@rel = $REL_EDIT]/@href}','{$type}',{$isNew}, true); return false;">Save &amp; Publish</a>
             <xsl:text> </xsl:text>
-            <a class="button-bar-button cancel-link" href="{atom:link[@rel = $REL_WORKING_COPY]/@href}" title="Cancel edit">Cancel</a>
+            <xsl:choose>
+                <xsl:when test="$isNew">
+                    <a class="button-bar-button cancel-link" href="{$path}" title="Cancel edit">Cancel</a>
+                </xsl:when>
+                <xsl:otherwise>
+                    <a class="button-bar-button cancel-link" href="{atom:link[@rel = $REL_WORKING_COPY]/@href}" title="Cancel edit">Cancel</a>
+                </xsl:otherwise>
+            </xsl:choose>
         </div>
     </xsl:template>
 

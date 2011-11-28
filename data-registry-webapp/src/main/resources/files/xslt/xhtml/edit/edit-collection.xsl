@@ -46,6 +46,7 @@
                      <!-- buttons -->
                     <div class="button-bar">
                         <xsl:call-template name="edit-button-bar">
+                            <xsl:with-param name="path" select="'collections'"/>
                             <xsl:with-param name="type" select="'collection'"/>
                         </xsl:call-template>
                     </div>
@@ -113,9 +114,9 @@
 								<xsl:call-template name="projects" />
 							</div>
 							<h2>
-								<label for="spacio-temporal">Time &amp; Space</label>
+								<label for="spatio-temporal">Time &amp; Space</label>
 							</h2>
-							<div id="spacio-temporal">
+							<div id="spatio-temporal">
 								<xsl:call-template name="edit-time-period" />
 								<xsl:call-template name="edit-region" />
 								<xsl:call-template name="edit-locations" />
