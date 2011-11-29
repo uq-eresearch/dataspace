@@ -38,101 +38,84 @@
     <document name="collections">
 
         <entity name="collection"
-                query="SELECT id, atomicnumber, published_id FROM collection WHERE isactive = true AND published_id is not null">
+                query="SELECT cv.id, c.atomicnumber, title, description, type FROM collectionversion cv join collection c on cv.parent_id=c.id WHERE cv.id IN (SELECT max(id) FROM collectionversion GROUP BY parent_id)">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
-            <entity name="collectionversion"
-                    query="SELECT title, description, type, id FROM collectionversion WHERE id=${collection.PUBLISHED_ID}${collection.published_id}">
-                <field column="title" name="title"/>
-                <field column="description" name="description"/>
-                <field column="type" name="type"/>
-                <entity name="collections_subjects"
-                        query="SELECT subjects_id FROM collections_subjects WHERE collectionversion_id=${collectionversion.ID}${collectionversion.id}">
-                    <entity name="collectionsubjects"
-                            query="SELECT label, term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID}${collections_subjects.subjects_id} AND label != 'keyword'">
-                        <field column="label" name="subjectlabel"/>
-                        <field column="term" name="subjectterm"/>
-                    </entity>
-                    <entity name="collectionkeywords"
-                            query="SELECT term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID}${collections_subjects.subjects_id} AND label = 'keyword'">
-                        <field column="term" name="subjectkeyword"/>
-                    </entity>
+            <field column="title" name="title"/>
+            <field column="description" name="description"/>
+            <field column="type" name="type"/>
+            <entity name="collections_subjects"
+                    query="SELECT subjects_id FROM collections_subjects WHERE collectionversion_id=${collection.ID}${collection.id}">
+                <entity name="collectionsubjects"
+                        query="SELECT label, term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID}${collections_subjects.subjects_id} AND label != 'keyword'">
+                    <field column="label" name="subjectlabel"/>
+                    <field column="term" name="subjectterm"/>
+                </entity>
+                <entity name="collectionkeywords"
+                        query="SELECT term FROM subject WHERE id=${collections_subjects.SUBJECTS_ID}${collections_subjects.subjects_id} AND label = 'keyword'">
+                    <field column="term" name="subjectkeyword"/>
                 </entity>
             </entity>
         </entity>
 
-<!--    tODO create a separate index for unpublished entities
         <entity name="agent"
-                query="SELECT id, atomicnumber, published_id FROM agent WHERE isactive = true AND published_id is not null">
--->
-        <entity name="agent"
-                query="SELECT id, atomicnumber, published_id FROM agent WHERE isactive = true">
+                query="SELECT av.id, a.atomicnumber, title, description, type FROM agentversion av join agent a on av.parent_id=a.id WHERE av.id IN (SELECT max(id) FROM agentversion GROUP BY parent_id)">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
-            <entity name="agentversion"
-                    query="SELECT title, description, type, id FROM agentversion WHERE id=${agent.PUBLISHED_ID}${agent.published_id}">
-                <field column="title" name="title"/>
-                <field column="description" name="description"/>
-                <field column="type" name="type"/>
-                <entity name="agents_subjects"
-                        query="SELECT subjects_id FROM agents_subjects WHERE agentversion_id=${agentversion.ID}${agentversion.id}">
-                    <entity name="agentsubjects"
-                            query="SELECT label, term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID}${agents_subjects.subjects_id} AND label != 'keyword'">
-                        <field column="label" name="subjectlabel"/>
-                        <field column="term" name="subjectterm"/>
-                    </entity>
-                    <entity name="agentkeywords"
-                            query="SELECT term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID}${agents_subjects.subjects_id} AND label = 'keyword'">
-                        <field column="term" name="subjectkeyword"/>
-                    </entity>
+            <field column="title" name="title"/>
+            <field column="description" name="description"/>
+            <field column="type" name="type"/>
+            <entity name="agents_subjects"
+                    query="SELECT subjects_id FROM agents_subjects WHERE agentversion_id=${agent.ID}${agent.id}">
+                <entity name="agentsubjects"
+                        query="SELECT label, term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID}${agents_subjects.subjects_id} AND label != 'keyword'">
+                    <field column="label" name="subjectlabel"/>
+                    <field column="term" name="subjectterm"/>
+                </entity>
+                <entity name="agentkeywords"
+                        query="SELECT term FROM subject WHERE id=${agents_subjects.SUBJECTS_ID}${agents_subjects.subjects_id} AND label = 'keyword'">
+                    <field column="term" name="subjectkeyword"/>
                 </entity>
             </entity>
         </entity>
-
         <entity name="service"
-                query="SELECT id, atomicnumber, published_id FROM service WHERE isactive = true AND published_id is not null">
+                query="SELECT sv.id, s.atomicnumber, title, description, type FROM serviceversion sv join service s on sv.parent_id=s.id WHERE sv.id IN (SELECT max(id) FROM serviceversion GROUP BY parent_id)">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
-            <entity name="serviceversion"
-                    query="SELECT title, description, type, id FROM serviceversion WHERE id=${service.PUBLISHED_ID}${service.published_id}">
-                <field column="title" name="title"/>
-                <field column="description" name="description"/>
-                <field column="type" name="type"/>
-                <entity name="services_subjects"
-                        query="SELECT subjects_id FROM services_subjects WHERE serviceversion_id=${serviceversion.ID}${serviceversion.id}">
-                    <entity name="servicesubjects"
-                            query="SELECT label, term FROM subject WHERE id=${services_subjects.SUBJECTS_ID}${services_subjects.subjects_id} AND label != 'keyword'">
-                        <field column="label" name="subjectlabel"/>
-                        <field column="term" name="subjectterm"/>
-                    </entity>
-                    <entity name="servicekeywords"
-                            query="SELECT term FROM subject WHERE id=${services_subjects.SUBJECTS_ID}${services_subjects.subjects_id} AND label = 'keyword'">
-                        <field column="term" name="subjectkeyword"/>
-                    </entity>
+            <field column="title" name="title"/>
+            <field column="description" name="description"/>
+            <field column="type" name="type"/>
+            <entity name="services_subjects"
+                    query="SELECT subjects_id FROM services_subjects WHERE serviceversion_id=${service.ID}${service.id}">
+                <entity name="servicesubjects"
+                        query="SELECT label, term FROM subject WHERE id=${services_subjects.SUBJECTS_ID}${services_subjects.subjects_id} AND label != 'keyword'">
+                    <field column="label" name="subjectlabel"/>
+                    <field column="term" name="subjectterm"/>
+                </entity>
+                <entity name="servicekeywords"
+                        query="SELECT term FROM subject WHERE id=${services_subjects.SUBJECTS_ID}${services_subjects.subjects_id} AND label = 'keyword'">
+                    <field column="term" name="subjectkeyword"/>
                 </entity>
             </entity>
         </entity>
 
         <entity name="activity"
-                query="SELECT id, atomicnumber, published_id FROM activity WHERE isactive = true AND published_id is not null">
+                query="SELECT av.id, a.atomicnumber, title, description, type FROM activityversion av join activity a on av.parent_id=a.id WHERE av.id IN (SELECT max(id) FROM activityversion GROUP BY parent_id)">
             <field column="id" name="id"/>
             <field column="atomicnumber" name="atomicnumber"/>
-            <entity name="activityversion"
-                    query="SELECT title, description, type, id FROM activityversion WHERE id=${activity.PUBLISHED_ID}${activity.published_id}">
-                <field column="title" name="title"/>
-                <field column="description" name="description"/>
-                <field column="type" name="type"/>
-                <entity name="activities_subjects"
-                        query="SELECT subjects_id FROM activities_subjects WHERE activityversion_id=${activityversion.ID}${activityversion.id}">
-                    <entity name="activitiessubjects"
-                            query="SELECT label, term FROM subject WHERE id=${activities_subjects.SUBJECTS_ID}${activities_subjects.subjects_id} AND label != 'keyword'">
-                        <field column="label" name="subjectlabel"/>
-                        <field column="term" name="subjectterm"/>
-                    </entity>
-                    <entity name="activitieskeywords"
-                            query="SELECT term FROM subject WHERE id=${activities_subjects.SUBJECTS_ID}${activities_subjects.subjects_id} AND label = 'keyword'">
-                        <field column="term" name="subjectkeyword"/>
-                    </entity>
+            <field column="title" name="title"/>
+            <field column="description" name="description"/>
+            <field column="type" name="type"/>
+            <entity name="activities_subjects"
+                    query="SELECT subjects_id FROM activities_subjects WHERE activityversion_id=${activity.ID}${activity.id}">
+                <entity name="activitiessubjects"
+                        query="SELECT label, term FROM subject WHERE id=${activities_subjects.SUBJECTS_ID}${activities_subjects.subjects_id} AND label != 'keyword'">
+                    <field column="label" name="subjectlabel"/>
+                    <field column="term" name="subjectterm"/>
+                </entity>
+                <entity name="activitieskeywords"
+                        query="SELECT term FROM subject WHERE id=${activities_subjects.SUBJECTS_ID}${activities_subjects.subjects_id} AND label = 'keyword'">
+                    <field column="term" name="subjectkeyword"/>
                 </entity>
             </entity>
         </entity>
