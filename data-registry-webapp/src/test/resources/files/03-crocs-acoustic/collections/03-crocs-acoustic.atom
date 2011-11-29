@@ -13,8 +13,8 @@
     <!--     collection type -->
     <link
         rel="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-        href="http://purl.org/dc/dcmitype/Collection"
-        title="Collection"/>
+        href="http://purl.org/dc/dcmitype/Dataset"
+        title="Dataset"/>
 
     <!--     collection title -->
     <title
