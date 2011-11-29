@@ -31,7 +31,7 @@ public class AgentVersion extends AbstractVersionEntity<Agent> {
     @Enumerated(STRING)
     private AgentType type;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> mboxes = new HashSet<String>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
