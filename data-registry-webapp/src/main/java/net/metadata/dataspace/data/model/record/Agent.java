@@ -1,6 +1,7 @@
 package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.context.FullName;
+import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import javax.validation.constraints.NotNull;
@@ -71,7 +72,7 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
         return this.versions.first().getCurrentProjects();
     }
 
-    public Set<String> getMBoxes() {
+    public Set<Mbox> getMBoxes() {
         return this.versions.first().getMboxes();
     }
 

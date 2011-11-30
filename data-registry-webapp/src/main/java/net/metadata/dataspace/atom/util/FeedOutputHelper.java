@@ -127,7 +127,7 @@ public class FeedOutputHelper {
                 Person person = request.getAbdera().getFactory().newAuthor();
                 person.setName(author.getTitle());
                 if (author.getMBoxes().size() > 0) {
-                	person.setEmail(author.getMBoxes().iterator().next());
+                	person.setEmail(author.getMBoxes().iterator().next().getEmailAddress());
                 }
                 person.setUri(RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + author.getUriKey());
                 personList.add(person);

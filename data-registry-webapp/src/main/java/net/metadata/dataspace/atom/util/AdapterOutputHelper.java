@@ -5,6 +5,7 @@ import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
+import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.context.Spatial;
@@ -152,11 +153,11 @@ public class AdapterOutputHelper {
                 familyNameElement.setAttributeValue("content", fullName.getFamilyName());
             }
 
-            Set<String> mboxes = version.getMboxes();
-            for (String mbox : mboxes) {
-                String href = "mailto:" + mbox;
-                Link link = entry.addLink(href, Constants.REL_MBOX);
-                link.setTitle(mbox);
+            Set<Mbox> mboxes = version.getMboxes();
+            for (Mbox mbox : mboxes) {
+                Link link = entry.addLink(mbox.toUri().toString(),
+                		Constants.REL_MBOX);
+                link.setTitle(mbox.getEmailAddress());
             }
 
             Set<String> pages = version.getPages();
@@ -223,9 +224,10 @@ public class AdapterOutputHelper {
             Set<Agent> authors = version.getCreators();
             for (Agent agent : authors) {
                 AgentVersion workingCopy = agent.getWorkingCopy();
-                String email = workingCopy.getMboxes().size() > 0 ?
+                Mbox mbox = workingCopy.getMboxes().size() > 0 ?
                 		workingCopy.getMboxes().iterator().next() : null;
-                entry.addAuthor(workingCopy.getTitle(), email, RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#");
+                entry.addAuthor(workingCopy.getTitle(), mbox.getEmailAddress(),
+                		RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey() + "#");
             }
 
             String collectionTypeLabel = WordUtils.capitalize(version.getType().toString().toLowerCase());
@@ -239,11 +241,11 @@ public class AdapterOutputHelper {
                 alternativeElement.setAttributeValue("content", alternativeName);
             }
 
-            Set<String> mboxes = version.getMboxes();
-            for (String mbox : mboxes) {
-                String href = "mailto:" + mbox;
+            Set<Mbox> mboxes = version.getMboxes();
+            for (Mbox mbox : mboxes) {
+                String href = mbox.toUri().toString();
                 Link link = entry.addLink(href, Constants.REL_MBOX);
-                link.setTitle(mbox);
+                link.setTitle(mbox.getEmailAddress());
             }
 
             //Pages

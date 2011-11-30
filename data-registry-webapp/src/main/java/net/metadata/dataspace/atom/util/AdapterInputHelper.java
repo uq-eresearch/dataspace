@@ -9,6 +9,7 @@ import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.FullName;
+import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.SourceAuthor;
@@ -179,8 +180,12 @@ public class AdapterInputHelper {
 
         List<Link> emails = entry.getLinks(Constants.REL_MBOX);
         for (Link emailLink : emails) {
-            version.getMboxes().add(
-            		getEmailFromHref(emailLink.getHref()).toString());
+        	InternetAddress email = getEmailFromHref(emailLink.getHref());
+        	Mbox mbox = getDaoManager().getMboxDao().getByEmail(email);
+        	if (mbox == null) {
+        		mbox = new Mbox(email);
+        	}
+            version.getMboxes().add(mbox);
         }
 
         addAlternativeTitles(version, entry);
@@ -312,10 +317,22 @@ public class AdapterInputHelper {
                     String token = "mailto:";
                     String mailTo = href.toString();
                     if (mailTo.startsWith(token)) {
-                        version.getMboxes().add(mailTo.substring(mailTo.indexOf(":") + 1));
-                    } else {
-                        version.getMboxes().add(mailTo);
+                    	mailTo = mailTo.substring(mailTo.indexOf(":") + 1);
                     }
+                    InternetAddress email;
+                    try {
+                    	email = new InternetAddress(mailTo);
+                    } catch (AddressException e) {
+                    	throw new ResponseContextException(
+                    			"Email (mbox) element is not a valid email address: "+mailTo,
+                    			400);
+                    }
+                    Mbox mbox = getDaoManager().getMboxDao().getByEmail(email);
+                    if (mbox == null) {
+                    	mbox = new Mbox(email);
+                    }
+                    version.addMbox(mbox);
+                    entityManager.persist(mbox);
                 }
             }
         }
@@ -814,17 +831,19 @@ public class AdapterInputHelper {
 		}
 
     	//Find the agent in our system first
-        Agent agent = daoManager.getAgentDao().getByEmail(emailAddress);
-        if (agent == null) {
-            List<Agent> agents = searchLDAPByEmail(email);
+		Mbox mbox = daoManager.getMboxDao().getByEmail(emailAddress);
+    	Agent agent;
+        if (mbox == null || mbox.getOwner() == null) {
+            List<Agent> agents = searchLDAPByEmail(emailAddress);
             if (agents.size() == 0) {
-                agent = createBasicAgent(name, email);
+                agent = createBasicAgent(name, emailAddress);
             } else {
             	agent = agents.get(0);
             }
             //agent.setDescriptionAuthor(user);
             entityManager.persist(agent);
         } else {
+        	agent = mbox.getOwner();
             if (!agent.isActive()) {
                 agent.setActive(true);
                 agent.setUpdated(new Date());
@@ -833,7 +852,7 @@ public class AdapterInputHelper {
         return agent;
     }
 
-    private Agent createBasicAgent(String name, String email) {
+    private Agent createBasicAgent(String name, InternetAddress email) {
         Agent agent = ((Agent) entityCreator.getNextRecord(Agent.class));
         AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
         SourceDao sourceDao = daoManager.getSourceDao();
@@ -843,7 +862,10 @@ public class AdapterInputHelper {
         Date now = new Date();
         version.setUpdated(now);
         version.setType(AgentType.PERSON);
-        version.getMboxes().add(email);
+
+        Mbox mbox = new Mbox(email);
+        version.addMbox(mbox);
+        getDaoManager().getMboxDao().save(mbox);
 
         version.setParent(agent);
         agent.getVersions().add(version);
@@ -854,10 +876,10 @@ public class AdapterInputHelper {
     }
 
     @SuppressWarnings("unchecked")
-	public List<Agent> searchLDAPByEmail(String email) {
+	public List<Agent> searchLDAPByEmail(InternetAddress email) {
     	return (List<Agent>) ldapTemplate.search(
     			"ou=staff,ou=people",
-    			"(mail=" + email + ")",
+    			"(mail=" + email.getAddress() + ")",
     			new AgentAttributesMapper());
     }
 
@@ -866,15 +888,19 @@ public class AdapterInputHelper {
 		@Override
 		public Agent mapFromAttributes(Attributes attrs) throws NamingException {
 			AgentDao agentDao = getDaoManager().getAgentDao();
-            String mail = (String) attrs.get("mail").get();
-            Agent agent;
+            InternetAddress mail;
+            Agent agent = null;
 			try {
-				agent = agentDao.getByEmail(new InternetAddress(mail));
+				mail = new InternetAddress((String) attrs.get("mail").get());
 			} catch (AddressException e) {
-				logger.error("Failed to validate LDAP email address: "+mail);
+				logger.error("Failed to validate LDAP email address: "+
+						attrs.get("mail").get());
 				return null;
 			}
-            if (agent == null) {
+			Mbox mbox = getDaoManager().getMboxDao().getByEmail(mail);
+			if (mbox != null && mbox.getOwner() != null) {
+				return mbox.getOwner();
+			} else {
                 EntityCreator entityCreator = getEntityCreator();
                 agent = ((Agent) entityCreator.getNextRecord(Agent.class));
                 AgentVersion version = ((AgentVersion) entityCreator.getNextVersion(agent));
@@ -919,15 +945,22 @@ public class AdapterInputHelper {
                 // Set ID to eSpace search
                 agent.setOriginalId("https://espace.library.uq.edu.au/"+uid);
 
-                // TODO: Add alternate mailboxes too
-                version.getMboxes().add(mail);
-
                 version.setParent(agent);
                 agent.getVersions().add(version);
                 version.getParent().setPublished(version);
                 agent.setUpdated(now);
 
                 version.setSource(systemSource);
+
+                // Assign mbox
+                if (mbox == null) {
+                	mbox = new Mbox(mail);
+                }
+                version.addMbox(mbox);
+
+                getDaoManager().getAgentDao().save(agent);
+                getDaoManager().getMboxDao().save(mbox);
+                getDaoManager().getAgentVersionDao().save(version);
             }
             return agent;
 		}

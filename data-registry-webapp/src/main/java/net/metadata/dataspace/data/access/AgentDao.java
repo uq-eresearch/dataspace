@@ -12,6 +12,4 @@ import net.metadata.dataspace.data.model.version.AgentVersion;
  */
 public interface AgentDao extends RecordDao<Agent, AgentVersion> {
 
-    Agent getByEmail(InternetAddress email);
-
 }

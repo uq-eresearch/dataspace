@@ -2,6 +2,7 @@ package net.metadata.dataspace.data.access.manager;
 
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import net.metadata.dataspace.data.access.*;
+import net.metadata.dataspace.data.model.context.Mbox;
 
 /**
  * User: alabri
@@ -27,6 +28,8 @@ public interface DaoManager {
     PublicationDao getPublicationDao();
 
     FullNameDao getFullNameDao();
+
+    MboxDao getMboxDao();
 
     UserDao getUserDao();
 

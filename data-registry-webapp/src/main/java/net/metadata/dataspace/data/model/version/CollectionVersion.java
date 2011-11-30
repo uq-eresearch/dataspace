@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Spatial;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -34,8 +35,8 @@ public class CollectionVersion extends AbstractVersionEntity<Collection> {
     @Enumerated(STRING)
     private CollectionType type;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    private Set<String> mboxes = new HashSet<String>();
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    private Set<Mbox> mboxes = new HashSet<Mbox>();
 
     @NotNull
     @Column(length = 4096)
@@ -97,7 +98,7 @@ public class CollectionVersion extends AbstractVersionEntity<Collection> {
 
     @ElementCollection(fetch = FetchType.LAZY)
     private Set<String> pages = new HashSet<String>();
-    
+
     public CollectionVersion() {
     }
 
@@ -151,11 +152,11 @@ public class CollectionVersion extends AbstractVersionEntity<Collection> {
         this.type = type;
     }
 
-    public Set<String> getMboxes() {
+    public Set<Mbox> getMboxes() {
         return mboxes;
     }
 
-    public void setMboxes(Set<String> mboxes) {
+    public void setMboxes(Set<Mbox> mboxes) {
         this.mboxes = mboxes;
     }
 

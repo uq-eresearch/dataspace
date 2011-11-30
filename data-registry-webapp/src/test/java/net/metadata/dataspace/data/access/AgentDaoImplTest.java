@@ -77,7 +77,7 @@ public class AgentDaoImplTest {
         entityManager.persist(subject2);
         entityManager.persist(agentVersion);
         entityManager.persist(agent);
-        
+
         Long id = agent.getId();
         Agent agentById = agentDao.getById(id);
         assertTrue("Table has " + agentDao.getAll().size() + " records", agentDao.getAll().size() == (originalTableSize + 1));

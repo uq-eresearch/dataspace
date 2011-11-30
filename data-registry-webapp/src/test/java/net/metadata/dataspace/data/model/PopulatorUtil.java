@@ -3,6 +3,7 @@ package net.metadata.dataspace.data.model;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
+import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -79,7 +80,7 @@ public class PopulatorUtil {
         agentVersion.setTitle("Test Agent Title");
         agentVersion.getAlternatives().add("Test");
         agentVersion.getPages().add("http://uq.edu.au/test-page.html");
-        agentVersion.getMboxes().add("email@company.com");
+        agentVersion.getMboxes().add(new Mbox("email@company.com"));
         agentVersion.setDescription("Test Agent Content");
         agentVersion.setType(AgentType.PERSON);
         agentVersion.setUpdated(new Date());
@@ -110,7 +111,7 @@ public class PopulatorUtil {
 
     @Transactional
     public static void cleanup() {
-        EntityManager entityManager = 
+        EntityManager entityManager =
         		daoManager.getEntityManagerSource().getEntityManager();
         Query dropQuery = entityManager.createNativeQuery("DROP SCHEMA registry if exists; CREATE SCHEMA registry;");
     }

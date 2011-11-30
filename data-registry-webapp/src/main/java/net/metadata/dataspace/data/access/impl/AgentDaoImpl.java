@@ -6,7 +6,6 @@ import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
-import javax.mail.internet.InternetAddress;
 import javax.persistence.Query;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -46,22 +45,6 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
         }
         assert resultList.size() == 1 : "id should be unique";
         return (AgentVersion) resultList.get(0);
-    }
-
-    @Override
-    public Agent getByEmail(InternetAddress email) {
-    	return getByEmail(email.toString());
-    }
-
-    protected Agent getByEmail(String email) {
-        Query query = getEntityManager().createQuery("SELECT DISTINCT(v.parent) FROM AgentVersion v WHERE :email IN elements(v.mboxes)");
-        query.setParameter("email", email);
-        List<?> resultList = query.getResultList();
-        if (resultList.isEmpty()) {
-            return null;
-        }
-        assert resultList.size() == 1 : "id should be unique";
-        return (Agent) resultList.get(0);
     }
 
     @Override

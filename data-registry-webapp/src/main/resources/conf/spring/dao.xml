@@ -58,4 +58,8 @@
         <constructor-arg ref="jpaConnector"/>
     </bean>
 
+    <bean id="mboxDao" class="net.metadata.dataspace.data.access.impl.MboxDaoImpl">
+        <constructor-arg ref="jpaConnector"/>
+    </bean>
+
 </beans>

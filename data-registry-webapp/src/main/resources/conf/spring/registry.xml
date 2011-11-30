@@ -134,6 +134,7 @@
         <property name="sourceDao" ref="sourceDao"/>
         <property name="publicationDao" ref="publicationDao"/>
         <property name="fullNameDao" ref="fullNameDao"/>
+        <property name="mboxDao" ref="mboxDao"/>
     </bean>
 
     <bean id="agentSequencer" class="net.metadata.dataspace.data.sequencer.AgentSequencer">

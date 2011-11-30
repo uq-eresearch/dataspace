@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
@@ -10,6 +11,9 @@ import net.metadata.dataspace.data.model.types.AgentType;
 import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.Cascade;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,8 +35,9 @@ public class AgentVersion extends AbstractVersionEntity<Agent> {
     @Enumerated(STRING)
     private AgentType type;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> mboxes = new HashSet<String>();
+    @ManyToMany(fetch = FetchType.EAGER,
+    		cascade = {CascadeType.PERSIST})
+    private Set<Mbox> mboxes = new HashSet<Mbox>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "agents_subjects")
@@ -126,11 +131,16 @@ public class AgentVersion extends AbstractVersionEntity<Agent> {
         this.made = made;
     }
 
-    public Set<String> getMboxes() {
+    public void addMbox(Mbox mbox) {
+    	mboxes.add(mbox);
+    	mbox.setOwner(this.getParent());
+    }
+
+    public Set<Mbox> getMboxes() {
         return mboxes;
     }
 
-    public void setMboxes(Set<String> mboxes) {
+    public void setMboxes(Set<Mbox> mboxes) {
         this.mboxes = mboxes;
     }
 

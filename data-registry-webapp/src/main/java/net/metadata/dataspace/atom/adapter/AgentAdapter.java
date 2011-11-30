@@ -7,6 +7,7 @@ import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.atom.util.OperationHelper;
 import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 
@@ -83,8 +84,8 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent,AgentVersion> {
     }
 
     protected Agent getAgentWithEmail(InternetAddress email) {
-    	Agent agent = ((AgentDao)getDao()).getByEmail(email);
-    	return agent != null ? agent : null;
+    	Mbox mbox = getDaoManager().getMboxDao().getByEmail(email);
+    	return mbox != null ? mbox.getOwner() : null;
     }
 
     protected ResponseContext getCanonicalRedirect(Agent agent) {
