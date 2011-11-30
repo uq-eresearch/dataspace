@@ -46,14 +46,19 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent,AgentVersion> {
     @Override
     public ResponseContext getEntry(RequestContext request) {
         String uriKey = OperationHelper.getEntryID(request);
-        try {
-        	// Check it's an email address
-        	Agent agent = getAgentWithEmail(new InternetAddress(uriKey));
-        	if (agent != null) {
-        		return getCanonicalRedirect(agent);
-        	}
-        } catch (AddressException address) {
-        	// No action required - we'll try the default behaviour
+        if (uriKey.contains("@")) {
+            try {
+	        	// Check it's an email address
+	        	Agent agent = getAgentWithEmail(new InternetAddress(uriKey));
+	        	if (agent == null) {
+	        		return new EmptyResponseContext(404,
+		    				"Unknown email address");
+	        	}
+	        	return getCanonicalRedirect(agent);
+	        } catch (AddressException address) {
+	        	return new EmptyResponseContext(400,
+	    				"Invalid email address specified");
+	        }
         }
     	return super.getEntry(request);
     }
