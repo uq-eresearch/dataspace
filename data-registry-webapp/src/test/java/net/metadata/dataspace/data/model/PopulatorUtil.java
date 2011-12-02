@@ -80,7 +80,7 @@ public class PopulatorUtil {
         agentVersion.setTitle("Test Agent Title");
         agentVersion.getAlternatives().add("Test");
         agentVersion.getPages().add("http://uq.edu.au/test-page.html");
-        agentVersion.getMboxes().add(new Mbox("email@company.com"));
+        agentVersion.addMbox(new Mbox("email@company.com"));
         agentVersion.setDescription("Test Agent Content");
         agentVersion.setType(AgentType.PERSON);
         agentVersion.setUpdated(new Date());

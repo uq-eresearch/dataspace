@@ -2,6 +2,7 @@ package net.metadata.dataspace.data.access.impl;
 
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import net.metadata.dataspace.data.access.AgentDao;
+import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.util.DaoHelper;
@@ -32,6 +33,13 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
         super(entityManagerSource);
     }
 
+	@Override
+	@Transactional
+	public void delete(Agent agent) {
+		dereferenceMboxes(agent);
+		super.delete(agent);
+	}
+
     @Override
     public AgentVersion getByVersion(String uriKey, String version) {
         int parentAtomicNumber = DaoHelper.fromOtherBaseToDecimal(31, uriKey);
@@ -57,6 +65,16 @@ public class AgentDaoImpl extends AbstractRegistryDao<Agent> implements AgentDao
         }
         assert resultList.size() == 1 : "id should be unique";
         return (Agent) resultList.get(0);
+    }
+
+    private void dereferenceMboxes(Agent agent) {
+		Query query = getEntityManager().createQuery("from Mbox m where m.owner = :agent");
+		query.setParameter("agent", agent);
+		@SuppressWarnings("unchecked")
+		List<Mbox> mboxes = (List<Mbox>) query.getResultList();
+		for (Mbox m : mboxes) {
+			m.setOwner(null);
+		}
     }
 
 }

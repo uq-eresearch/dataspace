@@ -114,6 +114,7 @@ public class AgentDaoImplTest {
         List<Agent> agentList = agentDao.getAll();
         for (Agent agent : agentList) {
             agentDao.delete(agent);
+            entityManager.flush();
         }
         assertTrue("Table is not empty", agentDao.getAll().size() == 0);
     }
