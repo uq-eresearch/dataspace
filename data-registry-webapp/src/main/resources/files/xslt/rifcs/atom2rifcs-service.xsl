@@ -41,8 +41,10 @@
                 <!-- entity type -->
                 <xsl:apply-templates select="atom:link[@rel=$REL_TYPE]"/>
                 <!-- identifiers -->
-                <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
                 <xsl:apply-templates select="/atom:entry/atom:id"/>
+                <xsl:if test="atom:id != atom:link[@rel = $RDF_DESCRIBES]/@href">
+                    <xsl:apply-templates select="atom:link[@rel=$RDF_DESCRIBES]"/>
+                </xsl:if>
                 <!-- names -->
                 <xsl:apply-templates select="atom:title"/>
                 <!-- locations -->
