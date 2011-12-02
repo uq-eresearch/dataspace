@@ -94,11 +94,14 @@
 								</xsl:call-template>
 							</div>
 						</div>
+                        <input type="hidden" name="source-user" value="{$currentUser}"/>
+                        <input type="hidden" name="source-email" value="{$currentEmail}"/>
 					</form>
                     <!-- actions -->
                     <div class="button-bar">
                             <xsl:call-template name="edit-actions">
-                                <xsl:with-param name="type">collection</xsl:with-param>
+                                <xsl:with-param name="path" select="'services'"/>
+                                <xsl:with-param name="type" select="'service'"/>
                             </xsl:call-template>
                     </div>
 				</div>

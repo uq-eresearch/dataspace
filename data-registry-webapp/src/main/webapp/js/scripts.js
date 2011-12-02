@@ -50,14 +50,22 @@ var DataSpace = (function() {
 	var REL_SPATIAL = NS_DC + "spatial";
 	var REL_VIA = "via";
 	var TERM_ANDS_GROUP = "The University of Queensland";
-	var TERM_ACTIVITY = NS_FOAF + "Project";
-	var TERM_COLLECTION = NS_DCMITYPE + "Collection";
+	var TERM_COLLECTION_AS_COLLECTION = NS_DCMITYPE + "Collection";
+    var TERM_COLLECTION_AS_DATASET = NS_DCMITYPE + "Dataset";
 	var TERM_AGENT_AS_GROUP = NS_FOAF + "Group";
 	var TERM_AGENT_AS_AGENT = NS_FOAF + "Agent";
-	var TERM_SERVICE = NS_VIVO + "Service";
+    var TERM_ACTIVITY_AS_PROJECT = NS_FOAF + "Project";
+    var TERM_ACTIVITY_AS_PROGRAM = NS_VIVO + "Program";
+    var TERM_SERVICE_AS_CREATE = NS_EFS + "Create";
+    var TERM_SERVICE_AS_GENERATE = NS_EFS + "Generate";
+    var TERM_SERVICE_AS_REPORT = NS_EFS + "Report";
+    var TERM_SERVICE_AS_ANNOTATE = NS_EFS + "Annotate";
+    var TERM_SERVICE_AS_TRANSFORM = NS_EFS + "Transform";
+    var TERM_SERVICE_AS_ASSEMBLE = NS_EFS + "Assemble";
+    var TERM_SERVICE_AS_HARVEST = NS_EFS + "Harvest";
+    var TERM_SERVICE_AS_SEARCH = NS_EFS + "Search";
+    var TERM_SERVICE_AS_SYNDICATE = NS_EFS + "Syndicate";
 	var LABEL_KEYWORD = "keyword";
-	var SCHEME_DCMITYPE = NS_DCMITYPE;
-	var SCHEME_KEYWORD = UQ_REGISTRY_URI_PREFIX + "keyword";
 	var SCHEME_ANZSRC_FOR = NS_ANZSRC + "2008/for";
 	var SCHEME_ANZSRC_SEO = NS_ANZSRC + "2008/seo";
 	var SCHEME_ANZSRC_TOA = NS_ANZSRC + "1993/toa";
@@ -135,7 +143,7 @@ var DataSpace = (function() {
 	};
 
 	var deleteRecord = function(url) {
-		if (confirm("Are you sure you want to delete this record?")) {
+		if (confirm("Delete this record?")) {
 			$.ajax({
 				type : 'DELETE',
 				url : url,
@@ -143,7 +151,7 @@ var DataSpace = (function() {
 					location.reload();
 				},
 				error : function(xhr, textStatus, errorThrown) {
-					alert("Could not deleted record");
+					alert("Could not delete record");
 				}
 			});
 		}
@@ -583,15 +591,12 @@ var DataSpace = (function() {
 		record.append(id);
 
 		// type
-		var typeRelation = getLinkElement('http://xmlns.com/foaf/0.1/Project',
-				REL_TYPE, 'Project');
-		record.append(typeRelation);
 		var recordType = $('#type-combobox').val();
-		if (recordType) {
-			var typeCategory = getCategoryElement(NS_DCMITYPE, NS_FOAF
-					+ recordType, recordType);
-			record.append(typeCategory);
-		}
+		if (recordType == "Project") {
+			record.append(getLinkElement(TERM_ACTIVITY_AS_PROJECT, REL_TYPE, recordType));
+		} else if (recordType == "Program") {
+			record.append(getLinkElement(TERM_ACTIVITY_AS_PROGRAM, REL_TYPE, recordType));
+        }
 		// title
 		var titleValue = $('#edit-title-text').val();
 		if (titleValue) {
@@ -609,10 +614,6 @@ var DataSpace = (function() {
 			content.attr('type', 'text');
 			record.append(content);
 		}
-
-		// Dummy author
-		var author = getAuthorElement('user interface',null,null);
-		record.append(author);
 
 		// pages
 		addPages(record);
@@ -642,15 +643,12 @@ var DataSpace = (function() {
 		record.append(id);
 
 		// type
-		var typeRelation = getLinkElement('http://xmlns.com/foaf/0.1/Person',
-				REL_TYPE, 'Person');
-		record.append(typeRelation);
-		var recordType = $('#type-combobox').val();
-		if (recordType) {
-			var typeCategory = getCategoryElement(NS_DCMITYPE, NS_FOAF
-					+ recordType, recordType);
-			record.append(typeCategory);
-		}
+        var recordType = $('#type-combobox').val();
+        if (recordType == "Person") {
+			record.append(getLinkElement(TERM_AGENT_AS_AGENT, REL_TYPE, recordType));
+		} else if (recordType == "Group") {
+			record.append(getLinkElement(TERM_AGENT_AS_GROUP, REL_TYPE, recordType));
+        }
 
 		// title
 		var titleValue = $('#edit-title-text').val();
@@ -686,10 +684,6 @@ var DataSpace = (function() {
 			record.append(content);
 		}
 
-		// Dummy author
-		var author = getAuthorElement('user interface',null,null);
-		record.append(author);
-
 		// Emails
 		addEmails(record);
 
@@ -721,16 +715,12 @@ var DataSpace = (function() {
 		record.append(id);
 
 		// type
-		var typeRelation = getLinkElement(
-				'http://purl.org/dc/dcmitype/Collection', REL_TYPE,
-				'Collection');
-		record.append(typeRelation);
 		var recordType = $('#type-combobox').val();
-		if (recordType) {
-			var typeCategory = getCategoryElement(NS_DCMITYPE, NS_DCMITYPE
-					+ recordType, recordType);
-			record.append(typeCategory);
-		}
+        if (recordType == "Collection") {
+			record.append(getLinkElement(TERM_COLLECTION_AS_COLLECTION, REL_TYPE, recordType));
+		} else if (recordType == "Dataset") {
+			record.append(getLinkElement(TERM_COLLECTION_AS_DATASET, REL_TYPE, recordType));
+        }
 		// title
 		var titleValue = $('#edit-title-text').val();
 		if (titleValue) {
@@ -811,16 +801,37 @@ var DataSpace = (function() {
 		record.append(id);
 
 		// type
-		var typeRelation = getLinkElement(
-				'http://www.e-framework.org/Contributions/ServiceGenres/Report',
-				REL_TYPE, 'Report');
-		record.append(typeRelation);
 		var recordType = $('#type-combobox').val();
-		if (recordType) {
-			var typeCategory = getCategoryElement(NS_DCMITYPE, NS_EFS
-					+ recordType, recordType);
-			record.append(typeCategory);
-		}
+        switch (recordType) {
+            case "Create":
+                record.append(getLinkElement(TERM_SERVICE_AS_CREATE, REL_TYPE, recordType));
+                break;
+            case "Generate":
+                record.append(getLinkElement(TERM_SERVICE_AS_GENERATE, REL_TYPE, recordType));
+                break;
+            case "Report":
+                record.append(getLinkElement(TERM_SERVICE_AS_REPORT, REL_TYPE, recordType));
+                break;
+            case "Annotate":
+                record.append(getLinkElement(TERM_SERVICE_AS_ANNOTATE, REL_TYPE, recordType));
+                break;
+            case "Transform":
+                record.append(getLinkElement(TERM_SERVICE_AS_TRANSFORM, REL_TYPE, recordType));
+                break;
+            case "Assemble":
+                record.append(getLinkElement(TERM_SERVICE_AS_ASSEMBLE, REL_TYPE, recordType));
+                break;
+            case "Harvest":
+                record.append(getLinkElement(TERM_SERVICE_AS_HARVEST, REL_TYPE, recordType));
+                break;
+            case "Search":
+                record.append(getLinkElement(TERM_SERVICE_AS_SEARCH, REL_TYPE, recordType));
+                break;
+            case "Syndicate":
+                record.append(getLinkElement(TERM_SERVICE_AS_SYNDICATE, REL_TYPE, recordType));
+                break;
+        }
+
 		// title
 		var titleValue = $('#edit-title-text').val();
 		if (titleValue) {
@@ -838,10 +849,6 @@ var DataSpace = (function() {
 			content.attr('type', 'text');
 			record.append(content);
 		}
-
-		// Dummy author
-		var author = getAuthorElement('user interface',null,null);
-		record.append(author);
 
 		// pages
 		addPages(record);
@@ -1055,7 +1062,7 @@ var DataSpace = (function() {
 		var id = getSimpleElementWithText('id', UQ_REGISTRY_URI_PREFIX);
 		source.append(id);
 		var title = getSimpleElementWithText('title',
-				'The University of Queensland Data Collections Registry');
+				'UQ Data Collections Registry');
 		title.attr('type', 'text');
 		source.append(title);
 

@@ -759,44 +759,45 @@ public class AdapterInputHelper {
             throw new ResponseContextException("Version is null", 400);
         } else {
             List<Link> links = entry.getLinks(Constants.REL_TYPE);
-            if (links.size() != 1) {
-                throw new ResponseContextException("Entry missing Type or assigned to more than one type", 400);
+            if (links.isEmpty()) {
+                throw new ResponseContextException("Entry missing Type", 400);
+            } else if (links.size() > 1) {
+                throw new ResponseContextException("Entry assigned to more than one type", 400);
             } else {
-                for (Link typeLink : links) {
-                    String entryType = typeLink.getTitle();
-                    if (entryType == null) {
-                        throw new ResponseContextException("Entry type is missing label", 400);
-                    } else {
-                        entryType = entryType.toUpperCase();
-                        if (version instanceof ActivityVersion) {
-                            ActivityType type = ActivityType.valueOf(entryType);
-                            if (type == null) {
-                                throw new ResponseContextException("Entry type is invalid", 400);
-                            } else {
-                                ((ActivityVersion) version).setType(type);
-                            }
-                        } else if (version instanceof AgentVersion) {
-                            AgentType type = AgentType.valueOf(entryType);
-                            if (type == null) {
-                                throw new ResponseContextException("Entry type is invalid", 400);
-                            } else {
-                                ((AgentVersion) version).setType(type);
-                            }
-                        } else if (version instanceof CollectionVersion) {
-                            CollectionType type = CollectionType.valueOf(entryType);
-                            if (type == null) {
-                                throw new ResponseContextException("Entry type is invalid", 400);
-                            } else {
-                                ((CollectionVersion) version).setType(type);
-                            }
-                            ((CollectionVersion) version).setRights(entry.getRights());
-                        } else if (version instanceof ServiceVersion) {
-                            ServiceType type = ServiceType.valueOf(entryType);
-                            if (type == null) {
-                                throw new ResponseContextException("Entry type is invalid", 400);
-                            } else {
-                                ((ServiceVersion) version).setType(type);
-                            }
+                Link typeLink = links.get(0);
+                String entryType = typeLink.getTitle();
+                if (entryType == null) {
+                    throw new ResponseContextException("Entry type is missing label", 400);
+                } else {
+                    entryType = entryType.toUpperCase();
+                    if (version instanceof ActivityVersion) {
+                        ActivityType type = ActivityType.valueOf(entryType);
+                        if (type == null) {
+                            throw new ResponseContextException("Entry type is invalid", 400);
+                        } else {
+                            ((ActivityVersion) version).setType(type);
+                        }
+                    } else if (version instanceof AgentVersion) {
+                        AgentType type = AgentType.valueOf(entryType);
+                        if (type == null) {
+                            throw new ResponseContextException("Entry type is invalid", 400);
+                        } else {
+                            ((AgentVersion) version).setType(type);
+                        }
+                    } else if (version instanceof CollectionVersion) {
+                        CollectionType type = CollectionType.valueOf(entryType);
+                        if (type == null) {
+                            throw new ResponseContextException("Entry type is invalid", 400);
+                        } else {
+                            ((CollectionVersion) version).setType(type);
+                        }
+                        ((CollectionVersion) version).setRights(entry.getRights());
+                    } else if (version instanceof ServiceVersion) {
+                        ServiceType type = ServiceType.valueOf(entryType);
+                        if (type == null) {
+                            throw new ResponseContextException("Entry type is invalid", 400);
+                        } else {
+                            ((ServiceVersion) version).setType(type);
                         }
                     }
                 }

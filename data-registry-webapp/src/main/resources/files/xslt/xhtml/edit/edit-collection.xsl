@@ -137,7 +137,8 @@
                     <!-- actions -->
                     <div class="button-bar">
                             <xsl:call-template name="edit-actions">
-                                <xsl:with-param name="type">collection</xsl:with-param>
+                                <xsl:with-param name="path" select="'collections'"/>
+                                <xsl:with-param name="type" select="'collection'"/>
                             </xsl:call-template>
                     </div>
 				</div>
