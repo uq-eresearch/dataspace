@@ -33,4 +33,4 @@ do
 		$CURL -X POST -H 'Content-Type: application/atom+xml' -b @$COOKIEJAR --data-binary @$f $URL
 	done
 done
-
+$CURL -X POST -b @$COOKIEJAR "$BASE_URL/reindex"
