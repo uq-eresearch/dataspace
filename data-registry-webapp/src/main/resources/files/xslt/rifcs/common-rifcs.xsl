@@ -129,17 +129,17 @@
     <!-- subjects -->
     <xsl:template match="atom:category[@scheme = $SCHEME_FOR]">
         <subject type="anzsrc-for">
-            <xsl:value-of select="substring-after(@term, $PREFIX_FOR)"/>
+            <xsl:value-of select="substring-after(@term, $SCHEME_FOR)"/>
         </subject>
     </xsl:template>
     <xsl:template match="atom:category[@scheme = $SCHEME_SEO]">
         <subject type="anzsrc-seo">
-            <xsl:value-of select="substring-after(@term, $PREFIX_SEO)"/>
+            <xsl:value-of select="substring-after(@term, $SCHEME_SEO)"/>
         </subject>
     </xsl:template>
     <xsl:template match="atom:category[@scheme = $SCHEME_TOA]">
         <subject type="anzsrc-toa">
-            <xsl:value-of select="substring-after(@term, $PREFIX_TOA)"/>
+            <xsl:value-of select="substring-after(@term, $SCHEME_TOA)"/>
         </subject>
     </xsl:template>
     <xsl:template match="atom:category[not(@scheme)]">
