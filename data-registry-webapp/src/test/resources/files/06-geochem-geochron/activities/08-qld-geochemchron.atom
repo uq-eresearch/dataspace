@@ -48,11 +48,11 @@
         term="http://purl.org/asc/1297.0/2008/for/040203"
         label="040203 - Isotope Geochemistry"/>
     <category
-        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
         term="http://purl.org/asc/1297.0/2008/for/0403"
         label="040300 - Geology"/>
     <category
-        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
         term="http://purl.org/asc/1297.0/2008/for/040303"
         label="040303 - Geochronology"/>
     <category

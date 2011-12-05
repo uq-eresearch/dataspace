@@ -48,11 +48,11 @@
         term="http://purl.org/asc/1297.0/2008/for/060208"
         label="060208 - Terrestrial Ecology"/>
     <category
-        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
         term="http://purl.org/asc/1297.0/2008/for/060603"
         label="060603 - Animal Physiology - Systems"/>
     <category
-        scheme="http://purl.org/asc/1297.0/2008/seo/"
+        scheme="http://purl.org/asc/1297.0/2008/for/"
         term="http://purl.org/asc/1297.0/2008/for/060808"
         label="060808 - Invertebrate Biology"/>
     <category term="arachnocampa"/>
