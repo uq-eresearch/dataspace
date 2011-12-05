@@ -82,12 +82,6 @@ The Queensland Department of Environment and Resource Management granted permiss
         href="http://www.geonames.org/2148764/"
         title="Springbrook"/>
 
-    <!--     related publications -->
-    <link
-        rel="http://purl.org/dc/terms/isReferencedBy"
-        title="GSQ–UQ project bringing research data to light"
-        href="http://www.dme.qld.gov.au/zone_files/QGMJ/3_ei_gsq-uq_project_bringing_research_data_to_light.pdf"/>
-
     <!--     rights -->
     <rights>The data is the property of The University of Queensland. Permission is required to use this material.</rights>
     <!--     access rights -->

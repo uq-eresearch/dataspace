@@ -28,7 +28,7 @@
         label="160400 - Human Geography"/>
     <category scheme="http://purl.org/asc/1297.0/2008/for/" term="http://purl.org/asc/1297.0/2008/for/160800"
         label="160499 - Sociology"/>
-    <category scheme="http://purl.org/asc/1297.0/2008/seo/" term="910102" label="910102 - Demography"/>
+    <category scheme="http://purl.org/asc/1297.0/2008/seo/" term="http://purl.org/asc/1297.0/2008/seo/910102" label="910102 - Demography"/>
 
     <!--     outputs -->
     <link rel="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#hasOutput"
