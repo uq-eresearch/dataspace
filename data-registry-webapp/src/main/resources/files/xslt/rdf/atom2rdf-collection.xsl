@@ -12,12 +12,14 @@
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
-                xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
-                xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
-                xmlns:uqdata="http://dataspace.metadata.net/"
+                xmlns:dcterms="http://purl.org/dc/terms/"
+                xmlns:cld="http://purl.org/cld/terms/"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#"
-                xmlns:owl="http://www.w3.org/2002/07/owl#">
+                xmlns:georss="http://www.georss.org/georss"
+                xmlns:owl="http://www.w3.org/2002/07/owl#"
+                xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
+
     <xsl:include href="common-rdf.xsl"/>
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
 
@@ -55,14 +57,13 @@
             <!-- email -->
             <xsl:apply-templates select="atom:link[@REL=$ATOM_MBOX]"/>
             <!-- subjects -->
-            <xsl:apply-templates select="atom:category[@scheme!=$NS_DCMITYPE]"/>
-            <!-- location -->
-
+            <xsl:apply-templates select="atom:category"/>
             <!-- creator -->
-            <xsl:apply-templates select="atom:link[@rel=$ATOM_CREATOR]"/>
-            <!-- curator -->
+            <xsl:apply-templates select="atom:author"/>
+            <!-- manager -->
             <xsl:apply-templates select="atom:link[@rel=$ATOM_PUBLISHER]"/>
             <!-- generating activity -->
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_OUTPUT_OF]"/>
             <!--<xsl:apply-templates select="atom:link[@rel=$NS_GROUP]"/>-->
             <!--&lt;!&ndash; accessed via service &ndash;&gt;-->
             <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]"/>
@@ -74,7 +75,11 @@
             <!-- temporal coverage -->
             <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
             <!-- spatial coverage -->
-            <!-- TO DO -->
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_SPATIAL]"/>
+            <xsl:apply-templates select="georss:point"/>
+            <xsl:apply-templates select="georss:polygon"/>
+            <!-- related publications -->
+            <xsl:apply-templates select="atom:link[@rel=$ATOM_IS_REFERENCED_BY]"/>
 
             <!-- link to metadata about the description -->
             <ore:isDescribedBy rdf:resource="{atom:link[@rel=$REL_SELF]/@href}"/>
@@ -84,15 +89,15 @@
         <xsl:text>
 	    </xsl:text>
         <xsl:comment>Metadata about the description</xsl:comment>
+        <xsl:text>
+	    </xsl:text>
         <rdf:Description rdf:about="{atom:link[@rel=$REL_SELF]/@href}">
             <!-- description publisher -->
-            <!--<xsl:apply-templates select="atom:category[@scheme=$NS_GROUP]"/>-->
+            <xsl:apply-templates select="atom:source/atom:link[@rel=$ATOM_PUBLISHER]"/>
             <!-- description creator -->
-            <xsl:apply-templates select="atom:author"/>
+            <xsl:apply-templates select="atom:source/atom:author"/>
             <!-- description update date -->
             <xsl:apply-templates select="atom:updated"/>
-            <!-- description original creation date -->
-            <xsl:apply-templates select="atom:published"/>
 
             <!-- description source -->
             <xsl:apply-templates select="atom:source"/>
@@ -105,21 +110,45 @@
 
     <!-- *** collection description elements *** -->
 
-    <!-- description type -->
-    <xsl:template match="atom:link[@rel=$REL_TYPE]">
-        <dcterms:type rdf:resource="{@title}"/>
-    </xsl:template>
+
 
     <!-- generating activity -->
     <xsl:template
             match="atom:link[@rel=$ATOM_IS_OUTPUT_OF]">
-        <ands:isOutputOf rdf:resource="{@href}"/>
+        <ands:isOutputOf>
+            <ands:Activity rdf:about="{@href}">
+                <xsl:if test="@title">
+                    <dc:title>
+                        <xsl:value-of select="@title"/>
+                    </dc:title>
+                </xsl:if>
+            </ands:Activity>
+        </ands:isOutputOf>
     </xsl:template>
 
     <!-- accessed via service -->
     <xsl:template
             match="atom:link[@rel=$ATOM_IS_ACCESSED_VIA]">
-        <ands:isOutputOf rdf:resource="{@href}"/>
+        <cld:isAccessedVia rdf:about="{@href}">
+            <xsl:if test="@title">
+                <dc:title>
+                    <xsl:value-of select="@title"/>
+                </dc:title>
+            </xsl:if>
+        </cld:isAccessedVia>
+    </xsl:template>
+
+    <!-- related publications -->
+    <xsl:template match="atom:link[@rel=$ATOM_IS_REFERENCED_BY]">
+        <dcterms:isReferencedBy>
+            <foaf:Document rdf:about="{@href}">
+                <xsl:if test="@title">
+                    <dcterms:title>
+                        <xsl:value-of select="@title"/>
+                    </dcterms:title>
+                </xsl:if>
+            </foaf:Document>
+        </dcterms:isReferencedBy>
     </xsl:template>
 
 </xsl:stylesheet>

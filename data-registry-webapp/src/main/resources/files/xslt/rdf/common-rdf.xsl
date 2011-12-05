@@ -10,17 +10,22 @@
     -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-                xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom"
-                xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/"
-                xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
-                xmlns:dcam="http://purl.org/dc/dcam/" xmlns:cld="http://purl.org/cld/terms/"
-                xmlns:uqdata="http://dataspace.metadata.net/"
+                xmlns:atom="http://www.w3.org/2005/Atom"
+                xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                xmlns:dcterms="http://purl.org/dc/terms/"
                 xmlns:ands="http://www.ands.org.au/ontologies/ns/0.1/VITRO-ANDS.owl#"
                 xmlns:rdfa="http://www.w3.org/ns/rdfa#"
-                xmlns:owl="http://www.w3.org/2002/07/owl#">
+                xmlns:owl="http://www.w3.org/2002/07/owl#"
+                xmlns:georss="http://www.georss.org/georss"
+                xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
 
     <xsl:include href="../constants.xsl"/>
     <xsl:output method="xml" media-type="application/rdf+xml" indent="yes"/>
+
+    <!-- entity type -->
+    <xsl:template match="atom:link[@rel=$REL_TYPE]">
+        <rdf:type rdf:resource="{@href}"/>
+    </xsl:template>
 
     <!-- alternate entity URI -->
     <xsl:template match="atom:id">
@@ -58,24 +63,51 @@
         <foaf:mbox rdf:resource="{@href}"/>
     </xsl:template>
 
-    <!-- creator -->
-    <xsl:template match="atom:link[@rel=$ATOM_CREATOR]">
-        <dcterms:creator rdf:resource="{@href}"/>
-    </xsl:template>
-
     <!-- curator -->
     <xsl:template match="atom:link[@rel=$ATOM_PUBLISHER]">
-        <dcterms:publisher rdf:resource="{@href}"/>
+        <ands:isManagedBy>
+            <foaf:Agent rdf:about="{@href}">
+                <xsl:if test="@title">
+                    <foaf:name>
+                        <xsl:value-of select="@title"/>
+                    </foaf:name>
+                </xsl:if>
+            </foaf:Agent>
+        </ands:isManagedBy>
     </xsl:template>
 
     <!-- subjects -->
-    <xsl:template
-            match="atom:category[@scheme!=$NS_DCMITYPE and @scheme!=$NS_FOAF]">
-        <dcterms:subject rdf:resource="{@term}"/>
+    <xsl:template match="atom:category">
+            <xsl:choose>
+                <xsl:when test="@scheme">
+                    <dcterms:subject rdf:resource="{@term}"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <dcterms:subject>
+                        <xsl:value-of select="@term"/>
+                    </dcterms:subject>
+                </xsl:otherwise>
+            </xsl:choose>
+
     </xsl:template>
 
     <!-- spatial coverage -->
-    <!-- TO DO -->
+    <xsl:template match="atom:link[@rel=$ATOM_SPATIAL]">
+        <dcterms:spatial rdf:resource="{@href}"/>
+    </xsl:template>
+    <xsl:template match="georss:point">
+        <geo:location>
+            <geo:lat>
+                <xsl:value-of select="substring-before(normalize-space(.),' ')"/>
+            </geo:lat>
+            <geo:long>
+                <xsl:value-of select="substring-after(normalize-space(.),' ')"/>
+            </geo:long>
+        </geo:location>
+    </xsl:template>
+    <xsl:template match="georss:polygon">
+        <xsl:copy-of select="."/>
+    </xsl:template>
 
     <!-- temporal coverage -->
     <xsl:template match="rdfa:meta[@property=$RDFA_TEMPORAL]">
@@ -112,12 +144,18 @@
 
 
     <!-- description publisher -->
-    <!--<xsl:template-->
-    <!--match="atom:category[@scheme=$NS_GROUP]">-->
-    <!--<dcterms:publisher>-->
-    <!--<xsl:value-of select="@term"/>-->
-    <!--</dcterms:publisher>-->
-    <!--</xsl:template>-->
+    <xsl:template match="atom:source/atom:link[@rel=$ATOM_PUBLISHER]">
+        <dcterms:publisher>
+            <foaf:Agent>
+                <foaf:page rdf:resource="{@href}"/>
+                <xsl:if test="@title">
+                    <foaf:name>
+                        <xsl:value-of select="@title"/>
+                    </foaf:name>
+                </xsl:if>
+            </foaf:Agent>
+        </dcterms:publisher>
+    </xsl:template>
 
     <!-- description source -->
     <xsl:template match="atom:source">
@@ -145,9 +183,13 @@
     <!-- description curator -->
     <xsl:template match="atom:author">
         <dcterms:creator>
-            <foaf:Person>
-                <xsl:apply-templates/>
-            </foaf:Person>
+            <foaf:Agent>
+                <xsl:if test="atom:uri">
+                    <xsl:attribute name="rdf:about" select="atom:uri"/>
+                </xsl:if>
+                <xsl:apply-templates select="atom:name"/>
+                <xsl:apply-templates select="atom:email"/>
+            </foaf:Agent>
         </dcterms:creator>
     </xsl:template>
 
@@ -157,14 +199,8 @@
         </foaf:name>
     </xsl:template>
 
-    <xsl:template match="atom:uri">
-        <foaf:page rdf:resource="{text()}"/>
-        <xsl:apply-templates/>
-    </xsl:template>
-
     <xsl:template match="atom:email">
         <foaf:mbox rdf:resource="mailto:{text()}"/>
-        <xsl:apply-templates/>
     </xsl:template>
 
     <!-- description update date -->
