@@ -971,11 +971,11 @@ var DataSpace = (function() {
 	var addRelations = entityAddHandler('relation', REL_RELATED);
 
 	var addPublications = function(record) {
-		$('input[id|="publication-title"]').each(
+		$('input[name|="publication-title"]').each(
 				function() {
 					var title = $(this).val();
 					var href = $(this).parent().parent().find(
-							'input[id|="publication-url"]').eq(0).val();
+							'input[name|="publication-url"]').eq(0).val();
 					if (href) {
 						var linkElement = getLinkElement(href,
 								REL_IS_REFERENCED_BY, title);
