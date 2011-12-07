@@ -978,7 +978,7 @@ var DataSpace = (function() {
 		$('input[name|="publication-title"]').each(
 				function() {
 					var title = $(this).val();
-					var href = $(this).parent().parent().find(
+					var href = $(this).parent().find(
 							'input[name|="publication-url"]').eq(0).val();
 					if (href) {
 						var linkElement = getLinkElement(href,

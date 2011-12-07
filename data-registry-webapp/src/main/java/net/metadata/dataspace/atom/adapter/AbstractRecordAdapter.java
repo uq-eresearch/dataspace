@@ -614,24 +614,32 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             // Return created entry
             return adapterOutputHelper.getEntryFromEntity(version, true);
         } catch (ConstraintViolationException e) {
+            logger.warn("Invalid Entry, Rolling back database", e);
         	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        	StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<?> cv : e.getConstraintViolations()) {
-            	sb.append(cv.getPropertyPath());
-            	sb.append(" ");
-            	sb.append(cv.getMessage());
-            	sb.append(": ");
-            	sb.append(cv.getInvalidValue());
-            	sb.append("\n");
-            }
-            throw new ResponseContextException(sb.toString(), 400);
+        	throw new ResponseContextException(
+            		buildConstraintViolationMessage(e), 400);
         } catch (Exception th) {
             logger.warn("Invalid Entry, Rolling back database", th);
+        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             throw new ResponseContextException(th.getMessage(), 400);
         }
     }
 
-    protected Entry processPutRequest(RequestContext request)
+    private String buildConstraintViolationMessage(
+			ConstraintViolationException e) {
+    	StringBuilder sb = new StringBuilder();
+        for (ConstraintViolation<?> cv : e.getConstraintViolations()) {
+        	sb.append(cv.getPropertyPath());
+        	sb.append(" ");
+        	sb.append(cv.getMessage());
+        	sb.append(": ");
+        	sb.append(cv.getInvalidValue());
+        	sb.append("\n");
+        }
+		return sb.toString();
+	}
+
+	protected Entry processPutRequest(RequestContext request)
 			throws ResponseContextException
 	{
 		logger.info("Updating Entry");
@@ -671,8 +679,14 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             // Return updated entry (with parent-level location)
             // return adapterOutputHelper.getEntryFromEntity(version, false);
             return adapterOutputHelper.getEntryFromEntity(version, true);
+        } catch (ConstraintViolationException e) {
+            logger.warn("Invalid Entry, Rolling back database", e);
+        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        	throw new ResponseContextException(
+            		buildConstraintViolationMessage(e), 400);
         } catch (Exception th) {
             logger.fatal("Invalid Entry, Rolling back database", th);
+        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             throw new ResponseContextException("Invalid Entry, Rolling back database", 400);
         }
 	}
