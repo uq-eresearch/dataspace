@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.UnknownTypeException;
 import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Subject;
@@ -7,7 +8,6 @@ import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
-import net.metadata.dataspace.data.model.types.AgentType;
 import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
@@ -25,15 +25,13 @@ import static javax.persistence.EnumType.STRING;
  * Time: 9:27:44 AM
  */
 @Entity
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"atomicnumber","parent_id"}))
 public class AgentVersion extends AbstractVersionEntity<Agent> {
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    private Agent parent;
-
     @NotNull
     @Enumerated(STRING)
-    private AgentType type;
+    private Agent.Type type;
 
     @ManyToMany(fetch = FetchType.EAGER,
     		cascade = {CascadeType.PERSIST})
@@ -73,16 +71,6 @@ public class AgentVersion extends AbstractVersionEntity<Agent> {
     public AgentVersion() {
     }
 
-    @Override
-    public Agent getParent() {
-        return parent;
-    }
-
-    @Override
-    public void setParent(Agent parent) {
-        this.parent = parent;
-    }
-
     public Set<Subject> getSubjects() {
         return subjects;
     }
@@ -115,12 +103,19 @@ public class AgentVersion extends AbstractVersionEntity<Agent> {
         this.currentProjects = currentProjects;
     }
 
-    public AgentType getType() {
+    public Agent.Type getType() {
         return type;
     }
 
-    public void setType(AgentType type) {
+    public void setType(Agent.Type type) {
         this.type = type;
+    }
+
+    public void setType(String type) throws UnknownTypeException {
+    	if (Agent.Type.valueOf(type) == null) {
+    		throw new UnknownTypeException("Unknown type: "+type);
+    	}
+    	setType(Agent.Type.valueOf(type));
     }
 
     public Set<Collection> getMade() {

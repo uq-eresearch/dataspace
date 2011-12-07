@@ -3,6 +3,11 @@ package net.metadata.dataspace.atom.util;
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.app.RegistryApplication;
+import net.metadata.dataspace.atom.adapter.ActivityAdapter;
+import net.metadata.dataspace.atom.adapter.AgentAdapter;
+import net.metadata.dataspace.atom.adapter.CollectionAdapter;
+import net.metadata.dataspace.atom.adapter.ServiceAdapter;
+import net.metadata.dataspace.atom.adapter.VersionAssembler;
 import net.metadata.dataspace.data.access.ActivityDao;
 import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.CollectionDao;
@@ -49,7 +54,16 @@ import static org.junit.Assert.assertTrue;
 public class AdapterOutputHelperTest {
 
 	@Autowired
-	private AdapterInputHelper adapterInputHelper;
+	private VersionAssembler<Activity,ActivityVersion> activityAdapter;
+
+	@Autowired
+	private VersionAssembler<Agent,AgentVersion> agentAdapter;
+
+	@Autowired
+	private VersionAssembler<Collection,CollectionVersion> collectionAdapter;
+
+	@Autowired
+	private VersionAssembler<Service,ServiceVersion> serviceAdapter;
 
 	@Autowired
 	private AdapterOutputHelper adapterOutputHelper;
@@ -212,7 +226,7 @@ public class AdapterOutputHelperTest {
         List<Agent> agents = daoManager.getAgentDao().getAll();
         Agent agent = agents.get(agents.size() - 1);
         Entry entry = adapterOutputHelper.getEntryFromEntity(agent.getVersions().first(), true);
-        Version version = adapterInputHelper.assembleAndValidateVersionFromEntry(agent, entry);
+        Version version = agentAdapter.assembleAndValidateVersionFromEntry(agent, entry);
         assertNotNull("Could not update entry", version);
         assertEquals("Entry title", agent.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", agent.getVersions().first().getDescription(), version.getDescription());
@@ -237,7 +251,7 @@ public class AdapterOutputHelperTest {
         List<Service> services = daoManager.getServiceDao().getAll();
         Service service = services.get(services.size() - 1);
         Entry entry = adapterOutputHelper.getEntryFromEntity(service.getVersions().first(), true);
-        ServiceVersion version = (ServiceVersion) adapterInputHelper.assembleAndValidateVersionFromEntry(service, entry);
+        ServiceVersion version = serviceAdapter.assembleAndValidateVersionFromEntry(service, entry);
         assertNotNull("Could not update entry", version);
         assertEquals("Entry title", service.getVersions().first().getTitle(), version.getTitle());
         assertEquals("Entry content", service.getVersions().first().getDescription(), version.getDescription());
@@ -249,7 +263,7 @@ public class AdapterOutputHelperTest {
         List<Activity> activities = daoManager.getActivityDao().getAll();
         Activity activity = activities.get(activities.size() - 1);
         Entry entry = adapterOutputHelper.getEntryFromEntity(activity.getVersions().first(), true);
-        Version version = adapterInputHelper.assembleAndValidateVersionFromEntry(activity, entry);
+        ActivityVersion version = activityAdapter.assembleAndValidateVersionFromEntry(activity, entry);
         assertNotNull("Could not update entry", version);
         assertEquals("Entry title", activity.getTitle(), version.getTitle());
         assertEquals("Entry content", activity.getContent(), version.getDescription());

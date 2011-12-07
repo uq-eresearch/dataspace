@@ -22,6 +22,11 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
 
     private static final long serialVersionUID = 1L;
 
+    public enum Type {
+        COLLECTION,
+        DATASET
+    }
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
     @NotNull
     @Sort(type = SortType.NATURAL)

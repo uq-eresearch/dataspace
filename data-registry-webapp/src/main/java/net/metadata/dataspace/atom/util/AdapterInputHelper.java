@@ -18,10 +18,6 @@ import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.*;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
-import net.metadata.dataspace.data.model.types.ActivityType;
-import net.metadata.dataspace.data.model.types.AgentType;
-import net.metadata.dataspace.data.model.types.CollectionType;
-import net.metadata.dataspace.data.model.types.ServiceType;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
@@ -39,11 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchResult;
 import javax.persistence.EntityManager;
 import javax.xml.namespace.QName;
 
@@ -337,7 +330,7 @@ public class AdapterInputHelper {
             }
         }
 
-        if (version.getType().equals(AgentType.PERSON)) {
+        if (version.getType().equals(Agent.Type.PERSON)) {
             List<Element> extensions = entry.getExtensions(Constants.QNAME_RDFA_META);
             String fullNameTitle = null;
             String givenName = null;
@@ -479,25 +472,6 @@ public class AdapterInputHelper {
         setPublished(entry, version);
         Date now = new Date();
         version.setUpdated(now);
-    }
-
-    public Version<?> assembleAndValidateVersionFromEntry(Record<?> record, Entry entry) throws ResponseContextException {
-        if (entry == null) {
-            throw new ResponseContextException("Empty Atom entry", 400);
-        } else if(!ProviderHelper.isValidEntry(entry)) {
-            throw new ResponseContextException("Invalid Atom entry", 400);
-        } else {
-            String content = entry.getContent();
-            if (content == null) {
-                throw new ResponseContextException("Content is null", 400);
-            }
-            Version<?> version = entityCreator.getNextVersion(record);
-            version.setTitle(entry.getTitle());
-            version.setDescription(content);
-            version.setUpdated(new Date());
-            addType(version, entry);
-            return version;
-        }
     }
 
     public Source assembleAndValidateSourceFromEntry(Entry entry) throws ResponseContextException {
@@ -754,56 +728,7 @@ public class AdapterInputHelper {
         return publications;
     }
 
-    private void addType(Version<?> version, Entry entry) throws ResponseContextException {
-        if (version == null) {
-            throw new ResponseContextException("Version is null", 400);
-        } else {
-            List<Link> links = entry.getLinks(Constants.REL_TYPE);
-            if (links.isEmpty()) {
-                throw new ResponseContextException("Entry missing Type", 400);
-            } else if (links.size() > 1) {
-                throw new ResponseContextException("Entry assigned to more than one type", 400);
-            } else {
-                Link typeLink = links.get(0);
-                String entryType = typeLink.getTitle();
-                if (entryType == null) {
-                    throw new ResponseContextException("Entry type is missing label", 400);
-                } else {
-                    entryType = entryType.toUpperCase();
-                    if (version instanceof ActivityVersion) {
-                        ActivityType type = ActivityType.valueOf(entryType);
-                        if (type == null) {
-                            throw new ResponseContextException("Entry type is invalid", 400);
-                        } else {
-                            ((ActivityVersion) version).setType(type);
-                        }
-                    } else if (version instanceof AgentVersion) {
-                        AgentType type = AgentType.valueOf(entryType);
-                        if (type == null) {
-                            throw new ResponseContextException("Entry type is invalid", 400);
-                        } else {
-                            ((AgentVersion) version).setType(type);
-                        }
-                    } else if (version instanceof CollectionVersion) {
-                        CollectionType type = CollectionType.valueOf(entryType);
-                        if (type == null) {
-                            throw new ResponseContextException("Entry type is invalid", 400);
-                        } else {
-                            ((CollectionVersion) version).setType(type);
-                        }
-                        ((CollectionVersion) version).setRights(entry.getRights());
-                    } else if (version instanceof ServiceVersion) {
-                        ServiceType type = ServiceType.valueOf(entryType);
-                        if (type == null) {
-                            throw new ResponseContextException("Entry type is invalid", 400);
-                        } else {
-                            ((ServiceVersion) version).setType(type);
-                        }
-                    }
-                }
-            }
-        }
-    }
+
 
     private Set<String> getUriKeysFromLink(Entry entry, String rel) throws ResponseContextException {
         Set<String> uriKeys = new HashSet<String>();
@@ -862,7 +787,7 @@ public class AdapterInputHelper {
         version.setDescription(name);
         Date now = new Date();
         version.setUpdated(now);
-        version.setType(AgentType.PERSON);
+        version.setType(Agent.Type.PERSON);
 
         Mbox mbox = new Mbox(email);
         version.addMbox(mbox);
@@ -941,7 +866,7 @@ public class AdapterInputHelper {
                 version.setDescription(name + " is a " + jobTitle + " in " + organisation + " at The University of Queensland");
                 Date now = new Date();
                 version.setUpdated(now);
-                version.setType(AgentType.PERSON);
+                version.setType(Agent.Type.PERSON);
 
                 // Set ID to eSpace search
                 agent.setOriginalId("https://espace.library.uq.edu.au/"+uid);

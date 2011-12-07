@@ -29,6 +29,11 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
 
     private static final long serialVersionUID = 1L;
 
+    public enum Type {
+        PROJECT,
+        PROGRAM
+    }
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
     @NotNull
     @Sort(type = SortType.NATURAL)

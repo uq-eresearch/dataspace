@@ -49,8 +49,10 @@ public interface Version<R extends Record<?>> {
 
 	Source getSource();
 
+	void setType(String type) throws UnknownTypeException;
+
 	void setDescriptionAuthors(Set<SourceAuthor> descriptionAuthors);
 
 	Set<SourceAuthor> getDescriptionAuthors();
-    
+
 }

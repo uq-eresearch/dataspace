@@ -62,10 +62,18 @@ public class CollectionIT {
         //get first version
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/1", TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get first version of entry after post", 200, getMethod.getStatusCode());
+
+        System.out.println("watch now");
         //Edit Entry
         fileName = "/files/put/update-collection.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not edit entry", 200, putMethod.getStatusCode());
+
+        System.out.println(postMethod.getResponseBodyAsString(8192));
+        checkRelatedPublicationsUpdate(
+        		XPathHelper.getDocFromFile(fileName),
+        		XPathHelper.getDocFromStream(postMethod.getResponseBodyAsStream()));
+
         //get second version
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/2", TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get second version of entry after edit", 200, getMethod.getStatusCode());
@@ -80,7 +88,17 @@ public class CollectionIT {
         assertEquals("Entry should not be found", 404, getMethod.getStatusCode());
     }
 
-    @Test
+    private void checkRelatedPublicationsUpdate(Document fromFile, Document fromStream) throws Exception {
+        final String countExpr = "count("+TestConstants.RECORD_REL_RELATED_PATH+")";
+        XPath xpath = XPathHelper.getXPath();
+        // Get number of entries in file and response
+        int expected = Integer.parseInt(xpath.evaluate(countExpr, fromFile));
+        int actual = Integer.parseInt(xpath.evaluate(countExpr, fromStream));
+        // Check they're the same
+        assertEquals(expected, actual);
+	}
+
+	@Test
     public void testCollectionUnauthorized() throws Exception {
         //create a client
         HttpClient client = new HttpClient();
@@ -364,6 +382,7 @@ public class CollectionIT {
         assertFalse("Feed entry draft is empty", entryContent.isEmpty());
 
     }
+
 
     private boolean hasXPathMatch(String xpathExpression, Document doc) throws XPathExpressionException {
     	XPath xpath = XPathHelper.getXPath();

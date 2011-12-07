@@ -3,7 +3,6 @@ package net.metadata.dataspace.auth.impl;
 import net.metadata.dataspace.auth.AuthorizationManager;
 import net.metadata.dataspace.auth.policy.AccessLevel;
 import net.metadata.dataspace.data.model.record.*;
-import net.metadata.dataspace.data.model.types.Role;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
@@ -64,7 +63,7 @@ public class AuthorizationManagerImpl implements AuthorizationManager<User> {
         if (user == null) {
             return false;
         } else {
-            if (user.getRole().equals(Role.ADMIN)) {
+            if (user.getRole().equals(User.Role.ADMIN)) {
                 return true;
             } else {
                 return LOGGED_IN_USERS_CAN_CREATE_INSTANCES.contains(clazz);

@@ -1,13 +1,15 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.UnknownTypeException;
 import net.metadata.dataspace.data.model.context.Subject;
+import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
-import net.metadata.dataspace.data.model.types.ServiceType;
 import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,15 +21,13 @@ import static javax.persistence.EnumType.STRING;
  * Time: 5:16:16 PM
  */
 @Entity
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"atomicnumber","parent_id"}))
 public class ServiceVersion extends AbstractVersionEntity<Service> {
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    private Service parent;
-
     @NotNull
     @Enumerated(STRING)
-    private ServiceType type;
+    private Service.Type type;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "services_is_supported_by")
@@ -50,16 +50,6 @@ public class ServiceVersion extends AbstractVersionEntity<Service> {
     public ServiceVersion() {
     }
 
-    @Override
-    public Service getParent() {
-        return parent;
-    }
-
-    @Override
-    public void setParent(Service parent) {
-        this.parent = parent;
-    }
-
     public Set<Collection> getSupportedBy() {
         return isSupportedBy;
     }
@@ -68,12 +58,19 @@ public class ServiceVersion extends AbstractVersionEntity<Service> {
         isSupportedBy = supportedBy;
     }
 
-    public ServiceType getType() {
+    public Service.Type getType() {
         return type;
     }
 
-    public void setType(ServiceType type) {
+    public void setType(Service.Type type) {
         this.type = type;
+    }
+
+    public void setType(String type) throws UnknownTypeException {
+    	if (Service.Type.valueOf(type) == null) {
+    		throw new UnknownTypeException("Unknown type: "+type);
+    	}
+    	setType(Service.Type.valueOf(type));
     }
 
     public Set<Agent> getManagedBy() {

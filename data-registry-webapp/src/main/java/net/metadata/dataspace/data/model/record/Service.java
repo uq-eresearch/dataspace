@@ -29,6 +29,18 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
 
     private static final long serialVersionUID = 1L;
 
+    public enum Type {
+        ANNOTATE,
+        ASSEMBLE,
+        CREATE,
+        GENERATE,
+        HARVEST,
+        REPORT,
+        SEARCH,
+        SYNDICATE,
+        TRANSFORM
+    }
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
     @NotNull
     @Sort(type = SortType.NATURAL)

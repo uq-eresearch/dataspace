@@ -25,11 +25,16 @@ import net.metadata.dataspace.data.access.RecordDao;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.UnknownTypeException;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.User;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
+import net.metadata.dataspace.data.model.version.AgentVersion;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
+import net.metadata.dataspace.data.model.version.ServiceVersion;
 
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.history.FeedPagingHelper;
@@ -42,6 +47,7 @@ import org.apache.abdera.model.Link;
 import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.ParseException;
 import org.apache.abdera.parser.Parser;
+import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
@@ -52,8 +58,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Version<R>> extends
-        AbstractEntityCollectionAdapter<R> {
+public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Version<R>>
+		extends AbstractEntityCollectionAdapter<R>
+		implements VersionAssembler<R,V>
+{
 
 	protected enum KnownContentTypes {
 		ATOM("atom", "application/atom+xml;type=feed", "application/atom+xml;type=entry"),
@@ -236,6 +244,54 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         			null, null, -1);
         }
 	}
+
+	private void addType(V version, Entry entry) throws ResponseContextException {
+        if (version == null) {
+            throw new ResponseContextException("Version is null", 400);
+        } else {
+            List<Link> links = entry.getLinks(Constants.REL_TYPE);
+            if (links.isEmpty()) {
+                throw new ResponseContextException("Entry missing Type", 400);
+            } else if (links.size() > 1) {
+                throw new ResponseContextException("Entry assigned to more than one type", 400);
+            } else {
+                Link typeLink = links.get(0);
+                String entryType = typeLink.getTitle();
+                if (entryType == null) {
+                    throw new ResponseContextException("Entry type is missing label", 400);
+                } else {
+                    entryType = entryType.toUpperCase();
+                    try {
+                    	version.setType(entryType);
+                    } catch (UnknownTypeException e) {
+                        throw new ResponseContextException("Entry type is invalid: "+entryType, 400);
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+	public V assembleAndValidateVersionFromEntry(R record, Entry entry) throws ResponseContextException {
+        if (entry == null) {
+            throw new ResponseContextException("Empty Atom entry", 400);
+        } else if(!ProviderHelper.isValidEntry(entry)) {
+            throw new ResponseContextException("Invalid Atom entry", 400);
+        } else {
+            String content = entry.getContent();
+            if (content == null) {
+                throw new ResponseContextException("Content is null", 400);
+            }
+            V version = (V) entityCreator.getNextVersion(record);
+            version.setTitle(entry.getTitle());
+            version.setDescription(content);
+            version.setUpdated(new Date());
+            addType(version, entry);
+            version.setParent(record);
+            record.getVersions().add(version);
+            return version;
+        }
+    }
 
 	@Override
     @Transactional(propagation=Propagation.REQUIRED)
@@ -589,8 +645,8 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
     	ensureRequestIsAtom(request);
         Entry entry = getEntryFromRequest(request);
-        Record record = getEntityCreator().getNextRecord(getRecordClass());
-        Version version = adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
+        R record = (R) getEntityCreator().getNextRecord(getRecordClass());
+        V version = assembleAndValidateVersionFromEntry(record, entry);
         if (version == null) {
             throw new ResponseContextException("Version is null", 400);
         }
@@ -642,6 +698,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 	protected Entry processPutRequest(RequestContext request)
 			throws ResponseContextException
 	{
+        EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
 		logger.info("Updating Entry");
 		ensureRequestIsAtom(request);
 	    Entry entry = getFomEntryFromRequest(request);
@@ -653,29 +710,27 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         if (!record.isActive()) {
         	((AbstractRecordEntity<V>) record).setActive(true);
         }
-        V version = (V) adapterInputHelper.assembleAndValidateVersionFromEntry(record, entry);
+        V version = assembleAndValidateVersionFromEntry(record, entry);
         if (version == null) {
             throw new ResponseContextException("Version is null", 400);
         }
+        entityManager.persist(version);
         User user = getAuthenticationManager().getCurrentUser(request);
         if (!getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         }
-        EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
         try {
             Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
             if (source.getId() == null) {
                 entityManager.persist(source);
             }
-            record.getVersions().add(version);
-            version.setParent(record);
+            entityManager.flush();
             adapterInputHelper.addRelations(entry, version, user);
             record.setUpdated(new Date());
             List<Person> authors = entry.getSource().getAuthors();
             adapterInputHelper.addDescriptionAuthors(version, authors, request);
             version.setSource(source);
-            entityManager.persist(version);
-            entityManager.merge(record);
+            entityManager.flush();
             // Return updated entry (with parent-level location)
             // return adapterOutputHelper.getEntryFromEntity(version, false);
             return adapterOutputHelper.getEntryFromEntity(version, true);

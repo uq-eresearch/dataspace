@@ -1,6 +1,5 @@
 package net.metadata.dataspace.data.model.record;
 
-import net.metadata.dataspace.data.model.types.Role;
 import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
@@ -17,9 +16,14 @@ import static javax.persistence.EnumType.STRING;
 public class User implements Serializable {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7038969101379646565L;
+
+	public enum Role {
+	    ADMIN,
+	    USER
+	}
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)

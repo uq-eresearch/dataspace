@@ -1,10 +1,12 @@
 package net.metadata.dataspace.data.model.version;
 
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.UnknownTypeException;
 import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
+import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.util.DaoHelper;
 
 import javax.validation.constraints.NotNull;
@@ -25,7 +27,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.UniqueConstraint;
 
 /**
  * Author: alabri
@@ -45,7 +49,7 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
     private Long id;
 
     @NotNull
-    @JoinColumn(name = "parent")
+    @Column(name="atomicnumber")
     private Integer atomicNumber;
 
     private boolean isActive;
@@ -70,6 +74,10 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Source source;
+
+    @ManyToOne
+    @JoinColumn(name="parent_id")
+    private R parent;
 
     public AbstractVersionEntity() {
         this.isActive = true;
@@ -194,5 +202,17 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
 	public void setSource(Source source) {
 		this.source = source;
 	}
+
+	@Override
+    public R getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(R parent) {
+        this.parent = parent;
+    }
+
+    public abstract void setType(String type) throws UnknownTypeException;
 
 }

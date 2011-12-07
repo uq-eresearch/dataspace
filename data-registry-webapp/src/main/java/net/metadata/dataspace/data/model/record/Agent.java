@@ -26,6 +26,11 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     private static final long serialVersionUID = 1L;
 
+    public enum Type {
+        PERSON,
+        GROUP
+    }
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
     @NotNull
     @Sort(type = SortType.NATURAL)

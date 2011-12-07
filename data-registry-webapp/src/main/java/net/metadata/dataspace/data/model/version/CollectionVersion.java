@@ -1,5 +1,6 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.UnknownTypeException;
 import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Spatial;
@@ -8,7 +9,6 @@ import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
-import net.metadata.dataspace.data.model.types.CollectionType;
 import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
@@ -24,16 +24,14 @@ import static javax.persistence.EnumType.STRING;
  * Time: 5:16:30 PM
  */
 @Entity
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"atomicnumber","parent_id"}))
 public class CollectionVersion extends AbstractVersionEntity<Collection> {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    private Collection parent;
-
     @NotNull
     @Enumerated(STRING)
-    private CollectionType type;
+    private Collection.Type type;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     private Set<Mbox> mboxes = new HashSet<Mbox>();
@@ -102,16 +100,6 @@ public class CollectionVersion extends AbstractVersionEntity<Collection> {
     public CollectionVersion() {
     }
 
-    @Override
-    public Collection getParent() {
-        return parent;
-    }
-
-    @Override
-    public void setParent(Collection parent) {
-        this.parent = parent;
-    }
-
     public Set<Subject> getSubjects() {
         return subjects;
     }
@@ -144,12 +132,19 @@ public class CollectionVersion extends AbstractVersionEntity<Collection> {
         this.isAccessedVia = accessedVia;
     }
 
-    public CollectionType getType() {
+    public Collection.Type getType() {
         return type;
     }
 
-    public void setType(CollectionType type) {
+    public void setType(Collection.Type type) {
         this.type = type;
+    }
+
+    public void setType(String type) throws UnknownTypeException {
+    	if (Collection.Type.valueOf(type) == null) {
+    		throw new UnknownTypeException("Unknown type: "+type);
+    	}
+    	setType(Collection.Type.valueOf(type));
     }
 
     public Set<Mbox> getMboxes() {

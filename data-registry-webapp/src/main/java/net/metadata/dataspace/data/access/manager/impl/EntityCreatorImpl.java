@@ -42,16 +42,17 @@ public class EntityCreatorImpl implements EntityCreator {
     public EntityCreatorImpl() {
     }
 
-    @Override
-    public <R extends Record<?>> Record<?> getNextRecord(Class<R> clazz) {
+    @SuppressWarnings("unchecked")
+	@Override
+    public <R extends Record<?>> R getNextRecord(Class<R> clazz) {
         if (clazz.equals(Activity.class)) {
-            return getNextActivity();
+            return (R) getNextActivity();
         } else if (clazz.equals(Collection.class)) {
-            return getNextCollection();
+            return (R) getNextCollection();
         } else if (clazz.equals(Agent.class)) {
-            return getNextAgent();
+            return (R) getNextAgent();
         } else if (clazz.equals(Service.class)) {
-            return getNextService();
+            return (R) getNextService();
         }
         return null;
     }
@@ -68,22 +69,24 @@ public class EntityCreatorImpl implements EntityCreator {
         return null;
     }
 
-    @Override
-    public Version getNextVersion(Record record) {
-        Version version = null;
+    @SuppressWarnings("unchecked")
+	@Override
+    public <R extends Record<?>, V extends Version<?>> V getNextVersion(R record) {
+        V version = null;
         if (record instanceof Activity) {
-            version = new ActivityVersion();
+            version = (V) new ActivityVersion();
         } else if (record instanceof Collection) {
-            version = new CollectionVersion();
+            version = (V) new CollectionVersion();
         } else if (record instanceof Agent) {
-            version = new AgentVersion();
+            version = (V) new AgentVersion();
         } else if (record instanceof Service) {
-            version = new ServiceVersion();
+            version = (V) new ServiceVersion();
         }
         AtomicInteger atomicInteger = new AtomicInteger(record.getVersions().size());
         version.setAtomicNumber(atomicInteger.incrementAndGet());
         return version;
     }
+
 
     @Override
     public Publication getNextPublication() {

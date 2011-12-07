@@ -1,13 +1,14 @@
 package net.metadata.dataspace.data.model.version;
 
+import net.metadata.dataspace.data.model.UnknownTypeException;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
-import net.metadata.dataspace.data.model.types.ActivityType;
 import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,15 +20,13 @@ import static javax.persistence.EnumType.STRING;
  * Time: 5:16:43 PM
  */
 @Entity
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"atomicnumber","parent_id"}))
 public class ActivityVersion extends AbstractVersionEntity<Activity> {
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    private Activity parent;
-
     @NotNull
     @Enumerated(STRING)
-    private ActivityType type;
+    private Activity.Type type;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "activities_has_output")
@@ -53,17 +52,6 @@ public class ActivityVersion extends AbstractVersionEntity<Activity> {
     public ActivityVersion() {
     }
 
-    @Override
-    public Activity getParent() {
-        return parent;
-    }
-
-
-    @Override
-    public void setParent(Activity parent) {
-        this.parent = parent;
-    }
-
     public Set<Collection> getHasOutput() {
         return hasOutput;
     }
@@ -80,12 +68,19 @@ public class ActivityVersion extends AbstractVersionEntity<Activity> {
         this.hasParticipants = hasParticipants;
     }
 
-    public ActivityType getType() {
+    public Activity.Type getType() {
         return type;
     }
 
-    public void setType(ActivityType type) {
+    public void setType(Activity.Type type) {
         this.type = type;
+    }
+
+    public void setType(String type) throws UnknownTypeException {
+    	if (Activity.Type.valueOf(type) == null) {
+    		throw new UnknownTypeException("Unknown type: "+type);
+    	}
+    	setType(Activity.Type.valueOf(type));
     }
 
     public Set<Subject> getSubjects() {
