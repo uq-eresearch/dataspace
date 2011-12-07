@@ -132,9 +132,13 @@ var DataSpace = (function() {
 					var loc = XMLHttpRequest.getResponseHeader('Location');
 					window.location.href = loc;
 				},
-				error : function(XMLHttpRequest, textStatus, errorThrown) {
+				error : function(jqXHR, textStatus, errorThrown) {
+					var message = textStatus;
+					if (message == 'error') {
+						message = jqXHR.responseText;
+					}
 					$('#ingest-error-msg').html(
-							'<span style="color:red;">' + textStatus
+							'<span style="color:red;">' + message
 									+ '</span>');
 				}
 			});

@@ -10,6 +10,8 @@ import java.util.Set;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
@@ -48,6 +50,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Version<R>> extends
         AbstractEntityCollectionAdapter<R> {
@@ -580,7 +583,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         }
     }
 
-	protected Entry processPostRequest(RequestContext request)
+    protected Entry processPostRequest(RequestContext request)
     		throws ResponseContextException
     {
         EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
@@ -602,9 +605,6 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             List<Person> authors = entry.getSource().getAuthors();
             adapterInputHelper.addDescriptionAuthors(version, authors, request);
             version.setSource(source);
-            //TODO these values (i.e. rights, license) should come from the entry
-            record.setLicense(RegistryApplication.getApplicationContext().getRegistryLicense());
-            record.setRights(RegistryApplication.getApplicationContext().getRegistryRights());
             record.getVersions().add(version);
             record.setUpdated(now);
             entityManager.persist(version);
@@ -613,6 +613,18 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             		getAuthenticationManager().getCurrentUser(request));
             // Return created entry
             return adapterOutputHelper.getEntryFromEntity(version, true);
+        } catch (ConstraintViolationException e) {
+        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        	StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<?> cv : e.getConstraintViolations()) {
+            	sb.append(cv.getPropertyPath());
+            	sb.append(" ");
+            	sb.append(cv.getMessage());
+            	sb.append(": ");
+            	sb.append(cv.getInvalidValue());
+            	sb.append("\n");
+            }
+            throw new ResponseContextException(sb.toString(), 400);
         } catch (Exception th) {
             logger.warn("Invalid Entry, Rolling back database", th);
             throw new ResponseContextException(th.getMessage(), 400);
