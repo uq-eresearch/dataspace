@@ -5,19 +5,15 @@ import javax.mail.internet.InternetAddress;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.atom.util.OperationHelper;
-import net.metadata.dataspace.data.access.AgentDao;
-import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
-
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Link;
 import org.apache.abdera.protocol.server.RequestContext;
 import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.context.EmptyResponseContext;
 import org.apache.abdera.protocol.server.context.ResponseContextException;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -99,6 +95,15 @@ public class AgentAdapter extends AbstractRecordAdapter<Agent,AgentVersion> {
 				"Agent found with email address");
 		response.setLocation(location);
 		return response;
+    }
+
+	@Override
+	protected Entry getEntryFromEntity(AgentVersion version,
+			boolean isParentLevel) throws ResponseContextException {
+        if (version == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+        }
+        return getAdapterOutputHelper().getEntryFromAgent(version, isParentLevel);
     }
 
 }

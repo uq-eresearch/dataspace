@@ -39,4 +39,14 @@ public class CollectionAdapter extends AbstractRecordAdapter<Collection,Collecti
     	return version;
     }
 
+	@Override
+	protected Entry getEntryFromEntity(CollectionVersion version,
+			boolean isParentLevel) throws ResponseContextException {
+        if (version == null) {
+            throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
+        }
+		return getAdapterOutputHelper().getEntryFromCollection(
+				version, isParentLevel);
+	}
+
 }

@@ -44,7 +44,7 @@ public class AdapterOutputHelper {
 
 	private final FeedOutputHelper feedOutputHelper = new FeedOutputHelper();
 
-    public Entry getEntryFromEntity(Version version, boolean isParentLevel) throws ResponseContextException {
+    public Entry getEntryFromEntity(Version<?> version, boolean isParentLevel) throws ResponseContextException {
         if (version == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
         } else {
@@ -61,7 +61,7 @@ public class AdapterOutputHelper {
         return null;
     }
 
-    private Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
+    public Entry getEntryFromActivity(ActivityVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + version.getParent().getUriKey();
 
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
@@ -121,7 +121,7 @@ public class AdapterOutputHelper {
         return entry;
     }
 
-    private Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
+    public Entry getEntryFromAgent(AgentVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
 
@@ -215,7 +215,7 @@ public class AdapterOutputHelper {
         return entry;
     }
 
-    private Entry getEntryFromCollection(CollectionVersion version, boolean isParentLevel) throws ResponseContextException {
+    public Entry getEntryFromCollection(CollectionVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {
@@ -343,7 +343,7 @@ public class AdapterOutputHelper {
         return entry;
     }
 
-    private Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
+    public Entry getEntryFromService(ServiceVersion version, boolean isParentLevel) throws ResponseContextException {
         String parentUrl = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_SERVICES + "/" + version.getParent().getUriKey();
         Entry entry = setCommonAttributes(version, isParentLevel, parentUrl);
         try {

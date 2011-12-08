@@ -31,11 +31,6 @@ import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.User;
-import net.metadata.dataspace.data.model.version.ActivityVersion;
-import net.metadata.dataspace.data.model.version.AgentVersion;
-import net.metadata.dataspace.data.model.version.CollectionVersion;
-import net.metadata.dataspace.data.model.version.ServiceVersion;
-
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.history.FeedPagingHelper;
 import org.apache.abdera.i18n.iri.IRI;
@@ -424,7 +419,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             }
             String versionKey = OperationHelper.getEntryVersionID(request);
             User user = getAuthenticationManager().getCurrentUser(request);
-            Version version;
+            V version;
             if (versionKey == null) {
                 if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
                     version = record.getWorkingCopy();
@@ -448,7 +443,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             if (version == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
             }
-            Entry entry = adapterOutputHelper.getEntryFromEntity(version, versionKey == null);
+            Entry entry = getEntryFromEntity(version, versionKey == null);
             return adapterOutputHelper.getContextResponseForGetEntry(request, entry, getRecordClass());
         } catch (ResponseContextException e) {
             return OperationHelper.createErrorResponse(e);
@@ -464,6 +459,9 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         return entry;
 
     }
+
+    protected abstract Entry getEntryFromEntity(V version, boolean isParentLevel)
+    		throws ResponseContextException;
 
     public R getExistingRecord(RequestContext request)
     		throws ResponseContextException
@@ -671,7 +669,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             adapterInputHelper.addRelations(entry, version,
             		getAuthenticationManager().getCurrentUser(request));
             // Return created entry
-            return adapterOutputHelper.getEntryFromEntity(version, true);
+            return getEntryFromEntity(version, true);
         } catch (ConstraintViolationException e) {
             logger.warn("Invalid Entry, Rolling back database", e);
         	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -736,7 +734,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             entityManager.flush();
             // Return updated entry (with parent-level location)
             // return adapterOutputHelper.getEntryFromEntity(version, false);
-            return adapterOutputHelper.getEntryFromEntity(version, true);
+            return getEntryFromEntity(version, true);
         } catch (ConstraintViolationException e) {
             logger.warn("Invalid Entry, Rolling back database", e);
         	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
