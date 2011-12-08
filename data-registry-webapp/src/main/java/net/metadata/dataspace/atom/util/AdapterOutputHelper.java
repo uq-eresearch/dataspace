@@ -590,8 +590,8 @@ public class AdapterOutputHelper {
             }
             Link publisher = source.addLink(Constants.UQ_URL, Constants.REL_PUBLISHER);
             publisher.setTitle(Constants.TERM_ANDS_GROUP);
-            source.setRights(RegistryApplication.getApplicationContext().getRegistryRights());
-            source.addLink(RegistryApplication.getApplicationContext().getRegistryLicense(), Constants.REL_LICENSE);
+            source.setRights(version.getParent().getSourceRights());
+            source.addLink(version.getParent().getSourceLicense(), Constants.REL_LICENSE);
         } catch (Throwable th) {
         	logger.warn(th.getMessage(), th);
             throw new ResponseContextException("Failed to add source", 500);
