@@ -84,6 +84,7 @@ public class EntityCreatorImpl implements EntityCreator {
         }
         AtomicInteger atomicInteger = new AtomicInteger(record.getVersions().size());
         version.setAtomicNumber(atomicInteger.incrementAndGet());
+        System.out.println("New version atomic number: "+version.getAtomicNumber());
         return version;
     }
 

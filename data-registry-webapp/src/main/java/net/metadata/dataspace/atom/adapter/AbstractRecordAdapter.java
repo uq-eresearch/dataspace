@@ -702,24 +702,33 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         EntityManager entityManager = getDaoManager().getEntityManagerSource().getEntityManager();
 		logger.info("Updating Entry");
 		ensureRequestIsAtom(request);
-	    Entry entry = getFomEntryFromRequest(request);
+	    // Find record from Atom
+		Entry entry = getFomEntryFromRequest(request);
 	    R record = getExistingRecord(request);
 	    if (record == null) {
 	        throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
 	    }
-        getDao().refresh(record);
-        if (!record.isActive()) {
-        	((AbstractRecordEntity<V>) record).setActive(true);
-        }
-        V version = assembleAndValidateVersionFromEntry(record, entry);
-        if (version == null) {
-            throw new ResponseContextException("Version is null", 400);
-        }
-        entityManager.persist(version);
+        // Check the user has access
         User user = getAuthenticationManager().getCurrentUser(request);
         if (!getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
             throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
         }
+	    // Ensure the record is up-to-date
+        getDao().refresh(record);
+        // Reactivate record if necessary
+        if (!record.isActive()) {
+        	((AbstractRecordEntity<V>) record).setActive(true);
+        }
+        // Assemble and add new version to record
+        V version = assembleAndValidateVersionFromEntry(record, entry);
+        if (version == null) {
+            throw new ResponseContextException("Version is null", 400);
+        }
+        // Save record (and thus cascade through and save version)
+//        try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e1) {}
+        entityManager.persist(record);
         try {
             Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
             if (source.getId() == null) {
