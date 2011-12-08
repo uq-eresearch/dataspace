@@ -59,6 +59,14 @@
 
 					<form id="page-form" action="">
 						<div>
+                            <dl>
+                                <dt>
+                                    <label class="required">Name</label>
+                                </dt>
+                                <dd>
+                                     indicates a mandatory field
+                                </dd>
+                            </dl>
 							<h2>
 								<label for="general">General Information</label>
 							</h2>

@@ -79,6 +79,7 @@
 									<xsl:with-param name="relation">
 										<xsl:value-of select="$ATOM_HAS_PARTICIPANT" />
 									</xsl:with-param>
+                                    <xsl:with-param name="classes" select="'required'"/>
 								</xsl:call-template>
 								<xsl:call-template name="lookup-edit">
 									<xsl:with-param name="title">
@@ -88,10 +89,11 @@
 									<xsl:with-param name="relation">
 										<xsl:value-of select="$ATOM_HAS_OUTPUT" />
 									</xsl:with-param>
+                                    <xsl:with-param name="classes" select="'required'"/>
 								</xsl:call-template>
-							</div>
-							<h2>
-								<label for="subjects">Topics</label>
+                            </div>
+                            <h2>
+                            <label for="subjects">Topics</label>
 							</h2>
 							<div id="subjects">
 								<xsl:call-template name="fields-of-research" />

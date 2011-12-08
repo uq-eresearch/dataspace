@@ -44,7 +44,7 @@
 					<span class="unpublished">Editing version <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/></span>
 				</xsl:when>
 				<xsl:otherwise>
-					<span class="unpublished">New collection</span>
+					<span class="unpublished">New</span>
 				</xsl:otherwise>
 			</xsl:choose>
 		</li>
@@ -104,8 +104,8 @@
 		<xsl:param name="label" required="no" select="'Title'"/>
 		<dl>
 		<dt>
-			<label for="edit-title-text">
-				<xsl:value-of select="$label" />
+			<label for="edit-title-text" class="required">
+				<xsl:value-of select="$label"/>
 			</label>
 		</dt>
 		<dd>
@@ -130,7 +130,7 @@
 		</dl>
 		<dl>
 		<dt>
-			<label for="edit-givenname-text">
+			<label for="edit-givenname-text" class="required">
 				Given Name
 			</label>
 		</dt>
@@ -142,7 +142,7 @@
 		</dl>
 		<dl>
 		<dt>
-			<label for="edit-familyname-text">
+			<label for="edit-familyname-text" class="required">
 				Family Name
 			</label>
 		</dt>
@@ -186,8 +186,7 @@
 			<dd>
 				<a id="alternative-name-link" class="new-link" href="#"
 					onclick="DataSpace.replicateSimpleField('alternative-title-text'); return false;"
-					title="Add Title">Add new
-				</a>
+					title="Add Title">add</a>
 			</dd>
 		</dl>
 	</xsl:template>
@@ -240,7 +239,7 @@
 	<xsl:template name="content">
 		<dl>
 			<dt>
-				<label for="content-textarea">Description</label>
+				<label for="content-textarea" class="required">Description</label>
 			</dt>
 			<dd>
 				<xsl:call-template name="text-area">
@@ -258,7 +257,7 @@
 	<xsl:template name="rights">
 		<dl>
 			<dt>
-				<label for="rights-textarea">Rights</label>
+				<label for="rights-textarea" class="required">Rights</label>
 			</dt>
 			<dd>
 				<xsl:call-template name="text-area">
@@ -275,11 +274,12 @@
 	<xsl:template name="access-rights">
 		<dl>
 			<dt>
-				<label for="access-rights-textarea">Access</label>
+				<label for="access-rights-textarea" class="required">Access</label>
 			</dt>
 			<dd>
 				<xsl:call-template name="text-area">
 					<xsl:with-param name="field" select="'access-rights'"/>
+                    <xsl:with-param name="classes" select="'required'" />
 					<xsl:with-param name="path">
 						<xsl:value-of select="rdfa:meta[@property=$RDFA_ACCESS_RIGHTS]/@content" />
 					</xsl:with-param>
@@ -490,26 +490,28 @@
 			<xsl:when test="atom:link[@rel=$ATOM_MBOX]">
 				<xsl:for-each select="atom:link[@rel=$ATOM_MBOX]">
 					<xsl:variable name="index" select="position() - 1" />
-					<xsl:choose>
-						<xsl:when test="$index = 0">
-						<dd>
-							<input id="email-text" class="required email" name="email-text" type="text" value="{@title}" />
-						</dd>
-						</xsl:when>
-						<xsl:otherwise>
-						<dd>
-							<input id="email-text-{$index}" name="email-text" type="text"
-								value="{@title}" />
-							<a id="email-text-{$index}-remove-link" class="remove-link"
-								href="#" onclick="DataSpace.$('#email-text-{$index}').remove(); $(this).remove();">x
-							</a>
-						</dd>
-						</xsl:otherwise>
-					</xsl:choose>
+                    <xsl:choose>
+                        <xsl:when test="$index = 0">
+                            <dd>
+                                <input id="email-text" class="required email" name="email-text" type="text" value="{@title}" />
+                            </dd>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <dd>
+                                <input id="email-text-{$index}" name="email-text" type="text"
+                                       value="{@title}" />
+                                <a id="email-text-{$index}-remove-link" class="remove-link"
+                                   href="#" onclick="DataSpace.$('#email-text-{$index}').remove(); $(this).remove();">x
+                                </a>
+                            </dd>
+                        </xsl:otherwise>
+                    </xsl:choose>
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<input id="email-text" name="email-text" type="text" value="" class="required email"/>
+                <dd>
+                    <input id="email-text" name="email-text" type="text" value="" class="required email"/>
+                </dd>
 			</xsl:otherwise>
 		</xsl:choose>
 			<dd>
@@ -558,9 +560,10 @@
 		<xsl:param name="title" />
 		<xsl:param name="field" />
 		<xsl:param name="relation" />
+        <xsl:param name="classes" required="no" select="''" />
 		<dl id="{$field}">
 			<dt>
-				<label for="{$field}">
+				<label for="{$field}" class="{$classes}">
 					<xsl:value-of select="$title" />
 				</label>
 			</dt>
@@ -577,9 +580,10 @@
 				</dd>
 			</xsl:for-each>
 			<dd>
-				<a class="new-link" href="#" title="Add">
-				add
-				</a>
+                <a class="new-link" href="#" title="Add">add</a>
+                <xsl:if test="contains($classes, 'required') and not(atom:link[@rel=$relation])">
+                    <input type="hidden" name="{$title}" value='' class="required"/>
+                </xsl:if>
 			</dd>
 		</dl>
 		<xsl:call-template name="lookup-dialog-window">

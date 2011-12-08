@@ -1442,6 +1442,7 @@ h1, h2, h3, h4 {
 #page-form label.error {
 	color: red;
 	font-size: 0.7em;
+    display: block;
 }
 
 #page-form input[type='text'], textarea {
@@ -1479,4 +1480,13 @@ h1, h2, h3, h4 {
 	background-repeat: no-repeat;
 	background-position: center;
 	min-height: 50px;
+}
+
+/* highlight mandatory form fields */
+label.required {
+    text-decoration: underline;
+}
+
+label.required:after {
+    content: '*';
 }

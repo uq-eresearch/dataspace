@@ -75,22 +75,19 @@
 							</h2>
 							<div id="related">
 								<xsl:call-template name="lookup-edit">
-									<xsl:with-param name="title">
-										Publisher
-									</xsl:with-param>
+									<xsl:with-param name="title">Publisher</xsl:with-param>
 									<xsl:with-param name="field" select="'publisher'" />
 									<xsl:with-param name="relation">
 										<xsl:value-of select="$ATOM_PUBLISHER" />
 									</xsl:with-param>
 								</xsl:call-template>
 								<xsl:call-template name="lookup-edit">
-									<xsl:with-param name="title">
-										Supported By
-									</xsl:with-param>
+									<xsl:with-param name="title">Supported By</xsl:with-param>
 									<xsl:with-param name="field" select="'issupportedby'" />
 									<xsl:with-param name="relation">
 										<xsl:value-of select="$ATOM_IS_SUPPORTED_BY" />
 									</xsl:with-param>
+                                    <xsl:with-param name="classes" select="'required'"/>
 								</xsl:call-template>
 							</div>
 						</div>
