@@ -125,19 +125,19 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
         this.created = created;
     }
 
-    public String getRights() {
+    public String getSourceRights() {
         return rights;
     }
 
-    public void setRights(String rights) {
+    public void setSourceRights(String rights) {
         this.rights = rights;
     }
 
-    public String getLicense() {
+    public String getSourceLicense() {
         return license;
     }
 
-    public void setLicense(String license) {
+    public void setSourceLicense(String license) {
         this.license = license;
     }
 

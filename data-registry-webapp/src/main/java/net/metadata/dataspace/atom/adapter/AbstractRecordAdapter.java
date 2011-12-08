@@ -661,6 +661,9 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             List<Person> authors = entry.getSource().getAuthors();
             adapterInputHelper.addDescriptionAuthors(version, authors, request);
             version.setSource(source);
+            // TODO: the source rights and license should come from the entry
+            record.setSourceLicense(RegistryApplication.getApplicationContext().getRegistryLicense());
+            record.setSourceRights(RegistryApplication.getApplicationContext().getRegistryRights());
             record.getVersions().add(version);
             record.setUpdated(now);
             entityManager.persist(version);

@@ -1,5 +1,8 @@
 package net.metadata.dataspace.atom.adapter;
 
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.protocol.server.context.ResponseContextException;
+
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
@@ -24,6 +27,16 @@ public class CollectionAdapter extends AbstractRecordAdapter<Collection,Collecti
     @Override
     protected String getTitle() {
         return Constants.TITLE_FOR_COLLECTIONS;
+    }
+
+    @Override
+    public CollectionVersion assembleAndValidateVersionFromEntry(
+    		Collection record, Entry entry) throws ResponseContextException
+    {
+    	CollectionVersion version =
+    			super.assembleAndValidateVersionFromEntry(record,entry);
+    	version.setRights(entry.getRights());
+    	return version;
     }
 
 }

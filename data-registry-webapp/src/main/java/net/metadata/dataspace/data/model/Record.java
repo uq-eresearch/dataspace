@@ -77,11 +77,11 @@ public interface Record<V extends Version<?>> {
 
     Date getPublishDate();
 
-    String getRights();
+    String getSourceRights();
 
-    void setRights(String rights);
+    void setSourceRights(String rights);
 
-    String getLicense();
+    String getSourceLicense();
 
-    void setLicense(String license);
+    void setSourceLicense(String license);
 }
