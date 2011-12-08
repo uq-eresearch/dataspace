@@ -262,6 +262,7 @@
 			</dt>
 			<dd>
 				<xsl:call-template name="text-area">
+                    <xsl:with-param name="classes" select="'required'"/>
 					<xsl:with-param name="field" select="'rights'"/>
 					<xsl:with-param name="path">
 						<xsl:value-of select="atom:rights" />
