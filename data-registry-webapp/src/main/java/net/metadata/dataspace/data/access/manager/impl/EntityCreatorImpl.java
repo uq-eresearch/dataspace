@@ -8,6 +8,7 @@ import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
+import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
@@ -135,8 +136,8 @@ public class EntityCreatorImpl implements EntityCreator {
         return service;
     }
 
-    private Activity getNextActivity() {
-        Activity activity = new Activity();
+    private AbstractRecordEntity<ActivityVersion> getNextActivity() {
+        AbstractRecordEntity<ActivityVersion> activity = new Activity();
         activity.setAtomicNumber(activitySequencer.next());
         return activity;
     }

@@ -5,6 +5,7 @@ import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Source;
+import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import org.junit.After;
@@ -57,7 +58,7 @@ public class ActivityDaoImplTest {
     @Test
     @Transactional
     public void testAddingActivity() throws Exception {
-        Activity activity = (Activity) entityCreator.getNextRecord(Activity.class);
+    	Activity activity = (Activity) entityCreator.getNextRecord(Activity.class);
         activity.setUpdated(new Date());
         int originalTableSize = activityDao.getAll().size();
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
@@ -67,9 +68,9 @@ public class ActivityDaoImplTest {
         entityManager.persist(source);
         entityManager.persist(activityVersion);
         entityManager.persist(activity);
-        
+
         Long id = activity.getId();
-        Activity activityById = activityDao.getById(id);
+        AbstractRecordEntity<ActivityVersion> activityById = activityDao.getById(id);
         assertTrue("Table has " + activityDao.getAll().size() + " records", activityDao.getAll().size() == (originalTableSize + 1));
         Assert.assertEquals("Added and Retrieved records are not the same.", id, activityById.getId());
         Assert.assertEquals("Number of versions", 1, activityById.getVersions().size());
@@ -89,7 +90,7 @@ public class ActivityDaoImplTest {
         activity.getVersions().first().setDescription(content);
         activity.setUpdated(now);
         entityManager.merge(activity);
-        Activity activityById = activityDao.getById(id);
+        AbstractRecordEntity<ActivityVersion> activityById = activityDao.getById(id);
         Assert.assertEquals("Modified and Retrieved records are not the same", activity, activityById);
         Assert.assertEquals("Update Date was not updated", now, activityById.getUpdated());
         Assert.assertEquals("content was not updated", content, activityById.getVersions().first().getDescription());

@@ -10,10 +10,12 @@ import net.metadata.dataspace.data.access.AgentDao;
 import net.metadata.dataspace.data.access.CollectionDao;
 import net.metadata.dataspace.data.access.ServiceDao;
 import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.util.DateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.ObjectNotFoundException;
@@ -110,7 +112,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             if (!activities.isEmpty()) {
                 uniqueActivitySet.addAll(activities);
             }
-            for (Activity activity : activities) {
+            for (AbstractRecordEntity<ActivityVersion> activity : activities) {
                 Set<Agent> hasParticipants = activity.getPublished().getHasParticipants();
                 uniqueAgentSet.addAll(hasParticipants);
             }
@@ -124,7 +126,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         List<String> headers = new ArrayList<String>(size);
         List<String> identifiers = new ArrayList<String>(size);
 
-        for (Activity activity : uniqueActivitySet) {
+        for (AbstractRecordEntity<ActivityVersion> activity : uniqueActivitySet) {
             identifiers.add(getRecordFactory().getOAIIdentifier(activity.getPublished()));
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(activity.getPublished()), getRecordFactory().getDatestamp(activity.getPublished()), getRecordFactory().getSetSpecs(activity), !activity.isActive())[0]);
         }

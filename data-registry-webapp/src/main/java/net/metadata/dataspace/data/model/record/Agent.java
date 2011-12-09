@@ -49,14 +49,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     public Agent() {
     }
 
-    public String getTitle() {
-        return this.versions.first().getTitle();
-    }
-
-    public String getContent() {
-        return this.versions.first().getDescription();
-    }
-
     public Set<Subject> getSubjects() {
         return this.versions.first().getSubjects();
     }

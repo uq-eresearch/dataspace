@@ -58,20 +58,12 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
         this.versions = versions;
     }
 
-    public String getTitle() {
-        return this.versions.first().getTitle();
-    }
-
-    public String getContent() {
-        return this.versions.first().getDescription();
-    }
-
     public Set<Collection> getHasOutput() {
-        return this.versions.first().getHasOutput();
+        return getMostRecentVersion().getHasOutput();
     }
 
     public Set<Agent> getHasParticipant() {
-        return this.versions.first().getHasParticipants();
+        return getMostRecentVersion().getHasParticipants();
     }
 
     @Override
@@ -81,7 +73,7 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
 
     @Override
     public ActivityVersion getWorkingCopy() {
-        return this.versions.first();
+        return getMostRecentVersion();
     }
 
     public void setPublished(ActivityVersion published) {

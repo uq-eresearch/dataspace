@@ -64,14 +64,6 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
         this.versions = versions;
     }
 
-    public String getTitle() {
-        return this.versions.first().getTitle();
-    }
-
-    public String getContent() {
-        return this.versions.first().getDescription();
-    }
-
     public Set<Collection> getSupportedBy() {
         return this.versions.first().getSupportedBy();
     }

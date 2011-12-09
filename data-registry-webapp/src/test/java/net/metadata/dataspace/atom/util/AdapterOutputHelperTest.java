@@ -194,7 +194,7 @@ public class AdapterOutputHelperTest {
     @Transactional
     public void testGetEntryFromActivity() throws Exception {
         List<Activity> activities = daoManager.getActivityDao().getAll();
-        Activity activity = activities.get(activities.size() - 1);
+        AbstractRecordEntity<ActivityVersion> activity = activities.get(activities.size() - 1);
         ActivityVersion version = activity.getVersions().first();
         Entry entry = adapterOutputHelper.getEntryFromEntity(version, true);
         assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());

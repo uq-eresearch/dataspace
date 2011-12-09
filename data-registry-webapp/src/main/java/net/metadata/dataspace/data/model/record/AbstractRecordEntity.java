@@ -2,6 +2,7 @@ package net.metadata.dataspace.data.model.record;
 
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.util.DaoHelper;
 import javax.validation.constraints.NotNull;
 
@@ -165,5 +166,17 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
     public String toString() {
     	return String.format("%s (%s)", getTitle(), getUriKey());
     }
+
+	protected V getMostRecentVersion() {
+		return this.getVersions().first();
+	}
+
+	public String getTitle() {
+	    return getMostRecentVersion().getTitle();
+	}
+
+	public String getContent() {
+	    return getMostRecentVersion().getDescription();
+	}
 
 }

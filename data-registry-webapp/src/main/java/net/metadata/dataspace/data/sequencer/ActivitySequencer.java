@@ -1,7 +1,8 @@
 package net.metadata.dataspace.data.sequencer;
 
 import net.metadata.dataspace.data.access.ActivityDao;
-import net.metadata.dataspace.data.model.record.Activity;
+import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ActivitySequencer extends AbstractAtomicSquencer {
 
     public ActivitySequencer(ActivityDao activityDao) {
-        Activity activity = activityDao.getMostRecentInserted();
+        AbstractRecordEntity<ActivityVersion> activity = activityDao.getMostRecentInserted();
         if (activity == null) {
             atomicInteger = new AtomicInteger(0);
         } else {

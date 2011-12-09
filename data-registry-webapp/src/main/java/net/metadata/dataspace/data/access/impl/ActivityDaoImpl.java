@@ -2,6 +2,7 @@ package net.metadata.dataspace.data.access.impl;
 
 import au.edu.uq.itee.maenad.dataaccess.jpa.EntityManagerSource;
 import net.metadata.dataspace.data.access.ActivityDao;
+import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.util.DaoHelper;
@@ -18,12 +19,12 @@ import java.util.List;
 public class ActivityDaoImpl extends AbstractRegistryDao<Activity> implements ActivityDao, Serializable {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3048244994760480452L;
 
 	public ActivityDaoImpl() {}
-	
+
 	public ActivityDaoImpl(EntityManagerSource entityManagerSource) {
         super(entityManagerSource);
     }

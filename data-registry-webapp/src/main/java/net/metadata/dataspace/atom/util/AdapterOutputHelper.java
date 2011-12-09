@@ -196,7 +196,7 @@ public class AdapterOutputHelper {
             }
 
             Set<Activity> activities = version.getCurrentProjects();
-            for (Activity activity : activities) {
+            for (AbstractRecordEntity<ActivityVersion> activity : activities) {
                 String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_CURRENT_PROJECT);
                 link.setTitle(activity.getTitle());
@@ -266,7 +266,7 @@ public class AdapterOutputHelper {
             }
             //Is Output of
             Set<Activity> activities = version.getOutputOf();
-            for (Activity activity : activities) {
+            for (AbstractRecordEntity<ActivityVersion> activity : activities) {
                 String href = RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey() + "#";
                 Link link = entry.addLink(href, Constants.REL_IS_OUTPUT_OF);
                 link.setTitle(activity.getTitle());

@@ -6,7 +6,6 @@ import net.metadata.dataspace.data.model.Version;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
-import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.util.DaoHelper;
 
 import javax.validation.constraints.NotNull;
@@ -27,9 +26,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.UniqueConstraint;
 
 /**
  * Author: alabri
