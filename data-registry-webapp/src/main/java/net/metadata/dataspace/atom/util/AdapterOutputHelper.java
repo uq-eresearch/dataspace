@@ -28,6 +28,7 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
@@ -517,10 +518,10 @@ public class AdapterOutputHelper {
             entry.setContent(version.getDescription());
             String uriKey = version.getParent().getUriKey();
             prepareSelfLink(entry, parentUrl, uriKey);
-            entry.setUpdated(version.getUpdated());
-            Date publishedDate = version.getParent().getCreated();
+            entry.setUpdated(version.getUpdated().getTime());
+            Calendar publishedDate = version.getParent().getCreated();
             if (publishedDate != null) {
-                entry.setPublished(publishedDate);
+                entry.setPublished(publishedDate.getTime());
             }
         } catch (Throwable th) {
         	logger.warn(th.getMessage(), th);

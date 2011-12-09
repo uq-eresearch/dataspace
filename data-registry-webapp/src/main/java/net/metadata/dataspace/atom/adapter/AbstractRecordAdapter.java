@@ -2,7 +2,9 @@ package net.metadata.dataspace.atom.adapter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -169,7 +171,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         R latestRecord = getDao().getMostRecentUpdated();
         if (latestRecord != null) {
             getDao().refresh(latestRecord);
-            feed.setUpdated(latestRecord.getUpdated());
+            feed.setUpdated(latestRecord.getUpdated().getTime());
         } else {
             //TODO what would the date be if the feed is empty??
             feed.setUpdated(new Date());
@@ -278,12 +280,12 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
                 throw new ResponseContextException("Content is null", 400);
             }
             V version = (V) entityCreator.getNextVersion(record);
+            if (version == null) {
+                throw new ResponseContextException("Version is null", 400);
+            }
             version.setTitle(entry.getTitle());
             version.setDescription(content);
-            version.setUpdated(new Date());
             addType(version, entry);
-            version.setParent(record);
-            record.getVersions().add(version);
             return version;
         }
     }
@@ -586,7 +588,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
 
     @Override
     public Date getUpdated(R record) throws ResponseContextException {
-        return record.getUpdated();
+        return record.getUpdated().getTime();
     }
 
     /**
@@ -644,30 +646,24 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     	ensureRequestIsAtom(request);
         Entry entry = getEntryFromRequest(request);
         R record = (R) getEntityCreator().getNextRecord(getRecordClass());
-        V version = assembleAndValidateVersionFromEntry(record, entry);
-        if (version == null) {
-            throw new ResponseContextException("Version is null", 400);
-        }
+        entityManager.persist(record);
+        entityManager.flush();
         try {
             Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
             if (source.getId() == null) {
                 entityManager.persist(source);
             }
-            version.setParent(record);
-            Date now = new Date();
-            version.setUpdated(now);
             List<Person> authors = entry.getSource().getAuthors();
+            V version = assembleAndValidateVersionFromEntry(record, entry);
             adapterInputHelper.addDescriptionAuthors(version, authors, request);
             version.setSource(source);
             // TODO: the source rights and license should come from the entry
             record.setSourceLicense(RegistryApplication.getApplicationContext().getRegistryLicense());
             record.setSourceRights(RegistryApplication.getApplicationContext().getRegistryRights());
-            record.getVersions().add(version);
-            record.setUpdated(now);
-            entityManager.persist(version);
-            entityManager.persist(record);
             adapterInputHelper.addRelations(entry, version,
             		getAuthenticationManager().getCurrentUser(request));
+            Calendar now = GregorianCalendar.getInstance();
+            entityManager.persist(version);
             // Return created entry
             return getEntryFromEntity(version, true);
         } catch (ConstraintViolationException e) {
@@ -719,27 +715,24 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
         if (!record.isActive()) {
         	((AbstractRecordEntity<V>) record).setActive(true);
         }
-        // Assemble and add new version to record
-        V version = assembleAndValidateVersionFromEntry(record, entry);
-        if (version == null) {
-            throw new ResponseContextException("Version is null", 400);
-        }
+        entityManager.flush();
         // Save record (and thus cascade through and save version)
 //        try {
 //			Thread.sleep(1000);
 //		} catch (InterruptedException e1) {}
-        entityManager.persist(record);
         try {
             Source source = adapterInputHelper.assembleAndValidateSourceFromEntry(entry);
             if (source.getId() == null) {
                 entityManager.persist(source);
             }
             entityManager.flush();
+            // Assemble and add new version to record
+            V version = assembleAndValidateVersionFromEntry(record, entry);
             adapterInputHelper.addRelations(entry, version, user);
-            record.setUpdated(new Date());
             List<Person> authors = entry.getSource().getAuthors();
             adapterInputHelper.addDescriptionAuthors(version, authors, request);
             version.setSource(source);
+            entityManager.persist(version);
             entityManager.flush();
             // Return updated entry (with parent-level location)
             // return adapterOutputHelper.getEntryFromEntity(version, false);

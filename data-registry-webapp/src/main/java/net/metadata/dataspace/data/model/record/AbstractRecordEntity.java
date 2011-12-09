@@ -1,6 +1,10 @@
 package net.metadata.dataspace.data.model.record;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -54,15 +58,18 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
     private String originalId;
 
     @NotNull
+    @javax.persistence.Version
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date updated;
+    @Column(name="updated")
+    private Calendar recordTimestamp;
 
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date created;
+    @Column(insertable=true, updatable=false, nullable=false)
+    private Calendar created;
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date publishDate;
+    private Calendar publishDate;
 
     private String rights;
 
@@ -70,13 +77,16 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
 
     public AbstractRecordEntity() {
         this.isActive = true;
-        this.created = new Date();
-        this.updated = new Date();
+        setCreated(Calendar.getInstance());
+    }
+
+    public boolean addVersion(V version) {
+    	return versions.add(version);
     }
 
     @Override
     public SortedSet<V> getVersions() {
-        return versions;
+        return Collections.unmodifiableSortedSet(versions);
     }
 
     protected void setVersions(SortedSet<V> versions) {
@@ -125,21 +135,26 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
     }
 
     @Override
-    public Date getUpdated() {
-        return updated;
+    public Calendar getUpdated() {
+        return Collections.max(Arrays.asList(new Calendar[] {
+        			getRecordTimestamp(),
+        			getMostRecentVersion().getUpdated()}));
+    }
+
+    public Calendar getRecordTimestamp() {
+        return recordTimestamp;
+    }
+
+    protected void setRecordTimestamp(Calendar recordTimestamp) {
+        this.recordTimestamp = recordTimestamp;
     }
 
     @Override
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    @Override
-    public Date getCreated() {
+    public Calendar getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    protected void setCreated(Calendar created) {
         this.created = created;
     }
 
@@ -172,11 +187,11 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
         return getId().equals(other.getId());
     }
 
-    public Date getPublishDate() {
+    public Calendar getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(Date publishDate) {
+    public void setPublishDate(Calendar publishDate) {
         this.publishDate = publishDate;
     }
 

@@ -1,19 +1,26 @@
 package net.metadata.dataspace.data.model.version;
 
-import net.metadata.dataspace.data.model.UnknownTypeException;
-import net.metadata.dataspace.data.model.context.Subject;
-import net.metadata.dataspace.data.model.record.Activity;
-import net.metadata.dataspace.data.model.record.Agent;
-import net.metadata.dataspace.data.model.record.Collection;
-import net.metadata.dataspace.data.model.record.Service;
-import javax.validation.constraints.NotNull;
-
-import javax.persistence.*;
+import static javax.persistence.EnumType.STRING;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.EnumType.STRING;
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+
+import net.metadata.dataspace.data.model.UnknownTypeException;
+import net.metadata.dataspace.data.model.context.Subject;
+import net.metadata.dataspace.data.model.record.Agent;
+import net.metadata.dataspace.data.model.record.Collection;
+import net.metadata.dataspace.data.model.record.Service;
 
 /**
  * Author: alabri

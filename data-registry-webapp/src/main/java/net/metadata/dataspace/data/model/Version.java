@@ -1,6 +1,6 @@
 package net.metadata.dataspace.data.model;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Set;
 
 import net.metadata.dataspace.data.model.context.Source;
@@ -8,18 +8,16 @@ import net.metadata.dataspace.data.model.context.SourceAuthor;
 
 /**
  * Author: alabri
- * Date: 03/11/2010
+ * Calendar: 03/11/2010
  * Time: 1:48:52 PM
  */
 public interface Version<R extends Record<?>> {
 
-    void setAtomicNumber(Integer atomicNumber);
-
     Integer getAtomicNumber();
 
-    Date getUpdated();
+    Calendar getUpdated();
 
-    Date getCreated();
+    Calendar getCreated();
 
     R getParent();
 
@@ -42,8 +40,6 @@ public interface Version<R extends Record<?>> {
     void setTitle(String title);
 
     void setDescription(String content);
-
-    void setUpdated(Date updated);
 
 	void setSource(Source source);
 

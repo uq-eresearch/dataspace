@@ -75,19 +75,45 @@ public class EntityCreatorImpl implements EntityCreator {
     public <R extends Record<?>, V extends Version<?>> V getNextVersion(R record) {
         V version = null;
         if (record instanceof Activity) {
-            version = (V) new ActivityVersion();
+            version = (V) getActivityVersion((Activity) record);
         } else if (record instanceof Collection) {
-            version = (V) new CollectionVersion();
+            version = (V) getCollectionVersion((Collection) record);
         } else if (record instanceof Agent) {
-            version = (V) new AgentVersion();
+            version = (V) getAgentVersion((Agent) record);
         } else if (record instanceof Service) {
-            version = (V) new ServiceVersion();
+            version = (V) getServiceVersion((Service) record);
         }
-        AtomicInteger atomicInteger = new AtomicInteger(record.getVersions().size());
-        version.setAtomicNumber(atomicInteger.incrementAndGet());
         System.out.println("New version atomic number: "+version.getAtomicNumber());
         return version;
     }
+
+	protected ServiceVersion getServiceVersion(Service record) {
+		ServiceVersion version = new ServiceVersion();
+		version.setParent(record);
+		record.addVersion(version);
+		return version;
+	}
+
+	protected AgentVersion getAgentVersion(Agent record) {
+		AgentVersion version = new AgentVersion();
+		version.setParent(record);
+		record.addVersion(version);
+		return version;
+	}
+
+	protected CollectionVersion getCollectionVersion(Collection record) {
+		CollectionVersion version = new CollectionVersion();
+		version.setParent(record);
+		record.addVersion(version);
+		return version;
+	}
+
+	protected ActivityVersion getActivityVersion(Activity record) {
+		ActivityVersion version = new ActivityVersion();
+		version.setParent(record);
+		record.addVersion(version);
+		return version;
+	}
 
 
     @Override

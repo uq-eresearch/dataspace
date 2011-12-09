@@ -127,8 +127,6 @@ public class AdapterInputHelper {
             }
         }
         setPublished(entry, version);
-        Date now = new Date();
-        version.setUpdated(now);
     }
 
     public InternetAddress getEmailFromHref(IRI href)
@@ -279,8 +277,6 @@ public class AdapterInputHelper {
             version.getReferencedBy().add(publication);
         }
         setPublished(entry, version);
-        Date now = new Date();
-        version.setUpdated(now);
     }
 
     private void addRelationsAgent(Entry entry, AgentVersion version) throws ResponseContextException {
@@ -425,8 +421,6 @@ public class AdapterInputHelper {
             }
         }
         setPublished(entry, version);
-        Date now = new Date();
-        version.setUpdated(now);
     }
 
     private void addRelationsService(Entry entry, ServiceVersion version) throws ResponseContextException {
@@ -469,8 +463,6 @@ public class AdapterInputHelper {
         }
 
         setPublished(entry, version);
-        Date now = new Date();
-        version.setUpdated(now);
     }
 
     public Source assembleAndValidateSourceFromEntry(Entry entry) throws ResponseContextException {
@@ -547,7 +539,6 @@ public class AdapterInputHelper {
                 if (agent != null) {
                     if (!agent.isActive()) {
                         agent.setActive(true);
-                        agent.setUpdated(new Date());
                     }
                     version.getCreators().add(agent);
                     agent.getMade().add(version.getParent());
@@ -682,7 +673,7 @@ public class AdapterInputHelper {
         Control control = entry.getControl();
         if (control != null && !control.isDraft()) {
             version.getParent().setPublished(version);
-            version.getParent().setPublishDate(new Date());
+            version.getParent().setPublishDate(GregorianCalendar.getInstance());
         }
     }
 
@@ -771,7 +762,6 @@ public class AdapterInputHelper {
         	agent = mbox.getOwner();
             if (!agent.isActive()) {
                 agent.setActive(true);
-                agent.setUpdated(new Date());
             }
         }
         return agent;
@@ -784,8 +774,6 @@ public class AdapterInputHelper {
         Source systemSource = sourceDao.getBySourceURI(RegistryApplication.getApplicationContext().getUriPrefix());
         version.setTitle(name);
         version.setDescription(name);
-        Date now = new Date();
-        version.setUpdated(now);
         version.setType(Agent.Type.PERSON);
 
         Mbox mbox = new Mbox(email);
@@ -795,7 +783,6 @@ public class AdapterInputHelper {
         version.setParent(agent);
         agent.getVersions().add(version);
         version.getParent().setPublished(version);
-        agent.setUpdated(now);
         version.setSource(systemSource);
         return agent;
     }
@@ -863,17 +850,12 @@ public class AdapterInputHelper {
                 }
                 version.setTitle(name);
                 version.setDescription(name + " is a " + jobTitle + " in " + organisation + " at The University of Queensland");
-                Date now = new Date();
-                version.setUpdated(now);
                 version.setType(Agent.Type.PERSON);
 
                 // Set ID to eSpace search
                 agent.setOriginalId("https://espace.library.uq.edu.au/"+uid);
 
-                version.setParent(agent);
-                agent.getVersions().add(version);
                 version.getParent().setPublished(version);
-                agent.setUpdated(now);
 
                 version.setSource(systemSource);
 

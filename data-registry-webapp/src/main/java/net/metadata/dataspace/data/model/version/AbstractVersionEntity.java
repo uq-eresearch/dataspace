@@ -12,8 +12,12 @@ import javax.validation.constraints.NotNull;
 
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -46,7 +50,7 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
     private Long id;
 
     @NotNull
-    @Column(name="atomicnumber")
+    @Column(name="atomicnumber", insertable=true, updatable=false)
     private Integer atomicNumber;
 
     private boolean isActive;
@@ -59,12 +63,14 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
     private String description;
 
     @NotNull
+    @javax.persistence.Version
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date updated;
+    private Calendar updated;
 
     @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date created;
+    @Column(insertable=true,updatable=false,nullable=false)
+    private Calendar created;
 
 	@ElementCollection(fetch = FetchType.LAZY)
 	private Set<SourceAuthor> descriptionAuthors = new HashSet<SourceAuthor>();
@@ -78,8 +84,7 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
 
     public AbstractVersionEntity() {
         this.isActive = true;
-        this.created = new Date();
-        this.updated = new Date();
+        setCreated(Calendar.getInstance());
     }
 
     public Long getId() {
@@ -97,12 +102,12 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
 
     @Override
     public Integer getAtomicNumber() {
-        return atomicNumber;
-    }
-
-    @Override
-    public void setAtomicNumber(Integer atomicNumber) {
-        this.atomicNumber = atomicNumber;
+    	Enumeration<?> e = Collections.enumeration(getParent().getVersions());
+    	@SuppressWarnings("unchecked")
+		List<Version<R>> list = (List<Version<R>>) Collections.list(e);
+    	Collections.reverse(list);
+    	this.atomicNumber = list.indexOf(this)+1;
+    	return atomicNumber;
     }
 
     public boolean isActive() {
@@ -134,24 +139,23 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
     }
 
     @Override
-    public Date getUpdated() {
+    public Calendar getUpdated() {
         return updated;
     }
 
-    @Override
-    public void setUpdated(Date updated) {
+    protected void setUpdated(Calendar updated) {
         this.updated = updated;
     }
 
     @Override
     public int compareTo(Version<R> version) {
-        if (this.getUpdated().equals(version.getUpdated())) {
-            return 0;
+        if (this.getCreated().equals(version.getCreated())) {
+            return this.getAtomicNumber().compareTo(version.getAtomicNumber());
         }
-        if (this.getUpdated().before(version.getUpdated())) {
+        if (this.getCreated().before(version.getCreated())) {
             return 1;
         }
-        if (this.getUpdated().after(version.getUpdated())) {
+        if (this.getCreated().after(version.getCreated())) {
             return -1;
         }
         return 0;
@@ -172,11 +176,11 @@ public abstract class AbstractVersionEntity<R extends Record<?>> implements Seri
     }
 
     @Override
-    public Date getCreated() {
+    public Calendar getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(Calendar created) {
         this.created = created;
     }
 

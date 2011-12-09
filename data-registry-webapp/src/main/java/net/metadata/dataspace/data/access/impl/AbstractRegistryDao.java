@@ -67,14 +67,14 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
 
     @Override
     public List<T> getAllActive() {
-        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true ORDER BY o.updated");
+        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true ORDER BY o.recordTimestamp");
         return getActive(0,0);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<T> getActive(int pageSize, int pageNumber) {
-        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true ORDER BY o.updated");
+        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true ORDER BY o.recordTimestamp");
         applyPaging(query, pageSize, pageNumber);
         return query.getResultList();
     }
@@ -82,7 +82,7 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     @Override
     @SuppressWarnings("unchecked")
     public List<T> getAllInactive() {
-        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = false ORDER BY o.updated");
+        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = false ORDER BY o.recordTimestamp");
         return query.getResultList();
     }
 
@@ -94,7 +94,7 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     @Override
     @SuppressWarnings("unchecked")
     public List<T> getPublished(int pageSize, int pageNumber) {
-    	Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.updated DESC");
+    	Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true AND o.published IS NOT NULL ORDER BY o.recordTimestamp DESC");
         applyPaging(query, pageSize, pageNumber);
         return query.getResultList();
     }
@@ -110,14 +110,14 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     @Override
     @SuppressWarnings("unchecked")
     public List<T> getAllUnpublished() {
-        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true AND o.published IS NULL ORDER BY o.updated");
+        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.isActive = true AND o.published IS NULL ORDER BY o.recordTimestamp");
         return query.getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<T> getAllPublishedBetween(Date fromDate, Date untilDate) {
-        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.published IS NOT NULL AND o.updated BETWEEN :fromDate and :untilDate ORDER BY o.updated");
+        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.published IS NOT NULL AND o.recordTimestamp BETWEEN :fromDate and :untilDate ORDER BY o.recordTimestamp");
         query.setParameter("fromDate", fromDate);
         query.setParameter("untilDate", untilDate);
         return query.getResultList();
@@ -125,7 +125,7 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
 
     @Override
     public T getMostRecentUpdated() {
-        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.updated = (SELECT MAX(o.updated) FROM " + getEntityName() + " o)");
+        Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.recordTimestamp = (SELECT MAX(o.recordTimestamp) FROM " + getEntityName() + " o)");
         List<T> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return null;

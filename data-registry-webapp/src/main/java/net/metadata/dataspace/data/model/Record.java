@@ -1,6 +1,6 @@
 package net.metadata.dataspace.data.model;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.SortedSet;
 
 /**
@@ -30,9 +30,18 @@ public interface Record<V extends Version<?>> {
     /**
      * Gets a all versions of this record
      *
-     * @return Sorted set (by updated) of versions
+     * @return Unmodifiable sorted set (by created) of versions
      */
     SortedSet<V> getVersions();
+
+
+    /**
+     * Add a version to this record
+     *
+     * @param version
+     * @return true if version was added, false if it was already present
+     */
+    boolean addVersion(V version);
 
     /**
      * Gets the published version of this record
@@ -50,16 +59,9 @@ public interface Record<V extends Version<?>> {
      */
     V getWorkingCopy();
 
-    /**
-     * Return the date when the entity last modified
-     *
-     * @param updated last updated date
-     */
-    void setUpdated(Date updated);
+    Calendar getUpdated();
 
-    Date getUpdated();
-
-    Date getCreated();
+    Calendar getCreated();
 
     String getUriKey();
 
@@ -73,9 +75,9 @@ public interface Record<V extends Version<?>> {
 
     boolean isActive();
 
-    void setPublishDate(Date publishDate);
+    void setPublishDate(Calendar publishDate);
 
-    Date getPublishDate();
+    Calendar getPublishDate();
 
     String getSourceRights();
 

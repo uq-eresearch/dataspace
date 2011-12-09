@@ -55,7 +55,7 @@ public class FeedOutputHelper {
             selfLink.setMimeType(Constants.MIME_TYPE_ATOM_ENTRY);
             List<Person> personList = getAuthors(record, request);
 
-            entry.setUpdated(version.getUpdated());
+            entry.setUpdated(version.getUpdated().getTime());
             setPublished(version, entry);
         }
         feed.setUpdated(new Date());
