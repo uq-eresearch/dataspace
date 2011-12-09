@@ -14,8 +14,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 

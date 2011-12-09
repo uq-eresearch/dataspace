@@ -50,27 +50,27 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     }
 
     public Set<Subject> getSubjects() {
-        return this.versions.first().getSubjects();
+        return getMostRecentVersion().getSubjects();
     }
 
     public Set<Collection> getIsManagerOf() {
-        return this.versions.first().getIsManagerOf();
+        return getMostRecentVersion().getIsManagerOf();
     }
 
     public Set<Service> getManagedServices() {
-        return this.versions.first().getManagedServices();
+        return getMostRecentVersion().getManagedServices();
     }
 
     public Set<Collection> getMade() {
-        return this.versions.first().getMade();
+        return getMostRecentVersion().getMade();
     }
 
     public Set<Activity> getParticipantIn() {
-        return this.versions.first().getCurrentProjects();
+        return getMostRecentVersion().getCurrentProjects();
     }
 
     public Set<Mbox> getMBoxes() {
-        return this.versions.first().getMboxes();
+        return getMostRecentVersion().getMboxes();
     }
 
     public SortedSet<AgentVersion> getVersions() {
@@ -90,12 +90,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
     public void setPublished(AgentVersion version) {
         this.published = version;
     }
-
-    @Override
-    public AgentVersion getWorkingCopy() {
-        return this.versions.first();
-    }
-
 
     public Set<Agent> getSameAs() {
         return sameAs;

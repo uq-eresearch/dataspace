@@ -53,27 +53,27 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     }
 
     public Set<Subject> getSubjects() {
-        return this.versions.first().getSubjects();
+        return getMostRecentVersion().getSubjects();
     }
 
     public Set<Agent> getCreators() {
-        return this.versions.first().getCreators();
+        return getMostRecentVersion().getCreators();
     }
 
     public Set<Agent> getPublishers() {
-        return this.versions.first().getPublishers();
+        return getMostRecentVersion().getPublishers();
     }
 
     public Set<Activity> getOutputOf() {
-        return this.versions.first().getOutputOf();
+        return getMostRecentVersion().getOutputOf();
     }
 
     public Set<Service> getAccessedVia() {
-        return this.versions.first().getAccessedVia();
+        return getMostRecentVersion().getAccessedVia();
     }
 
     public Set<Collection> getRelations() {
-        return this.versions.first().getRelations();
+        return getMostRecentVersion().getRelations();
     }
 
     @Override
@@ -84,11 +84,6 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
     @Override
     public void setPublished(CollectionVersion published) {
         this.published = published;
-    }
-
-    @Override
-    public CollectionVersion getWorkingCopy() {
-        return this.versions.first();
     }
 
     public Set<Collection> getSameAs() {

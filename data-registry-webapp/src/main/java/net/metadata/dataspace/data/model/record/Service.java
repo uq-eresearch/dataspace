@@ -14,8 +14,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 
@@ -65,11 +63,11 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     }
 
     public Set<Collection> getSupportedBy() {
-        return this.versions.first().getSupportedBy();
+        return getMostRecentVersion().getSupportedBy();
     }
 
     public Set<Agent> getManagedBy() {
-        return versions.first().getManagedBy();
+        return getMostRecentVersion().getManagedBy();
     }
 
     @Override
@@ -80,11 +78,6 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
     @Override
     public void setPublished(ServiceVersion published) {
         this.published = published;
-    }
-
-    @Override
-    public ServiceVersion getWorkingCopy() {
-        return this.versions.first();
     }
 
     public Set<Service> getSameAs() {
