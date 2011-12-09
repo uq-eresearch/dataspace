@@ -1,5 +1,9 @@
 package net.metadata.dataspace.atom.util;
 
+import java.util.Calendar;
+import java.util.Set;
+import java.util.SortedSet;
+
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.RegistryApplication;
 import net.metadata.dataspace.atom.writer.XSLTTransformerWriter;
@@ -10,15 +14,22 @@ import net.metadata.dataspace.data.model.context.Publication;
 import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.context.Spatial;
 import net.metadata.dataspace.data.model.context.Subject;
-import net.metadata.dataspace.data.model.record.*;
+import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
+import net.metadata.dataspace.data.model.record.Activity;
+import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.data.model.version.AgentVersion;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
+
 import org.apache.abdera.Abdera;
-import org.apache.abdera.model.*;
+import org.apache.abdera.model.Element;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Link;
+import org.apache.abdera.model.Person;
+import org.apache.abdera.model.Source;
 import org.apache.abdera.parser.stax.util.PrettyWriter;
 import org.apache.abdera.protocol.server.ProviderHelper;
 import org.apache.abdera.protocol.server.RequestContext;
@@ -27,11 +38,6 @@ import org.apache.abdera.protocol.server.context.ResponseContextException;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * User: alabri
@@ -290,6 +296,7 @@ public class AdapterOutputHelper {
             //Publications
             Set<Publication> publications = version.getReferencedBy();
             for (Publication publication : publications) {
+            	System.out.println("Outputting: "+publication);
                 String href = publication.getPublicationURI();
                 Link link = entry.addLink(href, Constants.REL_IS_REFERENCED_BY);
                 link.setTitle(publication.getTitle());

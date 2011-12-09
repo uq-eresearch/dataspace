@@ -274,6 +274,7 @@ public class AdapterInputHelper {
         //add publications
         Set<Publication> publications = getPublications(entry);
         for (Publication publication : publications) {
+        	System.out.println("Adding :"+publication);
             version.getReferencedBy().add(publication);
         }
         setPublished(entry, version);

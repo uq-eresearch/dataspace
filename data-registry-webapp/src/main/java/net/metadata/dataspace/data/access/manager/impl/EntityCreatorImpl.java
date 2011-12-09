@@ -83,7 +83,6 @@ public class EntityCreatorImpl implements EntityCreator {
         } else if (record instanceof Service) {
             version = (V) getServiceVersion((Service) record);
         }
-        System.out.println("New version atomic number: "+version.getAtomicNumber());
         return version;
     }
 

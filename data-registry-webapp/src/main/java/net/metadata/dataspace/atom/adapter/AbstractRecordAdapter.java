@@ -2,9 +2,7 @@ package net.metadata.dataspace.atom.adapter;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +31,7 @@ import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.record.User;
+
 import org.apache.abdera.Abdera;
 import org.apache.abdera.ext.history.FeedPagingHelper;
 import org.apache.abdera.i18n.iri.IRI;
@@ -662,8 +661,10 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             record.setSourceRights(RegistryApplication.getApplicationContext().getRegistryRights());
             adapterInputHelper.addRelations(entry, version,
             		getAuthenticationManager().getCurrentUser(request));
-            Calendar now = GregorianCalendar.getInstance();
             entityManager.persist(version);
+            // Refresh from database
+            entityManager.flush();
+            version = record.getWorkingCopy();
             // Return created entry
             return getEntryFromEntity(version, true);
         } catch (ConstraintViolationException e) {
@@ -733,7 +734,9 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             adapterInputHelper.addDescriptionAuthors(version, authors, request);
             version.setSource(source);
             entityManager.persist(version);
+            // Refresh from database
             entityManager.flush();
+            version = record.getWorkingCopy();
             // Return updated entry (with parent-level location)
             // return adapterOutputHelper.getEntryFromEntity(version, false);
             return getEntryFromEntity(version, true);
