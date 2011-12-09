@@ -1,5 +1,13 @@
 package net.metadata.dataspace.data.access;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
@@ -7,6 +15,7 @@ import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.Service;
 import net.metadata.dataspace.data.model.version.ServiceVersion;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,13 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Author: alabri
@@ -59,16 +61,15 @@ public class ServiceDaoImplTest {
     @Transactional
     public void testAddingService() throws Exception {
         Service service = (Service) entityCreator.getNextRecord(Service.class);
-        service.setUpdated(new Date());
         int originalTableSize = serviceDao.getAll().size();
         ServiceVersion serviceVersion = PopulatorUtil.getServiceVersion(service);
-        service.getVersions().add(serviceVersion);
+        service.addVersion(serviceVersion);
         Source source = PopulatorUtil.getSource();
         serviceVersion.setSource(source);
         entityManager.persist(source);
         entityManager.persist(serviceVersion);
         entityManager.persist(service);
-        
+
         Long id = service.getId();
         Service serviceById = serviceDao.getById(id);
         assertTrue("Table has " + serviceDao.getAll().size() + " records", serviceDao.getAll().size() == (originalTableSize + 1));
@@ -81,18 +82,20 @@ public class ServiceDaoImplTest {
     @Transactional
     public void testEditingService() throws Exception {
         testAddingService();
+        Calendar editStart = Calendar.getInstance();
         assertTrue("Table is empty", serviceDao.getAll().size() != 0);
         List<Service> services = serviceDao.getAll();
         Service service = services.get(0);
         Long id = service.getId();
-        Date now = new Date();
         String content = "Updated content";
         service.getVersions().first().setDescription(content);
-        service.setUpdated(now);
-        entityManager.merge(service);
+        entityManager.flush();
         Service serviceById = serviceDao.getById(id);
         Assert.assertEquals("Modified and Retrieved records are not the same", service, serviceById);
-        Assert.assertEquals("Update Date was not updated", now, serviceById.getUpdated());
+        Assert.assertTrue(String.format(
+				"Update Date was not updated. %tFT%<tT.%<tN < %tFT%<tT.%<tN",
+				serviceById.getUpdated(), editStart),
+        		serviceById.getUpdated().after(editStart));
         Assert.assertEquals("content was not updated", content, serviceById.getVersions().first().getDescription());
     }
 

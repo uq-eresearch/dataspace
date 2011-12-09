@@ -1,5 +1,13 @@
 package net.metadata.dataspace.data.access;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
@@ -9,6 +17,8 @@ import net.metadata.dataspace.data.model.context.SourceAuthor;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Agent;
 import net.metadata.dataspace.data.model.version.AgentVersion;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,13 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * User: alabri
@@ -60,14 +63,13 @@ public class AgentDaoImplTest {
     @Transactional
     public void testAddingAgent() throws Exception {
         Agent agent = (Agent) entityCreator.getNextRecord(Agent.class);
-        agent.setUpdated(new Date());
         int originalTableSize = agentDao.getAll().size();
         AgentVersion agentVersion = PopulatorUtil.getAgentVersion(agent);
         Subject subject1 = PopulatorUtil.getSubject();
         agentVersion.getSubjects().add(subject1);
         Subject subject2 = PopulatorUtil.getSubject();
         agentVersion.getSubjects().add(subject2);
-        agent.getVersions().add(agentVersion);
+        agent.addVersion(agentVersion);
         Source source = PopulatorUtil.getSource();
         agentVersion.getDescriptionAuthors().add(new SourceAuthor("Test User", "test@uq.edu.au", null));
         agentVersion.setSource(source);
@@ -91,18 +93,20 @@ public class AgentDaoImplTest {
     @Transactional
     public void testEditingAgent() throws Exception {
         testAddingAgent();
+        Calendar editStart = Calendar.getInstance();
         assertTrue("Table is empty", agentDao.getAll().size() != 0);
         List<Agent> agentList = agentDao.getAll();
         Agent agent = agentList.get(0);
         Long id = agent.getId();
-        Date now = new Date();
         String content = "Updated Content";
         agent.getVersions().first().setDescription(content);
-        agent.setUpdated(now);
-        entityManager.merge(agent);
+        entityManager.flush();
         Agent agentById = agentDao.getById(id);
         assertEquals("Modified and Retrieved records are not the same", agent, agentById);
-        assertEquals("Update Date was not updated", now, agentById.getUpdated());
+        Assert.assertTrue(String.format(
+				"Update Date was not updated. %tFT%<tT.%<tN < %tFT%<tT.%<tN",
+				agentById.getUpdated(), editStart),
+				agentById.getUpdated().after(editStart));
         assertEquals("content was not updated", content, agentById.getVersions().first().getDescription());
     }
 

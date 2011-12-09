@@ -1,5 +1,13 @@
 package net.metadata.dataspace.data.access;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
@@ -8,7 +16,9 @@ import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.record.Collection;
 import net.metadata.dataspace.data.model.version.CollectionVersion;
+
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,13 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * User: alabri
@@ -59,14 +62,13 @@ public class CollectionDaoImplTest {
     public void testAddingCollection() throws Exception {
 
         Collection collection = (Collection) entityCreator.getNextRecord(Collection.class);
-        collection.setUpdated(new Date());
         int originalTableSize = collectionDao.getAll().size();
         CollectionVersion collectionVersion = PopulatorUtil.getCollectionVersion(collection);
         Subject subject1 = PopulatorUtil.getSubject();
         collectionVersion.getSubjects().add(subject1);
         Subject subject2 = PopulatorUtil.getSubject();
         collectionVersion.getSubjects().add(subject2);
-        collection.getVersions().add(collectionVersion);
+        collection.addVersion(collectionVersion);
         Source source = PopulatorUtil.getSource();
         collectionVersion.setSource(source);
         entityManager.persist(source);
@@ -74,7 +76,7 @@ public class CollectionDaoImplTest {
         entityManager.persist(subject2);
         entityManager.persist(collectionVersion);
         entityManager.persist(collection);
-        
+
         Long id = collection.getId();
         Collection collectionById = collectionDao.getById(id);
         assertTrue("Table has " + collectionDao.getAll().size() + " records", collectionDao.getAll().size() == (originalTableSize + 1));
@@ -88,19 +90,20 @@ public class CollectionDaoImplTest {
     @Transactional
     public void testEditingCollection() throws Exception {
         testAddingCollection();
+        Calendar editStart = Calendar.getInstance();
         assertTrue("Table is empty", collectionDao.getAll().size() != 0);
         List<Collection> collectionList = collectionDao.getAll();
         Collection collection = collectionList.get(0);
         Long id = collection.getId();
-        Date now = new Date();
-        collection.setUpdated(now);
         String content = "Updated content";
         collection.getVersions().first().setDescription(content);
-        collection.setUpdated(now);
-        entityManager.merge(collection);
+        entityManager.flush();
         Collection collectionById = collectionDao.getById(id);
         assertEquals("Modified and Retrieved records are not the same", collection, collectionById);
-        assertEquals("Update Date was not updated", now, collectionById.getUpdated());
+        Assert.assertTrue(String.format(
+				"Update Date was not updated. %tFT%<tT.%<tN < %tFT%<tT.%<tN",
+				collectionById.getUpdated(), editStart),
+				collectionById.getUpdated().after(editStart));
         assertEquals("content was not updated", content, collectionById.getVersions().first().getDescription());
     }
 

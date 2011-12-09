@@ -23,6 +23,7 @@ import javax.persistence.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 /**
@@ -67,7 +68,6 @@ public class PopulatorUtil {
         collectionVersion.setDescription("Test Collection Content");
         collectionVersion.getPages().add("http://test.location.com.au/collection");
         collectionVersion.setRights("Test rights text");
-        collectionVersion.setUpdated(new Date());
         return collectionVersion;
     }
 
@@ -80,8 +80,6 @@ public class PopulatorUtil {
         agentVersion.addMbox(new Mbox("email@company.com"));
         agentVersion.setDescription("Test Agent Content");
         agentVersion.setType(Agent.Type.PERSON);
-        agentVersion.setUpdated(new Date());
-        agent.setUpdated(new Date());
         return agentVersion;
     }
 
@@ -91,7 +89,6 @@ public class PopulatorUtil {
         serviceVersion.setTitle("Test Service Title");
         serviceVersion.setDescription("Test Service Content");
         serviceVersion.setType(Service.Type.SYNDICATE);
-        serviceVersion.setUpdated(new Date());
         serviceVersion.getPages().add("http://test.location.com.au/collection");
         return serviceVersion;
     }
@@ -102,7 +99,6 @@ public class PopulatorUtil {
         activityVersion.setTitle("Test Activity Title");
         activityVersion.setDescription("Test Activity Content");
         activityVersion.setType(Activity.Type.PROJECT);
-        activityVersion.setUpdated(new Date());
         return activityVersion;
     }
 

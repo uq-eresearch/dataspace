@@ -82,7 +82,7 @@ public class AdapterOutputHelperTest {
         		daoManager.getEntityManagerSource().getEntityManager();
         User currentUser = new User("test", "Test User", "test@uq.edu.au");
         Agent agent = (Agent) entityCreator.getNextRecord(Agent.class);
-        AgentVersion agentVersion = PopulatorUtil.getAgentVersion(agent);
+        AgentVersion version = PopulatorUtil.getAgentVersion(agent);
         Collection collection = (Collection) entityCreator.getNextRecord(Collection.class);
         CollectionVersion collectionVersion = PopulatorUtil.getCollectionVersion(collection);
         Service service = (Service) entityCreator.getNextRecord(Service.class);
@@ -94,40 +94,36 @@ public class AdapterOutputHelperTest {
         		new SourceAuthor(currentUser.getDisplayName(),
         				currentUser.getEmail(), null);
 
-        agent.setUpdated(new Date());
         Subject subject1 = PopulatorUtil.getSubject();
-        agentVersion.getSubjects().add(subject1);
+        version.getSubjects().add(subject1);
         Subject subject2 = PopulatorUtil.getSubject();
-        agentVersion.getSubjects().add(subject2);
-        agent.getVersions().add(agentVersion);
+        version.getSubjects().add(subject2);
+        agent.addVersion(version);
         Source source = PopulatorUtil.getSource();
-        agentVersion.setSource(source);
-        agentVersion.getDescriptionAuthors().add(currentSourceAuthor);
+        version.setSource(source);
+        version.getDescriptionAuthors().add(currentSourceAuthor);
 
-        collection.setUpdated(new Date());
         Subject subject3 = PopulatorUtil.getSubject();
         collectionVersion.getSubjects().add(subject3);
         Subject subject4 = PopulatorUtil.getSubject();
         collectionVersion.getSubjects().add(subject4);
-        collection.getVersions().add(collectionVersion);
+        collection.addVersion(collectionVersion);
         collection.getCreators().add(agent);
         collectionVersion.getDescriptionAuthors().add(currentSourceAuthor);
         agent.getMade().add(collection);
         collectionVersion.setSource(source);
 
-        service.setUpdated(new Date());
-        service.getVersions().add(serviceVersion);
+        service.addVersion(serviceVersion);
         collectionVersion.getAccessedVia().add(service);
         serviceVersion.getSupportedBy().add(collection);
         serviceVersion.setSource(source);
         serviceVersion.getDescriptionAuthors().add(currentSourceAuthor);
 
-        activity.setUpdated(new Date());
         Subject subject5 = PopulatorUtil.getSubject();
         activityVersion.getSubjects().add(subject5);
         Subject subject6 = PopulatorUtil.getSubject();
         activityVersion.getSubjects().add(subject6);
-        activity.getVersions().add(activityVersion);
+        activity.addVersion(activityVersion);
         activity.getHasOutput().add(collection);
         activity.getHasParticipant().add(agent);
         activityVersion.getDescriptionAuthors().add(currentSourceAuthor);
@@ -143,7 +139,7 @@ public class AdapterOutputHelperTest {
         entityManager.persist(subject5);
         entityManager.persist(subject6);
         entityManager.persist(agent);
-        entityManager.persist(agentVersion);
+        entityManager.persist(version);
         entityManager.persist(collection);
         entityManager.persist(collectionVersion);
         entityManager.persist(service);
@@ -160,13 +156,14 @@ public class AdapterOutputHelperTest {
     @Test
     @Transactional
     public void testGetEntryFromAgent() throws Exception {
-        List<Agent> agents = daoManager.getAgentDao().getAll();
-        Agent agent = agents.get(agents.size() - 1);
-        AgentVersion agentVersion = agent.getVersions().first();
-        Entry entry = adapterOutputHelper.getEntryFromEntity(agentVersion, true);
-        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + agent.getUriKey());
-        assertEquals("Entry title", entry.getTitle(), agent.getTitle());
-        assertEquals("Entry content", entry.getContent(), agent.getContent());
+        List<Agent> records = daoManager.getAgentDao().getAll();
+        Agent record = records.get(records.size() - 1);
+        AgentVersion version = record.getVersions().first();
+        assertEquals(1, version.getAtomicNumber().intValue());
+        Entry entry = adapterOutputHelper.getEntryFromEntity(version, true);
+        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_AGENTS + "/" + record.getUriKey());
+        assertEquals("Entry title", entry.getTitle(), record.getTitle());
+        assertEquals("Entry content", entry.getContent(), record.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
         assertTrue("Entry should have at least 2 subjects", entry.getCategories(Constants.SCHEME_ANZSRC_FOR).size() >= 2);
         assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_MADE).size() >= 1);
@@ -175,13 +172,14 @@ public class AdapterOutputHelperTest {
     @Test
     @Transactional
     public void testGetEntryFromCollection() throws Exception {
-        List<Collection> collections = daoManager.getCollectionDao().getAll();
-        Collection collection = collections.get(collections.size() - 1);
-        CollectionVersion version = collection.getVersions().first();
+        List<Collection> records = daoManager.getCollectionDao().getAll();
+        Collection record = records.get(records.size() - 1);
+        CollectionVersion version = record.getVersions().first();
+        assertEquals(1, version.getAtomicNumber().intValue());
         Entry entry = adapterOutputHelper.getEntryFromEntity(version, true);
-        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + collection.getUriKey());
-        assertEquals("Entry title", entry.getTitle(), collection.getTitle());
-        assertEquals("Entry content", entry.getContent(), collection.getContent());
+        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_COLLECTIONS + "/" + record.getUriKey());
+        assertEquals("Entry title", entry.getTitle(), record.getTitle());
+        assertEquals("Entry content", entry.getContent(), record.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
         assertTrue("Entry should have at least 2 subjects", entry.getCategories(Constants.SCHEME_ANZSRC_FOR).size() >= 2);
         assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_PAGE).size() >= 1);
@@ -194,27 +192,30 @@ public class AdapterOutputHelperTest {
     @Transactional
     public void testGetEntryFromActivity() throws Exception {
         List<Activity> activities = daoManager.getActivityDao().getAll();
-        AbstractRecordEntity<ActivityVersion> activity = activities.get(activities.size() - 1);
-        ActivityVersion version = activity.getVersions().first();
+        AbstractRecordEntity<ActivityVersion> record = activities.get(activities.size() - 1);
+        ActivityVersion version = record.getVersions().first();
+        assertEquals(1, version.getAtomicNumber().intValue());
         Entry entry = adapterOutputHelper.getEntryFromEntity(version, true);
-        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + activity.getUriKey());
-        assertEquals("Entry title", entry.getTitle(), activity.getTitle());
-        assertEquals("Entry content", entry.getContent(), activity.getContent());
+        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_ACTIVITIES + "/" + record.getUriKey());
+        assertEquals("Entry title", entry.getTitle(), record.getTitle());
+        assertEquals("Entry content", entry.getContent(), record.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
         assertTrue("Entry should have at least 1 category", entry.getCategories().size() >= 1);
-        assertTrue("Entry should have at least one agent", entry.getLinks(Constants.REL_HAS_PARTICIPANT).size() >= 1);
+        assertTrue("Entry should have at least one record", entry.getLinks(Constants.REL_HAS_PARTICIPANT).size() >= 1);
         assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_HAS_OUTPUT).size() >= 1);
     }
 
     @Test
     @Transactional
     public void testGetEntryFromService() throws Exception {
-        List<Service> services = daoManager.getServiceDao().getAll();
-        Service service = services.get(services.size() - 1);
-        Entry entry = adapterOutputHelper.getEntryFromEntity(service.getVersions().first(), true);
-        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_SERVICES + "/" + service.getUriKey());
-        assertEquals("Entry title", entry.getTitle(), service.getTitle());
-        assertEquals("Entry content", entry.getContent(), service.getContent());
+        List<Service> records = daoManager.getServiceDao().getAll();
+        Service record = records.get(records.size() - 1);
+        ServiceVersion version = record.getVersions().first();
+        assertEquals(1, version.getAtomicNumber().intValue());
+        Entry entry = adapterOutputHelper.getEntryFromEntity(version, true);
+        assertEquals("Entry id", entry.getId().toString(), RegistryApplication.getApplicationContext().getUriPrefix() + Constants.PATH_FOR_SERVICES + "/" + record.getUriKey());
+        assertEquals("Entry title", entry.getTitle(), record.getTitle());
+        assertEquals("Entry content", entry.getContent(), record.getContent());
         assertEquals("Entry Description authors", entry.getSource().getAuthors().size(), 1);
         assertTrue("Entry should have at least one location", entry.getLinks(Constants.REL_PAGE).size() >= 1);
         assertTrue("Entry should have at least one collection", entry.getLinks(Constants.REL_IS_SUPPORTED_BY).size() >= 1);
@@ -223,13 +224,13 @@ public class AdapterOutputHelperTest {
     @Test
     @Transactional
     public void testUpdateAgentFromEntry() throws Exception {
-        List<Agent> agents = daoManager.getAgentDao().getAll();
-        Agent agent = agents.get(agents.size() - 1);
-        Entry entry = adapterOutputHelper.getEntryFromEntity(agent.getVersions().first(), true);
-        Version version = agentAdapter.assembleAndValidateVersionFromEntry(agent, entry);
+        List<Agent> records = daoManager.getAgentDao().getAll();
+        Agent record = records.get(records.size() - 1);
+        Entry entry = adapterOutputHelper.getEntryFromEntity(record.getVersions().first(), true);
+        Version version = agentAdapter.assembleAndValidateVersionFromEntry(record, entry);
         assertNotNull("Could not update entry", version);
-        assertEquals("Entry title", agent.getVersions().first().getTitle(), version.getTitle());
-        assertEquals("Entry content", agent.getVersions().first().getDescription(), version.getDescription());
+        assertEquals("Entry title", record.getVersions().first().getTitle(), version.getTitle());
+        assertEquals("Entry content", record.getVersions().first().getDescription(), version.getDescription());
     }
 
 //    @Test

@@ -1,9 +1,15 @@
 package net.metadata.dataspace.data.access;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.UUID;
+
 import net.metadata.dataspace.app.NonProductionConstants;
-import net.metadata.dataspace.app.RegistryConfiguration;
 import net.metadata.dataspace.data.model.PopulatorUtil;
 import net.metadata.dataspace.data.model.context.Source;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,10 +17,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.UUID;
-
-import static org.junit.Assert.*;
 
 /**
  * Author: alabri

@@ -1,5 +1,12 @@
 package net.metadata.dataspace.data.access;
 
+import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import net.metadata.dataspace.app.NonProductionConstants;
 import net.metadata.dataspace.data.access.manager.DaoManager;
 import net.metadata.dataspace.data.access.manager.EntityCreator;
@@ -8,6 +15,7 @@ import net.metadata.dataspace.data.model.context.Source;
 import net.metadata.dataspace.data.model.record.AbstractRecordEntity;
 import net.metadata.dataspace.data.model.record.Activity;
 import net.metadata.dataspace.data.model.version.ActivityVersion;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,12 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Author: alabri
@@ -59,10 +61,9 @@ public class ActivityDaoImplTest {
     @Transactional
     public void testAddingActivity() throws Exception {
     	Activity activity = (Activity) entityCreator.getNextRecord(Activity.class);
-        activity.setUpdated(new Date());
         int originalTableSize = activityDao.getAll().size();
         ActivityVersion activityVersion = PopulatorUtil.getActivityVersion(activity);
-        activity.getVersions().add(activityVersion);
+        activity.addVersion(activityVersion);
         Source source = PopulatorUtil.getSource();
         activityVersion.setSource(source);
         entityManager.persist(source);
@@ -81,18 +82,20 @@ public class ActivityDaoImplTest {
     @Transactional
     public void testEditingActivity() throws Exception {
         testAddingActivity();
+        Calendar editStart = Calendar.getInstance();
         assertTrue("Table is empty", activityDao.getAll().size() != 0);
         List<Activity> activities = activityDao.getAll();
         Activity activity = activities.get(0);
         Long id = activity.getId();
-        Date now = new Date();
         String content = "Updated content";
         activity.getVersions().first().setDescription(content);
-        activity.setUpdated(now);
-        entityManager.merge(activity);
+        entityManager.flush();
         AbstractRecordEntity<ActivityVersion> activityById = activityDao.getById(id);
         Assert.assertEquals("Modified and Retrieved records are not the same", activity, activityById);
-        Assert.assertEquals("Update Date was not updated", now, activityById.getUpdated());
+        Assert.assertTrue(String.format(
+				"Update Date was not updated. %tFT%<tT.%<tN < %tFT%<tT.%<tN",
+				activityById.getUpdated(), editStart),
+				activityById.getUpdated().after(editStart));
         Assert.assertEquals("content was not updated", content, activityById.getVersions().first().getDescription());
     }
 
