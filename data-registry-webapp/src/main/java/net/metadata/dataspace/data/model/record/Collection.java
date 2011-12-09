@@ -1,16 +1,17 @@
 package net.metadata.dataspace.data.model.record;
 
-import net.metadata.dataspace.data.model.context.Subject;
-import net.metadata.dataspace.data.model.version.CollectionVersion;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
-import javax.validation.constraints.NotNull;
-
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import net.metadata.dataspace.data.model.context.Subject;
+import net.metadata.dataspace.data.model.version.CollectionVersion;
 
 /**
  * User: alabri
@@ -27,11 +28,6 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
         DATASET
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
-    @NotNull
-    @Sort(type = SortType.NATURAL)
-    private SortedSet<CollectionVersion> versions = new TreeSet<CollectionVersion>();
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CollectionVersion published;
 
@@ -42,14 +38,6 @@ public class Collection extends AbstractRecordEntity<CollectionVersion> {
 
     public Collection() {
 
-    }
-
-    public SortedSet<CollectionVersion> getVersions() {
-        return versions;
-    }
-
-    public void setVersions(SortedSet<CollectionVersion> versions) {
-        this.versions = versions;
     }
 
     public Set<Subject> getSubjects() {

@@ -1,12 +1,7 @@
 package net.metadata.dataspace.data.model.record;
 
-import net.metadata.dataspace.data.model.version.ActivityVersion;
-import javax.validation.constraints.NotNull;
-
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -14,8 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
+
+import net.metadata.dataspace.data.model.version.ActivityVersion;
 
 /**
  * User: alabri
@@ -32,12 +27,6 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
         PROGRAM
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
-    @NotNull
-    @Sort(type = SortType.NATURAL)
-    private SortedSet<ActivityVersion> versions = new TreeSet<ActivityVersion>();
-
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ActivityVersion published;
 
@@ -46,14 +35,6 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
     private Set<Activity> sameAs = new HashSet<Activity>();
 
     public Activity() {
-    }
-
-    public SortedSet<ActivityVersion> getVersions() {
-        return versions;
-    }
-
-    public void setVersions(SortedSet<ActivityVersion> versions) {
-        this.versions = versions;
     }
 
     public Set<Collection> getHasOutput() {

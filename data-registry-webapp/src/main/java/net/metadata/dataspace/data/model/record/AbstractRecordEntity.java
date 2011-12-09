@@ -1,20 +1,27 @@
 package net.metadata.dataspace.data.model.record;
 
-import net.metadata.dataspace.data.model.Record;
-import net.metadata.dataspace.data.model.Version;
-import net.metadata.dataspace.util.DaoHelper;
-import javax.validation.constraints.NotNull;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
+import javax.validation.constraints.NotNull;
+
+import net.metadata.dataspace.data.model.Record;
+import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.util.DaoHelper;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 /**
  * User: alabri
@@ -32,6 +39,11 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
+    @NotNull
+    @Sort(type = SortType.NATURAL)
+    protected SortedSet<V> versions = new TreeSet<V>();
 
     @NotNull
     @Column(unique = true)
@@ -63,7 +75,13 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
     }
 
     @Override
-    abstract public SortedSet<V> getVersions();
+    public SortedSet<V> getVersions() {
+        return versions;
+    }
+
+    protected void setVersions(SortedSet<V> versions) {
+        this.versions = versions;
+    }
 
     @Override
     public Long getId() {

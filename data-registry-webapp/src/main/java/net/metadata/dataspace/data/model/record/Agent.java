@@ -1,20 +1,19 @@
 package net.metadata.dataspace.data.model.record;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import net.metadata.dataspace.data.model.context.FullName;
 import net.metadata.dataspace.data.model.context.Mbox;
 import net.metadata.dataspace.data.model.context.Subject;
 import net.metadata.dataspace.data.model.version.AgentVersion;
-import javax.validation.constraints.NotNull;
-
-import javax.persistence.*;
-
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * User: alabri
@@ -30,11 +29,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
         PERSON,
         GROUP
     }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
-    @NotNull
-    @Sort(type = SortType.NATURAL)
-    private SortedSet<AgentVersion> versions = new TreeSet<AgentVersion>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AgentVersion published;
@@ -71,14 +65,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     public Set<Mbox> getMBoxes() {
         return getMostRecentVersion().getMboxes();
-    }
-
-    public SortedSet<AgentVersion> getVersions() {
-        return versions;
-    }
-
-    public void setVersions(SortedSet<AgentVersion> versions) {
-        this.versions = versions;
     }
 
     @Override
