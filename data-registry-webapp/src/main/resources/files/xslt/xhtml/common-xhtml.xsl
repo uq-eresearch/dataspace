@@ -59,8 +59,9 @@
             </xsl:call-template>
         </p>
     </xsl:template>
+
+    <!-- replace two carriage returns in a row with a br -->
     <xsl:template name="break">
-        <!-- replace two carriage returns in a row with a br -->
         <xsl:param name="text" select="."/>
         <xsl:choose>
             <xsl:when test="contains($text,'&#xa;&#xa;')">
@@ -75,8 +76,6 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-
-
 
     <!-- object type -->
     <xsl:template name="type">
@@ -130,7 +129,9 @@
             </div>
             <div class="content">
                 <p>
-                    <xsl:value-of select="text()"/>
+                    <xsl:call-template name="break">
+                        <xsl:with-param name="text" select="text()"/>
+                    </xsl:call-template>
                 </p>
             </div>
         </div>
@@ -143,7 +144,9 @@
             </div>
             <div class="content">
                 <p>
-                    <xsl:value-of select="@content"/>
+                    <xsl:call-template name="break">
+                        <xsl:with-param name="text" select="@content"/>
+                    </xsl:call-template>
                 </p>
             </div>
         </div>
@@ -151,14 +154,16 @@
 
     <!-- creators -->
     <xsl:template name="creators">
-        <div class="statement">
-            <div class="property">
-                <p>Creator/s</p>
+        <xsl:if test="atom:author">
+            <div class="statement">
+                <div class="property">
+                    <p>Creator/s</p>
+                </div>
+                <div class="content">
+                    <xsl:apply-templates select="atom:author"/>
+                </div>
             </div>
-            <div class="content">
-                <xsl:apply-templates select="atom:author"/>
-            </div>
-        </div>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="atom:author">
         <p>
