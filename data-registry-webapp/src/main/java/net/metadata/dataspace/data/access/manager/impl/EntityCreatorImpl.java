@@ -21,6 +21,7 @@ import net.metadata.dataspace.data.sequencer.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -39,6 +40,8 @@ public class EntityCreatorImpl implements EntityCreator {
     private PublicationSequencer publicationSequencer;
     private SourceSequencer sourceSequencer;
     private FullNameSequencer fullNameSequencer;
+
+    private final Logger logger = Logger.getLogger(getClass());
 
     public EntityCreatorImpl() {
     }
@@ -82,6 +85,9 @@ public class EntityCreatorImpl implements EntityCreator {
             version = (V) getAgentVersion((Agent) record);
         } else if (record instanceof Service) {
             version = (V) getServiceVersion((Service) record);
+        }
+        if (version.getAtomicNumber() == null) {
+        	logger.warn("Version atomic number is null, but should not be.");
         }
         return version;
     }

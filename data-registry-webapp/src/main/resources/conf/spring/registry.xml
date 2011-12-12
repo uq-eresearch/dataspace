@@ -20,7 +20,8 @@
 	<bean id="feedOutputHelper" class="net.metadata.dataspace.atom.util.FeedOutputHelper"/>
 
 	<bean id="activityAdapter" class="net.metadata.dataspace.atom.adapter.ActivityAdapter">
-		<property name="dao" ref="activityDao"/>
+		<qualifier value="activity"/>
+        <property name="dao" ref="activityDao"/>
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
         <property name="entityCreator" ref="entityCreator"/>
@@ -34,7 +35,8 @@
 	</bean>
 
 	<bean id="agentAdapter" class="net.metadata.dataspace.atom.adapter.AgentAdapter">
-		<property name="dao" ref="agentDao"/>
+		<qualifier value="agent"/>
+        <property name="dao" ref="agentDao"/>
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
         <property name="entityCreator" ref="entityCreator"/>
@@ -48,6 +50,7 @@
 	</bean>
 
 	<bean id="collectionAdapter" class="net.metadata.dataspace.atom.adapter.CollectionAdapter">
+        <qualifier value="collection"/>
 		<property name="dao" ref="collectionDao"/>
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
@@ -62,7 +65,8 @@
 	</bean>
 
 	<bean id="serviceAdapter" class="net.metadata.dataspace.atom.adapter.ServiceAdapter">
-		<property name="dao" ref="serviceDao"/>
+		<qualifier value="service"/>
+        <property name="dao" ref="serviceDao"/>
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authorizationManager" ref="authorizationManager"/>
         <property name="entityCreator" ref="entityCreator"/>

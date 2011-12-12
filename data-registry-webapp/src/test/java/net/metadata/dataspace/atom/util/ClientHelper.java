@@ -83,7 +83,7 @@ public class ClientHelper {
         return deleteMethod;
     }
 
-    private static File getFile(String fileName) throws IOException {
+    public static File getFile(String fileName) throws IOException {
         return loader.getResource(fileName).getFile();
     }
 

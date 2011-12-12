@@ -168,6 +168,7 @@ public class AdapterInputHelper {
             version.getParent().setOriginalId(entryId.toString());
         }
 
+        entityManager.flush();
         List<Link> emails = entry.getLinks(Constants.REL_MBOX);
         for (Link emailLink : emails) {
         	InternetAddress email = getEmailFromHref(emailLink.getHref());
