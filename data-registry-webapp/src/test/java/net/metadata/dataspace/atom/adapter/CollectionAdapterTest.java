@@ -7,6 +7,7 @@ import java.io.PipedInputStream;
 import java.io.PipedReader;
 import java.io.PipedWriter;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Iterator;
 
@@ -68,25 +69,27 @@ public class CollectionAdapterTest {
 	}
 
 	@Test
+    @Transactional
 	public void testGetEmptyFeed() throws IOException {
-		RequestContext request = mock(RequestContext.class);
-		when(request.getAbdera()).thenReturn(abdera);
+		RequestContext request = getMockRequest();
 		when(request.getUri()).thenReturn(new IRI("http://example.test/collection.atom"));
 
 		// Simulate a request, get a input stream and parse it
 		ResponseContext response = collectionAdapter.getFeed(request);
 		assertEquals(200, response.getStatus());
 		assertEquals("OK", response.getStatusText());
-		Document<Feed> feedDoc = getFeedDocument(response);
+		@SuppressWarnings("unchecked")
+		Document<Feed> feedDoc = (Document<Feed>) getDocument(response);
 
 		// There should be no entries returned
 		assertEquals(0, feedDoc.getRoot().getEntries().size());
 	}
 
 	@Test
-	public void testPostNewEntry() throws IOException, MimeTypeParseException {
+    @Transactional
+	public void testCreateEntry() throws IOException, MimeTypeParseException {
 		final String filename = "/files/post/new-collection.xml";
-		RequestContext request = createRequestFromFile(filename);
+		RequestContext request = createEntryRequestFromFile(filename);
 		when(request.getUri()).thenReturn(new IRI("http://example.test/collection/"));
 		ResponseContext response;
 
@@ -95,25 +98,82 @@ public class CollectionAdapterTest {
 		// Should fail as unauthorised
 		assertEquals(401, response.getStatus());
 
-		when(request.getAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER))
-			.thenReturn(new User("testuser", Role.ADMIN));
+		attachAuthenticatedUser(request);
 
 		// Simulate a request
 		response = collectionAdapter.postEntry(request);
 		// Should create entity
 		assertEquals("Entry not created: "+response.getStatusText(), 201, response.getStatus());
+
+		// Get the created entity
+		request = createEntryRequest();
+		attachAuthenticatedUser(request);
+		when(request.getUri()).thenReturn(response.getLocation());
+		response = collectionAdapter.getEntry(request);
+
+		// Should be successful
+		assertEquals(200, response.getStatus());
+
 	}
 
-	protected RequestContext createRequestFromFile(final String filename)
+	@Test
+    @Transactional
+	public void testUpdateEntry() throws IOException, MimeTypeParseException {
+		final String postFile = "/files/post/new-collection.xml";
+		RequestContext request;
+		request = createEntryRequestFromFile(postFile);
+		when(request.getUri()).thenReturn(new IRI("http://example.test/collection/"));
+		ResponseContext response;
+
+		// Create the entity
+		attachAuthenticatedUser(request);
+		response = collectionAdapter.postEntry(request);
+		// Should create entity
+		assertEquals("Entry not created: "+response.getStatusText(), 201, response.getStatus());
+
+		final String putFile = "/files/put/update-collection.xml";
+		request = createEntryRequestFromFile(putFile);
+		when(request.getUri()).thenReturn(response.getLocation());
+
+		// Simulate a request
+		attachAuthenticatedUser(request);
+		response = collectionAdapter.putEntry(request);
+		// Should create entity
+		assertEquals(200, response.getStatus());
+
+		// Get the updated entity
+		request = createEntryRequest();
+		attachAuthenticatedUser(request);
+		when(request.getUri()).thenReturn(response.getLocation());
+		when(request.getAccept()).thenReturn(Constants.MIME_TYPE_ATOM_ENTRY);
+		response = collectionAdapter.getEntry(request);
+		@SuppressWarnings("unchecked")
+		Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
+
+		System.out.println(entryDoc.getRoot());
+	}
+
+	protected void attachAuthenticatedUser(RequestContext request) {
+		when(request.getAttribute(RequestContext.Scope.SESSION, Constants.SESSION_ATTRIBUTE_CURRENT_USER))
+			.thenReturn(new User("testuser", Role.ADMIN));
+	}
+
+	protected RequestContext createEntryRequest() {
+		RequestContext request = getMockRequest();
+		Target target = mock(Target.class);
+		when(request.getTarget()).thenReturn(target);
+		when(target.getType()).thenReturn(TargetType.TYPE_ENTRY);
+		return request;
+	}
+
+
+	protected RequestContext createEntryRequestFromFile(final String filename)
 			throws FileNotFoundException, IOException, MimeTypeParseException {
 		final Reader reader = new FileReader(
 				ClientHelper.getFile(filename));
 
-		RequestContext request = mock(RequestContext.class);
-		Target target = mock(Target.class);
-		when(target.getType()).thenReturn(TargetType.TYPE_ENTRY);
-		when(request.getAbdera()).thenReturn(abdera);
-		when(request.getTarget()).thenReturn(target);
+		RequestContext request = createEntryRequest();
+
 		when(request.getContentType()).thenReturn(new MimeType(Constants.MIME_TYPE_ATOM_ENTRY));
 		when(request.getReader()).thenReturn(reader);
 		when(request.getDocument(any(Parser.class))).then(new Answer<Document<Entry>>() {
@@ -126,13 +186,18 @@ public class CollectionAdapterTest {
 		return request;
 	}
 
-	protected Document<Feed> getFeedDocument(ResponseContext response)
+	protected RequestContext getMockRequest() {
+		RequestContext request = mock(RequestContext.class);
+		when(request.getAbdera()).thenReturn(abdera);
+		return request;
+	}
+
+	protected Document<?> getDocument(ResponseContext response)
 			throws IOException {
-		PipedReader pr = new PipedReader();
-		PipedWriter pw = new PipedWriter(pr);
-		response.writeTo(pw);
-		Document<Feed> feedDoc = abdera.getParser().parse(pr);
-		return feedDoc;
+		StringWriter writer = new StringWriter();
+		response.writeTo(writer);
+		StringReader reader = new StringReader(writer.getBuffer().toString());
+		return abdera.getParser().parse(reader);
 	}
 
 
