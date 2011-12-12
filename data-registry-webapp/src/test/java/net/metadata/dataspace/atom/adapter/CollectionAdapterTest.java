@@ -109,11 +109,17 @@ public class CollectionAdapterTest {
 		request = createEntryRequest();
 		attachAuthenticatedUser(request);
 		when(request.getUri()).thenReturn(response.getLocation());
+		when(request.getAccept()).thenReturn(Constants.MIME_TYPE_ATOM_ENTRY);
 		response = collectionAdapter.getEntry(request);
 
 		// Should be successful
 		assertEquals(200, response.getStatus());
+		@SuppressWarnings("unchecked")
+		Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
 
+		System.out.println(entryDoc.getRoot());
+
+		assertEquals(1, entryDoc.getRoot().getLinks(Constants.REL_IS_REFERENCED_BY).size());
 	}
 
 	@Test
@@ -151,6 +157,7 @@ public class CollectionAdapterTest {
 		Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
 
 		System.out.println(entryDoc.getRoot());
+		assertEquals(2, entryDoc.getRoot().getLinks(Constants.REL_IS_REFERENCED_BY).size());
 	}
 
 	protected void attachAuthenticatedUser(RequestContext request) {
