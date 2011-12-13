@@ -174,7 +174,7 @@
         <xsl:param name="colour"/>
         <xsl:choose>
             <xsl:when test="atom:link[@rel = $REL_TYPE]/@href = $ENTITY_COLLECTION or
-             atom:link[@rel = $REL_TYPE]/@href = $ENTITY_COLLECTION">
+             atom:link[@rel = $REL_TYPE]/@href = $ENTITY_DATASET">
                 <xsl:call-template name="entity-icon-type">
                     <xsl:with-param name="type">collection</xsl:with-param>
                     <xsl:with-param name="colour" select="$colour"/>

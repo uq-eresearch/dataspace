@@ -79,30 +79,38 @@ describe("DataSpace", function() {
 	}
 
 	it('should provide a valid new Activity', function() {
+        $('body').append($('<select id="type-combobox"><option value="Project" selected/></select>'));
 		var newActivity = DataSpace.getActivityAtom(true,false);
 		var newActivityId = $(newActivity).find('id:not(source id)').text();
 		runNewEntryChecks(newActivity,'activity');
 		// TODO: Add some more checks
+        $('#type-combobox').detach();
 	});
 
 	it('should provide a valid new Agent', function() {
+        $('body').append($('<select id="type-combobox"><option value="Person" selected/></select>'));
 		var newAgent = DataSpace.getAgentAtom(true,false);
 		runNewEntryChecks(newAgent,'agent');
 		// TODO: Add some more checks
+        $('#type-combobox').detach();
 	});
 
 	it('should provide a valid new Collection', function() {
+        $('body').append($('<select id="type-combobox"><option value="Dataset" selected/></select>'));
 		var newCollection = DataSpace.getCollectionAtom(true,false);
 		var newCollectionId = $(newCollection).find('id:not(source id)').text();
 		runNewEntryChecks(newCollection,'collection');
 		// TODO: Add some more checks
+        $('#type-combobox').detach();
 	});
 
 	it('should provide a valid new Service', function() {
-		var newService = DataSpace.getServiceAtom(true,false);
+        $('body').append($('<select id="type-combobox"><option value="Create" selected/></select>'));
+        var newService = DataSpace.getServiceAtom(true,false);
 		var newServiceId = $(newService).find('id:not(source id)').text();
 		runNewEntryChecks(newService,'service');
 		// TODO: Add some more checks
+        $('#type-combobox').detach();
 	});
 
 
