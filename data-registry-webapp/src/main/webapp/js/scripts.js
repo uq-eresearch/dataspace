@@ -1125,9 +1125,6 @@ var DataSpace = (function() {
 
 	var getAtomEntryElement = function() {
 		var attributes = [ {
-			name : "xmlns:atom",
-			value : NS_ATOM
-		}, {
 			name : "xmlns:app",
 			value : NS_APP
 		}, {
@@ -1137,6 +1134,13 @@ var DataSpace = (function() {
 			name : "xmlns:rdfa",
 			value : NS_RDFA
 		} ];
+		// Only Firefox seems to have registered this ahead of time
+		if (!$.browser.mozilla) {
+			attributes.unshift({
+				name : "xmlns:atom",
+				value : NS_ATOM
+			});
+		}
 		var entry = getElementWithAttributes("entry", attributes);
 		return entry;
 	};
