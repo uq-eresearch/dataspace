@@ -296,7 +296,6 @@ public class AdapterOutputHelper {
             //Publications
             Set<Publication> publications = version.getReferencedBy();
             for (Publication publication : publications) {
-            	System.out.println("Outputting: "+publication);
                 String href = publication.getPublicationURI();
                 Link link = entry.addLink(href, Constants.REL_IS_REFERENCED_BY);
                 link.setTitle(publication.getTitle());

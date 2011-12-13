@@ -45,8 +45,9 @@ public class CollectionAdapter extends AbstractRecordAdapter<Collection,Collecti
         if (version == null) {
             throw new ResponseContextException(Constants.HTTP_STATUS_400, 400);
         }
-		return getAdapterOutputHelper().getEntryFromCollection(
+        Entry entry = getAdapterOutputHelper().getEntryFromCollection(
 				version, isParentLevel);
+		return entry;
 	}
 
 }

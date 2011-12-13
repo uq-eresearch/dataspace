@@ -37,7 +37,7 @@ public class AtomNamespaceContext implements NamespaceContext {
     }
 
     @Override
-    public Iterator getPrefixes(String s) {
+    public Iterator<?> getPrefixes(String s) {
         return null;
     }
 }

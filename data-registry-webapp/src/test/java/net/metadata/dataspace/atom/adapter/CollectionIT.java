@@ -5,6 +5,7 @@ import net.metadata.dataspace.atom.util.ClientHelper;
 import net.metadata.dataspace.atom.util.XPathHelper;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -29,11 +30,16 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
-import static junit.framework.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Author: alabri
@@ -54,7 +60,12 @@ public class CollectionIT {
         //Post Entry
         String fileName = "/files/post/new-collection.xml";
         PostMethod postMethod = ClientHelper.postEntry(client, fileName, TestConstants.PATH_FOR_COLLECTIONS);
-        assertEquals(postMethod.getResponseBodyAsString(), 201, postMethod.getStatusCode());
+        assertEquals(postMethod.getResponseBodyAsString(8192), 201, postMethod.getStatusCode());
+        // Check the working copy is version 1
+        ensureWorkingCopyVersionIs(
+        		XPathHelper.getDocFromStream(postMethod.getResponseBodyAsStream()),
+        		1);
+
         String newEntryLocation = postMethod.getResponseHeader("Location").getValue();
         //Get entry
         GetMethod getMethod = ClientHelper.getEntry(client, newEntryLocation, TestConstants.ATOM_ENTRY_MIMETYPE);
@@ -63,20 +74,30 @@ public class CollectionIT {
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/1", TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get first version of entry after post", 200, getMethod.getStatusCode());
 
-        System.out.println("watch now");
         //Edit Entry
         fileName = "/files/put/update-collection.xml";
         PutMethod putMethod = ClientHelper.putEntry(client, fileName, newEntryLocation, TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not edit entry", 200, putMethod.getStatusCode());
 
-        System.out.println(postMethod.getResponseBodyAsString(8192));
-        checkRelatedPublicationsUpdate(
-        		XPathHelper.getDocFromFile(fileName),
-        		XPathHelper.getDocFromStream(postMethod.getResponseBodyAsStream()));
+        // Check the working copy is version 2
+        {
+        	String docStr = putMethod.getResponseBodyAsString(8192);
+        	Document doc = XPathHelper.getDocFromStream(putMethod.getResponseBodyAsStream());
+        	System.out.println(docStr);
+	        ensureWorkingCopyVersionIs(doc, 2);
+        }
 
         //get second version
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/2", TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get second version of entry after edit", 200, getMethod.getStatusCode());
+        {
+        	Document doc = XPathHelper.getDocFromStream(getMethod.getResponseBodyAsStream());
+	        ensureWorkingCopyVersionIs(doc, 2);
+	        checkRelatedPublicationsUpdate(
+	        		XPathHelper.getDocFromFile(fileName),
+	        		doc);
+        }
+
         //Get version history
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/version-history", TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get version history", 200, getMethod.getStatusCode());
@@ -88,7 +109,7 @@ public class CollectionIT {
         assertEquals("Entry should not be found", 404, getMethod.getStatusCode());
     }
 
-    private void checkRelatedPublicationsUpdate(Document fromFile, Document fromStream) throws Exception {
+	private void checkRelatedPublicationsUpdate(Document fromFile, Document fromStream) throws Exception {
         final String countExpr = "count("+TestConstants.RECORD_REL_RELATED_PATH+")";
         XPath xpath = XPathHelper.getXPath();
         // Get number of entries in file and response
@@ -436,6 +457,17 @@ public class CollectionIT {
 	        transformer.transform(new DOMSource(node), outputTarget);
     	}
     	return sw.toString();
+    }
+
+    protected void ensureWorkingCopyVersionIs(Document doc,  int version)
+    		throws IOException, Exception
+    {
+        XPath xpath = XPathHelper.getXPath();
+        String workingCopyExpr = TestConstants.RECORD_LINK_PATH+"[@rel='working-copy']";
+        assertEquals(1, Integer.parseInt(
+        		xpath.evaluate("count("+workingCopyExpr+")", doc)));
+        assertEquals(version, Integer.parseInt(
+        		xpath.evaluate(workingCopyExpr+"/@title", doc)));
     }
 
 }

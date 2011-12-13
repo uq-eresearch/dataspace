@@ -3,20 +3,14 @@ package net.metadata.dataspace.atom.adapter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedReader;
-import java.io.PipedWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Iterator;
-
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
-import net.metadata.dataspace.app.TestConstants;
 import net.metadata.dataspace.atom.util.ClientHelper;
 import net.metadata.dataspace.data.model.record.User;
 import net.metadata.dataspace.data.model.record.User.Role;
@@ -33,7 +27,6 @@ import org.apache.abdera.protocol.server.ResponseContext;
 import org.apache.abdera.protocol.server.Target;
 import org.apache.abdera.protocol.server.TargetType;
 import org.apache.abdera.protocol.server.servlet.AbderaServlet;
-import org.apache.solr.client.solrj.util.ClientUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,12 +107,14 @@ public class CollectionAdapterTest {
 
 		// Should be successful
 		assertEquals(200, response.getStatus());
-		@SuppressWarnings("unchecked")
-		Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
 
-		System.out.println(entryDoc.getRoot());
-
-		assertEquals(1, entryDoc.getRoot().getLinks(Constants.REL_IS_REFERENCED_BY).size());
+		{
+			@SuppressWarnings("unchecked")
+			Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
+			assertEquals(1, entryDoc.getRoot().getLinks("working-copy").size());
+			assertEquals("1", entryDoc.getRoot().getLinks("working-copy").get(0).getTitle());
+			assertEquals(1, entryDoc.getRoot().getLinks(Constants.REL_IS_REFERENCED_BY).size());
+		}
 	}
 
 	@Test
@@ -146,6 +141,13 @@ public class CollectionAdapterTest {
 		response = collectionAdapter.putEntry(request);
 		// Should create entity
 		assertEquals(200, response.getStatus());
+		{
+			@SuppressWarnings("unchecked")
+			Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
+			assertEquals(1, entryDoc.getRoot().getLinks("working-copy").size());
+			assertEquals("2", entryDoc.getRoot().getLinks("working-copy").get(0).getTitle());
+			assertEquals(2, entryDoc.getRoot().getLinks(Constants.REL_IS_REFERENCED_BY).size());
+		}
 
 		// Get the updated entity
 		request = createEntryRequest();
@@ -153,11 +155,14 @@ public class CollectionAdapterTest {
 		when(request.getUri()).thenReturn(response.getLocation());
 		when(request.getAccept()).thenReturn(Constants.MIME_TYPE_ATOM_ENTRY);
 		response = collectionAdapter.getEntry(request);
-		@SuppressWarnings("unchecked")
-		Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
-
-		System.out.println(entryDoc.getRoot());
-		assertEquals(2, entryDoc.getRoot().getLinks(Constants.REL_IS_REFERENCED_BY).size());
+		assertEquals(200, response.getStatus());
+		{
+			@SuppressWarnings("unchecked")
+			Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
+			assertEquals(1, entryDoc.getRoot().getLinks("working-copy").size());
+			assertEquals("2", entryDoc.getRoot().getLinks("working-copy").get(0).getTitle());
+			assertEquals(2, entryDoc.getRoot().getLinks(Constants.REL_IS_REFERENCED_BY).size());
+		}
 	}
 
 	protected void attachAuthenticatedUser(RequestContext request) {
