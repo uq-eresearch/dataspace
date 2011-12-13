@@ -421,25 +421,27 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             String versionKey = OperationHelper.getEntryVersionID(request);
             User user = getAuthenticationManager().getCurrentUser(request);
             V version;
-            if (versionKey == null) {
-                if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate() && record.getPublished() == null) {
-                    version = record.getWorkingCopy();
+            if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
+                if (versionKey == null) {
+                	if (record.getPublished() == null) {
+                		version = record.getWorkingCopy();
+                	} else {
+                        version = record.getPublished();
+                	}
                 } else {
-                    version = record.getPublished();
-                }
-
-            } else {
-            	if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
-                    if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
+                	if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
                         Feed versionHistoryFeed = getFeedOutputHelper().createVersionFeed(request);
                         ResponseContext versionHistoryFeed1 = getFeedOutputHelper().getVersionHistoryFeed(request, versionHistoryFeed, record, getRecordClass());
                         return versionHistoryFeed1;
                     } else {
                         version = getDao().getByVersion(record.getUriKey(), versionKey);
                     }
-                } else {
-                    throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
                 }
+            } else {
+            	if (versionKey != null || OperationHelper.getViewRepresentation(request) != null) {
+                    throw new ResponseContextException(Constants.HTTP_STATUS_401, 401);
+            	}
+            	version = record.getPublished();
             }
             if (version == null) {
                 throw new ResponseContextException(Constants.HTTP_STATUS_404, 404);
@@ -474,6 +476,14 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     @Override
     public ResponseContext getFeed(RequestContext request) {
     	ResponseContext response = super.getFeed(request);
+
+    	if (OperationHelper.getViewRepresentation(request) != null) {
+            try {
+				enforceAuthentication(request);
+			} catch (ResponseContextException e) {
+	            return OperationHelper.createErrorResponse(e);
+			}
+    	}
 
         if (getRepresentationMimeType(request) == KnownContentTypes.HTML) {
             return feedOutputHelper.getHtmlRepresentationOfFeed(request, response, getRecordClass());

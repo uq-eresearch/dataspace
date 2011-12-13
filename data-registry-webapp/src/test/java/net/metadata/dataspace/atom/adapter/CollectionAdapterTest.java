@@ -1,13 +1,24 @@
 package net.metadata.dataspace.atom.adapter;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
+
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 
 import net.metadata.dataspace.app.Constants;
 import net.metadata.dataspace.app.NonProductionConstants;
@@ -34,6 +45,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -76,6 +88,23 @@ public class CollectionAdapterTest {
 
 		// There should be no entries returned
 		assertEquals(0, feedDoc.getRoot().getEntries().size());
+	}
+
+	@Test
+    @Transactional
+	public void testNewFormRequiresAuthentication() throws IOException {
+		RequestContext request = getMockRequest();
+		when(request.getUri()).thenReturn(new IRI("http://example.test/collection?v=new"));
+		when(request.getParameter("v")).thenReturn("new");
+
+		// Simulate a request, get a input stream and parse it
+		ResponseContext response = collectionAdapter.getFeed(request);
+		assertEquals(401, response.getStatus());
+
+		// Simulate a request, get a input stream and parse it
+		attachAuthenticatedUser(request);
+		response = collectionAdapter.getFeed(request);
+		assertEquals(200, response.getStatus());
 	}
 
 	@Test
@@ -135,6 +164,44 @@ public class CollectionAdapterTest {
 			assertEquals("1", entry.getLinks("working-copy").get(0).getTitle());
 			assertEquals(1, entry.getLinks(Constants.REL_IS_REFERENCED_BY).size());
 		}
+	}
+
+	@Test
+    @Transactional
+	public void testEditFormRequiresAuthentication()
+			throws IOException, MimeTypeParseException
+	{
+		final String postFile = "/files/post/new-collection.xml";
+		RequestContext request;
+		request = createEntryRequestFromFile(postFile);
+		when(request.getUri()).thenReturn(new IRI("http://example.test/collection/"));
+		ResponseContext response;
+
+		// Create the entity
+		attachAuthenticatedUser(request);
+		response = collectionAdapter.postEntry(request);
+		// Should create entity
+		assertEquals("Entry not created: "+response.getStatusText(), 201, response.getStatus());
+		IRI editLocation;
+		{
+			Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
+			editLocation = entryDoc.getRoot().getLinks("edit").get(0).getHref();
+		}
+
+		request = createEntryRequest();
+		when(request.getUri()).thenReturn(editLocation);
+		when(request.urlFor(eq("feed"), anyMapOf(String.class, Object.class)))
+			.thenReturn("http://example.test/collection/");
+		when(request.getParameter("v")).thenReturn("edit");
+
+		// Simulate a request, get a input stream and parse it
+		response = collectionAdapter.getEntry(request);
+		assertEquals(401, response.getStatus());
+
+		// Simulate a request, get a input stream and parse it
+		attachAuthenticatedUser(request);
+		response = collectionAdapter.getFeed(request);
+		assertEquals(200, response.getStatus());
 	}
 
 	@Test
