@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
 import net.metadata.dataspace.data.model.version.ServiceVersion;
 
 /**
@@ -34,9 +32,6 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
         TRANSFORM
     }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ServiceVersion published;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "service_same_as")
     private Set<Service> sameAs = new HashSet<Service>();
@@ -50,16 +45,6 @@ public class Service extends AbstractRecordEntity<ServiceVersion> {
 
     public Set<Agent> getManagedBy() {
         return getMostRecentVersion().getManagedBy();
-    }
-
-    @Override
-    public ServiceVersion getPublished() {
-        return published;
-    }
-
-    @Override
-    public void setPublished(ServiceVersion published) {
-        this.published = published;
     }
 
     public Set<Service> getSameAs() {

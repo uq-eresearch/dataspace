@@ -30,9 +30,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
         GROUP
     }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private AgentVersion published;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "agent_same_as")
     private Set<Agent> sameAs = new HashSet<Agent>();
@@ -65,16 +62,6 @@ public class Agent extends AbstractRecordEntity<AgentVersion> {
 
     public Set<Mbox> getMBoxes() {
         return getMostRecentVersion().getMboxes();
-    }
-
-    @Override
-    public AgentVersion getPublished() {
-        return published;
-    }
-
-    @Override
-    public void setPublished(AgentVersion version) {
-        this.published = version;
     }
 
     public Set<Agent> getSameAs() {

@@ -17,11 +17,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 
 import net.metadata.dataspace.data.model.Record;
 import net.metadata.dataspace.data.model.Version;
+import net.metadata.dataspace.data.model.version.ActivityVersion;
 import net.metadata.dataspace.util.DaoHelper;
 
 import org.hibernate.annotations.Sort;
@@ -48,6 +50,9 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
     @NotNull
     @Sort(type = SortType.NATURAL)
     protected SortedSet<V> versions = new TreeSet<V>();
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private V published;
 
     @NotNull
     @Column(unique = true)
@@ -213,6 +218,14 @@ public abstract class AbstractRecordEntity<V extends Version<?>> implements Seri
 
 	public String getContent() {
 	    return getMostRecentVersion().getDescription();
+	}
+
+	public V getPublished() {
+		return published;
+	}
+
+	public void setPublished(V published) {
+		this.published = published;
 	}
 
 }

@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
 import net.metadata.dataspace.data.model.version.ActivityVersion;
 
 /**
@@ -27,9 +25,6 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
         PROGRAM
     }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ActivityVersion published;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "activity_same_as")
     private Set<Activity> sameAs = new HashSet<Activity>();
@@ -43,20 +38,6 @@ public class Activity extends AbstractRecordEntity<ActivityVersion> {
 
     public Set<Agent> getHasParticipant() {
         return getMostRecentVersion().getHasParticipants();
-    }
-
-    @Override
-    public ActivityVersion getPublished() {
-        return published;
-    }
-
-    @Override
-    public ActivityVersion getWorkingCopy() {
-        return getMostRecentVersion();
-    }
-
-    public void setPublished(ActivityVersion published) {
-        this.published = published;
     }
 
     public Set<Activity> getSameAs() {

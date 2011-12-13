@@ -70,6 +70,12 @@ public class CollectionIT {
         //Get entry
         GetMethod getMethod = ClientHelper.getEntry(client, newEntryLocation, TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get entry after post", 200, getMethod.getStatusCode());
+        // Check the working copy is version 1
+        {
+        	Document doc = XPathHelper.getDocFromStream(getMethod.getResponseBodyAsStream());
+	        ensureWorkingCopyVersionIs(doc, 1);
+        }
+
         //get first version
         getMethod = ClientHelper.getEntry(client, newEntryLocation + "/1", TestConstants.ATOM_ENTRY_MIMETYPE);
         assertEquals("Could not get first version of entry after post", 200, getMethod.getStatusCode());
@@ -81,9 +87,7 @@ public class CollectionIT {
 
         // Check the working copy is version 2
         {
-        	String docStr = putMethod.getResponseBodyAsString(8192);
         	Document doc = XPathHelper.getDocFromStream(putMethod.getResponseBodyAsStream());
-        	System.out.println(docStr);
 	        ensureWorkingCopyVersionIs(doc, 2);
         }
 

@@ -106,14 +106,34 @@ public class CollectionAdapterTest {
 		response = collectionAdapter.getEntry(request);
 
 		// Should be successful
+		IRI recordUri;
 		assertEquals(200, response.getStatus());
-
 		{
 			@SuppressWarnings("unchecked")
 			Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
-			assertEquals(1, entryDoc.getRoot().getLinks("working-copy").size());
-			assertEquals("1", entryDoc.getRoot().getLinks("working-copy").get(0).getTitle());
-			assertEquals(1, entryDoc.getRoot().getLinks(Constants.REL_IS_REFERENCED_BY).size());
+			Entry entry = entryDoc.getRoot();
+			assertEquals(1, entry.getLinks("working-copy").size());
+			assertEquals("1", entry.getLinks("working-copy").get(0).getTitle());
+			assertEquals(1, entry.getLinks(Constants.REL_IS_REFERENCED_BY).size());
+			recordUri = entry.getLinks("self").get(0).getHref();
+		}
+
+		// Get the record entity
+		request = createEntryRequest();
+		attachAuthenticatedUser(request);
+		when(request.getUri()).thenReturn(recordUri);
+		when(request.getAccept()).thenReturn(Constants.MIME_TYPE_ATOM_ENTRY);
+		response = collectionAdapter.getEntry(request);
+
+		// Should be successful
+		assertEquals(200, response.getStatus());
+		{
+			@SuppressWarnings("unchecked")
+			Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
+			Entry entry = entryDoc.getRoot();
+			assertEquals(1, entry.getLinks("working-copy").size());
+			assertEquals("1", entry.getLinks("working-copy").get(0).getTitle());
+			assertEquals(1, entry.getLinks(Constants.REL_IS_REFERENCED_BY).size());
 		}
 	}
 
@@ -156,12 +176,33 @@ public class CollectionAdapterTest {
 		when(request.getAccept()).thenReturn(Constants.MIME_TYPE_ATOM_ENTRY);
 		response = collectionAdapter.getEntry(request);
 		assertEquals(200, response.getStatus());
+		IRI recordUri;
 		{
 			@SuppressWarnings("unchecked")
 			Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
-			assertEquals(1, entryDoc.getRoot().getLinks("working-copy").size());
-			assertEquals("2", entryDoc.getRoot().getLinks("working-copy").get(0).getTitle());
-			assertEquals(2, entryDoc.getRoot().getLinks(Constants.REL_IS_REFERENCED_BY).size());
+			Entry entry = entryDoc.getRoot();
+			assertEquals(1, entry.getLinks("working-copy").size());
+			assertEquals("2", entry.getLinks("working-copy").get(0).getTitle());
+			assertEquals(2, entry.getLinks(Constants.REL_IS_REFERENCED_BY).size());
+			recordUri = entry.getLinks("self").get(0).getHref();
+		}
+
+		// Get the record entity
+		request = createEntryRequest();
+		attachAuthenticatedUser(request);
+		when(request.getUri()).thenReturn(recordUri);
+		when(request.getAccept()).thenReturn(Constants.MIME_TYPE_ATOM_ENTRY);
+		response = collectionAdapter.getEntry(request);
+
+		// Should be successful
+		assertEquals(200, response.getStatus());
+		{
+			@SuppressWarnings("unchecked")
+			Document<Entry> entryDoc = (Document<Entry>) getDocument(response);
+			Entry entry = entryDoc.getRoot();
+			assertEquals(1, entry.getLinks("working-copy").size());
+			assertEquals("2", entry.getLinks("working-copy").get(0).getTitle());
+			assertEquals(2, entry.getLinks(Constants.REL_IS_REFERENCED_BY).size());
 		}
 	}
 
