@@ -576,7 +576,7 @@
                 <xsl:text> </xsl:text>
                 <a class="button-bar-button" id="edit-record-link" href="{atom:link[@rel=$REL_WORKING_COPY]/@href}?v=edit" title="Edit Latest Version">Edit</a>
                 <xsl:text> </xsl:text>
-                <a class="button-bar-button" id="delete-record-link" href="#" onclick="deleteRecord('{atom:link[@rel=$REL_SELF]/@href}'); "
+                <a class="button-bar-button" id="delete-record-link" href="#" onclick="DataSpace.deleteRecord('{atom:link[@rel=$REL_SELF]/@href}'); "
                    title="Delete Record">Delete</a>
             </div>
         </xsl:if>

@@ -138,7 +138,7 @@
             </a>
         </li>
     </xsl:template>
-    
+
     <xsl:template name="paging">
         <xsl:if test="atom:link[@rel = $REL_PREVIOUS] or atom:link[@rel = $REL_NEXT]">
             <xsl:variable name="current" select="substring-after(atom:link[@rel = $REL_CURRENT]/@href, 'page=')"/>
@@ -213,7 +213,7 @@
                 <div class="controls">
                     <a  class="button-bar-button" href="{atom:id}" title="View Record">view</a>
                     <a  class="button-bar-button" href="{atom:id}?v=edit" title="Edit Record">edit</a>
-                    <a  class="button-bar-button" href="#" onclick="deleteRecord('{atom:id}'); "
+                    <a  class="button-bar-button" href="#" onclick="DataSpace.deleteRecord('{atom:id}'); "
                         title="Delete Record">delete</a>
                 </div>
             </xsl:if>

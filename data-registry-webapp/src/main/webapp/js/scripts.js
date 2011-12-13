@@ -1267,6 +1267,7 @@ var DataSpace = (function() {
 
 	instance.getNewEntryId = getNewEntryId;
 	instance.setPublished = setPublished;
+	instance.deleteRecord = deleteRecord;
 
 	return instance;
 }());

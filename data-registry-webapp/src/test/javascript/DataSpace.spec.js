@@ -28,6 +28,9 @@ describe("DataSpace", function() {
 		it('exposes createLookupDialog function', function() {
 			expect(typeof(DataSpace.createLookupDialog)).toBe("function");
 		});
+		it('exposes deleteRecord function', function() {
+			expect(typeof(DataSpace.deleteRecord)).toBe("function");
+		});
 	});
 
 	it('should set the publish flag correctly', function() {
