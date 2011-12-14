@@ -618,8 +618,10 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
     		}
     		// If active, this is a conflict
     		if (existingRecord.isActive()) {
+                String uri = request.getResolvedUri().toString() + "/" + existingRecord.getUriKey();
+
 				throw new ResponseContextException(
-	            		"Entry already exists: "+existingRecord, 409);
+	            		uri + " already exists", 409);
     		}
     		// Otherwise, reinstate the record
     		Entry reinstatedEntry = processPutRequest(request);
