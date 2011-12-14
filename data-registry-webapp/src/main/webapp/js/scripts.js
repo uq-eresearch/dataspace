@@ -1023,10 +1023,10 @@ var DataSpace = (function() {
 		var attributes = [];
 		var content = '';
 		if (startDate) {
-			content = content + 'start=' + startDate + ' ';
+			content = content + 'start=' + startDate + ';';
 		}
 		if (endDate) {
-			content = content + 'end=' + endDate;
+			content = content + 'end=' + endDate + ';';
 		}
 		if (content != '') {
 			attributes[0] = {

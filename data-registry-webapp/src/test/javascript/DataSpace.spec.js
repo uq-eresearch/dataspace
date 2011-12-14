@@ -78,13 +78,20 @@ describe("DataSpace", function() {
 		//console.debug(entry);
 	}
 
+    var runTemporalEncodingChecks = function(entry) {
+        var newPeriod = $(entry).find('meta[property="http://purl.org/dc/terms/temporal"]').attr('content');
+        expect(newPeriod).toMatch('.*start=[0-9]+;.*');
+        expect(newPeriod).toMatch('.*end=[0-9]+;.*');
+    }
+
 	it('should provide a valid new Activity', function() {
         $('body').append($('<select id="type-combobox"><option value="Project" selected/></select>'));
 		var newActivity = DataSpace.getActivityAtom(true,false);
 		var newActivityId = $(newActivity).find('id:not(source id)').text();
+        $('#type-combobox').detach();
 		runNewEntryChecks(newActivity,'activity');
 		// TODO: Add some more checks
-        $('#type-combobox').detach();
+
 	});
 
 	it('should provide a valid new Agent', function() {
@@ -97,20 +104,27 @@ describe("DataSpace", function() {
 
 	it('should provide a valid new Collection', function() {
         $('body').append($('<select id="type-combobox"><option value="Dataset" selected/></select>'));
+        $('body').append($('<input name="start-date" id="start-date" value="2000">'));
+        $('body').append($('<input name="end-date" id="end-date" value="2010">'));
 		var newCollection = DataSpace.getCollectionAtom(true,false);
+        $('#type-combobox').detach();
+        $('#start-date').detach();
+        $('#end-date').detach();
 		var newCollectionId = $(newCollection).find('id:not(source id)').text();
 		runNewEntryChecks(newCollection,'collection');
+        runTemporalEncodingChecks(newCollection);
+
 		// TODO: Add some more checks
-        $('#type-combobox').detach();
+        ;
 	});
 
 	it('should provide a valid new Service', function() {
         $('body').append($('<select id="type-combobox"><option value="Create" selected/></select>'));
         var newService = DataSpace.getServiceAtom(true,false);
 		var newServiceId = $(newService).find('id:not(source id)').text();
+        $('#type-combobox').detach();
 		runNewEntryChecks(newService,'service');
 		// TODO: Add some more checks
-        $('#type-combobox').detach();
 	});
 
 
