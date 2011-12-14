@@ -315,7 +315,6 @@
                 </div>
                 <div class="content">
                     <xsl:apply-templates select="rdfa:meta[@property=$RDFA_TEMPORAL]"/>
-
                 </div>
             </div>
         </xsl:if>
@@ -323,7 +322,27 @@
 
     <xsl:template match="rdfa:meta[@property=$RDFA_TEMPORAL]">
         <p>
-            <xsl:value-of select="@content"/>
+            <xsl:variable name="fields" select="fn:tokenize(@content,';')"/>
+            <xsl:variable name="tokens" select="for $field in ($fields) return
+            (normalize-space(substring-before($field,'=')), normalize-space(substring-after($field,'=')))"/>
+            <xsl:variable name="start-index" select="index-of($tokens, 'start')"/>
+            <xsl:variable name="end-index" select="index-of($tokens, 'end')"/>
+            <xsl:variable name="name-index" select="index-of($tokens, 'name')"/>
+            <xsl:if test="exists($start-index)">
+                <xsl:value-of select="$tokens[$start-index + 1]"/>
+            </xsl:if>
+            <xsl:if test="exists($start-index) or exists($end-index)">
+                <xsl:text> - </xsl:text>
+            </xsl:if>
+            <xsl:if test="exists($end-index)">
+                <xsl:value-of select="$tokens[$end-index + 1]"/>
+            </xsl:if>
+            <xsl:if test="exists($name-index)">
+                <xsl:if test="exists($start-index) or exists($end-index)">
+                    <xsl:text>; </xsl:text>
+                </xsl:if>
+                <xsl:value-of select="$tokens[$name-index + 1]"/>
+            </xsl:if>
         </p>
     </xsl:template>
 
