@@ -1,6 +1,7 @@
 package net.metadata.dataspace.app;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -181,6 +182,7 @@ public class SolrIT {
 	        	}
 	        	String url = TestConstants.URL_PREFIX+"search?q="+word;
 	        	final HtmlPage page = webClient.getPage(url);
+                assertNotNull("Page is null for: " + url, page);
 	        	// Wait for JS to eval
 	        	while (!page.asText().contains("displaying"))
 		        	Thread.sleep(100);
