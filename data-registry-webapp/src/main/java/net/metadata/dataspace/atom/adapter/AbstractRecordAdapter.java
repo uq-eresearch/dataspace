@@ -423,11 +423,7 @@ public abstract class AbstractRecordAdapter<R extends Record<V>, V extends Versi
             V version;
             if (getAuthorizationManager().getAccessLevelForInstance(user, record).canUpdate()) {
                 if (versionKey == null) {
-                	if (record.getPublished() == null) {
-                		version = record.getWorkingCopy();
-                	} else {
-                        version = record.getPublished();
-                	}
+                    version = record.getWorkingCopy();
                 } else {
                 	if (versionKey.equals(Constants.TARGET_TYPE_VERSION_HISTORY)) {
                         Feed versionHistoryFeed = getFeedOutputHelper().createVersionFeed(request);

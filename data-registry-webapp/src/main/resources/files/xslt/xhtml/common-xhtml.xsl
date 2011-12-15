@@ -513,9 +513,9 @@
         <xsl:choose>
             <xsl:when test="atom:link[@rel = $REL_SELF]/@href = atom:link[@rel = $REL_EDIT]/@href">
                 <!-- have asked for work URL -->
-                <xsl:choose>
+<!--                <xsl:choose>
                     <xsl:when test="atom:link[@rel = $REL_LATEST_VERSION]">
-                        <!-- being shown the latest version -->
+                        &lt;!&ndash; being shown the latest version &ndash;&gt;
                         <xsl:value-of select="atom:link[@rel = $REL_LATEST_VERSION]/@title"/>  (published)
                         <xsl:choose>
                             <xsl:when test="atom:link[@rel = $REL_LATEST_VERSION]/@href =
@@ -530,11 +530,18 @@
                         </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
-                        <!-- no published version, being shown the working copy -->
+                        &lt;!&ndash; no published version, being shown the working copy &ndash;&gt;
                         <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/>
                         <span class="unpublished"> (unpublished)</span>
                     </xsl:otherwise>
-                </xsl:choose>
+                </xsl:choose>-->
+                <!-- being shown the working copy -->
+                <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/>
+                <xsl:if test="atom:link[@rel = $REL_WORKING_COPY]/@href != atom:link[@rel = $REL_LATEST_VERSION]/@href">
+                    <span class="unpublished"> (unpublished)</span>
+                    (<a href="{atom:link[@rel = $REL_LATEST_VERSION]/@href}">published version
+                    <xsl:value-of select="atom:link[@rel = $REL_LATEST_VERSION]/@title"/> available</a>)
+                </xsl:if>
             </xsl:when>
             <xsl:otherwise>
                 <!-- have asked for a particular version URL -->
@@ -544,7 +551,10 @@
                     <xsl:when test="atom:link[@rel = $REL_SELF]/@href = atom:link[@rel = $REL_LATEST_VERSION]/@href">
                      (published)
                     </xsl:when>
-                    <xsl:otherwise><span class="unpublished"> (unpublished)</span></xsl:otherwise>
+                    <xsl:otherwise>
+                        (<a href="{atom:link[@rel = $REL_LATEST_VERSION]/@href}">published version
+                        <xsl:value-of select="atom:link[@rel = $REL_LATEST_VERSION]/@title"/></a> available)
+                    </xsl:otherwise>
                 </xsl:choose>
                 <xsl:choose>
                     <xsl:when test="atom:link[@rel = $REL_SELF]/@href = atom:link[@rel = $REL_WORKING_COPY]/@href">
@@ -552,7 +562,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                          (<a class="unpublished"
-                             href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">version
+                             href="{atom:link[@rel = $REL_WORKING_COPY]/@href}">unpublished version
                         <xsl:value-of select="atom:link[@rel = $REL_WORKING_COPY]/@title"/> available</a>)
                     </xsl:otherwise>
                 </xsl:choose>
