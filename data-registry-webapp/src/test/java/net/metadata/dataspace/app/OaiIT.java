@@ -53,39 +53,10 @@ public class OaiIT {
 
     @BeforeClass
     public static void loadTestData() throws Exception {
-        ResourcePatternResolver resolver =
-                new PathMatchingResourcePatternResolver();
-
         //create a client
         HttpClient client = new HttpClient();
-        //authenticate
-        int status = ClientHelper.login(client, TestConstants.USERNAME, TestConstants.PASSWORD);
-        assertEquals("Could not authenticate", 200, status);
 
-        String[] types = {
-                TestConstants.PATH_FOR_AGENTS,
-                TestConstants.PATH_FOR_COLLECTIONS,
-                TestConstants.PATH_FOR_ACTIVITIES,
-                TestConstants.PATH_FOR_SERVICES };
-        for (int t = 0; t < types.length; t++) {
-            String type = types[t];
-            List<String> testEntities = new LinkedList<String>();
-            {
-                Resource[] resources = resolver.getResources(
-                        "classpath:files/**/"+type+"/*.atom");
-                for (int r = 0; r < resources.length; r++) {
-                    Resource resource = resources[r];
-                    testEntities.add(resource.getURI().toString());
-                }
-            }
-            for (String fileName : testEntities) {
-                logger.info("Loading test data from "+fileName);
-                PostMethod postMethod = ClientHelper.postEntry(client, fileName, type);
-                assertEquals("Could not post entry", 201, postMethod.getStatusCode());
-                postMethod.releaseConnection();
-            }
-        }
-
+		ClientHelper.loadTestData(client);
     }
 
     @Test

@@ -4,16 +4,24 @@ import net.metadata.dataspace.app.TestConstants;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.*;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Author: alabri
@@ -23,8 +31,10 @@ import java.net.URL;
 public class ClientHelper {
 
 	private static ResourceLoader loader = new DefaultResourceLoader();
+    private static boolean dataLoaded;
 
     public ClientHelper() {
+        dataLoaded = false;
     }
 
     public static int login(HttpClient client, String username, String password) throws Exception {
@@ -87,4 +97,38 @@ public class ClientHelper {
         return loader.getResource(fileName).getFile();
     }
 
+    public static void loadTestData(HttpClient client) throws Exception {
+        if (! dataLoaded) {
+            ResourcePatternResolver resolver =
+                    new PathMatchingResourcePatternResolver();
+
+            //authenticate
+            int status = ClientHelper.login(client, TestConstants.USERNAME, TestConstants.PASSWORD);
+            assertEquals("Could not authenticate", 200, status);
+
+            String[] types = {
+                    TestConstants.PATH_FOR_AGENTS,
+                    TestConstants.PATH_FOR_COLLECTIONS,
+                    TestConstants.PATH_FOR_ACTIVITIES,
+                    TestConstants.PATH_FOR_SERVICES };
+            for (int t = 0; t < types.length; t++) {
+                String type = types[t];
+                List<String> testEntities = new LinkedList<String>();
+                {
+                    Resource[] resources = resolver.getResources(
+                            "classpath:files/**/"+type+"/*.atom");
+                    for (int r = 0; r < resources.length; r++) {
+                        Resource resource = resources[r];
+                        testEntities.add(resource.getURI().toString());
+                    }
+                }
+                for (String fileName : testEntities) {
+                    PostMethod postMethod = ClientHelper.postEntry(client, fileName, type);
+                    assertEquals("Could not post entry", 201, postMethod.getStatusCode());
+                    postMethod.releaseConnection();
+                }
+            }
+            dataLoaded = true;
+        }
+    }
 }
