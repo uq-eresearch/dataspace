@@ -74,14 +74,22 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
 
         Date fromDate = null;
         Date toDate = null;
+
         try {
             fromDate = DateUtil.parseDate(from, DateUtil.OAI_DATE_FORMATS);
             toDate = DateUtil.parseDate(until, DateUtil.OAI_DATE_FORMATS);
+            logger.info("OAI ListIdentifiers parsed dates: " + fromDate + " to " + toDate);
+
             //Offset timezone
-            Date currentLocalDate = new Date();
+            long offset = Calendar.getInstance().getTimeZone().getRawOffset();
+
+            fromDate.setTime(fromDate.getTime() - offset);
+            toDate.setTime(toDate.getTime() - offset);
+
+            /*Date currentLocalDate = new Date();
             int offset = currentLocalDate.getTimezoneOffset();
             fromDate.setMinutes(fromDate.getMinutes() - offset);
-            toDate.setMinutes(toDate.getMinutes() - offset);
+            toDate.setMinutes(toDate.getMinutes() - offset);*/
         } catch (ParseException pe) {
             throw new BadArgumentException();
         }
@@ -95,6 +103,7 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
          * outPutOf (Activities) of Collections
          * accessedVia (Services) of Collections
          * */
+        logger.info("Getting all published between " + fromDate + " and " + toDate);
         List<net.metadata.dataspace.data.model.record.Collection> collectionList = getCollectionDao().getAllPublishedBetween(fromDate, toDate);
         Set<Activity> uniqueActivitySet = new HashSet<Activity>();
         Set<Agent> uniqueAgentSet = new HashSet<Agent>();
@@ -123,6 +132,10 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         }
 
         int size = uniqueActivitySet.size() + collectionList.size() + uniqueAgentSet.size() + uniqueServiceSet.size();
+        if (size == 0) {
+            throw new NoItemsMatchException();
+        }
+
         List<String> headers = new ArrayList<String>(size);
         List<String> identifiers = new ArrayList<String>(size);
 

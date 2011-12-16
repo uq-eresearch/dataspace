@@ -8,6 +8,7 @@ import javax.persistence.Query;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -118,8 +119,12 @@ public abstract class AbstractRegistryDao<T> extends JpaDao<T> implements Regist
     @SuppressWarnings("unchecked")
     public List<T> getAllPublishedBetween(Date fromDate, Date untilDate) {
         Query query = getEntityManager().createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.published IS NOT NULL AND o.recordTimestamp BETWEEN :fromDate and :untilDate ORDER BY o.recordTimestamp");
-        query.setParameter("fromDate", fromDate);
-        query.setParameter("untilDate", untilDate);
+        Calendar fromCal = Calendar.getInstance();
+        Calendar untilCal = Calendar.getInstance();
+        fromCal.setTime(fromDate);
+        untilCal.setTime(untilDate);
+        query.setParameter("fromDate", fromCal);
+        query.setParameter("untilDate", untilCal);
         return query.getResultList();
     }
 

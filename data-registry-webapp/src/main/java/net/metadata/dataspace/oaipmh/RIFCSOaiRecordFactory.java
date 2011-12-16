@@ -51,7 +51,7 @@ public class RIFCSOaiRecordFactory extends RecordFactory {
     @Override
     public String getDatestamp(Object o) {
 //        return new SimpleDateFormat("yyyy-MM-dd").format(((Version) o).getUpdated());
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(((Version) o).getUpdated());
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(((Version) o).getUpdated().getTime());
     }
 
     @Override
