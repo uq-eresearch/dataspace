@@ -1,6 +1,6 @@
 package net.metadata.dataspace.atom.util;
 
-import net.metadata.dataspace.atom.AtomNamespaceContext;
+import net.metadata.dataspace.atom.DataspaceNamespaceContext;
 import org.w3c.dom.Document;
 
 import javax.xml.namespace.NamespaceContext;
@@ -25,7 +25,7 @@ public class XPathHelper {
     public static XPath getXPath() {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
-        NamespaceContext ctx = new AtomNamespaceContext();
+        NamespaceContext ctx = new DataspaceNamespaceContext();
         xpath.setNamespaceContext(ctx);
         return xpath;
     }

@@ -18,6 +18,7 @@ public interface TestConstants {
     String MIME_TYPE_RDF = "application/rdf+xml";
     String MIME_TYPE_RIFCS = "application/rifcs+xml";
     String MIME_TYPE_XHTML = "application/xhtml+xml";
+    String MIME_TYPE_OAI = "text/xml";
 
     /**
      * Adapters
@@ -68,6 +69,7 @@ public interface TestConstants {
 
     String TEST_CONTEXT = "/conf/spring/testContext.xml";
 
+    /* XPaths */
     String FEED_PATH = "/atom:feed";
     String FEED_ID_PATH = "/atom:feed/atom:id";
     String FEED_TITLE_PATH = "/atom:feed/atom:title";
@@ -88,5 +90,9 @@ public interface TestConstants {
     String RECORD_SOURCE_AUTHOR_NAME_PATH = "/atom:entry/atom:source/atom:author/atom:name";
     String RECORD_SOURCE_AUTHOR_EMAIL_PATH = "/atom:entry/atom:source/atom:author/atom:email";
     String RECORD_REL_RELATED_PATH = "/atom:entry/atom:link[@rel=\"http://purl.org/dc/terms/isReferencedBy\"]";
+
+    String OAI_IDENTIFY_REPO_BASE_PATH = "/oai:OAI-PMH/oai:Identify/oai:baseURL/text()";
+    String OAI_LISTRECORDS_ERROR_PATH = "/oai:OAI-PMH/oai:error/@code";
+    String OAI_LISTRECORDS_SUCCESS_PATH = "/oai:OAI-PMH/ListRecords";
 
 }
