@@ -97,11 +97,11 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         /**
          * Only include the following on the OAI-PMH feed:
          * All published Collections
-         * data creators (Agents)
-         * data managers (Agents)
-         * participants in an activity (Agents)
-         * outPutOf (Activities) of Collections
-         * accessedVia (Services) of Collections
+         * published data creators (Agents)
+         * published data managers (Agents)
+         * published participants in an activity (Agents)
+         * published outPutOf (Activities) of Collections
+         * published accessedVia (Services) of Collections
          * */
         logger.info("Getting all published between " + fromDate + " and " + toDate);
         List<net.metadata.dataspace.data.model.record.Collection> collectionList = getCollectionDao().getAllPublishedBetween(fromDate, toDate);
@@ -110,24 +110,36 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
         Set<Service> uniqueServiceSet = new HashSet<Service>();
         for (Collection collection : collectionList) {
             Set<Agent> creators = collection.getPublished().getCreators();
-            if (!creators.isEmpty()) {
-                uniqueAgentSet.addAll(creators);
+            for (Agent creator : creators) {
+                if (creator.getPublished() != null) {
+                    uniqueAgentSet.add(creator);
+                }
             }
             Set<Agent> publishers = collection.getPublished().getPublishers();
-            if (!publishers.isEmpty()) {
-                uniqueAgentSet.addAll(publishers);
+            for (Agent publisher : publishers) {
+                if (publisher.getPublished() != null) {
+                    uniqueAgentSet.add(publisher);
+                }
             }
             Set<Activity> activities = collection.getPublished().getOutputOf();
-            if (!activities.isEmpty()) {
-                uniqueActivitySet.addAll(activities);
+            for (Activity activity : activities) {
+                if (activity.getPublished() != null) {
+                    uniqueActivitySet.add(activity);
+                }
             }
             for (AbstractRecordEntity<ActivityVersion> activity : activities) {
                 Set<Agent> hasParticipants = activity.getPublished().getHasParticipants();
-                uniqueAgentSet.addAll(hasParticipants);
+                for (Agent agent : hasParticipants) {
+                    if (agent.getPublished() != null) {
+                        uniqueAgentSet.add(agent);
+                    }
+                }
             }
             Set<Service> services = collection.getPublished().getAccessedVia();
-            if (!services.isEmpty()) {
-                uniqueServiceSet.addAll(services);
+            for (Service service : services) {
+                if (service.getPublished() != null) {
+                    uniqueServiceSet.add(service);
+                }
             }
         }
 
@@ -148,8 +160,11 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
             headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(collection.getPublished()), getRecordFactory().getDatestamp(collection.getPublished()), getRecordFactory().getSetSpecs(collection), !collection.isActive())[0]);
         }
         for (Agent agent : uniqueAgentSet) {
-            identifiers.add(getRecordFactory().getOAIIdentifier(agent.getPublished()));
-            headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(agent.getPublished()), getRecordFactory().getDatestamp(agent.getPublished()), getRecordFactory().getSetSpecs(agent), !agent.isActive())[0]);
+            if (agent.getPublished() != null) {
+                identifiers.add(getRecordFactory().getOAIIdentifier(agent.getPublished()));
+                headers.add(RIFCSOaiRecordFactory.createHeader(getRecordFactory().getOAIIdentifier(agent.getPublished()), getRecordFactory().getDatestamp(agent.getPublished()), getRecordFactory().getSetSpecs(agent), !agent.isActive())[0]);
+
+            }
         }
         for (Service service : uniqueServiceSet) {
             identifiers.add(getRecordFactory().getOAIIdentifier(service.getPublished()));
