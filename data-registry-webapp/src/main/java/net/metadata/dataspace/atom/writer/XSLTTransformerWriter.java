@@ -74,7 +74,7 @@ public class XSLTTransformerWriter extends AbstractNamedWriter implements NamedW
         String xslPath = xslResource.getPath();
         File xslFile = new File(xslPath);
         //TODO need to find a better way to pipe in stream between ouputstream and inputstream
-        File xmlFile = new File("temp" + new Date().getTime());
+        File xmlFile = File.createTempFile("dataspace-xsl", null);
         PrettyWriter writer = new PrettyWriter();
         OutputStream fileOS = new FileOutputStream(xmlFile);
         writer.writeTo(base, fileOS);
