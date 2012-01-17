@@ -81,8 +81,8 @@ public class RIFCSOaiCatalog extends AbstractCatalog {
 
             // adjust for timezone offset
             long offset = Calendar.getInstance().getTimeZone().getRawOffset();
-            fromDate.setTime(fromDate.getTime() - offset);
-            toDate.setTime(toDate.getTime() - offset);
+            fromDate.setTime(fromDate.getTime() + offset);
+            toDate.setTime(toDate.getTime() + offset);
         } catch (ParseException pe) {
             throw new BadArgumentException();
         }
