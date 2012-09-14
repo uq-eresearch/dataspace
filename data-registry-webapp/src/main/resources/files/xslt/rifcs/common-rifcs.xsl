@@ -29,12 +29,12 @@
 
     <!-- identifiers -->
     <xsl:template match="atom:link[@rel=$RDF_DESCRIBES]">
-        <identifier type="url">
+        <identifier type="uri">
             <xsl:value-of select="@href"/>
         </identifier>
     </xsl:template>
     <xsl:template match="/atom:entry/atom:id">
-        <identifier type="url">
+        <identifier type="uri">
             <xsl:value-of select="self::node()"/>
         </identifier>
     </xsl:template>
