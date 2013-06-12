@@ -107,3 +107,22 @@ WITH GRANT OPTION;
 * H2 (used for testing): No preperation is required.
 
 The application can easily support other databases by adding persistence units to the META-INF/persistence.xml file.
+
+Solr Indexing
+-------------
+
+Solr is deployed to a Tomcat container in a similar way to the web app. It runs by default during integration tests, using a shared database config between Solr dataimport and the web app's Hibernate database.
+
+To deploy Solr:
+* Check out or replicate the directory structure from DATA-REGISTRY-WEBAPP/solr to /opt/solr.
+* Make the solr home readable and writable by tomcat
+```
+    chown -R tomcat /opt/solr
+    chmod -R 755 /opt/solr
+```
+* Modify /opt/solr/conf/solrconfig-dataimport.xml if necessary.
+* Let tomcat know solr's home directory: edit /usr/share/tomcat6/conf/tomcat6.conf, inserting ```JAVA_OPTS="${JAVA_OPTS} -Dsolr.solr.home=/opt/solr```
+* Restart tomcat and check the logs
+* Open the browser go to http://localhost:8080/solr/dataimport?command=full-import, This needs to be ran every now and then. There is a Quartz cron job that is set up for sending this command every 45 minutes. The implementation for this is in the net.metadata.dataspace.app.RegistryInitializer.
+* Go to http://localhost:8080/solr/select?qt=standard&q=subject:sheep to search for sheep
+* The query string should look like q=health&qt=standard. To do search on a particular field/column you can use something like q=label:health&qt=standard
