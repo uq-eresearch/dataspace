@@ -59,3 +59,51 @@ The project was created by a maven web app archetype. It contains the pom.xml fi
   * js contains JavaScript files used in the html pages of the applications. It contains JavaScript used for displaying Google Maps. It also contains a sub-directory containing an AJAX framework code used to interact with the Solr search engine through AJAX HTTP calls.
   * jsp contains java server page definitions
 
+Database setup
+--------------
+
+The web application uses Hibernate ORM. Three persistence units have been prepared for the following databases:
+* PostgreSQL
+  * Change the derivative persistenceUnitName in the file "resources/registry.properties" in the project's root directory so it points to postgreSQL persistence unit
+```persistenceUnitName=registry-pgsql```
+  
+  * Create a database called "registry".
+  * Create a user with a password "registry" and grant full access to the "registry" database
+  * Run the following sequence of commands after you login into postgreSQL:
+
+```
+user$ sudo su postgres
+postgres$ createdb registry
+postgres$ psql registry
+    
+Welcome to psql 8.3.7, the PostgreSQL interactive terminal.
+Type:  \copyright for distribution terms
+       \h for help with SQL commands
+       \? for help with psql commands
+       \g or terminate with semicolon to execute query
+       \q to quit
+
+registry=# create user registry password 'registry';
+CREATE ROLE
+registry=# grant all on database registry to registry;
+GRANT
+```
+
+* MySQL
+  * Change the derivative persistenceUnitName in the file "resources/registry.properties" in the project's root directory so it points to MySQL persistence unit
+```persistenceUnitName=registry-mysql```
+  
+  * Create a database called "registry".
+  * Create a user with a password "registry" and grant full access to the "registry" database
+
+```
+CREATE DATABASE registry;
+GRANT ALL ON registry.*
+TO 'registry'@'localhost'
+IDENTIFIED BY 'registry'
+WITH GRANT OPTION;
+```
+
+* H2 (used for testing): No preperation is required.
+
+The application can easily support other databases by adding persistence units to the META-INF/persistence.xml file.
